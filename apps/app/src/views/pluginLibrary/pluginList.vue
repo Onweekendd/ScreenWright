@@ -56,9 +56,7 @@ const describeB =
 const handleDownloadPlugin = (info: itemPluginResponse) => {
   if (!info.plugPath) return;
   const { MINIO_BASE_URL } = process.env;
-  const { WEB_APP_MINIO_BASE_URL } = (window as any).webconfig;
-  const minioUrl = WEB_APP_MINIO_BASE_URL || MINIO_BASE_URL;
-  downFile(minioUrl + info.plugPath);
+  downFile(MINIO_BASE_URL + info.plugPath);
 };
 
 onMounted(() => {

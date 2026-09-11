@@ -2,6 +2,8 @@ import { LibSQLStore } from "@mastra/libsql";
 import { Memory } from "@mastra/memory";
 import { z } from "zod";
 
+import { sqliteUrl } from "@/lib/db/sqlite-url";
+
 import { vector } from "../vector";
 import { embeddingModel } from "../vector/embeddingModel";
 
@@ -46,7 +48,7 @@ export const biThreadWorkingMemorySchema = z
 // URL 由 MASTRA_DATABASE_URL 提供（如 file:./.data/mastra.db），相对路径以 servers/server 为基准。
 export const storage = new LibSQLStore({
   id: "libsql-storage",
-  url: process.env.MASTRA_DATABASE_URL ?? "file:./.data/mastra.db"
+  url: sqliteUrl("MASTRA_DATABASE_URL", "file:./.data/mastra.db")
 });
 
 export const memory = new Memory({

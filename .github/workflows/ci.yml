@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  # prisma.config.ts 的 env() 缺失即抛错，postinstall 的 prisma generate 需要
+  PRISMA_DATABASE_URL: file:./.data/screenwright.db
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # turbo pipeline：test 依赖 check-types，check-types 依赖上游包 build
+      - name: Type check & test
+        run: pnpm turbo run test --output-logs=errors-only

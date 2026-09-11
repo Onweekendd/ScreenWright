@@ -50,3 +50,4 @@ agentbi-architecture.html
 apps/app/dev-dist/
 apps/app/public/worker/vueWorker/
 apps/app/public/cdn/geo-provinces/
+.playwright-mcp/

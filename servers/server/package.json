@@ -24,6 +24,8 @@
     "mastra:test:watch": "vitest --watch",
     "mastra:test:coverage": "vitest --coverage",
     "mastra:check-types": "tsc --noEmit && tsc -p tsconfig.agent-scripts.json",
+    "check-types": "tsc --noEmit",
+    "test": "vitest --run",
     "check-vue-part": "tsx scripts/check-vue-part.ts",
     "build:client": "rollup -c rollup.config.mjs",
     "build:server": "esbuild src/server.ts --bundle --platform=node --format=esm --outfile=dist/server.mjs --packages=external"

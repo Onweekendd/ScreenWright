@@ -1,5 +1,7 @@
 # ScreenWright
 
+[![CI](https://github.com/Onweekendd/ScreenWright/actions/workflows/ci.yml/badge.svg)](https://github.com/Onweekendd/ScreenWright/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/Onweekendd/ScreenWright)](https://github.com/Onweekendd/ScreenWright/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **AI 原生的数据大屏 / BI 可视化编辑器。** 用自然语言、设计稿或一张截图，让 Agent 帮你把大屏搭出来、连上数据、配好联动——而不只是"生成一段配置让你自己粘"。
 
 Agent 直接操作画布：创建组件、修改属性、配置事件、接入数据、分组排版、验证数据链路，每一步实时同步到编辑器，改动前可审批，改完可回溯。
@@ -181,7 +183,7 @@ pnpm server:dev          # Agent 服务开发
 pnpm dev:agent-trace     # 追踪台
 pnpm build               # 生产构建
 pnpm check-types         # 全仓类型检查
-pnpm test                # 单元测试
+pnpm test                # 全仓类型检查 + 单元测试（turbo pipeline）
 pnpm build:lib           # 构建 SDK（screenwright.umd.js）
 ```
 

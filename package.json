@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "onweekend",
   "scripts": {
-    "test": "pnpm --filter @screenwright/app test",
+    "test": "turbo run test",
     "dev": "turbo run dev --filter=@screenwright/app",
     "server:dev": "turbo run server:dev --filter=@screenwright/server",
     "desktop": "pnpm --filter @screenwright/desktop dev",

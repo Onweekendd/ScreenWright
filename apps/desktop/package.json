@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "tauri": "tauri",
+    "kill-stale": "node scripts/kill-stale.mjs",
+    "predev": "node scripts/kill-stale.mjs",
     "dev": "tauri dev",
     "build:sidecar": "node scripts/build-sidecar.mjs",
     "build": "tauri build"

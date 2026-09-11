@@ -13,7 +13,6 @@ import { cloneDeep, isArray, isBoolean, isDate, isEmpty, isNil, isNumber, isObje
 import IconModal from "@/assets/icon/assets-icon-modal.png";
 import { setMinioUrl } from "@/utils/config";
 import { BaseName } from "@/utils/config";
-import { encryptWithCryptoJS } from "@/utils/crypto";
 
 import { getRebuiltDom as getClonedDom } from "./dom";
 export { uuid };
@@ -141,46 +140,6 @@ export const downloadBlob = (blob: any, name: string) => {
   tempLink.remove();
 };
 
-export const roleEquitiesMessage = async () => {
-  const isToUpdate = await handleMessageBox("您的会员权益不足，请前往升级！", {
-    confirmButtonText: "前往升级",
-    cancelButtonText: "取消"
-  });
-  if (isToUpdate && process.env.WEBSITE_PAY) {
-    window.open(process.env.WEBSITE_PAY);
-  }
-  return false;
-};
-
-// 设置有效期
-export const setExpirationDate = (datetime: string | number | Date) => {
-  const isNum = typeof datetime === "number";
-  // 创建一个新的Date对象，默认为当前时间, 如果是具体时间则无需统计
-  const currentDate = !isNum ? new Date(datetime) : new Date();
-
-  // 设置月份时，注意月份是从0开始的，所以要+1
-  // 使用setMonth()方法时，如果新的月份超出了11（即12月），年份会自动增加
-  if (isNum) {
-    currentDate.setMonth(currentDate.getMonth() + datetime);
-  }
-
-  // 返回格式化后的日期字符串，格式为YYYY-MM-DD
-  // 注意：这里简化了格式化过程，可以根据需要调整
-  const year = currentDate.getFullYear();
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // 月份+1，并补0
-  const day = currentDate.getDate().toString().padStart(2, "0"); // 日期补0
-  const hour = currentDate.getHours().toString().padStart(2, "0");
-  const minutes = currentDate.getMinutes().toString().padStart(2, "0");
-  const seconds = currentDate.getSeconds().toString().padStart(2, "0");
-
-  const params = JSON.stringify({
-    i: new Date().getTime(),
-    v: `${year}-${month}-${day} ${hour}:${minutes}:${seconds}`
-  });
-
-  return encryptWithCryptoJS(params, uuid(32));
-};
-
 export function getVideoBase64(url: string, type = "jpeg"): Promise<string> {
   return new Promise(function (resolve) {
     let dataURL = "";
@@ -244,11 +203,8 @@ export const handleImgUrl = (url: string) => {
   // 缩略图后缀为glb、glft时更换为默认模型缩略图
   if (["glb", "gltf"].includes(arr[arr.length - 1])) {
     const { MINIO_DEFAULT_PREFIX } = process.env;
-    const { WEB_APP_MINIO_DEFAULT_PREFIX } = (window as any).webconfig;
 
-    return setMinioUrl(
-      `${WEB_APP_MINIO_DEFAULT_PREFIX || MINIO_DEFAULT_PREFIX}assets/scene/cover/defaultModelCover.png`
-    );
+    return setMinioUrl(`${MINIO_DEFAULT_PREFIX}assets/scene/cover/defaultModelCover.png`);
   }
   return setMinioUrl(url);
 };
@@ -360,46 +316,13 @@ export const blobUrlToFile = async (blobUrl: string, fileName: string) => {
 // 终端交互中继已内建进 Screenwright 后端（servers/server 的 encoded-control-relay），
 // 因此这里指向 funAI base 而非旧的 Java 网关（VITE_API_BASE_URL）。
 export const getWebsocketUrl = (id: string, type = "bi") => {
-  const webconfig = (window as { webconfig?: Record<string, string> }).webconfig ?? {};
-  const baseURL =
-    webconfig.WEB_APP_API_BASE_URL || import.meta.env.VITE_FUNAI_API_URL || "http://localhost:4111";
+  const baseURL = import.meta.env.VITE_FUNAI_API_URL || "http://localhost:4111";
   const doubleSlash = baseURL.indexOf("//");
   const hostAndPath = doubleSlash === -1 ? `//${baseURL}` : baseURL.slice(doubleSlash);
   const protocol = baseURL.startsWith("https:") ? "wss:" : "ws:";
   return `${protocol}${hostAndPath}${BaseName.System}/encodedControl/${type}/${id}`;
 };
 
-export function downFile(url: string | Blob, saveName?: string): void {
-  let urlToUse: string;
-  // 检查 url 是否为 Blob 对象
-  if (url instanceof Blob) {
-    // 如果是 Blob 对象，创建一个临时的 URL
-    urlToUse = URL.createObjectURL(url);
-  } else {
-    // 如果是字符串，直接使用
-    urlToUse = url;
-  }
-  // 创建一个 a 标签元素
-  const aLink: HTMLAnchorElement = document.createElement("a");
-  // 确定文件名，如果 saveName 存在则使用 saveName，否则从 url 中提取文件名
-  const fileName: string = saveName || urlToUse.slice(urlToUse.lastIndexOf("/") + 1);
-  // 设置 a 标签的 href 属性为 url
-  aLink.href = urlToUse;
-  // 设置 a 标签的 download 属性为文件名
-  aLink.download = fileName || "";
-  let event: MouseEvent;
-  // 检查浏览器是否支持 MouseEvent 构造函数
-  if (typeof window.MouseEvent === "function") {
-    // 如果支持，使用构造函数创建一个 click 事件
-    event = new MouseEvent("click");
-  } else {
-    // 如果不支持，使用旧的方式创建一个 click 事件
-    event = document.createEvent("MouseEvents") as MouseEvent;
-    event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-  }
-  // 触发 a 标签的 click 事件
-  aLink.dispatchEvent(event);
-}
 export const convertFormat = (format: string): string => {
   return format
     .replace(/yyyy/g, "YYYY")
@@ -569,8 +492,7 @@ export function getTcpNoticeWebsocketUrl() {
   let websocketHost = "";
   let protocol = "";
   const { VITE_API_BASE_URL } = process.env || {};
-  const { WEB_APP_API_BASE_URL } = window.webconfig || {};
-  const baseURL = WEB_APP_API_BASE_URL || VITE_API_BASE_URL;
+  const baseURL = VITE_API_BASE_URL;
   if (baseURL) {
     // 这个拿不到NODE_ENV，怪
     // if (['development', 'intranet', 'intranetfte', 'intranetvpn'].includes(NODE_ENV)) {

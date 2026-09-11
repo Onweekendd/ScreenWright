@@ -1,9 +1,33 @@
+import { copyFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 
 import Vue from "@vitejs/plugin-vue";
-import type { ConfigEnv } from "vite";
+import type { ConfigEnv, Plugin } from "vite";
 import { defineConfig, loadEnv } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
+
+/**
+ * 导出包运行时依赖：即下方 rollupOptions.external 排除掉的三个 npm 包的浏览器版。
+ * 构建 lib 时从 node_modules 拷到 public/lib/vendor/，版本随 package.json 走，
+ * 导出时（exportfile.ts）再把这些文件打进 zip，不需要手工维护任何 cdn 目录。
+ */
+const EXPORT_VENDOR_FILES: Record<string, string> = {
+  "vue.global.prod.js": "vue/dist/vue.global.prod.js",
+  "vue-router.global.prod.js": "vue-router/dist/vue-router.global.prod.js",
+  "element-plus.full.min.js": "element-plus/dist/index.full.min.js",
+  "element-plus.css": "element-plus/dist/index.css"
+};
+
+const copyExportVendor = (): Plugin => ({
+  name: "screenwright:copy-export-vendor",
+  apply: "build",
+  closeBundle() {
+    const outDir = path.resolve(__dirname, "public/lib/vendor");
+    mkdirSync(outDir, { recursive: true });
+    for (const [target, source] of Object.entries(EXPORT_VENDOR_FILES)) {
+      copyFileSync(path.resolve(__dirname, "node_modules", source), path.join(outDir, target));
+    }
+  }
+});
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv) => {
@@ -17,39 +41,7 @@ export default defineConfig(({ mode }: ConfigEnv) => {
         "vue-full": "vue" // 完整版 Vue (包含编译器)
       }
     },
-    plugins: [
-      Vue(),
-      VitePWA({
-        strategies: "injectManifest",
-        srcDir: "src/service-workers/minioCache",
-        filename: "minio-cache-export.ts",
-        injectRegister: "script-defer",
-        injectManifest: {
-          injectionPoint: undefined
-        },
-        manifest: {
-          name: "Screenwright-export",
-          scope: "/",
-          short_name: "Screenwright",
-          description: "Screenwright - Business Intelligence Platform",
-          theme_color: "#232630",
-          background_color: "#232630",
-          display: "standalone",
-          start_url: "/",
-          icons: [
-            {
-              src: "/favicon.ico",
-              sizes: "64x64 32x32 24x24 16x16",
-              type: "image/x-icon"
-            }
-          ]
-        },
-        devOptions: {
-          enabled: true,
-          type: "module"
-        }
-      })
-    ],
+    plugins: [Vue(), copyExportVendor()],
     esbuild: {
       drop: ["console", "debugger"],
       sourcemap: false
@@ -152,7 +144,6 @@ export default defineConfig(({ mode }: ConfigEnv) => {
         MINIO_DEFAULT_PREFIX: loadEnv(mode, process.cwd()).VITE_MINIO_DEFAULT_PREFIX,
         RESOURCE_BASE_URL: loadEnv(mode, process.cwd()).VITE_RESOURCE_BASE_URL,
         DOCUMENT_URL: loadEnv(mode, process.cwd()).VITE_DOCUMENT_URL,
-        WEBSITE_PAY: loadEnv(mode, process.cwd()).VITE_WEBSITE_PAY,
         WEBSITE_ORDER: loadEnv(mode, process.cwd()).VITE_WEBSITE_ORDER,
         WEBSITE_HOME: loadEnv(mode, process.cwd()).VITE_WEBSITE_HOME
       },

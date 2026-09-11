@@ -3,7 +3,8 @@ import { createGlobalState } from "@vueuse/core";
 
 import { ElMessage } from "element-plus";
 
-import { downFile, handleMessageBox } from "@/utils/utils";
+import { downFile } from "@/utils/config";
+import { handleMessageBox } from "@/utils/utils";
 import { useCustomAnimationData } from "@/views/build/components/buildConfig/attrsRender/components/customAnimation/useCustomAnimationData";
 import { useStatusAnimation } from "@/views/build/components/buildConfig/attrsRender/components/statusAnimation/useStatusAnimation";
 

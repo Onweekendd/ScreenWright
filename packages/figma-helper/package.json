@@ -11,6 +11,7 @@
     }
   },
   "scripts": {
+    "build": "pnpm shared:build",
     "shared:build": "vite build --config vite.config.shared.ts && tsc -p tsconfig.shared.json --emitDeclarationOnly",
     "figma:build": "vite build --config vite.config.ui.ts && vite build --config vite.config.code.ts && node scripts/pack.js",
     "figma:build:dev": "cross-env BUILD_TARGET=dev vite build --config vite.config.ui.ts && vite build --config vite.config.code.ts && node scripts/pack.js",

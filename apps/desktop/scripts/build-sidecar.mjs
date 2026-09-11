@@ -49,9 +49,14 @@ const resolvePkgDir = (name, fromDir) => {
   }
 };
 
-// 1. server 代码 bundle
-console.log("→ build:server");
-run("pnpm --filter @screenwright/server build:server", repoRoot);
+// 1. server 代码 bundle —— 走 turbo 而不是直接 pnpm --filter：
+//    server.mjs 是 --packages=external，运行时还要从 node_modules 加载 types / core /
+//    figma-helper(shared) / create-screenwright-app 这几个 workspace 包，入口都在各自
+//    被 gitignore 的 dist/ 下。CI 干净 checkout 里没有，不先建就会拷进空壳，装到别的机器
+//    上启动即 ERR_MODULE_NOT_FOUND。这些前置及它们各自的依赖链都在 turbo.json 的
+//    @screenwright/server#build:server.dependsOn 里声明，由 turbo 按图排序构建。
+console.log("→ build:server（turbo，含 workspace 运行时依赖）");
+run("pnpm turbo run build:server --filter=@screenwright/server", repoRoot);
 
 // 2. 依赖闭包遍历 + 扁平拷贝
 console.log("→ 遍历依赖闭包 → 扁平 node_modules");
@@ -75,6 +80,7 @@ const DROP = new Set([
 const doneVersions = new Set(); // "name@version" —— 拷过的
 const topVersion = new Map(); // name -> 顶层胜出的版本
 const missing = [];
+const workspaceDests = []; // 落地的 workspace 包（monorepo packages/ 下的），拷完要校验入口
 let nested = 0;
 // [名字, 解析起点目录, 父包落地目录]
 const queue = Object.keys(serverPkg.dependencies).map((n) => [n, serverSrc, outDir]);
@@ -109,6 +115,7 @@ while (queue.length) {
   }
 
   if (!existsSync(join(dest, "package.json"))) {
+    if (!fwd(real).includes("/node_modules/")) workspaceDests.push([name, dest, meta]);
     mkdirSync(dirname(dest), { recursive: true });
     // 不拷包自带的 node_modules：workspace 包（packages/*）里是 dev 工具链（eslint 等），
     // .pnpm 里的包本身没有嵌套 node_modules。依赖已由本遍历扁平化 + 冲突嵌套处理。
@@ -134,6 +141,22 @@ if (missing.length) {
   console.warn(`⚠ 未解析到 ${missing.length} 个包（多为可选/平台专属，通常无碍）：${missing.slice(0, 20).join(", ")}`);
 }
 console.log(`  拷了 ${doneVersions.size} 个包（含 ${nested} 处版本冲突嵌套）`);
+
+// workspace 包的入口文件（exports / main 指向的 dist）必须真实存在，否则宁可打包失败也别放出坏包
+const collectEntries = (v, out) => {
+  if (typeof v === "string") out.push(v);
+  else if (v && typeof v === "object") for (const x of Object.values(v)) collectEntries(x, out);
+  return out;
+};
+const broken = [];
+for (const [name, dest, meta] of workspaceDests) {
+  const entries = collectEntries(meta.exports ?? meta.main ?? [], []).filter((e) => /\.(m?js|cjs)$/.test(e) && !e.includes("*"));
+  for (const e of entries) if (!existsSync(join(dest, e))) broken.push(`${name} → ${e}`);
+}
+if (broken.length) {
+  throw new Error(`workspace 包入口缺失（未构建？）：\n  ${broken.join("\n  ")}`);
+}
+console.log(`  校验 ${workspaceDests.length} 个 workspace 包入口 ✓`);
 
 // 3. 组装其余文件
 console.log("→ 组装 resources/server");

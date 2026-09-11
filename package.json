@@ -25,10 +25,7 @@
     "build:stage": "turbo run build:stage && pnpm copy:dist",
     "build:prod": "turbo run build:prod && pnpm copy:dist",
     "copy:dist": "cpy 'apps/app/dist/**' dist",
-    "check-types": "turbo run check-types",
-    "prepare": "husky install",
-    "lint:staged": "lint-staged --config lint-staged.config.mjs --concurrent false",
-    "test:staged": "node scripts/test-staged.mjs"
+    "check-types": "turbo run check-types"
   },
   "keywords": [],
   "license": "MIT",
@@ -37,8 +34,6 @@
     "@types/node": "^24.10.2",
     "concurrently": "^8.2.2",
     "cpy-cli": "^5.0.0",
-    "husky": "8.0.3",
-    "lint-staged": "16.1.4",
     "turbo": "^2.5.8"
   }
 }

@@ -134,7 +134,12 @@
       "cache": false
     },
     "@screenwright/server#build:server": {
-      "dependsOn": ["@screenwright/types#build", "@screenwright/core#build"],
+      "dependsOn": [
+        "@screenwright/types#build",
+        "@screenwright/core#build",
+        "@screenwright/figma-helper#shared:build",
+        "create-screenwright-app#build"
+      ],
       "outputs": ["dist/server.mjs"],
       "cache": false
     },

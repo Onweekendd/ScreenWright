@@ -1,0 +1,143 @@
+{
+  "interactive": true,
+  "title": "动态面板",
+  "name": "动态面板",
+  "display": true,
+  "icon": "icon-tabs",
+  "img": "/img/ft-panel.20240430.png",
+  "callbackArgs": [],
+  "events": [],
+  "loadAnimation": {
+    "type": "none",
+    "opacityOpen": false,
+    "timingFunction": "linear",
+    "direction": "right",
+    "duration": 1000,
+    "delay": 0
+  },
+  "child": {
+    "index": [],
+    "paramName": "",
+    "key": "",
+    "value": ""
+  },
+  "cbArgs": [],
+  "listenArgs": [],
+  "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+  "dataFilterArr": {},
+  "eventBus": [],
+  "dataType": 0,
+  "data": [],
+  "component": {
+    "prop": "sw-panel",
+    "name": "sw-panel",
+    "width": 600,
+    "height": 600
+  },
+  "panelStatus": [],
+  "unitPavenType": "",
+  "option": {
+    "display": false,
+    "enableScroll": false,
+    "rotationShow": false,
+    "rotationType": "",
+    "autoRotation": false,
+    "arrowShow": false,
+    "gestureSliding": false,
+    "animationType": "opacity",
+    "timingFunction": 5,
+    "arrowWidth": 72,
+    "arrowHeight": 72,
+    "imgLeft": "version-test/assets/defaultImg/imgLeft.png",
+    "imgRight": "version-test/assets/defaultImg/imgRight.png",
+    "isCard3Show": true,
+    "card1Show": false,
+    "card2Show": false,
+    "card3Show": false,
+    "card1TranslateX": 0,
+    "card1TranslateY": 50,
+    "card2TranslateX": 200,
+    "card2TranslateY": 0,
+    "card3TranslateX": 300,
+    "card3TranslateY": -50,
+    "card1ScaleX": 1,
+    "card1ScaleY": 1,
+    "card2ScaleX": 1,
+    "card2ScaleY": 1,
+    "card3ScaleX": 1,
+    "card4ScaleY": 1,
+    "transform": false,
+    "perspective": 0,
+    "originX": 50,
+    "originY": 50,
+    "rotateX": 0,
+    "rotateY": 0,
+    "rotateZ": 0,
+    "skewX": 0,
+    "skewY": 0,
+    "scaleX": 100,
+    "scaleY": 100,
+    "translateX": 0,
+    "translateY": 0,
+    "translateZ": 0,
+    "originGrid": {
+      "left": "center",
+      "top": "center"
+    },
+    "horizontalScrollDirection": "scrollLeft",
+    "horizontalScrollSpeed": 50
+  },
+  "left": 1261,
+  "top": 363,
+  "showSubComponent": false,
+  "id": 4157,
+  "zIndex": 2,
+  "verticalConst": "Top",
+  "horizontalConst": "Left",
+  "parentDynamicPanelId": [],
+  "panelData": [
+    {
+      "id": "383e71a4-f5fb-4733-ada9-724718985971",
+      "title": "状态1",
+      "name": "状态1",
+      "backgroundColor": "rgba(24,27,36,0)",
+      "showBackgroundImage": false,
+      "backgroundImage": "",
+      "showScreenAdaptation": false,
+      "adaptationNorm": "default",
+      "adaptationType": 2,
+      "config": [
+        "4158_条形图"
+      ]
+    },
+    {
+      "id": "300675f8-766f-4033-89d0-8b318921b347",
+      "title": "状态2",
+      "name": "状态2",
+      "backgroundColor": "rgba(24,27,36,0)",
+      "showBackgroundImage": false,
+      "backgroundImage": "",
+      "showScreenAdaptation": false,
+      "adaptationNorm": "default",
+      "adaptationType": 2,
+      "config": [
+        "4161_分组"
+      ]
+    },
+    {
+      "id": "766bd70a-d6c7-48dd-903a-14ce182dc393",
+      "title": "状态3",
+      "name": "状态3",
+      "backgroundColor": "rgba(24,27,36,0)",
+      "showBackgroundImage": false,
+      "backgroundImage": "",
+      "showScreenAdaptation": false,
+      "adaptationNorm": "default",
+      "adaptationType": 2,
+      "config": [
+        "4162_面积折线图",
+        "4163_动态面板"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "container": {
+    "id": 4157,
+    "name": "动态面板",
+    "prop": "sw-panel",
+    "width": 600,
+    "height": 600,
+    "dir": "4157_动态面板/383e71a4-f5fb-4733-ada9-724718985971_状态1",
+    "stateId": "383e71a4-f5fb-4733-ada9-724718985971",
+    "stateName": "状态1"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 25,
+    "rowPx": 50
+  },
+  "ascii_map": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n················································\n················································\n················································\n················································\n················································\n················································\n\n图例（· = 空白）：\nA = 条形图（条形图，z1，id 4158）\n\n层叠顺序（底→顶）：A-条形图(z1,行1-6)",
+  "components": [
+    {
+      "id": 4158,
+      "type": "条形图",
+      "prop": "echartstripBar",
+      "name": "条形图",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 1,
+        "rowEnd": 6
+      }
+    }
+  ]
+}

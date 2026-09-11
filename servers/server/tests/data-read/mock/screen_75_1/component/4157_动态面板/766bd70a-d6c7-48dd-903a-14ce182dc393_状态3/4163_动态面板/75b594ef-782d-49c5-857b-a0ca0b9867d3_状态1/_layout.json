@@ -1,0 +1,40 @@
+{
+  "container": {
+    "id": 4163,
+    "name": "动态面板",
+    "prop": "sw-panel",
+    "width": 600,
+    "height": 300,
+    "dir": "4157_动态面板/766bd70a-d6c7-48dd-903a-14ce182dc393_状态3/4163_动态面板/75b594ef-782d-49c5-857b-a0ca0b9867d3_状态1",
+    "stateId": "75b594ef-782d-49c5-857b-a0ca0b9867d3",
+    "stateName": "状态1"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 25,
+    "rowPx": 25
+  },
+  "ascii_map": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n图例（· = 空白）：\nA = 条形图（条形图，z1，铺满，id 4164）\n\n层叠顺序（底→顶）：A-条形图(z1,铺满)",
+  "components": [
+    {
+      "id": 4164,
+      "type": "条形图",
+      "prop": "echartstripBar",
+      "name": "条形图",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 1,
+        "rowEnd": 12
+      }
+    }
+  ]
+}

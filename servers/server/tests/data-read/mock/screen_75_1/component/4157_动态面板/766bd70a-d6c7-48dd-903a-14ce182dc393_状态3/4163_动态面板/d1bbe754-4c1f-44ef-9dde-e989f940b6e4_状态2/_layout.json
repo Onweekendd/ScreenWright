@@ -1,0 +1,40 @@
+{
+  "container": {
+    "id": 4163,
+    "name": "动态面板",
+    "prop": "sw-panel",
+    "width": 600,
+    "height": 300,
+    "dir": "4157_动态面板/766bd70a-d6c7-48dd-903a-14ce182dc393_状态3/4163_动态面板/d1bbe754-4c1f-44ef-9dde-e989f940b6e4_状态2",
+    "stateId": "d1bbe754-4c1f-44ef-9dde-e989f940b6e4",
+    "stateName": "状态2"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 25,
+    "rowPx": 25
+  },
+  "ascii_map": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n图例（· = 空白）：\nA = 面积折线图（面积折线图，z1，铺满，id 4165）\n\n层叠顺序（底→顶）：A-面积折线图(z1,铺满)",
+  "components": [
+    {
+      "id": 4165,
+      "type": "面积折线图",
+      "prop": "echartareaLine",
+      "name": "面积折线图",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 1,
+        "rowEnd": 12
+      }
+    }
+  ]
+}

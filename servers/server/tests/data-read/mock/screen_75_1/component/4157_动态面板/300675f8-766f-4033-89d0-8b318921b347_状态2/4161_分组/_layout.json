@@ -1,0 +1,57 @@
+{
+  "container": {
+    "id": 4161,
+    "name": "分组",
+    "prop": "sw-folder",
+    "width": 600,
+    "height": 600,
+    "dir": "4157_动态面板/300675f8-766f-4033-89d0-8b318921b347_状态2/4161_分组"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 25,
+    "rowPx": 50
+  },
+  "ascii_map": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\n图例（· = 空白）：\nA = 条形图（条形图，z2，id 4160）\nB = 排名图（排名图，z1，id 4159）\n\n层叠顺序（底→顶）：B-排名图(z1,行7-12) → A-条形图(z2,行1-6)",
+  "components": [
+    {
+      "id": 4160,
+      "type": "条形图",
+      "prop": "echartstripBar",
+      "name": "条形图",
+      "zIndex": 2,
+      "rectPx": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 1,
+        "rowEnd": 6
+      }
+    },
+    {
+      "id": 4159,
+      "type": "排名图",
+      "prop": "echartrank",
+      "name": "排名图",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 300,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 7,
+        "rowEnd": 12
+      }
+    }
+  ]
+}

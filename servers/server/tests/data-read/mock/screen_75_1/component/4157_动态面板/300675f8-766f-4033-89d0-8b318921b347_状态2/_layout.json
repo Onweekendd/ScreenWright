@@ -1,0 +1,47 @@
+{
+  "container": {
+    "id": 4157,
+    "name": "动态面板",
+    "prop": "sw-panel",
+    "width": 600,
+    "height": 600,
+    "dir": "4157_动态面板/300675f8-766f-4033-89d0-8b318921b347_状态2",
+    "stateId": "300675f8-766f-4033-89d0-8b318921b347",
+    "stateName": "状态2"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 25,
+    "rowPx": 50
+  },
+  "ascii_map": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n\n图例（· = 空白）：\nA = 分组（分组，z1，铺满，含2子: 条形图×1 排名图×1，id 4161）\n\n层叠顺序（底→顶）：A-分组(z1,铺满)",
+  "components": [
+    {
+      "id": 4161,
+      "type": "分组",
+      "prop": "sw-folder",
+      "name": "分组",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 600
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 1,
+        "rowEnd": 12
+      },
+      "childrenSummary": {
+        "descendants": 2,
+        "byType": {
+          "条形图": 1,
+          "排名图": 1
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "title": "分组",
+  "name": "分组",
+  "display": true,
+  "isLock": false,
+  "loadAnimation": {
+    "type": "none",
+    "opacityOpen": false,
+    "timingFunction": "linear",
+    "direction": "right",
+    "duration": 1000,
+    "delay": 0
+  },
+  "top": 13,
+  "left": 0,
+  "component": {
+    "width": 1200,
+    "height": 300,
+    "name": "sw-folder",
+    "prop": "sw-folder"
+  },
+  "isExpand": true,
+  "isOuter": true,
+  "option": {
+    "transform": false,
+    "perspective": 0,
+    "originX": 50,
+    "originY": 50,
+    "rotateX": 0,
+    "rotateY": 0,
+    "rotateZ": 0,
+    "skewX": 0,
+    "skewY": 0,
+    "scaleX": 100,
+    "scaleY": 100,
+    "translateX": 0,
+    "translateY": 0,
+    "translateZ": 0,
+    "originGrid": {
+      "left": "center",
+      "top": "center"
+    },
+    "backdropFilterSaturate": 100
+  },
+  "id": 4156,
+  "zIndex": 1,
+  "parentDynamicPanelId": [],
+  "verticalConst": "Top",
+  "horizontalConst": "Left",
+  "children": [
+    "4155_条形图",
+    "4154_条形图"
+  ]
+}

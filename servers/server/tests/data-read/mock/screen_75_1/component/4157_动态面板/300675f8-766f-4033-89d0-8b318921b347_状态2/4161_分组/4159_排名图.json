@@ -1,0 +1,391 @@
+{
+  "name": "排名图",
+  "title": "排名图",
+  "display": true,
+  "icon": "icon-bar",
+  "img": "/img/echart-rank.475870a4.png",
+  "csvType": 0,
+  "callbackArgs": [],
+  "events": [],
+  "loadAnimation": {
+    "type": "none",
+    "opacityOpen": false,
+    "timingFunction": "linear",
+    "direction": "right",
+    "duration": 1000,
+    "delay": 0
+  },
+  "dataMethod": "get",
+  "dataType": 0,
+  "dataSource": {},
+  "requestHeader": "{}",
+  "requestBody": "{}",
+  "crossOrigin": false,
+  "needCookie": false,
+  "autoRefresh": false,
+  "dataQuery": "",
+  "isLock": false,
+  "sql": "SELECT * FROM",
+  "data": [
+    {
+      "name": "A",
+      "value": 2024
+    },
+    {
+      "name": "B",
+      "value": 1423
+    },
+    {
+      "name": "C",
+      "value": 1532
+    },
+    {
+      "name": "D",
+      "value": 1920
+    },
+    {
+      "name": "E",
+      "value": 1322
+    },
+    {
+      "name": "F",
+      "value": 1120
+    },
+    {
+      "name": "G",
+      "value": 1627
+    },
+    {
+      "name": "H",
+      "value": 1554
+    }
+  ],
+  "dataRemark": [
+    {
+      "key": "name",
+      "map": "name",
+      "decription": "类目"
+    },
+    {
+      "key": "value",
+      "map": "value",
+      "decription": "值"
+    }
+  ],
+  "openFilter": false,
+  "listenArgs": [],
+  "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+  "url": "",
+  "path": "",
+  "time": 30,
+  "component": {
+    "width": 600,
+    "height": 300,
+    "name": "echart-rank",
+    "prop": "echartrank"
+  },
+  "option": {
+    "refresh": true,
+    "stack": false,
+    "seriesTabsName": [
+      "排名1",
+      "排名2",
+      "排名3",
+      "排名4",
+      "排名5",
+      "排名6",
+      "排名7",
+      "排名8"
+    ],
+    "sortType": "desc",
+    "defaultSeriesColor": {
+      "type": "linear-gradient",
+      "angle": "90",
+      "colors": [
+        {
+          "color": "rgba(62,67,244,1)",
+          "per": 0
+        },
+        {
+          "color": "rgba(61,227,251,1)",
+          "per": 100
+        }
+      ]
+    },
+    "defaultSeriesOpacity": 100,
+    "seriesColor": [
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(137,181,252,1)",
+            "per": 100
+          }
+        ]
+      },
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(61,227,251,1)",
+            "per": 100
+          }
+        ]
+      },
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(61,227,251,1)",
+            "per": 100
+          }
+        ]
+      },
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(61,227,251,1)",
+            "per": 100
+          }
+        ]
+      },
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(61,227,251,1)",
+            "per": 100
+          }
+        ]
+      },
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(61,227,251,1)",
+            "per": 100
+          }
+        ]
+      },
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(61,227,251,1)",
+            "per": 100
+          }
+        ]
+      },
+      {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(62,67,244,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(61,227,251,1)",
+            "per": 100
+          }
+        ]
+      }
+    ],
+    "seriesColorpicker": [
+      "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)",
+      "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)"
+    ],
+    "seriesOpacity": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "barGap": 50,
+    "barCategoryGap": 60,
+    "barBorderRadius": "default",
+    "gridLeft": 60,
+    "gridTop": 50,
+    "gridRight": 70,
+    "gridBottom": 60,
+    "legendShow": false,
+    "legendWidth": 800,
+    "legendHeight": 800,
+    "legendItemWidth": 20,
+    "legendItemHeight": 10,
+    "legendItemGap": 20,
+    "legendFontFamily": "siayuan-normal",
+    "legendFontSize": 16,
+    "legendColor": "rgba(255, 255, 255, 1)",
+    "legendFontStyle": "normal",
+    "legendFontWeight": "normal",
+    "legendTextLeftPadding": 0,
+    "legendSelectedMode": true,
+    "legendGrid": {
+      "top": 0,
+      "left": "center"
+    },
+    "legendOffsetX": 0,
+    "legendOffsetY": 0,
+    "xNameFontSize": 16,
+    "yNameFontSize": 16,
+    "seriesLabelShow": [
+      true,
+      true,
+      false
+    ],
+    "seriesLabelColor": [
+      "rgba(255,255,255,1)",
+      "rgba(255,255,255,1)",
+      "rgba(255,255,255,1)"
+    ],
+    "seriesLabelFontFamily": [
+      "siayuan-normal",
+      "siayuan-normal",
+      "siayuan-normal"
+    ],
+    "seriesLabelFontSize": [
+      20,
+      18,
+      14
+    ],
+    "seriesLabelFontWeight": [
+      "normal",
+      "normal",
+      "normal"
+    ],
+    "seriesLabelFontStyle": [
+      "normal",
+      "normal",
+      "normal"
+    ],
+    "seriesLabelOffsetX": [
+      0,
+      6,
+      0
+    ],
+    "seriesLabelOffsetY": [
+      0,
+      -18,
+      0
+    ],
+    "seriesLabelSuffix": "",
+    "defaultSeriesLabelBackground": "",
+    "seriesLabelBackground": [],
+    "legendOrient": "horizontal",
+    "yAxisInverse": true,
+    "xAxisInverse": false,
+    "xAxisShow": false,
+    "yAxisShow": false,
+    "xAxisLabelShow": true,
+    "yAxisLabelShow": true,
+    "yAxisType": "category",
+    "yAxisInterval": 0,
+    "yAxisRotate": 0,
+    "xAxisMin": "0",
+    "xAxisMax": "",
+    "xAxisMargin": 8,
+    "yAxisMargin": 8,
+    "xAxisFontFamily": "siayuan-normal",
+    "yAxisFontFamily": "siayuan-normal",
+    "xAxisFontSize": 18,
+    "yAxisFontSize": 18,
+    "xAxisColor": "rgba(209, 209, 209, 1)",
+    "yAxisColor": "rgba(209, 209, 209, 1)",
+    "xAxisFontStyle": "normal",
+    "yAxisFontStyle": "normal",
+    "xAxisFontWeight": "normal",
+    "yAxisFontWeight": "normal",
+    "xAxisNameShow": false,
+    "xAxisName": "单位",
+    "xAxisNameFontFamily": "siayuan-normal",
+    "xAxisNameFontSize": 14,
+    "xAxisNameColor": "rgba(209, 209, 209, 1)",
+    "xAxisNameFontStyle": "normal",
+    "xAxisNameFontWeight": "normal",
+    "xAxisNameGap": 26,
+    "xAxisLineShow": false,
+    "yAxisLineShow": true,
+    "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+    "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+    "xAxisLineWidth": 1,
+    "yAxisLineWidth": 1,
+    "xAxisLineOpacity": 0.5,
+    "yAxisLineOpacity": 0.5,
+    "xAxisTickShow": false,
+    "yAxisTickShow": true,
+    "xAxisTickColor": "#65686f",
+    "yAxisTickColor": "#65686f",
+    "xAxisTickWidth": 1,
+    "yAxisTickWidth": 1,
+    "xAxisTickLength": 2,
+    "yAxisTickLength": 2,
+    "xAxisSplitLineShow": true,
+    "yAxisSplitLineShow": false,
+    "yAxisSplitLineInterval": 0,
+    "xAxisSplitLineWidth": 1,
+    "yAxisSplitLineWidth": 1,
+    "xAxisSplitLineColor": "#383d47",
+    "yAxisSplitLineColor": "#383d47",
+    "barBackgroundColor": "rgba(255, 255, 255, 0)",
+    "dataLoop": false,
+    "dataLoopInterval": 5,
+    "dataLoopDisplayRows": 4,
+    "dataLoopRollNum": 1,
+    "dataZoomShow": true,
+    "moveHandleSize": 10,
+    "moveHandleColor": "#d2dbee",
+    "moveHandleEmphasisColor": "#d2dbee",
+    "dataZoomRight": 20
+  },
+  "id": 4159,
+  "left": 0,
+  "top": 300,
+  "zIndex": 1,
+  "verticalConst": "Top",
+  "horizontalConst": "Left",
+  "parent": 4161,
+  "parentDynamicPanelId": [
+    4157
+  ]
+}

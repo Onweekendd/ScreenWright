@@ -1,0 +1,118 @@
+{
+  "screen": {
+    "id": 75,
+    "width": 1920,
+    "height": 1080,
+    "bg": "rgba(35, 38, 48, 1)"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 80,
+    "rowPx": 90
+  },
+  "ascii_map": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC··················\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC··················\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC··················\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC··················\n······························DDDDDDDDDDDDDDDDDD\n······························DDDDDDDDDDDDDDDDDD\n······BBBBBBBBBBBBAAAAAAAAAA··DDDDDDDDDDDDDDDDDD\n······BBBBBBBBBBBBAAAAAAAAAA··DDDDDDDDDDDDDDDDDD\n······BBBBBBBBBBBBAAAAAAAAAA··DDDDDDDDDDDDDDDDDD\n······························DDDDDDDDDDDDDDDDDD\n······························DDDDDDDDDDDDDDDDDD\n················································\n\n图例（· = 空白）：\nA = 条形图（条形图，z0，id 4152）\nB = 条形图（条形图，z0，id 4153）\nC = 分组（分组，z1，含2子: 条形图×2，id 4156）\nD = 动态面板（动态面板，z2，含13子: 状态×5 条形图×3 分组×1 排名图×1 面积折线图×2 动态面板×1，id 4157）\n\n层叠顺序（底→顶）：A-条形图(z0,行7-9) → B-条形图(z0,行7-9) → C-分组(z1,行1-4) → D-动态面板(z2,行5-11)",
+  "components": [
+    {
+      "id": 4152,
+      "type": "条形图",
+      "prop": "echartstripBar",
+      "name": "条形图",
+      "zIndex": 0,
+      "rectPx": {
+        "x": 681,
+        "y": 592,
+        "w": 420,
+        "h": 210
+      },
+      "grid": {
+        "colStart": 9,
+        "colEnd": 14,
+        "rowStart": 7,
+        "rowEnd": 9
+      }
+    },
+    {
+      "id": 4153,
+      "type": "条形图",
+      "prop": "echartstripBar",
+      "name": "条形图",
+      "zIndex": 0,
+      "rectPx": {
+        "x": 261,
+        "y": 592,
+        "w": 420,
+        "h": 210
+      },
+      "grid": {
+        "colStart": 4,
+        "colEnd": 9,
+        "rowStart": 7,
+        "rowEnd": 9
+      }
+    },
+    {
+      "id": 4156,
+      "type": "分组",
+      "prop": "sw-folder",
+      "name": "分组",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 13,
+        "w": 1200,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 15,
+        "rowStart": 1,
+        "rowEnd": 4
+      },
+      "childrenSummary": {
+        "descendants": 2,
+        "byType": {
+          "条形图": 2
+        }
+      }
+    },
+    {
+      "id": 4157,
+      "type": "动态面板",
+      "prop": "sw-panel",
+      "name": "动态面板",
+      "zIndex": 2,
+      "rectPx": {
+        "x": 1261,
+        "y": 363,
+        "w": 600,
+        "h": 600
+      },
+      "grid": {
+        "colStart": 16,
+        "colEnd": 24,
+        "rowStart": 5,
+        "rowEnd": 11
+      },
+      "childrenSummary": {
+        "descendants": 13,
+        "byType": {
+          "状态": 5,
+          "条形图": 3,
+          "分组": 1,
+          "排名图": 1,
+          "面积折线图": 2,
+          "动态面板": 1
+        }
+      }
+    }
+  ],
+  "theme_hints": {
+    "fontFamily": "",
+    "colors": {
+      "bg": "rgba(35, 38, 48, 1)",
+      "accent": "",
+      "highlight": ""
+    }
+  }
+}

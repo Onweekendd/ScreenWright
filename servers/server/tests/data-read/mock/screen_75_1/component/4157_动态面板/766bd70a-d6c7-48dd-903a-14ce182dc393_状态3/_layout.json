@@ -1,0 +1,67 @@
+{
+  "container": {
+    "id": 4157,
+    "name": "动态面板",
+    "prop": "sw-panel",
+    "width": 600,
+    "height": 600,
+    "dir": "4157_动态面板/766bd70a-d6c7-48dd-903a-14ce182dc393_状态3",
+    "stateId": "766bd70a-d6c7-48dd-903a-14ce182dc393",
+    "stateName": "状态3"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 25,
+    "rowPx": 50
+  },
+  "ascii_map": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\n图例（· = 空白）：\nA = 面积折线图（面积折线图，z1，id 4162）\nB = 动态面板（动态面板，z2，含4子: 状态×2 条形图×1 面积折线图×1，id 4163）\n\n层叠顺序（底→顶）：A-面积折线图(z1,行1-6) → B-动态面板(z2,行7-12)",
+  "components": [
+    {
+      "id": 4162,
+      "type": "面积折线图",
+      "prop": "echartareaLine",
+      "name": "面积折线图",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 1,
+        "rowEnd": 6
+      }
+    },
+    {
+      "id": 4163,
+      "type": "动态面板",
+      "prop": "sw-panel",
+      "name": "动态面板",
+      "zIndex": 2,
+      "rectPx": {
+        "x": 0,
+        "y": 300,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 24,
+        "rowStart": 7,
+        "rowEnd": 12
+      },
+      "childrenSummary": {
+        "descendants": 4,
+        "byType": {
+          "状态": 2,
+          "条形图": 1,
+          "面积折线图": 1
+        }
+      }
+    }
+  ]
+}

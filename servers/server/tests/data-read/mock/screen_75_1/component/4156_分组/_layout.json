@@ -1,0 +1,57 @@
+{
+  "container": {
+    "id": 4156,
+    "name": "分组",
+    "prop": "sw-folder",
+    "width": 1200,
+    "height": 300,
+    "dir": "4156_分组"
+  },
+  "grid": {
+    "cols": 24,
+    "rows": 12,
+    "colPx": 50,
+    "rowPx": 25
+  },
+  "ascii_map": "BBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAA\n\n图例（· = 空白）：\nA = 条形图（条形图，z2，id 4155）\nB = 条形图（条形图，z1，id 4154）\n\n层叠顺序（底→顶）：B-条形图(z1,行1-13) → A-条形图(z2,行1-13)",
+  "components": [
+    {
+      "id": 4155,
+      "type": "条形图",
+      "prop": "echartstripBar",
+      "name": "条形图",
+      "zIndex": 2,
+      "rectPx": {
+        "x": 600,
+        "y": 13,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 13,
+        "colEnd": 24,
+        "rowStart": 1,
+        "rowEnd": 13
+      }
+    },
+    {
+      "id": 4154,
+      "type": "条形图",
+      "prop": "echartstripBar",
+      "name": "条形图",
+      "zIndex": 1,
+      "rectPx": {
+        "x": 0,
+        "y": 13,
+        "w": 600,
+        "h": 300
+      },
+      "grid": {
+        "colStart": 1,
+        "colEnd": 12,
+        "rowStart": 1,
+        "rowEnd": 13
+      }
+    }
+  ]
+}

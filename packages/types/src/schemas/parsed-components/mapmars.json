@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "id": 58,
+    "name": "3D地球",
+    "prop": "mapmars",
+    "componentName": "map-mars",
+    "first_level_menu": "地图",
+    "second_level_menu": "",
+    "thumbnail": "/img/threeMap.4c364812.png"
+  },
+  "config": {
+    "title": "3D地球",
+    "name": "3D地球",
+    "display": true,
+    "icon": "icon-table",
+    "img": "/img/threeMap.4c364812.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "dataType": 0,
+    "data": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 1920,
+      "height": 1080,
+      "type": "map",
+      "name": "map-mars",
+      "prop": "mapmars"
+    },
+    "presetChild": [],
+    "showSubComponent": false,
+    "unitPavenType": "",
+    "option": {
+      "camera": {
+        "lng": 114.4,
+        "lat": 23,
+        "alt": 20000,
+        "heading": 0,
+        "pitch": -66,
+        "roll": 0
+      }
+    }
+  },
+  "template": []
+}

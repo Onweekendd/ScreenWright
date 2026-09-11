@@ -1,0 +1,55 @@
+{
+  "name": "@screenwright/composables",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Screenwright Vue 组合式适配层（把 @screenwright/core 的框架无关逻辑包装成 Vue composable，供主应用与物料包共用）",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "check-types": "vue-tsc --noEmit",
+    "lint": "eslint src --fix",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "@screenwright/core": "workspace:*",
+    "@screenwright/types": "workspace:*",
+    "@vueuse/core": "^14.2.1",
+    "axios": "1.4.0",
+    "browser-image-compression": "^2.0.2",
+    "element-plus": "^2.11.2",
+    "@screenwright/ui": "workspace:*",
+    "lodash-es": "4.17.21"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0",
+    "vue-router": "^4"
+  },
+  "devDependencies": {
+    "@screenwright/eslint-config": "workspace:*",
+    "@types/lodash-es": "4.17.7",
+    "@types/node": "20.3.2",
+    "eslint": "^9.32.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.6.2",
+    "typescript": "5.9.2",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0",
+    "vue": "3.5.21",
+    "vue-router": "4.2.2",
+    "vue-tsc": "^2.0.0"
+  }
+}

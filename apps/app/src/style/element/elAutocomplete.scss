@@ -1,0 +1,21 @@
+.sw-autocomplete-dropdown {
+  &.el-popper {
+    &.is-light {
+      background-color: #0f1014 !important;
+      border: none !important;
+      > .el-popper__arrow:before {
+        display: none;
+      }
+
+      .el-autocomplete-suggestion li:hover {
+        background-color: #3d404c !important;
+        color: #b4b7c1 !important;
+      }
+    }
+  }
+}
+.el-popper {
+  p {
+    margin: 0;
+  }
+}

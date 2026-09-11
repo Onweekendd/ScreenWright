@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "createdBy": "admin",
+    "createdTime": "2023-05-31 12:34:27",
+    "updatedBy": "admin",
+    "updatedTime": "2024-06-17 10:58:45",
+    "id": 102,
+    "userId": null,
+    "type": 0,
+    "status": 1,
+    "firstLevelMenu": "面板",
+    "secondLevelMenu": "",
+    "javaScript": "{\"interactive\":true,\"title\":\"终端交互\",\"name\":\"终端交互\",\"display\":true,\"icon\":\"icon-tabs\",\"img\":\"/img/terminalControl.20240418.png\",\"callbackArgs\":[],\"events\":[],\"encodes\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"cbArgs\":[],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data;\\r\\n}\",\"dataFilterArr\":{},\"eventBus\":[],\"dataType\":0,\"data\":[],\"component\":{\"prop\":\"terminal-control\",\"name\":\"terminal-control\",\"width\":768,\"height\":1024},\"panelStatus\":[],\"panelData\":[],\"unitPavenType\":\"\",\"option\":{\"display\":false,\"enableOpen\":true,\"enableScroll\":false,\"hiddenLoading\":false},\"left\":0,\"top\":0,\"showSubComponent\":false}",
+    "template": "[]",
+    "level": 0,
+    "name": "终端交互",
+    "thumbnail": "/img/terminalControl.20240418.png"
+  },
+  "data": null,
+  "timestamp": 1770346523425,
+  "requestId": "876d1a320d364829b64ba25c668b062a",
+  "onlTable": null
+}

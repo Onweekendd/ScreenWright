@@ -1,0 +1,187 @@
+{
+  "meta": {
+    "id": 36,
+    "name": "颜色块",
+    "prop": "swflop",
+    "componentName": "sw-flop",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/flop2.92ecff74.png"
+  },
+  "config": {
+    "title": "颜色块",
+    "name": "颜色块",
+    "display": true,
+    "icon": "icon-flop",
+    "img": "/img/flop2.92ecff74.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "backgroundColor": "#67C23A",
+        "prefixText": "某某某总人数",
+        "value": "12345",
+        "suffixText": "人"
+      },
+      {
+        "backgroundColor": "#409EFF",
+        "prefixText": "某某某总人数",
+        "value": "12345",
+        "suffixText": "人"
+      },
+      {
+        "backgroundColor": "#E6A23C",
+        "prefixText": "某某某总人数",
+        "value": "12345",
+        "suffixText": "人"
+      },
+      {
+        "backgroundColor": "#F56C6C",
+        "prefixText": "某某某总人数",
+        "value": "12345",
+        "suffixText": "人"
+      },
+      {
+        "backgroundColor": "#7232dd",
+        "prefixText": "某某某总人数",
+        "value": "12345",
+        "suffixText": "人"
+      },
+      {
+        "backgroundColor": "blue",
+        "prefixText": "某某某总人数",
+        "value": "12345",
+        "suffixText": "人"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "backgroundColor",
+        "map": "backgroundColor",
+        "decription": "背景色"
+      },
+      {
+        "key": "prefixText",
+        "map": "prefixText",
+        "decription": "前缀"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "suffixText",
+        "map": "suffixText",
+        "decription": "后缀"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 888,
+      "height": 203,
+      "name": "sw-flop",
+      "prop": "swflop"
+    },
+    "option": {
+      "padding": 12,
+      "suffixInline": true,
+      "whole": true,
+      "decimals": 2,
+      "span": 3,
+      "splitx": 17,
+      "splity": 23,
+      "type": "img",
+      "borderColor": "rgba(255, 255, 255, 1)",
+      "borderTopWidth": 10,
+      "borderBottomWidth": 10,
+      "borderLeftWidth": 16,
+      "borderRightWidth": 16,
+      "backgroundBorder": "",
+      "backgroundColor": "rgba(255, 255, 255, 0)",
+      "backgroundImage": "",
+      "fontFamily": "siayuan-normal",
+      "fontSize": 28,
+      "color": "rgba(255, 255, 255, 1)",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textAlign": "left",
+      "prefixText": "",
+      "prefixTextAlign": "center",
+      "prefixSplitx": 0,
+      "prefixSplity": 4,
+      "prefixFontFamily": "siayuan-normal",
+      "prefixFontSize": 13,
+      "prefixColor": "rgba(255, 255, 255, 1)",
+      "prefixFontWeight": "normal",
+      "prefixFontStyle": "normal",
+      "suffixText": "人",
+      "suffixTextAlign": "center",
+      "suffixSplitx": 10,
+      "suffixSplity": 0,
+      "suffixFontFamily": "siayuan-normal",
+      "suffixFontSize": 18,
+      "suffixColor": "rgba(255, 255, 255, 1)",
+      "suffixFontWeight": "normal",
+      "suffixFontStyle": "normal"
+    }
+  },
+  "template": [
+    {
+      "backgroundColor": "#67C23A",
+      "prefixText": "某某某总人数",
+      "value": "12345",
+      "suffixText": "人"
+    },
+    {
+      "backgroundColor": "#409EFF",
+      "prefixText": "某某某总人数",
+      "value": "12345",
+      "suffixText": "人"
+    },
+    {
+      "backgroundColor": "#E6A23C",
+      "prefixText": "某某某总人数",
+      "value": "12345",
+      "suffixText": "人"
+    },
+    {
+      "backgroundColor": "#F56C6C",
+      "prefixText": "某某某总人数",
+      "value": "12345",
+      "suffixText": "人"
+    },
+    {
+      "backgroundColor": "#7232dd",
+      "prefixText": "某某某总人数",
+      "value": "12345",
+      "suffixText": "人"
+    },
+    {
+      "backgroundColor": "blue",
+      "prefixText": "某某某总人数",
+      "value": "12345",
+      "suffixText": "人"
+    }
+  ]
+}

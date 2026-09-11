@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "id": 144,
+    "name": "弹性点九图",
+    "prop": "sw-nine-patch",
+    "componentName": "sw-nine-patch",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "弹性点九图",
+    "name": "弹性点九图",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/default.1026.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 610,
+      "height": 376,
+      "name": "sw-nine-patch",
+      "prop": "sw-nine-patch"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [],
+    "dataRemark": [],
+    "option": {
+      "top": 24,
+      "right": 21,
+      "bottom": 69,
+      "left": 75,
+      "src": "version-test/assets/newSystemAssets/标牌/标牌-31.png",
+      "width": 200,
+      "height": 200
+    }
+  },
+  "template": []
+}

@@ -1,0 +1,624 @@
+{
+  "createdBy": "onweekend",
+  "createdTime": "2025-09-01 10:07:25",
+  "updatedBy": "onweekend",
+  "updatedTime": "2025-09-01 10:07:46",
+  "id": 24336,
+  "moduleId": null,
+  "config": "[1932186]",
+  "name": "1234",
+  "detail": {
+    "width": "1920",
+    "height": "1080",
+    "scale": 1,
+    "initLoad": false,
+    "backgroundImage": "",
+    "backgroundColor": "rgba(35, 38, 48, 1)",
+    "showBackgroundImage": false,
+    "showScreenAdaptation": false,
+    "adaptationNorm": "default",
+    "adaptationType": 2,
+    "showScreenFilter": false,
+    "screenFilterInfo": {
+      "gaussianBlur": 0,
+      "brightness": 100,
+      "contrast": 100,
+      "grayscale": 0,
+      "hue": 0,
+      "saturate": 100,
+      "invert": 0,
+      "sepia": 0
+    },
+    "showWaterMark": true,
+    "waterMark": {
+      "text": "Screenwright凡拓数创",
+      "fontFamily": "sans-serif",
+      "fontStyle": "normal",
+      "fontWeight": "normal",
+      "fontSize": 30,
+      "color": "rgba(100,100,100,0.5)"
+    },
+    "gridDistance": 1,
+    "query": {},
+    "controlWebsocketUrl": "",
+    "heartbeatInterval": 15,
+    "terminalEnableArr": {},
+    "name": "1234"
+  },
+  "backgroundUrl": null,
+  "layers": [
+    {
+      "name": "条形图",
+      "title": "条形图",
+      "display": true,
+      "icon": "icon-bar",
+      "img": "/img/bar2.20240514.png",
+      "csvType": 0,
+      "callbackArgs": [],
+      "events": [],
+      "loadAnimation": {
+        "type": "none",
+        "opacityOpen": false,
+        "timingFunction": "linear",
+        "direction": "right",
+        "duration": 1000,
+        "delay": 0
+      },
+      "dataMethod": "get",
+      "dataType": 0,
+      "dataSource": {},
+      "requestHeader": "{}",
+      "requestBody": "{}",
+      "crossOrigin": false,
+      "needCookie": false,
+      "autoRefresh": false,
+      "dataQuery": "",
+      "isLock": false,
+      "sql": "SELECT * FROM",
+      "data": [
+        {
+          "seriesName": "系列一",
+          "name": "A",
+          "value": 2024
+        },
+        {
+          "seriesName": "系列二",
+          "name": "A",
+          "value": 2378
+        },
+        {
+          "seriesName": "系列一",
+          "name": "B",
+          "value": 1423
+        },
+        {
+          "seriesName": "系列二",
+          "name": "B",
+          "value": 1779
+        },
+        {
+          "seriesName": "系列一",
+          "name": "C",
+          "value": 1532
+        },
+        {
+          "seriesName": "系列二",
+          "name": "C",
+          "value": 1788
+        },
+        {
+          "seriesName": "系列一",
+          "name": "D",
+          "value": 1920
+        },
+        {
+          "seriesName": "系列二",
+          "name": "D",
+          "value": 2232
+        }
+      ],
+      "dataRemark": [
+        {
+          "key": "name",
+          "map": "name",
+          "decription": "类目"
+        },
+        {
+          "key": "value",
+          "map": "value",
+          "decription": "值"
+        },
+        {
+          "key": "seriesName",
+          "map": "seriesName",
+          "decription": "系列"
+        }
+      ],
+      "openFilter": true,
+      "listenArgs": [
+        {
+          "filterName": "新建过滤器1",
+          "usageStatus": true,
+          "callbackFields": []
+        },
+        {
+          "filterName": "新建过滤器2",
+          "usageStatus": true,
+          "callbackFields": []
+        },
+        {
+          "filterName": "新建过滤器3",
+          "usageStatus": true,
+          "callbackFields": []
+        },
+        {
+          "filterName": "新建过滤器4",
+          "usageStatus": true,
+          "callbackFields": []
+        }
+      ],
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+      "url": "",
+      "path": "",
+      "time": 30,
+      "component": {
+        "width": 600,
+        "height": 300,
+        "name": "echart-stripBar",
+        "prop": "echartstripBar"
+      },
+      "option": {
+        "refresh": true,
+        "stack": false,
+        "dataSeriesName": ["系列一", "系列二"],
+        "seriesName": ["系列一", "系列二"],
+        "seriesTabsName": [
+          {
+            "name": "系列1",
+            "value": "系列一"
+          },
+          {
+            "name": "系列2",
+            "value": "系列二"
+          }
+        ],
+        "seriesColor": [
+          {
+            "type": "linear-gradient",
+            "angle": "90",
+            "colors": [
+              {
+                "color": "rgba(62,67,244,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(137,181,252,1)",
+                "per": 100
+              }
+            ]
+          },
+          {
+            "type": "linear-gradient",
+            "angle": "90",
+            "colors": [
+              {
+                "color": "rgba(62,67,244,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(61,227,251,1)",
+                "per": 100
+              }
+            ]
+          }
+        ],
+        "seriesColorpicker": [
+          "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)",
+          "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)"
+        ],
+        "seriesOpacity": [100, 100],
+        "extremeShow": [false, false],
+        "extremeType": ["max", "max"],
+        "extremeColor": [
+          {
+            "type": "linear-gradient",
+            "angle": "90",
+            "colors": [
+              {
+                "color": "rgba(62,67,244,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(61,227,251,1)",
+                "per": 100
+              }
+            ]
+          },
+          {
+            "type": "linear-gradient",
+            "angle": "90",
+            "colors": [
+              {
+                "color": "rgba(62,67,244,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(137,181,252,1)",
+                "per": 100
+              }
+            ]
+          }
+        ],
+        "extremeOpacity": [100, 100],
+        "extremeColorpicker": [
+          "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)",
+          "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)"
+        ],
+        "barGap": 50,
+        "barCategoryGap": 60,
+        "barBorderRadius": "default",
+        "gridLeft": 60,
+        "gridTop": 50,
+        "gridRight": 70,
+        "gridBottom": 60,
+        "legendShow": true,
+        "legendWidth": 800,
+        "legendHeight": 800,
+        "legendItemWidth": 20,
+        "legendItemHeight": 10,
+        "legendItemGap": 20,
+        "legendFontFamily": "siayuan-normal",
+        "legendFontSize": 16,
+        "legendColor": "rgba(255, 255, 255, 1)",
+        "legendFontStyle": "normal",
+        "legendFontWeight": "normal",
+        "legendTextLeftPadding": 0,
+        "legendSelectedMode": true,
+        "legendGrid": {
+          "top": 0,
+          "left": "center"
+        },
+        "legendOffsetX": 0,
+        "legendOffsetY": 0,
+        "xNameFontSize": 16,
+        "yNameFontSize": 16,
+        "seriesLabelShow": false,
+        "seriesLabelColor": "rgba(255,255,255,1)",
+        "seriesLabelFontFamily": "siayuan-normal",
+        "seriesLabelFontSize": 14,
+        "seriesLabelFontWeight": "normal",
+        "seriesLabelFontStyle": "normal",
+        "seriesLabelOffsetX": 0,
+        "seriesLabelOffsetY": 0,
+        "seriesLabelSuffix": "",
+        "legendOrient": "horizontal",
+        "yAxisInverse": true,
+        "xAxisInverse": false,
+        "xAxisShow": true,
+        "yAxisShow": true,
+        "xAxisLabelShow": true,
+        "yAxisLabelShow": true,
+        "yAxisType": "category",
+        "yAxisInterval": 0,
+        "yAxisRotate": 0,
+        "xAxisMin": "0",
+        "xAxisMax": "",
+        "xAxisMargin": 8,
+        "yAxisMargin": 8,
+        "xAxisFontFamily": "siayuan-normal",
+        "yAxisFontFamily": "siayuan-normal",
+        "xAxisFontSize": 18,
+        "yAxisFontSize": 18,
+        "xAxisColor": "rgba(209, 209, 209, 1)",
+        "yAxisColor": "rgba(209, 209, 209, 1)",
+        "xAxisFontStyle": "normal",
+        "yAxisFontStyle": "normal",
+        "xAxisFontWeight": "normal",
+        "yAxisFontWeight": "normal",
+        "xAxisNameShow": false,
+        "xAxisName": "单位",
+        "xAxisNameFontFamily": "siayuan-normal",
+        "xAxisNameFontSize": 14,
+        "xAxisNameColor": "rgba(209, 209, 209, 1)",
+        "xAxisNameFontStyle": "normal",
+        "xAxisNameFontWeight": "normal",
+        "xAxisNameGap": 26,
+        "xAxisLineShow": false,
+        "yAxisLineShow": true,
+        "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+        "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+        "xAxisLineWidth": 1,
+        "yAxisLineWidth": 1,
+        "xAxisLineOpacity": 0.5,
+        "yAxisLineOpacity": 0.5,
+        "xAxisTickShow": false,
+        "yAxisTickShow": true,
+        "xAxisTickColor": "#65686f",
+        "yAxisTickColor": "#65686f",
+        "xAxisTickWidth": 1,
+        "yAxisTickWidth": 1,
+        "xAxisTickLength": 2,
+        "yAxisTickLength": 2,
+        "xAxisSplitLineShow": true,
+        "yAxisSplitLineShow": false,
+        "yAxisSplitLineInterval": 0,
+        "xAxisSplitLineWidth": 1,
+        "yAxisSplitLineWidth": 1,
+        "xAxisSplitLineColor": "#383d47",
+        "yAxisSplitLineColor": "#383d47",
+        "barBackgroundColor": "rgba(255, 255, 255, 0)",
+        "dataLoop": false,
+        "dataLoopInterval": 5,
+        "dataLoopDisplayRows": 4,
+        "dataLoopRollNum": 1,
+        "dataZoomShow": false,
+        "moveHandleSize": 10,
+        "moveHandleColor": "#d2dbee",
+        "moveHandleEmphasisColor": "#d2dbee",
+        "dataZoomRight": 20,
+        "tooltipLoop": false,
+        "tooltipLoopInterval": 3,
+        "tooltipTriggerOn": true,
+        "tooltipOffsetX": 0,
+        "tooltipOffsetY": 0,
+        "tooltipBackground": "",
+        "tooltipWidth": 200,
+        "tooltipHeight": 100,
+        "tooltipPaddingTop": 0,
+        "tooltipPaddingBottom": 0,
+        "tooltipPaddingLeft": 0,
+        "tooltipPaddingRight": 0,
+        "tooltipNameFontFamily": "siayuan-normal",
+        "tooltipNameFontSize": 18,
+        "tooltipNameColor": "rgba(255, 255, 255, 1)",
+        "tooltipNameFontWeight": "normal",
+        "tooltipNameFontStyle": "normal",
+        "tooltipAlign": "left",
+        "tooltipNameOffsetX": 0,
+        "tooltipNameOffsetY": 0,
+        "tooltipArrLineHeight": 12,
+        "tooltipSeriesNameFontFamily": "siayuan-normal",
+        "tooltipSeriesNameFontSize": 18,
+        "tooltipSeriesNameColor": "rgba(255, 255, 255, 1)",
+        "tooltipSeriesNameFontWeight": "normal",
+        "tooltipSeriesNameFontStyle": "normal",
+        "tooltipValueFontFamily": "siayuan-normal",
+        "tooltipValueFontSize": 18,
+        "tooltipValueColor": "rgba(255, 255, 255, 1)",
+        "tooltipValueFontWeight": "normal",
+        "tooltipValueFontStyle": "normal",
+        "tooltipUnit": ["", ""],
+        "tooltipUnitFontFamily": "siayuan-normal",
+        "tooltipUnitFontSize": 18,
+        "tooltipUnitColor": "rgba(255, 255, 255, 1)",
+        "tooltipUnitFontWeight": "normal",
+        "tooltipUnitFontStyle": "normal",
+        "tooltipUnitOffsetX": 0,
+        "tooltipUnitOffsetY": 0,
+        "tooltipMarkerSize": 10,
+        "dataUnitName": ["系列一", "系列二"],
+        "unitTabsName": [
+          {
+            "name": "后缀1",
+            "value": "个"
+          },
+          {
+            "name": "后缀2",
+            "value": "个"
+          }
+        ],
+        "tooltipAxisPointerWidth": 1,
+        "tooltipAxisPointerColor": "rgba(255, 255, 255, 1)",
+        "refreshKey": false
+      },
+      "width": 600,
+      "height": 300,
+      "selected": false,
+      "left": 68,
+      "top": 68,
+      "showSubComponent": false,
+      "id": 1932186,
+      "zIndex": 1,
+      "terminalId": ""
+    },
+    {
+      "title": "视频",
+      "name": "视频",
+      "display": true,
+      "icon": "icon-video",
+      "img": "/img/video.20240514.png",
+      "callbackArgs": [],
+      "encodes": [],
+      "events": [],
+      "loadAnimation": {
+        "type": "none",
+        "direction": "right",
+        "duration": 1000,
+        "delay": 0,
+        "timingFunction": "linear"
+      },
+      "time": 30,
+      "dataType": 0,
+      "dataMethod": "get",
+      "dataSource": {},
+      "requestHeader": "{}",
+      "requestBody": "{}",
+      "crossOrigin": false,
+      "needCookie": false,
+      "autoRefresh": false,
+      "dataQuery": "",
+      "isLock": false,
+      "cbArgs": [],
+      "data": [
+        {
+          "cover": "",
+          "value": "version-test/assets/defaultImg/video.mp4"
+        }
+      ],
+      "dataRemark": [
+        {
+          "key": "cover",
+          "map": "cover",
+          "decription": "视频封面"
+        },
+        {
+          "key": "value",
+          "map": "value",
+          "decription": "视频地址"
+        }
+      ],
+      "unitPavenType": "",
+      "option": {
+        "cover": "",
+        "url": "version-test/assets/defaultImg/video.mp4",
+        "delayPlayTime": 0,
+        "pointerEvents": false,
+        "mixBlendMode": "normal",
+        "isBuildPlay": true,
+        "opacity": 1,
+        "controler": false,
+        "autoPlay": true,
+        "loopPlay": true,
+        "muted": true,
+        "autoHiden": false,
+        "playbackRate": 1,
+        "rotateShow": false,
+        "rotateX": 0,
+        "rotateY": 0,
+        "rotateZ": 0,
+        "gaussianBlurShow": false,
+        "gaussianBlur": 5,
+        "brightnessShow": false,
+        "brightness": 100,
+        "contrastShow": false,
+        "contrast": 100,
+        "grayscaleShow": false,
+        "grayscale": 50,
+        "hueShow": false,
+        "hue": 180,
+        "invertShow": false,
+        "invert": 50,
+        "saturateShow": false,
+        "saturate": 100,
+        "sepiaShow": false,
+        "sepia": 50,
+        "shadowShow": false,
+        "shadowColor": "rgba(255, 255, 255, 1)",
+        "shadowX": 0,
+        "shadowY": 0,
+        "shadowFuzzy": 8,
+        "shadowExtension": 0,
+        "backdropFilter": false,
+        "backdropFilterBlur": 4,
+        "backdropFilterSaturate": 100
+      },
+      "listenArgs": [],
+      "dataFormatter": "(data, callbackArgs) => {      return data  }",
+      "component": {
+        "prop": "swvideo",
+        "width": 420,
+        "height": 210,
+        "name": "sw-video"
+      },
+      "id": 3157346,
+      "left": 1257,
+      "top": 424,
+      "zIndex": 0,
+      "_draftId": 1779258784808,
+      "verticalConst": "Top",
+      "horizontalConst": "Left"
+    }
+  ],
+  "password": "",
+  "status": null,
+  "userId": 219,
+  "type": 1,
+  "expirationTime": null,
+  "groupId": -2,
+  "invitationCode": "185c8985-bc39-473d-8b49-023d880f4753",
+  "versionCode": "1",
+  "versionDesc": null,
+  "dataFilterArr": {
+    "新建过滤器1": {
+      "name": "新建过滤器1",
+      "callBack": [],
+      "callBackStatus": false,
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+      "bindComponent": [
+        {
+          "label": "条形图",
+          "id": 1932186
+        }
+      ],
+      "checked": true,
+      "notSaved": false,
+      "tempPool": {
+        "callBack": [],
+        "dataFormatter": ""
+      },
+      "show": true
+    },
+    "新建过滤器2": {
+      "name": "新建过滤器2",
+      "callBack": [],
+      "callBackStatus": false,
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+      "bindComponent": [
+        {
+          "label": "条形图",
+          "id": 1932186
+        }
+      ],
+      "checked": true,
+      "notSaved": false,
+      "tempPool": {
+        "callBack": [],
+        "dataFormatter": ""
+      },
+      "show": true
+    },
+    "新建过滤器3": {
+      "name": "新建过滤器3",
+      "callBack": [],
+      "callBackStatus": false,
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+      "bindComponent": [
+        {
+          "label": "条形图",
+          "id": 1932186
+        }
+      ],
+      "checked": true,
+      "notSaved": false,
+      "tempPool": {
+        "callBack": [],
+        "dataFormatter": ""
+      },
+      "show": true
+    },
+    "新建过滤器4": {
+      "name": "新建过滤器4",
+      "callBack": [],
+      "callBackStatus": false,
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+      "bindComponent": [
+        {
+          "label": "条形图",
+          "id": 1932186
+        }
+      ],
+      "checked": true,
+      "notSaved": false,
+      "tempPool": {
+        "callBack": [],
+        "dataFormatter": ""
+      },
+      "show": true
+    }
+  },
+  "aniFrameSet": "{}",
+  "statusAnimation": "{}",
+  "hasPassword": null,
+  "hasExpirationTime": null,
+  "encodedControl": null
+}

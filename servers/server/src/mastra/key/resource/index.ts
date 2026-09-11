@@ -1,0 +1,21 @@
+export const figmaKey = [
+  "figd_mwhv9gqxheIELlH3-ZwAMQh0BG9tV-x-1L3CdB2H",
+  "figd_tDzduC4q1FrUTxPiQ0njCMvQv4jsoNJebtMezLOc",
+  "figd_i1iFn2HDBT21_AgmC6Wv9cvk1Sez2SKheNOptRZj",
+  "figd_Cftc4xBYUmi9mrcOJZyAzhg2pdkpC_uz7RM9weGf",
+  "figd_ND2ljdyYLvYSEecmLreczq3PpGVOdDTiXvhOi0Pq",
+  "figd_qXFSFj6WnPd-xAN1X9cZMf3xRSJ2y3xFqwzscF5N",
+  "figd_221ddZ6ZOxmBNBxIIreR6J-aMZNW_2uaEetxbnAr",
+  "figd_v1cNf6qVVDxNiN4VmHlJaUYxxTVboOHmWd9Ajmq0",
+  "figd_watS-iRv0_mWTuWXn8IdSCqm2ZaOOHSIi1tmTs24",
+  "figd_L_ICP5l0zuEnAbNxdlI-e7Y67BnrqsT5nnsXcC7F",
+  "figd_CqGRpA4-li03KQM34pBwVbtdgOZDLGrT53aPfqNI",
+  "figd_BEmgQJkzlSdIqyL7TNEACbV6eWUzwRMcNoo1szJ0",
+  "figd_T0x1Jik5eAVhwiL7HAykxrGOCkPSlPC60GiC0gqZ",
+  "figd_3Yk4xI3EOqb3Nh9nmNZzUz3hbQtLmxG8w04e91Ka",
+  "figd_dLa4Ou33tnRPQEMzN-DUUl61vhrYqQ0LjBGX30iE",
+  "figd_ObcR-fpv49R6vXI6G-9bqTWD4RFpcg-iqPQ12xj-",
+  "figd_OIfq8hW0jPvWm_GiZsF_88oWHTGrokksreEB-pU7",
+  "figd_-wF0Sp-_pmigG7WXvGAvuMXqPfWjYzWFnNlp_7vM",
+  "figd_daDTgmRgt6zgPX_Biq_MvEgteJy6KxRyRYQb3-jK"
+];

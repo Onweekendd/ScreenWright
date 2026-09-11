@@ -1,0 +1,35 @@
+.template-add {
+  width: 100%;
+  height: calc(100% - 46px);
+  cursor: pointer;
+  .content__info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background: url("@/assets/image/bg/default_content_add.png") no-repeat center center;
+    background-size: 100% 100%;
+  }
+  .content__main {
+    font-size: 12px;
+    width: 100%;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 10px;
+    color: #bcc9d4;
+    background: #1d262e;
+    position: absolute;
+    bottom: 0;
+    .content__name {
+      width: 150px !important;
+      padding: 0 5px;
+      line-height: 28px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+  }
+}

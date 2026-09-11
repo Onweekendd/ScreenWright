@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "id": 51,
+    "name": "搜索框组件",
+    "prop": "sw-search",
+    "componentName": "sw-search",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/search.20240514.png"
+  },
+  "config": {
+    "title": "搜索框组件",
+    "name": "搜索框组件",
+    "display": true,
+    "icon": "icon-search",
+    "img": "/img/search.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 450,
+      "height": 48,
+      "name": "sw-search",
+      "prop": "sw-search"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=>{\r\nreturn data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "value": ""
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "option": {
+      "isFont": true,
+      "textIndent": 10,
+      "fontSize": 24,
+      "fontWeight": "",
+      "fontStyle": "",
+      "fontFamily": "sans-serif",
+      "fontColor": "rgba(255,255,255,1)",
+      "fontSizeTip": 24,
+      "fontWeightTip": "",
+      "fontStyleTip": "",
+      "fontFamilyTip": "sans-serif",
+      "fontColorTip": "rgba(255,255,255,0.1)",
+      "placeholder": "关键字",
+      "isBorder": true,
+      "borderWidth": 2,
+      "borderColor": "rgba(138,86,232,0.9)",
+      "borderRadius": 50,
+      "isBackground": true,
+      "backgroundColor": "rgba(24,144,255,0.2)",
+      "backgroundImage": "",
+      "backgroundImageType": "100%100%",
+      "backgroundType": "color",
+      "isButton": true,
+      "buttonPosition": "right",
+      "buttonIconSize": 16,
+      "buttonIconColor": "rgba(255,255,255,0.8)",
+      "buttonWidth": 60,
+      "backgroundColorBtn": "rgba(139,88,231,0.6)",
+      "backgroundImageBtn": "",
+      "backgroundImageTypeBtn": "100%100%",
+      "backgroundTypeBtn": "color",
+      "buttonIconType": "default",
+      "buttonIcon": null,
+      "buttonIconWidth": 30,
+      "buttonIconHeight": 30
+    }
+  },
+  "template": [
+    {
+      "value": ""
+    }
+  ]
+}

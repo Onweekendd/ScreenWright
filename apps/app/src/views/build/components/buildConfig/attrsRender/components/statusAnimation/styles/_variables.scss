@@ -1,0 +1,61 @@
+// 状态动画组件的CSS变量定义
+// Status Animation Components CSS Variables
+
+:root {
+  // === 主要颜色变量 ===
+  // Primary Color Gradients
+  --primary-gradient: linear-gradient(135deg, #8b58e7 0%, #642cff 100%);
+  --primary-light: linear-gradient(135deg, #a578ea 0%, #7d4fff 100%);
+  --primary-dark: linear-gradient(135deg, #6d42c4 0%, #4a1faa 100%);
+  --primary-deep: linear-gradient(135deg, #503399 0%, #361d77 100%);
+  --primary-pale: linear-gradient(135deg, #b89ff0 0%, #9b7aff 100%);
+
+  // === 次要颜色变量 ===
+  // Secondary Color Gradients
+  --secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --group-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  // === 背景颜色变量 ===
+  // Background Colors
+  --dark-bg: #1a1b24;
+  --section-bg: #2e313f;
+  --card-bg: #363848;
+  --editor-bg: #2e313f;
+  --cell-bg: #2e313f;
+  --value-cell-bg: #232630;
+  --group-bg: #3a3d4f;
+  --component-header-bg: rgba(113, 68, 155, 0.8);
+
+  // === 交互颜色变量 ===
+  // Interactive Colors
+  --hover-bg: rgba(139, 88, 231, 0.1);
+  --highlight-bg: rgba(139, 88, 231, 0.15);
+  --focus-border: rgba(139, 88, 231, 0.6);
+
+  // === 边框颜色变量 ===
+  // Border Colors
+  --border-color: rgba(139, 88, 231, 0.15);
+  --border-color-alt: rgba(255, 255, 255, 0.1);
+
+  // === 文本颜色变量 ===
+  // Text Colors
+  --text-primary: #ffffff;
+  --text-secondary: #ababab;
+
+  // === 阴影变量 ===
+  // Shadow Variables
+  --shadow-light: 0 2px 8px rgba(139, 88, 231, 0.15);
+  --shadow-heavy: 0 8px 32px rgba(139, 88, 231, 0.25);
+  --shadow-component: 0 4px 16px rgba(139, 88, 231, 0.2);
+  --shadow-property: 0 4px 12px rgba(139, 88, 231, 0.2);
+  --shadow-group: 0 4px 16px rgba(102, 126, 234, 0.2);
+  --shadow-focus: 0 0 0 3px rgba(139, 88, 231, 0.2);
+
+  // === 特殊阴影变量 ===
+  // Special Shadow Variables (for specific components)
+  --shadow-light-alt: 0 2px 8px rgba(139, 88, 231, 0.1);
+  --shadow-light-minimal: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-light-default: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-heavy-alt: 0 8px 32px rgba(139, 88, 231, 0.3);
+}

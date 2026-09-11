@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "id": 75,
+    "name": "分组",
+    "prop": "sw-folder",
+    "componentName": "sw-folder",
+    "first_level_menu": "",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "分组",
+    "name": "分组",
+    "display": true,
+    "isLock": false,
+    "children": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "component": {
+      "width": 800,
+      "height": 500,
+      "name": "sw-folder",
+      "prop": "sw-folder"
+    },
+    "isExpand": true,
+    "isOuter": false,
+    "option": {
+      "transform": false,
+      "perspective": 0,
+      "originX": 50,
+      "originY": 50,
+      "rotateX": 0,
+      "rotateY": 0,
+      "rotateZ": 0,
+      "skewX": 0,
+      "skewY": 0,
+      "scaleX": 100,
+      "scaleY": 100,
+      "translateX": 0,
+      "translateY": 0,
+      "translateZ": 0,
+      "originGrid": {
+        "left": "center",
+        "top": "center"
+      },
+      "backdropFilter": false,
+      "backdropFilterBlur": 4,
+      "backdropFilterSaturate": 100
+    }
+  },
+  "template": []
+}

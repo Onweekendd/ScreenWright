@@ -1,0 +1,1 @@
+# 这些类型的组件是基于 ../../component 的基础上，二次封装其主要功能是带有el-formItem 或者 FtCollapseItem,如果不需要 el-formItem 或者 FtCollapseItem 可自行调用 ../../component 下的配置组件

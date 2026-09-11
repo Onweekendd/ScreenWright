@@ -1,0 +1,66 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    /** https://cn.vitejs.dev/guide/features.html#typescript-compiler-options */
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    /** TS 严格模式 */
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    /** https://cn.vitejs.dev/guide/features.html#typescript-compiler-options */
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom", "dom.asynciterable"],
+    "skipLibCheck": true,
+    "types": [
+      "node",
+      "vite/client",
+      /** Element Plus 的 Volar 插件支持 */
+      "element-plus/global"
+    ],
+    /** baseUrl 用来告诉编译器到哪里去查找模块，使用非相对模块时必须配置此项 */
+    "baseUrl": ".",
+    /** 非相对模块导入的路径映射配置，根据 baseUrl 配置进行路径计算 */
+    "paths": {
+      "@/*": ["src/*"],
+      // 与 vite.config.ts 的 resolve.alias 保持一致：测试期直连 packages/material 源码，
+      // 类型检查也需解析这些虚构别名，否则 vue-tsc 报 TS2307（@material 非真实 npm 包）
+      "@material/*": ["../../packages/material/src/*"],
+      "@editor/*": ["../../packages/material/src/editor-ui/*"]
+    },
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "types/**/*.d.ts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "src/build/dev.js"
+  ],
+  /** 编译器默认排除的编译文件 */
+  "exclude": [
+    "node_modules",
+    "@screenwright/server",
+    "dist",
+    "src/views/code/template",
+    "src/views/code/libs",
+    "src/assets/tinymce/**/*.js",
+    "src/components/ScreenwrightExtendsComponent/FtDigitalHuman/AiChatDialog/recorder-core.js",
+    "src/components/ScreenwrightColorPicker/xncolorpicker.min.js",
+    "src/components/ScreenwrightInteractive/components/ftVoiceControl/recorder-core.js",
+    "src/components/ScreenwrightSceneComponent/component/ThreeScene/mapBox/index.js",
+    "src/components/SwSheetExcel/x-data-spreadsheet/**/*.js",
+    "src/views/build/components/buildConfig/textComponent/textConfig/components/TextFtRichTextConfig/plugins_letterspacing.js",
+    "src/views/view/exportEntry/sdk/global.ts"
+  ]
+}

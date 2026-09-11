@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "id": 52,
+    "name": "时间轴",
+    "prop": "swTimerShaft",
+    "componentName": "sw-timerShaft",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/timline.20240514.png"
+  },
+  "config": {
+    "title": "时间轴",
+    "name": "时间轴",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/timline.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 500,
+      "height": 70,
+      "name": "sw-timerShaft",
+      "prop": "swTimerShaft"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "dataRemark": [
+      {
+        "key": "label",
+        "map": "label",
+        "decription": "年份"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "data": [
+      {
+        "label": 2019,
+        "value": 2019
+      },
+      {
+        "label": 2020,
+        "value": 2020
+      },
+      {
+        "label": 2021,
+        "value": 2021
+      },
+      {
+        "label": 2022,
+        "value": 2022
+      }
+    ],
+    "option": {
+      "active": 1,
+      "size": 4,
+      "autoPlay": false,
+      "loop": false,
+      "isPrewrap": false,
+      "interval": 5,
+      "iconSize": 24,
+      "iconLeft": 0,
+      "arrowLeft": 26,
+      "arrowRight": 26,
+      "margin": 50,
+      "lineColor": "rgba(21, 129, 131, 1)",
+      "lineHeight": 1,
+      "defaultObj": {
+        "textTranslateX": 0,
+        "textTranslateY": 0,
+        "isBorder": true,
+        "cursorSize": 6,
+        "borderWidth": 2,
+        "borderColor": "rgba(160, 169, 184, 0.3)",
+        "backgroundColor": "rgba(15, 22, 34, 0.6)",
+        "fontSize": 16,
+        "fontWeight": false,
+        "cursorColor": "rgba(0, 252, 237, 1)",
+        "fontStyle": false,
+        "fontFamily": "sans-serif",
+        "fontColor": "#00fced",
+        "isTextShadow": true,
+        "textShadow": {
+          "x": 0,
+          "y": 0,
+          "blur": 10,
+          "color": "#00fced",
+          "extend": 0
+        }
+      },
+      "activeObj": {
+        "textTranslateX": 0,
+        "textTranslateY": 0,
+        "isBorder": true,
+        "borderWidth": 2,
+        "borderColor": "rgba(245, 195, 74, 1)",
+        "cursorColor": "rgba(255, 255, 255, 1)",
+        "fontSize": 16,
+        "cursorSize": 10,
+        "fontWeight": false,
+        "fontStyle": false,
+        "fontFamily": "sans-serif",
+        "fontColor": "#fde44c",
+        "isTextShadow": true,
+        "textShadow": {
+          "x": 0,
+          "y": 0,
+          "blur": 10,
+          "color": "#fde44c",
+          "extend": 0
+        }
+      }
+    }
+  },
+  "template": [
+    {
+      "label": 2019,
+      "value": 2019
+    },
+    {
+      "label": 2020,
+      "value": 2020
+    },
+    {
+      "label": 2021,
+      "value": 2021
+    },
+    {
+      "label": 2022,
+      "value": 2022
+    }
+  ]
+}

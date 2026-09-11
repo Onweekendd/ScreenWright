@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "id": 110,
+    "name": "项目模板beta",
+    "prop": "map-project",
+    "componentName": "map-project",
+    "first_level_menu": "地图",
+    "second_level_menu": "",
+    "thumbnail": "/img/project.20240927.png"
+  },
+  "config": {
+    "title": "项目模板beta",
+    "name": "项目模板beta",
+    "display": true,
+    "isLock": false,
+    "icon": "icon-table",
+    "img": "/img/project.20240927.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "dataType": 0,
+    "data": [],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "listenArgs": [],
+    "events": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "unitPavenType": "percent",
+    "component": {
+      "width": 100,
+      "height": 100,
+      "type": "map",
+      "name": "map-project",
+      "prop": "map-project"
+    },
+    "option": {
+      "version": "1",
+      "cover": "",
+      "id": "",
+      "funcList": [],
+      "apiList": [],
+      "iframeUrl": "",
+      "projectZip": "project.json",
+      "isInitLoading": false,
+      "configJson": null
+    }
+  },
+  "template": []
+}

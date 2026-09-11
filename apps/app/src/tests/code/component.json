@@ -1,0 +1,73 @@
+{
+  "name": "自定义组件",
+  "title": "自定义组件",
+  "display": true,
+  "icon": "icon-bar",
+  "img": "/img/vue-part.33ccd601.png",
+  "callbackArgs": [],
+  "cbArgs": [],
+  "events": [],
+  "loadAnimation": {
+    "type": "none",
+    "opacityOpen": false,
+    "timingFunction": "linear",
+    "direction": "right",
+    "duration": 1000,
+    "delay": 0
+  },
+  "listenArgs": [],
+  "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+  "dataType": 0,
+  "dataSource": {},
+  "requestHeader": "{}",
+  "requestBody": "{}",
+  "crossOrigin": false,
+  "needCookie": false,
+  "autoRefresh": false,
+  "dataQuery": "",
+  "isLock": false,
+  "dataMethod": "get",
+  "data": [{ "value": "欢迎使用新BI自定义组件" }],
+  "dataRemark": [
+    { "key": "name", "map": "name", "decription": "类目" },
+    { "key": "value", "map": "value", "decription": "值" }
+  ],
+  "echartFormatter": "(data)=>{\nconsole.log(data)\nreturn {}",
+  "url": "./bar",
+  "time": 30,
+  "component": { "width": 600, "height": 300, "name": "custom-component", "prop": "custom-component" },
+  "option": {
+    "codeLibraryIds": [],
+    "user": {
+      "src/App.vue": {
+        "userMain": true,
+        "code": "<script setup lang=\"ts\">\r\nimport { version as epVersion } from \"element-plus\"\r\nimport { ref, version as vueVersion } from \"vue\"\r\n\r\nconst msg = ref(\"Hello World!\")\r\n</script>\r\n\r\n<template>\r\n  <h1>{{ msg }}</h1>\r\n  <el-input v-model=\"msg\" />\r\n\r\n  <p>Element Plus {{ epVersion }} + Vue {{ vueVersion }}</p>\r\n</template>\r\n"
+      },
+      "global.css": {
+        "code": "h1 {\r\n  color: red;\r\n}\r\n",
+        "compiled": {
+          "js": "",
+          "css": "h1 {\r\n  color: red;\r\n}\r\n"
+        }
+      }
+    },
+    "system": {
+      "tsconfig.json": {
+        "code": "{\r\n  \"compilerOptions\": {\r\n    \"target\": \"ESNext\",\r\n    \"jsx\": \"preserve\",\r\n    \"module\": \"ESNext\",\r\n    \"moduleResolution\": \"Bundler\",\r\n    \"types\": [\"element-plus/global.d.ts\"],\r\n    \"allowImportingTsExtensions\": true,\r\n    \"allowJs\": true,\r\n    \"checkJs\": true\r\n  },\r\n  \"vueCompilerOptions\": {\r\n    \"target\": 3.3\r\n  }\r\n}\r\n"
+      },
+      "src/PlaygroundMain.vue": {
+        "systemMain": true,
+        "code": "<script setup>\r\nimport App from \"./App.vue\"\r\nimport { setupElementPlus } from \"./element-plus.js\"\r\nsetupElementPlus()\r\n</script>\r\n\r\n<template>\r\n  <App />\r\n</template>\r\n"
+      },
+      "import-map.json": {
+        "code": "{\n  \"imports\": {\n    \"vue\": \"/codeLibs/@vue/@3.5.21/vue.esm-browser.prod.js\",\n    \"@vue/shared\": \"/codeLibs/@vue-shared/@3.5.21/shared.esm-bundler.js\",\n    \"element-plus\": \"/codeLibs/element-plus/@2.11.2/index.full.min.mjs\"\n  },\n  \"scopes\": {}\n}"
+      },
+      "src/element-plus.js": {
+        "code": "import ElementPlus from 'element-plus'\r\nimport { getCurrentInstance } from 'vue'\r\n\r\nlet installed = false\r\nawait loadStyle()\r\n\r\nexport function setupElementPlus() {\r\n  if (installed) return\r\n  const instance = getCurrentInstance()\r\n  instance.appContext.app.use(ElementPlus)\r\n  installed = true\r\n}\r\n\r\nexport function loadStyle() {\r\n  const styles = ['https://cdn.jsdelivr.net/npm/element-plus@2.11.2/dist/index.css', 'https://cdn.jsdelivr.net/npm/element-plus@2.11.2/theme-chalk/dark/css-vars.css'].map((style) => {\r\n    return new Promise((resolve, reject) => {\r\n      const link = document.createElement('link')\r\n      link.rel = 'stylesheet'\r\n      link.href = style\r\n      link.addEventListener('load', resolve)\r\n      link.addEventListener('error', reject)\r\n      document.body.append(link)\r\n    })\r\n  })\r\n  return Promise.allSettled(styles)\r\n}"
+      }
+    }
+  },
+  "left": 0,
+  "top": 0,
+  "showSubComponent": false
+}

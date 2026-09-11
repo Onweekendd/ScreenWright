@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "id": 14,
+    "name": "漏斗图",
+    "prop": "echartfunnel",
+    "componentName": "echart-funnel",
+    "first_level_menu": "图表",
+    "second_level_menu": "其他",
+    "thumbnail": "/img/funnel.20240514.png"
+  },
+  "config": {
+    "title": "漏斗图",
+    "name": "漏斗图",
+    "display": true,
+    "icon": "icon-funnel",
+    "img": "/img/funnel.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "time": 30,
+    "url": "./funnel",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "value": 200
+      },
+      {
+        "seriesName": "系列二",
+        "value": 150
+      },
+      {
+        "seriesName": "系列三",
+        "value": 100
+      },
+      {
+        "seriesName": "系列四",
+        "value": 50
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 500,
+      "height": 250,
+      "name": "echart-funnel",
+      "prop": "echartfunnel"
+    },
+    "option": {
+      "radius": true,
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二",
+        "系列三",
+        "系列四"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二",
+        "系列三",
+        "系列四"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        },
+        {
+          "name": "系列3",
+          "value": "系列三"
+        },
+        {
+          "name": "系列4",
+          "value": "系列四"
+        }
+      ],
+      "seriesColor": [
+        "rgba(62,72,244,1)",
+        "rgba(62,135,244,1)",
+        "rgba(62,211,244,1)",
+        "rgba(62,233,244,1)"
+      ],
+      "barGap": 70,
+      "barCategoryGap": 60,
+      "gridLeft": 80,
+      "gridTop": 40,
+      "gridRight": 80,
+      "gridBottom": 10,
+      "legendShow": true,
+      "legendWidth": 800,
+      "legendHeight": 800,
+      "legendItemWidth": 12,
+      "legendItemHeight": 12,
+      "legendItemGap": 20,
+      "legendFontFamily": "siayuan-normal",
+      "legendFontSize": 12,
+      "legendColor": "rgba(255, 255, 255, 1)",
+      "legendFontStyle": "normal",
+      "legendFontWeight": "normal",
+      "legendTextLeftPadding": 10,
+      "legendSelectedMode": true,
+      "legendGrid": {
+        "top": 0,
+        "left": "center"
+      },
+      "legendOffsetX": 0,
+      "legendOffsetY": 0,
+      "seriesLabelShow": true,
+      "seriesLabelColor": "rgba(255,255,255,1)",
+      "seriesLabelFontFamily": "siayuan-normal",
+      "seriesLabelFontSize": 12,
+      "seriesLabelFontWeight": "normal",
+      "seriesLabelFontStyle": "normal",
+      "legendOrient": "horizontal",
+      "seriesOrient": "vertical",
+      "seriesSort": "descending",
+      "seriesGap": 0,
+      "seriesFunnelAlign": "center",
+      "labelPosition": "center",
+      "borderShow": false,
+      "borderColor": "rgba(255,255,255,1)",
+      "borderWidth": 1
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "value": 200
+    },
+    {
+      "seriesName": "系列二",
+      "value": 150
+    },
+    {
+      "seriesName": "系列三",
+      "value": 100
+    },
+    {
+      "seriesName": "系列四",
+      "value": 50
+    }
+  ]
+}

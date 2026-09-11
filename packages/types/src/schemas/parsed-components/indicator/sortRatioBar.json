@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "id": 99,
+    "name": "分类占比条",
+    "prop": "sortRatioBar",
+    "componentName": "sortRatioBar",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/sortRatioBar.2e13315f.png"
+  },
+  "config": {
+    "title": "分类占比条",
+    "name": "分类占比条",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/sortRatioBar.2e13315f.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 500,
+      "height": 12,
+      "name": "sortRatioBar",
+      "prop": "sortRatioBar"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "name": "剩余数",
+        "value": 20
+      },
+      {
+        "name": "使用数",
+        "value": 43
+      },
+      {
+        "name": "故障数",
+        "value": 20
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "系列"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "option": {
+      "globalConfig": {
+        "bgColor": "rgba(255,255,255,1)",
+        "interval": 10
+      },
+      "textConfig": {
+        "translateX": 0,
+        "translateY": -10,
+        "tagFontFamily": "Alibaba-PuHuiTi-Regular",
+        "tagFontSize": 18,
+        "tagColor": "rgba(255, 255, 255, 0.7)",
+        "tagFontStyle": "normal",
+        "tagFontWeight": "normal",
+        "tagLetterSpacing": 0,
+        "tagLineHeight": 18,
+        "indexTranslateX": 3,
+        "indexTranslateY": 0,
+        "isUsed": true,
+        "tagShow": true,
+        "indexShow": true,
+        "decimalPlace": 0
+      },
+      "seriesList": [
+        {
+          "seriesKeyValue": "剩余数",
+          "seriesBgColor": {
+            "type": "linear-gradient",
+            "angle": "90",
+            "colors": [
+              {
+                "color": "rgba(0,245,171,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(196,245,49,0.98)",
+                "per": 100
+              }
+            ]
+          },
+          "seriesColor": "rgba(172,241,67,1)",
+          "seriesOpacity": 100,
+          "seriesFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesFontSize": 18,
+          "seriesLineHeight": 18,
+          "seriesLetterSpacing": 0,
+          "seriesFontStyle": "normal",
+          "seriesFontWeight": "normal",
+          "seriesTranslateX": 0,
+          "seriesTranslateY": 0,
+          "unitText": "个",
+          "unitTranslateX": 2,
+          "unitTranslateY": 0,
+          "isUnitCustomStyle": false,
+          "unitFontFamily": "Alibaba-PuHuiTi-Regular",
+          "unitFontSize": 20,
+          "unitLineHeight": 20,
+          "unitLetterSpacing": 0,
+          "unitColor": "rgba(255,255,255,1)",
+          "unitFontStyle": "italic",
+          "unitFontWeight": "bolder",
+          "seriesName": "系列1"
+        },
+        {
+          "seriesKeyValue": "使用数",
+          "seriesBgColor": {
+            "type": "linear-gradient",
+            "angle": "90",
+            "colors": [
+              {
+                "color": "rgba(245,226,81,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(247,178,49,0.98)",
+                "per": 100
+              }
+            ]
+          },
+          "seriesColor": "rgba(239,208,53,1)",
+          "seriesOpacity": 100,
+          "seriesFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesFontSize": 18,
+          "seriesLineHeight": 18,
+          "seriesLetterSpacing": 0,
+          "seriesFontStyle": "normal",
+          "seriesFontWeight": "normal",
+          "seriesTranslateX": 0,
+          "seriesTranslateY": 0,
+          "unitText": "个",
+          "unitTranslateX": 2,
+          "unitTranslateY": 0,
+          "isUnitCustomStyle": false,
+          "unitFontFamily": "Alibaba-PuHuiTi-Regular",
+          "unitFontSize": 20,
+          "unitLineHeight": 20,
+          "unitLetterSpacing": 0,
+          "unitColor": "rgba(255,255,255,1)",
+          "unitFontStyle": "italic",
+          "unitFontWeight": "bolder",
+          "seriesName": "系列2"
+        },
+        {
+          "seriesKeyValue": "故障数",
+          "seriesBgColor": {
+            "type": "linear-gradient",
+            "angle": "90",
+            "colors": [
+              {
+                "color": "rgba(249,139,43,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(249,38,38,1)",
+                "per": 100
+              }
+            ]
+          },
+          "seriesColor": "rgba(243,89,29,1)",
+          "seriesOpacity": 100,
+          "seriesFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesFontSize": 18,
+          "seriesLineHeight": 18,
+          "seriesLetterSpacing": 0,
+          "seriesFontStyle": "normal",
+          "seriesFontWeight": "normal",
+          "seriesTranslateX": 0,
+          "seriesTranslateY": 0,
+          "unitText": "个",
+          "unitTranslateX": 2,
+          "unitTranslateY": 0,
+          "isUnitCustomStyle": false,
+          "unitFontFamily": "Alibaba-PuHuiTi-Regular",
+          "unitFontSize": 20,
+          "unitLineHeight": 20,
+          "unitLetterSpacing": 0,
+          "unitColor": "rgba(255,255,255,1)",
+          "unitFontStyle": "italic",
+          "unitFontWeight": "bolder",
+          "seriesName": "系列3"
+        }
+      ]
+    }
+  },
+  "template": [
+    {
+      "name": "剩余数",
+      "value": 20
+    },
+    {
+      "name": "使用数",
+      "value": 43
+    },
+    {
+      "name": "故障数",
+      "value": 20
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "createdBy": "onweekend",
+  "createdTime": "2025-09-01 10:07:25",
+  "updatedBy": "onweekend",
+  "updatedTime": "2025-09-01 10:07:46",
+  "id": 24336,
+  "moduleId": null,
+  "config": "[1932186]",
+  "name": "1234",
+  "detail": {
+    "width": "1920",
+    "height": "1080",
+    "scale": 1,
+    "initLoad": false,
+    "backgroundImage": "",
+    "backgroundColor": "rgba(35, 38, 48, 1)",
+    "showBackgroundImage": false,
+    "showScreenAdaptation": false,
+    "adaptationNorm": "default",
+    "adaptationType": 2,
+    "showScreenFilter": false,
+    "screenFilterInfo": {
+      "gaussianBlur": 0,
+      "brightness": 100,
+      "contrast": 100,
+      "grayscale": 0,
+      "hue": 0,
+      "saturate": 100,
+      "invert": 0,
+      "sepia": 0
+    },
+    "showWaterMark": true,
+    "waterMark": {
+      "text": "Screenwright凡拓数创",
+      "fontFamily": "sans-serif",
+      "fontStyle": "normal",
+      "fontWeight": "normal",
+      "fontSize": 30,
+      "color": "rgba(100,100,100,0.5)"
+    },
+    "gridDistance": 1,
+    "query": {},
+    "controlWebsocketUrl": "",
+    "heartbeatInterval": 15,
+    "terminalEnableArr": {},
+    "name": "ws连接测试"
+  },
+  "backgroundUrl": null,
+  "layers": [
+    {
+      "title": "数据容器",
+      "name": "数据容器",
+      "display": true,
+      "icon": "icon-tabs",
+      "img": "/img/dataContainer.png",
+      "callbackArgs": [],
+      "events": [],
+      "encodes": [],
+      "loadAnimation": {
+        "type": "none",
+        "opacityOpen": false,
+        "timingFunction": "linear",
+        "direction": "right",
+        "duration": 1000,
+        "delay": 0
+      },
+      "component": {
+        "width": 400,
+        "height": 200,
+        "name": "sw-dataContainer",
+        "prop": "sw-dataContainer"
+      },
+      "cbArgs": [
+        {
+          "id": "callback_VWvQHLri-J0i1-4n5R-8cvL-xJ1ystJymm9b",
+          "name": "回调",
+          "type": "object",
+          "method": "default",
+          "value": {
+            "origin": {
+              "displayName": "字段值",
+              "type": "input",
+              "value": "value"
+            },
+            "target": {
+              "displayName": "变量名",
+              "type": "input",
+              "value": "cbVal"
+            }
+          }
+        }
+      ],
+      "listenArgs": [
+        {
+          "filterName": "新建过滤器",
+          "usageStatus": true,
+          "callbackFields": []
+        }
+      ],
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+      "dataType": 4,
+      "dataSource": {
+        "createdBy": "onweekend",
+        "createdTime": "2025-06-24 16:43:23",
+        "updatedBy": "onweekend",
+        "updatedTime": "2025-06-25 10:05:34",
+        "id": 554,
+        "userId": 219,
+        "type": 2,
+        "name": "WS moclk 2",
+        "description": "",
+        "config": "{\"baseUrl\":\"ws://127.0.0.1:8081\",\"type\":\"websocket\"}",
+        "dataGroupId": null,
+        "layerIds": "[]",
+        "value": 554,
+        "label": "WS moclk 2"
+      },
+      "websocketUrl": "ws://127.0.0.1:8081",
+      "isWebsocket": true,
+      "data": [
+        {
+          "text": "数据容器"
+        }
+      ],
+      "dataRemark": [
+        {
+          "key": "text",
+          "map": "text",
+          "decription": "描述"
+        }
+      ],
+      "option": {
+        "text": "",
+        "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+        "fontSize": 32,
+        "color": "rgba(255, 255, 255, 1)",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)"
+      },
+      "id": 2706210,
+      "left": 0,
+      "top": 0,
+      "zIndex": 1,
+      "openFilter": true
+    },
+    {
+      "title": "文本框",
+      "name": "文本框",
+      "display": true,
+      "icon": "icon-text",
+      "img": "/img/title.20240514.png",
+      "encodes": [],
+      "loadAnimation": {
+        "type": "none",
+        "opacityOpen": false,
+        "timingFunction": "linear",
+        "direction": "right",
+        "duration": 1000,
+        "delay": 0
+      },
+      "time": 30,
+      "dataType": 0,
+      "dataMethod": "get",
+      "dataSource": {},
+      "requestHeader": "{}",
+      "requestBody": "{}",
+      "crossOrigin": false,
+      "needCookie": false,
+      "autoRefresh": false,
+      "dataQuery": "",
+      "isLock": false,
+      "listenArgs": [
+        {
+          "filterName": "新建过滤器2",
+          "usageStatus": true,
+          "callbackFields": ["cbValue"]
+        }
+      ],
+      "dataFormatter": "(data,callbackArgs)=>{\r\n return data\r\n}",
+      "data": [
+        {
+          "value": "我是一个标题"
+        }
+      ],
+      "dataRemark": [
+        {
+          "key": "value",
+          "map": "value",
+          "decription": "文本"
+        }
+      ],
+      "component": {
+        "width": 307,
+        "height": 118,
+        "name": "sw-text",
+        "prop": "swtext"
+      },
+      "option": {
+        "iswrap": false,
+        "writingMode": "horizontal-tb",
+        "fontFamily": "siayuan-normal",
+        "fontSize": 32,
+        "color": "rgba(255,255,255,1)",
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "lineHeight": 40,
+        "selectedTextType": "normal",
+        "selectedTextColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+        "selectedTextOpacity": 100,
+        "textAlign": "center",
+        "textAlignVertical": "center",
+        "textOrientation": "mixed",
+        "split": 0,
+        "backgroundColor": "rgba(255,255,255,0)",
+        "shadowShow": false,
+        "shadowColor": "rgba(255,255,255,1)",
+        "shadowX": 0,
+        "shadowY": 0,
+        "shadowFuzzy": 8,
+        "shadowExtension": 0,
+        "opacity": 1,
+        "rotateX": 0,
+        "rotateY": 0,
+        "rotateZ": 0,
+        "textAnimationTiming": 100,
+        "textAnimationDelay": 0
+      },
+      "id": 2706212,
+      "left": 610,
+      "top": 402,
+      "zIndex": 2,
+      "openFilter": true
+    }
+  ],
+  "password": "",
+  "status": null,
+  "userId": 219,
+  "type": 1,
+  "expirationTime": null,
+  "groupId": -2,
+  "invitationCode": "185c8985-bc39-473d-8b49-023d880f4753",
+  "versionCode": "1",
+  "versionDesc": null,
+  "dataFilterArr": {
+    "新建过滤器": {
+      "name": "新建过滤器",
+      "callBack": [],
+      "callBackStatus": false,
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+      "bindComponent": [
+        {
+          "label": "数据容器",
+          "id": 2706210
+        }
+      ],
+      "checked": true,
+      "notSaved": false,
+      "tempPool": {
+        "callBack": [],
+        "dataFormatter": ""
+      },
+      "show": true
+    },
+    "新建过滤器2": {
+      "name": "新建过滤器2",
+      "callBack": ["cbValue"],
+      "callBackStatus": false,
+      "dataFormatter": "(data, callbackArgs) => {\r\n    return callbackArgs.cbValue ?\r\n        [\r\n            {\r\n                \"value\": callbackArgs.cbValue\r\n            }\r\n        ] : data\r\n}",
+      "bindComponent": [
+        {
+          "label": "文本框",
+          "id": 2706212
+        }
+      ],
+      "checked": true,
+      "notSaved": false,
+      "tempPool": {
+        "callBack": [],
+        "dataFormatter": ""
+      },
+      "show": true
+    }
+  },
+  "aniFrameSet": "{}",
+  "statusAnimation": "{}",
+  "hasPassword": null,
+  "hasExpirationTime": null,
+  "encodedControl": null
+}

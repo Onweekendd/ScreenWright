@@ -1,0 +1,261 @@
+{
+  "meta": {
+    "id": 26,
+    "name": "细长柱状图",
+    "prop": "echartthinBar",
+    "componentName": "echart-thinBar",
+    "first_level_menu": "图表",
+    "second_level_menu": "项目",
+    "thumbnail": "/img/rankBar2.20240514.png"
+  },
+  "config": {
+    "name": "细长柱状图",
+    "title": "细长柱状图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/rankBar2.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "name": "A",
+        "value": 2024
+      },
+      {
+        "name": "F",
+        "value": 1423
+      },
+      {
+        "name": "E",
+        "value": 1532
+      },
+      {
+        "name": "B",
+        "value": 1920
+      },
+      {
+        "name": "C",
+        "value": 1824
+      },
+      {
+        "name": "D",
+        "value": 1725
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "echart-thinBar",
+      "prop": "echartthinBar"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        }
+      ],
+      "seriesColor": {
+        "type": "linear-gradient",
+        "angle": "180",
+        "colors": [
+          {
+            "color": "rgb(255,255,255)",
+            "per": 0
+          },
+          {
+            "color": "rgb(128,249,255)",
+            "per": 7
+          },
+          {
+            "color": "rgb(115,248,255)",
+            "per": 8
+          },
+          {
+            "color": "rgba(0,242,254,0.93)",
+            "per": 14
+          },
+          {
+            "color": "rgba(62,112,255,0.47)",
+            "per": 57
+          },
+          {
+            "color": "rgba(62,112,255,0)",
+            "per": 100
+          }
+        ]
+      },
+      "hoverColor": {
+        "type": "linear-gradient",
+        "angle": "180",
+        "colors": [
+          {
+            "color": "rgb(255,255,255)",
+            "per": 0
+          },
+          {
+            "color": "rgb(252,236,162)",
+            "per": 8
+          },
+          {
+            "color": "rgba(249,220,85,0.93)",
+            "per": 14
+          },
+          {
+            "color": "rgba(255,162,62,0.47)",
+            "per": 57
+          },
+          {
+            "color": "rgba(255,162,62,0)",
+            "per": 100
+          }
+        ]
+      },
+      "isSort": true,
+      "isHover": true,
+      "seriesWidth": 9,
+      "seriesOpacity": 100,
+      "gridLeft": 70,
+      "gridTop": 45,
+      "gridRight": 10,
+      "gridBottom": 35,
+      "xNameFontSize": 16,
+      "yNameFontSize": 16,
+      "yAxisInverse": false,
+      "xAxisInverse": false,
+      "xAxisShow": true,
+      "yAxisShow": true,
+      "xAxisLabelShow": true,
+      "yAxisLabelShow": true,
+      "xAxisType": "category",
+      "xAxisInterval": 0,
+      "xAxisRotate": 0,
+      "yAxisMin": "0",
+      "yAxisMax": "",
+      "xAxisMargin": 8,
+      "yAxisMargin": 8,
+      "xAxisFontFamily": "siayuan-normal",
+      "yAxisFontFamily": "siayuan-normal",
+      "xAxisFontSize": 12,
+      "yAxisFontSize": 12,
+      "xAxisColor": "rgba(209, 209, 209, 1)",
+      "yAxisColor": "rgba(209, 209, 209, 1)",
+      "xAxisFontStyle": "normal",
+      "yAxisFontStyle": "normal",
+      "xAxisFontWeight": "normal",
+      "yAxisFontWeight": "normal",
+      "yAxisNameShow": true,
+      "yAxisName": "单位",
+      "yAxisNameFontFamily": "siayuan-normal",
+      "yAxisNameFontSize": 12,
+      "yAxisNameColor": "rgba(209, 209, 209, 1)",
+      "yAxisNameFontStyle": "normal",
+      "yAxisNameFontWeight": "normal",
+      "yAxisNamePaddingTop": 0,
+      "yAxisNamePaddingBottom": 0,
+      "yAxisNamePaddingLeft": 0,
+      "yAxisNamePaddingRight": 40,
+      "xAxisLineShow": true,
+      "yAxisLineShow": false,
+      "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "xAxisLineWidth": 1,
+      "yAxisLineWidth": 1,
+      "xAxisLineOpacity": 0.5,
+      "yAxisLineOpacity": 0.5,
+      "xAxisTickShow": true,
+      "yAxisTickShow": false,
+      "xAxisTickColor": "#65686f",
+      "yAxisTickColor": "#65686f",
+      "xAxisTickWidth": 1,
+      "yAxisTickWidth": 1,
+      "xAxisTickLength": 2,
+      "yAxisTickLength": 2,
+      "xAxisSplitLineShow": false,
+      "yAxisSplitLineShow": true,
+      "xAxisSplitLineInterval": 0,
+      "xAxisSplitLineWidth": 1,
+      "yAxisSplitLineWidth": 1,
+      "xAxisSplitLineColor": "#383d47",
+      "yAxisSplitLineColor": "#383d47",
+      "tooltipLoop": false,
+      "tooltipLoopInterval": 3,
+      "tooltipUnit": "",
+      "tooltipFixed": 0
+    }
+  },
+  "template": [
+    {
+      "name": "A",
+      "value": 2024
+    },
+    {
+      "name": "F",
+      "value": 1423
+    },
+    {
+      "name": "E",
+      "value": 1532
+    },
+    {
+      "name": "B",
+      "value": 1920
+    },
+    {
+      "name": "C",
+      "value": 1824
+    },
+    {
+      "name": "D",
+      "value": 1725
+    }
+  ]
+}

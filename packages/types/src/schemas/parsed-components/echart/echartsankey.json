@@ -1,0 +1,287 @@
+{
+  "meta": {
+    "id": 18,
+    "name": "桑基图",
+    "prop": "echartsankey",
+    "componentName": "echart-sankey",
+    "first_level_menu": "图表",
+    "second_level_menu": "其他",
+    "thumbnail": "/img/sankey.c7f9a27b.png"
+  },
+  "config": {
+    "name": "桑基图",
+    "title": "桑基图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/sankey.c7f9a27b.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "source": "安徽",
+        "target": "江苏 ",
+        "value": 18.68
+      },
+      {
+        "source": "安徽",
+        "target": "浙江 ",
+        "value": 12.38
+      },
+      {
+        "source": "广西",
+        "target": "广东 ",
+        "value": 30.36
+      },
+      {
+        "source": "江西",
+        "target": "广东 ",
+        "value": 12.48
+      },
+      {
+        "source": "江西",
+        "target": "浙江 ",
+        "value": 12.67
+      },
+      {
+        "source": "青海",
+        "target": "广东 ",
+        "value": 13.47
+      },
+      {
+        "source": "青海",
+        "target": "浙江 ",
+        "value": 11.03
+      },
+      {
+        "source": "湖南",
+        "target": "广东 ",
+        "value": 19.11
+      },
+      {
+        "source": "四川",
+        "target": "重庆 ",
+        "value": 15.02
+      },
+      {
+        "source": "湖北",
+        "target": "广东 ",
+        "value": 11.66
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "source",
+        "map": "source",
+        "decription": "节点头"
+      },
+      {
+        "key": "target",
+        "map": "target",
+        "decription": "节点尾"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 600,
+      "height": 400,
+      "name": "echart-sankey",
+      "prop": "echartsankey"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        }
+      ],
+      "points": [
+        "节点1",
+        "节点2",
+        "节点3",
+        "节点4",
+        "节点5",
+        "节点6",
+        "节点7",
+        "节点8",
+        "节点9",
+        "节点10"
+      ],
+      "pointColor": [
+        "#91cc75",
+        "#fac858",
+        "#fc8452",
+        "#ee6666",
+        "#ea7ccc",
+        "#5470c6",
+        "#159ede",
+        "#7eda91",
+        "#2af1e7",
+        "#9feeff",
+        "#91cc75",
+        "#fac858",
+        "#fc8452",
+        "#ee6666"
+      ],
+      "labelPosition": [
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "left",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right",
+        "right"
+      ],
+      "linkName": [
+        "路线1",
+        "路线2",
+        "路线3",
+        "路线4",
+        "路线5",
+        "路线6",
+        "路线7",
+        "路线8",
+        "路线9",
+        "路线10"
+      ],
+      "links": [],
+      "seriesLeft": 160,
+      "seriesTop": 10,
+      "seriesRight": 40,
+      "seriesBottom": 10,
+      "seriesLabelShow": true,
+      "seriesLabelColor": "rgba(255,255,255,1)",
+      "seriesLabelFontFamily": "siayuan-normal",
+      "seriesLabelFontSize": 12,
+      "seriesLabelFontWeight": "normal",
+      "seriesLabelFontStyle": "normal",
+      "seriesLabelOffsetX": 0,
+      "seriesLabelOffsetY": 0,
+      "tooltip": {
+        "show": true,
+        "backgroundColor": "rgba(123,120,120,0.3)",
+        "color": "rgba(255,255,255,1)"
+      },
+      "series": {
+        "draggable": true,
+        "nodeGap": 8,
+        "lineStyle": {
+          "color": "source",
+          "customColor": "rgba(145,204,117,1)",
+          "opacity": 0.1,
+          "curveness": 0.5
+        }
+      },
+      "seriesLabel": {
+        "padding": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "align": "right",
+        "nodeWidth": 20,
+        "nodeAlign": "justify",
+        "verticalAlign": "middle"
+      }
+    }
+  },
+  "template": [
+    {
+      "source": "安徽",
+      "target": "江苏 ",
+      "value": 18.68
+    },
+    {
+      "source": "安徽",
+      "target": "浙江 ",
+      "value": 12.38
+    },
+    {
+      "source": "广西",
+      "target": "广东 ",
+      "value": 30.36
+    },
+    {
+      "source": "江西",
+      "target": "广东 ",
+      "value": 12.48
+    },
+    {
+      "source": "江西",
+      "target": "浙江 ",
+      "value": 12.67
+    },
+    {
+      "source": "青海",
+      "target": "广东 ",
+      "value": 13.47
+    },
+    {
+      "source": "青海",
+      "target": "浙江 ",
+      "value": 11.03
+    },
+    {
+      "source": "湖南",
+      "target": "广东 ",
+      "value": 19.11
+    },
+    {
+      "source": "四川",
+      "target": "重庆 ",
+      "value": 15.02
+    },
+    {
+      "source": "湖北",
+      "target": "广东 ",
+      "value": 11.66
+    }
+  ]
+}

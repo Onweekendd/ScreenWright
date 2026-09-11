@@ -1,0 +1,36 @@
+{
+  "name": "@screenwright/figma-helper",
+  "version": "1.0.2",
+  "description": "Screenwright Figma 规范助手插件",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "default": "./dist/shared/index.js"
+    }
+  },
+  "scripts": {
+    "shared:build": "vite build --config vite.config.shared.ts && tsc -p tsconfig.shared.json --emitDeclarationOnly",
+    "figma:build": "vite build --config vite.config.ui.ts && vite build --config vite.config.code.ts && node scripts/pack.js",
+    "figma:build:dev": "cross-env BUILD_TARGET=dev vite build --config vite.config.ui.ts && vite build --config vite.config.code.ts && node scripts/pack.js",
+    "figma:dev": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.code.ts --watch\"",
+    "figma:check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.101.0",
+    "@screenwright/eslint-config": "workspace:*",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.32.0",
+    "prettier": "^3.6.2",
+    "typescript": "5.9.2",
+    "vite": "^5.4.11",
+    "vite-plugin-singlefile": "^2.0.0",
+    "vue": "^3.5.13"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
+  }
+}

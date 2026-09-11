@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "id": 72,
+    "name": "时间范围选择器",
+    "prop": "swDateTimePicker",
+    "componentName": "sw-dateTimePicker",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/dateTimePicker.771ce446.gif"
+  },
+  "config": {
+    "title": "时间范围选择器",
+    "name": "时间范围选择器",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/dateTimePicker.771ce446.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 300,
+      "height": 50,
+      "name": "sw-dateTimePicker",
+      "prop": "swDateTimePicker"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "dataRemark": [
+      {
+        "key": "startTime",
+        "map": "startTime",
+        "decription": "最小时间"
+      },
+      {
+        "key": "endTime",
+        "map": "endTime",
+        "decription": "最大时间"
+      }
+    ],
+    "data": [
+      {
+        "startTime": "2023-01-01 00:00:00",
+        "endTime": "2023-02-01 00:00:00"
+      }
+    ],
+    "option": {
+      "type": "datetimerange",
+      "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSize": 16,
+      "color": "rgba(255,255,255,1)",
+      "fontStyle": "normal",
+      "fontWeight": "normal",
+      "letterSpacing": 0,
+      "lineHeight": 24,
+      "dateFormat": "yyyy-MM-dd",
+      "timeFormat": "",
+      "startTime": "",
+      "endTime": "",
+      "textAlign": "center",
+      "rangeSeparator": "：",
+      "backgroundType": "color",
+      "backgroundColor": "rgba(0,0,0,1)",
+      "backgroundColorOpacity": 0.6,
+      "backgroundImageType": "100% 100%",
+      "backgroundImage": "",
+      "borderColor": "rgba(158,158,158,1)",
+      "borderWidth": 1,
+      "borderRadius": 0,
+      "calendarShow": true,
+      "calendarPosition": "bottom",
+      "spacing": 5,
+      "calendarHeight": 400,
+      "calendarBackgroundColor": "rgba(0,0,0,1)",
+      "calendarFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "calendarFontSize": "16",
+      "calendarColor": "rgba(255,255,255,1)",
+      "calendarFontStyle": "normal",
+      "calendarFontWeight": "normal",
+      "lineDecorativeColor": "rgba(255,255,255,1)",
+      "buttonFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "buttonFontSize": "16",
+      "buttonColor": "rgba(255,255,255,1)",
+      "buttonFontStyle": "normal",
+      "buttonFontWeight": "normal"
+    }
+  },
+  "template": [
+    {
+      "startTime": "2023-01-01 00:00:00",
+      "endTime": "2023-02-01 00:00:00"
+    }
+  ]
+}

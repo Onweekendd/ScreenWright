@@ -1,0 +1,73 @@
+{
+  "caseId": "shared-empty-screen",
+  "screenId": 76,
+  "note": "1920x1080 的空白起点屏，A1（创建组件）与 C1（拒绝后不落盘）共用。\n来源：业务接口返回的 screen 76 原始响应，按前端 cacheWorker.buildCacheEntry 的规则解析成 ParsedLargeScreenInfo（config/detail/dataFilterArr/aniFrameSet/statusAnimation 从 JSON 字符串 parse，encodedControl 原本是 null、按 parseIfNeeded 的 fallback 取 []）。\nlayers 为空是刻意的：A1 断言的是「从无到有多出一个组件」，起点有东西会让 id 差集失去意义。\n改它之前想清楚：动 detail.width/height 会让 A1 的「落在画布内」换一把尺子；动 layers 会让 A1/C1 的前提失效，那时该新开一份 fixture 而不是改这份。\ninvitationCode 已抹成全零占位——真实邀请码是大屏访问凭证，不进仓库；eval 全程不读它。",
+  "authoredAt": "2026-08-30",
+  "screen": {
+    "createdBy": "onweekend",
+    "createdTime": "2026-08-26 17:33:31",
+    "updatedBy": "onweekend",
+    "updatedTime": "2026-08-30 12:57:11",
+    "id": 76,
+    "moduleId": null,
+    "config": [],
+    "name": "123",
+    "detail": {
+      "width": "1920",
+      "height": "1080",
+      "scale": 1,
+      "initLoad": false,
+      "backgroundImage": "",
+      "backgroundColor": "rgba(35, 38, 48, 1)",
+      "showBackgroundImage": false,
+      "showScreenAdaptation": false,
+      "adaptationNorm": "default",
+      "adaptationType": 2,
+      "showScreenFilter": false,
+      "screenFilterInfo": {
+        "gaussianBlur": 0,
+        "brightness": 100,
+        "contrast": 100,
+        "grayscale": 0,
+        "hue": 0,
+        "saturate": 100,
+        "invert": 0,
+        "sepia": 0
+      },
+      "showWaterMark": true,
+      "waterMark": {
+        "text": "Screenwright凡拓数创",
+        "fontFamily": "sans-serif",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontSize": 30,
+        "color": "rgba(100,100,100,0.5)"
+      },
+      "gridDistance": 1,
+      "query": {},
+      "controlWebsocketUrl": "",
+      "heartbeatInterval": 15,
+      "terminalEnableArr": {},
+      "name": "123"
+    },
+    "backgroundUrl": null,
+    "layers": [],
+    "password": "",
+    "status": null,
+    "userId": 71,
+    "type": 1,
+    "expirationTime": null,
+    "groupId": 0,
+    "invitationCode": "00000000-0000-0000-0000-000000000000",
+    "versionCode": "1",
+    "versionDesc": null,
+    "dataFilterArr": {},
+    "aniFrameSet": {
+      "animationList": []
+    },
+    "statusAnimation": {},
+    "hasPassword": null,
+    "hasExpirationTime": null,
+    "encodedControl": []
+  }
+}

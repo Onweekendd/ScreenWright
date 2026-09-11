@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "id": 141,
+    "name": "滤镜组件",
+    "prop": "sw-filter",
+    "componentName": "sw-filter",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "滤镜组件",
+    "name": "滤镜组件",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/default.1026.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 400,
+      "height": 400,
+      "name": "sw-filter",
+      "prop": "sw-filter"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [],
+    "dataRemark": [],
+    "option": {
+      "shape": "rectangle",
+      "shapeOption": [
+        {
+          "name": "矩形",
+          "value": "rectangle"
+        },
+        {
+          "name": "圆形",
+          "value": "circle"
+        },
+        {
+          "name": "三角形",
+          "value": "triangle"
+        },
+        {
+          "name": "svg",
+          "value": "custom"
+        }
+      ],
+      "borderRadius": 0,
+      "svgUrl": "version-test/assets/defaultImg/arrow.svg",
+      "backdropFilter": {
+        "name": "背景滤镜",
+        "show": true,
+        "blur": 5,
+        "saturate": 100,
+        "isGradient": false,
+        "background": "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%)"
+      },
+      "blur": {
+        "name": "高斯模糊",
+        "show": false,
+        "value": 5
+      },
+      "brightness": {
+        "name": "亮度",
+        "show": false,
+        "value": 100
+      },
+      "contras": {
+        "name": "对比度",
+        "show": false,
+        "value": 100
+      },
+      "grayscale": {
+        "name": "灰度",
+        "show": false,
+        "value": 50
+      },
+      "hueRotate": {
+        "name": "色相",
+        "show": false,
+        "value": 180
+      },
+      "invert": {
+        "name": "反色",
+        "show": false,
+        "value": 50
+      },
+      "saturate": {
+        "name": "饱和度",
+        "show": false,
+        "value": 100
+      },
+      "sepia": {
+        "name": "褐色",
+        "show": false,
+        "value": 50
+      }
+    }
+  },
+  "template": []
+}

@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "id": 76,
+    "name": "卡片滚动",
+    "prop": "swcollection",
+    "componentName": "sw-collection",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/collection.d2407873.png"
+  },
+  "config": {
+    "title": "卡片滚动",
+    "name": "卡片滚动",
+    "display": true,
+    "icon": "icon-scroll",
+    "img": "/img/collection.d2407873.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataRemark": [
+      {
+        "key": "src",
+        "map": "src",
+        "decription": "资源地址"
+      },
+      {
+        "key": "title",
+        "map": "title",
+        "decription": "标题"
+      }
+    ],
+    "data": [
+      {
+        "src": "",
+        "title": "标题1"
+      },
+      {
+        "src": "",
+        "title": "标题2"
+      },
+      {
+        "src": "",
+        "title": "标题3"
+      },
+      {
+        "src": "",
+        "title": "标题4"
+      },
+      {
+        "src": "",
+        "title": "标题5"
+      }
+    ],
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "component": {
+      "width": 1000,
+      "height": 300,
+      "name": "sw-collection",
+      "prop": "swcollection"
+    },
+    "option": {
+      "type": "scroll",
+      "scroll": true,
+      "scrollBar": false,
+      "speed": 10,
+      "speedPosition": "ToLeft",
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "backgroundType": "color",
+      "background": "rgba(24,144,255,0.2)",
+      "backgroundImage": "none",
+      "cardLen": 3,
+      "cardMarginRight": 10,
+      "cardBackgroundType": "color",
+      "cardBackgroundColor": "rgba(24,144,255,0.2)",
+      "cardBackgroundImage": "none",
+      "cardPadding": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "cardObjectFit": "contain",
+      "cardBgObjectFit": "contain",
+      "controls": false,
+      "loopPlay": true,
+      "autoPlay": true,
+      "muted": true,
+      "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSize": 26,
+      "color": "rgba(255, 255, 255, 1)",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "spacing": 1,
+      "titleWidth": 100,
+      "titleHeight": 42,
+      "textTranslateX": 0,
+      "textTranslateY": 0,
+      "titleBackgroundType": "color",
+      "titleBackgroundColor": "rgba(24,144,255,0.2)",
+      "titleBackgroundImage": "none"
+    }
+  },
+  "template": [
+    {
+      "src": "",
+      "title": "标题1"
+    },
+    {
+      "src": "",
+      "title": "标题2"
+    },
+    {
+      "src": "",
+      "title": "标题3"
+    },
+    {
+      "src": "",
+      "title": "标题4"
+    },
+    {
+      "src": "",
+      "title": "标题5"
+    }
+  ]
+}

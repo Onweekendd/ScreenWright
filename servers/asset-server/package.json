@@ -1,0 +1,54 @@
+{
+  "name": "@screenwright/asset-server",
+  "private": true,
+  "version": "0.0.0",
+  "author": "onweekend",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "screenwright-server": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "start": "node dist/index.js start",
+    "screenwright": "node dist/index.js screenwright",
+    "devBI": "node dist/index.js devBI",
+    "prodBI": "node dist/index.js prodBI",
+    "server": "tsx src/index.ts",
+    "mock": "tsx src/api-mock.ts",
+    "lint:eslint": "eslint --cache --max-warnings 0 \"src/**/*.{js,ts}\" --fix",
+    "lint:prettier": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "lint": "pnpm lint:eslint && pnpm lint:prettier"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "commander": "^11.1.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@screenwright/eslint-config": "workspace:*",
+    "@types/express": "^4.17.17",
+    "@types/cors": "^2.8.13",
+    "@types/node": "20.3.2",
+    "eslint": "^9.32.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.0.0",
+    "typescript": "5.9.2"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ],
+    "package.json": [
+      "prettier --write"
+    ]
+  }
+}

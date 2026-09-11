@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "id": 152,
+    "name": "翻牌器v3",
+    "prop": "swFlopPerformance",
+    "componentName": "sw-flop-performance",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/flop.7637e12e.png"
+  },
+  "config": {
+    "title": "翻牌器",
+    "name": "翻牌器",
+    "display": true,
+    "icon": "icon-flop",
+    "img": "/img/flop.7637e12e.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "value": 12345
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=> {\r\nreturndata\r\n}",
+    "component": {
+      "width": 400,
+      "height": 94,
+      "name": "sw-flop-performance",
+      "prop": "swFlopPerformance"
+    },
+    "option": {
+      "autoplay": false,
+      "intervalTime": 10,
+      "whole": false,
+      "decimals": 0,
+      "span": 1,
+      "splitx": 31,
+      "splity": 20,
+      "letterSpace": 1,
+      "useGrouping": true,
+      "makeComplete": false,
+      "completeCount": 6,
+      "type": "img",
+      "borderColor": "rgba(255,255,255,1)",
+      "borderTopWidth": 10,
+      "borderBottomWidth": 10,
+      "borderLeftWidth": 16,
+      "borderRightWidth": 16,
+      "backgroundBorder": "",
+      "backgroundColor": "rgba(255,255,255,0)",
+      "backgroundImage": "",
+      "fontFamily": "siayuan-normal",
+      "fontSize": 42,
+      "color": "rgba(255,255,255,1)",
+      "fontLinearColor": "linear-gradient(286.0deg,rgba(126,255,77,1) 0.0,rgba(30,213,64,0) 100.0%)",
+      "fontWeight": "bolder",
+      "fontStyle": "normal",
+      "textAlign": "center",
+      "prefixInline": "block",
+      "prefixText": "翻牌器标题",
+      "prefixTextAlign": "center",
+      "prefixSplitx": 37,
+      "prefixSplity": 0,
+      "prefixFontFamily": "siayuan-normal",
+      "prefixFontSize": 20,
+      "prefixColor": "rgba(255, 255, 255, 1)",
+      "prefixFontWeight": "normal",
+      "prefixFontStyle": "normal",
+      "suffixInline": "inline-block",
+      "suffixText": "单位",
+      "suffixTextAlign": "center",
+      "suffixSplitx": 0,
+      "suffixSplity": 0,
+      "suffixFontFamily": "siayuan-normal",
+      "suffixFontSize": 18,
+      "suffixColor": "rgba(57,48,243,1)",
+      "suffixFontWeight": "normal",
+      "suffixFontStyle": "normal",
+      "autoIncrement": false,
+      "incrementFrequency": 5,
+      "randomRange": 20
+    },
+    "left": 0,
+    "top": 0,
+    "parentDynamicPanelId": []
+  },
+  "template": [
+    {
+      "value": 12345
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# 静态资源 / 构建产物 / 第三方库，不参与 GitHub 语言统计
+apps/*/public/** linguist-vendored
+servers/server/src/lib/process-manager/static-server/public/** linguist-vendored
+packages/*/dist/** linguist-generated

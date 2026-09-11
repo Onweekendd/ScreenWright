@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "id": 92,
+    "name": "音频",
+    "prop": "sw-embed-audio",
+    "componentName": "sw-embed-audio",
+    "first_level_menu": "媒体",
+    "second_level_menu": "",
+    "thumbnail": "/img/audio.g105b5.png"
+  },
+  "config": {
+    "title": "音频",
+    "name": "音频",
+    "display": true,
+    "icon": "icon-video",
+    "img": "/img/audio.g105b5.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "value": ""
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "音频地址"
+      }
+    ],
+    "option": {
+      "url": "version-test/assets/defaultImg/embedAudio.mp3",
+      "controler": false,
+      "autoPlay": true,
+      "loopPlay": true,
+      "autoHidden": false
+    },
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "sw-embed-audio",
+      "prop": "sw-embed-audio"
+    }
+  },
+  "template": [
+    {
+      "value": ""
+    }
+  ]
+}

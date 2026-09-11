@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "id": 104,
+    "name": "线性渐变遮罩层",
+    "prop": "sw-mask-layer",
+    "componentName": "sw-mask-layer",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/maskLayer.ef2b23ee.png"
+  },
+  "config": {
+    "title": "线性渐变遮罩层",
+    "name": "线性渐变遮罩层",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/maskLayer.ef2b23ee.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "",
+    "data": [
+      {
+        "text": "线性渐变遮罩层"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "文本"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 500,
+      "height": 500,
+      "name": "sw-mask-layer",
+      "prop": "sw-mask-layer"
+    },
+    "unitPavenType": "",
+    "option": {
+      "linearGradient": {
+        "markColor": "rgba(0,0,0,0.7)",
+        "markPosition": 180,
+        "markRadius": 40,
+        "markOpacity": 90
+      },
+      "radioactiveGradation": {
+        "markColor": "rgba(0,0,0,1)",
+        "markOpacityRadius": 40,
+        "markOpacity": 100,
+        "markUnOpacityRadius": 90,
+        "showLengthWidthRatio": false,
+        "lengthWidthRatio": 0
+      },
+      "markType": "linearGradient",
+      "pointerEvents": false,
+      "refresh": false,
+      "backdropFilter": false,
+      "backdropFilterBlur": 4,
+      "backdropFilterSaturate": 100
+    },
+    "left": 0,
+    "top": 0,
+    "showSubComponent": false
+  },
+  "template": [
+    {
+      "text": "线性渐变遮罩层"
+    }
+  ]
+}

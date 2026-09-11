@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "id": 9,
+    "name": "饼图",
+    "prop": "echartpie",
+    "componentName": "echart-pie",
+    "first_level_menu": "图表",
+    "second_level_menu": "饼图",
+    "thumbnail": "/img/pie.20240514.png"
+  },
+  "config": {
+    "name": "饼图",
+    "title": "饼图",
+    "display": true,
+    "icon": "icon-pie",
+    "img": "/img/pie.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      }
+    ],
+    "time": 30,
+    "url": "./pie",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "value": 2024
+      },
+      {
+        "seriesName": "系列二",
+        "value": 2378
+      },
+      {
+        "seriesName": "系列三",
+        "value": 1423
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "resize": false,
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "echart-pie",
+      "prop": "echartpie"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二",
+        "系列三"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二",
+        "系列三"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        },
+        {
+          "name": "系列3",
+          "value": "系列三"
+        }
+      ],
+      "seriesLeft": 0,
+      "seriesTop": 30,
+      "seriesRight": 120,
+      "seriesBottom": 30,
+      "seriesLabelShow": true,
+      "seriesDistanceToLabelLine": 5,
+      "seriesLabelLineLength": 10,
+      "seriesLabelOrient": "horizontal",
+      "seriesLabelSeriesShow": true,
+      "seriesLabelSeriesFontFamily": "siayuan-normal",
+      "seriesLabelSeriesFontSize": 12,
+      "seriesLabelSeriesColor": "rgba(255, 255, 255, 1)",
+      "seriesLabelSeriesFontStyle": "normal",
+      "seriesLabelSeriesFontWeight": "normal",
+      "seriesLabelPercentShow": true,
+      "seriesLabelPercentValue": 0,
+      "seriesLabelPercentFontFamily": "siayuan-normal",
+      "seriesLabelPercentFontSize": 14,
+      "seriesLabelPercentColor": "rgba(255, 255, 255, 1)",
+      "seriesLabelPercentFontStyle": "normal",
+      "seriesLabelPercentFontWeight": "normal",
+      "seriesLabelValueShow": false,
+      "seriesLabelUnit": "",
+      "seriesLabelUnitFontSize": 12,
+      "seriesLabelUnitLeftPadding": 5,
+      "seriesLabelValueLeftPadding": 0,
+      "seriesLabelValueFontFamily": "siayuan-normal",
+      "seriesLabelValueFontSize": 12,
+      "seriesLabelValueColor": "rgba(255, 255, 255, 1)",
+      "seriesLabelValueFontStyle": "normal",
+      "seriesLabelValueFontWeight": "normal",
+      "legendShow": false,
+      "legendOrder": "default",
+      "legendItemWidth": 10,
+      "legendItemHeight": 10,
+      "legendTextLeftPadding": 5,
+      "legendSeriesShow": false,
+      "legendSeriesFontFamily": "siayuan-normal",
+      "legendSeriesFontSize": 12,
+      "legendSeriesColor": "rgba(255, 255, 255, 1)",
+      "legendSeriesFontStyle": "normal",
+      "legendSeriesFontWeight": "normal",
+      "legendPercentShow": false,
+      "legendPercent": 0,
+      "legendPercentLeftPadding": 15,
+      "legendPercentFontFamily": "siayuan-normal",
+      "legendPercentFontSize": 12,
+      "legendPercentColor": "rgba(255, 255, 255, 1)",
+      "legendPercentFontStyle": "normal",
+      "legendPercentFontWeight": "normal",
+      "legendPercentColorFollow": false,
+      "legendValueShow": false,
+      "legendUnit": "",
+      "legendUnitFontSize": 12,
+      "legendUnitLeftPadding": 5,
+      "legendValueLeftPadding": 0,
+      "legendValueColorFollow": false,
+      "legendValueFontFamily": "siayuan-normal",
+      "legendValueFontSize": 12,
+      "legendValueColor": "rgba(255, 255, 255, 1)",
+      "legendValueFontStyle": "normal",
+      "legendValueFontWeight": "normal",
+      "legendOrient": "vertical",
+      "legendWidth": 800,
+      "legendHeight": 800,
+      "legendItemGap": 20,
+      "legendGrid": {
+        "top": "center",
+        "right": 0
+      },
+      "legendOffsetX": 0,
+      "legendOffsetY": 0,
+      "pieRadiusOuter": 50,
+      "pieRoseType": false,
+      "pieRadiusInner": 0,
+      "pieStartAngle": 90,
+      "pieClockwise": false,
+      "itemBorderWidth": 1.5,
+      "itemBorderColor": "rgba(0, 0, 0, 1)",
+      "seriesOrder": "default",
+      "seriesColor": [
+        "#31e0f2",
+        "#2dc0ee",
+        "#3e43f4"
+      ],
+      "legendSeriesWidthType": "auto",
+      "legendSeriesWidth": 100
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "value": 2024
+    },
+    {
+      "seriesName": "系列二",
+      "value": 2378
+    },
+    {
+      "seriesName": "系列三",
+      "value": 1423
+    }
+  ]
+}

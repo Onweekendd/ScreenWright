@@ -1,0 +1,255 @@
+{
+  "nodes": [
+    {
+      "id": "I1869:5212;2087:2071",
+      "name": "主题选择1-subtab",
+      "type": "INSTANCE",
+      "layout": "layout_c0cd02",
+      "fills": "fill_675ae4",
+      "componentId": "2094:1908",
+      "children": [
+        {
+          "id": "I1869:5212;2087:2071;2092:1901",
+          "name": "五大深耕行业-tabitem",
+          "type": "INSTANCE",
+          "layout": "layout_34d9d6",
+          "componentId": "2092:1818",
+          "children": [
+            {
+              "id": "I1869:5212;2087:2071;2092:1901;2095:2683",
+              "name": "4-image",
+              "type": "GROUP",
+              "layout": "layout_ef2ff7",
+              "children": [
+                {
+                  "id": "I1869:5212;2087:2071;2092:1901;2092:1871",
+                  "name": "4",
+                  "type": "RECTANGLE",
+                  "layout": "layout_ef2ff7",
+                  "fills": "fill_9d4035",
+                  "strokes": "stroke_7c50e2",
+                  "effects": "effect_d15902"
+                },
+                {
+                  "id": "I1869:5212;2087:2071;2092:1901;2095:2634",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "layout": "layout_36a582",
+                  "fills": "fill_61446e"
+                }
+              ]
+            },
+            {
+              "id": "I1869:5212;2087:2071;2092:1901;2092:1872",
+              "name": "四大核心技术",
+              "type": "TEXT",
+              "layout": "layout_b1f2f3",
+              "text": "五大深耕行业",
+              "textStyle": "style_0db917",
+              "fills": "fill_991294"
+            }
+          ]
+        },
+        {
+          "id": "I1869:5212;2087:2071;2092:1890",
+          "name": "四大核心技术-tabitem",
+          "type": "INSTANCE",
+          "layout": "layout_196b03",
+          "componentId": "2092:1804",
+          "children": [
+            {
+              "id": "I1869:5212;2087:2071;2092:1890;2095:2384",
+              "name": "Group 1144-image",
+              "type": "GROUP",
+              "layout": "layout_c95dbb",
+              "children": [
+                {
+                  "id": "I1869:5212;2087:2071;2092:1890;2095:2529",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "layout": "layout_c95dbb"
+                }
+              ]
+            },
+            {
+              "id": "I1869:5212;2087:2071;2092:1890;2092:1844",
+              "name": "四大核心技术",
+              "type": "TEXT",
+              "layout": "layout_12a702",
+              "text": "四大核心技术",
+              "textStyle": "style_0db917",
+              "fills": "fill_991294"
+            }
+          ]
+        },
+        {
+          "id": "I1869:5212;2087:2071;2092:1884",
+          "name": "三大发展历程-tabitem",
+          "type": "INSTANCE",
+          "layout": "layout_5738b5",
+          "componentId": "2092:1797",
+          "children": [
+            {
+              "id": "I1869:5212;2087:2071;2092:1884;2095:2550",
+              "name": "4-image",
+              "type": "GROUP",
+              "layout": "layout_e3615a",
+              "children": [
+                {
+                  "id": "I1869:5212;2087:2071;2092:1884;2092:1799",
+                  "name": "4",
+                  "type": "RECTANGLE",
+                  "layout": "layout_e3615a",
+                  "fills": "fill_57d793",
+                  "strokes": "stroke_2b3766",
+                  "effects": "effect_d15902"
+                },
+                {
+                  "id": "I1869:5212;2087:2071;2092:1884;2095:2549",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "layout": "layout_a92863",
+                  "fills": "fill_d2917e"
+                }
+              ]
+            },
+            {
+              "id": "I1869:5212;2087:2071;2092:1884;2092:1800",
+              "name": "四大核心技术",
+              "type": "TEXT",
+              "layout": "layout_ed461d",
+              "text": "三大发展历程",
+              "textStyle": "style_0db917",
+              "fills": "fill_d2917e"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "components": {},
+  "componentSets": {},
+  "globalVars": {
+    "styles": {
+      "layout_c0cd02": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 789, "height": 52 },
+        "absolutePosition": { "x": 0, "y": 0 }
+      },
+      "fill_675ae4": ["rgba(255, 255, 255, NaN)"],
+      "layout_34d9d6": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 237, "height": 50 },
+        "absolutePosition": { "x": 560, "y": 0 }
+      },
+      "layout_ef2ff7": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 236, "height": 50 },
+        "absolutePosition": { "x": 560, "y": 0 }
+      },
+      "fill_9d4035": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(51, 70, 106, 1) 0%, rgba(80, 97, 134, 1) 100%)"
+        }
+      ],
+      "stroke_7c50e2": {
+        "colors": [
+          {
+            "type": "GRADIENT_LINEAR",
+            "gradient": "linear-gradient(0deg, rgba(233, 238, 255, 1) 0%, rgba(186, 190, 204, 0.5) 50%, rgba(123, 136, 177, 1) 100%)"
+          }
+        ],
+        "strokeWeight": "1px"
+      },
+      "effect_d15902": { "backdropFilter": "blur(20px)" },
+      "layout_36a582": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 30, "height": 29 },
+        "absolutePosition": { "x": 580, "y": 11 }
+      },
+      "fill_61446e": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(82, 245, 218, 1) 0%, rgba(61, 203, 255, 1) 100%)"
+        }
+      ],
+      "layout_b1f2f3": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 164, "height": 34 },
+        "absolutePosition": { "x": 617, "y": 7 }
+      },
+      "style_0db917": {
+        "fontFamily": "Alibaba PuHuiTi 2.0",
+        "fontSize": 24,
+        "letterSpacing": "20.833333333333336%",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_991294": ["rgba(241, 247, 255, NaN)"],
+      "layout_196b03": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 237, "height": 50 },
+        "absolutePosition": { "x": 280, "y": 0 }
+      },
+      "layout_c95dbb": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 236, "height": 50 },
+        "absolutePosition": { "x": 280, "y": 0 }
+      },
+      "layout_12a702": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 164, "height": 34 },
+        "absolutePosition": { "x": 337, "y": 7 }
+      },
+      "layout_5738b5": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 237, "height": 50 },
+        "absolutePosition": { "x": 0, "y": 0 }
+      },
+      "layout_e3615a": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 236, "height": 50 },
+        "absolutePosition": { "x": 0, "y": 0 }
+      },
+      "fill_57d793": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(219, 239, 255, 1) 0%, rgba(255, 255, 255, 1) 100%)"
+        }
+      ],
+      "stroke_2b3766": {
+        "colors": [
+          {
+            "type": "GRADIENT_LINEAR",
+            "gradient": "linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(186, 190, 204, 0.5) 50%, rgba(123, 136, 177, 1) 100%)"
+          }
+        ],
+        "strokeWeight": "1px"
+      },
+      "layout_a92863": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 28, "height": 26 },
+        "absolutePosition": { "x": 18, "y": 11 }
+      },
+      "fill_d2917e": ["rgba(78, 84, 108, NaN)"],
+      "layout_ed461d": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 164, "height": 34 },
+        "absolutePosition": { "x": 57, "y": 7 }
+      }
+    }
+  }
+}

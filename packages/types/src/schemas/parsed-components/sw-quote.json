@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "id": 70,
+    "name": "引用面板",
+    "prop": "sw-quote",
+    "componentName": "sw-quote",
+    "first_level_menu": "面板",
+    "second_level_menu": "",
+    "thumbnail": "/img/ft-quote.20240430.png"
+  },
+  "config": {
+    "interactive": true,
+    "title": "引用面板",
+    "name": "引用面板",
+    "display": true,
+    "left": 0,
+    "top": 0,
+    "icon": "icon-tabs",
+    "img": "/img/ft-quote.20240430.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "child": {
+      "index": [],
+      "paramName": "",
+      "key": "",
+      "value": ""
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=>{\r\nreturn data;\r\n}",
+    "eventBus": [],
+    "dataType": 0,
+    "data": [],
+    "component": {
+      "width": 600,
+      "height": 600,
+      "name": "sw-quote",
+      "prop": "sw-quote"
+    },
+    "panelStatus": [],
+    "panelData": [],
+    "unitPavenType": "",
+    "option": {
+      "display": false,
+      "enableScroll": false,
+      "autoRotation": false,
+      "animationType": "opacity",
+      "timingFunction": 5,
+      "displayList": [
+        {
+          "id": "quote_DeSIpAFuIBJbqxYHa",
+          "name": "大屏",
+          "value": "",
+          "version": "1"
+        }
+      ]
+    }
+  },
+  "template": []
+}

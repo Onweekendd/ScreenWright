@@ -1,0 +1,35 @@
+.build-nav-info {
+  box-sizing: border-box;
+  font-size: 14px;
+  font-family: Source Han Sans CN-Normal, Source Han Sans CN;
+  color: #ffffff;
+  width: 204px !important;
+  height: 100%;
+  padding: 6px 4px 2px 8px;
+  line-height: 24px;
+  position: relative;
+}
+.info {
+  font-size: 15px;
+  margin-left: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  .tips {
+    font-size: 13px;
+    width: 100%;
+    color: #8a8a8a;
+  }
+
+  &:hover {
+    .version {
+      color: #ffffff;
+    }
+  }
+  .version {
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 13px;
+  }
+}

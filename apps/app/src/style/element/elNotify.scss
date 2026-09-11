@@ -1,0 +1,24 @@
+.el-notification-custom {
+  z-index: 9999 !important;
+  background-image: url("@/assets/image/notice_bg.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  .el-notification__title,
+  .el-notification__closeBtn {
+    color: #555c75;
+    font-weight: 600;
+  }
+  .el-notification__content {
+    color: #7a829b;
+    font-size: 12px;
+    font-family: "Alibaba-PuHuiTi-Regular";
+    .audio_icon {
+      width: 14px;
+      height: 13px;
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+      background-image: url("~@/assets/image/audio_icon.png");
+    }
+  }
+}

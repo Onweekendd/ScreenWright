@@ -1,0 +1,652 @@
+{
+  "meta": {
+    "id": 80,
+    "name": "多级下拉框",
+    "prop": "swCascader",
+    "componentName": "sw-cascader",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/ftCascader.gif"
+  },
+  "config": {
+    "title": "多级下拉框",
+    "name": "多级下拉框",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "data:image/png;base64,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UmVhZHlxyWU8AAADJ2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4wLWMwMDEgNzkuYzAyMDRiMmRlZiwgMjAyMy8wMi8wMi0xMjoxNDoyNCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDI0LjMgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjE3RUM3NkU2NzI0QjExRUU5NDU3RDQyRUE3NUQ0OTA1IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjE3RUM3NkU3NzI0QjExRUU5NDU3RDQyRUE3NUQ0OTA1Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTdFQzc2RTQ3MjRCMTFFRTk0NTdENDJFQTc1RDQ5MDUiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MTdFQzc2RTU3MjRCMTFFRTk0NTdENDJFQTc1RDQ5MDUiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz43qMw0AAASNElEQVR42uxcCVwT19afycxkkpAACRAIiArUDauAilpFW7VPtJ/71opVsfrqe3V7bq3VWm1dqpWqrfWrvic+q9X3qnVD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",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 200,
+      "height": 42,
+      "name": "sw-cascader",
+      "prop": "swCascader"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=>{\r\n return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "dataRemark": [
+      {
+        "key": "label",
+        "map": "label",
+        "decription": "标签"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "children",
+        "map": "children",
+        "decription": "子集"
+      },
+      {
+        "key": "disabled",
+        "map": "disabled",
+        "decription": "禁用"
+      }
+    ],
+    "data": [
+      {
+        "value": "zhinan",
+        "label": "指南",
+        "disabled": false,
+        "children": [
+          {
+            "value": "shejiyuanze",
+            "label": "设计原则",
+            "children": [
+              {
+                "value": "yizhi",
+                "label": "一致"
+              },
+              {
+                "value": "fankui",
+                "label": "反馈"
+              },
+              {
+                "value": "xiaolv",
+                "label": "效率"
+              },
+              {
+                "value": "kekong",
+                "label": "可控"
+              }
+            ]
+          },
+          {
+            "value": "daohang",
+            "label": "导航",
+            "children": [
+              {
+                "value": "cexiangdaohang",
+                "label": "侧向导航"
+              },
+              {
+                "value": "dingbudaohang",
+                "label": "顶部导航"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "value": "zujian",
+        "label": "组件",
+        "disabled": false,
+        "children": [
+          {
+            "value": "basic",
+            "label": "Basic",
+            "children": [
+              {
+                "value": "layout",
+                "label": "Layout 布局"
+              },
+              {
+                "value": "color",
+                "label": "Color 色彩"
+              },
+              {
+                "value": "typography",
+                "label": "Typography 字体"
+              },
+              {
+                "value": "icon",
+                "label": "Icon 图标"
+              },
+              {
+                "value": "button",
+                "label": "Button 按钮"
+              }
+            ]
+          },
+          {
+            "value": "form",
+            "label": "Form",
+            "children": [
+              {
+                "value": "radio",
+                "label": "Radio 单选框"
+              },
+              {
+                "value": "checkbox",
+                "label": "Checkbox 多选框"
+              },
+              {
+                "value": "input",
+                "label": "Input 输入框"
+              },
+              {
+                "value": "input-number",
+                "label": "InputNumber 计数器"
+              },
+              {
+                "value": "select",
+                "label": "Select 选择器"
+              },
+              {
+                "value": "cascader",
+                "label": "Cascader 级联选择器"
+              },
+              {
+                "value": "switch",
+                "label": "Switch 开关"
+              },
+              {
+                "value": "slider",
+                "label": "Slider 滑块"
+              },
+              {
+                "value": "time-picker",
+                "label": "TimePicker 时间选择器"
+              },
+              {
+                "value": "date-picker",
+                "label": "DatePicker 日期选择器"
+              },
+              {
+                "value": "datetime-picker",
+                "label": "DateTimePicker 日期时间选择器"
+              },
+              {
+                "value": "upload",
+                "label": "Upload 上传"
+              },
+              {
+                "value": "rate",
+                "label": "Rate 评分"
+              },
+              {
+                "value": "form",
+                "label": "Form 表单"
+              }
+            ]
+          },
+          {
+            "value": "data",
+            "label": "Data",
+            "children": [
+              {
+                "value": "table",
+                "label": "Table 表格"
+              },
+              {
+                "value": "tag",
+                "label": "Tag 标签"
+              },
+              {
+                "value": "progress",
+                "label": "Progress 进度条"
+              },
+              {
+                "value": "tree",
+                "label": "Tree 树形控件"
+              },
+              {
+                "value": "pagination",
+                "label": "Pagination 分页"
+              },
+              {
+                "value": "badge",
+                "label": "Badge 标记"
+              }
+            ]
+          },
+          {
+            "value": "notice",
+            "label": "Notice",
+            "children": [
+              {
+                "value": "alert",
+                "label": "Alert 警告"
+              },
+              {
+                "value": "loading",
+                "label": "Loading 加载"
+              },
+              {
+                "value": "message",
+                "label": "Message 消息提示"
+              },
+              {
+                "value": "message-box",
+                "label": "MessageBox 弹框"
+              },
+              {
+                "value": "notification",
+                "label": "Notification 通知"
+              }
+            ]
+          },
+          {
+            "value": "navigation",
+            "label": "Navigation",
+            "children": [
+              {
+                "value": "menu",
+                "label": "NavMenu 导航菜单"
+              },
+              {
+                "value": "tabs",
+                "label": "Tabs 标签页"
+              },
+              {
+                "value": "breadcrumb",
+                "label": "Breadcrumb 面包屑"
+              },
+              {
+                "value": "dropdown",
+                "label": "Dropdown 下拉菜单"
+              },
+              {
+                "value": "steps",
+                "label": "Steps 步骤条"
+              }
+            ]
+          },
+          {
+            "value": "others",
+            "label": "Others",
+            "children": [
+              {
+                "value": "dialog",
+                "label": "Dialog 对话框"
+              },
+              {
+                "value": "tooltip",
+                "label": "Tooltip 文字提示"
+              },
+              {
+                "value": "popover",
+                "label": "Popover 弹出框"
+              },
+              {
+                "value": "card",
+                "label": "Card 卡片"
+              },
+              {
+                "value": "carousel",
+                "label": "Carousel 走马灯"
+              },
+              {
+                "value": "collapse",
+                "label": "Collapse 折叠面板"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "value": "ziyuan",
+        "label": "资源",
+        "disabled": true,
+        "children": [
+          {
+            "value": "axure",
+            "label": "Axure Components"
+          },
+          {
+            "value": "sketch",
+            "label": "Sketch Templates"
+          },
+          {
+            "value": "jiaohu",
+            "label": "组件交互文档"
+          }
+        ]
+      }
+    ],
+    "option": {
+      "defaultIndex": 0,
+      "placeholder": "请选择",
+      "textAlign": "center",
+      "color": "rgba(255,255,255,1)",
+      "fontFamily": "SourceHanSansCN-Normal,SourceHanSansCN",
+      "fontSize": 20,
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "lineHeight": 12,
+      "letterSpacing": 1,
+      "backgroundType": "custom",
+      "backgroundImage": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAjCAYAAAB2BvMkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAJJklEQVR4nO2czaslVxXF19r7VN37QkISJH60ZpAMEjEDMeBAHEkmCf4NDoQOEtRBj0T/AMVJHIlIWhz4NwQyCGSkQkBFFNFJotJp7GBIS2K/e2/V2cvBOaeq3u18YPygb6gF91W99+6rC+/82GfX2nsXJWGpn7+JzwC4DOApAA8B2GDVqtu1B/AKgBcAXP3i/fjD8pdsYD3/OnoAz+72eOY3fwJfvQ69+RaU88WrKYAIQLmcS1A9AgIE1C+rTkYE2I4EaAAJ0gA6YFZ+tpQ7cP894EOXwM89Cm03eA7AlS9/FOdABeun19ADeP7adTzx8q+gw3CEhoDI00vtvAGlQOFzPvk//DdW/fdEsBI1HSpg5tOL7bxQOKvvwM8/Dj74SbwE4KmvfgqHBADXdvjBGzfwxB9/jTjaGREjkEcgxhK9YgSUoYgRihHRSFOohS6tYJ2UWENVCVFGmsvMQUswS2A5lTtgCfQEWJr//jBAv3gZ+vTj+NJHPoZnAXyDT/9Oj+UBv73+SzDGmQgJyAOQB2iGKxTjAZEHRAyKPECRITW4BCEWXK2A3dnidCCMIEFzkCU8mXcw62jewVIPS0ZLgCfAO9C7snU2WQIvfQHyDp9Nfz3HZVyDaUS0NyiA8VCgygOQRyiGHXLeV7AKXIpBkTOkEYooWyFUE65VJyMSBAUaaAYywdzBApXMe1ju4eMG1m2hDCogBZj6Of+KEXrtVRgexOX02g5PPvB3qKufIc1QleOoPOyQx51i3COPe0U+QHmocI2KyGV/nHIsYM7kV92x4vQFXGTrdRukeSd6B/MenjeMNMhjpGIrKRFlhZk2c+Qa3oBefwBPphs7PPyJ3YxA2/7GA5APg8bhHHk4Vx7OEeNeedzXiHWQ8oCSa2VIWYrARNN6e3gC4iIRZ41WTprDLDWoaN5DeZDlgYosKQidCegIQLQSuQDAd9CNHR5ON3foKWSgJupt+xvGAtXhlvJwC3nYKY+7GrH2iLHkWVrmWZPv0LSm8XequPhaTkvEIl00B1t+lQ4y30Ax0iMLCtZtiSBFJtIgM9ASQAE3d+jTMNQLa7r7Qx5Rtr/hXHm4hbFGrDzsFOMOkQ/K4wGKth1m3Q7WuhXe8VpshQuwQHOadwjr5NFDPk6RSlhCZaTdLXMwL6yIYQASorwvcrUURiBqTlXg2lWoKlzjXjFth4MUw9JyWH2sk9TCxzKHmStyB/OOihGWslzBGjVYEn2vtkRi9i3MoUglaiF0BFYulkK5+9sjxrr9NbgqbFET+Fgk8CVxz+sd4amKLNGKhrBE87Gsa2RoARXQIpUrPDF7Jxt7RDJGrv5WAauWaSZH/YAYD3Oi3iLUuFcMuwrbHtV2UDFJxzVinbSOI1aSyppSCgBStVBFOsNcud41hveMdEDkLQqDIAJIDDWwKlxDu+tD5ANyPiBygSzPsCHGQ4laURxURZQ7wzVinaSK3eCkGWQJZh1KlFBLwtRc+ZwTmbsFJwMibxXF3wJDSB5CtKgVgchjiUIlg1fzq+ZXiVQ578s2WCwHrRHrlDVFLJWIFZTX0hwhkGSt60QeYGXdFXlkZUURQYUhAvAGVjPLm20QkdXqgDFtdaMUA5QbdGMzSUvYLAVETBbDGrlOQySK01l8LCgQkqyEKARLiUc2QNEpYmRMNeKxsKLMwo4BWoClVoVRTK9iHWRIISx8qrLdte9zTdqjQtmK0E0rXHe2OC8RCYQAY13/Csy8zpRqvqQQVPOvC8wUjjyE1LXIUp1ySdN21iLPFIFUvanpXLUha/neY/9qhevOVKvIlCyKLZuSwKP1Xa75BSaOeGlL3UlIKWL+nLrXkkRtpphCZWnUqSWA6by1WxTyVRyOKd2rpaT/8T9o1QfXwn+v68yjtT1e8wtMHPHSljpFIHWh6e9L66DVTq9SkCSNMFfzOEgn2b53kqGpIywq+sCaY52KlpCY1TWe1hnzOhdXHlaZqDxcZKZw1IWQ+tCiJXXqxSEtyYqnAbOEsERaJ/oIqzkWIRjAIIUwkOWukOv2d2K6zccivQM9wbx09tG60vFQeZgbASuA5miBqw+ViNV6ms0M5olmSeWCHemdzDuYd2h3f5AIQQQRJJiNstXHOmUtfSxWH8u8n7obGgNWO/zoHc1LDacwY5WhFrEUy97mubGrvtwHyEd6qpXtaY9jKUSGI2xy3rn6WKeo2yJWBaanpR6eNvC0oacNzDf0BR8zdKUnngb0irIVVrBojgJV6mF5Qy8eFa15FSX/b/Ui0JyRB3CtFZ6+FrXC2uRXgelhaUPrtrC0paUNrEGWNrTU4GrpV90K+yggTNMYyejjBpEGWS49OO9ShATrlhlRDLLVeT9V3dbdAFrpbqhglYjVbeHdlp5myNw3tGTzBA8aWDUGWZvAyFB0W5QW1FyMsCOowlx5TDAfGHmArf1Yp6n36ceidfBU86xUoerO6nELT1tat0Wd2uEEloTURwC1QctTKUZ7Ru1rnrsFWaHK5mJOpHWIGGSl0Y9rB+lp6T06SHGxg7SDecuxGlx3wbuzChemyZ12uT4CqZcOghwgLAEedQJDqfY1l27BVtmmJUbuEH6Q8sC15/2U9Z4971j2vLecqkSsM6buDN4leldGweY5Q7GX3k596JWD8iNiEgB4Byia398tWlBdUe2HOqXDoykdrlM6J6b3n9LBNKWTNiWnSnUb7BJTP88XTpdURh/6S+qkFxT7Rw9ewCKBOnFRJjCYSl+z1W5B73k0V8h1rvDEVeYK8S5zhWhOgfum5VRTpEr9PPoFAF3s2Ukvpk76SRpvfXPwu6haj6EBaTNVdkQHw7ewsUf4hUlorpPQp6x/fxK6jde/0yQ0Id413gpKVykJX/n+33649+0z/+jvi+OPXp/d8OHXOzy7Ae/w7Aa827Mbmu493LRN3v3oZ9/6+NcTACTpShrPH3HpiZub+xRTJblcwByIYkW03nhGTlCk+VFGAlcf61T1nz1txiDeu7/Js7x7CcAVAPPzsS5/73oP4NmAPfNWfzfPfavRXDq6yvp8rA+hPsDzsQghReZZ3vGew9syxHMArlz99qX5+VhLfe271x8D8DSAJwE8DKDDqlW3658A/gzgRQBXf/ydS79f/vJfDedigrnyMksAAAAASUVORK5CYII=",
+      "backgroundColor": "rgba(255,255,255,0)",
+      "borderColor": "rgba(0,0,0,0)",
+      "borderWidth": 0,
+      "borderRadius": 0,
+      "dropDownIcon": "",
+      "dropDownIconSize": 16,
+      "dropdownBackgroundColor": "rgba(2, 19, 51, 0.95)",
+      "dropdownMaxHeight": 108,
+      "dropdownMarginTop": 12,
+      "scrollBarWidth": 6,
+      "scrollBackgroundColor": "rgba(255,255,255,0)",
+      "scrollBarColor": "rgba(144,147,153,0.3)",
+      "menuHeight": 34,
+      "menuMarginLeft": 20,
+      "menuMarginTop": 0,
+      "menuDefaultFontFamily": "SourceHanSansCN-Normal,SourceHanSansCN",
+      "menuDefaultFontSize": 14,
+      "menuDefaultColor": "rgba(180,183,193,1)",
+      "menuDefaultFontStyle": "normal",
+      "menuDefaultFontWeight": "normal",
+      "menuDefaultLetterSpacing": 0,
+      "menuDefaultLineHeight": 34,
+      "menuDefaultBackgroundType": "color",
+      "menuDefaultBackgroundColor": "rgba(0,0,0,0.2)",
+      "menuDefaultBackgroundImage": "",
+      "menuHoverFontFamily": "SourceHanSansCN-Normal,SourceHanSansCN",
+      "menuHoverFontSize": 14,
+      "menuHoverColor": "rgba(255,255,255,1)",
+      "menuHoverFontStyle": "normal",
+      "menuHoverFontWeight": "normal",
+      "menuHoverLetterSpacing": 0,
+      "menuHoverLineHeight": 34,
+      "menuHoverBackgroundType": "custom",
+      "menuHoverBackgroundColor": "rgba(255,255,255,0)",
+      "menuHoverBackgroundImage": "data:image/png;base64,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"
+    }
+  },
+  "template": [
+    {
+      "value": "zhinan",
+      "label": "指南",
+      "disabled": false,
+      "children": [
+        {
+          "value": "shejiyuanze",
+          "label": "设计原则",
+          "children": [
+            {
+              "value": "yizhi",
+              "label": "一致"
+            },
+            {
+              "value": "fankui",
+              "label": "反馈"
+            },
+            {
+              "value": "xiaolv",
+              "label": "效率"
+            },
+            {
+              "value": "kekong",
+              "label": "可控"
+            }
+          ]
+        },
+        {
+          "value": "daohang",
+          "label": "导航",
+          "children": [
+            {
+              "value": "cexiangdaohang",
+              "label": "侧向导航"
+            },
+            {
+              "value": "dingbudaohang",
+              "label": "顶部导航"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "zujian",
+      "label": "组件",
+      "disabled": false,
+      "children": [
+        {
+          "value": "basic",
+          "label": "Basic",
+          "children": [
+            {
+              "value": "layout",
+              "label": "Layout 布局"
+            },
+            {
+              "value": "color",
+              "label": "Color 色彩"
+            },
+            {
+              "value": "typography",
+              "label": "Typography 字体"
+            },
+            {
+              "value": "icon",
+              "label": "Icon 图标"
+            },
+            {
+              "value": "button",
+              "label": "Button 按钮"
+            }
+          ]
+        },
+        {
+          "value": "form",
+          "label": "Form",
+          "children": [
+            {
+              "value": "radio",
+              "label": "Radio 单选框"
+            },
+            {
+              "value": "checkbox",
+              "label": "Checkbox 多选框"
+            },
+            {
+              "value": "input",
+              "label": "Input 输入框"
+            },
+            {
+              "value": "input-number",
+              "label": "InputNumber 计数器"
+            },
+            {
+              "value": "select",
+              "label": "Select 选择器"
+            },
+            {
+              "value": "cascader",
+              "label": "Cascader 级联选择器"
+            },
+            {
+              "value": "switch",
+              "label": "Switch 开关"
+            },
+            {
+              "value": "slider",
+              "label": "Slider 滑块"
+            },
+            {
+              "value": "time-picker",
+              "label": "TimePicker 时间选择器"
+            },
+            {
+              "value": "date-picker",
+              "label": "DatePicker 日期选择器"
+            },
+            {
+              "value": "datetime-picker",
+              "label": "DateTimePicker 日期时间选择器"
+            },
+            {
+              "value": "upload",
+              "label": "Upload 上传"
+            },
+            {
+              "value": "rate",
+              "label": "Rate 评分"
+            },
+            {
+              "value": "form",
+              "label": "Form 表单"
+            }
+          ]
+        },
+        {
+          "value": "data",
+          "label": "Data",
+          "children": [
+            {
+              "value": "table",
+              "label": "Table 表格"
+            },
+            {
+              "value": "tag",
+              "label": "Tag 标签"
+            },
+            {
+              "value": "progress",
+              "label": "Progress 进度条"
+            },
+            {
+              "value": "tree",
+              "label": "Tree 树形控件"
+            },
+            {
+              "value": "pagination",
+              "label": "Pagination 分页"
+            },
+            {
+              "value": "badge",
+              "label": "Badge 标记"
+            }
+          ]
+        },
+        {
+          "value": "notice",
+          "label": "Notice",
+          "children": [
+            {
+              "value": "alert",
+              "label": "Alert 警告"
+            },
+            {
+              "value": "loading",
+              "label": "Loading 加载"
+            },
+            {
+              "value": "message",
+              "label": "Message 消息提示"
+            },
+            {
+              "value": "message-box",
+              "label": "MessageBox 弹框"
+            },
+            {
+              "value": "notification",
+              "label": "Notification 通知"
+            }
+          ]
+        },
+        {
+          "value": "navigation",
+          "label": "Navigation",
+          "children": [
+            {
+              "value": "menu",
+              "label": "NavMenu 导航菜单"
+            },
+            {
+              "value": "tabs",
+              "label": "Tabs 标签页"
+            },
+            {
+              "value": "breadcrumb",
+              "label": "Breadcrumb 面包屑"
+            },
+            {
+              "value": "dropdown",
+              "label": "Dropdown 下拉菜单"
+            },
+            {
+              "value": "steps",
+              "label": "Steps 步骤条"
+            }
+          ]
+        },
+        {
+          "value": "others",
+          "label": "Others",
+          "children": [
+            {
+              "value": "dialog",
+              "label": "Dialog 对话框"
+            },
+            {
+              "value": "tooltip",
+              "label": "Tooltip 文字提示"
+            },
+            {
+              "value": "popover",
+              "label": "Popover 弹出框"
+            },
+            {
+              "value": "card",
+              "label": "Card 卡片"
+            },
+            {
+              "value": "carousel",
+              "label": "Carousel 走马灯"
+            },
+            {
+              "value": "collapse",
+              "label": "Collapse 折叠面板"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "ziyuan",
+      "label": "资源",
+      "disabled": true,
+      "children": [
+        {
+          "value": "axure",
+          "label": "Axure Components"
+        },
+        {
+          "value": "sketch",
+          "label": "Sketch Templates"
+        },
+        {
+          "value": "jiaohu",
+          "label": "组件交互文档"
+        }
+      ]
+    }
+  ]
+}

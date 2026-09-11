@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "id": 81,
+    "name": "城市模板",
+    "prop": "maptalks",
+    "componentName": "map-talks",
+    "first_level_menu": "地图",
+    "second_level_menu": "",
+    "thumbnail": "/img/city.png"
+  },
+  "config": {
+    "title": "城市模板",
+    "name": "城市模板",
+    "display": true,
+    "isLock": false,
+    "icon": "icon-table",
+    "img": "/img/city.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "dataType": 0,
+    "data": [],
+    "listenArgs": [],
+    "events": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "unitPavenType": "percent",
+    "component": {
+      "width": 100,
+      "height": 100,
+      "type": "map",
+      "name": "map-talks",
+      "prop": "maptalks"
+    },
+    "option": {
+      "version": "1",
+      "cityType": "cityEditor",
+      "cover": "",
+      "id": "",
+      "cityJsonPath": "",
+      "cityList": [],
+      "simplifySceneList": []
+    }
+  },
+  "template": []
+}

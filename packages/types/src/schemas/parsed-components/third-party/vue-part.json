@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "id": 21,
+    "name": "vue2 片段",
+    "prop": "vue-part",
+    "componentName": "vue-part",
+    "first_level_menu": "第三方",
+    "second_level_menu": "",
+    "thumbnail": "/img/vue-part.33ccd601.png"
+  },
+  "config": {
+    "name": "vue2 片段",
+    "title": "vue2 片段",
+    "display": true,
+    "icon": "icon-bar",
+    "img": "/img/vue-part.33ccd601.png",
+    "callbackArgs": [],
+    "cbArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "name": "广州",
+        "value": 10
+      },
+      {
+        "name": "深圳",
+        "value": 10
+      },
+      {
+        "name": "佛山",
+        "value": 10
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "echartFormatter": "(data)=>{\nconsole.log(data)\nreturn {}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 600,
+      "height": 300,
+      "name": "vue-part",
+      "prop": "vue-part"
+    },
+    "option": {
+      "funName": "",
+      "template": "<template>\n  <div class=\"wrapper\">\n    <div class=\"sub-title\">{{ message}}</div>\n    <div class=\"sub-tabs\" v-for=\"item in dataList\" :key=\"item.value\" @click.stop=\"onClick(item)\">\n      {{ item.name }}\n    </div>\n  </div>\n</template>",
+      "js": "function generate(info) {\n  /*\n  ** info Object组件自带参数\n  * @params id: 组件id\n  * @params list: 绑定数据\n  * @params emitEvent: 通信函数,固定交互通信函数名为fireCustomCode_${组件id}，或fireCustomCode_${配置自定义函数名}\n  * @params defaultFun: 内置的函数 如:深拷贝cloneDeep, 防抖debounce, 节流throttle\n  */\n  const { id, list, emitEvent, defaultFun } = info || {};\n  const { cloneDeep } = defaultFun || {};\n  return {\n    name: 'customCode',\n    inject: ['main'],\n    data() {\n      return {\n        dataList: list,\n        message: 'vue2 片段'\n      }\n    },\n    watch: {},\n    computed: {},\n    created() {},\n    mounted() {},\n    methods: {\n      // 系统自带交互方法\n      onClick(item) {\n        if (id && emitEvent) {\n          emitEvent(`fireCustomCode_${id}`, item);\n        }\n      }\n    },\n  }\n}",
+      "css": ".wrapper {\n  height: 100%;\n  font-size: 20px;\n  color: #ffffff;\n  text-align: center;\n}\n.sub-title {\n  height: 60px;\n  line-height: 60px;\n  font-size: 26px;\n  color: #ffffff;\n  background: #383b47;\n}\n.sub-tabs {\n  margin: 5px 0px;\n  padding: 5px 10px;\n  height: calc((100% - 60px) / 3 - 20px);\n  line-height: 60px;\n  background: #8b58e7;\n}"
+    },
+    "left": 0,
+    "top": 0,
+    "showSubComponent": false
+  },
+  "template": [
+    {
+      "name": "广州",
+      "value": 10
+    },
+    {
+      "name": "深圳",
+      "value": 10
+    },
+    {
+      "name": "佛山",
+      "value": 10
+    }
+  ]
+}

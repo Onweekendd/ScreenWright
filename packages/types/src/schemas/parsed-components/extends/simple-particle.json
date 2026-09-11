@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "id": 93,
+    "name": "上升粒子",
+    "prop": "simple-particle",
+    "componentName": "simple-particle",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/particle.12asqw.gif"
+  },
+  "config": {
+    "title": "上升粒子",
+    "name": "上升粒子",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/particle.12asqw.gif",
+    "callbackArgs": [],
+    "events": [],
+    "dataSource": {},
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 450,
+      "height": 250,
+      "name": "simple-particle",
+      "prop": "simple-particle"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "data": [],
+    "dataRemark": [],
+    "unitPavenType": "",
+    "option": {
+      "size": 2,
+      "number": 100,
+      "direction": "top",
+      "speed": 5,
+      "colorList": [
+        {
+          "name": "颜色1",
+          "color": "rgba(62,244,138,1)"
+        },
+        {
+          "name": "颜色2",
+          "color": "rgba(0,242,254,1)"
+        },
+        {
+          "name": "颜色3",
+          "color": "rgba(244,189,62,1)"
+        }
+      ]
+    }
+  },
+  "template": []
+}

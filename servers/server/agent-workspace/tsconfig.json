@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noImplicitThis": false,
+    "baseUrl": ".",
+    "paths": {
+      "@vue-part": ["./types/vue-part.ts"]
+    }
+  },
+  "vueCompilerOptions": {
+    "target": 2.7
+  },
+  "include": ["types/**/*.ts", "types/**/*.dts", "**/*.vue"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "id": 96,
+    "name": "滚动选择器",
+    "prop": "scrollPicker",
+    "componentName": "scrollPicker",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/scrollPicker.2082ce26.gif"
+  },
+  "config": {
+    "title": "滚动选择器",
+    "name": "滚动选择器",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/scrollPicker.2082ce26.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 150,
+      "height": 320,
+      "name": "scrollPicker",
+      "prop": "scrollPicker"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "label": "Tab A",
+        "value": "1"
+      },
+      {
+        "label": "Tab B",
+        "value": "2"
+      },
+      {
+        "label": "Tab C",
+        "value": "3"
+      },
+      {
+        "label": "Tab D",
+        "value": "4"
+      },
+      {
+        "label": "Tab E",
+        "value": "5"
+      },
+      {
+        "label": "Tab F",
+        "value": "6"
+      },
+      {
+        "label": "Tab G",
+        "value": "7"
+      },
+      {
+        "label": "Tab H",
+        "value": "8"
+      },
+      {
+        "label": "Tab I",
+        "value": "9"
+      },
+      {
+        "label": "Tab J",
+        "value": "10"
+      },
+      {
+        "label": "Tab K",
+        "value": "11"
+      },
+      {
+        "label": "Tab L",
+        "value": "12"
+      },
+      {
+        "label": "Tab M",
+        "value": "13"
+      },
+      {
+        "label": "Tab N",
+        "value": "14"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "label",
+        "map": "label",
+        "decription": "标签"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "option": {
+      "globalConfig": {
+        "defaultSelected": 1,
+        "showNum": 7,
+        "tabInterval": 0,
+        "permutationType": "column",
+        "autoCarousel": false,
+        "tabIntervalTime": 1
+      },
+      "defaultObj": {
+        "textFontFamily": "Alibaba-PuHuiTi-Regular",
+        "textFontSize": 20,
+        "textLineHeight": 20,
+        "textLetterSpacing": 0,
+        "textColor": "rgba(255,255,255,1)",
+        "textFontStyle": "normal",
+        "textFontWeight": "normal",
+        "textAlign": "center",
+        "isTextShadow": false,
+        "textShadowColor": "rgba(255,255,255,1)",
+        "textShadowX": 0,
+        "textShadowY": 0,
+        "textShadowBlur": 4,
+        "backgroundType": "color",
+        "backgroundColor": "rgba(25,139,245,0.6)",
+        "backgroundImage": "version-test/assets/newSystemAssets/标题栏/标题栏03.png",
+        "backgroundImageType": "contain"
+      },
+      "activeObj": {
+        "textFontFamily": "Alibaba-PuHuiTi-Regular",
+        "textFontSize": 28,
+        "textLineHeight": 28,
+        "textLetterSpacing": 0,
+        "textColor": "rgba(255,255,255,1)",
+        "textFontStyle": "normal",
+        "textFontWeight": "normal",
+        "textAlign": "center",
+        "isTextShadow": true,
+        "textShadowColor": "rgba(255,255,255,1)",
+        "textShadowX": 0,
+        "textShadowY": 0,
+        "textShadowBlur": 8,
+        "backgroundType": "color",
+        "backgroundColor": "rgba(25,139,245,1)"
+      }
+    }
+  },
+  "template": [
+    {
+      "content": "Tab A",
+      "s": "1"
+    },
+    {
+      "content": "Tab B",
+      "s": "2"
+    },
+    {
+      "content": "Tab C",
+      "s": "3"
+    },
+    {
+      "content": "Tab D",
+      "s": "4"
+    },
+    {
+      "content": "Tab E",
+      "s": "5"
+    },
+    {
+      "content": "Tab F",
+      "s": "6"
+    },
+    {
+      "content": "Tab G",
+      "s": "7"
+    },
+    {
+      "content": "Tab H",
+      "s": "8"
+    },
+    {
+      "content": "Tab I",
+      "s": "9"
+    },
+    {
+      "content": "Tab J",
+      "s": "10"
+    },
+    {
+      "content": "Tab K",
+      "s": "11"
+    },
+    {
+      "content": "Tab L",
+      "s": "12"
+    },
+    {
+      "content": "Tab M",
+      "s": "13"
+    },
+    {
+      "content": "Tab N",
+      "s": "14"
+    }
+  ]
+}

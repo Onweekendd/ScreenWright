@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="referrer" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/cdn/animate/3.5.1/animate.min.css" type="text/css" />
+    <link rel="stylesheet" href="/cdn/componentAnimate/componentAnimate.css" type="text/css" />
+    <title>Screenwright</title>
+    <script src="/webconfig.js" type="text/javascript"></script>
+  </head>
+  <style>
+    body,
+    html,
+    #app {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .sketch {
+      width: 100%;
+      height: 100%;
+      background-color: #232630;
+      position: relative;
+    }
+    .sketch-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .sketch video {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
+  <body>
+    <div id="app">
+      <div class="sketch" style="width: 100%; height: 100%">
+        <div class="sketch-wrapper" id="sketch-mask-scene">
+          <video src="/video/loading/loading-mask-scene.webm" autoplay loop muted />
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts" defer></script>
+    <script src="/cdn/animate/jquery-wowslider.js"></script>
+    <script src="/cdn/extend/marked.min.js"></script>
+    <script src="/cdn/h5player/h5player.min.js"></script>
+    <script src="/cdn/pdfjs/pdf.min.js"></script>
+    <script src="/tinymce/tinymce.min.js"></script>
+    <script src="/cdn/html2canvas/html2canvas.js"></script>
+    <script>
+      function parseUrl(search) {
+        const url = search || window.location.href;
+        const a = url.substring(url.indexOf("?") + 1);
+        const b = a.split("&");
+        const obj = {};
+        b.forEach((item) => {
+          const c = item.split("=");
+          obj[c[0]] = c[1]?.indexOf("#%") ? c[1].split("#")[0] : c[1];
+        });
+        return obj;
+      }
+      const searchParam = parseUrl(location.href);
+      if (searchParam.notPlan && searchParam.notPlan === "true") {
+        document.getElementById("sketch-mask-scene").style.display = "none";
+      }
+      function isMobileDevice() {
+        // 匹配常见移动端设备的User-Agent特征
+        const reg = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|iOS/i;
+        // 同时排除平板等大屏设备误判（可选，根据需求调整）
+        const isTablet = /iPad|Tablet|Android(?!.*Mobile)/i.test(navigator.userAgent);
+        return reg.test(navigator.userAgent) && !isTablet;
+      }
+
+      // 页面加载完成后执行（避免DOM未加载完成）
+      document.addEventListener("DOMContentLoaded", function () {
+        // 判断是否为移动端，添加/移除类名
+        if (isMobileDevice()) {
+          document.body.classList.add("is-phone");
+        } else {
+          document.body.classList.remove("is-phone");
+        }
+      });
+
+      // 可选：监听窗口尺寸变化（适配横竖屏切换/PC端缩放）
+      window.addEventListener("resize", function () {
+        if (isMobileDevice()) {
+          document.body.classList.add("is-phone");
+        } else {
+          document.body.classList.remove("is-phone");
+        }
+      });
+    </script>
+  </body>
+</html>

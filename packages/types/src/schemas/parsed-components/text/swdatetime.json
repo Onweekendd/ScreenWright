@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "id": 66,
+    "name": "实时时间",
+    "prop": "swdatetime",
+    "componentName": "sw-datetime",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/time.20240514.png"
+  },
+  "config": {
+    "name": "实时时间",
+    "title": "实时时间",
+    "display": true,
+    "icon": "icon-datetime",
+    "img": "/img/time.20240514.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "listenArgs": [],
+    "component": {
+      "width": 250,
+      "height": 30,
+      "name": "sw-datetime",
+      "prop": "swdatetime"
+    },
+    "option": {
+      "format": "yyyy-MM-dd HH:mm:ss",
+      "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSize": 20,
+      "color": "rgba(255, 255, 255, 1)",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "textAlign": "center",
+      "textAlignVertical": "center",
+      "split": 0,
+      "backgroundColor": "rgba(255, 255, 255, 0)"
+    }
+  },
+  "template": []
+}

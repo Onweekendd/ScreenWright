@@ -1,0 +1,32 @@
+{
+  "name": "create-screenwright-app",
+  "version": "0.1.0",
+  "description": "创建 Screenwright Artifact Vue 应用",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/create-artifact-app.d.ts",
+      "default": "./dist/create-artifact-app.js"
+    }
+  },
+  "bin": {
+    "create-screenwright-app": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-template.mjs",
+    "check-types": "tsc -p tsconfig.json --noEmit",
+    "prepack": "npm run build",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.2",
+    "typescript": "5.9.2",
+    "vitest": "^4.0.16"
+  }
+}

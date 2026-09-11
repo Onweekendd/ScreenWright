@@ -1,0 +1,512 @@
+{
+  "meta": {
+    "id": 68,
+    "name": "词云",
+    "prop": "swTextWordCloud",
+    "componentName": "sw-textWordCloud",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/textWordCloud.39228e2b.gif"
+  },
+  "config": {
+    "title": "词云",
+    "name": "词云",
+    "display": true,
+    "icon": "icon-scroll",
+    "img": "/img/textWordCloud.39228e2b.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "文本"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "data": [
+      {
+        "text": "北京",
+        "value": 93
+      },
+      {
+        "text": "上海",
+        "value": 45
+      },
+      {
+        "text": "广州",
+        "value": 56
+      },
+      {
+        "text": "深圳",
+        "value": 80
+      },
+      {
+        "text": "杭州",
+        "value": 88
+      },
+      {
+        "text": "成都",
+        "value": 64
+      },
+      {
+        "text": "苏州",
+        "value": 71
+      },
+      {
+        "text": "天津",
+        "value": 70
+      },
+      {
+        "text": "武汉",
+        "value": 61
+      },
+      {
+        "text": "重庆",
+        "value": 64
+      },
+      {
+        "text": "南京",
+        "value": 62
+      },
+      {
+        "text": "长沙",
+        "value": 57
+      },
+      {
+        "text": "郑州",
+        "value": 55
+      },
+      {
+        "text": "西安",
+        "value": 53
+      },
+      {
+        "text": "大连",
+        "value": 54
+      },
+      {
+        "text": "无锡",
+        "value": 60
+      },
+      {
+        "text": "青岛",
+        "value": 57
+      },
+      {
+        "text": "济南",
+        "value": 48
+      },
+      {
+        "text": "沈阳",
+        "value": 49
+      },
+      {
+        "text": "宁波",
+        "value": 58
+      },
+      {
+        "text": "佛山",
+        "value": 62
+      },
+      {
+        "text": "南通",
+        "value": 54
+      },
+      {
+        "text": "长春",
+        "value": 45
+      },
+      {
+        "text": "烟台",
+        "value": 48
+      },
+      {
+        "text": "哈尔滨",
+        "value": 43
+      },
+      {
+        "text": "石家庄",
+        "value": 43
+      },
+      {
+        "text": "福州",
+        "value": 45
+      },
+      {
+        "text": "东莞",
+        "value": 49
+      },
+      {
+        "text": "常州",
+        "value": 49
+      },
+      {
+        "text": "太原",
+        "value": 38
+      },
+      {
+        "text": "合肥",
+        "value": 40
+      },
+      {
+        "text": "昆明",
+        "value": 37
+      },
+      {
+        "text": "唐山",
+        "value": 49
+      },
+      {
+        "text": "绍兴",
+        "value": 44
+      },
+      {
+        "text": "温州",
+        "value": 42
+      },
+      {
+        "text": "潍坊",
+        "value": 38
+      },
+      {
+        "text": "泉州",
+        "value": 39
+      },
+      {
+        "text": "南昌",
+        "value": 56
+      },
+      {
+        "text": "嘉兴",
+        "value": 40
+      },
+      {
+        "text": "徐州",
+        "value": 35
+      },
+      {
+        "text": "淄博",
+        "value": 37
+      },
+      {
+        "text": "厦门",
+        "value": 66
+      },
+      {
+        "text": "鄂尔多斯",
+        "value": 44
+      },
+      {
+        "text": "贵阳",
+        "value": 28
+      },
+      {
+        "text": "扬州",
+        "value": 39
+      },
+      {
+        "text": "南宁",
+        "value": 29
+      },
+      {
+        "text": "呼和浩特",
+        "value": 33
+      },
+      {
+        "text": "金华",
+        "value": 40
+      },
+      {
+        "text": "台州",
+        "value": 37
+      },
+      {
+        "text": "乌鲁木齐",
+        "value": 29
+      },
+      {
+        "text": "镇江",
+        "value": 36
+      },
+      {
+        "text": "威海",
+        "value": 33
+      },
+      {
+        "text": "珠海",
+        "value": 32
+      },
+      {
+        "text": "中山",
+        "value": 36
+      }
+    ],
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 520,
+      "height": 400,
+      "name": "sw-textWordCloud",
+      "prop": "swTextWordCloud"
+    },
+    "option": {
+      "type": "scroll",
+      "scroll": true,
+      "speed": 10,
+      "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSize": 26,
+      "textFontSize": 12,
+      "color": "rgba(255, 255, 255, 1)",
+      "maxNumber": 100,
+      "dragControl": false,
+      "seriesColor": [
+        "rgba(62,67,244,1)",
+        "rgba(61,227,251,1)",
+        "rgba(137,181,252,1)"
+      ]
+    }
+  },
+  "template": [
+    {
+      "text": "北京",
+      "value": 93
+    },
+    {
+      "text": "上海",
+      "value": 45
+    },
+    {
+      "text": "广州",
+      "value": 56
+    },
+    {
+      "text": "深圳",
+      "value": 80
+    },
+    {
+      "text": "杭州",
+      "value": 88
+    },
+    {
+      "text": "成都",
+      "value": 64
+    },
+    {
+      "text": "苏州",
+      "value": 71
+    },
+    {
+      "text": "天津",
+      "value": 70
+    },
+    {
+      "text": "武汉",
+      "value": 61
+    },
+    {
+      "text": "重庆",
+      "value": 64
+    },
+    {
+      "text": "南京",
+      "value": 62
+    },
+    {
+      "text": "长沙",
+      "value": 57
+    },
+    {
+      "text": "郑州",
+      "value": 55
+    },
+    {
+      "text": "西安",
+      "value": 53
+    },
+    {
+      "text": "大连",
+      "value": 54
+    },
+    {
+      "text": "无锡",
+      "value": 60
+    },
+    {
+      "text": "青岛",
+      "value": 57
+    },
+    {
+      "text": "济南",
+      "value": 48
+    },
+    {
+      "text": "沈阳",
+      "value": 49
+    },
+    {
+      "text": "宁波",
+      "value": 58
+    },
+    {
+      "text": "佛山",
+      "value": 62
+    },
+    {
+      "text": "南通",
+      "value": 54
+    },
+    {
+      "text": "长春",
+      "value": 45
+    },
+    {
+      "text": "烟台",
+      "value": 48
+    },
+    {
+      "text": "哈尔滨",
+      "value": 43
+    },
+    {
+      "text": "石家庄",
+      "value": 43
+    },
+    {
+      "text": "福州",
+      "value": 45
+    },
+    {
+      "text": "东莞",
+      "value": 49
+    },
+    {
+      "text": "常州",
+      "value": 49
+    },
+    {
+      "text": "太原",
+      "value": 38
+    },
+    {
+      "text": "合肥",
+      "value": 40
+    },
+    {
+      "text": "昆明",
+      "value": 37
+    },
+    {
+      "text": "唐山",
+      "value": 49
+    },
+    {
+      "text": "绍兴",
+      "value": 44
+    },
+    {
+      "text": "温州",
+      "value": 42
+    },
+    {
+      "text": "潍坊",
+      "value": 38
+    },
+    {
+      "text": "泉州",
+      "value": 39
+    },
+    {
+      "text": "南昌",
+      "value": 56
+    },
+    {
+      "text": "嘉兴",
+      "value": 40
+    },
+    {
+      "text": "徐州",
+      "value": 35
+    },
+    {
+      "text": "淄博",
+      "value": 37
+    },
+    {
+      "text": "厦门",
+      "value": 66
+    },
+    {
+      "text": "鄂尔多斯",
+      "value": 44
+    },
+    {
+      "text": "贵阳",
+      "value": 28
+    },
+    {
+      "text": "扬州",
+      "value": 39
+    },
+    {
+      "text": "南宁",
+      "value": 29
+    },
+    {
+      "text": "呼和浩特",
+      "value": 33
+    },
+    {
+      "text": "金华",
+      "value": 40
+    },
+    {
+      "text": "台州",
+      "value": 37
+    },
+    {
+      "text": "乌鲁木齐",
+      "value": 29
+    },
+    {
+      "text": "镇江",
+      "value": 36
+    },
+    {
+      "text": "威海",
+      "value": 33
+    },
+    {
+      "text": "珠海",
+      "value": 32
+    },
+    {
+      "text": "中山",
+      "value": 36
+    }
+  ]
+}

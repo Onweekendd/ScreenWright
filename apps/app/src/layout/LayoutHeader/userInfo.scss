@@ -1,0 +1,20 @@
+@import "src/style/theme.scss";
+
+.header-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .user-image {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: $sw-text;
+
+    :deep(.el-icon) {
+      font-size: 18px;
+    }
+  }
+}

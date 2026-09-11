@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "id": 98,
+    "name": "栅格进度条",
+    "prop": "rasterProgressBar",
+    "componentName": "rasterProgressBar",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/rasterProgressBar.d486338e.png"
+  },
+  "config": {
+    "title": "栅格进度条",
+    "name": "栅格进度条",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/rasterProgressBar.d486338e.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 400,
+      "height": 20,
+      "name": "rasterProgressBar",
+      "prop": "rasterProgressBar"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "value": "0.65"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      },
+      {
+        "key": "max",
+        "map": "max",
+        "decription": "最大值"
+      },
+      {
+        "key": "min",
+        "map": "min",
+        "decription": "最小值"
+      }
+    ],
+    "option": {
+      "globalConfig": {
+        "animatieTime": 400,
+        "numType": "percent",
+        "isUsed": true,
+        "extremeValueMax": 1,
+        "extremeValueMin": 0
+      },
+      "gridConfig": {
+        "sectionNums": 10,
+        "borderRadius": 5,
+        "foregroundOpacity": 100,
+        "backgroundOpacity": 0,
+        "interval": 0.2,
+        "foregroundColor": {
+          "type": "linear-gradient",
+          "angle": "0",
+          "colors": [
+            {
+              "color": "rgba(24,144,255,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(30,231,231,1)",
+              "per": 100
+            }
+          ]
+        },
+        "backgroundColor": "rgba(59,58,58,1)"
+      },
+      "seriesConfig": {
+        "seriesFontFamily": "Alibaba-PuHuiTi-Regular",
+        "seriesFontSize": 18,
+        "seriesLetterSpacing": 0,
+        "seriesColor": "rgba(255,255,255,1)",
+        "seriesFontStyle": "normal",
+        "seriesFontWeight": "normal",
+        "seriesLineHeight": 18,
+        "decimalPlace": 1,
+        "seriesTranslateX": 0,
+        "seriesTranslateY": -34,
+        "bgImgSrc": "version-test/assets/newSystemAssets/标牌/标牌-20.png",
+        "bgImgWidth": 97,
+        "bgImgHeight": 49,
+        "bgImgTranslateX": 0,
+        "bgImgTranslateY": 0,
+        "unitText": "",
+        "unitTranslateX": 0,
+        "unitTranslateY": 0,
+        "isUnitCustomStyle": false,
+        "unitFontFamily": "Alibaba-PuHuiTi-Regular",
+        "unitFontSize": 20,
+        "unitLineHeight": 20,
+        "unitLetterSpacing": 0,
+        "unitColor": "rgba(255,255,255,1)",
+        "unitFontStyle": "normal",
+        "unitFontWeight": "normal",
+        "tagShow": true,
+        "tagFontFamily": "Alibaba-PuHuiTi-Regular",
+        "tagFontSize": 18,
+        "tagLetterSpacing": 0,
+        "tagColor": "rgba(255,255,255,1)",
+        "tagFontStyle": "normal",
+        "tagFontWeight": "normal",
+        "tagLineHeight": 18,
+        "tagTranslateX": 0,
+        "tagTranslateY": 0,
+        "tagUnitText": "",
+        "tagUnitTranslateX": 0,
+        "tagUnitTranslateY": 0,
+        "isTagUnitCustomStyle": false,
+        "tagUnitFontFamily": "Alibaba-PuHuiTi-Regular",
+        "tagUnitFontSize": 20,
+        "tagUnitLineHeight": 20,
+        "tagUnitLetterSpacing": 0,
+        "tagUnitColor": "rgba(255,255,255,1)",
+        "tagUnitFontStyle": "normal",
+        "tagUnitFontWeight": "normal"
+      },
+      "sectionList": [
+        {
+          "sectionMin": 0.3,
+          "sectionMax": 0.6,
+          "sectionBgColor": {
+            "type": "linear-gradient",
+            "angle": "0",
+            "colors": [
+              {
+                "color": "rgba(108,233,36,1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(253,206,37,1)",
+                "per": 100
+              }
+            ]
+          },
+          "sectionOpacity": 100,
+          "seriesFontFamily": "Alibaba-PuHuiTi-Regular",
+          "seriesFontSize": 18,
+          "seriesLineHeight": 20,
+          "seriesLetterSpacing": 0,
+          "seriesColor": "rgba(255,242,173,1)",
+          "seriesFontStyle": "normal",
+          "seriesFontWeight": "normal",
+          "seriesBgImgSrc": "version-test/assets/newSystemAssets/标牌/标牌-19.png",
+          "seriesBgImgWidth": 97,
+          "seriesBgImgHeight": 49,
+          "seriesBgImgTranslateX": 0,
+          "seriesBgImgTranslateY": 0,
+          "sectionName": "区间1"
+        }
+      ],
+      "refresh": true
+    }
+  },
+  "template": [
+    {
+      "value": "0.65"
+    }
+  ]
+}

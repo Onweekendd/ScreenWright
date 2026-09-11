@@ -1,0 +1,47 @@
+.sw-message-box {
+  &.el-message-box {
+    --el-messagebox-title-color: rgba(255, 255, 255, 0.699);
+    --el-bg-color: #1b1e25;
+    --el-messagebox-content-color: #606266;
+    --el-messagebox-content-font-size: 14px;
+    .el-input__wrapper {
+      background-color: #1a1e27;
+      box-shadow: 0 0 0 1px#333543;
+    }
+  }
+}
+
+.el-message-box__content {
+  padding: 10px 15px;
+}
+
+.el-message-box__message {
+  font-size: 14px;
+  font-family: Source Han Sans CN-Normal, Source Han Sans CN;
+  font-weight: 400;
+  color: #b4b7c1;
+}
+.el-message-box__btns {
+  padding: 5px 15px 0;
+  text-align: right;
+  .el-button {
+    width: fit-content;
+    height: 32px;
+    background-color: #3d404c;
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    &:focus-visible {
+      outline: none;
+    }
+    &:hover {
+      background-color: #3d404c;
+      color: #fff;
+    }
+  }
+  .el-button--primary {
+    background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    margin-left: 10px;
+  }
+}

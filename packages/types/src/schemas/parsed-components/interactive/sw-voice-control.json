@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "id": 115,
+    "name": "语音控件beta",
+    "prop": "sw-voice-control",
+    "componentName": "sw-voice-control",
+    "first_level_menu": "交互",
+    "second_level_menu": null,
+    "thumbnail": "/img/default-voice.20240927.png"
+  },
+  "config": {
+    "title": "语音控件beta",
+    "name": "语音控件beta",
+    "display": true,
+    "icon": "icon-video",
+    "img": "/img/default-voice.20240927.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "value": ""
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "文本"
+      }
+    ],
+    "option": {
+      "asrUrl": "",
+      "isWakeUp": false,
+      "wakeUpWord": "小凡同学",
+      "hotwords": "凡拓数创 20",
+      "mode": "2pass",
+      "itn": false,
+      "showResult": false,
+      "wav_name": "h5",
+      "is_speaking": false,
+      "chunk_size": [
+        5,
+        10,
+        5
+      ],
+      "chunk_interval": 10,
+      "voiceImg": "version-test/assets/defaultImg/default-voice.png",
+      "voiceStartImg": "version-test/assets/defaultImg/default-voicestart.png"
+    },
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 120,
+      "height": 120,
+      "name": "sw-voice-control",
+      "prop": "sw-voice-control"
+    }
+  },
+  "template": [
+    {
+      "label": "一级1",
+      "isChecked": false,
+      "value": 1,
+      "children": [
+        {
+          "label": "一级1-1",
+          "value": "1-1",
+          "isChecked": false,
+          "children": [
+            {
+              "label": "一级1-1-1",
+              "value": "1-1-1",
+              "isChecked": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "二级1",
+      "value": "2",
+      "isChecked": false
+    }
+  ]
+}

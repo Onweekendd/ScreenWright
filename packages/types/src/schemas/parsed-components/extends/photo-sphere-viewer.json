@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "id": 139,
+    "name": "360全景容器v1",
+    "prop": "photo-sphere-viewer",
+    "componentName": "photo-sphere-viewer",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "360全景容器v1",
+    "name": "360全景容器v1",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/default.1026.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "./scatter",
+    "data": [
+      {
+        "value": "version-test/assets/defaultImg/example-photo-sphere.jpg"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 960,
+      "height": 540,
+      "name": "photo-sphere-viewer",
+      "prop": "photo-sphere-viewer"
+    },
+    "option": {
+      "muted": true,
+      "initLoad": false,
+      "cover": "",
+      "minFov": 30,
+      "maxFov": 90,
+      "defaultZoomLvl": 50,
+      "fisheye": false,
+      "defaultYaw": 0,
+      "defaultPitch": 0,
+      "loadingImg": "version-test/assets/photoSphereImg/loading.png",
+      "loadingTxt": "",
+      "mousewheel": true,
+      "mousemove": true,
+      "keyboard": "fullscreen",
+      "mousewheelCtrlKey": false,
+      "touchmoveTwoFingers": false,
+      "sphereCorrection": {
+        "pan": 0,
+        "tilt": 0,
+        "roll": 0
+      },
+      "defaultTransition：": {
+        "speed": 1500,
+        "rotation": true,
+        "effect": "fade"
+      },
+      "moveSpeed": 1,
+      "zoomSpeed": 1,
+      "moveInertia": 0.8,
+      "withCredentials": false,
+      "canvasBackground": "transparent",
+      "rendererParameters": {
+        "alpha": true,
+        "antialias": true
+      },
+      "showNavbar": true,
+      "navbarList": [
+        "zoom",
+        "gallery",
+        "autorotate",
+        "caption",
+        "fullscreen"
+      ],
+      "autostart": true,
+      "autostartDelay": 1000,
+      "autostartOnIdle": false,
+      "autorotateSpeed": 2,
+      "autorotatePitch": 0,
+      "showMarkers": true,
+      "showGallery": true,
+      "visibleOnLoad": false,
+      "thumbnailSize": {
+        "width": 50,
+        "height": 50
+      },
+      "galleryItems": [
+        {
+          "id": "图片1",
+          "name": "图片1",
+          "panorama": "version-test/assets/photoSphereImg/0S1A6948.jpg",
+          "thumbnail": "version-test/assets/defaultImg/default.png",
+          "caption": "这是一段说明文本1",
+          "markers": []
+        },
+        {
+          "id": "图片2",
+          "name": "图片2",
+          "panorama": "version-test/assets/photoSphereImg/0S1A6949.jpg",
+          "thumbnail": "version-test/assets/defaultImg/default.png",
+          "caption": "这是一段说明文本2",
+          "markers": []
+        }
+      ]
+    }
+  },
+  "template": []
+}

@@ -1,0 +1,68 @@
+{
+  "adcode": {
+    "label": "中华人民共和国",
+    "value": "100000"
+  },
+  "fillType": "color",
+  "areaColor": "#171a24",
+  "activeAreaColor": "#FF00FF",
+  "picture": "",
+  "activePicture": "",
+  "borderWidth": 1,
+  "borderColor": "#ffffff",
+  "activeBorderColor": "#ffffff",
+  "textStyle": {
+    "fontFamily": "sans-serif",
+    "fontSize": 20,
+    "color": "rgba(255, 255, 255, 1)",
+    "fontStyle": "normal",
+    "fontWeight": "normal"
+  },
+  "sceneControl": {
+    "regionHeight": 10,
+    "autoRotate": false,
+    "rotateSpeed": 1,
+    "initialRotationAngle": 0,
+    "mapRotationAngle": 0,
+    "bloom": {
+      "enable": false,
+      "strength": 0.5,
+      "radius": 0.4,
+      "threshold": 0
+    },
+    "innerShadow": {
+      "enable": false,
+      "color": "#000000",
+      "radius": 0.3,
+      "opacity": 1.0,
+      "resolution": 1024
+    }
+  },
+  "backgroundColor": "#000",
+  "fog": false,
+  "fogColor": "#000",
+  "camera": {
+    "distance": 30,
+    "verticalTiltAngle": 20,
+    "horizontalRotationAngle": 0
+  },
+  "light": {
+    "ambientIntensity": 0.6,
+    "directionalIntensity": 1.2,
+    "directionalPosition": [5, 10, 5],
+    "ambientColor": "#fff8e1",
+    "directionalColor": "#fff8e1"
+  },
+  "mouseControl": {
+    "zoomSpeed": 25,
+    "panSpeed": 10,
+    "rotateSpeed": 25
+  },
+  "hoverLift": {
+    "height": 1,
+    "duration": 300
+  },
+  "defaultLiftAdcode": "",
+  "geoLabelShow": false,
+  "maxDrillDownLevel": 0
+}

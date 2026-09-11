@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "id": 89,
+    "name": "开场视频",
+    "prop": "sw-open-video",
+    "componentName": "sw-open-video",
+    "first_level_menu": "媒体",
+    "second_level_menu": "",
+    "thumbnail": "/img/openVideo.20240326.gif"
+  },
+  "config": {
+    "title": "开场视频",
+    "name": "开场视频",
+    "display": true,
+    "icon": "icon-video",
+    "img": "/img/openVideo.20240326.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "cbArgs": [],
+    "isLock": false,
+    "data": [
+      {
+        "cover": "",
+        "value": ""
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "cover",
+        "map": "cover",
+        "decription": "视频封面"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "视频地址"
+      }
+    ],
+    "unitPavenType": "",
+    "option": {
+      "cover": "",
+      "url": "version-test/assets/defaultImg/openingVideo.mp4",
+      "openDelayLoading": false,
+      "delayLoadingTime": 2,
+      "delayPlayTime": 0,
+      "pointerEvents": false,
+      "mixBlendMode": "normal",
+      "controler": false,
+      "isBuildPlay": true,
+      "autoPlay": true,
+      "loopPlay": false,
+      "muted": true,
+      "autoHidden": true,
+      "rotateShow": false,
+      "rotateX": 0,
+      "rotateY": 0,
+      "rotateZ": 0,
+      "gaussianBlurShow": false,
+      "gaussianBlur": 5,
+      "brightnessShow": false,
+      "brightness": 100,
+      "contrastShow": false,
+      "contrast": 100,
+      "grayscaleShow": false,
+      "grayscale": 50,
+      "hueShow": false,
+      "hue": 180,
+      "invertShow": false,
+      "invert": 50,
+      "saturateShow": false,
+      "saturate": 100,
+      "sepiaShow": false,
+      "sepia": 50,
+      "shadowShow": false,
+      "shadowColor": "rgba(255, 255, 255, 1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "buttonType": "text",
+      "buttonContent": "进入系统",
+      "buttonWidth": 145,
+      "buttonHeight": 40,
+      "buttonTranslateX": 0,
+      "buttonTranslateY": 0,
+      "buttonImageType": "100% 100%",
+      "buttonImage": "version-test/assets/newSystemAssets/按钮/cover_按钮19.png",
+      "buttonIconType": "100% 100%",
+      "buttonIcon": "version-test/assets/defaultImg/text_title.png",
+      "buttonIconWidth": 104,
+      "buttonIconHeight": 20,
+      "buttonFontSize": 16,
+      "buttonFontWeight": false,
+      "buttonFontStyle": false,
+      "buttonFontFamily": "sans-serif",
+      "buttonFontColor": "rgba(255, 255, 255, 1)",
+      "buttonLetterSpacing": 2,
+      "buttonTextTranslateX": 0,
+      "buttonTextTranslateY": 0,
+      "isButtonTextShadow": false,
+      "buttonTextShadow": {
+        "x": 0,
+        "y": 0,
+        "blur": 0,
+        "color": "rgba(255, 255, 255, 1)",
+        "extend": 0
+      }
+    },
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 400,
+      "height": 200,
+      "name": "sw-open-video",
+      "prop": "sw-open-video"
+    }
+  },
+  "template": [
+    {
+      "cover": "",
+      "value": ""
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "id": 118,
+    "name": "UE像素流v2",
+    "prop": "ue-pixel-streaming",
+    "componentName": "ue-pixel-streaming",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/ueVessel.d88605dd.jpg"
+  },
+  "config": {
+    "title": "UE像素流v2",
+    "name": "UE像素流v2",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/ueVessel.d88605dd.jpg",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "./scatter",
+    "data": [
+      {
+        "text": "UE像素流v2"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "文本"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "unitPavenType": "percent",
+    "component": {
+      "width": 100,
+      "height": 100,
+      "name": "ue-pixel-streaming",
+      "prop": "ue-pixel-streaming"
+    },
+    "presetChild": [],
+    "option": {
+      "muted": true,
+      "initLoad": false,
+      "pixelStreamingUrl": "",
+      "cover": ""
+    }
+  },
+  "template": []
+}

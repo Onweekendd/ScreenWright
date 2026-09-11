@@ -1,0 +1,17 @@
+{
+  // agent-workspace/scripts 的类型检查入口。
+  //
+  // 【为什么单独一份而不是塞进 tsconfig.json 的 include】主 tsconfig 的 `noEmit: false` +
+  // `outDir` 是给构建用的，输出根目录由输入文件的公共前缀推导——把 agent-workspace 加进去会
+  // 悄悄改变 dist 的目录层级。这份只做检查，`noEmit: true`，对构建零影响。
+  //
+  // 【为什么必须检】这批脚本是我们自己维护的源码，而且 skill 把 `simulateEvent.ts` 标成
+  // 「必须执行」的验证步骤。它们此前同时落在 tsconfig 的 include 之外和 eslint 的 ignore 之内，
+  // 一处写死的 `../../src/...` 相对导入（拷进 eval 工作区后指向不存在的目录）因此长期没人发现。
+  // lint 侧的对应措施见 eslint.config.js 的 ignores 注释。
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["agent-workspace/scripts/**/*.ts"]
+}

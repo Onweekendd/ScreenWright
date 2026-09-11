@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "id": 46,
+    "name": "iframe",
+    "prop": "swiframe",
+    "componentName": "sw-iframe",
+    "first_level_menu": "媒体",
+    "second_level_menu": "",
+    "thumbnail": "/img/iframe.20240514.png"
+  },
+  "config": {
+    "title": "iframe",
+    "name": "iframe",
+    "display": true,
+    "icon": "icon-iframe",
+    "img": "/img/iframe.20240514.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 960,
+      "height": 540,
+      "name": "sw-iframe",
+      "prop": "swiframe"
+    },
+    "option": {
+      "extendIframeUrl": "",
+      "gridTop": 0,
+      "gridBottom": 0,
+      "gridLeft": 0,
+      "gridRight": 0,
+      "closeColor": "rgba(255,255,255,1)",
+      "closeSize": 20,
+      "allowScripts": false,
+      "allowForms": false,
+      "showClose": false,
+      "frameborder": false,
+      "scrolling": false,
+      "allowSameOrigin": false,
+      "allowTopNavigation": false,
+      "closeTop": 0,
+      "closeBottom": 0,
+      "closeLeft": 0,
+      "closeRight": 0,
+      "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontStyle": "normal",
+      "fontWeight": "normal",
+      "isQuote": false,
+      "quoteId": "",
+      "quoteVersion": "",
+      "isQuoteReload": false,
+      "allowMicrophone": false,
+      "allowCamera": false,
+      "allowFullscreen": false
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "value": ""
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "callbackArgs": [],
+    "events": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "cbArgs": [],
+    "showSubComponent": false
+  },
+  "template": [
+    {
+      "value": ""
+    }
+  ]
+}

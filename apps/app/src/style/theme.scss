@@ -1,0 +1,31 @@
+// ============================================================
+// 全局主题色板
+// 布局 / 侧边栏 / 菜单等处复用，避免颜色散落各文件。
+// 用法： @import "src/style/theme.scss";
+// ============================================================
+
+// —— 品牌紫 ——
+$sw-purple: #7c42ee;
+$sw-purple-light: #a884ff;
+$sw-purple-deep: #642cff;
+$sw-purple-soft: #8b58e7;
+$sw-purple-gradient: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+
+// —— 表面 / 背景 ——
+$sw-bg: #181a24; // 主内容区
+$sw-surface-1: #1a1c26; // 侧边栏外层
+$sw-surface-2: #16181f; // 一级菜单列
+$sw-border: rgba(255, 255, 255, 0.06);
+$sw-divider: rgba(255, 255, 255, 0.05);
+
+// —— 文本 ——
+$sw-text: #c8ccd8;
+$sw-text-dim: #9aa0b0;
+$sw-text-muted: #8b90a0;
+$sw-text-strong: #ffffff;
+
+// —— 交互态 ——
+$sw-active-bg: rgba(124, 66, 238, 0.16);
+$sw-active-bar: #a884ff;
+$sw-hover-bg: rgba(255, 255, 255, 0.04);
+$sw-tree-active-bg: rgba(124, 66, 238, 0.14);

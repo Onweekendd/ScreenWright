@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "id": 123,
+    "name": "滑动卡片v1",
+    "prop": "sw-slidecard-v1",
+    "componentName": "sw-slidecard-v1",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/slidecardV1.gif"
+  },
+  "config": {
+    "title": "滑动卡片v1",
+    "name": "滑动卡片v1",
+    "callbackArgs": [],
+    "events": [],
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=> {\r\nreturn data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "display": true,
+    "icon": "icon-flop",
+    "img": "/img/slidecardV1.gif",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "time": 30,
+    "dataMethod": "get",
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "src": "version-test/assets/defaultImg/swiperCardBg_1.webp",
+        "title": "示例图片1"
+      },
+      {
+        "src": "version-test/assets/defaultImg/swiperCardBg_1.webp",
+        "title": "示例图片2"
+      },
+      {
+        "src": "version-test/assets/defaultImg/swiperCardBg_1.webp",
+        "title": "示例图片3"
+      },
+      {
+        "src": "version-test/assets/defaultImg/swiperCardBg_1.webp",
+        "title": "示例图片4"
+      },
+      {
+        "src": "version-test/assets/defaultImg/swiperCardBg_1.webp",
+        "title": "示例图片5"
+      },
+      {
+        "src": "version-test/assets/defaultImg/swiperCardBg_1.webp",
+        "title": "示例图片6"
+      },
+      {
+        "src": "version-test/assets/defaultImg/swiperCardBg_1.webp",
+        "title": "示例图片7"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "src",
+        "map": "src",
+        "decription": "图片地址"
+      },
+      {
+        "key": "title",
+        "map": "title",
+        "decription": "图片标题"
+      }
+    ],
+    "component": {
+      "width": 200,
+      "height": 500,
+      "name": "sw-slidecard-v1",
+      "prop": "sw-slidecard-v1"
+    },
+    "option": {
+      "maxDisplay": 5,
+      "autoPlay": true,
+      "autoPlayInterval": 3000,
+      "autoPlayDirection": "up",
+      "perspectiveDistance": 100,
+      "activeImageSetting": {
+        "fitType": "fill",
+        "width": 140,
+        "height": 100,
+        "previewWidth": 160,
+        "previewHeight": 120
+      },
+      "defaultImageSetting": {
+        "fitType": "fill",
+        "rotate": 50,
+        "gap": 50,
+        "gapZ": 10,
+        "width": 100,
+        "height": 90
+      }
+    }
+  },
+  "template": []
+}

@@ -1,0 +1,89 @@
+// 定义颜色相关的变量
+$default-bg-color: #0f1014;
+$default-text-color: #859094;
+$default-border-color: #282e3a;
+$default-hover-border-color: #642cff;
+
+// 定义通用的mixin，基于变量设置样式
+@mixin common-element-style($selector, $use-deep: true, $border: false) {
+  @if $use-deep {
+    :deep(#{$selector}) {
+      background-color: $default-bg-color !important;
+      color: $default-text-color !important;
+      border-color: $default-border-color !important;
+      box-shadow: none !important;
+      @if $border {
+        border: 1px solid #393b4a !important;
+      }
+      &:hover {
+        box-shadow: 0 0 0 1px $default-hover-border-color inset !important;
+      }
+      @if $selector == ".el-select__wrapper" {
+        min-height: 28px;
+      }
+    }
+  } @else {
+    #{$selector} {
+      background-color: $default-bg-color !important;
+      color: $default-text-color !important;
+      border-color: $default-border-color !important;
+      box-shadow: none !important;
+      @if $border {
+        border: 1px solid #393b4a !important;
+      }
+      &:hover {
+        box-shadow: 0 0 0 1px $default-hover-border-color inset !important;
+      }
+      @if $selector == ".el-select__wrapper" {
+        min-height: 28px;
+      }
+    }
+  }
+}
+
+$checkbox-border-color: $default-hover-border-color;
+$checkbox-gradient-start-color: #8b58e7;
+$checkbox-gradient-end-color: #642cff;
+
+@mixin checkbox-style() {
+  :deep(.el-checkbox) {
+    margin-right: 10px;
+    .el-checkbox__inner {
+      background-color: #181b24 !important;
+      border: 1px solid #393b4a !important;
+      border-radius: 2px;
+      &:hover {
+        box-shadow: 0 0 0 1px $default-hover-border-color inset !important;
+      }
+    }
+    &.is-checked .el-checkbox__inner {
+      border-color: $checkbox-border-color !important;
+      background: linear-gradient(180deg, $checkbox-gradient-start-color 0%, $checkbox-gradient-end-color 100%);
+    }
+    .el-checkbox__label {
+      color: #bfbfbf;
+      font-size: 12px;
+    }
+  }
+}
+
+@mixin radio-style() {
+  :deep(.el-radio__input.is-checked .el-radio__inner) {
+    border-color: $default-hover-border-color;
+    background-color: transparent;
+  }
+  :deep(.el-radio__input.is-checked + .el-radio__label) {
+    color: #fff;
+  }
+  :deep(.el-radio__inner) {
+    background-color: transparent !important;
+    &:hover {
+      border-color: $default-hover-border-color;
+    }
+  }
+  :deep(.el-radio__inner:after) {
+    width: 8px;
+    height: 8px;
+    background-image: linear-gradient(180deg, $checkbox-gradient-start-color, $default-hover-border-color);
+  }
+}

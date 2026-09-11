@@ -1,0 +1,197 @@
+{
+  "meta": {
+    "id": 97,
+    "name": "点状时间轴",
+    "prop": "pointTimeline",
+    "componentName": "pointTimeline",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/pointTimeline.6993b8ac.gif"
+  },
+  "config": {
+    "title": "点状时间轴",
+    "name": "点状时间轴",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/pointTimeline.6993b8ac.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 800,
+      "height": 400,
+      "name": "pointTimeline",
+      "prop": "pointTimeline"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "text": "2002.07",
+        "value": "凡拓创意总部创立于广州"
+      },
+      {
+        "text": "2005.08",
+        "value": "上海公司成立"
+      },
+      {
+        "text": "2006.09",
+        "value": "凡拓创意参与2008北京奥运会场馆图像设计"
+      },
+      {
+        "text": "2008.05",
+        "value": "成立2010年广州亚运会图像设计独家供应商；深圳公司成立"
+      },
+      {
+        "text": "2009.09",
+        "value": "北京公司成立，布局华北地区"
+      },
+      {
+        "text": "2010.02",
+        "value": "参与上海世博会中国馆设计宣传服务、山东•海阳2012亚洲沙滩运动会数字服务赞助商"
+      },
+      {
+        "text": "2013.03",
+        "value": "凡拓创意推动数字体验中心新标准，开启5D数字体验时代"
+      },
+      {
+        "text": "2014.05",
+        "value": "荣获中国地产最佳数字服务商"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "标题"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "文本"
+      }
+    ],
+    "option": {
+      "globalConfig": {
+        "defaultExpansion": false,
+        "crossDisplay": false,
+        "initMargin": 30,
+        "shaftMargin": 180,
+        "centralAxisMargin": 100,
+        "defaultSelected": 1,
+        "axisColor": "rgba(186,231,255,0.3)",
+        "axisWidth": 2,
+        "arrangementDirection": "row"
+      },
+      "timeLineConfig": {
+        "defaultObj": {
+          "axialPointImgSrc": "version-test/assets/defaultImg/defaultPoint.png",
+          "axialPointWidth": 20,
+          "axialPointHeight": 20,
+          "axialPointTranslateX": 0,
+          "axialPointTranslateY": 0,
+          "axialSpindleWidth": 80,
+          "axialSpindleTextFontFamily": "Alibaba-PuHuiTi-Regular",
+          "axialSpindleTextFontSize": 12,
+          "axialSpindleTextLetterSpacing": 1,
+          "axialSpindleTextColor": "rgba(230,247,255,0.5)",
+          "axialSpindleTextFontStyle": "normal",
+          "axialSpindleTextFontWeight": "normal",
+          "axialSpindleTextLineHeight": 12,
+          "axialSpindleTextAlign": "center",
+          "axialSpindleTranslateX": 0,
+          "axialSpindleTranslateY": 20,
+          "axialTitleWidth": 250,
+          "axialTitleTextFontFamily": "Alibaba-PuHuiTi-Regular",
+          "axialTitleTextFontSize": 16,
+          "axialTitleTextLetterSpacing": 1,
+          "axialTitleTextColor": "rgba(230,247,255,0.5)",
+          "axialTitleTextFontStyle": "normal",
+          "axialTitleTextFontWeight": "normal",
+          "axialTitleTextLineHeight": 16,
+          "axialTitleTextAlign": "center",
+          "axialTitleTranslateX": 0,
+          "axialTitleTranslateY": 0
+        },
+        "activeObj": {
+          "axialPointImgSrc": "version-test/assets/defaultImg/currentPoint.png",
+          "axialPointWidth": 55,
+          "axialPointHeight": 55,
+          "axialPointTranslateX": 0,
+          "axialPointTranslateY": 0,
+          "axialSpindleWidth": 80,
+          "axialSpindleTextFontFamily": "Alibaba-PuHuiTi-Regular",
+          "axialSpindleTextFontSize": 14,
+          "axialSpindleTextLetterSpacing": 1,
+          "axialSpindleTextColor": "rgba(0,245,255,1)",
+          "axialSpindleTextFontStyle": "normal",
+          "axialSpindleTextFontWeight": "normal",
+          "axialSpindleTextLineHeight": 14,
+          "axialSpindleTextAlign": "center",
+          "axialSpindleTranslateX": 0,
+          "axialSpindleTranslateY": 20,
+          "axialTitleWidth": 250,
+          "axialTitleTextFontFamily": "Alibaba-PuHuiTi-Regular",
+          "axialTitleTextFontSize": 16,
+          "axialTitleTextLetterSpacing": 1,
+          "axialTitleTextColor": "rgba(0,245,255,1)",
+          "axialTitleTextFontStyle": "normal",
+          "axialTitleTextFontWeight": "normal",
+          "axialTitleTextLineHeight": 16,
+          "axialTitleTextAlign": "center",
+          "axialTitleTranslateX": 0,
+          "axialTitleTranslateY": 0
+        }
+      },
+      "animationConfig": {
+        "loop": true,
+        "loopInterval": 4,
+        "animateTranstion": 2
+      }
+    }
+  },
+  "template": [
+    {
+      "text": "2002.07",
+      "value": "凡拓创意总部创立于广州"
+    },
+    {
+      "text": "2005.08",
+      "value": "上海公司成立"
+    },
+    {
+      "text": "2006.09",
+      "value": "凡拓创意参与2008北京奥运会场馆图像设计"
+    },
+    {
+      "text": "2008.05",
+      "value": "成立2010年广州亚运会图像设计独家供应商；深圳公司成立"
+    },
+    {
+      "text": "2009.09",
+      "value": "北京公司成立，布局华北地区"
+    },
+    {
+      "text": "2010.02",
+      "value": "参与上海世博会中国馆设计宣传服务、山东•海阳2012亚洲沙滩运动会数字服务赞助商"
+    },
+    {
+      "text": "2013.03",
+      "value": "凡拓创意推动数字体验中心新标准，开启5D数字体验时代"
+    },
+    {
+      "text": "2014.05",
+      "value": "荣获中国地产最佳数字服务商"
+    }
+  ]
+}

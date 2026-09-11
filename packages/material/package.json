@@ -1,0 +1,126 @@
+{
+  "name": "@screenwright/material",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Screenwright 大屏物料组件包（Vue 组件，依赖 @screenwright/core 纯逻辑 + 主应用注入的运行时实现）",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./text": {
+      "types": "./dist/text.d.ts",
+      "import": "./dist/text.js"
+    },
+    "./chart": {
+      "types": "./dist/chart.d.ts",
+      "import": "./dist/chart.js"
+    },
+    "./indicator": {
+      "types": "./dist/indicator.d.ts",
+      "import": "./dist/indicator.js"
+    },
+    "./media": {
+      "types": "./dist/media.d.ts",
+      "import": "./dist/media.js"
+    },
+    "./interactive": {
+      "types": "./dist/interactive.d.ts",
+      "import": "./dist/interactive.js"
+    },
+    "./exhibit": {
+      "types": "./dist/exhibit.d.ts",
+      "import": "./dist/exhibit.js"
+    },
+    "./extends": {
+      "types": "./dist/extends.d.ts",
+      "import": "./dist/extends.js"
+    },
+    "./equipment": {
+      "types": "./dist/equipment.d.ts",
+      "import": "./dist/equipment.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "sideEffects": true,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "check-types": "vue-tsc --noEmit",
+    "lint": "eslint src --fix",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "@screenwright/core": "workspace:*",
+    "@screenwright/types": "workspace:*",
+    "@screenwright/composables": "workspace:*",
+    "@vueuse/core": "^14.2.1",
+    "dayjs": "^1.11.13",
+    "lodash-es": "4.17.21"
+  },
+  "peerDependencies": {
+    "@photo-sphere-viewer/autorotate-plugin": "^5.13.4",
+    "@photo-sphere-viewer/core": "^5.13.4",
+    "@photo-sphere-viewer/gallery-plugin": "^5.13.4",
+    "@photo-sphere-viewer/markers-plugin": "^5.13.4",
+    "axios": "1.4.0",
+    "echarts": "^5.6.0",
+    "echarts-gl": "^2.0.9",
+    "echarts-liquidfill": "^3.1.0",
+    "echarts-wordcloud": "^2.1.0",
+    "element-plus": "^2.11.2",
+    "flv.js": "^1.6.2",
+    "@screenwright/ui": "workspace:*",
+    "hls.js": "^1.5.20",
+    "page-flip": "^2.0.7",
+    "photoswipe": "^5.4.4",
+    "three": "^0.182.0",
+    "vue": "^3.5.0",
+    "vue-router": "4.2.2",
+    "vuedraggable": "^4.1.0"
+  },
+  "devDependencies": {
+    "axios": "1.4.0",
+    "@element-plus/icons-vue": "^2.1.0",
+    "@photo-sphere-viewer/autorotate-plugin": "^5.13.4",
+    "@photo-sphere-viewer/core": "^5.13.4",
+    "@photo-sphere-viewer/gallery-plugin": "^5.13.4",
+    "@photo-sphere-viewer/markers-plugin": "^5.13.4",
+    "@screenwright/eslint-config": "workspace:*",
+    "@tinymce/tinymce-vue": "^6.1.0",
+    "@screenwright/ui": "workspace:*",
+    "@types/lodash-es": "4.17.7",
+    "@types/node": "20.3.2",
+    "@types/page-flip": "^2.0.3",
+    "@types/three": "^0.182.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "echarts": "^5.6.0",
+    "echarts-gl": "^2.0.9",
+    "echarts-liquidfill": "^3.1.0",
+    "echarts-wordcloud": "^2.1.0",
+    "element-plus": "^2.11.2",
+    "flv.js": "^1.6.2",
+    "hls.js": "^1.5.20",
+    "page-flip": "^2.0.7",
+    "photoswipe": "^5.4.4",
+    "three": "^0.182.0",
+    "vue-router": "4.2.2",
+    "vuedraggable": "^4.1.0",
+    "eslint": "^9.32.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.6.2",
+    "typescript": "5.9.2",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0",
+    "vue": "3.5.21",
+    "vue-tsc": "^2.0.0"
+  }
+}

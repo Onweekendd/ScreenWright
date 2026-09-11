@@ -1,0 +1,193 @@
+{
+  "meta": {
+    "id": 48,
+    "name": "视频面板",
+    "prop": "ctVideoPanel",
+    "componentName": "ct-video-panel",
+    "first_level_menu": "媒体",
+    "second_level_menu": "",
+    "thumbnail": "/img/videoPanel.20240326.gif"
+  },
+  "config": {
+    "title": "视频面板",
+    "name": "视频面板",
+    "display": true,
+    "icon": "icon-video",
+    "img": "/img/videoPanel.20240326.gif",
+    "callbackArgs": [],
+    "events": [],
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=>{\r\nreturn data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "component": {
+      "width": 400,
+      "height": 860,
+      "name": "ct-video-panel",
+      "prop": "ctVideoPanel"
+    },
+    "showDataList": true,
+    "data": [
+      {
+        "name": "video1",
+        "url": "version-test/assets/defaultImg/video.mp4"
+      },
+      {
+        "name": "video2",
+        "url": "version-test/assets/defaultImg/video.mp4"
+      },
+      {
+        "name": "video3",
+        "url": "version-test/assets/defaultImg/video.mp4"
+      },
+      {
+        "name": "video4",
+        "url": "version-test/assets/defaultImg/video.mp4"
+      },
+      {
+        "name": "video5",
+        "url": "version-test/assets/defaultImg/video.mp4"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "标签"
+      },
+      {
+        "key": "url",
+        "map": "url",
+        "decription": "值"
+      }
+    ],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "option": {
+      "mixBlendMode": "normal",
+      "controler": false,
+      "autoPlay": true,
+      "hkVideoPlayerMode": 0,
+      "loopPlay": true,
+      "muted": true,
+      "autoHidden": false,
+      "gaussianBlurShow": false,
+      "gaussianBlur": 5,
+      "brightnessShow": false,
+      "brightness": 100,
+      "contrastShow": false,
+      "contrast": 100,
+      "grayscaleShow": false,
+      "grayscale": 50,
+      "hueShow": false,
+      "hue": 180,
+      "invertShow": false,
+      "invert": 50,
+      "saturateShow": false,
+      "saturate": 100,
+      "sepiaShow": false,
+      "sepia": 50,
+      "shadowShow": false,
+      "shadowColor": "rgba(255,255,255,1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "showVideoBg": true,
+      "showVideoIcon": true,
+      "videoBg": "version-test/assets/defaultImg/video-bg.png",
+      "videoIcon": "version-test/assets/defaultImg/video-icon.png",
+      "rows": 3,
+      "columns": 1,
+      "rowGap": 0,
+      "columnGap": 5,
+      "showPage": true,
+      "pageIcon": "version-test/assets/defaultImg/page-icon.png",
+      "textTranslateX": 0,
+      "textTranslateY": 0,
+      "backgroundColor": "rgba(15,22,34,0.6)",
+      "backgroundImage": "",
+      "backgroundImageType": "100% 100%",
+      "backgroundType": "color",
+      "titleBgType": "color",
+      "titleBgColor": "rgba(15,22,34,0.6)",
+      "titleBgImage": "",
+      "titleBgImageType": "100% 100%",
+      "fontSize": 20,
+      "fontWeight": false,
+      "fontStyle": false,
+      "fontFamily": "sans-serif",
+      "fontColor": "rgba(255,255,255,1)",
+      "isTextShadow": false,
+      "textShadow": {
+        "x": 0,
+        "y": 0,
+        "blur": 0,
+        "color": "rgba(255,255,255,1)",
+        "extend": 0
+      },
+      "textPosition": "top",
+      "iconWidth": 60,
+      "iconHeight": 50,
+      "padding": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "pagerTime": 10,
+      "autoPager": false,
+      "pagerAni": "fading-ease-in",
+      "textAlign": "left",
+      "objectFit": "cover",
+      "borderBgImage": "version-test/assets/defaultImg/video-border.png",
+      "borderBgSize": "100% 100%",
+      "videoBoxWidth": 98,
+      "videoBoxHeight": 98,
+      "pagerIconWidth": 44,
+      "pagerIconHeight": 24,
+      "pagerHeight": 40,
+      "pagerfontSize": 20,
+      "pagerfontWeight": false,
+      "pagerfontStyle": false,
+      "pagerfontFamily": "sans-serif",
+      "pagerfontColor": "rgba(255,255,255,1)",
+      "pagerletterSpacing": 0,
+      "pagerfontSize2": 16,
+      "pagerfontWeight2": false,
+      "pagerfontStyle2": false,
+      "pagerfontFamily2": "sans-serif",
+      "pagerfontColor2": "rgba(37,255,251,1)",
+      "pagerletterSpacing2": 0
+    }
+  },
+  "template": [
+    {
+      "name": "video1",
+      "url": "version-test/assets/defaultImg/video.mp4"
+    },
+    {
+      "name": "video2",
+      "url": "version-test/assets/defaultImg/video.mp4"
+    },
+    {
+      "name": "video3",
+      "url": "version-test/assets/defaultImg/video.mp4"
+    },
+    {
+      "name": "video4",
+      "url": "version-test/assets/defaultImg/video.mp4"
+    },
+    {
+      "name": "video5",
+      "url": "version-test/assets/defaultImg/video.mp4"
+    }
+  ]
+}

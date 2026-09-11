@@ -1,0 +1,13 @@
+{
+  "name": "Screenwright 规范助手",
+  "id": "screenwright-bi-helper",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/index.html",
+  "editorType": ["figma"],
+  "enablePrivatePluginApi": true,
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "This plugin connects to an internal company server to upload Figma node assets."
+  }
+}

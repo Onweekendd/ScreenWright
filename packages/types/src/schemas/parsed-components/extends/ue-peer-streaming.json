@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "id": 87,
+    "name": "UE像素流beta",
+    "prop": "ue-peer-streaming",
+    "componentName": "ue-peer-streaming",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/ueVessel.d88605dd.jpg"
+  },
+  "config": {
+    "title": "UE像素流beta",
+    "name": "UE像素流beta",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/ueVessel.d88605dd.jpg",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "./scatter",
+    "data": [
+      {
+        "text": "UE像素流"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "文本"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "unitPavenType": "percent",
+    "component": {
+      "width": 100,
+      "height": 100,
+      "name": "ue-peer-streaming",
+      "prop": "ue-peer-streaming"
+    },
+    "presetChild": [],
+    "option": {
+      "muted": true,
+      "initLoad": false,
+      "pixelStreamingUrl": "",
+      "cover": ""
+    }
+  },
+  "template": [
+    {
+      "text": "UE像素流"
+    }
+  ]
+}

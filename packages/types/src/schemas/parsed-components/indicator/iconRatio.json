@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "id": 100,
+    "name": "图标占比图",
+    "prop": "iconRatio",
+    "componentName": "iconRatio",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/iconRatio.800c072d.png"
+  },
+  "config": {
+    "title": "图标占比图",
+    "name": "图标占比图",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/iconRatio.800c072d.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 350,
+      "height": 200,
+      "name": "iconRatio",
+      "prop": "iconRatio"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "name": "men",
+        "value": 0.57
+      },
+      {
+        "name": "women",
+        "value": 0.43
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "文本"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "option": {
+      "globalConfig": {
+        "decimalPlace": 2,
+        "positionX": 0,
+        "positionY": 0,
+        "colNum": 2,
+        "rowNum": 1
+      },
+      "iconList": [
+        {
+          "iconKeyValue": "men",
+          "iconFontFamily": "Alibaba-PuHuiTi-Regular",
+          "iconFontSize": 32,
+          "iconFontStyle": "normal",
+          "iconFontWeight": "normal",
+          "iconLetterSpacing": 0,
+          "iconColor": "rgba(74, 144, 226, 1)",
+          "iconLineHeight": 32,
+          "iconImgSrc": "version-test/assets/defaultImg/nan.png",
+          "iconImgWidth": 100,
+          "iconImgHeight": 100,
+          "iconTranslateX": 0,
+          "iconTranslateY": 0,
+          "iconTabsName": "系列1"
+        },
+        {
+          "iconKeyValue": "women",
+          "iconFontFamily": "Alibaba-PuHuiTi-Regular",
+          "iconFontSize": 32,
+          "iconFontStyle": "normal",
+          "iconFontWeight": "normal",
+          "iconLetterSpacing": 0,
+          "iconColor": "rgba(74, 144, 226, 1)",
+          "iconLineHeight": 32,
+          "iconImgSrc": "version-test/assets/defaultImg/nv.png",
+          "iconImgWidth": 100,
+          "iconImgHeight": 100,
+          "iconTranslateX": 0,
+          "iconTranslateY": 0,
+          "iconTabsName": "系列2"
+        }
+      ]
+    }
+  },
+  "template": [
+    {
+      "name": "men",
+      "value": 0.57
+    },
+    {
+      "name": "women",
+      "value": 0.43
+    }
+  ]
+}

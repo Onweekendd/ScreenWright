@@ -1,0 +1,30 @@
+export const defaultGroupOption = {
+  icon: "icon-link",
+  img: "version-test/assets/publicResource/publicModel/modelImage/22/SM_JZ_10.png",
+  type: "group",
+  options: {
+    isLock: false,
+    visible: true,
+    renderOrder: 0,
+    isBloom: false,
+    modelCenterType: "default",
+    animation: false,
+    isLoop: false,
+    castShadow: true,
+    receiveShadow: true,
+    position: [-11.276901441900947, 2.740825498077713e-14, -123.43580691830343],
+    opacity: 1,
+    scale: [1, 1, 1],
+    rotation: [0, 0, 0],
+    index: "组1"
+  },
+  id: "组1",
+  index: "组1",
+  name: "组1",
+  title: "分组",
+  loaded: true,
+  objId: null,
+  showSubComponent: false,
+  coordType: 0,
+  children: []
+};

@@ -1,0 +1,750 @@
+{
+  "meta": {
+    "id": 61,
+    "name": "轮播表格",
+    "prop": "swScroll",
+    "componentName": "sw-scrolltable",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/scrollTable.70b511f1.png"
+  },
+  "config": {
+    "title": "轮播表格",
+    "display": true,
+    "name": "轮播表格",
+    "icon": "icon-table",
+    "img": "/img/scrollTable.70b511f1.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 776,
+    "left": 4,
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "data": [
+      {
+        "accidentType": "car",
+        "status": "已解决",
+        "time": "07:33:40",
+        "content": "左侧OBU无响应"
+      },
+      {
+        "accidentType": "config",
+        "status": "处理中",
+        "time": "07:31:22",
+        "content": "金链路5G基站信号丢失,中山路5G基站信号丢失"
+      },
+      {
+        "accidentType": "accident",
+        "status": "已解决",
+        "time": "07:30:48",
+        "content": "闯红灯"
+      },
+      {
+        "accidentType": "car",
+        "status": "已解决",
+        "time": "07:14:40",
+        "content": "左侧OBU无响应"
+      },
+      {
+        "accidentType": "config",
+        "status": "已解决",
+        "time": "07:06:40",
+        "content": "金链路监控信号丢失"
+      },
+      {
+        "accidentType": "car",
+        "status": "已解决",
+        "time": "06:55:40",
+        "content": "智慧出租00031闯红灯"
+      },
+      {
+        "accidentType": "accident",
+        "status": "处理中",
+        "time": "06:33:40",
+        "content": "左侧OBU无响应"
+      },
+      {
+        "accidentType": "car",
+        "status": "已解决",
+        "time": "05:33:40",
+        "content": "左侧OBU无响应"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "accidentType",
+        "map": "accidentType",
+        "decription": "事故类型"
+      },
+      {
+        "key": "time",
+        "map": "time",
+        "decription": "时间"
+      },
+      {
+        "key": "content",
+        "map": "content",
+        "decription": "内容"
+      },
+      {
+        "key": "status",
+        "map": "status",
+        "decription": "状态"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "component": {
+      "width": 450,
+      "height": 250,
+      "name": "sw-scrolltable",
+      "prop": "swScroll"
+    },
+    "option": {
+      "refresh": true,
+      "columnShow": true,
+      "columnViews": true,
+      "animationShow": true,
+      "cursorShow": true,
+      "textStyleShow": false,
+      "headerHeight": 1,
+      "headerFontSize": 12,
+      "headerFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "headerlineHeight": 35,
+      "borderShow": true,
+      "backgroundType": "custom",
+      "backgroundImage": "version-test/assets/defaultImg/scrollTableBgImg.png",
+      "headerletterSpacing": 12,
+      "headerFontStyle": "normal",
+      "headerFontWeight": "normal",
+      "headerBackground": "rgba(0,138,255,0.3)",
+      "headerColor": "rgba(0, 168, 255, 0.65)",
+      "activeKeys": "",
+      "column": [
+        {
+          "name": "事故类型",
+          "alias": "accidentType"
+        },
+        {
+          "name": "时间",
+          "alias": "time"
+        },
+        {
+          "name": "内容",
+          "alias": "content"
+        },
+        {
+          "name": "状态",
+          "alias": "status"
+        }
+      ],
+      "headerShow": true,
+      "selectedShow": true,
+      "selectedFontSize": 20,
+      "selectedFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "selectedletterSpacing": 1,
+      "selectedFontStyle": "normal",
+      "selectedFontWeight": "normal",
+      "selectedColor": "rgba(241,242,245,1)",
+      "selectedlineHeight": 0,
+      "selectedMode": "single",
+      "selectedBgType": "custom",
+      "selectedBgColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+      "selectedBgOpacity": 100,
+      "selectedBgImage": "version-test/assets/defaultImg/scrollTableSelectedBgImg.png",
+      "shadowShow": false,
+      "shadowColor": "rgba(0, 0, 0, 1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "rowName": [],
+      "rowTitle": "序号",
+      "initialValue": 1,
+      "rowWidth": 60,
+      "rowSpace": 10,
+      "rowAlign": "center",
+      "rowKey": [],
+      "rowOffsetX": [],
+      "rowOffsetY": [],
+      "rowBgWidth": [],
+      "rowBgHeight": [],
+      "rowBgType": [],
+      "rowBgColor": [],
+      "rowBgOpacity": [],
+      "rowBgImage": [],
+      "rowFontSize": [],
+      "rowFontFamily": [],
+      "rowletterSpacing": [],
+      "rowFontStyle": [],
+      "rowFontWeight": [],
+      "rowColor": [],
+      "rowlineHeight": [],
+      "rowShow": true,
+      "headerTextAlign": "center",
+      "bodyBackground": "rgba(0, 0, 0, 0.01)",
+      "bodyColor": "rgba(0, 0, 0, 1)",
+      "borderColor": "rgba(51, 65, 107, 1)",
+      "bodyTextAlign": "center",
+      "seriesXTabsName": [
+        "行1",
+        "行2"
+      ],
+      "seriesXbackgroundType": [
+        "color",
+        "color"
+      ],
+      "seriesXbackgroundImage": [
+        "",
+        ""
+      ],
+      "seriesXBackground": [
+        "rgba(0,0,0,0)",
+        "rgba(0, 138, 255, 0.1)"
+      ],
+      "seriesXBorderColor": [
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)"
+      ],
+      "seriesXBorderWidth": [
+        0,
+        0
+      ],
+      "seriesXRadius": [
+        0,
+        0
+      ],
+      "seriesXOffsetX": [
+        0,
+        0
+      ],
+      "seriesYWidth": [
+        100,
+        160,
+        280,
+        120
+      ],
+      "seriesYMarginLeft": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "seriesYbackgroundImage": [
+        "",
+        "",
+        "",
+        ""
+      ],
+      "seriesYBackground": [
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)"
+      ],
+      "seriesYBorderColor": [
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)"
+      ],
+      "seriesYBorderWidth": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "seriesYFontSize": [
+        20,
+        20,
+        20,
+        20
+      ],
+      "seriesYFontFamily": [
+        "sans-serif",
+        "sans-serif",
+        "sans-serif",
+        "sans-serif"
+      ],
+      "seriesYletterSpacing": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "seriesYFontStyle": [
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesYFontWeight": [
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesYColor": [
+        "#ffffff",
+        "rgba(255,255,255,1)",
+        "#ffffff",
+        "rgba(255,255,255,1)"
+      ],
+      "seriesYContentType": [
+        "statusImg",
+        "number",
+        "word",
+        "word"
+      ],
+      "seriesYTextAlign": [
+        "center",
+        "center",
+        "center",
+        "center"
+      ],
+      "seriesYOverFlow": [
+        "ellipsis",
+        "ellipsis",
+        "carousel",
+        "ellipsis"
+      ],
+      "seriesYlineHeight": [
+        20,
+        20,
+        20,
+        20
+      ],
+      "seriesYOffsetX": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "seriesYOffsetY": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "seriesYTabsName": [
+        "列1",
+        "列2",
+        "列3",
+        "列4"
+      ],
+      "maskImage": [
+        "",
+        "",
+        "",
+        ""
+      ],
+      "imageWidth": [
+        20,
+        20,
+        20,
+        20
+      ],
+      "imageHeight": [
+        20,
+        20,
+        20,
+        20
+      ],
+      "suffixShow": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "thousandSplit": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "suffixFontSize": [
+        20,
+        20,
+        20,
+        20
+      ],
+      "suffixFontFamily": [
+        "sans-serif",
+        "sans-serif",
+        "sans-serif",
+        "sans-serif"
+      ],
+      "suffixletterSpacing": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "suffixFontStyle": [
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "suffixFontWeight": [
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "suffixColor": [
+        "#ffffff",
+        "rgba(255,255,255,1)",
+        "#ffffff",
+        "rgba(255,255,255,1)"
+      ],
+      "suffixlineHeight": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "suffixOffsetX": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "suffixOffsetY": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "suffixContent": [
+        "/单位",
+        "/单位",
+        "/单位",
+        "/单位"
+      ],
+      "statusConfigValue": [
+        [
+          "car",
+          "config",
+          "accident"
+        ],
+        [],
+        [],
+        []
+      ],
+      "statusConfigImg": [
+        [
+          "version-test/assets/defaultImg/table-icon1.png",
+          "version-test/assets/defaultImg/table-icon2.png",
+          "version-test/assets/defaultImg/table-icon3.png"
+        ],
+        [],
+        [],
+        []
+      ],
+      "statusConfigWidth": [
+        [
+          24,
+          24,
+          24
+        ],
+        [],
+        [],
+        []
+      ],
+      "statusConfigHeight": [
+        [
+          24,
+          24,
+          24
+        ],
+        [],
+        [],
+        []
+      ],
+      "statusConfigName": [
+        [
+          "状态1",
+          "状态2",
+          "状态3"
+        ],
+        [],
+        [],
+        []
+      ],
+      "styleAssignKeyValue": [
+        [],
+        [],
+        [],
+        [
+          "处理中"
+        ]
+      ],
+      "styleAssignFontFamily": [
+        [],
+        [],
+        [],
+        [
+          "sans-serif"
+        ]
+      ],
+      "styleAssignFontSize": [
+        [],
+        [],
+        [],
+        [
+          20
+        ]
+      ],
+      "styleAssignHeight": [
+        [],
+        [],
+        [],
+        [
+          12
+        ]
+      ],
+      "styleAssignletterSpacing": [
+        [],
+        [],
+        [],
+        [
+          1
+        ]
+      ],
+      "styleAssignColor": [
+        [],
+        [],
+        [],
+        [
+          "rgba(255,168,84,1)"
+        ]
+      ],
+      "styleAssignFontStyle": [
+        [],
+        [],
+        [],
+        [
+          "normal"
+        ]
+      ],
+      "styleAssignFontWeight": [
+        [],
+        [],
+        [],
+        [
+          "normal"
+        ]
+      ],
+      "styleAssignName": [
+        [],
+        [],
+        [],
+        [
+          "1"
+        ]
+      ],
+      "styleAssignBgImg": [
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignBgWdith": [
+        [],
+        [],
+        [],
+        [
+          20
+        ]
+      ],
+      "styleAssignBgHeight": [
+        [],
+        [],
+        [],
+        [
+          20
+        ]
+      ],
+      "styleAssignBgLeft": [
+        [],
+        [],
+        [],
+        [
+          0
+        ]
+      ],
+      "align": "center",
+      "header": false,
+      "scroll": true,
+      "scrollTime": 84,
+      "scrollTimeType": true,
+      "scrollSingleTime": 3,
+      "fontSize": 15,
+      "count": 5,
+      "lineMarginBottom": 10,
+      "nthColor": "rgba(127, 185, 242, 1)",
+      "othColor": "rgba(164, 205, 244, 1)",
+      "index": true,
+      "scrollCount": 1,
+      "globalScrollYTrackWidth": 5,
+      "globalScrollYTrackBackground": "rgba(0, 119, 255, 0.3)",
+      "globalScrollYTrackBorderRadius": 0,
+      "globalScrollYThumbWidth": 5,
+      "globalScrollYThumbBackground": "#0078ff",
+      "globalScrollYThumbBorderRadius": 0,
+      "progressYConfig": [
+        {
+          "type": "line",
+          "text-inside": false,
+          "status": "custom",
+          "indeterminate": false,
+          "duration": 3,
+          "showText": false,
+          "stroke-linecap": "round",
+          "striped": false,
+          "color": "#88FC8D",
+          "outerBgColor": "#ebeef5",
+          "linearGradientColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+          "fontFamily": "siayuan-normal",
+          "fontSize": 18,
+          "fontColor": "#fff",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "borderRadius": 100,
+          "commonColor": "#409EFF"
+        },
+        {
+          "type": "line",
+          "text-inside": false,
+          "status": "custom",
+          "indeterminate": false,
+          "duration": 3,
+          "showText": false,
+          "stroke-linecap": "round",
+          "striped": false,
+          "color": "#88FC8D",
+          "outerBgColor": "#ebeef5",
+          "linearGradientColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+          "fontFamily": "siayuan-normal",
+          "fontSize": 18,
+          "fontColor": "#fff",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "borderRadius": 100,
+          "commonColor": "#409EFF"
+        },
+        {
+          "type": "line",
+          "text-inside": false,
+          "status": "custom",
+          "indeterminate": false,
+          "duration": 3,
+          "showText": false,
+          "stroke-linecap": "round",
+          "striped": false,
+          "color": "#88FC8D",
+          "outerBgColor": "#ebeef5",
+          "linearGradientColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+          "fontFamily": "siayuan-normal",
+          "fontSize": 18,
+          "fontColor": "#fff",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "borderRadius": 100,
+          "commonColor": "#409EFF"
+        },
+        {
+          "type": "line",
+          "text-inside": false,
+          "status": "custom",
+          "indeterminate": false,
+          "duration": 3,
+          "showText": false,
+          "stroke-linecap": "round",
+          "striped": false,
+          "color": "#88FC8D",
+          "outerBgColor": "#ebeef5",
+          "linearGradientColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+          "fontFamily": "siayuan-normal",
+          "fontSize": 18,
+          "fontColor": "#fff",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+          "borderRadius": 100,
+          "commonColor": "#409EFF"
+        }
+      ]
+    }
+  },
+  "template": [
+    {
+      "accidentType": "car",
+      "status": "已解决",
+      "time": "07:33:40",
+      "content": "左侧OBU无响应"
+    },
+    {
+      "accidentType": "config",
+      "status": "处理中",
+      "time": "07:31:22",
+      "content": "金链路5G基站信号丢失,中山路5G基站信号丢失"
+    },
+    {
+      "accidentType": "accident",
+      "status": "已解决",
+      "time": "07:30:48",
+      "content": "闯红灯"
+    },
+    {
+      "accidentType": "car",
+      "status": "已解决",
+      "time": "07:14:40",
+      "content": "左侧OBU无响应"
+    },
+    {
+      "accidentType": "config",
+      "status": "已解决",
+      "time": "07:06:40",
+      "content": "金链路监控信号丢失"
+    },
+    {
+      "accidentType": "car",
+      "status": "已解决",
+      "time": "06:55:40",
+      "content": "智慧出租00031闯红灯"
+    },
+    {
+      "accidentType": "accident",
+      "status": "处理中",
+      "time": "06:33:40",
+      "content": "左侧OBU无响应"
+    },
+    {
+      "accidentType": "car",
+      "status": "已解决",
+      "time": "05:33:40",
+      "content": "左侧OBU无响应"
+    }
+  ]
+}

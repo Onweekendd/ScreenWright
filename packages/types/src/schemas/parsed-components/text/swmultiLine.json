@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "id": 67,
+    "name": "多行文本",
+    "prop": "swmultiLine",
+    "componentName": "sw-multiLine",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/multiLine.6523f61c.gif"
+  },
+  "config": {
+    "title": "多行文本",
+    "name": "多行文本",
+    "display": true,
+    "icon": "icon-scroll",
+    "img": "/img/multiLine.6523f61c.gif",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "src",
+        "map": "src",
+        "decription": "前缀图标"
+      }
+    ],
+    "data": [
+      {
+        "name": "文字段落1",
+        "src": ""
+      },
+      {
+        "name": "文字段落2",
+        "src": ""
+      },
+      {
+        "name": "文字段落3",
+        "src": ""
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=>{\r\nreturn  data\r\n}",
+    "component": {
+      "width": 311,
+      "height": 345,
+      "name": "sw-multiLine",
+      "prop": "swmultiLine"
+    },
+    "option": {
+      "type": "scroll",
+      "scroll": false,
+      "speed": 10,
+      "fontFamily": "SourceHanSansCN-Normal,SourceHanSansCN",
+      "fontSize": 26,
+      "color": "rgba(255,255,255,1)",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "selectedTextType": "normal",
+      "selectedTextColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+      "selectedTextOpacity": 100,
+      "textAlign": "center",
+      "textAlignVertical": "center",
+      "split": 0,
+      "lineHeight": 36,
+      "backgroundColor": "rgba(255,255,255,0)",
+      "shadowShow": false,
+      "shadowColor": "rgba(255,255,255,1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "textDeraction": "ToLeft",
+      "lineMarginTop": 0,
+      "lineMarginBottom": 0,
+      "lineMarginLeft": 10,
+      "lineMarginRight": 10,
+      "whiteSpace": true,
+      "textIndent": 0,
+      "icon": null,
+      "iconWidth": 20,
+      "iconHeight": 20,
+      "iconMargin": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "template": [
+    {
+      "name": "文字段落1",
+      "src": ""
+    },
+    {
+      "name": "文字段落2",
+      "src": ""
+    },
+    {
+      "name": "文字段落3",
+      "src": ""
+    }
+  ]
+}

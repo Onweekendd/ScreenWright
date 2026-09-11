@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "id": 60,
+    "name": "场景模板",
+    "prop": "threescene",
+    "componentName": "three-scene",
+    "first_level_menu": "地图",
+    "second_level_menu": "",
+    "thumbnail": "/img/threeScene.png"
+  },
+  "config": {
+    "title": "场景模板",
+    "name": "场景模板",
+    "display": true,
+    "icon": "icon-table",
+    "img": "/img/threeScene.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "data": [],
+    "listenArgs": [],
+    "events": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "isLock": false,
+    "unitPavenType": "percent",
+    "component": {
+      "width": 100,
+      "height": 100,
+      "type": "map",
+      "name": "three-scene",
+      "prop": "threescene"
+    },
+    "showSubComponent": false,
+    "presetChild": [],
+    "option": {
+      "sceneType": "sceneEditor",
+      "cover": "",
+      "id": "",
+      "version": "1",
+      "sceneJsonPath": "",
+      "sceneList": [],
+      "defaultSceneObj": "",
+      "environment": "",
+      "simplifySceneList": [],
+      "isInitLoading": true,
+      "quality": "original"
+    }
+  },
+  "template": []
+}

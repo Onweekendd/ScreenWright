@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "id": 41,
+    "name": "水球图",
+    "prop": "echartliquidFill",
+    "componentName": "echart-liquidFill",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/waterball.b80597ee.png"
+  },
+  "config": {
+    "title": "水球图",
+    "name": "水球图",
+    "display": true,
+    "icon": "icon-circle",
+    "img": "/img/waterball.b80597ee.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "seriesName": "A",
+        "percent": 0.5
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      },
+      {
+        "key": "percent",
+        "map": "percent",
+        "decription": "占比"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 200,
+      "height": 200,
+      "name": "echart-liquidFill",
+      "prop": "echartliquidFill"
+    },
+    "option": {
+      "refresh": true,
+      "centerX": 50,
+      "centerY": 50,
+      "radius": 80,
+      "amplitude": 8,
+      "waveLength": 80,
+      "direction": "right",
+      "shape": "circle",
+      "waveColor": [
+        "#294D99",
+        "#156ACF",
+        "#1598ED",
+        "#45BDFF"
+      ],
+      "waveAnimation": true,
+      "outlineShow": true,
+      "outlineBorderDistance": 8,
+      "outlineColor": "rgba(0,0,0,0)",
+      "outlineBorderColor": "#294D99",
+      "outlineBorderWidth": 8,
+      "backgroundColor": "#E3F7FF",
+      "seriesItemStyleOpacity": 0.95,
+      "seriesLabelInsideColor": "#ffffff",
+      "seriesLabelShow": true,
+      "seriesLabelSeriesShow": false,
+      "seriesLabelSeriesFontFamily": "siayuan-normal",
+      "seriesLabelSeriesFontSize": 50,
+      "seriesLabelSeriesColor": "#294D99",
+      "seriesLabelSeriesFontStyle": "normal",
+      "seriesLabelSeriesFontWeight": "bolder",
+      "seriesLabelSeriesBottomPadding": 10,
+      "seriesLabelPercentShow": true,
+      "seriesLabelPercentValue": 0,
+      "seriesLabelPercentFontFamily": "siayuan-normal",
+      "seriesLabelPercentFontSize": 50,
+      "seriesLabelPercentColor": "rgba(41, 77, 153, 1)",
+      "seriesLabelPercentFontStyle": "normal",
+      "seriesLabelPercentFontWeight": 48,
+      "seriesLabelAlign": "center",
+      "seriesLabelBaseline": "middle",
+      "seriesLabelPositionX": 50,
+      "seriesLabelPositionY": 50,
+      "waveTabsName": [
+        "水波1",
+        "水波2",
+        "水波3",
+        "水波4"
+      ]
+    }
+  },
+  "template": [
+    {
+      "seriesName": "A",
+      "percent": 0.5
+    }
+  ]
+}

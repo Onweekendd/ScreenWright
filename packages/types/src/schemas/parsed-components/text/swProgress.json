@@ -1,0 +1,862 @@
+{
+  "meta": {
+    "id": 62,
+    "name": "进度条表格",
+    "prop": "swProgress",
+    "componentName": "sw-progresstable",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/progresstable.edb050e7.png"
+  },
+  "config": {
+    "title": "进度条表格",
+    "name": "进度条表格",
+    "display": true,
+    "icon": "icon-table",
+    "img": "/img/progresstable.edb050e7.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "data": [
+      {
+        "地区": "深圳",
+        "小学": 0.08905,
+        "初中": 0.440881,
+        "高中（含中专）": 0.239027,
+        "大学及以上（含大专）": 0.176439
+      },
+      {
+        "地区": "广州",
+        "小学": 0.155875,
+        "初中": 0.356219,
+        "高中（含中专）": 0.231826,
+        "大学及以上（含大专）": 0.196166
+      },
+      {
+        "地区": "珠海",
+        "小学": 0.161912,
+        "初中": 0.335511,
+        "高中（含中专）": 0.245931,
+        "大学及以上（含大专）": 0.185492
+      },
+      {
+        "地区": "佛山",
+        "小学": 0.205987,
+        "初中": 0.433138,
+        "高中（含中专）": 0.198142,
+        "大学及以上（含大专）": 0.097418
+      },
+      {
+        "地区": "中山",
+        "小学": 0.195153,
+        "初中": 0.446148,
+        "高中（含中专）": 0.216246,
+        "大学及以上（含大专）": 0.080086
+      },
+      {
+        "地区": "东莞",
+        "小学": 0.134428,
+        "初中": 0.543325,
+        "高中（含中专）": 0.206168,
+        "大学及以上（含大专）": 0.072514
+      },
+      {
+        "地区": "惠州",
+        "小学": 0.213061,
+        "初中": 0.466479,
+        "高中（含中专）": 0.160067,
+        "大学及以上（含大专）": 0.063774
+      },
+      {
+        "地区": "江门",
+        "小学": 0.242305,
+        "初中": 0.418112,
+        "高中（含中专）": 0.208383,
+        "大学及以上（含大专）": 0.055914
+      },
+      {
+        "地区": "韶关",
+        "小学": 0.262672,
+        "初中": 0.379626,
+        "高中（含中专）": 0.168311,
+        "大学及以上（含大专）": 0.071267
+      },
+      {
+        "地区": "清远",
+        "小学": 0.307167,
+        "初中": 0.416855,
+        "高中（含中专）": 0.114893,
+        "大学及以上（含大专）": 0.041551
+      },
+      {
+        "地区": "阳江",
+        "小学": 0.284201,
+        "初中": 0.406695,
+        "高中（含中专）": 0.1478,
+        "大学及以上（含大专）": 0.047091
+      },
+      {
+        "地区": "湛江",
+        "小学": 0.282866,
+        "初中": 0.413751,
+        "高中（含中专）": 0.133593,
+        "大学及以上（含大专）": 0.05092
+      },
+      {
+        "地区": "肇庆",
+        "小学": 0.291317,
+        "初中": 0.431513,
+        "高中（含中专）": 0.120992,
+        "大学及以上（含大专）": 0.046395
+      },
+      {
+        "地区": "河源",
+        "小学": 0.243281,
+        "初中": 0.432312,
+        "高中（含中专）": 0.140451,
+        "大学及以上（含大专）": 0.043376
+      },
+      {
+        "地区": "梅州",
+        "小学": 0.227222,
+        "初中": 0.445932,
+        "高中（含中专）": 0.168047,
+        "大学及以上（含大专）": 0.048599
+      },
+      {
+        "地区": "汕头",
+        "小学": 0.335758,
+        "初中": 0.372554,
+        "高中（含中专）": 0.145416,
+        "大学及以上（含大专）": 0.042751
+      },
+      {
+        "地区": "茂名",
+        "小学": 0.294418,
+        "初中": 0.389356,
+        "高中（含中专）": 0.140016,
+        "大学及以上（含大专）": 0.045957
+      },
+      {
+        "地区": "潮州",
+        "小学": 0.327569,
+        "初中": 0.396373,
+        "高中（含中专）": 0.132243,
+        "大学及以上（含大专）": 0.041222
+      },
+      {
+        "地区": "云浮",
+        "小学": 0.275043,
+        "初中": 0.453673,
+        "高中（含中专）": 0.114804,
+        "大学及以上（含大专）": 0.032407
+      },
+      {
+        "地区": "汕尾",
+        "小学": 0.338157,
+        "初中": 0.399678,
+        "高中（含中专）": 0.108722,
+        "大学及以上（含大专）": 0.024214
+      },
+      {
+        "地区": "揭阳",
+        "小学": 0.334974,
+        "初中": 0.43348,
+        "高中（含中专）": 0.113474,
+        "大学及以上（含大专）": 0.018774
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "地区",
+        "map": "地区",
+        "decription": "地区"
+      },
+      {
+        "key": "小学",
+        "map": "小学",
+        "decription": "小学"
+      },
+      {
+        "key": "初中",
+        "map": "初中",
+        "decription": "初中"
+      },
+      {
+        "key": "高中（含中专）",
+        "map": "高中（含中专）",
+        "decription": "高中（含中专）"
+      },
+      {
+        "key": "大学及以上（含大专）",
+        "map": "大学及以上（含大专）",
+        "decription": "大学及以上（含大专）"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "callbackArgs": [],
+    "events": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "component": {
+      "width": 460,
+      "height": 420,
+      "name": "sw-progresstable",
+      "prop": "swProgress"
+    },
+    "option": {
+      "refresh": true,
+      "columnShow": true,
+      "columnViews": true,
+      "animationShow": true,
+      "cursorShow": true,
+      "headerHeight": 12,
+      "headerFontSize": 12,
+      "headerFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "headerlineHeight": 40,
+      "backgroundType": "custom",
+      "backgroundImage": "",
+      "headerletterSpacing": 1,
+      "headerFontStyle": "normal",
+      "headerFontWeight": "normal",
+      "headerBackground": "rgba(0,0,0,0)",
+      "headerColor": "rgba(60, 233, 255, 0.65)",
+      "column": [
+        {
+          "name": "",
+          "alias": "地区",
+          "icon": ""
+        },
+        {
+          "name": "小学",
+          "alias": "小学",
+          "icon": ""
+        },
+        {
+          "name": "初中",
+          "alias": "初中",
+          "icon": ""
+        },
+        {
+          "name": "高中",
+          "alias": "高中（含中专）",
+          "icon": ""
+        },
+        {
+          "name": "大学",
+          "alias": "大学及以上（含大专）",
+          "icon": ""
+        }
+      ],
+      "headerShow": true,
+      "selectedShow": true,
+      "selectedFontSize": 20,
+      "selectedFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "selectedletterSpacing": 1,
+      "selectedFontStyle": "normal",
+      "selectedFontWeight": "normal",
+      "selectedColor": "rgba(241,242,245,1)",
+      "selectedlineHeight": 0,
+      "selectedMode": "single",
+      "selectedBgType": "color",
+      "selectedBgColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+      "selectedBgOpacity": 100,
+      "selectedBgImage": "",
+      "shadowShow": false,
+      "shadowColor": "rgba(0, 0, 0, 1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "rowName": [],
+      "rowTitle": "序号",
+      "initialValue": 1,
+      "rowWidth": 80,
+      "rowSpace": 0,
+      "rowAlign": "center",
+      "rowKey": [],
+      "rowOffsetX": [],
+      "rowOffsetY": [],
+      "rowBgWidth": [],
+      "rowBgHeight": [],
+      "rowBgType": [],
+      "rowBgColor": [],
+      "rowBgOpacity": [],
+      "rowBgImage": [],
+      "rowFontSize": [],
+      "rowFontFamily": [],
+      "rowletterSpacing": [],
+      "rowFontStyle": [],
+      "rowFontWeight": [],
+      "rowColor": [],
+      "rowlineHeight": [],
+      "rowShow": false,
+      "headerTextAlign": "center",
+      "bodyBackground": "rgba(0, 0, 0, 0.01)",
+      "bodyColor": "rgba(0, 0, 0, 1)",
+      "borderColor": "rgba(51, 65, 107, 1)",
+      "bodyTextAlign": "center",
+      "seriesXTabsName": [
+        "行1",
+        "行2"
+      ],
+      "seriesXbackgroundType": [
+        "color",
+        "color"
+      ],
+      "seriesXbackgroundImage": [
+        "",
+        ""
+      ],
+      "seriesXBackground": [
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)"
+      ],
+      "seriesXBorderColor": [
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)"
+      ],
+      "seriesXBorderWidth": [
+        0,
+        0
+      ],
+      "seriesXRadius": [
+        0,
+        0
+      ],
+      "seriesXOffsetX": [
+        0,
+        0
+      ],
+      "seriesYWidth": [
+        68,
+        142,
+        142,
+        142,
+        142
+      ],
+      "seriesYMarginLeft": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "seriesYbackgroundImage": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "seriesYBackground": [
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)"
+      ],
+      "seriesYBorderColor": [
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)",
+        "rgba(0,0,0,0)"
+      ],
+      "seriesYBorderWidth": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "seriesYFontSize": [
+        16,
+        14,
+        14,
+        14,
+        14
+      ],
+      "seriesYFontFamily": [
+        "Source Han Sans CN-Normal, Source Han Sans CN",
+        "DIN-Bold",
+        "DIN-Bold",
+        "DIN-Bold",
+        "DIN-Bold"
+      ],
+      "seriesYletterSpacing": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "seriesYFontStyle": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesYFontWeight": [
+        "normal",
+        "bold",
+        "bold",
+        "bold",
+        "bold",
+        "bold"
+      ],
+      "seriesYColor": [
+        "#3ce9ff",
+        "rgba(255,255,255,1)",
+        "#ffffff",
+        "#ffffff",
+        "rgba(255,255,255,1)"
+      ],
+      "seriesYContentType": [
+        "word",
+        "number",
+        "number",
+        "number",
+        "number"
+      ],
+      "seriesYTextAlign": [
+        "center",
+        "center",
+        "center",
+        "center",
+        "center"
+      ],
+      "seriesYOverFlow": [
+        "ellipsis",
+        "ellipsis",
+        "ellipsis",
+        "ellipsis",
+        "ellipsis"
+      ],
+      "seriesYlineHeight": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "seriesYOffsetX": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "seriesYOffsetY": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "seriesYTabsName": [
+        "列1",
+        "列2",
+        "列3",
+        "列4",
+        "列5"
+      ],
+      "maskImage": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "imageWidth": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "imageHeight": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "decimalSave": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "percentageShow": [
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "suffixShow": [
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "thousandSplit": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "suffixFontSize": [
+        20,
+        14,
+        14,
+        14,
+        14
+      ],
+      "suffixFontFamily": [
+        "Source Han Sans CN-Normal, Source Han Sans CN",
+        "DIN-Bold",
+        "DIN-Bold",
+        "DIN-Bold",
+        "DIN-Bold"
+      ],
+      "suffixletterSpacing": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "suffixFontStyle": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "suffixFontWeight": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "suffixColor": [
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff"
+      ],
+      "suffixlineHeight": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "suffixOffsetX": [
+        -2,
+        -2,
+        -2,
+        -2
+      ],
+      "suffixOffsetY": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "suffixContent": [
+        "/单位",
+        "%",
+        "%",
+        "%",
+        "%"
+      ],
+      "statusConfigValue": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "statusConfigImg": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "statusConfigWidth": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "statusConfigHeight": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "statusConfigName": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignKeyValue": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignFontFamily": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignFontSize": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignHeight": [
+        [],
+        [],
+        [],
+        [
+          12
+        ]
+      ],
+      "styleAssignletterSpacing": [
+        [],
+        [],
+        [],
+        [
+          1
+        ]
+      ],
+      "styleAssignColor": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignFontStyle": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignFontWeight": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "styleAssignName": [
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "align": "center",
+      "header": false,
+      "scroll": true,
+      "scrollTime": 2,
+      "fontSize": 15,
+      "count": 5,
+      "lineMarginBottom": 10,
+      "nthColor": "rgba(127, 185, 242, 1)",
+      "othColor": "rgba(164, 205, 244, 1)",
+      "index": true,
+      "scrollCount": 1
+    }
+  },
+  "template": [
+    {
+      "地区": "深圳",
+      "小学": 0.08905,
+      "初中": 0.440881,
+      "高中（含中专）": 0.239027,
+      "大学及以上（含大专）": 0.176439
+    },
+    {
+      "地区": "广州",
+      "小学": 0.155875,
+      "初中": 0.356219,
+      "高中（含中专）": 0.231826,
+      "大学及以上（含大专）": 0.196166
+    },
+    {
+      "地区": "珠海",
+      "小学": 0.161912,
+      "初中": 0.335511,
+      "高中（含中专）": 0.245931,
+      "大学及以上（含大专）": 0.185492
+    },
+    {
+      "地区": "佛山",
+      "小学": 0.205987,
+      "初中": 0.433138,
+      "高中（含中专）": 0.198142,
+      "大学及以上（含大专）": 0.097418
+    },
+    {
+      "地区": "中山",
+      "小学": 0.195153,
+      "初中": 0.446148,
+      "高中（含中专）": 0.216246,
+      "大学及以上（含大专）": 0.080086
+    },
+    {
+      "地区": "东莞",
+      "小学": 0.134428,
+      "初中": 0.543325,
+      "高中（含中专）": 0.206168,
+      "大学及以上（含大专）": 0.072514
+    },
+    {
+      "地区": "惠州",
+      "小学": 0.213061,
+      "初中": 0.466479,
+      "高中（含中专）": 0.160067,
+      "大学及以上（含大专）": 0.063774
+    },
+    {
+      "地区": "江门",
+      "小学": 0.242305,
+      "初中": 0.418112,
+      "高中（含中专）": 0.208383,
+      "大学及以上（含大专）": 0.055914
+    },
+    {
+      "地区": "韶关",
+      "小学": 0.262672,
+      "初中": 0.379626,
+      "高中（含中专）": 0.168311,
+      "大学及以上（含大专）": 0.071267
+    },
+    {
+      "地区": "清远",
+      "小学": 0.307167,
+      "初中": 0.416855,
+      "高中（含中专）": 0.114893,
+      "大学及以上（含大专）": 0.041551
+    },
+    {
+      "地区": "阳江",
+      "小学": 0.284201,
+      "初中": 0.406695,
+      "高中（含中专）": 0.1478,
+      "大学及以上（含大专）": 0.047091
+    },
+    {
+      "地区": "湛江",
+      "小学": 0.282866,
+      "初中": 0.413751,
+      "高中（含中专）": 0.133593,
+      "大学及以上（含大专）": 0.05092
+    },
+    {
+      "地区": "肇庆",
+      "小学": 0.291317,
+      "初中": 0.431513,
+      "高中（含中专）": 0.120992,
+      "大学及以上（含大专）": 0.046395
+    },
+    {
+      "地区": "河源",
+      "小学": 0.243281,
+      "初中": 0.432312,
+      "高中（含中专）": 0.140451,
+      "大学及以上（含大专）": 0.043376
+    },
+    {
+      "地区": "梅州",
+      "小学": 0.227222,
+      "初中": 0.445932,
+      "高中（含中专）": 0.168047,
+      "大学及以上（含大专）": 0.048599
+    },
+    {
+      "地区": "汕头",
+      "小学": 0.335758,
+      "初中": 0.372554,
+      "高中（含中专）": 0.145416,
+      "大学及以上（含大专）": 0.042751
+    },
+    {
+      "地区": "茂名",
+      "小学": 0.294418,
+      "初中": 0.389356,
+      "高中（含中专）": 0.140016,
+      "大学及以上（含大专）": 0.045957
+    },
+    {
+      "地区": "潮州",
+      "小学": 0.327569,
+      "初中": 0.396373,
+      "高中（含中专）": 0.132243,
+      "大学及以上（含大专）": 0.041222
+    },
+    {
+      "地区": "云浮",
+      "小学": 0.275043,
+      "初中": 0.453673,
+      "高中（含中专）": 0.114804,
+      "大学及以上（含大专）": 0.032407
+    },
+    {
+      "地区": "汕尾",
+      "小学": 0.338157,
+      "初中": 0.399678,
+      "高中（含中专）": 0.108722,
+      "大学及以上（含大专）": 0.024214
+    },
+    {
+      "地区": "揭阳",
+      "小学": 0.334974,
+      "初中": 0.43348,
+      "高中（含中专）": 0.113474,
+      "大学及以上（含大专）": 0.018774
+    }
+  ]
+}

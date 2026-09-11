@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "id": 113,
+    "name": "富文本",
+    "prop": "swRichtext",
+    "componentName": "swRichtext",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/ftRichtext.dbc58503.png"
+  },
+  "config": {
+    "title": "富文本",
+    "name": "富文本",
+    "display": true,
+    "icon": "icon-banner",
+    "img": "/img/ftRichtext.dbc58503.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "time": 30,
+    "url": "",
+    "cbArgs": [],
+    "encodes": [],
+    "events": [],
+    "data": [
+      {
+        "value": ""
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "文本"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 316,
+      "height": 268,
+      "name": "swRichtext",
+      "prop": "swRichtext"
+    },
+    "option": {
+      "content": "<p><span style=\"font-size: 20px;\"><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\">凡拓<span style=\"color: #b96ad9; font-family: DY追光体;\">Screenwright</span></span><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\">大屏应用编辑器是</span><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\">数字孪生<span style=\"color: #f1c40f;\"><strong>零代码</strong></span>平</span><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\">台</span><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\">的关键组成，助力用户轻松构建魅力大屏。用户可便捷地将</span><em><strong><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify; color: #843fa1;\">三维场景与图表、柱状图</span></strong></em><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\">等联动，创造信息丰富、引人入胜的大屏应用。通过简单的拖拉拽操作，用户能快速布置元素，实现</span><span style=\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\"><strong><span style=\"color: #3598db; font-family: 造字工房悦黑;\">动态、互动</span></strong>和多媒体内容的精彩展示，满足<strong><span style=\"color: #e67e23; font-family: 造字工房悦黑;\">个性化需求</span></strong>。</span></span></p>",
+      "textAnimationTiming": 50,
+      "textAnimationDelay": 0,
+      "textAnimationType": "",
+      "startScroll": false,
+      "scrollLoop": false,
+      "scrollInterval": 10
+    }
+  },
+  "template": []
+}

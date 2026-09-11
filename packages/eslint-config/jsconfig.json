@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    // 启用所有严格的类型检查选项
+    "checkJs": true,
+    "strict": true,
+    
+    // 模块解析
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    
+    // JavaScript 支持
+    "allowJs": true,
+    
+    // 目标 ECMAScript 版本
+    "target": "ES2020",
+    
+    // 库文件
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    
+    // 互操作性约束
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    // 跳过库检查
+    "skipLibCheck": true,
+    
+    // 类型根目录
+    "typeRoots": ["./node_modules/@types"],
+    
+    // 基础路径
+    "baseUrl": ".",
+    
+    // 路径映射
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "*.js",
+    "**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build"
+  ]
+}
+

@@ -1,0 +1,514 @@
+{
+  "nodes": [
+    {
+      "id": "19026:181226",
+      "name": "二级导航-subtab",
+      "type": "INSTANCE",
+      "layout": "layout_6ebe7c",
+      "componentId": "19026:181225",
+      "children": [
+        {
+          "id": "I19026:181226;19026:181171",
+          "name": "做好承接人-tabitem",
+          "type": "INSTANCE",
+          "layout": "layout_a91f39",
+          "componentId": "19024:181130",
+          "componentProperties": [{ "name": "Property 1", "value": "noActive", "type": "VARIANT" }],
+          "children": [
+            {
+              "id": "I19026:181226;19026:181171;19024:181065",
+              "name": "选中-image",
+              "type": "GROUP",
+              "layout": "layout_411f98",
+              "children": [
+                {
+                  "id": "I19026:181226;19026:181171;19024:181066",
+                  "name": "Subtract",
+                  "type": "IMAGE-SVG",
+                  "layout": "layout_55e6cc",
+                  "strokes": "stroke_cecc45",
+                  "opacity": 0.4000000059604645
+                },
+                {
+                  "id": "I19026:181226;19026:181171;19024:181067",
+                  "name": "Subtract",
+                  "type": "IMAGE-SVG",
+                  "layout": "layout_f04515",
+                  "fills": "fill_859a57",
+                  "strokes": "stroke_34fabb",
+                  "effects": "effect_c7b51c"
+                },
+                {
+                  "id": "I19026:181226;19026:181171;19024:181068",
+                  "name": "Group 1142813458",
+                  "type": "GROUP",
+                  "layout": "layout_c9ed7d",
+                  "opacity": 0.6000000238418579,
+                  "children": [
+                    {
+                      "id": "I19026:181226;19026:181171;19024:181069",
+                      "name": "Rectangle 838",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_f9b9b1",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19026:181171;19024:181070",
+                      "name": "Rectangle 840",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_8bb7d8",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19026:181171;19024:181071",
+                      "name": "Rectangle 841",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_42f1e2",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    }
+                  ]
+                },
+                {
+                  "id": "I19026:181226;19026:181171;19024:181072",
+                  "name": "Group 1142813457",
+                  "type": "GROUP",
+                  "layout": "layout_646070",
+                  "opacity": 0.6000000238418579,
+                  "children": [
+                    {
+                      "id": "I19026:181226;19026:181171;19024:181073",
+                      "name": "Rectangle 838",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_9681ea",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19026:181171;19024:181074",
+                      "name": "Rectangle 840",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_8fea12",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19026:181171;19024:181075",
+                      "name": "Rectangle 841",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_18079f",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "I19026:181226;19026:181171;19024:181076",
+              "name": "做好“承接人”",
+              "type": "TEXT",
+              "layout": "layout_66a550",
+              "text": "  做好“承接人”",
+              "textStyle": "style_340f9d",
+              "fills": "fill_658ab2"
+            }
+          ]
+        },
+        {
+          "id": "I19026:181226;19024:181158",
+          "name": "当好收信人-tabitem",
+          "type": "INSTANCE",
+          "layout": "layout_7a6ae8",
+          "componentId": "19024:181124",
+          "componentProperties": [{ "name": "Property 1", "value": "active", "type": "VARIANT" }],
+          "children": [
+            {
+              "id": "I19026:181226;19024:181158;19024:181111",
+              "name": "选中-image",
+              "type": "GROUP",
+              "layout": "layout_98c403",
+              "children": [
+                {
+                  "id": "I19026:181226;19024:181158;19024:181112",
+                  "name": "Subtract",
+                  "type": "IMAGE-SVG",
+                  "layout": "layout_346250",
+                  "strokes": "stroke_cecc45",
+                  "opacity": 0.4000000059604645
+                },
+                {
+                  "id": "I19026:181226;19024:181158;19024:181113",
+                  "name": "Subtract",
+                  "type": "IMAGE-SVG",
+                  "layout": "layout_a95c1b",
+                  "fills": "fill_036cc1",
+                  "strokes": "stroke_61d6f1",
+                  "effects": "effect_920c18"
+                },
+                {
+                  "id": "I19026:181226;19024:181158;19024:181114",
+                  "name": "Group 1142813458",
+                  "type": "GROUP",
+                  "layout": "layout_88abe7",
+                  "children": [
+                    {
+                      "id": "I19026:181226;19024:181158;19024:181115",
+                      "name": "Rectangle 838",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_1e3eb9",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19024:181158;19024:181116",
+                      "name": "Rectangle 840",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_d67393",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19024:181158;19024:181117",
+                      "name": "Rectangle 841",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_1e707a",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    }
+                  ]
+                },
+                {
+                  "id": "I19026:181226;19024:181158;19024:181118",
+                  "name": "Group 1142813457",
+                  "type": "GROUP",
+                  "layout": "layout_a24480",
+                  "children": [
+                    {
+                      "id": "I19026:181226;19024:181158;19024:181119",
+                      "name": "Rectangle 838",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_fa0162",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19024:181158;19024:181120",
+                      "name": "Rectangle 840",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_d58cf5",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    },
+                    {
+                      "id": "I19026:181226;19024:181158;19024:181121",
+                      "name": "Rectangle 841",
+                      "type": "IMAGE-SVG",
+                      "layout": "layout_c5c0ff",
+                      "fills": "fill_658ab2",
+                      "effects": "effect_c0a441"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "I19026:181226;19024:181158;19024:181122",
+              "name": "当好“收信人”",
+              "type": "TEXT",
+              "layout": "layout_0eced5",
+              "text": "  当好“收信人”",
+              "textStyle": "style_e71e11",
+              "fills": "fill_658ab2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "components": {},
+  "componentSets": {},
+  "globalVars": {
+    "styles": {
+      "layout_6ebe7c": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 452, "height": 45 },
+        "absolutePosition": { "x": 0, "y": 0 }
+      },
+      "layout_a91f39": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 200, "height": 42 },
+        "absolutePosition": { "x": 252, "y": 3 }
+      },
+      "layout_411f98": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 200, "height": 40 },
+        "absolutePosition": { "x": 252, "y": 5 }
+      },
+      "layout_55e6cc": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 198, "height": 38 },
+        "absolutePosition": { "x": 254, "y": 7 }
+      },
+      "stroke_cecc45": {
+        "colors": [
+          {
+            "type": "GRADIENT_LINEAR",
+            "gradient": "linear-gradient(0deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.8) 100%)"
+          }
+        ],
+        "strokeWeight": "1.2881557941436768px"
+      },
+      "layout_f04515": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 198, "height": 38 },
+        "absolutePosition": { "x": 252, "y": 5 }
+      },
+      "fill_859a57": [
+        {
+          "type": "GRADIENT_RADIAL",
+          "gradient": "radial-gradient(0deg, rgba(20, 204, 255, 1) 0%, rgba(65, 176, 255, 0) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(65, 220, 255, 0) 0%, rgba(90, 161, 255, 1) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(65, 154, 255, 0.2) 0%, rgba(20, 75, 255, 1) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(60, 196, 255, 0) 0%, rgba(60, 196, 255, 0.2) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(32, 196, 255, 0) 0%, rgba(32, 169, 255, 0.6) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(65, 214, 255, 0.2) 0%, rgba(65, 154, 255, 0) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(9, 22, 44, 0.5) 0%, rgba(9, 31, 44, 1) 48%, rgba(9, 22, 44, 0.5) 95%)"
+        }
+      ],
+      "stroke_34fabb": {
+        "colors": [
+          {
+            "type": "GRADIENT_LINEAR",
+            "gradient": "linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 10%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 1) 100%)"
+          }
+        ],
+        "strokeWeight": "1.939645528793335px"
+      },
+      "effect_c7b51c": {
+        "boxShadow": "0px 2.4717326164245605px 4.943465232849121px 0px rgba(18, 0, 55, 0.4), inset 2.4717326164245605px 7.415197372436523px 1.2358663082122803px 0px rgba(51, 133, 255, 0.2)"
+      },
+      "layout_c9ed7d": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 94, "height": 1 },
+        "absolutePosition": { "x": 304, "y": 5 }
+      },
+      "layout_f9b9b1": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 58, "height": 1 },
+        "absolutePosition": { "x": 322, "y": 5 }
+      },
+      "fill_658ab2": ["#FFFFFF"],
+      "effect_c0a441": { "boxShadow": "0px 0px 9.886930465698242px 0px rgba(74, 201, 255, 0.8)" },
+      "layout_8bb7d8": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 304, "y": 5 }
+      },
+      "layout_42f1e2": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 380, "y": 5 }
+      },
+      "layout_646070": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 94, "height": 1 },
+        "absolutePosition": { "x": 304, "y": 41 }
+      },
+      "layout_9681ea": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 58, "height": 1 },
+        "absolutePosition": { "x": 322, "y": 41 }
+      },
+      "layout_8fea12": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 304, "y": 41 }
+      },
+      "layout_18079f": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 380, "y": 41 }
+      },
+      "layout_66a550": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 200, "height": 40 },
+        "absolutePosition": { "x": 252, "y": 3 }
+      },
+      "style_340f9d": {
+        "fontFamily": "Alibaba PuHuiTi 2.0",
+        "fontWeight": 500,
+        "fontSize": 22,
+        "letterSpacing": "4%",
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "CENTER"
+      },
+      "layout_7a6ae8": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 202, "height": 41 },
+        "absolutePosition": { "x": 0, "y": 4 }
+      },
+      "layout_98c403": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 200, "height": 40 },
+        "absolutePosition": { "x": 0, "y": 5 }
+      },
+      "layout_346250": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 198, "height": 38 },
+        "absolutePosition": { "x": 0, "y": 7 }
+      },
+      "layout_a95c1b": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 198, "height": 38 },
+        "absolutePosition": { "x": 2, "y": 5 }
+      },
+      "fill_036cc1": [
+        {
+          "type": "GRADIENT_RADIAL",
+          "gradient": "radial-gradient(0deg, rgba(20, 204, 255, 1) 0%, rgba(65, 176, 255, 0) 100%)"
+        },
+        {
+          "type": "GRADIENT_RADIAL",
+          "gradient": "radial-gradient(0deg, rgba(20, 204, 255, 1) 0%, rgba(65, 176, 255, 0) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(65, 220, 255, 0) 0%, rgba(90, 161, 255, 1) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(65, 154, 255, 0.2) 0%, rgba(20, 75, 255, 1) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(60, 196, 255, 0) 0%, rgba(60, 196, 255, 0.2) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(32, 196, 255, 0) 0%, rgba(32, 169, 255, 0.6) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(65, 214, 255, 0.2) 0%, rgba(65, 154, 255, 0) 100%)"
+        },
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(9, 22, 44, 0.5) 0%, rgba(9, 31, 44, 1) 48%, rgba(9, 22, 44, 0.5) 95%)"
+        }
+      ],
+      "stroke_61d6f1": {
+        "colors": [
+          {
+            "type": "GRADIENT_LINEAR",
+            "gradient": "linear-gradient(0deg, rgba(36, 197, 255, 1) 0%, rgba(43, 216, 255, 0) 10%, rgba(43, 216, 255, 0) 50%, rgba(43, 216, 255, 0) 90%, rgba(36, 197, 255, 1) 100%)"
+          }
+        ],
+        "strokeWeight": "1.939645528793335px"
+      },
+      "effect_920c18": {
+        "boxShadow": "0px 2.4717326164245605px 4.943465232849121px 0px rgba(18, 0, 55, 0.4), 0px 0px 7.625882148742676px 0px rgba(8, 179, 253, 0.5), inset 2.4717326164245605px 7.415197372436523px 1.2358663082122803px 0px rgba(51, 133, 255, 0.2), inset 0px 0px 9.886930465698242px 0px rgba(255, 255, 255, 1), inset -2.4717326164245605px -2.4717326164245605px 0px 0px rgba(28, 244, 233, 0.4)"
+      },
+      "layout_88abe7": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 94, "height": 1 },
+        "absolutePosition": { "x": 54, "y": 5 }
+      },
+      "layout_1e3eb9": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 58, "height": 1 },
+        "absolutePosition": { "x": 72, "y": 5 }
+      },
+      "layout_d67393": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 130, "y": 5 }
+      },
+      "layout_1e707a": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 54, "y": 5 }
+      },
+      "layout_a24480": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 94, "height": 1 },
+        "absolutePosition": { "x": 54, "y": 42 }
+      },
+      "layout_fa0162": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 58, "height": 1 },
+        "absolutePosition": { "x": 72, "y": 42 }
+      },
+      "layout_d58cf5": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 130, "y": 42 }
+      },
+      "layout_c5c0ff": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 18, "height": 1 },
+        "absolutePosition": { "x": 54, "y": 42 }
+      },
+      "layout_0eced5": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 200, "height": 40 },
+        "absolutePosition": { "x": 2, "y": 4 }
+      },
+      "style_e71e11": {
+        "fontFamily": "Alibaba PuHuiTi 2.0",
+        "fontWeight": 700,
+        "fontSize": 22,
+        "letterSpacing": "4%",
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "CENTER"
+      }
+    }
+  }
+}

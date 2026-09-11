@@ -1,0 +1,523 @@
+{
+  "meta": {
+    "id": 112,
+    "name": "斑马柱状图2",
+    "prop": "echartzebra2",
+    "componentName": "echart-zebra2",
+    "first_level_menu": "图表",
+    "second_level_menu": "项目",
+    "thumbnail": "/img/zebra2.f1d2ff44.png"
+  },
+  "config": {
+    "name": "斑马柱状图2",
+    "title": "斑马柱状图2",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/zebra2.f1d2ff44.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "name": "A",
+        "value": 2024
+      },
+      {
+        "seriesName": "系列一",
+        "name": "B",
+        "value": 1423
+      },
+      {
+        "seriesName": "系列一",
+        "name": "C",
+        "value": 1532
+      },
+      {
+        "seriesName": "系列一",
+        "name": "D",
+        "value": 1920
+      },
+      {
+        "seriesName": "系列二",
+        "name": "A",
+        "value": 1824
+      },
+      {
+        "seriesName": "系列二",
+        "name": "B",
+        "value": 2423
+      },
+      {
+        "seriesName": "系列二",
+        "name": "C",
+        "value": 2532
+      },
+      {
+        "seriesName": "系列二",
+        "name": "D",
+        "value": 1720
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "echart-zebra2",
+      "prop": "echartzebra2"
+    },
+    "option": {
+      "refresh": true,
+      "stack": false,
+      "barWidth": 25,
+      "dataSeriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        }
+      ],
+      "seriesColor": [
+        {
+          "type": "linear-gradient",
+          "angle": "0",
+          "colors": [
+            {
+              "color": "rgba(62,67,244,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(137,181,252,1)",
+              "per": 100
+            }
+          ]
+        },
+        {
+          "type": "linear-gradient",
+          "angle": "0",
+          "colors": [
+            {
+              "color": "rgba(62,67,244,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(61,227,251,1)",
+              "per": 100
+            }
+          ]
+        }
+      ],
+      "seriesColorpicker": [
+        "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)",
+        "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)"
+      ],
+      "seriesOpacity": [
+        100,
+        100
+      ],
+      "extremeShow": [
+        false,
+        false
+      ],
+      "extremeType": [
+        "max",
+        "max"
+      ],
+      "xAxisSplitLineType": "dashed",
+      "yAxisSplitLineType": "dashed",
+      "extremeColor": [
+        {
+          "type": "linear-gradient",
+          "angle": "0",
+          "colors": [
+            {
+              "color": "rgba(62,67,244,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(61,227,251,1)",
+              "per": 100
+            }
+          ]
+        },
+        {
+          "type": "linear-gradient",
+          "angle": "0",
+          "colors": [
+            {
+              "color": "rgba(62,67,244,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(137,181,252,1)",
+              "per": 100
+            }
+          ]
+        }
+      ],
+      "extremeOpacity": [
+        100,
+        100
+      ],
+      "extremeColorpicker": [
+        "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)",
+        "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)"
+      ],
+      "markLineDataType": [
+        "average",
+        "average"
+      ],
+      "markLineData": [
+        2000,
+        2000
+      ],
+      "markLineSymbolStart": [
+        "circle",
+        "circle"
+      ],
+      "markLineSymbolStartImage": [
+        "",
+        ""
+      ],
+      "markLineSymbolEnd": [
+        "arrow",
+        "arrow"
+      ],
+      "markLineSymbolEndImage": [
+        "",
+        ""
+      ],
+      "markLineSymbolWidth": [
+        10,
+        10
+      ],
+      "markLineSymbolHeight": [
+        10,
+        10
+      ],
+      "markLineLabelShow": [
+        true,
+        true
+      ],
+      "markLineLabelPosition": [
+        "middle",
+        "middle"
+      ],
+      "markLineLabelDistance": [
+        0,
+        0
+      ],
+      "markLineLabelCustom": [
+        "",
+        ""
+      ],
+      "markLineLabelFontFamily": [
+        "Source Han Sans CN-Normal, Source Han Sans CN",
+        "Source Han Sans CN-Normal, Source Han Sans CN"
+      ],
+      "markLineLabelFontStyle": [
+        "normal",
+        "normal"
+      ],
+      "markLineLabelFontSize": [
+        16,
+        16
+      ],
+      "markLineLabelColor": [
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)"
+      ],
+      "markLineLabelFontWeight": [
+        "normal",
+        "normal"
+      ],
+      "markLineLabelPaddingTop": [
+        0,
+        0
+      ],
+      "markLineLabelPaddingRight": [
+        0,
+        0
+      ],
+      "markLineLabelPaddingBottom": [
+        0,
+        0
+      ],
+      "markLineLabelPaddingLeft": [
+        0,
+        0
+      ],
+      "markLineLineColor": [
+        "rgba(137,181,252,1)",
+        "rgba(61,227,251,1)"
+      ],
+      "markLineLineWidth": [
+        2,
+        2
+      ],
+      "markLineLineType": [
+        "dashed",
+        "dashed"
+      ],
+      "markLineShow": [
+        false,
+        false
+      ],
+      "barGap": 70,
+      "barCategoryGap": 5,
+      "barBlockItemHeight": 15,
+      "barBlockItemInterval": 4,
+      "barBlockItemRadio": 4,
+      "barBorderRadius": "default",
+      "gridLeft": 45,
+      "gridTop": 50,
+      "gridRight": 25,
+      "gridBottom": 25,
+      "legendShow": true,
+      "legendWidth": 800,
+      "legendHeight": 800,
+      "legendItemWidth": 10,
+      "legendItemHeight": 10,
+      "legendItemGap": 20,
+      "legendFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "legendFontSize": 12,
+      "legendColor": "rgba(255, 255, 255, 1)",
+      "legendFontStyle": "normal",
+      "legendFontWeight": "normal",
+      "legendTextLeftPadding": 5,
+      "legendSelectedMode": true,
+      "legendGrid": {
+        "top": 0,
+        "left": "center"
+      },
+      "legendOffsetX": 0,
+      "legendOffsetY": 0,
+      "xNameFontSize": 16,
+      "yNameFontSize": 16,
+      "seriesLabelShow": false,
+      "seriesLabelColor": "rgba(255,255,255,1)",
+      "seriesLabelFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "seriesLabelFontSize": 14,
+      "seriesLabelFontWeight": "normal",
+      "seriesLabelFontStyle": "normal",
+      "seriesLabelOffsetX": 0,
+      "seriesLabelOffsetY": 0,
+      "legendOrient": "horizontal",
+      "yAxisInverse": false,
+      "xAxisInverse": false,
+      "xAxisShow": true,
+      "yAxisShow": true,
+      "xAxisLabelShow": true,
+      "yAxisLabelShow": true,
+      "xAxisType": "category",
+      "xAxisLabelLimit": false,
+      "xAxisLabelLimitNum": 1,
+      "xAxisInterval": 0,
+      "xAxisRotate": 0,
+      "yAxisMin": "0",
+      "yAxisMax": "",
+      "xAxisMargin": 8,
+      "yAxisMargin": 8,
+      "xAxisFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "yAxisFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "xAxisFontSize": 12,
+      "yAxisFontSize": 12,
+      "xAxisColor": "rgba(209, 209, 209, 1)",
+      "yAxisColor": "rgba(209, 209, 209, 1)",
+      "xAxisFontStyle": "normal",
+      "yAxisFontStyle": "normal",
+      "xAxisFontWeight": "normal",
+      "yAxisFontWeight": "normal",
+      "yAxisNameShow": true,
+      "yAxisName": "单位",
+      "yAxisNameFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "yAxisNameFontSize": 12,
+      "yAxisNameColor": "rgba(209, 209, 209, 1)",
+      "yAxisNameFontStyle": "normal",
+      "yAxisNameFontWeight": "normal",
+      "yAxisNamePaddingTop": 0,
+      "yAxisNamePaddingBottom": 0,
+      "yAxisNamePaddingLeft": 0,
+      "yAxisNamePaddingRight": 40,
+      "xAxisLineShow": true,
+      "yAxisLineShow": false,
+      "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "xAxisLineWidth": 1,
+      "yAxisLineWidth": 1,
+      "xAxisLineOpacity": 0.5,
+      "yAxisLineOpacity": 0.5,
+      "xAxisTickShow": true,
+      "yAxisTickShow": false,
+      "xAxisTickColor": "#65686f",
+      "yAxisTickColor": "#65686f",
+      "xAxisTickWidth": 1,
+      "yAxisTickWidth": 1,
+      "xAxisTickLength": 2,
+      "yAxisTickLength": 2,
+      "xAxisSplitLineShow": false,
+      "yAxisSplitLineShow": true,
+      "xAxisSplitLineInterval": 0,
+      "xAxisSplitLineWidth": 1,
+      "yAxisSplitLineWidth": 1,
+      "xAxisSplitLineColor": "#383d47",
+      "yAxisSplitLineColor": "#383d47",
+      "barBackgroundColor": "rgba(255, 255, 255, 0)",
+      "dataLoop": false,
+      "dataLoopInterval": 5,
+      "dataLoopDisplayRows": 4,
+      "dataLoopRollNum": 1,
+      "dataZoomShow": false,
+      "moveHandleSize": 10,
+      "moveHandleColor": "#d2dbee",
+      "moveHandleEmphasisColor": "#d2dbee",
+      "dataZoomBottom": 10,
+      "tooltipLoop": false,
+      "tooltipLoopInterval": 3,
+      "tooltipTriggerOn": true,
+      "tooltipOffsetX": 50,
+      "tooltipOffsetY": 30,
+      "tooltipBackground": "",
+      "tooltipWidth": 120,
+      "tooltipHeight": 110,
+      "tooltipPaddingTop": 13,
+      "tooltipPaddingBottom": 10,
+      "tooltipPaddingLeft": 12,
+      "tooltipPaddingRight": 12,
+      "tooltipNameFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "tooltipNameFontSize": 16,
+      "tooltipNameColor": "rgba(255, 255, 255, 1)",
+      "tooltipNameFontWeight": "normal",
+      "tooltipNameFontStyle": "normal",
+      "tooltipAlign": "left",
+      "tooltipNameOffsetX": 0,
+      "tooltipNameOffsetY": 0,
+      "tooltipArrLineHeight": 5,
+      "tooltipSeriesNameFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "tooltipSeriesNameFontSize": 12,
+      "tooltipSeriesNameColor": "rgba(255, 255, 255, 1)",
+      "tooltipSeriesNameFontWeight": "normal",
+      "tooltipSeriesNameFontStyle": "normal",
+      "tooltipValueFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "tooltipValueFontSize": 12,
+      "tooltipValueColor": "rgba(255, 255, 255, 1)",
+      "tooltipValueFontWeight": "normal",
+      "tooltipValueFontStyle": "normal",
+      "tooltipUnit": [
+        "",
+        ""
+      ],
+      "tooltipUnitFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "tooltipUnitFontSize": 12,
+      "tooltipUnitColor": "rgba(255, 255, 255, 1)",
+      "tooltipUnitFontWeight": "normal",
+      "tooltipUnitFontStyle": "normal",
+      "tooltipUnitOffsetX": 0,
+      "tooltipUnitOffsetY": 0,
+      "tooltipMarkerSize": 10,
+      "dataUnitName": [
+        "系列一",
+        "系列二"
+      ],
+      "unitTabsName": [
+        {
+          "name": "后缀1",
+          "value": "个"
+        },
+        {
+          "name": "后缀2",
+          "value": "个"
+        }
+      ],
+      "tooltipAxisPointerWidth": 50,
+      "tooltipAxisPointerColor": "rgba(255, 255, 255, 1)",
+      "tooltipLabelGapSapce": 5
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "name": "A",
+      "value": 2024
+    },
+    {
+      "seriesName": "系列一",
+      "name": "B",
+      "value": 1423
+    },
+    {
+      "seriesName": "系列一",
+      "name": "C",
+      "value": 1532
+    },
+    {
+      "seriesName": "系列一",
+      "name": "D",
+      "value": 1920
+    },
+    {
+      "seriesName": "系列二",
+      "name": "A",
+      "value": 1824
+    },
+    {
+      "seriesName": "系列二",
+      "name": "B",
+      "value": 2423
+    },
+    {
+      "seriesName": "系列二",
+      "name": "C",
+      "value": 2532
+    },
+    {
+      "seriesName": "系列二",
+      "name": "D",
+      "value": 1720
+    }
+  ]
+}

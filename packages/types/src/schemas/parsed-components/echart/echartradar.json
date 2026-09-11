@@ -1,0 +1,330 @@
+{
+  "meta": {
+    "id": 15,
+    "name": "雷达图",
+    "prop": "echartradar",
+    "componentName": "echart-radar",
+    "first_level_menu": "图表",
+    "second_level_menu": "其他",
+    "thumbnail": "/img/radar.237e8670.png"
+  },
+  "config": {
+    "title": "雷达图",
+    "name": "雷达图",
+    "display": true,
+    "icon": "icon-radar",
+    "img": "/img/radar.237e8670.png",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "time": 30,
+    "url": "./radar",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "name": "维度一",
+        "value": 20
+      },
+      {
+        "seriesName": "系列一",
+        "name": "维度二",
+        "value": 80
+      },
+      {
+        "seriesName": "系列一",
+        "name": "维度三",
+        "value": 50
+      },
+      {
+        "seriesName": "系列一",
+        "name": "维度四",
+        "value": 20
+      },
+      {
+        "seriesName": "系列一",
+        "name": "维度五",
+        "value": 90
+      },
+      {
+        "seriesName": "系列一",
+        "name": "维度六",
+        "value": 40
+      },
+      {
+        "seriesName": "系列二",
+        "name": "维度一",
+        "value": 80
+      },
+      {
+        "seriesName": "系列二",
+        "name": "维度二",
+        "value": 80
+      },
+      {
+        "seriesName": "系列二",
+        "name": "维度三",
+        "value": 20
+      },
+      {
+        "seriesName": "系列二",
+        "name": "维度四",
+        "value": 95
+      },
+      {
+        "seriesName": "系列二",
+        "name": "维度五",
+        "value": 80
+      },
+      {
+        "seriesName": "系列二",
+        "name": "维度六",
+        "value": 88
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 450,
+      "height": 250,
+      "name": "echart-radar",
+      "prop": "echartradar"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        }
+      ],
+      "radarCenterX": 50,
+      "radarCenterY": 50,
+      "radarRadiusMax": 55,
+      "radarRadiusMin": 0,
+      "seriesLabelShow": false,
+      "seriesLabelColor": "rgba(255,255,255,1)",
+      "seriesLabelFontFamily": "siayuan-normal",
+      "seriesLabelFontSize": 12,
+      "seriesLabelFontWeight": "normal",
+      "seriesLabelFontStyle": "normal",
+      "seriesLabelOffsetX": 0,
+      "seriesLabelOffsetY": 0,
+      "legendShow": true,
+      "legendWidth": 800,
+      "legendHeight": 800,
+      "legendItemWidth": 10,
+      "legendItemHeight": 10,
+      "legendItemGap": 30,
+      "legendFontFamily": "siayuan-normal",
+      "legendFontSize": 12,
+      "legendColor": "rgba(255, 255, 255, 1)",
+      "legendFontStyle": "normal",
+      "legendFontWeight": "normal",
+      "legendTextLeftPadding": 5,
+      "legendSelectedMode": true,
+      "legendGrid": {
+        "top": "center",
+        "right": 0
+      },
+      "legendOffsetX": -10,
+      "legendOffsetY": 0,
+      "legendOrient": "vertical",
+      "radarMin": 0,
+      "radarMax": 100,
+      "radarShape": "circle",
+      "radarNameShow": true,
+      "radarNameGap": 20,
+      "radarNameFontFamily": "siayuan-normal",
+      "radarNameFontSize": 12,
+      "radarNameColor": "rgba(255, 255, 255, 1)",
+      "radarNameFontStyle": "normal",
+      "radarNameFontWeight": "normal",
+      "radarLineShow": true,
+      "radarLineColor": "rgba(209, 209, 209, 0.5)",
+      "radarLineWidth": 1,
+      "radarTickShow": true,
+      "radarSplitNumber": 3,
+      "radarTickColor": "#65686f",
+      "radarTickWidth": 1,
+      "radarTickLength": 2,
+      "radarLabelShow": false,
+      "radarLabelMaxShow": true,
+      "radarLabelMinShow": false,
+      "radarLabelMargin": 8,
+      "radarLabelFontFamily": "siayuan-normal",
+      "radarLabelFontSize": 16,
+      "radarLabelColor": "rgba(255, 255, 255, 1)",
+      "radarLabelFontStyle": "normal",
+      "radarLabelFontWeight": "normal",
+      "radarSplitLineShow": true,
+      "radarSplitLineWidth": 2,
+      "radarSplitLineColor": "#5b626b",
+      "radarSplitAreaTabsName": [
+        "区域1",
+        "区域2",
+        "区域3"
+      ],
+      "radarSplitAreaColor": [
+        "#575f69",
+        "#474e58",
+        "#363b45"
+      ],
+      "seriesLineColor": [
+        "rgba(49,224,242,1)",
+        "rgba(62,67,244,1)"
+      ],
+      "seriesLineWidth": [
+        2,
+        2
+      ],
+      "seriesLineShadowColor": [
+        "rgba(49,224,242,1)",
+        "rgba(62,67,244,1)"
+      ],
+      "seriesLineShadowOffsetX": [
+        0,
+        0
+      ],
+      "seriesLineShadowOffsetY": [
+        0,
+        0
+      ],
+      "seriesLineShadowBlur": [
+        10,
+        10
+      ],
+      "seriesLineShadowBlurExtension": 0,
+      "seriesSymbol": [
+        "circle",
+        "circle"
+      ],
+      "seriesSymbolImage": [
+        "",
+        ""
+      ],
+      "seriesSymbolWidth": [
+        1,
+        1
+      ],
+      "seriesSymbolHeight": [
+        1,
+        1
+      ],
+      "seriesItemColor": [
+        "rgba(49,224,242,1)",
+        "rgba(62,67,244,1)"
+      ],
+      "seriesItemBorderWidth": [
+        0,
+        0
+      ],
+      "seriesItemBorderColor": [
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)"
+      ],
+      "seriesAreaColor": [
+        "rgba(49,224,242,0.2)",
+        "rgba(62,67,244,0.2)"
+      ]
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "name": "维度一",
+      "value": 20
+    },
+    {
+      "seriesName": "系列一",
+      "name": "维度二",
+      "value": 80
+    },
+    {
+      "seriesName": "系列一",
+      "name": "维度三",
+      "value": 50
+    },
+    {
+      "seriesName": "系列一",
+      "name": "维度四",
+      "value": 20
+    },
+    {
+      "seriesName": "系列一",
+      "name": "维度五",
+      "value": 90
+    },
+    {
+      "seriesName": "系列一",
+      "name": "维度六",
+      "value": 40
+    },
+    {
+      "seriesName": "系列二",
+      "name": "维度一",
+      "value": 80
+    },
+    {
+      "seriesName": "系列二",
+      "name": "维度二",
+      "value": 80
+    },
+    {
+      "seriesName": "系列二",
+      "name": "维度三",
+      "value": 20
+    },
+    {
+      "seriesName": "系列二",
+      "name": "维度四",
+      "value": 95
+    },
+    {
+      "seriesName": "系列二",
+      "name": "维度五",
+      "value": 80
+    },
+    {
+      "seriesName": "系列二",
+      "name": "维度六",
+      "value": 88
+    }
+  ]
+}

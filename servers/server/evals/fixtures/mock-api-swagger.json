@@ -1,0 +1,998 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "电子厂大屏 Mock API",
+    "version": "1.0.0",
+    "description": "为电子厂大屏展示提供模拟数据接口，涵盖生产、设备、质检、订单、能耗五大模块"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3100",
+      "description": "本地开发服务器"
+    }
+  ],
+  "paths": {
+    "/api/energy": {
+      "get": {
+        "summary": "获取能耗总览",
+        "description": "返回今日/本月电耗、费用、单件能耗及分时用电，用于大屏能耗看板",
+        "tags": [
+          "Energy"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "todayKwh": {
+                          "type": "number",
+                          "description": "今日用电量（度）"
+                        },
+                        "monthKwh": {
+                          "type": "number",
+                          "description": "本月用电量（度）"
+                        },
+                        "costToday": {
+                          "type": "number",
+                          "description": "今日电费（元）"
+                        },
+                        "costMonth": {
+                          "type": "number",
+                          "description": "本月电费（元）"
+                        },
+                        "perUnitKwh": {
+                          "type": "number",
+                          "description": "单件能耗（度/件）"
+                        },
+                        "hourly": {
+                          "type": "array",
+                          "description": "分时用电量",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "hour": {
+                                "type": "string"
+                              },
+                              "kwh": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/equipment": {
+      "get": {
+        "summary": "获取设备列表",
+        "tags": [
+          "Equipment"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "running",
+                "warning",
+                "fault",
+                "idle"
+              ]
+            },
+            "description": "按状态过滤"
+          },
+          {
+            "in": "query",
+            "name": "line",
+            "schema": {
+              "type": "string"
+            },
+            "description": "按生产线过滤，如 L01"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "line": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "running",
+                              "warning",
+                              "fault",
+                              "idle"
+                            ]
+                          },
+                          "uptime": {
+                            "type": "number",
+                            "description": "稼动率（%）"
+                          },
+                          "lastMaintenance": {
+                            "type": "string"
+                          },
+                          "nextMaintenance": {
+                            "type": "string"
+                          },
+                          "temperature": {
+                            "type": "number",
+                            "description": "当前温度（°C）"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/equipment/{id}": {
+      "get": {
+        "summary": "获取单台设备详情",
+        "tags": [
+          "Equipment"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EQ001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          },
+          "404": {
+            "description": "设备不存在"
+          }
+        }
+      }
+    },
+    "/api/equipment/stats/summary": {
+      "get": {
+        "summary": "获取设备状态汇总（用于大屏饼图/统计卡片）",
+        "tags": [
+          "Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer"
+                        },
+                        "running": {
+                          "type": "integer"
+                        },
+                        "warning": {
+                          "type": "integer"
+                        },
+                        "fault": {
+                          "type": "integer"
+                        },
+                        "idle": {
+                          "type": "integer"
+                        },
+                        "avgUptime": {
+                          "type": "number",
+                          "description": "平均稼动率（%）"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "summary": "获取生产订单列表",
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "running",
+                "pending",
+                "done"
+              ]
+            },
+            "description": "按状态过滤"
+          },
+          {
+            "in": "query",
+            "name": "priority",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "urgent",
+                "high",
+                "normal"
+              ]
+            },
+            "description": "按优先级过滤"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "PO-2024051401"
+                          },
+                          "customer": {
+                            "type": "string"
+                          },
+                          "product": {
+                            "type": "string"
+                          },
+                          "quantity": {
+                            "type": "integer",
+                            "description": "计划数量"
+                          },
+                          "completed": {
+                            "type": "integer",
+                            "description": "已完成数量"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "running",
+                              "pending",
+                              "done"
+                            ]
+                          },
+                          "deadline": {
+                            "type": "string",
+                            "description": "交期"
+                          },
+                          "priority": {
+                            "type": "string",
+                            "enum": [
+                              "urgent",
+                              "high",
+                              "normal"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/orders/{id}": {
+      "get": {
+        "summary": "获取订单详情",
+        "tags": [
+          "Orders"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "PO-2024051401"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          },
+          "404": {
+            "description": "订单不存在"
+          }
+        }
+      }
+    },
+    "/api/overview": {
+      "get": {
+        "summary": "获取工厂看板总览数据",
+        "description": "包含今日产量、综合效率、不良率、在线设备数、预警信息等核心指标",
+        "tags": [
+          "Overview"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "date": {
+                          "type": "string",
+                          "example": "2024-05-14"
+                        },
+                        "shift": {
+                          "type": "string",
+                          "example": "白班 08:00-20:00"
+                        },
+                        "totalOutput": {
+                          "type": "integer",
+                          "description": "今日实际产量（件）"
+                        },
+                        "totalTarget": {
+                          "type": "integer",
+                          "description": "今日目标产量（件）"
+                        },
+                        "completionRate": {
+                          "type": "number",
+                          "description": "完成率（%）"
+                        },
+                        "overallEfficiency": {
+                          "type": "number",
+                          "description": "综合效率 OEE（%）"
+                        },
+                        "defectRate": {
+                          "type": "number",
+                          "description": "综合不良率（%）"
+                        },
+                        "onlineEquipment": {
+                          "type": "integer"
+                        },
+                        "totalEquipment": {
+                          "type": "integer"
+                        },
+                        "alerts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "level": {
+                                "type": "string",
+                                "enum": [
+                                  "error",
+                                  "warning",
+                                  "info"
+                                ]
+                              },
+                              "message": {
+                                "type": "string"
+                              },
+                              "time": {
+                                "type": "string"
+                              },
+                              "line": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/production/lines": {
+      "get": {
+        "summary": "获取所有生产线实时状态",
+        "tags": [
+          "Production"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "L01"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "running",
+                              "warning",
+                              "idle",
+                              "fault"
+                            ]
+                          },
+                          "efficiency": {
+                            "type": "number",
+                            "description": "效率（%）"
+                          },
+                          "output": {
+                            "type": "integer",
+                            "description": "当日已产（件）"
+                          },
+                          "target": {
+                            "type": "integer",
+                            "description": "当日目标（件）"
+                          },
+                          "defectRate": {
+                            "type": "number",
+                            "description": "不良率（%）"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/production/lines/{id}": {
+      "get": {
+        "summary": "获取单条生产线详情",
+        "tags": [
+          "Production"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "L01"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          },
+          "404": {
+            "description": "生产线不存在"
+          }
+        }
+      }
+    },
+    "/api/production/hourly": {
+      "get": {
+        "summary": "获取今日分时产量",
+        "description": "返回当班每小时的实际产量、目标产量与缺陷数，用于折线图展示",
+        "tags": [
+          "Production"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "hour": {
+                            "type": "string",
+                            "example": "08:00"
+                          },
+                          "actual": {
+                            "type": "integer"
+                          },
+                          "target": {
+                            "type": "integer"
+                          },
+                          "defects": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/production/daily": {
+      "get": {
+        "summary": "获取近30天日产量趋势",
+        "description": "用于大屏趋势折线图，周末产量为0",
+        "tags": [
+          "Production"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "days",
+            "schema": {
+              "type": "integer",
+              "default": 30
+            },
+            "description": "查询天数（最多30天）"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "example": "05-14"
+                          },
+                          "output": {
+                            "type": "integer"
+                          },
+                          "target": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quality/defects": {
+      "get": {
+        "summary": "获取缺陷类型分布",
+        "description": "返回各缺陷类型的数量、不良率和趋势，用于大屏饼图或排行榜",
+        "tags": [
+          "Quality"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "缺陷类型名称"
+                          },
+                          "count": {
+                            "type": "integer",
+                            "description": "当日发生数量"
+                          },
+                          "rate": {
+                            "type": "number",
+                            "description": "占总产量不良率（%）"
+                          },
+                          "trend": {
+                            "type": "string",
+                            "enum": [
+                              "up",
+                              "down",
+                              "stable"
+                            ],
+                            "description": "与昨日对比趋势"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quality/summary": {
+      "get": {
+        "summary": "获取质检汇总指标（用于大屏统计卡片）",
+        "tags": [
+          "Quality"
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "totalInspected": {
+                          "type": "integer",
+                          "description": "今日检测总数"
+                        },
+                        "totalDefects": {
+                          "type": "integer",
+                          "description": "今日总缺陷数"
+                        },
+                        "defectRate": {
+                          "type": "number",
+                          "description": "综合不良率（%）"
+                        },
+                        "passRate": {
+                          "type": "number",
+                          "description": "直通率（%）"
+                        },
+                        "topDefect": {
+                          "type": "string",
+                          "description": "最多缺陷类型"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "summary": "获取用户列表",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "role",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "admin",
+                "user"
+              ]
+            },
+            "description": "按角色过滤"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "description": "页码"
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "description": "每页数量"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功返回用户列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "page": {
+                          "type": "integer"
+                        },
+                        "pageSize": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "创建新用户",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "赵六"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "zhaoliu@example.com"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "user"
+                    ],
+                    "default": "user"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "创建成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "summary": "根据 ID 获取用户详情",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "用户 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功返回用户信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "用户不存在"
+          }
+        }
+      },
+      "delete": {
+        "summary": "删除用户",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "删除成功"
+          },
+          "404": {
+            "description": "用户不存在"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": [
+    {
+      "name": "Energy",
+      "description": "能耗监控数据"
+    },
+    {
+      "name": "Equipment",
+      "description": "设备状态管理"
+    },
+    {
+      "name": "Orders",
+      "description": "生产订单管理"
+    },
+    {
+      "name": "Overview",
+      "description": "工厂大屏总览"
+    },
+    {
+      "name": "Production",
+      "description": "生产线与产量数据"
+    },
+    {
+      "name": "Quality",
+      "description": "质检与不良分析"
+    },
+    {
+      "name": "Users",
+      "description": "用户管理接口"
+    }
+  ]
+}

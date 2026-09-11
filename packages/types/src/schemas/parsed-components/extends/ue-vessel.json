@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "id": 83,
+    "name": "UE容器beta",
+    "prop": "ue-vessel",
+    "componentName": "ue-vessel",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/ueVessel.d88605dd.jpg"
+  },
+  "config": {
+    "title": "UE容器beta",
+    "name": "UE容器beta",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/ueVessel.d88605dd.jpg",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "./scatter",
+    "data": [
+      {
+        "text": "UE容器-beta"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "文本"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 200,
+      "height": 200,
+      "name": "ue-vessel",
+      "prop": "ue-vessel"
+    },
+    "presetChild": [],
+    "option": {
+      "msgName": "",
+      "fontSize": 16,
+      "fontWeight": false,
+      "fontStyle": false,
+      "fontFamily": "sans-serif",
+      "fontColor": "rgba(255, 255, 255, 1)",
+      "backgroundColor": "rgba(255, 255, 255, 0)"
+    }
+  },
+  "template": [
+    {
+      "text": "UE容器-beta"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+@import "./normalize.css";
+
+// 注入 @funbi/material 物料包所需的 CSS 变量
+:root {
+  --ft-progress-bar-bg-image: url("@/assets/image/bg/progress.png");
+  // 桌面端自定义标题栏高度（Web 端为 0，不占布局）
+  --sw-titlebar-height: 0px;
+}
+:root.is-desktop {
+  --sw-titlebar-height: 32px;
+}
+@import "./common.scss";
+@import "./box.scss";
+@import "./iconfont/iconfont.css";
+@import "./animationOut.scss";
+@import "./element/index.scss";
+@import "./fontface.scss";

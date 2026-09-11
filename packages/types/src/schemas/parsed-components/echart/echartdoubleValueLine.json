@@ -1,0 +1,519 @@
+{
+  "meta": {
+    "id": 30,
+    "name": "特殊型折线图",
+    "prop": "echartdoubleValueLine",
+    "componentName": "echart-doubleValueLine",
+    "first_level_menu": "图表",
+    "second_level_menu": "项目",
+    "thumbnail": "/img/doubleValueLine.c9dcda6c.png"
+  },
+  "config": {
+    "name": "特殊型折线图",
+    "title": "特殊型折线图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/doubleValueLine.c9dcda6c.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "value": [
+          [
+            0,
+            0
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            7,
+            5
+          ]
+        ]
+      },
+      {
+        "seriesName": "系列二",
+        "value": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            6,
+            10
+          ],
+          [
+            7,
+            12
+          ],
+          [
+            8,
+            8
+          ]
+        ]
+      },
+      {
+        "seriesName": "系列三",
+        "value": [
+          [
+            0,
+            0
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            5,
+            8
+          ],
+          [
+            6,
+            5
+          ],
+          [
+            7,
+            12
+          ],
+          [
+            8,
+            13
+          ]
+        ]
+      },
+      {
+        "seriesName": "系列四",
+        "value": [
+          [
+            0,
+            0
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            10,
+            4
+          ],
+          [
+            15,
+            2
+          ],
+          [
+            20,
+            1
+          ],
+          [
+            25,
+            3
+          ]
+        ]
+      },
+      {
+        "seriesName": "系列五",
+        "value": [
+          [
+            0,
+            0
+          ],
+          [
+            7,
+            12
+          ],
+          [
+            8,
+            13
+          ],
+          [
+            10,
+            15
+          ],
+          [
+            13,
+            10
+          ],
+          [
+            14,
+            16
+          ]
+        ]
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "echart-doubleValueLine",
+      "prop": "echartdoubleValueLine"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二",
+        "系列三",
+        "系列四",
+        "系列五"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二",
+        "系列三",
+        "系列四",
+        "系列五"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        },
+        {
+          "name": "系列3",
+          "value": "系列三"
+        },
+        {
+          "name": "系列4",
+          "value": "系列四"
+        },
+        {
+          "name": "系列5",
+          "value": "系列五"
+        }
+      ],
+      "gridLeft": 45,
+      "gridTop": 45,
+      "gridRight": 45,
+      "gridBottom": 25,
+      "xNameFontSize": 16,
+      "yNameFontSize": 16,
+      "xAxisLabelUtil": "",
+      "yAxisLabelUtil": "",
+      "yAxisInverse": false,
+      "xAxisInverse": false,
+      "xAxisShow": true,
+      "yAxisShow": true,
+      "xAxisLabelShow": true,
+      "yAxisLabelShow": true,
+      "yAxisMin": "0",
+      "yAxisMax": "",
+      "xAxisMargin": 8,
+      "yAxisMargin": 8,
+      "xAxisFontFamily": "siayuan-normal",
+      "yAxisFontFamily": "siayuan-normal",
+      "xAxisFontSize": 12,
+      "yAxisFontSize": 12,
+      "xAxisColor": "rgba(209, 209, 209, 1)",
+      "yAxisColor": "rgba(209, 209, 209, 1)",
+      "xAxisFontStyle": "normal",
+      "yAxisFontStyle": "normal",
+      "xAxisFontWeight": "normal",
+      "yAxisFontWeight": "normal",
+      "yAxisNameShow": true,
+      "yAxisName": "",
+      "yAxisNameFontFamily": "siayuan-normal",
+      "yAxisNameFontSize": 14,
+      "yAxisNameColor": "rgba(209, 209, 209, 1)",
+      "yAxisNameFontStyle": "normal",
+      "yAxisNameFontWeight": "normal",
+      "yAxisNamePaddingTop": 0,
+      "yAxisNamePaddingBottom": 0,
+      "yAxisNamePaddingLeft": 0,
+      "yAxisNamePaddingRight": 40,
+      "xAxisLineShow": true,
+      "yAxisLineShow": false,
+      "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "xAxisLineWidth": 1,
+      "yAxisLineWidth": 1,
+      "xAxisLineOpacity": 0.5,
+      "yAxisLineOpacity": 0.5,
+      "xAxisTickShow": true,
+      "yAxisTickShow": false,
+      "xAxisTickColor": "#65686f",
+      "yAxisTickColor": "#65686f",
+      "xAxisTickWidth": 1,
+      "yAxisTickWidth": 1,
+      "xAxisTickLength": 2,
+      "yAxisTickLength": 2,
+      "xAxisSplitLineShow": false,
+      "yAxisSplitLineShow": true,
+      "xAxisSplitLineInterval": 0,
+      "xAxisSplitLineWidth": 1,
+      "yAxisSplitLineWidth": 1,
+      "xAxisSplitLineColor": "#383d47",
+      "yAxisSplitLineColor": "#383d47",
+      "seriesColor": [
+        "rgba(254,226,77,1)",
+        "rgba(0,255,255,1)",
+        "rgba(248,243,204,1)",
+        "rgba(104,229,174,1)",
+        "rgba(0,96,255,1)"
+      ],
+      "seriesLabelShow": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "seriesLabelColor": [
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)"
+      ],
+      "seriesLabelFontFamily": [
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal"
+      ],
+      "seriesLabelFontSize": [
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "seriesLabelFontWeight": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesLabelFontStyle": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesLabelOffsetX": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "seriesLabelOffsetY": [
+        0,
+        0,
+        -10,
+        0,
+        -15
+      ]
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "value": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          7,
+          5
+        ]
+      ]
+    },
+    {
+      "seriesName": "系列二",
+      "value": [
+        [
+          0,
+          0
+        ],
+        [
+          4,
+          7
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          10
+        ],
+        [
+          7,
+          12
+        ],
+        [
+          8,
+          8
+        ]
+      ]
+    },
+    {
+      "seriesName": "系列三",
+      "value": [
+        [
+          0,
+          0
+        ],
+        [
+          5,
+          10
+        ],
+        [
+          5,
+          8
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          7,
+          12
+        ],
+        [
+          8,
+          13
+        ]
+      ]
+    },
+    {
+      "seriesName": "系列四",
+      "value": [
+        [
+          0,
+          0
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          10,
+          4
+        ],
+        [
+          15,
+          2
+        ],
+        [
+          20,
+          1
+        ],
+        [
+          25,
+          3
+        ]
+      ]
+    },
+    {
+      "seriesName": "系列五",
+      "value": [
+        [
+          0,
+          0
+        ],
+        [
+          7,
+          12
+        ],
+        [
+          8,
+          13
+        ],
+        [
+          10,
+          15
+        ],
+        [
+          13,
+          10
+        ],
+        [
+          14,
+          16
+        ]
+      ]
+    }
+  ]
+}

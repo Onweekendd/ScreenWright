@@ -1,0 +1,31 @@
+.sw-dialog {
+  &.sw-dialog--center {
+    .el-dialog {
+      transform: translateY(-50%);
+      top: 50%;
+      margin-top: 0;
+    }
+  }
+  .el-dialog {
+    --el-dialog-bg-color: #232630;
+    // transform: translateY(-50%);
+    color: #ffffff;
+    // top: 50%;
+    // margin-top: 0;
+    padding: 0 !important;
+    .el-dialog__title {
+      color: #fff;
+      font-size: 16px;
+    }
+    .el-dialog__header {
+      padding: 10px 20px;
+      border-bottom: 1px solid #3e4049;
+    }
+    .el-dialog__headerbtn {
+      font-size: 24px;
+    }
+    .el-dialog__body {
+      padding: 10px 20px;
+    }
+  }
+}

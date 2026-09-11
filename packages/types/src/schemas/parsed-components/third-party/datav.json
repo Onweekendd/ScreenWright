@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "id": 17,
+    "name": "datav",
+    "prop": "datav",
+    "componentName": "datav",
+    "first_level_menu": "第三方",
+    "second_level_menu": "",
+    "thumbnail": "/img/text6.f13c7072.png"
+  },
+  "config": {
+    "name": "datav",
+    "title": "datav",
+    "display": true,
+    "icon": "icon-bar",
+    "img": "/img/text6.f13c7072.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "categories": [
+          "苹果",
+          "三星",
+          "小米",
+          "oppo",
+          "vivo"
+        ],
+        "series": [
+          {
+            "name": "手机品牌",
+            "data": [
+              1000879,
+              3400879,
+              2300879,
+              5400879,
+              3400879
+            ]
+          }
+        ]
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "categories",
+        "map": "categories",
+        "decription": "类目"
+      },
+      {
+        "key": "series",
+        "map": "series",
+        "decription": "系列"
+      }
+    ],
+    "echartFormatter": "(data)=>{\n  console.log(data)\n  return {\n    config:{\n\t  data: [66] \n\t}\n  }\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 150,
+      "height": 200,
+      "name": "datav",
+      "prop": "datav"
+    },
+    "option": {
+      "is": "dv-water-level-pond",
+      "echartFormatter": "/**\n * datav通用性配置\n * @params data 数据参数\n * @return 输出配置， 可在return前做一些数据处理操作等\n * 备注：第三方datav配置替换代码区域-start<->end\n */\n(data)=>{\n  // console.log(data)\n  return {\n    /* --------- 输出配置赋值-绑定的可能是config或者option等等-start --------- */\n    config:{\n      data: [66]\n    }\n\n    /* --------- end --------- */\n  }\n}"
+    }
+  },
+  "template": [
+    {
+      "categories": [
+        "苹果",
+        "三星",
+        "小米",
+        "oppo",
+        "vivo"
+      ],
+      "series": [
+        {
+          "name": "手机品牌",
+          "data": [
+            1000879,
+            3400879,
+            2300879,
+            5400879,
+            3400879
+          ]
+        }
+      ]
+    }
+  ]
+}

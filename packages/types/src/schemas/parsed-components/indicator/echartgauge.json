@@ -1,0 +1,182 @@
+{
+  "meta": {
+    "id": 39,
+    "name": "仪表盘",
+    "prop": "echartgauge",
+    "componentName": "echart-gauge",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/gauge.9eabe330.png"
+  },
+  "config": {
+    "title": "仪表盘",
+    "name": "仪表盘",
+    "display": true,
+    "icon": "icon-gauge",
+    "img": "/img/gauge.9eabe330.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataMethod": "get",
+    "time": 30,
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "url": "./gauge",
+    "data": [
+      {
+        "value": 33
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 400,
+      "height": 300,
+      "name": "echart-gauge",
+      "prop": "echartgauge"
+    },
+    "option": {
+      "refresh": true,
+      "axisLabelShow": true,
+      "min": 0,
+      "max": 100,
+      "axisLabelDistance": -30,
+      "axisLabelFontFamily": "siayuan-normal",
+      "axisLabelFontSize": 18,
+      "axisLabelColor": "rgba(209, 209, 209, 1)",
+      "axisLabelFontStyle": "normal",
+      "axisLabelFontWeight": "normal",
+      "splitNumber": 5,
+      "axisLabelToFixed": 0,
+      "splitLineShow": true,
+      "splitLineColor": "rgba(255, 255, 255, 1)",
+      "splitLineWidth": 1,
+      "splitLineLength": 16,
+      "splitLineDistance": -18,
+      "pointerShow": true,
+      "pointerColor": "rgba(255, 255, 255, 1)",
+      "pointerlength": 120,
+      "anchorShow": true,
+      "anchorColor": "rgba(255, 255, 255, 1)",
+      "anchorSize": 30,
+      "animationShow": true,
+      "animationDuration": 1,
+      "seriesDetailShow": true,
+      "seriesDetailPercentValue": 0,
+      "seriesDetailColor": "rgba(255, 255, 255, 1)",
+      "seriesDetailType": "percent",
+      "seriesDetailFontFamily": "siayuan-normal",
+      "seriesDetailFontSize": 32,
+      "seriesDetailFontWeight": "normal",
+      "seriesDetailFontStyle": "normal",
+      "seriesDetailOffsetX": 0,
+      "seriesDetailOffsetY": 40,
+      "seriesDetailPrefixShow": false,
+      "seriesDetailPrefix": "占比",
+      "seriesDetailPrefixColor": "rgba(255,255,255,1)",
+      "seriesDetailPrefixType": "value",
+      "seriesDetailPrefixFontFamily": "siayuan-normal",
+      "seriesDetailPrefixFontSize": 18,
+      "seriesDetailPrefixFontWeight": "normal",
+      "seriesDetailPrefixFontStyle": "normal",
+      "seriesDetailPrefixPadding": 10,
+      "seriesDetailPrefixColorFollow": false,
+      "seriesDetailUnitShow": true,
+      "seriesDetailUnit": "%",
+      "seriesDetailUnitColor": "rgba(255,255,255,1)",
+      "seriesDetailUnitType": "value",
+      "seriesDetailUnitFontFamily": "siayuan-normal",
+      "seriesDetailUnitFontSize": 16,
+      "seriesDetailUnitFontWeight": "normal",
+      "seriesDetailUnitFontStyle": "normal",
+      "seriesDetailUnitPadding": 10,
+      "seriesDetailUnitColorFollow": false,
+      "axisLineWidth": 10,
+      "axisLineTabsName": [
+        "区间1",
+        "区间2",
+        "区间3",
+        "区间4"
+      ],
+      "axisLineScope": [
+        0.2,
+        0.4,
+        0.6,
+        1
+      ],
+      "axisLineColor": [
+        "rgba(136, 84, 233, 1)",
+        "rgba(133, 174, 252, 1)",
+        "rgba(140, 227, 255, 1)",
+        "rgba(239, 151, 19, 1)"
+      ],
+      "seriesColor": {
+        "type": "linear-gradient",
+        "angle": "90",
+        "colors": [
+          {
+            "color": "rgba(0,127,247,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(0,183,226,1)",
+            "per": 100
+          }
+        ]
+      },
+      "seriesOpacity": 100,
+      "barBackgroundColor": "rgba(180,180,180,0.2)",
+      "barBorderRadius": 20,
+      "headImgShow": false,
+      "headImg": "",
+      "headImgWidth": 20,
+      "headImgHeight": 20,
+      "headImgOffsetX": 0,
+      "headImgOffsetY": 0,
+      "xAxisInverse": false,
+      "xAxisShow": true,
+      "xAxisLabelShow": true,
+      "xAxisMargin": 8,
+      "xAxisNameShow": false,
+      "xAxisName": "单位",
+      "xAxisNameFontFamily": "siayuan-normal",
+      "xAxisNameFontSize": 14,
+      "xAxisNameColor": "rgba(209, 209, 209, 1)",
+      "xAxisNameFontStyle": "normal",
+      "xAxisNameFontWeight": "normal",
+      "xAxisSplitNumber": 5,
+      "xAxisNamePaddingTop": 0,
+      "xAxisNamePaddingBottom": 0,
+      "xAxisNamePaddingLeft": 0,
+      "xAxisNamePaddingRight": 40,
+      "xAxisSplitLineShow": true,
+      "xAxisSplitLineWidth": 1,
+      "xAxisSplitLineColor": "#383d47"
+    }
+  },
+  "template": [
+    {
+      "value": 33
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "id": 24,
+    "name": "排名图",
+    "prop": "echartrankBar",
+    "componentName": "echart-rankBar",
+    "first_level_menu": "图表",
+    "second_level_menu": "项目",
+    "thumbnail": "/img/rankBar.20240514.png"
+  },
+  "config": {
+    "name": "排名图",
+    "title": "排名图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/rankBar.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "name": "范例1",
+        "value": 2024
+      },
+      {
+        "name": "范例2",
+        "value": 1920
+      },
+      {
+        "name": "范例3",
+        "value": 1824
+      },
+      {
+        "name": "范例4",
+        "value": 1725
+      },
+      {
+        "name": "范例5",
+        "value": 1532
+      },
+      {
+        "name": "范例6",
+        "value": 1423
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "echart-rankBar",
+      "prop": "echartrankBar"
+    },
+    "option": {
+      "refresh": true,
+      "seriesWidth": 18,
+      "intervalColor": "rgba(35,38,48,0.8)",
+      "gridLeft": 160,
+      "gridTop": 0,
+      "gridRight": 90,
+      "gridBottom": 0,
+      "valueShow": true,
+      "valueFontFamily": "siayuan-normal",
+      "valueFontSize": 12,
+      "valueColor": "rgba(255, 255, 255, 1)",
+      "valueFontStyle": "normal",
+      "valueFontWeight": "normal",
+      "valueOffSetX": 10,
+      "valueOffSetY": 0,
+      "nameFontFamily": "siayuan-normal",
+      "nameFontSize": 12,
+      "nameColor": "rgba(255, 255, 255, 1)",
+      "nameFontStyle": "normal",
+      "nameFontWeight": "normal",
+      "nameWidth": 100,
+      "nameLeftPadding": 320,
+      "dataLoop": false,
+      "dataLoopInterval": 5,
+      "dataLoopDisplayRows": 4,
+      "dataLoopRollNum": 1
+    }
+  },
+  "template": [
+    {
+      "name": "范例1",
+      "value": 2024
+    },
+    {
+      "name": "范例2",
+      "value": 1920
+    },
+    {
+      "name": "范例3",
+      "value": 1824
+    },
+    {
+      "name": "范例4",
+      "value": 1725
+    },
+    {
+      "name": "范例5",
+      "value": 1532
+    },
+    {
+      "name": "范例6",
+      "value": 1423
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "id": 109,
+    "name": "多选框",
+    "prop": "formCheckbox",
+    "componentName": "formCheckbox",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/formCheckbox.20240423.gif"
+  },
+  "config": {
+    "title": "多选框",
+    "name": "多选框",
+    "display": true,
+    "icon": "icon-banner",
+    "img": "/img/formCheckbox.20240423.gif",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "time": 30,
+    "url": "",
+    "cbArgs": [],
+    "encodes": [],
+    "events": [],
+    "data": [
+      {
+        "label": "周一",
+        "value": "1",
+        "isChecked": true,
+        "disabled": false
+      },
+      {
+        "label": "周二",
+        "value": "2",
+        "isChecked": true,
+        "disabled": false
+      },
+      {
+        "label": "周三",
+        "value": "3",
+        "isChecked": true,
+        "disabled": false
+      },
+      {
+        "label": "周四",
+        "value": "4",
+        "disabled": false
+      },
+      {
+        "label": "周五",
+        "value": "5",
+        "disabled": false
+      },
+      {
+        "label": "周六",
+        "value": "6",
+        "disabled": false
+      },
+      {
+        "label": "周日",
+        "value": "7",
+        "disabled": false
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "label",
+        "map": "label",
+        "decription": "名称"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 460,
+      "height": 80,
+      "name": "formCheckbox",
+      "prop": "formCheckbox"
+    },
+    "option": {
+      "disabled": false,
+      "paddingTop": 0,
+      "paddingLeft": 0,
+      "textColor": "rgba(255, 255, 255, 1)",
+      "fillColor": "rgba(36,175,255,1.00)",
+      "min": 0,
+      "max": 5,
+      "sizeX": 20,
+      "sizeY": 20,
+      "fontColor": "rgba(255, 255, 255, 1)",
+      "fontSize": 16,
+      "letterSpacing": 0,
+      "fontWeight": false,
+      "fontFamily": "sans-serif",
+      "fontStyle": false,
+      "textTranslateX": 0,
+      "textTranslateY": 0,
+      "isTextShadow": false,
+      "textShadow": {
+        "color": "rgba(255, 255, 255, 1)",
+        "x": 0,
+        "y": 0,
+        "blur": 0,
+        "extend": 0
+      }
+    }
+  },
+  "template": [
+    {
+      "label": "周一",
+      "value": "1",
+      "isChecked": true,
+      "disabled": false
+    },
+    {
+      "label": "周二",
+      "value": "2",
+      "isChecked": true,
+      "disabled": false
+    },
+    {
+      "label": "周三",
+      "value": "3",
+      "isChecked": true,
+      "disabled": false
+    },
+    {
+      "label": "周四",
+      "value": "4",
+      "disabled": false
+    },
+    {
+      "label": "周五",
+      "value": "5",
+      "disabled": false
+    },
+    {
+      "label": "周六",
+      "value": "6",
+      "disabled": false
+    },
+    {
+      "label": "周日",
+      "value": "7",
+      "disabled": false
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "id": 137,
+    "name": "轮播图v2",
+    "prop": "sw-carousel-image-v2",
+    "componentName": "sw-carousel-image-v2",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "轮播图v2",
+    "name": "轮播图v2",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/ftQachat.20250401.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 500,
+      "height": 300,
+      "name": "sw-carousel-image-v2",
+      "prop": "sw-carousel-image-v2"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [],
+    "dataRemark": [],
+    "option": {
+      "effects": [
+        "ws_blinds",
+        "ws_seven",
+        "ws_cube",
+        "ws_brick"
+      ],
+      "delay": 4500,
+      "duration": 5000,
+      "loop": true,
+      "autoPlay": true,
+      "autoPlayVideo": false,
+      "stopOnHover": false,
+      "bullets": false,
+      "controls": false,
+      "imageList": [
+        {
+          "id": "1",
+          "name": "图片1",
+          "src": "version-test/assets/defaultImg/default.png"
+        },
+        {
+          "id": "2",
+          "name": "图片2",
+          "src": "version-test/assets/defaultImg/default.png"
+        },
+        {
+          "id": "3",
+          "name": "图片3",
+          "src": "version-test/assets/defaultImg/default.png"
+        },
+        {
+          "id": "4",
+          "name": "图片4",
+          "src": "version-test/assets/defaultImg/default.png"
+        },
+        {
+          "id": "5",
+          "name": "图片5",
+          "src": "version-test/assets/defaultImg/default.png"
+        }
+      ]
+    }
+  },
+  "template": [
+    {
+      "label": "区域点击",
+      "value": 1
+    }
+  ]
+}

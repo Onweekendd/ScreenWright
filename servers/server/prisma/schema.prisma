@@ -1,0 +1,497 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// AI 模型配置：只 3 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
+/// 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
+model AiModel {
+  role          String   @id // "reasoning" | "vision" | "embedding"
+  baseUrl       String   @default("") @map("base_url")
+  apiKey        String   @default("") @map("api_key")
+  modelId       String   @default("") @map("model_id")
+  contextLength Int?     @map("context_length") // reasoning 专用：前端上下文进度条分母
+  dimensions    Int? // embedding 专用：向量维度
+  updatedTime   DateTime @updatedAt @map("updated_time")
+
+  @@map("ai_model")
+}
+
+// Figma API Key Pool Management
+model FigmaKey {
+  id       String  @id @default(cuid())
+  keyValue String  @unique
+  name     String?
+  isActive Boolean @default(true)
+
+  // 速率限制状态
+  isRateLimited       Boolean   @default(false)
+  rateLimitStart      DateTime?
+  rateLimitEnd        DateTime?
+  consecutive429Count Int       @default(0)
+
+  // 使用统计
+  totalRequests   Int       @default(0)
+  successRequests Int       @default(0)
+  failedRequests  Int       @default(0)
+  lastUsedAt      DateTime?
+  lastSuccessAt   DateTime?
+
+  // 元数据
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, isRateLimited])
+  @@index([rateLimitEnd])
+  @@index([totalRequests])
+  @@map("figma_keys")
+}
+
+// Module Management - BI 组件和大屏模块
+model Module {
+  id              String    @id @default(cuid())
+  moduleId        Int?      @map("module_id") // SQL 中的原始 ID
+  userId          Int?      @map("user_id")
+  type            Int?      @default(0)
+  javaScript      String?   @map("java_script")
+  level           Int?
+  secondLevelMenu String?   @map("second_level_menu")
+  firstLevelMenu  String?   @map("first_level_menu")
+  name            String?   @unique
+  thumbnail       String?
+  createdBy       String?   @map("created_by")
+  createdTime     DateTime? @map("created_time")
+  updatedBy       String?   @map("updated_by")
+  updatedTime     DateTime? @map("updated_time")
+  template        String?
+  status          Int?      @default(0)
+
+  @@index([moduleId])
+  @@map("modules")
+}
+
+// Figma Node to Minio Storage Mapping
+model FigmaNodeAsset {
+  id String @id @default(cuid())
+
+  // Figma 节点标识
+  fileKey  String  @map("file_key") // Figma 文件 Key
+  nodeId   String  @map("node_id") // Figma 节点 ID
+  nodeName String? @map("node_name") // Figma 节点名称
+
+  // Minio 存储信息
+  bucket    String // Minio bucket 名称
+  objectKey String  @map("object_key") // Minio 对象路径
+  url       String? // 可访问的公开 URL（可选）
+  mimeType  String? @map("mime_type") // 文件 MIME 类型，如 image/png
+  fileSize  Int?    @map("file_size") // 文件大小（字节）
+
+  // 元数据
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([fileKey, nodeId])
+  @@index([fileKey])
+  @@index([nodeId])
+  @@map("figma_node_assets")
+}
+
+// 对话压缩记录:软删除的消息 ID + 摘要消息 ID,用于在 inputProcessor 中过滤已压缩消息
+model CompactionRecord {
+  id                  String   @id @default(cuid())
+  threadId            String   @map("thread_id")
+  // 被压缩(软删除)的消息 ID 数组,不包含被保留的用户消息
+  compactedMessageIds Json     @map("compacted_message_ids")
+  // 摘要消息在 Mastra messages 表中的 ID
+  summaryMessageId    String   @map("summary_message_id")
+  messageCountBefore  Int?     @map("message_count_before")
+  messageCountAfter   Int?     @map("message_count_after")
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  @@index([threadId])
+  @@map("compaction_records")
+}
+
+// Figma Node to Minio Storage Mapping
+model FigmaNodeJson {
+  id String @id @default(cuid())
+
+  // Figma 节点标识
+  fileKey  String  @map("file_key") // Figma 文件 Key
+  nodeId   String  @map("node_id") // Figma 节点 ID
+  nodeName String? @map("node_name") // Figma 节点名称
+
+  // Minio 存储信息
+  bucket    String // Minio bucket 名称
+  objectKey String  @map("object_key") // Minio 对象路径
+  url       String? // 可访问的公开 URL（可选）
+  mimeType  String? @map("mime_type") // 文件 MIME 类型，如 image/png
+  fileSize  Int?    @map("file_size") // 文件大小（字节）
+
+  // 元数据
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([fileKey, nodeId])
+  @@index([fileKey])
+  @@index([nodeId])
+  @@map("figma_node_json")
+}
+
+// LLM 往返记录索引:每次发给 LLM 的往返(step)一行。
+// 完整请求/响应内容全量存 MinIO,这里只存可查询字段 + 对象指针,
+// 供离线评估按 thread / 工具 / 状态筛选聚合,命中后再按 objectKey 去 MinIO 拉完整内容。
+model LlmExchangeRecord {
+  id        String  @id @default(cuid())
+  threadId  String  @map("thread_id")
+  runId     String? @map("run_id") // resume 请求携带,new 请求为 null
+  turnIndex Int     @map("turn_index") // 第几轮问答(turn)
+  step      Int // turn 内步骤序号(LLM 往返粒度)
+
+  // 从记录内容抽取的可查询字段(便于评估筛选,无需拉 MinIO)
+  url                String?
+  model              String?
+  status             Int?
+  ok                 Boolean?
+  toolNames          Json      @default("[]") @map("tool_names") // 本步调用的工具名列表（SQLite 无原生数组，存 JSON string[]）
+  toolCallCount      Int       @default(0) @map("tool_call_count")
+  toolFailures       Int?      @map("tool_failures") // 到本步为止,请求历史里可见的失败工具结果数(累计,按分支取最大值即该分支总数)
+  at                 DateTime? // LLM 往返时间戳
+  generationTimeMs   Int?      @map("generation_time_ms")
+  promptTokens       Int?      @map("prompt_tokens")
+  completionTokens   Int?      @map("completion_tokens")
+  totalTokens        Int?      @map("total_tokens")
+  cachedPromptTokens Int?      @map("cached_prompt_tokens")
+  reasoningTokens    Int?      @map("reasoning_tokens")
+  branchKey          String?   @map("branch_key") // 分支键,用于标识不同的执行分支
+  evalRunId          String?   @map("eval_run_id") // 属于哪一批 eval;真实用户会话为 null
+
+  // MinIO 完整内容指针
+  bucket    String
+  objectKey String @map("object_key")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([threadId, turnIndex, step])
+  @@index([threadId])
+  @@index([ok])
+  @@index([model])
+  @@index([branchKey])
+  @@index([evalRunId])
+  @@map("llm_exchange_records")
+}
+
+// eval 一次运行(批次)。id 即 runId,同时是 runs/<runId>/ 目录名与 llm_exchange_records.eval_run_id
+// ——三处同值,从任一处能回到另外两处。
+model EvalRun {
+  id          String   @id // = report.runId
+  startedAt   DateTime @map("started_at")
+  finishedAt  DateTime @map("finished_at")
+  totalCases  Int      @map("total_cases")
+  passedCases Int      @map("passed_cases")
+  /// 这一批跑的时候有没有上传录制。false 时 L2 指标全 0,画趋势要把这些点排除掉
+  uploaded    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  cases EvalCase[]
+
+  @@index([startedAt])
+  @@map("eval_runs")
+}
+
+// 一个 case 的一次尝试。同一 case 跑 N 遍就是 N 行(attempt 区分),通过率靠它算。
+model EvalCase {
+  id      String  @id @default(cuid())
+  runId   String  @map("run_id")
+  run     EvalRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  caseId  String  @map("case_id")
+  title   String
+  attempt Int
+  passed  Boolean
+  /// 点进去看那次对话;driver 出错到拿不到 thread 时为 null
+  threadId     String? @map("thread_id")
+  timedOut     Boolean @default(false) @map("timed_out")
+  errorMessage String? @map("error_message")
+  elapsedMs    Int     @map("elapsed_ms")
+
+  // L2 指标快照。冗余存一份而不是每次去 join llm_exchange_records:
+  // 趋势图要按 case 横向比,join 一次拉全表太重;且没上传的历史批次那边根本没有行。
+  steps        Int @default(0)
+  toolCalls    Int @default(0) @map("tool_calls")
+  toolFailures Int @default(0) @map("tool_failures")
+  totalTokens  Int @default(0) @map("total_tokens")
+
+  /// L0 不变量明细 Assertion[]
+  invariants Json
+  /// L1 断言明细 Assertion[]
+  assertions Json
+  /// 挂起流水账摘要 { type, channel, toolName }[]
+  suspends Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([runId, caseId, attempt])
+  @@index([caseId])
+  @@index([runId])
+  @@map("eval_cases")
+}
+
+// ==================== 从 Java bi-backend 回落的业务表（PostgreSQL，全新开始）====================
+// 注：密码用 bcrypt（passwordHash），不复刻原 PBE；登录态为无状态 JWT，不做单点登录强制。
+
+// 用户（对齐前端 src/model/Login.ts 的 User）
+model BiUser {
+  id                   Int       @id @default(autoincrement())
+  userName             String    @unique @map("user_name")
+  passwordHash         String    @map("password_hash") // bcrypt 哈希
+  type                 Int       @default(0) // 0普通 1高级 2尊享
+  status               Int       @default(1) // 1正常 2到期 3未审核
+  role                 Int       @default(1) // 0超管 1普通
+  stockType            Int       @default(1) @map("stock_type") // 0旧版 1新版
+  balance              Int       @default(0)
+  companyId            Int?      @map("company_id")
+  email                String?
+  phone                String?
+  realname             String?
+  region               String?
+  temporaryCompanyName String?   @map("temporary_company_name")
+  forbidden            Boolean   @default(false)
+  expirationTime       DateTime? @map("expiration_time")
+  avatar               String?
+  invitedBy            String?   @map("invited_by")
+  // 以下为前端 User 里的 JSON 字符串字段，DB 存 Json，读出时 JSON.stringify
+  createLarge          Json?     @map("create_large")
+  createScene          Json?     @map("create_scene")
+  exportLarge          Json?     @map("export_large")
+  exportScene          Json?     @map("export_scene")
+  createCity           Json?     @map("create_city")
+  exportCity           Json?     @map("export_city")
+  createdBy            String?   @map("created_by")
+  createdTime          DateTime  @default(now()) @map("created_time")
+  updatedBy            String?   @map("updated_by")
+  updatedTime          DateTime  @updatedAt @map("updated_time")
+
+  @@map("bi_user")
+}
+
+// 大屏（对齐前端 src/model/Visual.ts 的 ScreenItem）
+// 简化为单版本：config/detail 直接存行上，不做 t_large_screen_config 多版本机制
+model LargeScreen {
+  id              Int         @id @default(autoincrement())
+  userId          Int         @map("user_id")
+  moduleId        Int?        @map("module_id")
+  name            String
+  config          Json? // 读出 JSON.stringify 成前端期望的 string
+  detail          Json?
+  backgroundUrl   String?     @map("background_url")
+  sceneInfo       String?     @map("scene_info")
+  type            Int         @default(1) // 1私有 2协作 3系统模板
+  stockType       Int         @default(1) @map("stock_type")
+  groupId         Int         @default(0) @map("group_id") // 0=未分组
+  password        String? // 大屏访问密码(bcrypt)，可为空
+  invitationCode  String?     @map("invitation_code")
+  status          Boolean     @default(false) // 是否已发布
+  expirationTime  DateTime?   @map("expiration_time")
+  sort            Int         @default(0)
+  versionCode     String?     @map("version_code")
+  versionDesc     String?     @map("version_desc")
+  minioIds        Json?       @map("minio_ids")
+  dataFilterArr   Json?       @map("data_filter_arr")
+  aniFrameSet     Json?       @map("ani_frame_set")
+  encodedControl  Json?       @map("encoded_control")
+  statusAnimation Json?       @map("status_animation")
+  publishInfo     String?     @map("publish_info")
+  path            String?
+  newApplication  Boolean     @default(false) @map("new_application")
+  createdBy       String?     @map("created_by")
+  createdTime     DateTime    @default(now()) @map("created_time")
+  updatedBy       String?     @map("updated_by")
+  updatedTime     DateTime    @updatedAt @map("updated_time")
+
+  @@index([userId])
+  @@index([groupId])
+  @@map("large_screen")
+}
+
+// 大屏版本快照（对齐 Java large_screen_config：一个大屏多个版本，版本间 config + layers 隔离）。
+// large_screen 上的同名列是「当前版本」的冗余镜像，供列表页 / 未改的旧读路径零改动使用。
+model LargeScreenVersion {
+  id              Int       @id @default(autoincrement())
+  largeId         Int       @map("large_id")
+  versionCode     String    @map("version_code") // "1" / "2" / ...
+  versionDesc     String?   @map("version_desc")
+  config          Json?
+  detail          Json?
+  backgroundUrl   String?   @map("background_url")
+  sceneInfo       String?   @map("scene_info")
+  statusAnimation Json?     @map("status_animation")
+  aniFrameSet     Json?     @map("ani_frame_set")
+  dataFilterArr   Json?     @map("data_filter_arr")
+  encodedControl  Json?     @map("encoded_control")
+  minioIds        Json?     @map("minio_ids")
+  status          Boolean   @default(false) // 该版本是否已发布
+  password        String?
+  expirationTime  DateTime? @map("expiration_time")
+  publishInfo     String?   @map("publish_info")
+  createdBy       String?   @map("created_by")
+  createdTime     DateTime  @default(now()) @map("created_time")
+  updatedBy       String?   @map("updated_by")
+  updatedTime     DateTime  @updatedAt @map("updated_time")
+
+  @@unique([largeId, versionCode])
+  @@index([largeId])
+  @@map("large_screen_version")
+}
+
+// 大屏分组（groupId=0 表示未分组，无外键约束，逻辑关联）
+model LargeGroup {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  name        String
+  type        Int      @default(0)
+  sort        Int      @default(0)
+  createdBy   String?  @map("created_by")
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedBy   String?  @map("updated_by")
+  updatedTime DateTime @updatedAt @map("updated_time")
+
+  @@index([userId])
+  @@map("large_group")
+}
+
+// 组件（对齐前端 src/model/Layer.ts 的 GroupCase / Java t_layers）
+// largeId 指向 LargeScreen.id；config 为组件配置 JSON（读出字符串化）
+model Layers {
+  id          Int      @id @default(autoincrement())
+  userId      Int?     @map("user_id")
+  moduleId    Int?     @map("module_id")
+  largeId     Int      @map("large_id")
+  config      Json?
+  minioIds    Json?    @map("minio_ids")
+  dataJson    Json?    @map("data_json")
+  versionCode String?  @map("version_code")
+  createdBy   String?  @map("created_by")
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedBy   String?  @map("updated_by")
+  updatedTime DateTime @updatedAt @map("updated_time")
+
+  @@index([largeId])
+  @@map("layers")
+}
+
+// 数据管理分组（对齐 Java t_data_group）
+model DataGroup {
+  id          Int      @id @default(autoincrement())
+  userId      Int?     @map("user_id")
+  name        String
+  createdBy   String?  @map("created_by")
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedBy   String?  @map("updated_by")
+  updatedTime DateTime @updatedAt @map("updated_time")
+
+  @@index([userId])
+  @@map("data_group")
+}
+
+// 数据源：数据库 / API（对齐 Java t_data_source）
+// type: 1=数据库, 2=API；config 为连接配置 JSON（读出字符串化）
+model DataSource {
+  id          Int      @id @default(autoincrement())
+  userId      Int?     @map("user_id")
+  type        Int      @default(1)
+  name        String
+  description String?
+  config      Json?
+  dataGroupId Int?     @map("data_group_id")
+  layerIds    Json?    @map("layer_ids")
+  createdBy   String?  @map("created_by")
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedBy   String?  @map("updated_by")
+  updatedTime DateTime @updatedAt @map("updated_time")
+
+  @@index([userId])
+  @@index([dataGroupId])
+  @@map("data_source")
+}
+
+// 本地文件数据源：CSV / Excel（对齐 Java t_data_local）
+model DataLocal {
+  id          Int      @id @default(autoincrement())
+  userId      Int?     @map("user_id")
+  name        String
+  description String?
+  type        String?
+  url         String?
+  dataGroupId Int?     @map("data_group_id")
+  fileName    String?  @map("file_name")
+  size        Int?
+  charsetName String?  @map("charset_name")
+  content     Json?    // 解析后的行数据（{ headers, values }）
+  layerIds    Json?    @map("layer_ids")
+  createdBy   String?  @map("created_by")
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedBy   String?  @map("updated_by")
+  updatedTime DateTime @updatedAt @map("updated_time")
+
+  @@index([userId])
+  @@index([dataGroupId])
+  @@map("data_local")
+}
+
+// 素材文件（对齐 Java t_minio）：图片 / 视频 / 模型等用户上传资源
+// blobKey 指向本地 FS blob 存储；url 为可访问地址
+model MinioFile {
+  id           Int      @id @default(autoincrement())
+  userId       Int?     @map("user_id")
+  name         String
+  fileName     String?  @map("file_name") // 类型分类 / 扩展名
+  url          String?
+  blobKey      String?  @map("blob_key")
+  resourceType Int?     @map("resource_type")
+  fileType     Int?     @map("file_type")
+  auth         Int?
+  largeId      Int?     @map("large_id")
+  groupId      Int?     @map("group_id")
+  cover        String?
+  coverName    String?  @map("cover_name")
+  resourceSize Int?     @map("resource_size")
+  layerIds     Json?    @map("layer_ids")
+  largeUseIds  Json?    @map("large_use_ids")
+  createdBy    String?  @map("created_by")
+  createdTime  DateTime @default(now()) @map("created_time")
+  updatedBy    String?  @map("updated_by")
+  updatedTime  DateTime @updatedAt @map("updated_time")
+
+  @@index([userId])
+  @@index([groupId])
+  @@map("minio_file")
+}
+
+// 素材分组（对齐 Java t_minio_group）
+model MinioGroup {
+  id          Int      @id @default(autoincrement())
+  userId      Int?     @map("user_id")
+  name        String
+  type        Int      @default(0)
+  createdBy   String?  @map("created_by")
+  createdTime DateTime @default(now()) @map("created_time")
+  updatedBy   String?  @map("updated_by")
+  updatedTime DateTime @updatedAt @map("updated_time")
+
+  @@index([userId])
+  @@map("minio_group")
+}
+
+// 组合案例 / 用户资产（Java t_group_layer / t_group_layer_data）：依赖 Screenwright 内部素材云，开源版移除

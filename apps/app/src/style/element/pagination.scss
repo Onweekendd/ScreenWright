@@ -1,0 +1,32 @@
+.el-pagination {
+  justify-content: center;
+}
+.el-pagination__total {
+  color: #fff;
+}
+.el-pagination.is-background .btn-next,
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .el-pager li {
+  background-color: transparent;
+  color: #fff;
+  height: 28px !important;
+  font-weight: bold;
+}
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: transparent;
+}
+.el-pagination__total,
+.el-pagination .btn-prev,
+.el-pagination .btn-next,
+.el-pagination button:disabled,
+.el-pagination .el-pager li {
+  background: none !important;
+  color: #b4b7c1;
+  &.is-active {
+    color: #fff;
+    box-shadow: 0 0 0 1px #642cff inset;
+  }
+}
+.el-pagination button:not(:disabled):hover {
+  color: #642cff;
+}

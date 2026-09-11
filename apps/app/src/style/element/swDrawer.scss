@@ -1,0 +1,199 @@
+@import "src/style/theme.scss";
+
+// ============================================================
+// 统一抽屉皮肤
+// 版本管理 / 全局过滤器管理 / 回调参数管理 等右侧抽屉共用
+// 用法：<el-drawer class="sw-drawer" ...>
+//   .sw-drawer__toolbar  顶部工具条（搜索框 / 操作按钮）
+//   .sw-drawer__scroll   主体滚动区
+//   .sw-drawer__footer   底部（分页等）
+//   .sw-drawer__empty    空状态容器
+//   .sw-drawer__action   主按钮（品牌紫渐变）
+// 网格表（版本列表 / 回调映射）用 .sw-vtable
+// ============================================================
+
+.sw-drawer.el-drawer {
+  background-color: $sw-bg;
+
+  .el-drawer__header {
+    flex-shrink: 0;
+    height: 44px;
+    margin: 0;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid $sw-border;
+    background-color: $sw-surface-1;
+
+    .el-drawer__title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: $sw-text-strong;
+    }
+
+    .el-drawer__close-btn {
+      padding: 4px;
+      font-size: 16px;
+      color: $sw-text-muted;
+      transition: color 0.15s;
+
+      &:hover {
+        color: $sw-text-strong;
+      }
+    }
+  }
+
+  .el-drawer__body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: 12px;
+    color: $sw-text;
+
+    *::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    *::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+  }
+
+  // —— 顶部工具条 ——
+  .sw-drawer__toolbar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-bottom: 1px solid $sw-border;
+
+    .el-input,
+    .el-autocomplete {
+      flex: 1;
+    }
+
+    .el-input__wrapper {
+      background-color: $sw-surface-2 !important;
+      box-shadow: none !important;
+      border: 1px solid $sw-border !important;
+      border-radius: 6px;
+
+      &:hover,
+      &.is-focus {
+        border-color: $sw-purple-deep !important;
+      }
+    }
+  }
+
+  // —— 主体滚动区 ——
+  .sw-drawer__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 12px 14px;
+  }
+
+  // —— 底部 ——
+  .sw-drawer__footer {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    padding: 8px 14px;
+    border-top: 1px solid $sw-border;
+  }
+
+  // —— 空状态 ——
+  .sw-drawer__empty {
+    flex: 1;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 0;
+  }
+
+  // —— 主按钮 ——
+  .sw-drawer__action.el-button {
+    height: 30px;
+    padding: 0 14px;
+    margin: 0;
+    font-size: 12px;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    background: $sw-purple-gradient;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 0.88;
+    }
+  }
+}
+
+// ============================================================
+// 统一网格表
+// ============================================================
+.sw-vtable {
+  border: 1px solid $sw-border;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 12px;
+
+  &__head,
+  &__row {
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__head {
+    background-color: $sw-surface-1;
+    font-weight: 600;
+    color: $sw-text-dim;
+  }
+
+  &__row {
+    border-top: 1px solid $sw-border;
+    color: $sw-text;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: $sw-hover-bg;
+    }
+
+    &.is-active {
+      background-color: $sw-active-bg;
+      color: $sw-text-strong;
+      box-shadow: inset 2px 0 0 $sw-active-bar;
+    }
+  }
+
+  &__cell {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    line-height: 1.5;
+
+    &:not(:last-child) {
+      border-right: 1px solid $sw-border;
+    }
+
+    &.is-ellipsis {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+  }
+}

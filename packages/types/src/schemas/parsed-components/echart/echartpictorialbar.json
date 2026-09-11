@@ -1,0 +1,328 @@
+{
+  "meta": {
+    "id": 5,
+    "name": "象形图",
+    "prop": "echartpictorialbar",
+    "componentName": "echart-pictorialbar",
+    "first_level_menu": "图表",
+    "second_level_menu": "柱形图",
+    "thumbnail": "/img/bar2.95f5ddc8.png"
+  },
+  "config": {
+    "title": "象形图",
+    "name": "象形图",
+    "display": true,
+    "icon": "icon-pictorialBar",
+    "img": "/img/bar2.95f5ddc8.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "url": "./pie",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "name": "A",
+        "value": 2024
+      },
+      {
+        "seriesName": "系列一",
+        "name": "B",
+        "value": 1423
+      },
+      {
+        "seriesName": "系列一",
+        "name": "C",
+        "value": 1532
+      },
+      {
+        "seriesName": "系列一",
+        "name": "D",
+        "value": 1920
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 450,
+      "height": 250,
+      "name": "echart-pictorialbar",
+      "prop": "echartpictorialbar"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一"
+      ],
+      "seriesName": [
+        "系列一"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        }
+      ],
+      "seriesColor": [
+        {
+          "type": "linear-gradient",
+          "angle": "0",
+          "colors": [
+            {
+              "color": "rgba(62,67,244,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(137,181,252,1)",
+              "per": 100
+            }
+          ]
+        }
+      ],
+      "seriesColorpicker": [
+        "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)"
+      ],
+      "seriesOpacity": [
+        100
+      ],
+      "extremeShow": [
+        false
+      ],
+      "extremeType": [
+        "max"
+      ],
+      "extremeColor": [
+        {
+          "type": "linear-gradient",
+          "angle": "0",
+          "colors": [
+            {
+              "color": "rgba(62,67,244,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(61,227,251,1)",
+              "per": 100
+            }
+          ]
+        }
+      ],
+      "extremeOpacity": [
+        100
+      ],
+      "extremeColorpicker": [
+        "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)"
+      ],
+      "barGap": 70,
+      "barCategoryGap": 0,
+      "symbol": "M66,0 C66,85.625 88,135.625 132,150 L0,150 C45.3894737,135 67.3894737,85 66,0 Z",
+      "symbolWidth": 100,
+      "symbolHeight": 100,
+      "gridLeft": 50,
+      "gridTop": 30,
+      "gridRight": 10,
+      "gridBottom": 60,
+      "legendShow": true,
+      "legendWidth": 800,
+      "legendHeight": 800,
+      "legendItemWidth": 20,
+      "legendItemHeight": 10,
+      "legendItemGap": 20,
+      "legendFontFamily": "siayuan-normal",
+      "legendFontSize": 11,
+      "legendColor": "rgba(255, 255, 255, 1)",
+      "legendFontStyle": "normal",
+      "legendFontWeight": "normal",
+      "legendTextLeftPadding": 0,
+      "legendSelectedMode": true,
+      "legendGrid": {
+        "top": 0,
+        "left": "center"
+      },
+      "legendOffsetX": 0,
+      "legendOffsetY": 0,
+      "xNameFontSize": 16,
+      "yNameFontSize": 16,
+      "seriesLabelShow": true,
+      "seriesLabelColor": "rgba(255,255,255,1)",
+      "seriesLabelFontFamily": "siayuan-normal",
+      "seriesLabelFontSize": 12,
+      "seriesLabelFontWeight": "bolder",
+      "seriesLabelFontStyle": "normal",
+      "seriesLabelOffsetX": 0,
+      "seriesLabelOffsetY": 0,
+      "legendOrient": "horizontal",
+      "yAxisInverse": false,
+      "xAxisInverse": false,
+      "xAxisShow": true,
+      "yAxisShow": true,
+      "xAxisLabelShow": true,
+      "yAxisLabelShow": true,
+      "xAxisType": "category",
+      "xAxisInterval": 0,
+      "xAxisRotate": 0,
+      "yAxisMin": "0",
+      "yAxisMax": "",
+      "xAxisMargin": 8,
+      "yAxisMargin": 8,
+      "xAxisFontFamily": "siayuan-normal",
+      "yAxisFontFamily": "siayuan-normal",
+      "xAxisFontSize": 18,
+      "yAxisFontSize": 18,
+      "xAxisColor": "rgba(209, 209, 209, 1)",
+      "yAxisColor": "rgba(209, 209, 209, 1)",
+      "xAxisFontStyle": "normal",
+      "yAxisFontStyle": "normal",
+      "xAxisFontWeight": "normal",
+      "yAxisFontWeight": "normal",
+      "yAxisNameShow": true,
+      "yAxisName": "单位",
+      "yAxisNameFontFamily": "siayuan-normal",
+      "yAxisNameFontSize": 14,
+      "yAxisNameColor": "rgba(209, 209, 209, 1)",
+      "yAxisNameFontStyle": "normal",
+      "yAxisNameFontWeight": "normal",
+      "yAxisNamePaddingTop": 0,
+      "yAxisNamePaddingBottom": 0,
+      "yAxisNamePaddingLeft": 0,
+      "yAxisNamePaddingRight": 40,
+      "xAxisLineShow": true,
+      "yAxisLineShow": false,
+      "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+      "xAxisLineWidth": 1,
+      "yAxisLineWidth": 1,
+      "xAxisLineOpacity": 0.5,
+      "yAxisLineOpacity": 0.5,
+      "xAxisTickShow": true,
+      "yAxisTickShow": false,
+      "xAxisTickColor": "#65686f",
+      "yAxisTickColor": "#65686f",
+      "xAxisTickWidth": 1,
+      "yAxisTickWidth": 1,
+      "xAxisTickLength": 2,
+      "yAxisTickLength": 2,
+      "xAxisSplitLineShow": false,
+      "yAxisSplitLineShow": true,
+      "xAxisSplitLineInterval": 0,
+      "xAxisSplitLineWidth": 1,
+      "yAxisSplitLineWidth": 1,
+      "xAxisSplitLineColor": "#383d47",
+      "yAxisSplitLineColor": "#383d47",
+      "barBackgroundColor": "rgba(255, 255, 255, 0)",
+      "dataLoop": false,
+      "dataLoopInterval": 5,
+      "dataLoopDisplayRows": 4,
+      "dataLoopRollNum": 1,
+      "tooltipLoop": false,
+      "tooltipLoopInterval": 3,
+      "tooltipTriggerOn": true,
+      "tooltipOffsetX": 0,
+      "tooltipOffsetY": 0,
+      "tooltipBackground": "",
+      "tooltipWidth": 200,
+      "tooltipHeight": 100,
+      "tooltipPaddingTop": 0,
+      "tooltipPaddingBottom": 0,
+      "tooltipPaddingLeft": 0,
+      "tooltipPaddingRight": 0,
+      "tooltipNameFontFamily": "siayuan-normal",
+      "tooltipNameFontSize": 18,
+      "tooltipNameColor": "rgba(255, 255, 255, 1)",
+      "tooltipNameFontWeight": "normal",
+      "tooltipNameFontStyle": "normal",
+      "tooltipAlign": "left",
+      "tooltipNameOffsetX": 0,
+      "tooltipNameOffsetY": 0,
+      "tooltipArrLineHeight": 12,
+      "tooltipSeriesNameFontFamily": "siayuan-normal",
+      "tooltipSeriesNameFontSize": 18,
+      "tooltipSeriesNameColor": "rgba(255, 255, 255, 1)",
+      "tooltipSeriesNameFontWeight": "normal",
+      "tooltipSeriesNameFontStyle": "normal",
+      "tooltipValueFontFamily": "siayuan-normal",
+      "tooltipValueFontSize": 18,
+      "tooltipValueColor": "rgba(255, 255, 255, 1)",
+      "tooltipValueFontWeight": "normal",
+      "tooltipValueFontStyle": "normal",
+      "tooltipUnit": [
+        ""
+      ],
+      "tooltipUnitFontFamily": "siayuan-normal",
+      "tooltipUnitFontSize": 18,
+      "tooltipUnitColor": "rgba(255, 255, 255, 1)",
+      "tooltipUnitFontWeight": "normal",
+      "tooltipUnitFontStyle": "normal",
+      "tooltipUnitOffsetX": 0,
+      "tooltipUnitOffsetY": 0,
+      "tooltipMarkerSize": 10,
+      "dataUnitName": [
+        "系列一"
+      ],
+      "unitTabsName": [
+        {
+          "name": "后缀1",
+          "value": "个"
+        }
+      ],
+      "tooltipAxisPointerWidth": 1,
+      "tooltipAxisPointerColor": "rgba(255, 255, 255, 1)"
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "name": "A",
+      "value": 2024
+    },
+    {
+      "seriesName": "系列一",
+      "name": "B",
+      "value": 1423
+    },
+    {
+      "seriesName": "系列一",
+      "name": "C",
+      "value": 1532
+    },
+    {
+      "seriesName": "系列一",
+      "name": "D",
+      "value": 1920
+    }
+  ]
+}

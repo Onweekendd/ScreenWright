@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "id": 103,
+    "name": "页面刷新",
+    "prop": "pageReload",
+    "componentName": "pageReload",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/pageReload.png"
+  },
+  "config": {
+    "title": "页面刷新",
+    "name": "页面刷新",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/pageReload.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 100,
+      "height": 100,
+      "name": "pageReload",
+      "prop": "pageReload"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "data": [],
+    "dataRemark": [],
+    "option": {
+      "icon": "version-test/assets/defaultImg/shuaxin.png",
+      "iconHeight": 50,
+      "iconWidth": 50,
+      "opacity": 1,
+      "pageReloadType": "click",
+      "pageReloadTypeClick": "0"
+    }
+  },
+  "template": []
+}

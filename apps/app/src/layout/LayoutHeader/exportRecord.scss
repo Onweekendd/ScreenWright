@@ -1,0 +1,103 @@
+@import "src/style/mixins/element.scss";
+
+.export-control {
+  margin-top: 5px;
+  span {
+    display: inline-block;
+    padding: 0 20px;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #642cff;
+    &.is-select {
+      color: #ffffff;
+      background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    }
+  }
+}
+.select-content {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.select-content-item {
+  @include common-element-style(".el-select__wrapper");
+  width: 240px;
+  margin-right: 10px;
+  .label {
+    width: 48px;
+    color: #bfbfbf;
+  }
+}
+.record-list {
+  border: 1px solid #3e4049;
+  overflow: hidden;
+  padding-bottom: 10px;
+  min-height: 330px;
+  .record-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #bfbfbf;
+    border-bottom: 1px solid #3e4049;
+    span {
+      padding: 5px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-right: 1px solid #3e4049;
+      width: 200px;
+      &:nth-child(1) {
+        width: 80px;
+      }
+      &:nth-child(2) {
+        width: 300px;
+      }
+    }
+  }
+  .list-item {
+    color: #bfbfbf;
+    border-bottom: 1px solid #3e4049;
+    height: 30px;
+    span {
+      padding: 5px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-right: 1px solid #3e4049;
+      width: 200px;
+      text-align: center;
+      &:nth-child(1) {
+        width: 80px;
+      }
+      &:nth-child(2) {
+        width: 300px;
+      }
+      &:last-child {
+        border: none;
+      }
+      &.is-pointer {
+        cursor: pointer;
+        color: #8b58e7;
+      }
+      &.is-finish {
+        color: #1fb51f;
+      }
+      &.is-over {
+        color: #6b6a6a;
+      }
+      &.is-fail {
+        color: #ff0b0b;
+      }
+      &.is-progress {
+        color: #c7c707;
+      }
+    }
+  }
+}
+.pagination-wrapper {
+  margin-top: 20px;
+}
+.status-text {
+  color: rgb(107, 106, 106);
+}

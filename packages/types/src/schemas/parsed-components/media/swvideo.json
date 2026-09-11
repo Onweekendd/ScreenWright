@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "id": 47,
+    "name": "视频",
+    "prop": "swvideo",
+    "componentName": "sw-video",
+    "first_level_menu": "媒体",
+    "second_level_menu": "",
+    "thumbnail": "/img/video.20240514.png"
+  },
+  "config": {
+    "title": "视频",
+    "name": "视频",
+    "display": true,
+    "icon": "icon-video",
+    "img": "/img/video.20240514.png",
+    "callbackArgs": [],
+    "encodes": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "cbArgs": [],
+    "data": [
+      {
+        "cover": "",
+        "value": "version-test/assets/defaultImg/video.mp4"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "cover",
+        "map": "cover",
+        "decription": "视频封面"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "视频地址"
+      }
+    ],
+    "unitPavenType": "",
+    "option": {
+      "cover": "",
+      "url": "version-test/assets/defaultImg/video.mp4",
+      "delayPlayTime": 0,
+      "pointerEvents": false,
+      "mixBlendMode": "normal",
+      "isBuildPlay": true,
+      "controler": false,
+      "autoPlay": true,
+      "loopPlay": true,
+      "muted": true,
+      "autoHiden": false,
+      "rotateShow": false,
+      "rotateX": 0,
+      "rotateY": 0,
+      "rotateZ": 0,
+      "gaussianBlurShow": false,
+      "gaussianBlur": 5,
+      "brightnessShow": false,
+      "brightness": 100,
+      "contrastShow": false,
+      "contrast": 100,
+      "grayscaleShow": false,
+      "grayscale": 50,
+      "hueShow": false,
+      "hue": 180,
+      "invertShow": false,
+      "invert": 50,
+      "saturateShow": false,
+      "saturate": 100,
+      "sepiaShow": false,
+      "sepia": 50,
+      "shadowShow": false,
+      "shadowColor": "rgba(255, 255, 255, 1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "playbackRate": 1,
+      "backdropFilter": false,
+      "backdropFilterBlur": 4,
+      "backdropFilterSaturate": 100,
+      "opacity": 1
+    },
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "sw-video",
+      "prop": "swvideo"
+    }
+  },
+  "template": [
+    {
+      "cover": "",
+      "value": "version-test/assets/defaultImg/video.mp4"
+    }
+  ]
+}

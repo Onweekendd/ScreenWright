@@ -1,0 +1,5 @@
+# Rust 构建产物
+/target
+
+# Tauri 生成的 schema（构建时自动重建）
+/gen/schemas

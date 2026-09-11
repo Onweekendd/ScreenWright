@@ -1,0 +1,93 @@
+// AgentBI 模块 SCSS 变量
+// 使用方式：@use '../styles/variables' as *;
+
+// === 主色调（紫色系）===
+$color-primary: #7c4dff;
+$color-primary-light: #8b58e7;
+$color-primary-dark: #4d50ae;
+$color-primary-name: #b8a4ff; // 工具名称
+$color-primary-done: #a07dff; // 完成状态标签
+$color-primary-step: #a0b0cc; // 步骤名称
+
+// primary rgba 透明度变体
+$color-primary-5: rgba(124, 77, 255, 0.02);
+$color-primary-10: rgba(124, 77, 255, 0.1);
+$color-primary-18: rgba(124, 77, 255, 0.18);
+$color-primary-20: rgba(124, 77, 255, 0.2);
+$color-primary-25: rgba(124, 77, 255, 0.25);
+$color-primary-35: rgba(124, 77, 255, 0.35);
+$color-primary-40: rgba(124, 77, 255, 0.4);
+$color-primary-50: rgba(124, 77, 255, 0.5);
+$color-primary-60: rgba(124, 77, 255, 0.6);
+$color-primary-70: rgba(124, 77, 255, 0.7);
+$color-primary-80: rgba(124, 77, 255, 0.8);
+
+// light-purple (139, 88, 231) 透明度变体 — mention/tag 系列
+$color-lp-15: rgba(139, 88, 231, 0.15);
+$color-lp-20: rgba(139, 88, 231, 0.2);
+$color-lp-25: rgba(139, 88, 231, 0.25);
+$color-lp-30: rgba(139, 88, 231, 0.3);
+$color-lp-35: rgba(139, 88, 231, 0.35);
+$color-lp-40: rgba(139, 88, 231, 0.4);
+$color-lp-50: rgba(139, 88, 231, 0.5);
+$color-lp-55: rgba(139, 88, 231, 0.55);
+$color-lp-60: rgba(139, 88, 231, 0.6);
+$color-lp-70: rgba(139, 88, 231, 0.7);
+$color-lp-95: rgba(139, 88, 231, 0.95);
+
+// === 状态色 ===
+$color-pending: #ffb400; // 执行中
+$color-pending-bg: rgba(255, 180, 0, 0.15);
+$color-success: #50c878; // 完成（步骤）
+$color-success-bg: rgba(80, 200, 120, 0.15);
+
+// === 代码区配色（统一为紫色系，不使用绿色）===
+$color-code-text: #b8c8e0; // 代码输出文本（冷灰蓝，替换绿色）
+$color-code-label: $color-primary-50; // 输入/输出 标签
+
+// === 文本色 ===
+$color-text-primary: #e0e6f0; // 主文本
+$color-text-msg: #d0d8e8; // 消息文本
+$color-text-user-bubble: #e8eaf0; // 用户气泡
+$color-text-secondary: #c0c8d4; // 次级文本
+$color-text-muted: #a0a8bc; // 弱化文本（提升对比度，原 #859094）
+$color-text-dim: #8a93a8; // 更弱文本（提升对比度，原 #5a6480）
+$color-text-white: #ffffff;
+$color-text-active: #7c9ff5; // 历史激活条目
+$color-text-loading-dot: #8b9cc8; // 加载动画点
+$color-text-send-btn: #dfe0e3; // 发送按钮
+
+// === 背景色 ===
+$color-bg-drawer: #1a1a1a; // 抽屉面板背景
+$color-bg-step-body: rgba(0, 0, 0, 0.25); // 工作流步骤内容区
+$color-bg-dropdown: #2a2f4a; // mention 下拉框
+$color-bg-editor: rgba(255, 255, 255, 0.05); // 输入编辑器（替换蓝色，融入整体）
+$color-bg-code: rgba(255, 255, 255, 0.04); // pre 代码块背景（替换近黑色）
+$color-bg-tool-body: rgba(0, 0, 0, 0.15); // 工具调用内容区（替换过深的深紫黑）
+$color-bg-inline-code: rgba(124, 77, 255, 0.1); // 内联代码（紫色系）
+$color-bg-code-block: rgba(0, 0, 0, 0.2); // 代码块 pre
+
+// === 输入框 ===
+$color-input-border: $color-primary-25; // 正常边框
+$color-input-border-focus: $color-primary-50; // 聚焦边框
+
+// === 边框色 ===
+$color-border-panel: #2a3147; // 面板分割线
+
+// === 滚动条 ===
+$color-scrollbar-thumb: #3a4557;
+$color-scrollbar-thumb-hover: #4a556d;
+
+// === 渐变 ===
+$gradient-input-border: linear-gradient(180deg, #8b58e7, #4d50ae);
+$gradient-drawer-bg: linear-gradient(0deg, rgba(129, 66, 255, 0.25) 0%, transparent 90%);
+$gradient-user-bubble: linear-gradient(135deg, rgba(124, 77, 255, 0.35) 0%, rgba(90, 50, 200, 0.25) 100%);
+
+// === 字体 ===
+$font-monospace: monospace;
+$font-family-panel: "Alibaba-PuHuiTi-Regular";
+
+// === 过渡 ===
+$transition-fast: 0.15s;
+$transition-base: 0.2s;
+$transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);

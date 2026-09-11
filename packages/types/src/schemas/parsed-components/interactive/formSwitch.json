@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "id": 106,
+    "name": "开关",
+    "prop": "formSwitch",
+    "componentName": "formSwitch",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/formSwitch.20240417.gif"
+  },
+  "config": {
+    "title": "开关",
+    "name": "开关",
+    "display": true,
+    "icon": "icon-banner",
+    "img": "/img/formSwitch.20240417.gif",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "time": 30,
+    "url": "",
+    "cbArgs": [],
+    "encodes": [],
+    "events": [],
+    "data": [
+      {
+        "label": "开关",
+        "value": false
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 200,
+      "height": 60,
+      "name": "formSwitch",
+      "prop": "formSwitch"
+    },
+    "option": {
+      "type": "default",
+      "pointSize": 50,
+      "pointColor": "#2898ff",
+      "pointColor2": "#3b445a",
+      "disabled": false,
+      "paddingTop": 0,
+      "paddingLeft": 0,
+      "backgroundImage": "",
+      "backgroundSize": "100% 100%",
+      "activeText": "打开",
+      "inactiveText": "关闭",
+      "activeColor": "#0c0c13",
+      "inactiveColor": "#0c0c13",
+      "activeIcon": "version-test/assets/defaultImg/switch-on-icon.png",
+      "inactiveIcon": "version-test/assets/defaultImg/switch-off-icon.png",
+      "activeImage": "version-test/assets/defaultImg/switch-on-image.png",
+      "inactiveImage": "version-test/assets/defaultImg/switch-off-image.png",
+      "fontColor": "rgba(255, 255, 255, 1)",
+      "fontSize": 16,
+      "letterSpacing": 0,
+      "fontWeight": false,
+      "fontFamily": "sans-serif",
+      "fontStyle": false,
+      "textTranslateX": 0,
+      "textTranslateY": 0,
+      "isTextShadow": false,
+      "textShadow": {
+        "color": "rgba(255, 255, 255, 1)",
+        "x": 0,
+        "y": 0,
+        "blur": 0,
+        "extend": 0
+      },
+      "fontPaddingTop": 10,
+      "fontPaddingLeft": 10
+    }
+  },
+  "template": [
+    {
+      "label": "开关",
+      "value": false
+    }
+  ]
+}

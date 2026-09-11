@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+              <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+              <link rel="icon" href="./public/favicon.ico" />
+              <meta http-equiv="Pragma" content="no-cache" />
+              <meta http-equiv="Cache-Control" content="no-cache" />
+              <meta http-equiv="Expires" content="0" />
+              <meta name="referrer" content="same-origin" />
+              <script src="./view.js"></script>
+               <link rel="stylesheet" href="./public/cdn/componentAnimate/componentAnimate.css" />
+              <link rel="stylesheet" href="./public/cdn/element-plus/2.11.2/index.css"/>
+              <link rel="stylesheet" href="./public/lib/screenwright.css" />
+              <link rel="stylesheet" href="./public/lib/fontface.css" />
+              <script>
+                // 全局配置属性
+                window.webconfig = {
+                  controlWebsocketUrl: '',
+                  projectIframeUrl: '',
+                  pixelStreamingUrl: '',
+                  tcpNoticeWebsocketUrl: ''
+                };
+                // GLTFCache.js 引用 draco 路径问题-标识
+                window.isProductionForYarnWC = true;
+              </script>
+              <script src="./public/cdn/echarts/5.3.0/echarts.min.js"></script>
+              <script src="./public/cdn/echarts/echarts-gl.min.js"></script>
+              <script src="./public/cdn/echarts/echarts-wordcloud.min.js"></script>
+              <script src="./public/cdn/echarts/echarts-liquidfill.min.js"></script>
+              
+              <script src="./public/cdn/vue/3.5.21/vue.global.prod.js" ></script>
+              <!-- <script src="./public/getters/getters.umd.min.js"></script> -->
+              <script src="./public/cdn/axios/1.0.0/axios.min.js"></script>
+              <script src="./public/cdn/element-plus/2.11.2/index.full.min.js"></script>
+              <script src="./public/cdn/mitt/mitt.umd.js"></script>
+              <script src="./public/cdn/vue-router/4.6.3/vue-router.global.prod.js"></script>
+              <script src="./public/lib/screenwright.umd.js"></script>
+              <script src="./public/cdn/geo-provinces/province-list.js"></script>
+              <title>导出大屏</title>
+              <style>
+                body {
+                  padding: 0;
+                  margin: 0;
+                  text-decoration: unset;
+                }
+                html, body, #screenwrightApp {
+                  height: 100%;
+                  width: 100%;
+                  font-family: Source Han Sans CN-Regular, Source Han Sans CN;
+                }
+              </style>
+              <script>
+                window.emitter = window.mitt();
+                window.emitter.on('post-inside-message', (data) => {
+                  window.parent.postMessage({ ...data }, '*');
+                })
+                window.addEventListener('message', (e) => {
+                  e.preventDefault()
+                  window.emitter.emit('post-outside-message', { ...e.data })
+                }, false)
+
+                function GetQueryString(name) {
+                  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                  var r = window.location.search.substr(1).match(reg);
+                  if (r != null) return unescape(r[2]);
+                  return null;
+                }
+                // 特殊处理
+                const htmlDom = document.querySelector('html');
+                if(htmlDom) htmlDom.addEventListener('mousedown', (e) => {
+                  if (e.target.tagName !== 'HTML') return;
+                  window.parent.postMessage({ key: 'down' }, '*');
+                })
+              </script>
+            </head>
+
+            <body>
+              <div id="screenwrightApp">
+                <screenwright-app :data="option"></screenwright-app>
+              </div>
+              <script>
+                const { createApp } = Vue;
+                const app = createApp({
+                  setup() {
+                    return {
+                      props: {
+                        id: GetQueryString("id"),
+                        name: "view",
+                        userInfo: 'gkdDO7CiF8yiKEmsT4eRp9+8egxtabfGeU8K70VmzJPShjJckWPcn7ZL5HakJkFWTju5GpHElsP8uZBlJKxFnMAz5ASP8uvVhUC+0NhB1lRdq41bzmI2q2sm9d62dcBG'
+                      },
+                      option: option
+                    };
+                  },
+                });
+                app.use(screenwright.router);
+                app.use(ElementPlus);
+                app.use(screenwright.default)
+                app.mount("#screenwrightApp");
+              </script>
+            </body>
+          </html>

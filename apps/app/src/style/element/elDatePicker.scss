@@ -1,0 +1,70 @@
+@import "../mixins/element.scss";
+.sw-date-picker-dropdown {
+  .el-date-picker {
+    --el-datepicker-active-color: #fff !important;
+    --el-datepicker-hover-text-color: #fff !important;
+    --el-datepicker-border-color: #282e3a !important;
+  }
+  --el-border-color-light: #282e3a !important;
+  --el-border-color-lighter: #282e3a !important;
+
+  .el-picker-panel {
+    --el-bg-color-overlay: #0f1014;
+  }
+  --el-component-size-small: 32px;
+  .el-picker-panel__body {
+    @include common-element-style(".el-input__wrapper", $use-deep: false);
+    .el-input__wrapper {
+      box-shadow: 0 0 0 1px #393b4a inset !important;
+    }
+  }
+  .el-date-picker__header {
+    .el-picker-panel__icon-btn {
+      color: #859094 !important;
+    }
+  }
+  .el-date-table td.today .el-date-table-cell__text {
+    color: #fff !important;
+  }
+  .el-date-picker__header-label {
+    color: #859094 !important;
+  }
+  .el-picker-panel__footer {
+    .el-button.is-plain {
+      color: #ffffff;
+      border-color: #642cff;
+      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+    }
+    .el-button.is-text:not(.is-disabled) {
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+  .el-date-table td.current:not(.disabled) .el-date-table-cell__text {
+    background-color: transparent;
+  }
+  .el-time-panel__footer {
+    .el-time-panel__btn.confirm {
+      color: #ffffff;
+      border-color: #642cff;
+      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      border-radius: 4px;
+    }
+    .el-time-panel__btn.cancel {
+      color: #859094;
+    }
+  }
+  .el-time-spinner__item {
+    color: #859094;
+  }
+  .el-time-spinner__item.is-active:not(.is-disabled) {
+    color: #859094;
+  }
+  .el-time-spinner__item:hover:not(.is-disabled):not(.is-active) {
+    background-color: transparent;
+  }
+  .el-popper__arrow {
+    display: none;
+  }
+}

@@ -1,0 +1,92 @@
+.sw-select-dropdown {
+  &.el-popper {
+    &.is-light {
+      background-color: #0f1014 !important;
+      border: none !important;
+      > .el-popper__arrow:before {
+        display: none;
+      }
+      .el-select-dropdown__item {
+        color: #bfbfbf;
+        padding-right: 0px !important;
+        font-size: 12px !important;
+      }
+      .el-select-dropdown__item.is-hovering {
+        background-color: #3d404c !important;
+        color: #b4b7c1 !important;
+      }
+    }
+  }
+  .el-tree {
+    background: transparent !important;
+    --el-tree-node-hover-bg-color: transparent !important;
+  }
+}
+
+// agentBI 面板专用下拉主题（撤销下拉 / 模式选择等）：贴主色的紫调、圆角、活动项带小圆点
+// 色值取自 agentBI/styles/_variables.scss（$color-bg-dropdown / $color-primary 等），此处硬编码以与本文件一致
+.agent-select-dropdown {
+  &.el-popper.is-light {
+    min-width: 116px !important;
+    padding: 4px !important;
+    background-color: #2a2f4a !important;
+    border: 1px solid rgba(124, 77, 255, 0.4) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+
+    > .el-popper__arrow {
+      display: none;
+    }
+
+    .el-select-dropdown__list {
+      padding: 0;
+    }
+
+    .el-select-dropdown__item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+      min-height: 0;
+      margin: 0;
+      padding: 7px 12px !important;
+      color: #c0c8d4;
+      font-size: 12px !important;
+      line-height: 1.5;
+      border-radius: 7px;
+      transition:
+        background-color 0.12s,
+        color 0.12s;
+
+      &::before {
+        content: "";
+        flex-shrink: 0;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #7c4dff;
+        opacity: 0;
+        transition: opacity 0.12s;
+      }
+
+      &.is-selected {
+        color: #7c4dff;
+        font-weight: 600;
+
+        &::before {
+          opacity: 1;
+        }
+      }
+
+      &.is-hovering,
+      &:hover {
+        background-color: rgba(124, 77, 255, 0.18) !important;
+        color: #e0e6f0 !important;
+
+        &::before {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

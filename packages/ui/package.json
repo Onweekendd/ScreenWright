@@ -1,0 +1,164 @@
+{
+  "name": "@screenwright/ui",
+  "private": true,
+  "version": "0.0.0",
+  "author": "onweekend",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./index.css": "./dist/index.css",
+    "./input": {
+      "types": "./dist/SwInput.d.ts",
+      "import": "./dist/SwInput.js"
+    },
+    "./input-number": {
+      "types": "./dist/SwInputNumber.d.ts",
+      "import": "./dist/SwInputNumber.js"
+    },
+    "./search-input": {
+      "types": "./dist/SwSearchInput.d.ts",
+      "import": "./dist/SwSearchInput.js"
+    },
+    "./slider": {
+      "types": "./dist/SwSlider.d.ts",
+      "import": "./dist/SwSlider.js"
+    },
+    "./radio": {
+      "types": "./dist/SwRadio.d.ts",
+      "import": "./dist/SwRadio.js"
+    },
+    "./label-type": {
+      "types": "./dist/SwLabelType.d.ts",
+      "import": "./dist/SwLabelType.js"
+    },
+    "./color-picker": {
+      "types": "./dist/SwColorPicker.d.ts",
+      "import": "./dist/SwColorPicker.js"
+    },
+    "./count-up": {
+      "types": "./dist/SwCountUp.d.ts",
+      "import": "./dist/SwCountUp.js"
+    },
+    "./single-color-picker": {
+      "types": "./dist/SwSingleColorPicker.d.ts",
+      "import": "./dist/SwSingleColorPicker.js"
+    },
+    "./single-select": {
+      "types": "./dist/SwSingleSelect.d.ts",
+      "import": "./dist/SwSingleSelect.js"
+    },
+    "./collapse-item": {
+      "types": "./dist/SwCollapseItem.d.ts",
+      "import": "./dist/SwCollapseItem.js"
+    },
+    "./coordinate-tabs": {
+      "types": "./dist/SwCoordinateTabs.d.ts",
+      "import": "./dist/SwCoordinateTabs.js"
+    },
+    "./empty": {
+      "types": "./dist/SwEmpty.d.ts",
+      "import": "./dist/SwEmpty.js"
+    },
+    "./item-empty": {
+      "types": "./dist/SwItemEmpty.d.ts",
+      "import": "./dist/SwItemEmpty.js"
+    },
+    "./grid-button": {
+      "types": "./dist/SwGridButton.d.ts",
+      "import": "./dist/SwGridButton.js"
+    },
+    "./sheet-excel": {
+      "types": "./dist/SwSheetExcel.d.ts",
+      "import": "./dist/SwSheetExcel.js"
+    },
+    "./use-dialog": {
+      "types": "./dist/useDialog.d.ts",
+      "import": "./dist/useDialog.js"
+    },
+    "./*": {
+      "import": "./dist/*.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "main.ts",
+    "src"
+  ],
+  "scripts": {
+    "build:watch": "vite build --watch",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint:eslint": "eslint --cache --max-warnings 0 \"{src,tests,types}/**/*.{vue,js,jsx,ts,tsx}\" --fix",
+    "lint:prettier": "prettier --write \"{src,tests,types}/**/*.{vue,js,jsx,ts,tsx,json,css,less,scss,html,md}\"",
+    "lint": "pnpm lint:eslint && pnpm lint:prettier",
+    "lint:style": "stylelint \"./**/*.{css,less,scss,sass,vue,html}\" --fix --cache --cache-location node_modules/.cache/stylelint/ --ignore-path .gitignore",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --run --coverage",
+    "check-types": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "@vueuse/core": "^10.8.0",
+    "element-plus": "^2.11.2",
+    "lodash-es": "4.17.21",
+    "monaco-editor": "0.52.2",
+    "vue": "3.5.21",
+    "vue-router": "4.2.2"
+  },
+  "devDependencies": {
+    "@screenwright/eslint-config": "workspace:*",
+    "@types/lodash-es": "4.17.7",
+    "@types/node": "20.3.2",
+    "@vitejs/plugin-vue": "4.2.3",
+    "vite-plugin-dts": "^3.7.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.32.0",
+    "husky": "8.0.3",
+    "jsdom": "^26.1.0",
+    "lint-staged": "13.2.2",
+    "prettier": "^3.6.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "1.63.6",
+    "terser": "5.18.1",
+    "typescript": "5.9.2",
+    "vite": "4.3.9",
+    "@vue/test-utils": "2.4.6",
+    "vite-plugin-image-optimizer": "^1.1.8",
+    "vitest": "0.32.2",
+    "vue-tsc": "3.0.7",
+    "stylelint": "^15.10.1",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-standard": "^34.0.0",
+    "stylelint-config-standard-scss": "^10.0.0",
+    "stylelint-config-standard-vue": "^1.0.0",
+    "stylelint-order": "^6.0.3",
+    "stylelint-prettier": "^4.0.0",
+    "stylelint-scss": "^5.0.1"
+  },
+  "lint-staged": {
+    "*.{vue,js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,less,scss,html,md}": [
+      "prettier --write"
+    ],
+    "package.json": [
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

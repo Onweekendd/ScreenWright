@@ -1,0 +1,31 @@
+.build-nav {
+  font-family:
+    Source Han Sans CN-Normal,
+    Source Han Sans CN;
+  background-image: url("@/assets/image/bg/bi_top_bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  min-width: 810px;
+  height: 61px;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar-track {
+    background-color: #2d2d2d !important;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #4d4d4d !important;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: #6a6a6a !important;
+    }
+  }
+
+  .build-nav-right {
+    padding-top: 6px;
+    height: 100%;
+  }
+}

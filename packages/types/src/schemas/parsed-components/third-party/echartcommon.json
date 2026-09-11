@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "id": 16,
+    "name": "Echarts通用型",
+    "prop": "echartcommon",
+    "componentName": "echart-common",
+    "first_level_menu": "第三方",
+    "second_level_menu": "",
+    "thumbnail": "/img/echart.20240514.png"
+  },
+  "config": {
+    "name": "Echarts通用型",
+    "title": "Echarts通用型",
+    "display": true,
+    "icon": "icon-bar",
+    "img": "/img/echart.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "categories": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "series": [
+          {
+            "name": "系列一",
+            "data": [
+              10,
+              30,
+              20,
+              40,
+              50
+            ]
+          },
+          {
+            "name": "系列二",
+            "data": [
+              10,
+              30,
+              20,
+              40,
+              50
+            ]
+          }
+        ]
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "categories",
+        "map": "categories",
+        "decription": "类目"
+      },
+      {
+        "key": "series",
+        "map": "series",
+        "decription": "系列"
+      }
+    ],
+    "echartFormatter": "(data)=>{\nconsole.log(data)\nreturn {}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 600,
+      "height": 350,
+      "name": "echart-common",
+      "prop": "echartcommon"
+    },
+    "option": {
+      "echartFormatter": "/**\n * echart通用性配置\n * @params data 数据参数\n * @return 输出配置， 可在return前做一些数据处理操作等\n * 备注：第三方Echarts配置---start<-替换代码区域->end\n */\n(data)=>{\n  // 声明option配置，匹配Echart实例的option变量\n  let option = {}\n  // console.log(data)\n\n  // ------ 输出配置赋值-start ------\n  option = {\n    tooltip: {\n      trigger: 'axis',\n      axisPointer: {\n        type: 'cross',\n        crossStyle: {\n          color: '#999999'\n        }\n      }\n    },\n    legend: {\n      data: ['系列一', '系列二'],\n      textStyle: {\n        fontSize: 16,\n        color: '#ffffff'\n      }\n    },\n    xAxis: [\n      {\n        type: 'category',\n        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],\n        axisPointer: {\n          type: 'shadow'\n        },\n        axisLabel: {\n          fontSize: 16,\n          color: '#ffffff'\n        }\n      }\n    ],\n    yAxis: [\n      {\n        type: 'value',\n        splitLine: {\n          lineStyle: {\n            color: '#726c6c'\n          }\n        },\n        axisLabel: {\n          formatter: '{value} ml',\n          fontSize: 16,\n          color: '#ffffff'\n        }\n      },\n      {\n        type: 'value',\n        splitLine: {\n          show: false\n        },\n        axisLabel: {\n          formatter: '{value} °C',\n          fontSize: 16,\n          color: '#ffffff'\n        }\n      }\n    ],\n    series: [\n      {\n        name: '系列一',\n        type: 'bar',\n        barMaxWidth: 30,\n        itemStyle: {\n          borderColor: '#188df0',\n          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [\n            { offset: 0, color: '#83bff6' },\n            { offset: 0.5, color: '#188df0' },\n            { offset: 1, color: '#188df0' }\n          ])\n        },\n        tooltip: {\n          valueFormatter: function (value) {\n            return value + ' ml'\n          }\n        },\n        data: [ 10, 30, 20, 40, 50 ]\n      },\n      {\n        name: '系列二',\n        type: 'line',\n        yAxisIndex: 1,\n        tooltip: {\n          valueFormatter: function (value) {\n            return value + ' °C'\n          }\n        },\n        data: [10, 30, 20, 40, 50]\n      }\n    ]\n  }\n  // ------ 输出配置赋值-end ------\n\n  // 数据参数处理\n  \n  // 输出配置\n  return option\n}"
+    }
+  },
+  "template": [
+    {
+      "categories": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "series": [
+        {
+          "name": "系列一",
+          "data": [
+            10,
+            30,
+            20,
+            40,
+            50
+          ]
+        },
+        {
+          "name": "系列二",
+          "data": [
+            10,
+            30,
+            20,
+            40,
+            50
+          ]
+        }
+      ]
+    }
+  ]
+}

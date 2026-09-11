@@ -1,0 +1,42 @@
+{
+  "name": "@screenwright/core",
+  "version": "1.0.0",
+  "description": "Screenwright 大屏编辑器核心包（框架无关：不依赖任何 UI 框架/状态管理库）",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "watch": "vite build --watch",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src --fix",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "@screenwright/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@screenwright/eslint-config": "workspace:*",
+    "@types/node": "^24.10.2",
+    "eslint": "^9.32.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.6.2",
+    "typescript": "5.9.2",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0",
+    "vitest": "^3.2.4"
+  }
+}

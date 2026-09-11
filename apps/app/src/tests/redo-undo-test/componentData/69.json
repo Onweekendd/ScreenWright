@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "message": "",
+  "code": 200,
+  "result": {
+    "createdBy": "admin",
+    "createdTime": "2023-06-09 17:29:57",
+    "updatedBy": "admin",
+    "updatedTime": "2024-06-17 10:58:43",
+    "id": 69,
+    "userId": null,
+    "type": 0,
+    "status": 1,
+    "firstLevelMenu": "面板",
+    "secondLevelMenu": "",
+    "javaScript": "{\"interactive\":true,\"title\":\"动态面板\",\"name\":\"动态面板\",\"display\":true,\"icon\":\"icon-tabs\",\"img\":\"/img/ft-panel.20240430.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"child\":{\"index\":[],\"paramName\":\"\",\"key\":\"\",\"value\":\"\"},\"cbArgs\":[],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data;\\r\\n}\",\"dataFilterArr\":{},\"eventBus\":[],\"dataType\":0,\"data\":[],\"component\":{\"prop\":\"sw-panel\",\"name\":\"sw-panel\",\"width\":600,\"height\":600},\"panelStatus\":[],\"panelData\":[],\"unitPavenType\":\"\",\"option\":{\"display\":false,\"isPreLoad\":true,\"enableScroll\":false,\"rotationShow\":false,\"rotationType\":\"\",\"autoRotation\":false,\"arrowShow\":false,\"gestureSliding\":false,\"animationType\":\"opacity\",\"timingFunction\":5,\"arrowWidth\":72,\"arrowHeight\":72,\"imgLeft\":\"version-test/assets/defaultImg/imgLeft.png\",\"imgRight\":\"version-test/assets/defaultImg/imgRight.png\",\"isCard3Show\":true,\"card1Show\":false,\"card2Show\":false,\"card3Show\":false,\"card1TranslateX\":0,\"card1TranslateY\":50,\"card2TranslateX\":200,\"card2TranslateY\":0,\"card3TranslateX\":300,\"card3TranslateY\":-50,\"card1ScaleX\":1,\"card1ScaleY\":1,\"card2ScaleX\":1,\"card2ScaleY\":1,\"card3ScaleX\":1,\"card4ScaleY\":1,\"transform\":false,\"perspective\":0,\"originX\":50,\"originY\":50,\"rotateX\":0,\"rotateY\":0,\"rotateZ\":0,\"skewX\":0,\"skewY\":0,\"scaleX\":100,\"scaleY\":100,\"translateX\":0,\"translateY\":0,\"translateZ\":0,\"originGrid\":{\"left\":\"center\",\"top\":\"center\"},\"backdropFilter\":false,\"backdropFilterBlur\":4,\"backdropFilterSaturate\":100,\"customPosition\":false,\"customPositionType\":\"toCenter\",\"customPositionX\":0,\"customPositionY\":0,\"customPositionTop\":0,\"customPositionBottom\":0},\"left\":0,\"top\":0,\"showSubComponent\":false}",
+    "template": "[]",
+    "level": 0,
+    "name": "动态面板",
+    "thumbnail": "/img/ft-panel.20240430.png"
+  },
+  "data": null,
+  "timestamp": 1770346439867,
+  "requestId": "ac4abe256f9a4882bfe46dc9c10123e8",
+  "onlTable": null
+}

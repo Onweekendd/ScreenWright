@@ -1,0 +1,7 @@
+[
+  { "id": "L01", "name": "SMT 一线", "status": "running", "efficiency": 96.2, "output": 5280, "target": 6000, "defectRate": 0.8 },
+  { "id": "L02", "name": "SMT 二线", "status": "running", "efficiency": 93.5, "output": 4600, "target": 5500, "defectRate": 1.2 },
+  { "id": "L03", "name": "组装一线", "status": "warning", "efficiency": 85.1, "output": 3800, "target": 5000, "defectRate": 1.5 },
+  { "id": "L04", "name": "测试包装线", "status": "running", "efficiency": 91.8, "output": 2800, "target": 3500, "defectRate": 0.5 },
+  { "id": "L05", "name": "备用产线", "status": "idle", "efficiency": 0, "output": 0, "target": 0, "defectRate": 0 }
+]

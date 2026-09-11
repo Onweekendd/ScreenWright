@@ -1,0 +1,53 @@
+.total-list {
+  font-family: Source Han Sans CN-Bold, Source Han Sans CN;
+  font-weight: bold;
+  color: #bfbfbf;
+  font-size: 18px;
+  .quantity-info {
+    margin-left: 10px;
+    width: 40%;
+    font-size: 14px;
+    color: #606266;
+    text-align: right;
+  }
+}
+.list-search {
+  :deep(.el-input) {
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px #393b4a inset;
+  }
+  :deep(.el-input .el-input__wrapper) {
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    .el-input__inner {
+      color: #ddd;
+      height: 32px !important;
+    }
+  }
+}
+.sort-list {
+  margin-left: 21px;
+  cursor: pointer;
+  color: #b4b7c1;
+  font-family: Source Han Sans CN-Normal, Source Han Sans CN;
+  font-weight: 400;
+  :deep(.el-dropdown) {
+    color: #b4b7c1;
+  }
+}
+.design-file-btn {
+  > span {
+    cursor: pointer;
+    color: transparent;
+    -webkit-background-clip: text;
+    font-size: 14px;
+    margin-right: 8px;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(90deg, #8b58e7 0px, #642cff 100%);
+  }
+}

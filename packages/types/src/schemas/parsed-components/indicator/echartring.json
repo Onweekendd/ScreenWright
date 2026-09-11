@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "id": 37,
+    "name": "环形图",
+    "prop": "echartring",
+    "componentName": "echart-ring",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/progress.1e8fda59.png"
+  },
+  "config": {
+    "title": "环形图",
+    "name": "环形图",
+    "display": true,
+    "icon": "icon-circle",
+    "img": "/img/progress.1e8fda59.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "value": 75,
+        "total": 100
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "total",
+        "map": "total",
+        "decription": "总数"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 250,
+      "height": 250,
+      "name": "echart-ring",
+      "prop": "echartring"
+    },
+    "option": {
+      "refresh": true,
+      "startAngle": 90,
+      "centerX": 50,
+      "centerY": 50,
+      "radiusMax": 100,
+      "radiusMin": 70,
+      "seriesColor": {
+        "type": "linear-gradient",
+        "angle": "180",
+        "colors": [
+          {
+            "color": "rgba(0,127,247,1)",
+            "per": 0
+          },
+          {
+            "color": "rgba(0,183,226,1)",
+            "per": 100
+          }
+        ]
+      },
+      "seriesOpacity": 100,
+      "barGap": 70,
+      "barCategoryGap": 60,
+      "seriesLabelShow": true,
+      "seriesLabelUtil": "%",
+      "seriesLabelColor": "rgba(255,255,255,1)",
+      "seriesLabelFontFamily": "siayuan-normal",
+      "seriesLabelFontSize": 32,
+      "seriesLabelFontWeight": "normal",
+      "seriesLabelFontStyle": "normal",
+      "seriesLabelOffsetX": 0,
+      "seriesLabelOffsetY": 0
+    }
+  },
+  "template": [
+    {
+      "value": 75,
+      "total": 100
+    }
+  ]
+}

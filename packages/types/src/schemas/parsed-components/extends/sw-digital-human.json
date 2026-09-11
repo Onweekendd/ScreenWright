@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "id": 73,
+    "name": "数字人beta",
+    "prop": "sw-digital-human",
+    "componentName": "sw-digital-human",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/digitalHuman.dbc58503.png"
+  },
+  "config": {
+    "title": "数字人beta",
+    "name": "数字人beta",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/digitalHuman.dbc58503.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 714,
+      "height": 1022,
+      "name": "sw-digital-human",
+      "prop": "sw-digital-human"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "label": "标签一",
+        "value": "你好，欢迎使用数字人服务"
+      },
+      {
+        "label": "标签二",
+        "value": "你好，欢迎进入数字孪生世界"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "label",
+        "map": "label",
+        "decription": "标签"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "文本"
+      }
+    ],
+    "unitPavenType": "",
+    "option": {
+      "autoPlay": false,
+      "loopBack": false,
+      "autoHide": false,
+      "showQrcode": true,
+      "showCaptions": true,
+      "showMsgInput": true,
+      "currentSession": false,
+      "welcome": "你好，欢迎使用数字人服务",
+      "defaultImage": "/img/digitalHuman.dbc58503.png",
+      "defaultVideo": "version-test/assets/defaultImg/human-man.webm",
+      "humanType": "online",
+      "aiChatShow": false,
+      "aiChatAct": "manual",
+      "aiChatInt": "text",
+      "aiChatModel": "aibase",
+      "aiChatWidth": 500,
+      "aiChatHeight": 600,
+      "aiChatBottom": 300,
+      "aiChatLeft": -400,
+      "aiChatCompWidth": 360,
+      "aiChatCompHeight": 180,
+      "acFontFamily": "sans-serif",
+      "acFontSize": 13,
+      "acFontColor": "rgba(191, 191, 191, 1)",
+      "borderRadius": 10,
+      "backgroundType": "color",
+      "backgroundColor": "rgba(43, 42, 62, 1)",
+      "backgroundImage": "",
+      "voiceImg": "version-test/assets/defaultImg/default-voice.png",
+      "voiceStartImg": "version-test/assets/defaultImg/default-voicestart.png",
+      "renderHumanUrl": "",
+      "sendMsgUrl": "",
+      "instructionCodeSet": [],
+      "compositeOption": {
+        "seriesId": null,
+        "name": "",
+        "image": "xionxion",
+        "clothes": null,
+        "motion": 1,
+        "voice": 4003,
+        "rate": 5,
+        "pitch": 5,
+        "volume": 5,
+        "type": "component",
+        "actions": [
+          {
+            "tabsName": "动作1",
+            "action": "",
+            "text": ""
+          }
+        ],
+        "knowledgeBase": false,
+        "knowledgeBaseName": "",
+        "knowledgeBaseFile": "version-test/assets/defaultImg/default.pdf",
+        "knowledgeBaseData": [
+          {
+            "问题": "你好",
+            "答案": "你好，我是数字人小豪",
+            "关键词": "你好 您好 你好呀 你好啊",
+            "PDF页码": "",
+            "图片": "",
+            "视频": ""
+          },
+          {
+            "问题": "介绍下凡拓",
+            "答案": "凡拓数创是一家专注于数字创意与数据可视化领域的国家高新技术企业，成立于2002年，总部位于广州。公司以三维可视化、数字孿生、大数据分析为核心技术，为政企客户提供数字化展示、智慧城市、数字营销等全链条服务",
+            "关键词": "凡拓 凡拓数创",
+            "PDF页码": "1",
+            "图片": "",
+            "视频": ""
+          }
+        ],
+        "userId": null,
+        "emotion": 0,
+        "captions": true,
+        "fontFamily": "sans-serif",
+        "fontSize": 16,
+        "fontColor": "rgba(255, 255, 255, 1)",
+        "fontWeight": false,
+        "fontStyle": false,
+        "textTranslateX": 0,
+        "textTranslateY": 0
+      },
+      "compositeList": [],
+      "sendQrcodeX": 0,
+      "sendQrcodeY": 0,
+      "sendQrcodeSize": 100,
+      "sendCaptionsStaleTimer": 10,
+      "sendInputX": 0,
+      "sendInputY": 0,
+      "sendInputFontFamily": "sans-serif",
+      "sendInputFontSize": 16,
+      "sendInputFontColor": "rgba(255,255,255,1)",
+      "sendInputAskTitle": "您好，我是“小凡”，你可以对我说：",
+      "sendInputAskWords": "请介绍下凡拓数创,请介绍下数字孪生的前景如何,请问广州目前在哪个区收益最好,请介绍下凡拓数创现阶段下的成绩,请问近年来凡拓数创在数字孪生领域取得怎样的成效",
+      "sendQrcodeUrl": "https://example.com",
+      "sendDialogX": 600,
+      "sendDialogY": -120,
+      "sendDialogW": 860,
+      "sendDialogH": 680,
+      "sendDialogBgImage": "version-test/assets/defaultImg/captions-panel-bg.png",
+      "sendDialogBgColor": "rgba(255,255,255,0.1)",
+      "sendDialogBgType": "image",
+      "sendDialogFontFamily": "sans-serif",
+      "sendDialogFontSize": 16,
+      "sendDialogFontColor": "rgba(255,255,255,1)",
+      "sendDialogFontBgColorL": "rgba(0,160,226,0.1)",
+      "sendDialogFontBgColorR": "rgba(255,255,255,0.1)",
+      "sendDialogHeadBgImageL": "version-test/assets/defaultImg/qachat_left.png",
+      "sendDialogHeadBgImageR": "version-test/assets/defaultImg/qachat_right.png",
+      "analysisDialogWidth": 30,
+      "analysisDialogHeight": 60,
+      "analysisDialogMoveX": 0,
+      "analysisDialogMoveY": 100,
+      "analysisDialogBgType": "color",
+      "analysisDialogBgImage": "",
+      "analysisDialogBgColor": "rgba(17,19,23,0.8)",
+      "analysisFontFamily": "sans-serif",
+      "analysisFontSize": 16,
+      "analysisFontColor": "rgba(255,255,255,1)",
+      "wakeWord": "小凡小凡",
+      "asrUrl": "ws://127.0.0.1:10095",
+      "asrType": "BAIDU",
+      "baiduASRAppid": null,
+      "baiduASRAppKey": "",
+      "baiduASRUrl": "wss://vop.baidu.com/realtime_asr",
+      "showAnalysis": false
+    },
+    "enableDataAnalysis": false,
+    "dataAnalysisName": "",
+    "dataAnalysisData": null,
+    "terminalId": "",
+    "left": 0,
+    "top": 0,
+    "showSubComponent": false
+  },
+  "template": [
+    {
+      "keyword": "菜单切换选项一",
+      "actionCode": 1
+    },
+    {
+      "keyword": "面板切换状态一",
+      "actionCode": "panel-1"
+    }
+  ]
+}

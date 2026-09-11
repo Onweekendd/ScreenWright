@@ -1,0 +1,56 @@
+.fs-18 {
+  font-size: 18px;
+}
+.fs-14 {
+  font-size: 14px;
+}
+.template-menu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(29, 38, 46, 0.8);
+  width: 100%;
+  height: 100%;
+  // height: calc(100% - 46px);
+  .content__btn {
+    width: 66px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    background: #3d404c;
+    font-size: 14px;
+    color: #fff;
+    border-radius: 4px 4px;
+    cursor: pointer;
+    &:first-child {
+      margin-right: 16px;
+    }
+    &:nth-child(2) {
+      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+    }
+  }
+  .content__view {
+    position: absolute;
+    bottom: 35px;
+    .font-family {
+      margin-right: 10px;
+      cursor: pointer;
+      position: relative;
+      &:last-child {
+        margin-right: 0;
+      }
+      &.has-newApplication::after {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: red;
+        box-shadow: 0 0 10px #703bfa;
+        position: absolute;
+        right: -5px;
+        top: -5px;
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+.build-side-bar {
+  height: 100%;
+  overflow: hidden;
+  color: #b4b7c1;
+  background: #232630;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border-right: 1px solid #000000;
+  position: relative;
+  outline: none;
+  transition: width 0.3s;
+  background-image: url("@/assets/image/bg/bi_left_bg.png");
+  .build-side-bar-title {
+    box-sizing: border-box;
+    line-height: 36px;
+    width: 100%;
+    height: 36px;
+    background-color: #373a47;
+    color: #b4b7c1 !important;
+    font-family:
+      Source Han Sans CN-Normal,
+      Source Han Sans CN;
+    font-weight: 400;
+    text-align: center;
+    border-left: 1px solid #000;
+    font-size: 12px !important;
+    border-right: 1px solid #000;
+    position: relative;
+  }
+  .build-side-tree {
+    height: calc(100% - 76px);
+  }
+}
+
+// 面板拖拽把手（左右侧栏共用）
+.panel-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  z-index: 30;
+  cursor: col-resize;
+  transition: background-color 0.15s;
+
+  &--right {
+    right: 0;
+  }
+  &--left {
+    left: 0;
+  }
+  &:hover {
+    background-color: #7c42ee;
+  }
+}

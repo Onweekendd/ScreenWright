@@ -1,0 +1,107 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Debug FunAI + Screenwright",
+      "configurations": ["Debug FunAI Server", "launch 启动调试 canary"],
+      "stopAll": true
+    }
+  ],
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "name": "attach 启动调试",
+      "webRoot": "${workspaceFolder}/apps/app",
+      "sourceMapPathOverrides": {
+        "webpack://_N_E/*": "${webRoot}/*",
+        "http://localhost:5173/*": "${webRoot}/*",
+        "packages/codeEditor/*": "${workspaceFolder}/packages/codeEditor/*"
+      }
+      // 启动命令 "C:\Users\wangweijian\AppData\Local\Google\Chrome SxS\chrome.exe" --remote-debugging-port=9222 --user-data-dir="D:\debuggerUser"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "launch 启动调试 canary",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/apps/app",
+      "userDataDir": true,
+      "runtimeArgs": [],
+      "skipFiles": [],
+      "smartStep": true,
+      "sourceMapPathOverrides": {
+        "webpack://_N_E/*": "${webRoot}/*",
+        "http://localhost:5173/*": "${webRoot}/*",
+        "packages/codeEditor/*": "${workspaceFolder}/packages/codeEditor/*"
+      }
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Monorepo (screenwright + codeEditor)",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}",
+      "userDataDir": true,
+      "runtimeExecutable": "canary",
+      "runtimeArgs": [],
+      "skipFiles": [],
+      "smartStep": true,
+      "sourceMapPathOverrides": {
+        "webpack://_N_E/*": "${workspaceFolder}/*",
+        "http://localhost:5173/*": "${workspaceFolder}/*",
+        "packages/codeEditor/*": "${workspaceFolder}/packages/codeEditor/*",
+        "apps/app/*": "${workspaceFolder}/apps/app/*"
+      }
+    },
+
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Test File",
+      "autoAttachChildProcesses": true,
+      "cwd": "${workspaceRoot}/apps/app",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "program": "${workspaceRoot}/apps/app/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${file}"],
+      "smartStep": true,
+      "console": "integratedTerminal"
+    },
+
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug FunAI Server",
+      "autoAttachChildProcesses": true,
+      "cwd": "${workspaceRoot}/servers/server",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "runtimeExecutable": "${workspaceRoot}/servers/server/node_modules/.bin/dotenvx",
+      "runtimeArgs": ["run", "--env-file", ".env", "--"],
+      "program": "${workspaceRoot}/servers/server/node_modules/tsx/dist/cli.mjs",
+      "args": ["watch", "src/server.ts"],
+      "smartStep": true,
+      "console": "integratedTerminal"
+    },
+
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Test File For FunAI",
+      "autoAttachChildProcesses": true,
+      "cwd": "${workspaceRoot}",
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "runtimeExecutable": "${workspaceRoot}/servers/server/node_modules/.bin/dotenvx",
+      "runtimeArgs": ["run", "--env-file", "servers/server/.env", "--"],
+      "program": "${workspaceRoot}/servers/server/node_modules/vitest/vitest.mjs",
+      "args": [
+        "run",
+        "--config",
+        "servers/server/vitest.config.ts",
+        "${relativeFile}"
+      ],
+      "smartStep": true,
+      "console": "integratedTerminal"
+    }
+  ]
+}

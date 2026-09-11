@@ -1,0 +1,35 @@
+{
+  "nodes": [
+    {
+      "id": "16754:245",
+      "name": "政策、人才、资金、空间、场景",
+      "type": "TEXT",
+      "layout": "layout_fae6b0",
+      "text": "政策、人才、资金、空间、场景",
+      "textStyle": "style_d92943",
+      "fills": "fill_b9cecd"
+    }
+  ],
+  "components": {},
+  "componentSets": {},
+  "globalVars": {
+    "styles": {
+      "layout_fae6b0": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 375, "height": 30 },
+        "absolutePosition": { "x": 0, "y": 0 }
+      },
+      "style_d92943": {
+        "fontFamily": "FZLTHProS",
+        "fontWeight": 500,
+        "fontSize": 26,
+        "lineHeight": "1.1538461538461537em",
+        "letterSpacing": "11.538461538461538%",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_b9cecd": ["#031034"]
+    }
+  }
+}

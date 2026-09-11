@@ -1,0 +1,164 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["test"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "create-screenwright-app#build": {
+      "dependsOn": ["test"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/apps/artifact-app-template/**"
+      ],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "build:fontFace": {
+      "outputs": ["public/lib/**"],
+      "cache": true
+    },
+    "build:lib": {
+      "dependsOn": ["^build", "build:fontFace"],
+      "outputs": ["public/lib/**"],
+      "cache": true
+    },
+    "build:sdk:types": {
+      "dependsOn": ["@screenwright/composables#build"],
+      "outputs": ["public/lib/**"],
+      "cache": true
+    },
+    "build:lib:prod": {
+      "dependsOn": ["test"],
+      "outputs": ["public/lib/**"],
+      "cache": true
+    },
+    "build:stage": {
+      "dependsOn": ["test", "build:lib:prod", "@screenwright/server#build:client"],
+      "outputs": ["dist/**"],
+      "cache": false
+    },
+    "build:prod": {
+      "dependsOn": ["test", "build:lib:prod", "@screenwright/server#build:client"],
+      "outputs": ["dist/**"],
+      "cache": false
+    },
+    "build:client": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "build:workers:dev": {
+      "outputs": ["dist/worker/**"],
+      "inputs": [
+        "src/monaco/vueWorker.ts",
+        "src/monaco/utils/**",
+        "src/monaco/env.ts",
+        "vite.worker.config.ts"
+      ],
+      "cache": false
+    },
+    "build:workers:prod": {
+      "outputs": ["dist/worker/**"],
+      "inputs": [
+        "src/monaco/vueWorker.ts",
+        "src/monaco/utils/**",
+        "src/monaco/env.ts",
+        "vite.worker.config.ts"
+      ]
+    },
+    "check-types": {
+      "dependsOn": ["^build"],
+      "outputs": [".tsbuildinfo"],
+      "cache": true
+    },
+    "@screenwright/app#check-types": {
+      "dependsOn": ["^build", "@screenwright/server#build:client"],
+      "outputs": [".tsbuildinfo"],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["check-types"],
+      "cache": true
+    },
+    "mastra:check-types": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "mastra:build": {
+      "dependsOn": ["@screenwright/figma-helper#shared:build", "create-screenwright-app#build"],
+      "outputs": [".mastra/output/**"],
+      "cache": true
+    },
+    "mastra:test": {
+      "dependsOn": [
+        "^build",
+        "@screenwright/figma-helper#shared:build",
+        "check-types",
+        "mastra:check-types"
+      ],
+      "cache": true
+    },
+    "shared:build": {
+      "outputs": ["dist/shared/**"],
+      "cache": true
+    },
+    "@screenwright/server#server:dev": {
+      "dependsOn": [
+        "@screenwright/figma-helper#shared:build",
+        "create-screenwright-app#build",
+        "@screenwright/core#build"
+      ],
+      "persistent": true,
+      "cache": false
+    },
+    "@screenwright/app#dev": {
+      "persistent": true,
+      "dependsOn": [
+        "@screenwright/server#build:client",
+        "@screenwright/types#build",
+        "@screenwright/ui#build"
+      ],
+      "cache": false
+    },
+    "@screenwright/app#dev:desktop": {
+      "persistent": true,
+      "dependsOn": [
+        "@screenwright/server#build:client",
+        "@screenwright/server#build:server",
+        "@screenwright/types#build",
+        "@screenwright/ui#build"
+      ],
+      "cache": false
+    },
+    "@screenwright/server#build:server": {
+      "dependsOn": ["@screenwright/types#build", "@screenwright/core#build"],
+      "outputs": ["dist/server.mjs"],
+      "cache": false
+    },
+    "build:desktop": {
+      "dependsOn": [
+        "^build",
+        "@screenwright/server#build:client",
+        "@screenwright/server#build:server"
+      ],
+      "outputs": ["dist/**"],
+      "cache": false
+    },
+    "dev": {
+      "persistent": true,
+      "dependsOn": ["^build", "@screenwright/server#build:client"],
+      "cache": false
+    },
+    "build:watch": {
+      "persistent": true,
+      "cache": false
+    },
+    "build:editor:watch": {
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

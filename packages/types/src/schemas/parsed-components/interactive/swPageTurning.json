@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "id": 56,
+    "name": "翻页",
+    "prop": "swPageTurning",
+    "componentName": "sw-pageTurning",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/page.20240514.png"
+  },
+  "config": {
+    "title": "翻页",
+    "name": "翻页",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/page.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 200,
+      "height": 42,
+      "name": "sw-pageTurning",
+      "prop": "swPageTurning"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "dataRemark": [
+      {
+        "key": "pageIndex",
+        "map": "pageIndex",
+        "decription": "当前页码"
+      },
+      {
+        "key": "pageTotal",
+        "map": "pageTotal",
+        "decription": "总页数"
+      },
+      {
+        "key": "textPage",
+        "map": "textPage",
+        "decription": "文本数据集"
+      }
+    ],
+    "data": [
+      {
+        "pageIndex": 1,
+        "pageTotal": 2,
+        "textPage": [
+          "分页一",
+          "分页二"
+        ]
+      }
+    ],
+    "option": {
+      "isText": false,
+      "isLoop": false,
+      "isPlay": false,
+      "intervalTime": 5,
+      "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSize": 26,
+      "color": "rgba(255, 255, 255, 1)",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "fontFamilyTotal": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSizeTotal": 26,
+      "colorTotal": "rgba(255, 255, 255, 1)",
+      "fontWeightTotal": "normal",
+      "fontStyleTotal": "normal",
+      "fontFamilyLine": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSizeLine": 26,
+      "colorLine": "rgba(255, 255, 255, 1)",
+      "fontWeightLine": "normal",
+      "fontStyleLine": "normal",
+      "shadowShow": false,
+      "shadowColor": "rgba(255, 255, 255, 1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "letterSpacing": 0,
+      "split": 5,
+      "backgroundImage": "version-test/assets/defaultImg/Arrow.png",
+      "buttonWidth": 50,
+      "buttonHeight": 25
+    }
+  },
+  "template": [
+    {
+      "pageIndex": 1,
+      "pageTotal": 2,
+      "textPage": [
+        "分页一",
+        "分页二"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,472 @@
+{
+  "meta": {
+    "id": 19,
+    "name": "关系图",
+    "prop": "echartgraph",
+    "componentName": "echart-graph",
+    "first_level_menu": "图表",
+    "second_level_menu": "其他",
+    "thumbnail": "/img/graph.b13fc475.png"
+  },
+  "config": {
+    "name": "关系图",
+    "title": "关系图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/graph.b13fc475.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "name": "节点A",
+        "value": 2
+      },
+      {
+        "name": "节点B",
+        "value": 1
+      },
+      {
+        "name": "节点C",
+        "value": 1
+      },
+      {
+        "name": "节点D",
+        "value": 2
+      },
+      {
+        "name": "节点E",
+        "value": 1
+      },
+      {
+        "name": "节点F",
+        "value": 3
+      },
+      {
+        "name": "节点G",
+        "value": 1
+      },
+      {
+        "name": "节点H",
+        "value": 1
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "echart-graph",
+      "prop": "echartgraph"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        }
+      ],
+      "points": [
+        "节点1",
+        "节点2",
+        "节点3",
+        "节点4",
+        "节点5",
+        "节点6",
+        "节点7",
+        "节点8"
+      ],
+      "pointColor": [
+        "#91cc75",
+        "#fac858",
+        "#fc8452",
+        "#ee6666",
+        "#ea7ccc",
+        "#5470c6",
+        "#159ede",
+        "#7eda91"
+      ],
+      "labelPosition": [
+        "right",
+        "right",
+        "left",
+        "left",
+        "left",
+        "left",
+        "right",
+        "right"
+      ],
+      "linkName": [
+        "路线1",
+        "路线2",
+        "路线3",
+        "路线4",
+        "路线5",
+        "路线6",
+        "路线7",
+        "路线8",
+        "路线9",
+        "路线10",
+        "路线11",
+        "路线12",
+        "路线13",
+        "路线14"
+      ],
+      "links": [
+        {
+          "source": "节点A",
+          "target": "节点F",
+          "value": 11066,
+          "color": "source"
+        },
+        {
+          "source": "节点B",
+          "target": "节点F",
+          "value": 6903,
+          "color": "source"
+        },
+        {
+          "source": "节点C",
+          "target": "节点B",
+          "value": 6696,
+          "color": "source"
+        },
+        {
+          "source": "节点B",
+          "target": "节点A",
+          "value": 5129,
+          "color": "source"
+        },
+        {
+          "source": "节点C",
+          "target": "节点A",
+          "value": 4747,
+          "color": "source"
+        },
+        {
+          "source": "节点C",
+          "target": "节点D",
+          "value": 4111,
+          "color": "source"
+        },
+        {
+          "source": "节点D",
+          "target": "节点F",
+          "value": 2913,
+          "color": "source"
+        },
+        {
+          "source": "节点B",
+          "target": "节点G",
+          "value": 2328,
+          "color": "source"
+        },
+        {
+          "source": "节点B",
+          "target": "节点D",
+          "value": 2300,
+          "color": "source"
+        },
+        {
+          "source": "节点E",
+          "target": "节点A",
+          "value": 1783,
+          "color": "source"
+        },
+        {
+          "source": "节点E",
+          "target": "节点B",
+          "value": 1645,
+          "color": "source"
+        },
+        {
+          "source": "节点D",
+          "target": "节点A",
+          "value": 965,
+          "color": "source"
+        },
+        {
+          "source": "节点C",
+          "target": "节点E",
+          "value": 689,
+          "color": "source"
+        },
+        {
+          "source": "节点H",
+          "target": "节点A",
+          "value": 541,
+          "color": "source"
+        }
+      ],
+      "pointsSymbol": [
+        "circle",
+        "circle",
+        "circle",
+        "circle",
+        "circle",
+        "circle",
+        "circle",
+        "circle"
+      ],
+      "pointsSymbolImage": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "pointsSymbolWidth": [
+        10,
+        10,
+        10
+      ],
+      "pointsSymbolHeight": [
+        10,
+        10,
+        10
+      ],
+      "seriesLinksSymbolSize": 20,
+      "seriesLinksLineWidth": 0.005,
+      "seriesLinksLineType": [
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid",
+        "solid"
+      ],
+      "seriesLabelAlign": [
+        "left",
+        "left",
+        "right",
+        "right",
+        "right",
+        "right",
+        "left",
+        "left"
+      ],
+      "seriesLabelVerticalAlign": [
+        "middle",
+        "middle",
+        "middle",
+        "middle",
+        "middle",
+        "middle",
+        "middle",
+        "middle"
+      ],
+      "seriesLabelNameShow": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "seriesLabelNameColor": [
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)"
+      ],
+      "seriesLabelNameFontFamily": [
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal"
+      ],
+      "seriesLabelNameFontSize": [
+        12,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "seriesLabelNameFontWeight": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesLabelNameFontStyle": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesLabelValueShow": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "seriesLabelValueColor": [
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)",
+        "rgba(255,255,255,1)"
+      ],
+      "seriesLabelValueFontFamily": [
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal",
+        "siayuan-normal"
+      ],
+      "seriesLabelValueFontSize": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "seriesLabelValueFontWeight": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesLabelValueFontStyle": [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal"
+      ],
+      "seriesLabelOffsetX": 0,
+      "seriesLabelOffsetY": 0
+    }
+  },
+  "template": [
+    {
+      "name": "节点A",
+      "value": 2
+    },
+    {
+      "name": "节点B",
+      "value": 1
+    },
+    {
+      "name": "节点C",
+      "value": 1
+    },
+    {
+      "name": "节点D",
+      "value": 2
+    },
+    {
+      "name": "节点E",
+      "value": 1
+    },
+    {
+      "name": "节点F",
+      "value": 3
+    },
+    {
+      "name": "节点G",
+      "value": 1
+    },
+    {
+      "name": "节点H",
+      "value": 1
+    }
+  ]
+}

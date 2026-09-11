@@ -1,0 +1,4 @@
+export const COMPONENT_WIDTH = 100;
+export const PROPERTY_GROUP_WIDTH = 80;
+export const PROPERTY_NAME_WIDTH = 150;
+export const PROPERTY_VALUE_EDITOR_WIDTH = 100;

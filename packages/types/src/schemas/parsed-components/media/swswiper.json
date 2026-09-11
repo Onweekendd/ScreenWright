@@ -1,0 +1,243 @@
+{
+  "meta": {
+    "id": 45,
+    "name": "轮播图",
+    "prop": "swswiper",
+    "componentName": "sw-swiper",
+    "first_level_menu": "媒体",
+    "second_level_menu": "",
+    "thumbnail": "/img/swiper.edea319b.png"
+  },
+  "config": {
+    "title": "轮播图",
+    "name": "轮播图",
+    "display": true,
+    "icon": "icon-banner",
+    "img": "/img/swiper.edea319b.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "time": 30,
+    "url": "./swiper",
+    "data": [],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 580,
+      "height": 280,
+      "name": "sw-swiper",
+      "prop": "swswiper"
+    },
+    "option": {
+      "type": "card",
+      "interval": 5000,
+      "opacity": 1,
+      "secondOpacity": 1,
+      "thirdOpacity": 1,
+      "indicator": "none",
+      "direction": "horizontal",
+      "autoplay": false,
+      "arrow": "never",
+      "arrowImg": "",
+      "isRotate": false,
+      "showSwiper": false,
+      "objectFit": "contain",
+      "imageWidth": 100,
+      "imageHeight": 100,
+      "imagesList": [
+        {
+          "name": "图片1",
+          "value": "version-test/assets/defaultImg/default.png",
+          "objectFit": "contain",
+          "borderImageWidth": 100,
+          "borderImageHeight": 100,
+          "borderImageSize": "contain",
+          "content": "",
+          "fontColor": "rgba(255, 255, 255, 1)",
+          "fontSize": 12,
+          "letterSpacing": 0,
+          "fontWeight": false,
+          "fontFamily": "sans-serif",
+          "fontStyle": false,
+          "textAlign": "center",
+          "imgTranslateX": 0,
+          "imgTranslateY": 0,
+          "textTranslateX": 0,
+          "textTranslateY": 0,
+          "isTextShadow": false,
+          "textShadow": {
+            "color": "rgba(255, 255, 255, 1)",
+            "x": 0,
+            "y": 0,
+            "blur": 0,
+            "extend": 0
+          },
+          "opacity": 100
+        },
+        {
+          "name": "图片2",
+          "value": "version-test/assets/defaultImg/default.png",
+          "objectFit": "contain",
+          "borderImageWidth": 100,
+          "borderImageHeight": 100,
+          "borderImageSize": "contain",
+          "content": "",
+          "fontColor": "rgba(255, 255, 255, 1)",
+          "fontSize": 12,
+          "letterSpacing": 0,
+          "fontWeight": false,
+          "fontFamily": "sans-serif",
+          "fontStyle": false,
+          "textAlign": "center",
+          "imgTranslateX": 0,
+          "imgTranslateY": 0,
+          "textTranslateX": 0,
+          "textTranslateY": 0,
+          "isTextShadow": false,
+          "textShadow": {
+            "color": "rgba(255, 255, 255, 1)",
+            "x": 0,
+            "y": 0,
+            "blur": 0,
+            "extend": 0
+          },
+          "opacity": 100
+        },
+        {
+          "name": "图片3",
+          "value": "version-test/assets/defaultImg/default.png",
+          "objectFit": "contain",
+          "borderImageWidth": 100,
+          "borderImageHeight": 100,
+          "borderImageSize": "contain",
+          "content": "",
+          "fontColor": "rgba(255, 255, 255, 1)",
+          "fontSize": 12,
+          "letterSpacing": 0,
+          "fontWeight": false,
+          "fontFamily": "sans-serif",
+          "fontStyle": false,
+          "textAlign": "center",
+          "imgTranslateX": 0,
+          "imgTranslateY": 0,
+          "textTranslateX": 0,
+          "textTranslateY": 0,
+          "isTextShadow": false,
+          "textShadow": {
+            "color": "rgba(255, 255, 255, 1)",
+            "x": 0,
+            "y": 0,
+            "blur": 0,
+            "extend": 0
+          },
+          "opacity": 100
+        },
+        {
+          "name": "图片4",
+          "value": "version-test/assets/defaultImg/default.png",
+          "objectFit": "contain",
+          "borderImageWidth": 100,
+          "borderImageHeight": 100,
+          "borderImageSize": "contain",
+          "content": "",
+          "fontColor": "rgba(255, 255, 255, 1)",
+          "fontSize": 12,
+          "letterSpacing": 0,
+          "fontWeight": false,
+          "fontFamily": "sans-serif",
+          "fontStyle": false,
+          "textAlign": "center",
+          "imgTranslateX": 0,
+          "imgTranslateY": 0,
+          "textTranslateX": 0,
+          "textTranslateY": 0,
+          "isTextShadow": false,
+          "textShadow": {
+            "color": "rgba(255, 255, 255, 1)",
+            "x": 0,
+            "y": 0,
+            "blur": 0,
+            "extend": 0
+          },
+          "opacity": 100
+        },
+        {
+          "name": "图片5",
+          "value": "version-test/assets/defaultImg/default.png",
+          "objectFit": "contain",
+          "borderImageWidth": 100,
+          "borderImageHeight": 100,
+          "borderImageSize": "contain",
+          "content": "",
+          "fontColor": "rgba(255, 255, 255, 1)",
+          "fontSize": 12,
+          "letterSpacing": 0,
+          "fontWeight": false,
+          "fontFamily": "sans-serif",
+          "fontStyle": false,
+          "textAlign": "center",
+          "imgTranslateX": 0,
+          "imgTranslateY": 0,
+          "textTranslateX": 0,
+          "textTranslateY": 0,
+          "isTextShadow": false,
+          "textShadow": {
+            "color": "rgba(255, 255, 255, 1)",
+            "x": 0,
+            "y": 0,
+            "blur": 0,
+            "extend": 0
+          },
+          "opacity": 100
+        }
+      ],
+      "picStyle": {
+        "firstStyle": {
+          "translateX": 0,
+          "translateY": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "showFont": true
+        },
+        "secondStyle": {
+          "translateX": 120,
+          "translateY": 0,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "showFont": true
+        },
+        "thirdStyle": {
+          "translateX": 220,
+          "translateY": 0,
+          "scaleX": 0.4,
+          "scaleY": 0.4,
+          "showFont": true
+        }
+      }
+    }
+  },
+  "template": []
+}

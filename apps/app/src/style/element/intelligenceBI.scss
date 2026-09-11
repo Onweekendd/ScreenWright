@@ -1,0 +1,33 @@
+.intelligence-tooltip.is-dark {
+  //   background-color: rgba(76, 87, 98, 1) !important;
+  --el-text-color-primary: rgba(76, 87, 98, 1) !important;
+  --el-bg-color: #bcc9d4 !important;
+  padding: 5px 10px;
+  color: #bcc9d4;
+  .tooltip-button {
+    margin: 8px 0;
+    cursor: pointer;
+    &:hover {
+      color: #ffffff;
+    }
+  }
+  //   .popper__arrow::after {
+  //     border-bottom-color: rgba(76, 87, 98, 1) !important;
+  //   }
+  .upload-button {
+    height: fit-content;
+    background: transparent;
+    margin: 0 5px 0 0;
+    line-height: unset;
+    .el-upload--text > span {
+      color: #bcc9d4;
+      padding: 0;
+      &:hover {
+        color: #ffffff;
+      }
+    }
+    .iconfont-cloudupload {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "nodes": [
+    {
+      "id": "16754:234",
+      "name": "智算中心、赋能中心、创新中心",
+      "type": "TEXT",
+      "layout": "layout_c06300",
+      "text": "智算中心、赋能中心、创新中心",
+      "textStyle": "style_b719c2",
+      "characterStyleOverrides": {
+        "ranges": [{ "start": 5, "end": 9, "styleId": "1" }],
+        "styleTable": {
+          "1": {
+            "fills": [
+              {
+                "type": "SOLID",
+                "visible": true,
+                "opacity": 1,
+                "blendMode": "NORMAL",
+                "color": { "r": 0, "g": 0.4333333373069763, "b": 1 },
+                "boundVariables": {}
+              }
+            ],
+            "fontSize": 32
+          }
+        }
+      },
+      "fills": "fill_9e843e"
+    }
+  ],
+  "components": {},
+  "componentSets": {},
+  "globalVars": {
+    "styles": {
+      "layout_c06300": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 388, "height": 36 },
+        "absolutePosition": { "x": 0, "y": 0 }
+      },
+      "style_b719c2": {
+        "fontFamily": "ABeeZee",
+        "fontWeight": 400,
+        "fontSize": 26,
+        "lineHeight": "1.3777267749492939em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_9e843e": ["#031034"]
+    }
+  }
+}

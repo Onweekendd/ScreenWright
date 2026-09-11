@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "id": 20,
+    "name": "矩形树图",
+    "prop": "echarttreemap",
+    "componentName": "echart-treemap",
+    "first_level_menu": "图表",
+    "second_level_menu": "其他",
+    "thumbnail": "/img/recttree.20240514.png"
+  },
+  "config": {
+    "name": "矩形树图",
+    "title": "矩形树图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/recttree.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "name": "节点A",
+        "value": 50,
+        "children": [
+          {
+            "name": "节点A-1",
+            "value": 10
+          },
+          {
+            "name": "节点A-2",
+            "value": 10
+          },
+          {
+            "name": "节点A-3",
+            "value": 10
+          },
+          {
+            "name": "节点A-4",
+            "value": 10
+          },
+          {
+            "name": "节点A-5",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "name": "节点B",
+        "value": 40,
+        "children": [
+          {
+            "name": "节点B-1",
+            "value": 22
+          },
+          {
+            "name": "节点B-2",
+            "value": 18
+          },
+          {
+            "name": "节点B-3",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "name": "节点C",
+        "value": 36.5
+      },
+      {
+        "name": "节点D",
+        "value": 25.5
+      },
+      {
+        "name": "节点E",
+        "value": 20.8
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "children",
+        "map": "children",
+        "decription": "子项"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 720,
+      "height": 500,
+      "name": "echart-treemap",
+      "prop": "echarttreemap"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列1",
+        "系列2",
+        "系列3",
+        "系列4",
+        "系列5"
+      ],
+      "seriesTabsName": [
+        "节点A",
+        "节点B",
+        "节点C",
+        "节点D",
+        "节点E"
+      ],
+      "seriesColor": [
+        "rgba(0,150,254,1)",
+        "rgba(0,255,255,1)",
+        "rgba(104,229,174,1)",
+        "rgba(73, 204, 255, 1)",
+        "rgba(40, 43, 78, 1)"
+      ],
+      "seriesLabelShow": true,
+      "seriesLabelColor": "rgba(255,255,255,1)",
+      "seriesLabelFontFamily": "siayuan-normal",
+      "seriesLabelFontSize": 12,
+      "seriesLabelFontWeight": "normal",
+      "seriesLabelFontStyle": "normal",
+      "seriesBorderColor": "rgba(255,255,255,1)",
+      "seriesBorderWidth": 2,
+      "seriesChildBorderColor": "rgba(255,255,255,1)",
+      "seriesChildBorderWidth": 0.5
+    }
+  },
+  "template": [
+    {
+      "name": "节点A",
+      "value": 50,
+      "children": [
+        {
+          "name": "节点A-1",
+          "value": 10
+        },
+        {
+          "name": "节点A-2",
+          "value": 10
+        },
+        {
+          "name": "节点A-3",
+          "value": 10
+        },
+        {
+          "name": "节点A-4",
+          "value": 10
+        },
+        {
+          "name": "节点A-5",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "name": "节点B",
+      "value": 40,
+      "children": [
+        {
+          "name": "节点B-1",
+          "value": 22
+        },
+        {
+          "name": "节点B-2",
+          "value": 18
+        },
+        {
+          "name": "节点B-3",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "name": "节点C",
+      "value": 36.5
+    },
+    {
+      "name": "节点D",
+      "value": 25.5
+    },
+    {
+      "name": "节点E",
+      "value": 20.8
+    }
+  ]
+}

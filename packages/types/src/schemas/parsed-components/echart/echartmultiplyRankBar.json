@@ -1,0 +1,416 @@
+{
+  "meta": {
+    "id": 28,
+    "name": "总数排名图",
+    "prop": "echartmultiplyRankBar",
+    "componentName": "echart-multiplyRankBar",
+    "first_level_menu": "图表",
+    "second_level_menu": "项目",
+    "thumbnail": "/img/rankBar3.20240514.png"
+  },
+  "config": {
+    "name": "总数排名图",
+    "title": "总数排名图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/rankBar3.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "name": "范例1",
+        "value": 19
+      },
+      {
+        "seriesName": "系列二",
+        "name": "范例1",
+        "value": 22
+      },
+      {
+        "seriesName": "系列三",
+        "name": "范例1",
+        "value": 13
+      },
+      {
+        "seriesName": "系列四",
+        "name": "范例1",
+        "value": 41
+      },
+      {
+        "seriesName": "系列一",
+        "name": "范例2",
+        "value": 20
+      },
+      {
+        "seriesName": "系列二",
+        "name": "范例2",
+        "value": 23
+      },
+      {
+        "seriesName": "系列三",
+        "name": "范例2",
+        "value": 34
+      },
+      {
+        "seriesName": "系列四",
+        "name": "范例2",
+        "value": 12
+      },
+      {
+        "seriesName": "系列一",
+        "name": "范例3",
+        "value": 15
+      },
+      {
+        "seriesName": "系列二",
+        "name": "范例3",
+        "value": 17
+      },
+      {
+        "seriesName": "系列三",
+        "name": "范例3",
+        "value": 13
+      },
+      {
+        "seriesName": "系列四",
+        "name": "范例3",
+        "value": 31
+      },
+      {
+        "seriesName": "系列一",
+        "name": "范例4",
+        "value": 14
+      },
+      {
+        "seriesName": "系列二",
+        "name": "范例4",
+        "value": 17
+      },
+      {
+        "seriesName": "系列三",
+        "name": "范例4",
+        "value": 15
+      },
+      {
+        "seriesName": "系列四",
+        "name": "范例4",
+        "value": 13
+      },
+      {
+        "seriesName": "系列一",
+        "name": "范例5",
+        "value": 14
+      },
+      {
+        "seriesName": "系列二",
+        "name": "范例5",
+        "value": 17
+      },
+      {
+        "seriesName": "系列三",
+        "name": "范例5",
+        "value": 12
+      },
+      {
+        "seriesName": "系列四",
+        "name": "范例5",
+        "value": 6
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 420,
+      "height": 210,
+      "name": "echart-multiplyRankBar",
+      "prop": "echartmultiplyRankBar"
+    },
+    "option": {
+      "refresh": true,
+      "dataSeriesName": [
+        "系列一",
+        "系列二",
+        "系列三",
+        "系列四"
+      ],
+      "seriesName": [
+        "系列一",
+        "系列二",
+        "系列三",
+        "系列四"
+      ],
+      "seriesTabsName": [
+        {
+          "name": "系列1",
+          "value": "系列一"
+        },
+        {
+          "name": "系列2",
+          "value": "系列二"
+        },
+        {
+          "name": "系列3",
+          "value": "系列三"
+        },
+        {
+          "name": "系列4",
+          "value": "系列四"
+        }
+      ],
+      "seriesWidth": 18,
+      "intervalColor": "rgba(35,38,48,0.8)",
+      "gridLeft": 170,
+      "gridTop": 30,
+      "gridRight": 70,
+      "gridBottom": 0,
+      "legendShow": true,
+      "legendOrient": "horizontal",
+      "legendWidth": 800,
+      "legendHeight": 800,
+      "legendItemWidth": 20,
+      "legendItemHeight": 10,
+      "legendItemGap": 20,
+      "legendFontFamily": "siayuan-normal",
+      "legendFontSize": 12,
+      "legendColor": "rgba(255, 255, 255, 1)",
+      "legendFontStyle": "normal",
+      "legendFontWeight": "normal",
+      "legendTextLeftPadding": 0,
+      "legendSelectedMode": true,
+      "legendGrid": {
+        "top": 0,
+        "left": "center"
+      },
+      "legendOffsetX": 0,
+      "legendOffsetY": 0,
+      "valueShow": true,
+      "valueFontFamily": "siayuan-normal",
+      "valueFontSize": 12,
+      "valueColor": "rgba(255, 255, 255, 1)",
+      "valueFontStyle": "normal",
+      "valueFontWeight": "normal",
+      "valueOffSetX": 10,
+      "valueOffSetY": 0,
+      "nameFontFamily": "siayuan-normal",
+      "nameFontSize": 12,
+      "nameColor": "rgba(255, 255, 255, 1)",
+      "nameFontStyle": "normal",
+      "nameFontWeight": "normal",
+      "nameWidth": 100,
+      "nameLeftPadding": 320,
+      "dataLoop": false,
+      "dataLoopInterval": 5,
+      "dataLoopDisplayRows": 4,
+      "dataLoopRollNum": 1,
+      "seriesColor": [
+        {
+          "type": "linear-gradient",
+          "angle": "90",
+          "colors": [
+            {
+              "color": "rgba(0,120,255,0)",
+              "per": 0
+            },
+            {
+              "color": "rgba(0,120,255,1)",
+              "per": 100
+            }
+          ]
+        },
+        {
+          "type": "linear-gradient",
+          "angle": "90",
+          "colors": [
+            {
+              "color": "rgba(34,180,255,0)",
+              "per": 0
+            },
+            {
+              "color": "rgba(34,180,255,1)",
+              "per": 100
+            }
+          ]
+        },
+        {
+          "type": "linear-gradient",
+          "angle": "90",
+          "colors": [
+            {
+              "color": "rgba(40,255,247,0)",
+              "per": 0
+            },
+            {
+              "color": "rgba(40,255,247,1)",
+              "per": 100
+            }
+          ]
+        },
+        {
+          "type": "linear-gradient",
+          "angle": "90",
+          "colors": [
+            {
+              "color": "rgba(62,235,255,0)",
+              "per": 0
+            },
+            {
+              "color": "rgba(176,247,255,1)",
+              "per": 64
+            },
+            {
+              "color": "rgba(239,253,255,1)",
+              "per": 100
+            }
+          ]
+        }
+      ],
+      "seriesOpacity": [
+        100,
+        100,
+        100,
+        100
+      ]
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "name": "范例1",
+      "value": 19
+    },
+    {
+      "seriesName": "系列二",
+      "name": "范例1",
+      "value": 22
+    },
+    {
+      "seriesName": "系列三",
+      "name": "范例1",
+      "value": 13
+    },
+    {
+      "seriesName": "系列四",
+      "name": "范例1",
+      "value": 41
+    },
+    {
+      "seriesName": "系列一",
+      "name": "范例2",
+      "value": 20
+    },
+    {
+      "seriesName": "系列二",
+      "name": "范例2",
+      "value": 23
+    },
+    {
+      "seriesName": "系列三",
+      "name": "范例2",
+      "value": 34
+    },
+    {
+      "seriesName": "系列四",
+      "name": "范例2",
+      "value": 12
+    },
+    {
+      "seriesName": "系列一",
+      "name": "范例3",
+      "value": 15
+    },
+    {
+      "seriesName": "系列二",
+      "name": "范例3",
+      "value": 17
+    },
+    {
+      "seriesName": "系列三",
+      "name": "范例3",
+      "value": 13
+    },
+    {
+      "seriesName": "系列四",
+      "name": "范例3",
+      "value": 31
+    },
+    {
+      "seriesName": "系列一",
+      "name": "范例4",
+      "value": 14
+    },
+    {
+      "seriesName": "系列二",
+      "name": "范例4",
+      "value": 17
+    },
+    {
+      "seriesName": "系列三",
+      "name": "范例4",
+      "value": 15
+    },
+    {
+      "seriesName": "系列四",
+      "name": "范例4",
+      "value": 13
+    },
+    {
+      "seriesName": "系列一",
+      "name": "范例5",
+      "value": 14
+    },
+    {
+      "seriesName": "系列二",
+      "name": "范例5",
+      "value": 17
+    },
+    {
+      "seriesName": "系列三",
+      "name": "范例5",
+      "value": 12
+    },
+    {
+      "seriesName": "系列四",
+      "name": "范例5",
+      "value": 6
+    }
+  ]
+}

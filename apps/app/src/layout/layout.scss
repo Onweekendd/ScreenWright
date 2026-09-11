@@ -1,0 +1,122 @@
+@import "src/style/theme.scss";
+
+$global-font-color: $sw-text-strong;
+$global-bg-color: $sw-bg;
+$header-height: 60px;
+$layout-padding: 25px;
+$layout-bg-color: $sw-bg;
+.layout {
+  overflow: hidden;
+}
+.layout-container {
+  // 桌面端标题栏占位后由 .app-shell__body 提供高度；Web 端等同 100vh
+  height: 100%;
+  width: 100%;
+  font-family:
+    Source Han Sans CN-Normal,
+    Source Han Sans CN;
+  .layout-aside {
+    width: 300px !important;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    background: $sw-surface-2;
+    overflow: hidden !important;
+
+    // 设置页：二级树收起，只剩一级列宽度
+    &.is-narrow {
+      width: 100px !important;
+    }
+  }
+  .layout-mainbox {
+    overflow: hidden;
+    background-color: $sw-bg;
+  }
+  .layout-main {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    color: $global-font-color;
+    background-color: $sw-bg;
+    padding: 20px 0px 20px 20px;
+  }
+}
+// 全局
+.el-message-box__wrapper {
+  background: transparent !important;
+}
+.el-dialog.common-dialog {
+  border: 1px solid #3e4049;
+  width: 550px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff;
+  background: #232630;
+  .slot-title {
+    position: relative;
+    .model-title {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  &.view {
+    width: 60%;
+    min-width: 700px;
+    height: 70%;
+    position: relative;
+  }
+  .el-dialog__header,
+  .el-dialog__body,
+  .el-dialog__footer {
+    padding: 10px 20px;
+  }
+  .el-dialog__header {
+    border-bottom: 1px solid #3e4049;
+    button {
+      top: 5px;
+      & > i {
+        font-size: 24px;
+      }
+    }
+  }
+  .el-dialog__footer {
+    padding: 10px 40px 20px 19px;
+    .el-button {
+      color: #ffffff;
+      background-color: #3d404c;
+      border-color: #3d404c;
+      &.el-button--primary {
+        // background-color: #3e43f4;
+        border-color: #642cff;
+        background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      }
+    }
+  }
+  .el-radio,
+  .el-checkbox {
+    width: auto;
+  }
+  .el-select,
+  .el-input,
+  .el-textarea,
+  .el-input-number {
+    width: 100%;
+  }
+  .el-radio__inner {
+    background: transparent;
+  }
+  .el-radio__input.is-checked + .el-radio__label {
+    color: #ffffff;
+  }
+  .el-radio__input.is-checked .el-radio__inner {
+    border-color: #642cff;
+    background-color: transparent;
+  }
+  .el-radio__input.is-checked .el-radio__inner::after {
+    width: 8px;
+    height: 8px;
+    background-image: linear-gradient(180deg, #8b58e7, #642cff);
+  }
+}

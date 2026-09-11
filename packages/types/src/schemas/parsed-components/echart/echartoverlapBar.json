@@ -1,0 +1,312 @@
+{
+  "meta": {
+    "id": 32,
+    "name": "堆叠占比图",
+    "prop": "echartoverlapBar",
+    "componentName": "echart-overlapBar",
+    "first_level_menu": "图表",
+    "second_level_menu": "项目",
+    "thumbnail": "/img/overlapBar.8ea5f49e.png"
+  },
+  "config": {
+    "name": "堆叠占比图",
+    "title": "堆叠占比图",
+    "display": true,
+    "icon": "icon-line",
+    "img": "/img/overlapBar.8ea5f49e.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "data": [
+      {
+        "seriesName": "系列一",
+        "name": "1小时内等时圈",
+        "value": 7.31
+      },
+      {
+        "seriesName": "系列一",
+        "name": "2小时内等时圈",
+        "value": 34.2
+      },
+      {
+        "seriesName": "系列一",
+        "name": "3小时内等时圈",
+        "value": 65.02
+      },
+      {
+        "seriesName": "系列一",
+        "name": "4小时内等时圈",
+        "value": 87.85
+      },
+      {
+        "seriesName": "系列一",
+        "name": "5小时内等时圈",
+        "value": 98.71
+      },
+      {
+        "seriesName": "系列一",
+        "name": "6小时内等时圈",
+        "value": 99.96
+      },
+      {
+        "seriesName": "系列一",
+        "name": "7小时内等时圈",
+        "value": 100
+      },
+      {
+        "seriesName": "系列二",
+        "name": "1小时内等时圈",
+        "value": 12.03
+      },
+      {
+        "seriesName": "系列二",
+        "name": "2小时内等时圈",
+        "value": 51.94
+      },
+      {
+        "seriesName": "系列二",
+        "name": "3小时内等时圈",
+        "value": 90.32
+      },
+      {
+        "seriesName": "系列二",
+        "name": "4小时内等时圈",
+        "value": 99.65
+      },
+      {
+        "seriesName": "系列二",
+        "name": "5小时内等时圈",
+        "value": 99.94
+      },
+      {
+        "seriesName": "系列二",
+        "name": "6小时内等时圈",
+        "value": 99.99
+      },
+      {
+        "seriesName": "系列二",
+        "name": "7小时内等时圈",
+        "value": 100
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "seriesName",
+        "map": "seriesName",
+        "decription": "系列"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "url": "./bar",
+    "time": 30,
+    "component": {
+      "width": 650,
+      "height": 210,
+      "name": "echart-overlapBar",
+      "prop": "echartoverlapBar"
+    },
+    "option": {
+      "refresh": true,
+      "seriesWidth": [
+        8,
+        8
+      ],
+      "intervalColor": "rgba(35,38,48,0.8)",
+      "gridLeft": 120,
+      "gridTop": 0,
+      "gridRight": 135,
+      "gridBottom": 0,
+      "splitLineFontSize": 12,
+      "splitLineColor": "rgb(255,255,255,0.5)",
+      "valueShow": [
+        true,
+        true
+      ],
+      "valueFontFamily": [
+        "siayuan-normal",
+        "siayuan-normal"
+      ],
+      "valueFontSize": [
+        12,
+        12
+      ],
+      "valueColor": [
+        "rgba(56,248,211,1)",
+        "rgba(49,201,233,1)"
+      ],
+      "valueFontStyle": [
+        "normal",
+        "normal"
+      ],
+      "valueFontWeight": [
+        "normal",
+        "normal"
+      ],
+      "valueOffSetX": [
+        458,
+        518
+      ],
+      "valueOffSetY": [
+        0,
+        0
+      ],
+      "seriesTabsName": [
+        "系列1",
+        "系列2"
+      ],
+      "nameFontFamily": "siayuan-normal",
+      "nameFontSize": 12,
+      "nameColor": "rgba(255, 255, 255,0.8)",
+      "nameFontStyle": "normal",
+      "nameFontWeight": "bold",
+      "barBodyOpacity": [
+        100,
+        100
+      ],
+      "barBorderColor": "rgba(0, 0, 0, 0)",
+      "borderWidth": 1,
+      "barBodyColor": [
+        {
+          "type": "linear-gradient",
+          "angle": "90",
+          "colors": [
+            {
+              "color": "rgba(56,248,211,0)",
+              "per": 0
+            },
+            {
+              "color": "rgba(56,248,211,1)",
+              "per": 100
+            }
+          ]
+        },
+        {
+          "type": "linear-gradient",
+          "angle": "270",
+          "colors": [
+            {
+              "color": "rgba(0,162,255,1)",
+              "per": 0
+            },
+            {
+              "color": "rgba(0,162,255,0)",
+              "per": 100
+            }
+          ]
+        }
+      ],
+      "nameWidth": 100,
+      "nameLeftPadding": 20,
+      "dataLoop": false,
+      "dataLoopInterval": 5,
+      "dataLoopDisplayRows": 4,
+      "dataLoopRollNum": 1,
+      "xAxisSplitLineShow": true,
+      "xAxisSplitLineColor": "rgba(255,255,255,.20)",
+      "xAxisSplitLineType": "dashed",
+      "xAxisSplitLineWidth": 1
+    }
+  },
+  "template": [
+    {
+      "seriesName": "系列一",
+      "name": "1小时内等时圈",
+      "value": 7.31
+    },
+    {
+      "seriesName": "系列一",
+      "name": "2小时内等时圈",
+      "value": 34.2
+    },
+    {
+      "seriesName": "系列一",
+      "name": "3小时内等时圈",
+      "value": 65.02
+    },
+    {
+      "seriesName": "系列一",
+      "name": "4小时内等时圈",
+      "value": 87.85
+    },
+    {
+      "seriesName": "系列一",
+      "name": "5小时内等时圈",
+      "value": 98.71
+    },
+    {
+      "seriesName": "系列一",
+      "name": "6小时内等时圈",
+      "value": 99.96
+    },
+    {
+      "seriesName": "系列一",
+      "name": "7小时内等时圈",
+      "value": 100
+    },
+    {
+      "seriesName": "系列二",
+      "name": "1小时内等时圈",
+      "value": 12.03
+    },
+    {
+      "seriesName": "系列二",
+      "name": "2小时内等时圈",
+      "value": 51.94
+    },
+    {
+      "seriesName": "系列二",
+      "name": "3小时内等时圈",
+      "value": 90.32
+    },
+    {
+      "seriesName": "系列二",
+      "name": "4小时内等时圈",
+      "value": 99.65
+    },
+    {
+      "seriesName": "系列二",
+      "name": "5小时内等时圈",
+      "value": 99.94
+    },
+    {
+      "seriesName": "系列二",
+      "name": "6小时内等时圈",
+      "value": 99.99
+    },
+    {
+      "seriesName": "系列二",
+      "name": "7小时内等时圈",
+      "value": 100
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "id": 65,
+    "name": "超链接",
+    "prop": "swtext",
+    "componentName": "sw-text",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/link.20240514.png"
+  },
+  "config": {
+    "title": "超链接",
+    "name": "超链接",
+    "display": true,
+    "icon": "icon-link",
+    "img": "/img/link.20240514.png",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "value": "超链接"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "component": {
+      "width": 240,
+      "height": 50,
+      "name": "sw-text",
+      "prop": "swtext"
+    },
+    "option": {
+      "type": "link",
+      "link": true,
+      "linkHref": "https://example.com",
+      "linkTarget": "_self",
+      "writingMode": "horizontal-tb",
+      "fontFamily": "siayuan-normal",
+      "fontSize": 32,
+      "color": "rgba(255, 255, 255, 1)",
+      "fontWeight": "normal",
+      "fontStyle": "normal",
+      "lineHeight": 40,
+      "selectedTextType": "normal",
+      "selectedTextColor": "linear-gradient(0.0deg,rgba(10,17,219,1) 0.0,rgba(137,181,252,1) 100.0%)",
+      "selectedTextOpacity": 100,
+      "textAlign": "center",
+      "textAlignVertical": "center",
+      "textOrientation": "mixed",
+      "split": 0,
+      "backgroundColor": "rgba(255, 255, 255, 0)",
+      "shadowShow": false,
+      "shadowColor": "rgba(255, 255, 255, 1)",
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowFuzzy": 8,
+      "shadowExtension": 0,
+      "pointerEvents": true
+    }
+  },
+  "template": [
+    {
+      "value": "超链接"
+    }
+  ]
+}

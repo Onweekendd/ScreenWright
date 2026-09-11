@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "id": 102,
+    "name": "终端交互",
+    "prop": "terminal-control",
+    "componentName": "terminal-control",
+    "first_level_menu": "面板",
+    "second_level_menu": "",
+    "thumbnail": "/img/terminalControl.20240418.png"
+  },
+  "config": {
+    "interactive": true,
+    "title": "终端交互",
+    "name": "终端交互",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/terminalControl.20240418.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data;\r\n}",
+    "dataFilterArr": {},
+    "eventBus": [],
+    "dataType": 0,
+    "data": [],
+    "component": {
+      "prop": "terminal-control",
+      "name": "terminal-control",
+      "width": 768,
+      "height": 1024
+    },
+    "panelStatus": [],
+    "panelData": [],
+    "unitPavenType": "",
+    "option": {
+      "display": false,
+      "enableOpen": true,
+      "enableScroll": false,
+      "hiddenLoading": false
+    },
+    "left": 0,
+    "top": 0,
+    "showSubComponent": false
+  },
+  "template": []
+}

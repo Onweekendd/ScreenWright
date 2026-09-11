@@ -1,0 +1,19 @@
+@import "src/style/mixins/element.scss";
+.component-search {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+.component-search-dialog {
+  .el-dialog {
+    padding: 10px !important;
+    background-color: #232630 !important;
+  }
+  .component-search-header {
+    height: 56px;
+  }
+  :deep(.el-input) {
+    display: none !important;
+  }
+}

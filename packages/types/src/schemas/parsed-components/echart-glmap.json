@@ -1,0 +1,413 @@
+{
+  "meta": {
+    "id": 148,
+    "name": "中国2.5D地图",
+    "prop": "echart-glmap",
+    "componentName": "echart-glmap",
+    "first_level_menu": "地图",
+    "second_level_menu": "",
+    "thumbnail": "/img/commonMap.6d3dd447.png"
+  },
+  "config": {
+    "title": "中国2.5D地图",
+    "name": "中国2.5D地图",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/commonMap.6d3dd447.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "./scatter",
+    "data": [
+      {
+        "name": "中华人民共和国",
+        "adcode": "100000"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "adcode",
+        "map": "adcode",
+        "decription": "区域代码"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 1920,
+      "height": 1080,
+      "name": "echart-glmap",
+      "prop": "echart-glmap"
+    },
+    "presetChild": [
+      {
+        "name": "飞线",
+        "title": "飞线",
+        "isEdit": false,
+        "showOperation": false,
+        "type": "mapLines",
+        "listenArgs": [],
+        "show": true,
+        "dataMethod": "get",
+        "dataType": 0,
+        "dataSource": {},
+        "requestHeader": {},
+        "requestBody": {},
+        "crossOrigin": false,
+        "needCookie": false,
+        "autoRefresh": false,
+        "dataQuery": "",
+        "sql": "SELECT * FROM",
+        "data": [
+          {
+            "name": "上海-北京",
+            "coords": [
+              [
+                121.4692688,
+                31.2381763
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "广东-北京",
+            "coords": [
+              [
+                113.2614288,
+                23.1189117
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "台湾-北京",
+            "coords": [
+              [
+                120.9581316,
+                23.8516062
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "香港-北京",
+            "coords": [
+              [
+                114.139452,
+                22.391577
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "澳门-北京",
+            "coords": [
+              [
+                113.5678411,
+                22.167654
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          }
+        ],
+        "dataRemark": [
+          {
+            "key": "name",
+            "map": "name",
+            "decription": "名称"
+          },
+          {
+            "key": "coords",
+            "map": "coords",
+            "decription": "经纬度"
+          }
+        ],
+        "component": {
+          "name": "echart-mapLines",
+          "prop": "echartmapLines"
+        },
+        "option": {
+          "effectShow": true,
+          "effectType": "constantSpeed",
+          "period": 4,
+          "constantSpeed": 80,
+          "delay": 0,
+          "effectSymbol": "pin",
+          "effectSymbolImage": "",
+          "effectSymbolWidth": 2,
+          "effectSymbolHeight": 20,
+          "effectColor": {
+            "type": "linear-gradient",
+            "angle": "0",
+            "colors": [
+              {
+                "color": "rgba(253, 143, 209, 1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(255, 255, 255, 1)",
+                "per": 100
+              }
+            ]
+          },
+          "effectOpacity": 100,
+          "trailLength": 0.86,
+          "loop": true,
+          "lineColor": "rgba(88, 179, 204, 1)",
+          "lineOpacity": 50,
+          "lineWidth": 0,
+          "lineCurveness": 0.1,
+          "lineLabelShow": false,
+          "lineLabelPosition": "end",
+          "lineLabelColor": "rgba(255,255,255,1)",
+          "lineLabelFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "lineLabelFontSize": 18,
+          "lineLabelFontWeight": "bolder",
+          "lineLabelFontStyle": "normal"
+        }
+      },
+      {
+        "name": "散点",
+        "title": "散点",
+        "isEdit": false,
+        "showOperation": false,
+        "type": "mapGlScatter",
+        "listenArgs": [],
+        "show": true,
+        "dataMethod": "get",
+        "dataType": 0,
+        "dataSource": {},
+        "requestHeader": {},
+        "requestBody": {},
+        "crossOrigin": false,
+        "needCookie": false,
+        "autoRefresh": false,
+        "dataQuery": "",
+        "sql": "SELECT * FROM",
+        "data": [
+          {
+            "name": "北京",
+            "value": [
+              "116.3979471",
+              "39.9081726",
+              0
+            ]
+          },
+          {
+            "name": "上海",
+            "value": [
+              "121.4692688",
+              "31.2381763",
+              0
+            ]
+          },
+          {
+            "name": "广东",
+            "value": [
+              "113.2614288",
+              "23.1189117",
+              0
+            ]
+          },
+          {
+            "name": "台湾",
+            "value": [
+              "120.9581316",
+              "23.8516062",
+              0
+            ]
+          },
+          {
+            "name": "香港",
+            "value": [
+              "114.139452",
+              "22.391577",
+              0
+            ]
+          }
+        ],
+        "dataRemark": [
+          {
+            "key": "name",
+            "map": "name",
+            "decription": "类目"
+          },
+          {
+            "key": "value",
+            "map": "value",
+            "decription": "值"
+          }
+        ],
+        "component": {
+          "width": 850,
+          "height": 450,
+          "name": "echart-mapGlScatter",
+          "prop": "echartmapGlScatter"
+        },
+        "option": {
+          "refresh": true,
+          "dataSeriesName": [
+            "系列一",
+            "系列二"
+          ],
+          "seriesName": [
+            "系列一",
+            "系列二"
+          ],
+          "seriesTabsName": [
+            {
+              "name": "系列1",
+              "value": "系列一"
+            },
+            {
+              "name": "系列2",
+              "value": "系列二"
+            }
+          ],
+          "gridLeft": 50,
+          "gridTop": 0,
+          "gridRight": 50,
+          "gridBottom": 0,
+          "symbolSize": 15,
+          "borderWidth": 2,
+          "borderColor": "rgba(59, 147, 203, 0.23)",
+          "rippleEffectNumber": 3,
+          "rippleEffectPeriod": 5,
+          "rippleEffectScale": 1.5,
+          "rippleEffectBrushType": "stroke",
+          "insideColor": "rgba(255,255,255,1)",
+          "outsideColor": "rgba(255,255,255,1)",
+          "showEffectOn": "render",
+          "seriesLabelNameShow": false,
+          "seriesLabelNameFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesLabelNameFontSize": 18,
+          "seriesLabelNameColor": "rgba(255, 255, 255, 1)",
+          "seriesLabelNameFontStyle": "normal",
+          "seriesLabelNameFontWeight": "normal",
+          "seriesLabelValueShow": false,
+          "seriesLabelValueFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesLabelValueFontSize": 18,
+          "seriesLabelValueColor": "rgba(255, 255, 255, 1)",
+          "seriesLabelValueFontStyle": "normal",
+          "seriesLabelValueFontWeight": "normal"
+        }
+      }
+    ],
+    "unitPavenType": "",
+    "option": {
+      "adcode": {
+        "label": "中华人民共和国",
+        "value": "100000"
+      },
+      "fillType": "picture",
+      "areaColor": "rgba(5, 87, 255, 1)",
+      "activeAreaColor": "rgba(181, 222, 255, 1)",
+      "picture": "http://127.0.0.1:60034/version-test/resource/35/01730341-25dd-4380-88cf-27c0c5df4a19.png",
+      "activePicture": "",
+      "borderWidth": 1,
+      "borderColor": "rgba(17, 164, 255, 1)",
+      "activeBorderColor": "#ffffff",
+      "textStyle": {
+        "fontFamily": "sans-serif",
+        "fontSize": 3.5,
+        "color": "rgba(255, 255, 255, 1)",
+        "fontStyle": "normal",
+        "fontWeight": "normal"
+      },
+      "sceneControl": {
+        "regionHeight": 100,
+        "autoRotate": false,
+        "rotateSpeed": 1,
+        "initialRotationAngle": 0,
+        "mapRotationAngle": 0,
+        "bloom": {
+          "enable": false,
+          "strength": 0.9,
+          "radius": 0.25,
+          "threshold": 0.65
+        }
+      },
+      "backgroundColor": "#0a1122",
+      "fog": false,
+      "fogColor": "#000",
+      "camera": {
+        "distance": 30,
+        "verticalTiltAngle": 20,
+        "horizontalRotationAngle": 0
+      },
+      "light": {
+        "ambientIntensity": 5,
+        "directionalIntensity": 10,
+        "directionalPosition": [
+          5,
+          10,
+          5
+        ],
+        "ambientColor": "rgba(242, 247, 250, 1)",
+        "directionalColor": "rgba(74, 112, 144, 1)"
+      },
+      "mouseControl": {
+        "zoomSpeed": 25,
+        "panSpeed": 10,
+        "rotateSpeed": 25
+      },
+      "hoverLift": {
+        "height": 1,
+        "duration": 300,
+        "hoverLiftHeight": 3
+      },
+      "geoLabelShow": false,
+      "maxDrillDownLevel": 2,
+      "autoDrillDown": true,
+      "borderAreaColor": "rgba(33, 138, 208, 1)",
+      "sideGlowStrength": 1.2,
+      "normalMapIntensity": 1,
+      "sideGlowColor": "rgba(56, 86, 145, 1)"
+    }
+  },
+  "template": {
+    "name": "中华人民共和国",
+    "adcode": "100000"
+  }
+}

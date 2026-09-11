@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "id": 128,
+    "name": "签名板",
+    "prop": "sw-signaturePad",
+    "componentName": "sw-signaturePad",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "签名板",
+    "name": "签名板",
+    "display": true,
+    "icon": "icon-video",
+    "img": "/img/ft-particles.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "time": 30,
+    "dataType": 0,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "data": [
+      {
+        "penWidth": 10
+      }
+    ],
+    "dataRemark": [],
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 1920,
+      "height": 1080,
+      "name": "sw-signaturePad",
+      "prop": "sw-signaturePad"
+    },
+    "option": {
+      "exportType": "systemInterface",
+      "penColor": "#642cff",
+      "dotSize": "8",
+      "minWidth": 3,
+      "velocityFilterWeight": 0.2,
+      "minDistance": 5,
+      "backgroundColor": "rgba(0,0,0,0)",
+      "throttle": 10,
+      "actionControls": {
+        "export": true,
+        "clear": true,
+        "undo": true,
+        "redo": true
+      },
+      "configControls": {
+        "penColor": true,
+        "backgroundColor": true,
+        "lineWidth": true
+      },
+      "exportConfig": {
+        "apiUrl": "",
+        "method": "POST",
+        "body": [],
+        "headers": []
+      }
+    }
+  },
+  "template": []
+}

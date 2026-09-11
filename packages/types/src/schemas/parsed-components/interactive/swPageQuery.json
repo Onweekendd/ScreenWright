@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "id": 55,
+    "name": "分页",
+    "prop": "swPageQuery",
+    "componentName": "sw-pageQuery",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/pageQuery.e8b5f7f6.gif"
+  },
+  "config": {
+    "title": "分页",
+    "name": "分页",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/pageQuery.51ab4e39.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 520,
+      "height": 35,
+      "name": "sw-pageQuery",
+      "prop": "swPageQuery"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "dataRemark": [
+      {
+        "key": "pageIndex",
+        "map": "pageIndex",
+        "decription": "当前页码"
+      },
+      {
+        "key": "pageTotal",
+        "map": "pageTotal",
+        "decription": "总条数"
+      },
+      {
+        "key": "pageSize",
+        "map": "pageSize",
+        "decription": "每页条数"
+      }
+    ],
+    "data": [
+      {
+        "pageIndex": 1,
+        "pageTotal": 1000,
+        "pageSize": 10
+      }
+    ],
+    "option": {
+      "showJumper": true,
+      "pageSize": 10,
+      "textAlign": "center",
+      "boxWidth": 30,
+      "boxHeight": 30,
+      "borderRadius": 0,
+      "margin": 3,
+      "defaultFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "defaultFontSize": 12,
+      "defaultColor": "rgba(179,205,224,1)",
+      "defaultFontStyle": "normal",
+      "defaultFontWeight": "normal",
+      "defaultLetterSpacing": 0,
+      "defaultLineHeight": 16,
+      "defaultBackgroundType": "color",
+      "defaultBackgroundColor": "rgba(144,172,201,0.15)",
+      "defaultBackgroundColorOpacity": 100,
+      "defaultBackgroundImageType": "100% 100%",
+      "defaultBackgroundImage": "",
+      "defaultBorderWidth": 1,
+      "defaultBorderColor": "rgba(144, 171, 201, 0.45)",
+      "hoverFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "hoverFontSize": 12,
+      "hoverColor": "rgba(230,247,255,1)",
+      "hoverFontStyle": "normal",
+      "hoverFontWeight": "normal",
+      "hoverLetterSpacing": 0,
+      "hoverLineHeight": 16,
+      "hoverBackgroundType": "color",
+      "hoverBackgroundColor": "rgba(19,98,184,1)",
+      "hoverBackgroundColorOpacity": 100,
+      "hoverBackgroundImageType": "100% 100%",
+      "hoverBackgroundImage": "",
+      "hoverBorderWidth": 1,
+      "hoverBorderColor": "rgba(125, 220, 255, 1)",
+      "checkedFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "checkedFontSize": 12,
+      "checkedColor": "rgba(255,255,255,1)",
+      "checkedFontStyle": "normal",
+      "checkedFontWeight": "normal",
+      "checkedLetterSpacing": 0,
+      "checkedLineHeight": 16,
+      "checkedBackgroundType": "color",
+      "checkedBackgroundColor": "rgba(144,172,201,1)",
+      "checkedBackgroundColorOpacity": 100,
+      "checkedBackgroundImageType": "100% 100%",
+      "checkedBackgroundImage": "",
+      "checkedBorderWidth": 1,
+      "checkedBorderColor": "rgba(160, 169, 184, 0.3)"
+    }
+  },
+  "template": [
+    {
+      "pageIndex": 1,
+      "pageTotal": 1000,
+      "pageSize": 10
+    }
+  ]
+}

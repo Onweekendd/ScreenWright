@@ -1,0 +1,24 @@
+.upload-button {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  background: #3c3f4c;
+  border-radius: 50px;
+  border: none;
+  padding: 0;
+  margin: 0 0 0 10px;
+
+  .sw-upload {
+    padding: 0 10px;
+  }
+  .el-upload > span {
+    color: #bfbfbf;
+    padding: 0 10px;
+  }
+  &.not-allowed {
+    cursor: not-allowed !important;
+    & > div {
+      pointer-events: none;
+    }
+  }
+}

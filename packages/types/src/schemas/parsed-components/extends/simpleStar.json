@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "id": 95,
+    "name": "闪点组件",
+    "prop": "simpleStar",
+    "componentName": "simpleStar",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/simpleStar.79f7d130.gif"
+  },
+  "config": {
+    "title": "闪点组件",
+    "name": "闪点组件",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/simpleStar.79f7d130.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 300,
+      "height": 300,
+      "name": "simpleStar",
+      "prop": "simpleStar"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [],
+    "dataRemark": [],
+    "unitPavenType": "",
+    "option": {
+      "color": "rgba(28,207,238,1)",
+      "dotNum": 40,
+      "radio": 10
+    }
+  },
+  "template": []
+}

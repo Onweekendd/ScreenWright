@@ -1,0 +1,232 @@
+{
+  "meta": {
+    "id": 147,
+    "name": "3D圆形指标v2",
+    "prop": "ringIndicator3dNew",
+    "componentName": "ringIndicator3dNew",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/ringIndicator3d.fc67abb8.gif"
+  },
+  "config": {
+    "title": "3D圆形指标v2",
+    "name": "3D圆形指标v2",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/ringIndicator3d.fc67abb8.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "",
+    "data": [
+      {
+        "name": "产品-001",
+        "value": 3209
+      },
+      {
+        "name": "产品-002",
+        "value": 4465
+      },
+      {
+        "name": "产品-003",
+        "value": 876
+      },
+      {
+        "name": "产品-004",
+        "value": 312
+      },
+      {
+        "name": "产品-005",
+        "value": 576
+      },
+      {
+        "name": "产品-006",
+        "value": 842
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "名称"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 1000,
+      "height": 600,
+      "name": "ringIndicator3dNew",
+      "prop": "ringIndicator3dNew"
+    },
+    "option": {
+      "globalConfig": {
+        "cameraPositionX": 100,
+        "cameraPositionY": 360,
+        "cameraPositionZ": 1100,
+        "roateRadius": 700,
+        "transitionTime": 1,
+        "hoverPause": true,
+        "autoPlay": true,
+        "intervalTime": 1,
+        "rotateDirection": 1,
+        "perspective": 1000,
+        "cameraRotateX": 0,
+        "cameraRotateY": 0,
+        "cameraRotateZ": 0
+      },
+      "placard": {
+        "defaultObj": {
+          "opacity": 100,
+          "showNum": true,
+          "showNumUnit": true,
+          "showName": true,
+          "nameOffsetLeft": 0,
+          "nameOffsetTop": 50,
+          "nameFontWeight": "bolder",
+          "nameFontStyle": "normal",
+          "nameFontSize": 24,
+          "nameLetterSpacing": 2,
+          "nameLineHeight": 40,
+          "nameColor": "rgba(255,255,255,1)",
+          "nameFontFamily": "siayuan-normal",
+          "placardImg": "version-test/assets/defaultImg/ringIndicator3dDefault.png",
+          "placardOffsetWidth": 240,
+          "placardOffsetHeight": 240,
+          "iconList": [
+            {
+              "tabsName": "图标1",
+              "name": "",
+              "img": "version-test/assets/newSystemAssets/圆/圆08.png",
+              "offsetWidth": 80,
+              "offsetHeight": 80,
+              "offsetLeft": 0,
+              "offsetTop": 0
+            }
+          ],
+          "numList": [
+            {
+              "Mapping": "value",
+              "tabsName": "数字1",
+              "numFontFamily": "siayuan-normal",
+              "numColor": "rgba(88,176,251,1)",
+              "numFontSize": 50,
+              "numFontWeight": "bolder",
+              "numFontStyle": "normal",
+              "numLineHeight": 70,
+              "numLetterSpacing": 0,
+              "numOffsetLeft": 0,
+              "numOffsetTop": 0,
+              "numUnitText": "件",
+              "numUnitFontFamily": "siayuan-normal",
+              "numUnitFontSize": 24,
+              "numUnitFontWeight": "bolder",
+              "numUnitFontStyle": "normal",
+              "numUnitLetterSpacing": 0,
+              "numUnitLineHeight": 30,
+              "numUnitOffsetLeft": 0,
+              "numUnitOffsetTop": 0,
+              "numUnitColor": "rgba(88,176,251,1)"
+            }
+          ]
+        },
+        "selectObj": {
+          "opacity": 100,
+          "showNum": true,
+          "showNumUnit": true,
+          "showName": true,
+          "nameColor": "rgba(255, 255, 255, 1)",
+          "nameFontSize": 24,
+          "nameLetterSpacing": 2,
+          "nameLineHeight": 40,
+          "nameFontFamily": "siayuan-normal",
+          "nameFontWeight": "bolder",
+          "nameFontStyle": "normal",
+          "nameOffsetLeft": 0,
+          "nameOffsetTop": 140,
+          "placardImg": "version-test/assets/defaultImg/ringIndicator3dActive.png",
+          "placardOffsetWidth": 240,
+          "placardOffsetHeight": 240,
+          "iconList": [
+            {
+              "tabsName": "图标1",
+              "name": "产品-001",
+              "img": "version-test/assets/newSystemAssets/圆/圆12.png",
+              "offsetWidth": 80,
+              "offsetHeight": 80,
+              "offsetLeft": 0,
+              "offsetTop": 0
+            },
+            {
+              "tabsName": "图标2",
+              "name": "",
+              "img": "version-test/assets/newSystemAssets/圆/圆27.png",
+              "offsetWidth": 80,
+              "offsetHeight": 80,
+              "offsetLeft": 0,
+              "offsetTop": 0
+            }
+          ],
+          "numList": [
+            {
+              "Mapping": "value",
+              "tabsName": "数字1",
+              "numFontFamily": "siayuan-normal",
+              "numColor": "rgba(0,237,255,1)",
+              "numFontSize": 60,
+              "numFontWeight": "bolder",
+              "numFontStyle": "normal",
+              "numLineHeight": 70,
+              "numLetterSpacing": 0,
+              "numOffsetLeft": 0,
+              "numOffsetTop": 0,
+              "numUnitText": "件",
+              "numUnitFontFamily": "siayuan-normal",
+              "numUnitFontSize": 28,
+              "numUnitFontWeight": "bolder",
+              "numUnitFontStyle": "normal",
+              "numUnitLetterSpacing": 0,
+              "numUnitLineHeight": 30,
+              "numUnitOffsetLeft": 0,
+              "numUnitOffsetTop": 0,
+              "numUnitColor": "rgba(0,237,255,1)"
+            }
+          ]
+        }
+      },
+      "refresh": false
+    },
+    "left": 0,
+    "top": 0,
+    "showSubComponent": false,
+    "minioArr": [],
+    "parentDynamicPanelId": []
+  },
+  "template": []
+}

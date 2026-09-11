@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "id": 153,
+    "name": "旋转组件",
+    "prop": "sw-rotate",
+    "componentName": "sw-rotate",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "旋转组件",
+    "name": "旋转组件",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/default.1026.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "left": 0,
+    "top": 0,
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 280,
+      "height": 330,
+      "name": "sw-rotate",
+      "prop": "sw-rotate"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [],
+    "dataRemark": [],
+    "option": {
+      "frontBgImageUrl": "version-test/assets/defaultImg/default.png",
+      "backBgImageUrl": "version-test/assets/defaultImg/default.png",
+      "direction": "leftTop",
+      "relate": true,
+      "backBgImageUrlSizeWidth": 696,
+      "backBgImageUrlSizeHight": 931,
+      "rotateOpenTime": 1,
+      "rotateOpenTiming": "ease-in",
+      "openTime": 0.5,
+      "openTiming": "ease-in",
+      "rotateBackTime": 1,
+      "rotateBackTiming": "ease-in",
+      "hideTime": 0.5,
+      "hideTiming": "ease-in"
+    },
+    "verticalConst": "Top",
+    "horizontalConst": "Left"
+  },
+  "template": []
+}

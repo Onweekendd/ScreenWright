@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "id": 101,
+    "name": "全屏切换",
+    "prop": "fullScreenSwitch",
+    "componentName": "fullScreenSwitch",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/fullScreenSwitch.35df5a53.png"
+  },
+  "config": {
+    "title": "全屏切换",
+    "name": "全屏切换",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/fullScreenSwitch.35df5a53.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 100,
+      "height": 100,
+      "name": "fullScreenSwitch",
+      "prop": "fullScreenSwitch"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "data": [],
+    "dataRemark": [],
+    "option": {
+      "fullScreenImg": "version-test/assets/defaultImg/quanpingsuoxiao.png",
+      "unFullScreenImg": "version-test/assets/defaultImg/quanpingxianshi.png"
+    }
+  },
+  "template": []
+}

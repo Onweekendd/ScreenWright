@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "id": 79,
+    "name": "数据容器",
+    "prop": "sw-dataContainer",
+    "componentName": "sw-dataContainer",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/dataContainer.png"
+  },
+  "config": {
+    "title": "数据容器",
+    "name": "数据容器",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/dataContainer.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 400,
+      "height": 200,
+      "name": "sw-dataContainer",
+      "prop": "sw-dataContainer"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "websocketUrl": "",
+    "isWebsocket": true,
+    "data": [
+      {
+        "text": "数据容器"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "描述"
+      }
+    ],
+    "option": {
+      "text": "",
+      "fontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "fontSize": 32,
+      "color": "rgba(255, 255, 255, 1)",
+      "fontStyle": "normal",
+      "fontWeight": "normal",
+      "backgroundColor": "rgba(0, 0, 0, 0)"
+    }
+  },
+  "template": {
+    "text": "数据容器"
+  }
+}

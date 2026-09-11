@@ -1,0 +1,211 @@
+@charset "utf-8";
+/**
+ * 弹性布局，子元素排列在同一水平上
+ */
+
+@mixin flex() {
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@mixin flex-column() {
+  flex-direction: column !important;
+}
+@mixin flex-row() {
+  flex-direction: row !important;
+}
+
+@mixin flex-wrap() {
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+}
+
+@mixin box-sizing() {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+/*
+ * ------------------------------------定位------------------------------------
+ */
+@mixin flex-center() {
+  align-items: center;
+  justify-content: center;
+}
+
+// 水平定位
+@mixin flex-align-start {
+  align-items: start !important;
+}
+
+@mixin flex-align-center {
+  align-items: center;
+}
+
+@mixin flex-align-end {
+  align-items: flex-end;
+}
+
+@mixin flex-align-around {
+  align-content: space-around;
+}
+
+@mixin flex-align-between {
+  align-content: space-between;
+}
+
+// 垂直定位
+@mixin flex-justify-start() {
+  justify-content: start !important;
+}
+
+@mixin flex-justify-center() {
+  justify-content: center;
+}
+
+@mixin flex-justify-end() {
+  justify-content: flex-end;
+}
+
+@mixin flex-justify-around() {
+  justify-content: space-around;
+}
+
+@mixin flex-justify-evenly() {
+  justify-content: space-evenly;
+}
+
+@mixin flex-justify-between() {
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+@mixin flex-justify-start() {
+  justify-content: flex-start;
+}
+
+@mixin flex-absolute() {
+  position: absolute;
+  top: 21%;
+  left: 36%;
+  z-index: 200;
+  width: 105px;
+  height: 20px;
+  display: flex;
+}
+@mixin inline-label {
+  display: inline-block;
+  padding: 2px 3px;
+  color: white;
+
+  font-size: 12px;
+  margin-left: 5px;
+  border-radius: 3px;
+}
+
+.flex {
+  @include flex();
+}
+
+// 垂直排版
+.flex-column {
+  @include flex-column();
+}
+
+// 横向默认排版
+.flex-row {
+  @include flex-row();
+}
+
+// 换行
+.flex-wrap {
+  @include flex-wrap();
+}
+
+// 居中
+.flex-center {
+  @include flex-center();
+}
+
+// 水平定位
+.flex-align-start {
+  @include flex-align-start();
+}
+.flex-align-center {
+  @include flex-align-center();
+}
+.flex-align-end {
+  @include flex-align-end();
+}
+.flex-align-around {
+  @include flex-align-around();
+}
+.flex-align-between {
+  @include flex-align-between();
+}
+
+// 垂直定位
+.flex-justify-start {
+  @include flex-justify-start();
+}
+.flex-justify-center {
+  @include flex-justify-center();
+}
+.flex-justify-end {
+  @include flex-justify-end();
+}
+.flex-justify-around {
+  @include flex-justify-around();
+}
+.flex-justify-between {
+  @include flex-justify-between();
+}
+.flex-justify-evenly {
+  @include flex-justify-evenly();
+}
+
+// 组合定位
+.flex-center-between {
+  @include flex-align-center();
+  @include flex-justify-between();
+}
+.flex-center-around {
+  @include flex-align-center();
+  @include flex-justify-around();
+}
+.flex-center-start {
+  @include flex-align-center();
+  @include flex-justify-start();
+}
+.flex-center-end {
+  @include flex-align-center();
+  @include flex-justify-end();
+}
+.flex-start-start {
+  @include flex-align-start();
+  @include flex-justify-start();
+}
+// 文字
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fullWidth {
+  width: 100%;
+}

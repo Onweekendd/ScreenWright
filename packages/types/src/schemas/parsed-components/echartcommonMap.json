@@ -1,0 +1,957 @@
+{
+  "meta": {
+    "id": 57,
+    "name": "中国2D地图",
+    "prop": "echartcommonMap",
+    "componentName": "echart-commonMap",
+    "first_level_menu": "地图",
+    "second_level_menu": "",
+    "thumbnail": "/img/commonMap.6d3dd447.png"
+  },
+  "config": {
+    "title": "中国2D地图",
+    "name": "中国2D地图",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/commonMap.6d3dd447.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "./scatter",
+    "data": [
+      {
+        "name": "中华人民共和国",
+        "adcode": "100000"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "类目"
+      },
+      {
+        "key": "adcode",
+        "map": "adcode",
+        "decription": "区域代码"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 1920,
+      "height": 1080,
+      "name": "echart-commonMap",
+      "prop": "echartcommonMap"
+    },
+    "presetChild": [
+      {
+        "name": "飞线",
+        "title": "飞线",
+        "isEdit": false,
+        "showOperation": false,
+        "type": "mapLines",
+        "listenArgs": [],
+        "show": true,
+        "dataMethod": "get",
+        "dataType": 0,
+        "dataSource": {},
+        "requestHeader": {},
+        "requestBody": {},
+        "crossOrigin": false,
+        "needCookie": false,
+        "autoRefresh": false,
+        "dataQuery": "",
+        "isLock": false,
+        "sql": "SELECT * FROM",
+        "data": [
+          {
+            "name": "上海-北京",
+            "coords": [
+              [
+                121.4692688,
+                31.2381763
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "重庆-北京",
+            "coords": [
+              [
+                106.548425,
+                29.5549144
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "辽宁-北京",
+            "coords": [
+              [
+                123.4116821,
+                41.7966156
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "吉林-北京",
+            "coords": [
+              [
+                125.3154297,
+                43.8925629
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "黑龙江-北京",
+            "coords": [
+              [
+                126.6433411,
+                45.7414932
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "浙江-北京",
+            "coords": [
+              [
+                120.1592484,
+                30.265995
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "福建-北京",
+            "coords": [
+              [
+                119.2978134,
+                26.0785904
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "河南-北京",
+            "coords": [
+              [
+                113.6500473,
+                34.7570343
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "湖北-北京",
+            "coords": [
+              [
+                114.2919388,
+                30.5675144
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "湖南-北京",
+            "coords": [
+              [
+                112.9812698,
+                28.2008247
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "广东-北京",
+            "coords": [
+              [
+                113.2614288,
+                23.1189117
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "海南-北京",
+            "coords": [
+              [
+                110.3465118,
+                20.0317936
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "四川-北京",
+            "coords": [
+              [
+                104.0817566,
+                30.6610565
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "贵州-北京",
+            "coords": [
+              [
+                106.7113724,
+                26.5768738
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "云南-北京",
+            "coords": [
+              [
+                102.704567,
+                25.0438442
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "江西-北京",
+            "coords": [
+              [
+                115.8999176,
+                28.6759911
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "陕西-北京",
+            "coords": [
+              [
+                108.949028,
+                34.2616844
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "青海-北京",
+            "coords": [
+              [
+                101.7874527,
+                36.6094475
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "甘肃-北京",
+            "coords": [
+              [
+                103.7500534,
+                36.0680389
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "广西-北京",
+            "coords": [
+              [
+                108.3117676,
+                22.8065434
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "新疆-北京",
+            "coords": [
+              [
+                87.6061172,
+                43.7909393
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "西藏-北京",
+            "coords": [
+              [
+                91.1320496,
+                29.657589
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "宁夏-北京",
+            "coords": [
+              [
+                106.2719421,
+                38.4680099
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "台湾-北京",
+            "coords": [
+              [
+                120.9581316,
+                23.8516062
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "香港-北京",
+            "coords": [
+              [
+                114.139452,
+                22.391577
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "澳门-北京",
+            "coords": [
+              [
+                113.5678411,
+                22.167654
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "安徽-北京",
+            "coords": [
+              [
+                117.2757034,
+                31.8632545
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          },
+          {
+            "name": "江苏-北京",
+            "coords": [
+              [
+                118.7727814,
+                32.0476151
+              ],
+              [
+                116.405285,
+                39.904989
+              ]
+            ]
+          }
+        ],
+        "dataRemark": [
+          {
+            "key": "name",
+            "map": "name",
+            "decription": "名称"
+          },
+          {
+            "key": "coords",
+            "map": "coords",
+            "decription": "经纬度"
+          }
+        ],
+        "component": {
+          "name": "echart-mapLines",
+          "prop": "echartmapLines"
+        },
+        "option": {
+          "effectShow": true,
+          "effectType": "constantSpeed",
+          "period": 4,
+          "constantSpeed": 80,
+          "delay": 0,
+          "effectSymbol": "arrow",
+          "effectSymbolImage": "",
+          "effectSymbolWidth": 2,
+          "effectSymbolHeight": 20,
+          "effectColor": {
+            "type": "linear-gradient",
+            "angle": "0",
+            "colors": [
+              {
+                "color": "rgba(253, 143, 209, 1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(255, 255, 255, 1)",
+                "per": 100
+              }
+            ]
+          },
+          "effectOpacity": 100,
+          "trailLength": 0.86,
+          "loop": true,
+          "lineColor": {
+            "type": "linear-gradient",
+            "angle": "0",
+            "colors": [
+              {
+                "color": "rgba(88, 179, 204, 1)",
+                "per": 0
+              },
+              {
+                "color": "rgba(255, 255, 255, 1)",
+                "per": 100
+              }
+            ]
+          },
+          "lineOpacity": 50,
+          "lineWidth": 0,
+          "lineCurveness": 0.1,
+          "lineLabelShow": false,
+          "lineLabelPosition": "end",
+          "lineLabelColor": "rgba(255,255,255,1)",
+          "lineLabelFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "lineLabelFontSize": 18,
+          "lineLabelFontWeight": "bolder",
+          "lineLabelFontStyle": "normal"
+        }
+      },
+      {
+        "name": "散点",
+        "title": "散点",
+        "isEdit": false,
+        "showOperation": false,
+        "type": "mapEffectScatter",
+        "listenArgs": [],
+        "show": true,
+        "dataMethod": "get",
+        "dataType": 0,
+        "dataSource": {},
+        "requestHeader": {},
+        "requestBody": {},
+        "crossOrigin": false,
+        "needCookie": false,
+        "autoRefresh": false,
+        "dataQuery": "",
+        "isLock": false,
+        "sql": "SELECT * FROM",
+        "data": [
+          {
+            "name": "上海",
+            "value": [
+              "121.4692688",
+              "31.2381763",
+              75
+            ]
+          },
+          {
+            "name": "重庆",
+            "value": [
+              "106.548425",
+              "29.5549144",
+              78
+            ]
+          },
+          {
+            "name": "辽宁",
+            "value": [
+              "123.4116821",
+              "41.7966156",
+              96
+            ]
+          },
+          {
+            "name": "吉林",
+            "value": [
+              "125.3154297",
+              "43.8925629",
+              46
+            ]
+          },
+          {
+            "name": "黑龙江",
+            "value": [
+              "126.6433411",
+              "45.7414932",
+              97
+            ]
+          },
+          {
+            "name": "浙江",
+            "value": [
+              "120.1592484",
+              "30.265995",
+              32
+            ]
+          },
+          {
+            "name": "福建",
+            "value": [
+              "119.2978134",
+              "26.0785904",
+              2
+            ]
+          },
+          {
+            "name": "河南",
+            "value": [
+              "113.6500473",
+              "34.7570343",
+              23
+            ]
+          },
+          {
+            "name": "湖北",
+            "value": [
+              "114.2919388",
+              "30.5675144",
+              76
+            ]
+          },
+          {
+            "name": "湖南",
+            "value": [
+              "112.9812698",
+              "28.2008247",
+              71
+            ]
+          },
+          {
+            "name": "广东",
+            "value": [
+              "113.2614288",
+              "23.1189117",
+              6
+            ]
+          },
+          {
+            "name": "海南",
+            "value": [
+              "110.3465118",
+              "20.0317936",
+              64
+            ]
+          },
+          {
+            "name": "四川",
+            "value": [
+              "104.0817566",
+              "30.6610565",
+              54
+            ]
+          },
+          {
+            "name": "贵州",
+            "value": [
+              "106.7113724",
+              "26.5768738",
+              1
+            ]
+          },
+          {
+            "name": "云南",
+            "value": [
+              "102.704567",
+              "25.0438442",
+              78
+            ]
+          },
+          {
+            "name": "江西",
+            "value": [
+              "115.8999176",
+              "28.6759911",
+              16
+            ]
+          },
+          {
+            "name": "陕西",
+            "value": [
+              "108.949028",
+              "34.2616844",
+              14
+            ]
+          },
+          {
+            "name": "青海",
+            "value": [
+              "101.7874527",
+              "36.6094475",
+              22
+            ]
+          },
+          {
+            "name": "甘肃",
+            "value": [
+              "103.7500534",
+              "36.0680389",
+              37
+            ]
+          },
+          {
+            "name": "广西",
+            "value": [
+              "108.3117676",
+              "22.8065434",
+              52
+            ]
+          },
+          {
+            "name": "新疆",
+            "value": [
+              "87.6061172",
+              "43.7909393",
+              11
+            ]
+          },
+          {
+            "name": "西藏",
+            "value": [
+              "91.1320496",
+              "29.657589",
+              6
+            ]
+          },
+          {
+            "name": "宁夏",
+            "value": [
+              "106.2719421",
+              "38.4680099",
+              64
+            ]
+          },
+          {
+            "name": "台湾",
+            "value": [
+              "120.9581316",
+              "23.8516062",
+              49
+            ]
+          },
+          {
+            "name": "香港",
+            "value": [
+              "114.139452",
+              "22.391577",
+              49
+            ]
+          },
+          {
+            "name": "澳门",
+            "value": [
+              "113.5678411",
+              "22.167654",
+              36
+            ]
+          },
+          {
+            "name": "安徽",
+            "value": [
+              "117.2757034",
+              "31.8632545",
+              78
+            ]
+          },
+          {
+            "name": "江苏",
+            "value": [
+              "118.7727814",
+              "32.0476151",
+              98
+            ]
+          }
+        ],
+        "dataRemark": [
+          {
+            "key": "name",
+            "map": "name",
+            "decription": "类目"
+          },
+          {
+            "key": "value",
+            "map": "value",
+            "decription": "值"
+          }
+        ],
+        "component": {
+          "width": 850,
+          "height": 450,
+          "name": "echart-mapEffectScatter",
+          "prop": "echartmapEffectScatter"
+        },
+        "option": {
+          "refresh": true,
+          "dataSeriesName": [
+            "系列一",
+            "系列二"
+          ],
+          "seriesName": [
+            "系列一",
+            "系列二"
+          ],
+          "seriesTabsName": [
+            {
+              "name": "系列1",
+              "value": "系列一"
+            },
+            {
+              "name": "系列2",
+              "value": "系列二"
+            }
+          ],
+          "gridLeft": 50,
+          "gridTop": 0,
+          "gridRight": 50,
+          "gridBottom": 0,
+          "symbolSize": 6,
+          "borderWidth": 2,
+          "borderColor": "rgba(59, 147, 203, 0.23)",
+          "rippleEffectNumber": 3,
+          "rippleEffectPeriod": 5,
+          "rippleEffectScale": 1.5,
+          "rippleEffectBrushType": "stroke",
+          "insideColor": "rgba(255,255,255,1)",
+          "outsideColor": "rgba(255,255,255,1)",
+          "showEffectOn": "render",
+          "seriesLabelNameShow": false,
+          "seriesLabelNameFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesLabelNameFontSize": 18,
+          "seriesLabelNameColor": "rgba(255, 255, 255, 1)",
+          "seriesLabelNameFontStyle": "normal",
+          "seriesLabelNameFontWeight": "normal",
+          "seriesLabelValueShow": false,
+          "seriesLabelValueFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesLabelValueFontSize": 18,
+          "seriesLabelValueColor": "rgba(255, 255, 255, 1)",
+          "seriesLabelValueFontStyle": "normal",
+          "seriesLabelValueFontWeight": "normal"
+        }
+      },
+      {
+        "name": "散点",
+        "title": "散点",
+        "isEdit": false,
+        "showOperation": false,
+        "type": "mapEffectScatter",
+        "listenArgs": [],
+        "show": true,
+        "dataMethod": "get",
+        "dataType": 0,
+        "dataSource": {},
+        "requestHeader": {},
+        "requestBody": {},
+        "crossOrigin": false,
+        "needCookie": false,
+        "autoRefresh": false,
+        "dataQuery": "",
+        "isLock": false,
+        "sql": "SELECT * FROM",
+        "data": [
+          {
+            "name": "北京",
+            "value": [
+              "116.3979471",
+              "39.9081726",
+              78
+            ]
+          }
+        ],
+        "dataRemark": [
+          {
+            "key": "name",
+            "map": "name",
+            "decription": "类目"
+          },
+          {
+            "key": "value",
+            "map": "value",
+            "decription": "值"
+          }
+        ],
+        "component": {
+          "width": 850,
+          "height": 450,
+          "name": "echart-mapEffectScatter",
+          "prop": "echartmapEffectScatter"
+        },
+        "option": {
+          "refresh": true,
+          "dataSeriesName": [
+            "系列一",
+            "系列二"
+          ],
+          "seriesName": [
+            "系列一",
+            "系列二"
+          ],
+          "seriesTabsName": [
+            {
+              "name": "系列1",
+              "value": "系列一"
+            },
+            {
+              "name": "系列2",
+              "value": "系列二"
+            }
+          ],
+          "gridLeft": 50,
+          "gridTop": 0,
+          "gridRight": 50,
+          "gridBottom": 0,
+          "symbolSize": 30,
+          "borderWidth": 2,
+          "borderColor": "rgba(59, 147, 203, 0.23)",
+          "rippleEffectNumber": 3,
+          "rippleEffectPeriod": 5,
+          "rippleEffectScale": 12,
+          "rippleEffectBrushType": "stroke",
+          "insideColor": "rgba(0,0,0,0)",
+          "outsideColor": "rgba(253,143,209,1)",
+          "showEffectOn": "render",
+          "seriesLabelNameShow": false,
+          "seriesLabelNameFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesLabelNameFontSize": 18,
+          "seriesLabelNameColor": "rgba(255, 255, 255, 1)",
+          "seriesLabelNameFontStyle": "normal",
+          "seriesLabelNameFontWeight": "normal",
+          "seriesLabelValueShow": false,
+          "seriesLabelValueFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+          "seriesLabelValueFontSize": 18,
+          "seriesLabelValueColor": "rgba(255, 255, 255, 1)",
+          "seriesLabelValueFontStyle": "normal",
+          "seriesLabelValueFontWeight": "normal"
+        }
+      }
+    ],
+    "unitPavenType": "",
+    "option": {
+      "refresh": true,
+      "roam": true,
+      "adcode": {
+        "label": "中华人民共和国",
+        "value": "100000"
+      },
+      "areaColor": "#171a24",
+      "borderWidth": 1,
+      "borderColor": "#87c0ff",
+      "shadowColor": "#87c0ff",
+      "shadowOffsetX": 0,
+      "shadowOffsetY": 0,
+      "shadowBlur": 10,
+      "geoLabelShow": false,
+      "geoLabelFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "geoLabelFontSize": 16,
+      "geoLabelColor": "rgba(240, 242, 245, 1)",
+      "geoLabelFontStyle": "normal",
+      "geoLabelFontWeight": "normal"
+    }
+  },
+  "template": {
+    "name": "中华人民共和国",
+    "adcode": "100000"
+  }
+}

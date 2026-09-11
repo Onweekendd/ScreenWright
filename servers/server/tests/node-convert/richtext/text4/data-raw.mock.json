@@ -1,0 +1,104 @@
+{
+  "nodes": {
+    "19024:161460": {
+      "document": {
+        "id": "19024:161460",
+        "name": "四流合一",
+        "type": "TEXT",
+        "blendMode": "PASS_THROUGH",
+        "rotation": -7.9513871775984e-16,
+        "fills": [
+          {
+            "type": "GRADIENT_LINEAR",
+            "visible": true,
+            "opacity": 1,
+            "blendMode": "NORMAL",
+            "gradientStops": [
+              {
+                "color": {
+                  "r": 0.45192307233810425,
+                  "g": 0.8812499642372131,
+                  "b": 1,
+                  "a": 0.800000011920929
+                },
+                "position": 0,
+                "boundVariables": {}
+              },
+              {
+                "color": { "r": 1, "g": 1, "b": 1, "a": 1 },
+                "position": 1,
+                "boundVariables": {}
+              }
+            ],
+            "gradientTransform": [
+              [-4.980045510086933e-16, -1.2647058963775635, 1.2647058963775635],
+              [105.64227294921875, 5.623615722399888e-13, -52.321136474609375]
+            ]
+          }
+        ],
+        "strokes": [
+          {
+            "type": "SOLID",
+            "visible": true,
+            "opacity": 1,
+            "blendMode": "NORMAL",
+            "color": {
+              "r": 0.9134615659713745,
+              "g": 0.9316802024841309,
+              "b": 1
+            },
+            "boundVariables": {}
+          }
+        ],
+        "strokeWeight": 0.9820923805236816,
+        "strokeAlign": "INSIDE",
+        "absoluteBoundingBox": {
+          "x": -7407,
+          "y": 8496,
+          "width": 209,
+          "height": 65
+        },
+        "absoluteRenderBounds": {
+          "x": -7405.6376953125,
+          "y": 8506.349609375,
+          "width": 208.95654296875,
+          "height": 54.75
+        },
+        "constraints": { "horizontal": "CENTER", "vertical": "MIN" },
+        "effects": [
+          {
+            "type": "DROP_SHADOW",
+            "visible": true,
+            "radius": 4,
+            "boundVariables": {},
+            "color": { "r": 0, "g": 0, "b": 0, "a": 0.25 },
+            "offset": { "x": 0, "y": 4 },
+            "spread": 0,
+            "blendMode": "NORMAL",
+            "showShadowBehindNode": false
+          }
+        ],
+        "interactions": [],
+        "characters": "四流合一",
+        "characterStyleOverrides": [0, 0, 0, 0],
+        "styleOverrideTable": {},
+        "style": {
+          "textAlignHorizontal": "CENTER",
+          "textAlignVertical": "CENTER",
+          "textAutoResize": "WIDTH_AND_HEIGHT",
+          "fontFamily": "Alibaba PuHuiTi 2.0",
+          "fontPostScriptName": "65 Medium",
+          "fontStyle": "65 Medium",
+          "fontSize": 50,
+          "fontWeight": 500,
+          "letterSpacing": 8,
+          "lineHeightPx": 130.9999942779541
+        },
+        "lineTypes": ["NONE"],
+        "lineIndentations": [0],
+        "layoutVersion": 4,
+        "complexStrokeProperties": { "strokeType": "BASIC" }
+      }
+    }
+  }
+}

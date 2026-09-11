@@ -1,0 +1,2505 @@
+{
+  "threadId": "822a0cd8-7ddd-4859-b0ce-2726320f1b6f",
+  "recordedAt": "2026-05-14T06:42:01.915Z",
+  "steps": [
+    {
+      "step": 0,
+      "request": {
+        "messages": [
+          {
+            "id": "e123be5c-97fd-4a98-af61-5a3da486fd9b",
+            "role": "user",
+            "content": "<editor-context>\n<screen-info>\n大屏ID: 30028，版本号: 1，Workspace目录: screen_30028-1\n</screen-info>\n\n<current-page>\n类型: 大屏根画布\n</current-page>\n\n<selected-components>无</selected-components>\n\n<page-components>\n  <component id=\"3102579\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n  <component id=\"3101069\" name=\"折线柱形图\" prop=\"echartlineAndBar\" title=\"折线柱形图\" />\n  <component id=\"3101064\" name=\"数据容器\" prop=\"ft-dataContainer\" title=\"数据容器\" />\n  <component id=\"3090844\" name=\"动态面板\" prop=\"ft-panel\" title=\"动态面板\" />\n  <component id=\"3102626\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n</page-components>\n</editor-context>\n\n<user-message>\n添加一个条形图\n</user-message>",
+            "parts": [
+              {
+                "type": "text",
+                "text": "<editor-context>\n<screen-info>\n大屏ID: 30028，版本号: 1，Workspace目录: screen_30028-1\n</screen-info>\n\n<current-page>\n类型: 大屏根画布\n</current-page>\n\n<selected-components>无</selected-components>\n\n<page-components>\n  <component id=\"3102579\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n  <component id=\"3101069\" name=\"折线柱形图\" prop=\"echartlineAndBar\" title=\"折线柱形图\" />\n  <component id=\"3101064\" name=\"数据容器\" prop=\"ft-dataContainer\" title=\"数据容器\" />\n  <component id=\"3090844\" name=\"动态面板\" prop=\"ft-panel\" title=\"动态面板\" />\n  <component id=\"3102626\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n</page-components>\n</editor-context>\n\n<user-message>\n添加一个条形图\n</user-message>",
+                "createdAt": 1778740921864
+              }
+            ]
+          }
+        ],
+        "clientTools": {
+          "listAvailableActions": {
+            "description": "在配置交互事件时 使用组件的标识数组(props) 批量列出组件所有可以支持的行为，返回 { prop: [{label, value}] } 结构",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "props": {
+                  "description": "组件的 prop 标识数组，位于组件JsonSchema的 component.prop字段 如 ['bar', 'line']",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "props"
+              ],
+              "additionalProperties": false
+            },
+            "outputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "description": "行为名称",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "行为标识",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "listAvailableEvents": {
+            "description": "在配置交互事件时 使用组件的标识数组(props) 批量列出组件所有可以触发事件的方式，返回 { prop: [{label, value}] } 结构",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "props": {
+                  "description": "组件的 prop 标识数组，位于组件JsonSchema的 component.prop字段 如 ['bar', 'line']",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "props"
+              ],
+              "additionalProperties": false
+            },
+            "outputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "description": "事件名称",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "事件标识",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "routeChange": {
+            "description": "用于前端路由跳转。支持三种跳转目标：root（大屏首页，无需 targetId）、panel（动态面板，需提供 targetId）、encode（终端面板，需提供 targetId）。",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "targetType": {
+                  "description": "跳转目标类型 root:大屏首页;panel:动态面板;encode:终端面板",
+                  "type": "string",
+                  "enum": [
+                    "root",
+                    "encode",
+                    "panel"
+                  ]
+                },
+                "targetId": {
+                  "description": "跳转目标ID,只有在targetType为panel或encode时才需要提供",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "targetType"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "listLayoutTemplates": {
+            "description": "输出可用的布局模板列表，目前仅包含名称和描述，后续可根据需要增加其他信息",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "scene": {
+                  "description": "布局场景，默认为空，表示不区分场景",
+                  "type": "string"
+                },
+                "theme": {
+                  "description": "布局主题类型，默认为空，表示不区分主题",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "getLayoutTemplateDetail": {
+            "description": "根据布局模板ID获取布局模板的详细信息，输入为布局模板ID，输出为包含布局模板详细信息的对象",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "布局模板ID",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "applyLayoutTemplate": {
+            "description": "将模板应用到当前大屏",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "布局模板ID",
+                  "type": "string"
+                },
+                "options": {
+                  "description": "布局模板自定义配置，包含目标大屏ID、生成图层ID集合等信息，格式为JSON字符串，具体内容根据实际需求定义，例如：{\"targetScreenId\": \"123\", \"generateLayerIds\": [\"layer1\", \"layer2\"]}",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "updateLayoutTemplate": {
+            "description": "将替换模板应用到当前大屏",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "布局模板ID",
+                  "type": "string"
+                },
+                "options": {
+                  "description": "布局模板自定义配置，包含目标大屏ID、生成图层ID集合等信息，格式为JSON字符串，具体内容根据实际需求定义，例如：{\"targetScreenId\": \"123\", \"generateLayerIds\": [\"layer1\", \"layer2\"]}",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "threadId": "822a0cd8-7ddd-4859-b0ce-2726320f1b6f",
+        "resourceId": "30028"
+      },
+      "chunks": [
+        {
+          "type": "start",
+          "messageId": "c076fbdc-4ac8-47f8-a6a8-50a9f9d33986"
+        },
+        {
+          "type": "start-step"
+        },
+        {
+          "type": "tool-input-start",
+          "toolCallId": "functions.skill:0",
+          "toolName": "skill",
+          "dynamic": false
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "{\""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "name"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "fun"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "bi"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "-agent"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "-component"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill:0",
+          "inputTextDelta": "\"}"
+        },
+        {
+          "type": "tool-input-available",
+          "toolCallId": "functions.skill:0",
+          "toolName": "skill",
+          "input": {
+            "name": "sw-agent-component"
+          }
+        },
+        {
+          "type": "tool-output-available",
+          "toolCallId": "functions.skill:0",
+          "output": "# Screenwright 大屏组件操作\r\n\r\n## 操作目录\r\n\r\n| 操作     | 参考文件                                              |\r\n| -------- | ----------------------------------------------------- |\r\n| 创建组件 | [create-component.md](references/create-component.md) |\r\n| 修改组件 | [update-component.md](references/update-component.md) |\r\n| 复制组件 | [copy-component.md](references/copy-component.md)     |\r\n| 删除组件 | [delete-component.md](references/delete-component.md) |\r\n\r\n遇到对应操作时，读取对应参考文件后执行。\n\n## References\n- references/copy-component.md\n- references/create-component.md\n- references/delete-component.md\n- references/update-component.md"
+        },
+        {
+          "type": "finish-step"
+        },
+        {
+          "type": "start-step"
+        },
+        {
+          "type": "tool-input-start",
+          "toolCallId": "functions.skill_read:1",
+          "toolName": "skill_read",
+          "dynamic": false
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "{\""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "skill"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "Name"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "fun"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "bi"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "-agent"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "-component"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "\","
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "path"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "references"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "/create"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "-component"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": ".md"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "\","
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "start"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "Line"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": " null"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": ","
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "end"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "Line"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": " null"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.skill_read:1",
+          "inputTextDelta": "}"
+        },
+        {
+          "type": "tool-input-available",
+          "toolCallId": "functions.skill_read:1",
+          "toolName": "skill_read",
+          "input": {
+            "skillName": "sw-agent-component",
+            "path": "references/create-component.md",
+            "startLine": null,
+            "endLine": null
+          }
+        },
+        {
+          "type": "tool-output-available",
+          "toolCallId": "functions.skill_read:1",
+          "output": "# 创建组件流程\r\n\r\n## 工具说明\r\n\r\n| 工具                      | 用途                                                                 |\r\n| ------------------------- | -------------------------------------------------------------------- |\r\n| `search-component`        | 通过自然语言描述搜索匹配的组件，返回组件文档                         |\r\n| `create_component`        | 在 workspace 创建组件 JSON 文件（带 _draftId），返回 filePath        |\r\n| `read_file`               | 读取组件文件内容（edit_file 前必须先调用）                           |\r\n| `edit_file`               | 修改组件文件，组件路径时自动校验并推送到前端                         |\r\n| `push_component`          | **首选推送工具**（客户端）：直接创建组件并同步返回真实 componentId   |\r\n| `stream_push_component`   | **备选推送工具**（服务端）：通过流推送，适用于客户端工具不可用的场景 |\r\n\r\n---\r\n\r\n## Step 1：确认目标组件\r\n\r\n### 路径 A：用户明确指定了组件\r\n\r\n直接在 `sw-component-schema` skill 的组件速查表中确认该组件是否存在，提取：\r\n\r\n- **title**：中文名（如 `面积折线图`）\r\n- **prop**：英文标识（如 `echartareaLine`）\r\n\r\n### 路径 B：用户描述了需求但未指定组件\r\n\r\n1. 从用户描述中提取特征关键词，构造一个简洁的自然语言 query\r\n2. 调用 `search-component` 工具（topK 默认 3）\r\n3. 从返回的 `doc` 字段第一行解析：\r\n   ```\r\n   # 面积折线图 (echartareaLine)\r\n        ↑ title          ↑ prop\r\n   ```\r\n4. 若有多个候选，根据 `score` 和描述选最优项，或向用户确认\r\n\r\n---\r\n\r\n## Step 2：创建组件文件\r\n\r\n调用 `create_component` 在 workspace 中创建组件 JSON：\r\n\r\n```\r\ncreate_component({\r\n  screenId: \"<大屏标识>\",          // 如 \"29445-1\"\r\n  componentName: \"<title>\",        // 中文名，如 \"柱状图\"\r\n  placement: {                     // 可选，嵌套时提供\r\n    parentId: <父组件id>,\r\n    parentType: \"group\" | \"dynamicPanel\",\r\n    stateId: \"<状态id>\"            // dynamicPanel 时必填\r\n  }\r\n})\r\n```\r\n\r\n返回 `{ filePath, draftId }`，后续操作都基于这个 `filePath`。\r\n\r\n---\r\n\r\n## Step 3：按需修改\r\n\r\n**核心原则：只修改用户明确要求的字段。模板已包含所有默认值，用户没提的字段不要动。**\r\n\r\n### 是否需要修改？\r\n\r\n- **用户有定制需求**（数据、位置、样式等）→ 继续 Step 3\r\n- **用户只说\"加一个 XX 图\"无其他要求** → 跳到 Step 4 直接推送\r\n\r\n### 修改流程\r\n\r\n1. 先调用 `read_file({ path: filePath })` 读取文件内容\r\n2. 再调用 `edit_file` 修改指定字段：\r\n\r\n```\r\nedit_file({\r\n  path: \"<filePath>\",\r\n  old_string: \"要替换的内容\",\r\n  new_string: \"替换后的内容\"\r\n})\r\n```\r\n\r\n**组件 JSON 文件（路径含 /component/）会自动使用 prop 专属 schema 校验 data/option，校验通过后自动推送到前端。**\r\n\r\n### 按需参考 schema\r\n\r\n| 用户需求                             | 参考来源                                                     |\r\n| ------------------------------------ | ------------------------------------------------------------ |\r\n| 位置（left/top）                     | 激活 `sw-component-schema` → `component-base-identity.md` |\r\n| 尺寸（component.width/height）       | 激活 `sw-component-schema` → `component-base-identity.md` |\r\n| 数据                                 | 激活 `sw-component-schema` → 对应组件的 references 文件   |\r\n| 数据源（API/SQL）                    | 激活 `sw-component-schema` → `component-base-data.md`     |\r\n| 图表样式、series、颜色等组件专属配置 | 激活 `sw-component-schema` → 对应组件的 references 文件   |\r\n\r\n### 涉及数据时必须查 schema\r\n\r\n用户提供了数据，或者要求展示某些数据时，**必须**：\r\n\r\n1. 调用 `skill` 工具，启用 `sw-component-schema`\r\n2. 查询该组件（按 prop 名称）的 data 字段结构\r\n3. 将用户数据按组件 data 格式映射后修改 `data` 字段\r\n\r\n**禁止直接用用户给出的字段名填写 data**——用户数据的字段名与组件所需格式几乎不会一致，必须做映射转换。\r\n\r\n### 禁止修改的字段\r\n\r\n| 字段       | 原因                                   |\r\n| ---------- | -------------------------------------- |\r\n| `_draftId` | 系统标记，用于前端同步时匹配文件       |\r\n| `id`       | 由系统分配                             |\r\n| `title`    | 系统内部标识符，由组件模板自动设置     |\r\n\r\n---\r\n\r\n## Step 4：推送到前端\r\n\r\n### 已修改过（edit_file 组件路径）\r\n\r\n`edit_file` 已自动推送，无需再次调用。\r\n\r\n### 未修改（使用默认模板直接推送）\r\n\r\n#### 优先：`push_component`（客户端工具）\r\n\r\n直接创建组件并同步返回真实 ID，**优先使用**：\r\n\r\n```\r\npush_component({\r\n  path: \"<filePath>\",              // 工作区文件相对路径\r\n  componentTitle: \"<组件中文名>\"    // 如 \"柱状图\"，用于查找组件模板\r\n})\r\n```\r\n\r\n返回值：\r\n\r\n```json\r\n{ \"success\": true, \"message\": \"成功添加 柱状图\", \"componentId\": 456 }\r\n```\r\n\r\n#### 备选：`stream_push_component`（服务端工具）\r\n\r\n当 `push_component` 不可用时（如运行在子 Agent 中，无法访问客户端工具），改用服务端流推送：\r\n\r\n```\r\nstream_push_component({\r\n  path: \"<filePath>\"              // 工作区文件相对路径\r\n})\r\n```\r\n\r\n推送成功后，前端会分配真实 ID，同步完成后写入映射文件。需要真实 ID 时，读取映射文件查询：\r\n\r\n```\r\nread_file({ path: \"screen_<screenId>/_draft_id_map.json\" })\r\n// 返回：{ \"<draftId>\": <realId>, ... }\r\n```\r\n\r\n### 获得新组件 ID 后的注意事项\r\n\r\n1. **不要再读取或引用原 draft 文件路径**（如 `component/{_draftId}.json`）\r\n2. 后续对该组件的 `read_file`、`edit_file` 操作应使用新路径：`component/{componentId}.json`\r\n3. 如果需要嵌套放置，`addTo` 参数使用 `componentId` 作为父组件 ID\r\n\r\n---\r\n\r\n## 示例\r\n\r\n### 示例 1：仅需默认样式\r\n\r\n**用户**：加一个柱状图\r\n\r\n1. 确认组件：速查 → title = `柱状图`\r\n2. 创建文件：\r\n   ```\r\n   create_component({ screenId: \"29445-1\", componentName: \"柱状图\" })\r\n   ```\r\n3. 用户无定制需求 → 调用客户端工具推送：\r\n   ```\r\n   push_component({ path: \"screen_29445-1/component/{draftId}.json\", componentTitle: \"柱状图\" })\r\n   ```\r\n   返回 `{ \"componentId\": 456 }` → 后续使用 `component/456.json` 操作该组件\r\n\r\n### 示例 2：带数据和定制\r\n\r\n**用户**：加一个柱状图，展示各分数段人数\r\n\r\n1. 确认组件：速查 → title = `柱状图`\r\n2. 创建文件：\r\n   ```\r\n   create_component({ screenId: \"29445-1\", componentName: \"柱状图\" })\r\n   ```\r\n3. 用户要传数据 → 查 `echartbar.md` 确认 `data` 结构\r\n4. 读取并修改：\r\n   ```\r\n   read_file({ path: \"<filePath>\" })\r\n\r\n   edit_file({\r\n     path: \"<filePath>\",\r\n     old_string: \"原有 data 内容\",\r\n     new_string: \"映射后的 data 内容\"\r\n   })\r\n   ```\r\n   edit_file 自动校验并推送到前端，流程结束。\r\n"
+        },
+        {
+          "type": "finish-step"
+        },
+        {
+          "type": "start-step"
+        },
+        {
+          "type": "text-start",
+          "id": "txt-0"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "根据"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "参考"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "文档"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "，"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "我来"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "为您"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "创建一个"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "条形"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "图"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "组件"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "。"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "首先"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "，"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "我需要"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "确认"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "当前"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "大屏"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "的"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "组件"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "信息"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "，"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "然后"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "创建"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "条形"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "图"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "。"
+        },
+        {
+          "type": "tool-input-start",
+          "toolCallId": "functions.searchComponentTool:2",
+          "toolName": "searchComponentTool",
+          "dynamic": false
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "{\""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "query"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "条形"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "图"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "\","
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "top"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "K"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": " "
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "3"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.searchComponentTool:2",
+          "inputTextDelta": "}"
+        },
+        {
+          "type": "tool-input-available",
+          "toolCallId": "functions.searchComponentTool:2",
+          "toolName": "searchComponentTool",
+          "input": {
+            "query": "条形图",
+            "topK": 3
+          }
+        },
+        {
+          "type": "text-end",
+          "id": "txt-0"
+        },
+        {
+          "type": "tool-output-available",
+          "toolCallId": "functions.searchComponentTool:2",
+          "output": [
+            {
+              "componentId": "echartstripBar",
+              "category": "图表",
+              "score": 0.6224752635441811,
+              "doc": "# 条形图 (echartstripBar)\r\n\r\n**组件标识**: echartstripBar | **中文名**: 条形图 | **分类**: 图表 > 柱形图\r\n\r\n## 描述\r\n\r\n横向柱状图，用水平柱子长度表示数值大小，适合展示长标签的分类数据对比。支持多系列并排展示、堆叠模式、数值标签显示和极值高亮。\r\n\r\n**与其他柱图的区别**：\r\n- 区别于柱状图（echartbar）：本组件为横向，柱状图为竖向\r\n- 区别于双向条形图（echartbothWayStripBar）：本组件单向，双向条形图两侧分别展示两个系列\r\n- 区别于排名图（echartrank）：本组件标准对比，排名图带排序样式\r\n- 区别于折线柱形图（echartlineAndBar）：本组件纯条形，不含折线\r\n\r\n## 别名/同义词\r\n\r\n横向柱图 条形图 bar图 水平柱状图 横向对比 柱形图 条形对比 分类排行 横向统计\r\n\r\n## 适用场景\r\n\r\n部门销售额对比 产品销量排行 地区数据对比 员工绩效排名 月度业绩对比 客户收入等级 长标签分类 项目投入对比 KPI完成情况\r\n"
+            },
+            {
+              "componentId": "echartlineAndBar",
+              "category": "图表",
+              "score": 0.6131441943434071,
+              "doc": "# 折线柱形图 (echartlineAndBar)\r\n\r\n**组件标识**: echartlineAndBar | **中文名**: 折线柱形图 | **分类**: 图表 > 柱形图\r\n\r\n## 描述\r\n\r\n混合图表，在同一个图表中同时展示柱形图和折线图，支持双Y轴左右对齐，适合展示不同度量单位的数据关联趋势。可自由切换每个系列的图表类型（柱形/折线）、独立设置颜色、透明度、数值标签等样式。\r\n\r\n**与其他柱图的区别**：\r\n- 区别于柱状图（echartbar）：本组件混合图表，可同时包含柱形和折线\r\n- 区别于折线图（echartline）：本组件默认包含柱形，折线图为纯折线\r\n- 区别于条形图（echartstripBar）：本组件可混合折线，条形图纯条形\r\n- 区别于面积折线图（echartareaLine）：本组件柱形+折线组合，面积图为折线+面积填充\r\n- 区别于3D折线柱形图（echartthreedBarAndLine）：本组件2D平面，3D图为立体效果\r\n\r\n## 别名/同义词\r\n\r\n折线柱形图 柱状折线图 混合图表 组合图 柱折图 双轴图 趋势对比图 量价图 关联分析图 复合图 组合图表\r\n\r\n## 适用场景\r\n\r\n销售额与增长率对比 产量与合格率 访问量与转化率 成本与利润对比 订单量与客单价 流量与点击率 两个度量单位的关联数据 多指标趋势分析 量价分析 同期对比分析\r\n"
+            },
+            {
+              "componentId": "echartline",
+              "category": "图表",
+              "score": 0.5989071669981901,
+              "doc": "# 折线图 (echartline)\r\n\r\n**组件标识**: echartline | **中文名**: 折线图 | **分类**: 图表 > 折线图\r\n\r\n## 描述\r\n\r\n用折线连接多个数据点，展示数据变化趋势。适合展示时间序列数据或连续数据的走势变化，支持多系列对比、添加面积填充和平滑曲线效果。\r\n\r\n**与其他趋势图的区别**：\r\n- 区别于柱状图（echartbar）：本组件展示连续趋势，柱状图用于离散数据对比\r\n- 区别于面积折线图（echartareaLine）：本组件为纯线条，面积折线图用彩色面积填充区域\r\n- 区别于特殊型折线图（echartdoubleValueLine）：本组件标准折线，特殊型支持多轴和双值显示\r\n- 区别于3D柱状折线图（echartthreedBarAndLine）：本组件纯折线，折线柱形混合图包含柱子\r\n\r\n## 别名/同义词\r\n\r\n趋势图 trend图 线图 连线图 数据走势 时间序列图 变化曲线 折线走势 多线对比\r\n\r\n## 适用场景\r\n\r\n时间序列数据展示 历史数据走势 用户增长趋势 股票价格走势 实时监测数据 按日期的销售额 网站访问量趋势 设备运行状态 KPI达成进展 预测值vs实际值对比\r\n"
+            }
+          ]
+        },
+        {
+          "type": "finish-step"
+        },
+        {
+          "type": "start-step"
+        },
+        {
+          "type": "tool-input-start",
+          "toolCallId": "functions.createComponentTool:3",
+          "toolName": "createComponentTool",
+          "dynamic": false
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "{\""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "screen"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "Id"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "300"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "28"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "-"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "1"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "\","
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "component"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "Name"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "条形"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "图"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "\","
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "placement"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": " null"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.createComponentTool:3",
+          "inputTextDelta": "}"
+        },
+        {
+          "type": "tool-input-available",
+          "toolCallId": "functions.createComponentTool:3",
+          "toolName": "createComponentTool",
+          "input": {
+            "screenId": "30028-1",
+            "componentName": "条形图",
+            "placement": null
+          }
+        },
+        {
+          "type": "tool-output-available",
+          "toolCallId": "functions.createComponentTool:3",
+          "output": {
+            "success": true,
+            "filePath": "screen_30028-1/component/1778740937270.json",
+            "draftId": 1778740937270,
+            "message": "已创建草稿组件 条形图，draftId: 1778740937270，路径: screen_30028-1/component/1778740937270.json"
+          }
+        },
+        {
+          "type": "finish-step"
+        },
+        {
+          "type": "start-step"
+        },
+        {
+          "type": "tool-input-start",
+          "toolCallId": "functions.pushComponentTool:4",
+          "toolName": "pushComponentTool",
+          "dynamic": false
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "{\""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "path"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "\":"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": " \""
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "screen"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "_"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "300"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "28"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "-"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "1"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "/component"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "/"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "177"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "874"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "093"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "727"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "0"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": ".json"
+        },
+        {
+          "type": "tool-input-delta",
+          "toolCallId": "functions.pushComponentTool:4",
+          "inputTextDelta": "\"}"
+        },
+        {
+          "type": "tool-input-available",
+          "toolCallId": "functions.pushComponentTool:4",
+          "toolName": "pushComponentTool",
+          "input": {
+            "path": "screen_30028-1/component/1778740937270.json"
+          }
+        },
+        {
+          "type": "data-tool-call-suspended",
+          "data": {
+            "state": "data-tool-call-suspended",
+            "runId": "0116c890-ba69-40a3-9385-d2cd0f3bb984",
+            "toolCallId": "functions.pushComponentTool:4",
+            "toolName": "pushComponentTool",
+            "suspendPayload": {
+              "type": "ask_approval_create_component",
+              "purpose": "推送组件到前端",
+              "filePath": "screen_30028-1/component/1778740937270.json",
+              "component": {
+                "id": 1778740937270,
+                "component": {
+                  "prop": "echartstripBar",
+                  "width": 420,
+                  "height": 210,
+                  "name": "echart-stripBar"
+                },
+                "name": "条形图",
+                "left": 0,
+                "top": 0,
+                "isLock": false,
+                "zIndex": 0,
+                "display": true,
+                "img": "/img/bar2.20240514.png",
+                "title": "条形图",
+                "listenArgs": [],
+                "cbArgs": [],
+                "openFilter": false,
+                "dataSource": {},
+                "dataType": 0,
+                "dataRemark": [
+                  {
+                    "key": "name",
+                    "map": "name",
+                    "decription": "类目"
+                  },
+                  {
+                    "key": "value",
+                    "map": "value",
+                    "decription": "值"
+                  },
+                  {
+                    "key": "seriesName",
+                    "map": "seriesName",
+                    "decription": "系列"
+                  }
+                ],
+                "events": [],
+                "url": "",
+                "path": "",
+                "dataQuery": "",
+                "loadAnimation": {
+                  "type": "none",
+                  "direction": "right",
+                  "duration": 1000,
+                  "delay": 0,
+                  "timingFunction": "linear"
+                },
+                "data": [
+                  {
+                    "name": "A",
+                    "seriesName": "系列一",
+                    "value": 2024
+                  },
+                  {
+                    "name": "A",
+                    "seriesName": "系列二",
+                    "value": 2378
+                  },
+                  {
+                    "name": "B",
+                    "seriesName": "系列一",
+                    "value": 1423
+                  },
+                  {
+                    "name": "B",
+                    "seriesName": "系列二",
+                    "value": 1779
+                  },
+                  {
+                    "name": "C",
+                    "seriesName": "系列一",
+                    "value": 1532
+                  },
+                  {
+                    "name": "C",
+                    "seriesName": "系列二",
+                    "value": 1788
+                  },
+                  {
+                    "name": "D",
+                    "seriesName": "系列一",
+                    "value": 1920
+                  },
+                  {
+                    "name": "D",
+                    "seriesName": "系列二",
+                    "value": 2232
+                  }
+                ],
+                "option": {
+                  "refresh": true,
+                  "stack": false,
+                  "dataSeriesName": [
+                    "系列一",
+                    "系列二"
+                  ],
+                  "seriesName": [
+                    "系列一",
+                    "系列二"
+                  ],
+                  "seriesTabsName": [
+                    {
+                      "name": "系列1",
+                      "value": "系列一"
+                    },
+                    {
+                      "name": "系列2",
+                      "value": "系列二"
+                    }
+                  ],
+                  "seriesColor": [
+                    {
+                      "type": "linear-gradient",
+                      "angle": "90",
+                      "colors": [
+                        {
+                          "color": "rgba(62,67,244,1)",
+                          "per": 0
+                        },
+                        {
+                          "color": "rgba(137,181,252,1)",
+                          "per": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "linear-gradient",
+                      "angle": "90",
+                      "colors": [
+                        {
+                          "color": "rgba(62,67,244,1)",
+                          "per": 0
+                        },
+                        {
+                          "color": "rgba(61,227,251,1)",
+                          "per": 100
+                        }
+                      ]
+                    }
+                  ],
+                  "seriesColorpicker": [
+                    "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)",
+                    "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)"
+                  ],
+                  "seriesOpacity": [
+                    100,
+                    100
+                  ],
+                  "extremeShow": [
+                    false,
+                    false
+                  ],
+                  "extremeType": [
+                    "max",
+                    "max"
+                  ],
+                  "extremeColor": [
+                    {
+                      "type": "linear-gradient",
+                      "angle": "90",
+                      "colors": [
+                        {
+                          "color": "rgba(62,67,244,1)",
+                          "per": 0
+                        },
+                        {
+                          "color": "rgba(61,227,251,1)",
+                          "per": 100
+                        }
+                      ]
+                    },
+                    {
+                      "type": "linear-gradient",
+                      "angle": "90",
+                      "colors": [
+                        {
+                          "color": "rgba(62,67,244,1)",
+                          "per": 0
+                        },
+                        {
+                          "color": "rgba(137,181,252,1)",
+                          "per": 100
+                        }
+                      ]
+                    }
+                  ],
+                  "extremeOpacity": [
+                    100,
+                    100
+                  ],
+                  "extremeColorpicker": [
+                    "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)",
+                    "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)"
+                  ],
+                  "barGap": 50,
+                  "barCategoryGap": 60,
+                  "barBorderRadius": "default",
+                  "barBackgroundColor": "rgba(255, 255, 255, 0)",
+                  "gridLeft": 45,
+                  "gridTop": 30,
+                  "gridRight": 45,
+                  "gridBottom": 30,
+                  "legendShow": true,
+                  "legendWidth": 800,
+                  "legendHeight": 800,
+                  "legendItemWidth": 10,
+                  "legendItemHeight": 10,
+                  "legendItemGap": 20,
+                  "legendFontFamily": "siayuan-normal",
+                  "legendFontSize": 12,
+                  "legendColor": "rgba(255, 255, 255, 1)",
+                  "legendFontStyle": "normal",
+                  "legendFontWeight": "normal",
+                  "legendTextLeftPadding": 5,
+                  "legendSelectedMode": true,
+                  "legendGrid": {
+                    "top": 0,
+                    "left": "center"
+                  },
+                  "legendOffsetX": 0,
+                  "legendOffsetY": 0,
+                  "legendOrient": "horizontal",
+                  "xNameFontSize": 16,
+                  "yNameFontSize": 16,
+                  "seriesLabelShow": false,
+                  "seriesLabelColor": "rgba(255,255,255,1)",
+                  "seriesLabelFontFamily": "siayuan-normal",
+                  "seriesLabelFontSize": 14,
+                  "seriesLabelFontWeight": "normal",
+                  "seriesLabelFontStyle": "normal",
+                  "seriesLabelOffsetX": 0,
+                  "seriesLabelOffsetY": 0,
+                  "seriesLabelSuffix": "",
+                  "yAxisInverse": true,
+                  "xAxisInverse": false,
+                  "xAxisShow": true,
+                  "yAxisShow": true,
+                  "xAxisLabelShow": true,
+                  "yAxisLabelShow": true,
+                  "yAxisType": "category",
+                  "yAxisInterval": 0,
+                  "yAxisRotate": 0,
+                  "xAxisMin": "0",
+                  "xAxisMax": "",
+                  "xAxisMargin": 8,
+                  "yAxisMargin": 8,
+                  "xAxisFontFamily": "siayuan-normal",
+                  "yAxisFontFamily": "siayuan-normal",
+                  "xAxisFontSize": 12,
+                  "yAxisFontSize": 12,
+                  "xAxisColor": "rgba(209, 209, 209, 1)",
+                  "yAxisColor": "rgba(209, 209, 209, 0.7)",
+                  "xAxisFontStyle": "normal",
+                  "yAxisFontStyle": "normal",
+                  "xAxisFontWeight": "normal",
+                  "yAxisFontWeight": "normal",
+                  "xAxisNameShow": false,
+                  "xAxisName": "单位",
+                  "xAxisNameFontFamily": "siayuan-normal",
+                  "xAxisNameFontSize": 14,
+                  "xAxisNameColor": "rgba(209, 209, 209, 1)",
+                  "xAxisNameFontStyle": "normal",
+                  "xAxisNameFontWeight": "normal",
+                  "xAxisNameGap": 26,
+                  "xAxisLineShow": false,
+                  "yAxisLineShow": false,
+                  "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+                  "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+                  "xAxisLineWidth": 1,
+                  "yAxisLineWidth": 1,
+                  "xAxisLineOpacity": 0.5,
+                  "yAxisLineOpacity": 0.5,
+                  "xAxisTickShow": false,
+                  "yAxisTickShow": false,
+                  "xAxisTickColor": "#65686f",
+                  "yAxisTickColor": "#65686f",
+                  "xAxisTickWidth": 1,
+                  "yAxisTickWidth": 1,
+                  "xAxisTickLength": 2,
+                  "yAxisTickLength": 2,
+                  "xAxisSplitLineShow": false,
+                  "yAxisSplitLineShow": true,
+                  "yAxisSplitLineInterval": 0,
+                  "xAxisSplitLineWidth": 1,
+                  "yAxisSplitLineWidth": 1,
+                  "xAxisSplitLineColor": "#383d47",
+                  "yAxisSplitLineColor": "rgba(56, 61, 71, 1)",
+                  "dataLoop": false,
+                  "dataLoopInterval": 5,
+                  "dataLoopDisplayRows": 4,
+                  "dataLoopRollNum": 1,
+                  "dataZoomShow": false,
+                  "moveHandleSize": 10,
+                  "moveHandleColor": "#d2dbee",
+                  "moveHandleEmphasisColor": "#d2dbee",
+                  "dataZoomRight": 20,
+                  "tooltipLoop": false,
+                  "tooltipLoopInterval": 3,
+                  "tooltipTriggerOn": true,
+                  "tooltipOffsetX": 50,
+                  "tooltipOffsetY": 30,
+                  "tooltipBackground": "",
+                  "tooltipWidth": 120,
+                  "tooltipHeight": 110,
+                  "tooltipPaddingTop": 13,
+                  "tooltipPaddingBottom": 10,
+                  "tooltipPaddingLeft": 12,
+                  "tooltipPaddingRight": 12,
+                  "tooltipNameFontFamily": "siayuan-normal",
+                  "tooltipNameFontSize": 16,
+                  "tooltipNameColor": "rgba(255, 255, 255, 1)",
+                  "tooltipNameFontWeight": "normal",
+                  "tooltipNameFontStyle": "normal",
+                  "tooltipAlign": "left",
+                  "tooltipNameOffsetX": 0,
+                  "tooltipNameOffsetY": 0,
+                  "tooltipArrLineHeight": 5,
+                  "tooltipSeriesNameFontFamily": "siayuan-normal",
+                  "tooltipSeriesNameFontSize": 18,
+                  "tooltipSeriesNameColor": "rgba(255, 255, 255, 1)",
+                  "tooltipSeriesNameFontWeight": "normal",
+                  "tooltipSeriesNameFontStyle": "normal",
+                  "tooltipValueFontFamily": "siayuan-normal",
+                  "tooltipValueFontSize": 12,
+                  "tooltipValueColor": "rgba(255, 255, 255, 1)",
+                  "tooltipValueFontWeight": "normal",
+                  "tooltipValueFontStyle": "normal",
+                  "tooltipUnit": [
+                    "",
+                    ""
+                  ],
+                  "tooltipUnitFontFamily": "siayuan-normal",
+                  "tooltipUnitFontSize": 12,
+                  "tooltipUnitColor": "rgba(255, 255, 255, 1)",
+                  "tooltipUnitFontWeight": "normal",
+                  "tooltipUnitFontStyle": "normal",
+                  "tooltipUnitOffsetX": 0,
+                  "tooltipUnitOffsetY": 0,
+                  "tooltipMarkerSize": 10,
+                  "dataUnitName": [
+                    "系列一",
+                    "系列二"
+                  ],
+                  "unitTabsName": [
+                    {
+                      "name": "后缀1",
+                      "value": "个"
+                    },
+                    {
+                      "name": "后缀2",
+                      "value": "个"
+                    }
+                  ],
+                  "tooltipAxisPointerWidth": 1,
+                  "tooltipAxisPointerColor": "rgba(255, 255, 255, 1)",
+                  "tooltipLabelGapSapce": 5
+                },
+                "icon": "icon-bar",
+                "csvType": 0,
+                "callbackArgs": [],
+                "dataMethod": "get",
+                "requestHeader": "{}",
+                "requestBody": "{}",
+                "crossOrigin": false,
+                "needCookie": false,
+                "autoRefresh": false,
+                "sql": "SELECT * FROM",
+                "dataFormatter": "(data, callbackArgs) => {      return data  }",
+                "time": 30,
+                "_draftId": 1778740937270
+              }
+            },
+            "resumeSchema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"type\":\"object\",\"properties\":{\"approved\":{\"description\":\"用户是否批准操作\",\"type\":\"boolean\"},\"componentId\":{\"description\":\"前端为组件分配的真实 ID\",\"type\":\"number\"}},\"additionalProperties\":false}"
+          },
+          "id": "functions.pushComponentTool:4"
+        },
+        {
+          "type": "data-usage",
+          "data": {
+            "inputTokens": 18947,
+            "outputTokens": 35,
+            "totalTokens": 18982,
+            "reasoningTokens": 0,
+            "cachedInputTokens": 2048,
+            "raw": {
+              "inputTokens": 18947,
+              "outputTokens": 35,
+              "totalTokens": 18982,
+              "reasoningTokens": 0,
+              "cachedInputTokens": 2048
+            }
+          }
+        }
+      ]
+    },
+    {
+      "step": 1,
+      "runId": "0116c890-ba69-40a3-9385-d2cd0f3bb984",
+      "request": {
+        "messages": [
+          {
+            "id": "e123be5c-97fd-4a98-af61-5a3da486fd9b",
+            "role": "user",
+            "content": "<editor-context>\n<screen-info>\n大屏ID: 30028，版本号: 1，Workspace目录: screen_30028-1\n</screen-info>\n\n<current-page>\n类型: 大屏根画布\n</current-page>\n\n<selected-components>无</selected-components>\n\n<page-components>\n  <component id=\"3102579\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n  <component id=\"3101069\" name=\"折线柱形图\" prop=\"echartlineAndBar\" title=\"折线柱形图\" />\n  <component id=\"3101064\" name=\"数据容器\" prop=\"ft-dataContainer\" title=\"数据容器\" />\n  <component id=\"3090844\" name=\"动态面板\" prop=\"ft-panel\" title=\"动态面板\" />\n  <component id=\"3102626\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n</page-components>\n</editor-context>\n\n<user-message>\n添加一个条形图\n</user-message>",
+            "parts": [
+              {
+                "type": "text",
+                "text": "<editor-context>\n<screen-info>\n大屏ID: 30028，版本号: 1，Workspace目录: screen_30028-1\n</screen-info>\n\n<current-page>\n类型: 大屏根画布\n</current-page>\n\n<selected-components>无</selected-components>\n\n<page-components>\n  <component id=\"3102579\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n  <component id=\"3101069\" name=\"折线柱形图\" prop=\"echartlineAndBar\" title=\"折线柱形图\" />\n  <component id=\"3101064\" name=\"数据容器\" prop=\"ft-dataContainer\" title=\"数据容器\" />\n  <component id=\"3090844\" name=\"动态面板\" prop=\"ft-panel\" title=\"动态面板\" />\n  <component id=\"3102626\" name=\"条形图\" prop=\"echartstripBar\" title=\"条形图\" />\n</page-components>\n</editor-context>\n\n<user-message>\n添加一个条形图\n</user-message>"
+              }
+            ]
+          },
+          {
+            "id": "c076fbdc-4ac8-47f8-a6a8-50a9f9d33986",
+            "role": "assistant",
+            "parts": [
+              {
+                "type": "step-start"
+              },
+              {
+                "type": "tool-skill",
+                "toolCallId": "functions.skill:0",
+                "state": "output-available",
+                "input": {
+                  "name": "sw-agent-component"
+                },
+                "output": "# Screenwright 大屏组件操作\r\n\r\n## 操作目录\r\n\r\n| 操作     | 参考文件                                              |\r\n| -------- | ----------------------------------------------------- |\r\n| 创建组件 | [create-component.md](references/create-component.md) |\r\n| 修改组件 | [update-component.md](references/update-component.md) |\r\n| 复制组件 | [copy-component.md](references/copy-component.md)     |\r\n| 删除组件 | [delete-component.md](references/delete-component.md) |\r\n\r\n遇到对应操作时，读取对应参考文件后执行。\n\n## References\n- references/copy-component.md\n- references/create-component.md\n- references/delete-component.md\n- references/update-component.md"
+              },
+              {
+                "type": "step-start"
+              },
+              {
+                "type": "tool-skill_read",
+                "toolCallId": "functions.skill_read:1",
+                "state": "output-available",
+                "input": {
+                  "skillName": "sw-agent-component",
+                  "path": "references/create-component.md",
+                  "startLine": null,
+                  "endLine": null
+                },
+                "output": "# 创建组件流程\r\n\r\n## 工具说明\r\n\r\n| 工具                      | 用途                                                                 |\r\n| ------------------------- | -------------------------------------------------------------------- |\r\n| `search-component`        | 通过自然语言描述搜索匹配的组件，返回组件文档                         |\r\n| `create_component`        | 在 workspace 创建组件 JSON 文件（带 _draftId），返回 filePath        |\r\n| `read_file`               | 读取组件文件内容（edit_file 前必须先调用）                           |\r\n| `edit_file`               | 修改组件文件，组件路径时自动校验并推送到前端                         |\r\n| `push_component`          | **首选推送工具**（客户端）：直接创建组件并同步返回真实 componentId   |\r\n| `stream_push_component`   | **备选推送工具**（服务端）：通过流推送，适用于客户端工具不可用的场景 |\r\n\r\n---\r\n\r\n## Step 1：确认目标组件\r\n\r\n### 路径 A：用户明确指定了组件\r\n\r\n直接在 `sw-component-schema` skill 的组件速查表中确认该组件是否存在，提取：\r\n\r\n- **title**：中文名（如 `面积折线图`）\r\n- **prop**：英文标识（如 `echartareaLine`）\r\n\r\n### 路径 B：用户描述了需求但未指定组件\r\n\r\n1. 从用户描述中提取特征关键词，构造一个简洁的自然语言 query\r\n2. 调用 `search-component` 工具（topK 默认 3）\r\n3. 从返回的 `doc` 字段第一行解析：\r\n   ```\r\n   # 面积折线图 (echartareaLine)\r\n        ↑ title          ↑ prop\r\n   ```\r\n4. 若有多个候选，根据 `score` 和描述选最优项，或向用户确认\r\n\r\n---\r\n\r\n## Step 2：创建组件文件\r\n\r\n调用 `create_component` 在 workspace 中创建组件 JSON：\r\n\r\n```\r\ncreate_component({\r\n  screenId: \"<大屏标识>\",          // 如 \"29445-1\"\r\n  componentName: \"<title>\",        // 中文名，如 \"柱状图\"\r\n  placement: {                     // 可选，嵌套时提供\r\n    parentId: <父组件id>,\r\n    parentType: \"group\" | \"dynamicPanel\",\r\n    stateId: \"<状态id>\"            // dynamicPanel 时必填\r\n  }\r\n})\r\n```\r\n\r\n返回 `{ filePath, draftId }`，后续操作都基于这个 `filePath`。\r\n\r\n---\r\n\r\n## Step 3：按需修改\r\n\r\n**核心原则：只修改用户明确要求的字段。模板已包含所有默认值，用户没提的字段不要动。**\r\n\r\n### 是否需要修改？\r\n\r\n- **用户有定制需求**（数据、位置、样式等）→ 继续 Step 3\r\n- **用户只说\"加一个 XX 图\"无其他要求** → 跳到 Step 4 直接推送\r\n\r\n### 修改流程\r\n\r\n1. 先调用 `read_file({ path: filePath })` 读取文件内容\r\n2. 再调用 `edit_file` 修改指定字段：\r\n\r\n```\r\nedit_file({\r\n  path: \"<filePath>\",\r\n  old_string: \"要替换的内容\",\r\n  new_string: \"替换后的内容\"\r\n})\r\n```\r\n\r\n**组件 JSON 文件（路径含 /component/）会自动使用 prop 专属 schema 校验 data/option，校验通过后自动推送到前端。**\r\n\r\n### 按需参考 schema\r\n\r\n| 用户需求                             | 参考来源                                                     |\r\n| ------------------------------------ | ------------------------------------------------------------ |\r\n| 位置（left/top）                     | 激活 `sw-component-schema` → `component-base-identity.md` |\r\n| 尺寸（component.width/height）       | 激活 `sw-component-schema` → `component-base-identity.md` |\r\n| 数据                                 | 激活 `sw-component-schema` → 对应组件的 references 文件   |\r\n| 数据源（API/SQL）                    | 激活 `sw-component-schema` → `component-base-data.md`     |\r\n| 图表样式、series、颜色等组件专属配置 | 激活 `sw-component-schema` → 对应组件的 references 文件   |\r\n\r\n### 涉及数据时必须查 schema\r\n\r\n用户提供了数据，或者要求展示某些数据时，**必须**：\r\n\r\n1. 调用 `skill` 工具，启用 `sw-component-schema`\r\n2. 查询该组件（按 prop 名称）的 data 字段结构\r\n3. 将用户数据按组件 data 格式映射后修改 `data` 字段\r\n\r\n**禁止直接用用户给出的字段名填写 data**——用户数据的字段名与组件所需格式几乎不会一致，必须做映射转换。\r\n\r\n### 禁止修改的字段\r\n\r\n| 字段       | 原因                                   |\r\n| ---------- | -------------------------------------- |\r\n| `_draftId` | 系统标记，用于前端同步时匹配文件       |\r\n| `id`       | 由系统分配                             |\r\n| `title`    | 系统内部标识符，由组件模板自动设置     |\r\n\r\n---\r\n\r\n## Step 4：推送到前端\r\n\r\n### 已修改过（edit_file 组件路径）\r\n\r\n`edit_file` 已自动推送，无需再次调用。\r\n\r\n### 未修改（使用默认模板直接推送）\r\n\r\n#### 优先：`push_component`（客户端工具）\r\n\r\n直接创建组件并同步返回真实 ID，**优先使用**：\r\n\r\n```\r\npush_component({\r\n  path: \"<filePath>\",              // 工作区文件相对路径\r\n  componentTitle: \"<组件中文名>\"    // 如 \"柱状图\"，用于查找组件模板\r\n})\r\n```\r\n\r\n返回值：\r\n\r\n```json\r\n{ \"success\": true, \"message\": \"成功添加 柱状图\", \"componentId\": 456 }\r\n```\r\n\r\n#### 备选：`stream_push_component`（服务端工具）\r\n\r\n当 `push_component` 不可用时（如运行在子 Agent 中，无法访问客户端工具），改用服务端流推送：\r\n\r\n```\r\nstream_push_component({\r\n  path: \"<filePath>\"              // 工作区文件相对路径\r\n})\r\n```\r\n\r\n推送成功后，前端会分配真实 ID，同步完成后写入映射文件。需要真实 ID 时，读取映射文件查询：\r\n\r\n```\r\nread_file({ path: \"screen_<screenId>/_draft_id_map.json\" })\r\n// 返回：{ \"<draftId>\": <realId>, ... }\r\n```\r\n\r\n### 获得新组件 ID 后的注意事项\r\n\r\n1. **不要再读取或引用原 draft 文件路径**（如 `component/{_draftId}.json`）\r\n2. 后续对该组件的 `read_file`、`edit_file` 操作应使用新路径：`component/{componentId}.json`\r\n3. 如果需要嵌套放置，`addTo` 参数使用 `componentId` 作为父组件 ID\r\n\r\n---\r\n\r\n## 示例\r\n\r\n### 示例 1：仅需默认样式\r\n\r\n**用户**：加一个柱状图\r\n\r\n1. 确认组件：速查 → title = `柱状图`\r\n2. 创建文件：\r\n   ```\r\n   create_component({ screenId: \"29445-1\", componentName: \"柱状图\" })\r\n   ```\r\n3. 用户无定制需求 → 调用客户端工具推送：\r\n   ```\r\n   push_component({ path: \"screen_29445-1/component/{draftId}.json\", componentTitle: \"柱状图\" })\r\n   ```\r\n   返回 `{ \"componentId\": 456 }` → 后续使用 `component/456.json` 操作该组件\r\n\r\n### 示例 2：带数据和定制\r\n\r\n**用户**：加一个柱状图，展示各分数段人数\r\n\r\n1. 确认组件：速查 → title = `柱状图`\r\n2. 创建文件：\r\n   ```\r\n   create_component({ screenId: \"29445-1\", componentName: \"柱状图\" })\r\n   ```\r\n3. 用户要传数据 → 查 `echartbar.md` 确认 `data` 结构\r\n4. 读取并修改：\r\n   ```\r\n   read_file({ path: \"<filePath>\" })\r\n\r\n   edit_file({\r\n     path: \"<filePath>\",\r\n     old_string: \"原有 data 内容\",\r\n     new_string: \"映射后的 data 内容\"\r\n   })\r\n   ```\r\n   edit_file 自动校验并推送到前端，流程结束。\r\n"
+              },
+              {
+                "type": "step-start"
+              },
+              {
+                "type": "text",
+                "text": "根据参考文档，我来为您创建一个条形图组件。首先，我需要确认当前大屏的组件信息，然后创建条形图。",
+                "state": "done"
+              },
+              {
+                "type": "tool-searchComponentTool",
+                "toolCallId": "functions.searchComponentTool:2",
+                "state": "output-available",
+                "input": {
+                  "query": "条形图",
+                  "topK": 3
+                },
+                "output": [
+                  {
+                    "componentId": "echartstripBar",
+                    "category": "图表",
+                    "score": 0.6224752635441811,
+                    "doc": "# 条形图 (echartstripBar)\r\n\r\n**组件标识**: echartstripBar | **中文名**: 条形图 | **分类**: 图表 > 柱形图\r\n\r\n## 描述\r\n\r\n横向柱状图，用水平柱子长度表示数值大小，适合展示长标签的分类数据对比。支持多系列并排展示、堆叠模式、数值标签显示和极值高亮。\r\n\r\n**与其他柱图的区别**：\r\n- 区别于柱状图（echartbar）：本组件为横向，柱状图为竖向\r\n- 区别于双向条形图（echartbothWayStripBar）：本组件单向，双向条形图两侧分别展示两个系列\r\n- 区别于排名图（echartrank）：本组件标准对比，排名图带排序样式\r\n- 区别于折线柱形图（echartlineAndBar）：本组件纯条形，不含折线\r\n\r\n## 别名/同义词\r\n\r\n横向柱图 条形图 bar图 水平柱状图 横向对比 柱形图 条形对比 分类排行 横向统计\r\n\r\n## 适用场景\r\n\r\n部门销售额对比 产品销量排行 地区数据对比 员工绩效排名 月度业绩对比 客户收入等级 长标签分类 项目投入对比 KPI完成情况\r\n"
+                  },
+                  {
+                    "componentId": "echartlineAndBar",
+                    "category": "图表",
+                    "score": 0.6131441943434071,
+                    "doc": "# 折线柱形图 (echartlineAndBar)\r\n\r\n**组件标识**: echartlineAndBar | **中文名**: 折线柱形图 | **分类**: 图表 > 柱形图\r\n\r\n## 描述\r\n\r\n混合图表，在同一个图表中同时展示柱形图和折线图，支持双Y轴左右对齐，适合展示不同度量单位的数据关联趋势。可自由切换每个系列的图表类型（柱形/折线）、独立设置颜色、透明度、数值标签等样式。\r\n\r\n**与其他柱图的区别**：\r\n- 区别于柱状图（echartbar）：本组件混合图表，可同时包含柱形和折线\r\n- 区别于折线图（echartline）：本组件默认包含柱形，折线图为纯折线\r\n- 区别于条形图（echartstripBar）：本组件可混合折线，条形图纯条形\r\n- 区别于面积折线图（echartareaLine）：本组件柱形+折线组合，面积图为折线+面积填充\r\n- 区别于3D折线柱形图（echartthreedBarAndLine）：本组件2D平面，3D图为立体效果\r\n\r\n## 别名/同义词\r\n\r\n折线柱形图 柱状折线图 混合图表 组合图 柱折图 双轴图 趋势对比图 量价图 关联分析图 复合图 组合图表\r\n\r\n## 适用场景\r\n\r\n销售额与增长率对比 产量与合格率 访问量与转化率 成本与利润对比 订单量与客单价 流量与点击率 两个度量单位的关联数据 多指标趋势分析 量价分析 同期对比分析\r\n"
+                  },
+                  {
+                    "componentId": "echartline",
+                    "category": "图表",
+                    "score": 0.5989071669981901,
+                    "doc": "# 折线图 (echartline)\r\n\r\n**组件标识**: echartline | **中文名**: 折线图 | **分类**: 图表 > 折线图\r\n\r\n## 描述\r\n\r\n用折线连接多个数据点，展示数据变化趋势。适合展示时间序列数据或连续数据的走势变化，支持多系列对比、添加面积填充和平滑曲线效果。\r\n\r\n**与其他趋势图的区别**：\r\n- 区别于柱状图（echartbar）：本组件展示连续趋势，柱状图用于离散数据对比\r\n- 区别于面积折线图（echartareaLine）：本组件为纯线条，面积折线图用彩色面积填充区域\r\n- 区别于特殊型折线图（echartdoubleValueLine）：本组件标准折线，特殊型支持多轴和双值显示\r\n- 区别于3D柱状折线图（echartthreedBarAndLine）：本组件纯折线，折线柱形混合图包含柱子\r\n\r\n## 别名/同义词\r\n\r\n趋势图 trend图 线图 连线图 数据走势 时间序列图 变化曲线 折线走势 多线对比\r\n\r\n## 适用场景\r\n\r\n时间序列数据展示 历史数据走势 用户增长趋势 股票价格走势 实时监测数据 按日期的销售额 网站访问量趋势 设备运行状态 KPI达成进展 预测值vs实际值对比\r\n"
+                  }
+                ]
+              },
+              {
+                "type": "step-start"
+              },
+              {
+                "type": "tool-createComponentTool",
+                "toolCallId": "functions.createComponentTool:3",
+                "state": "output-available",
+                "input": {
+                  "screenId": "30028-1",
+                  "componentName": "条形图",
+                  "placement": null
+                },
+                "output": {
+                  "success": true,
+                  "filePath": "screen_30028-1/component/1778740937270.json",
+                  "draftId": 1778740937270,
+                  "message": "已创建草稿组件 条形图，draftId: 1778740937270，路径: screen_30028-1/component/1778740937270.json"
+                }
+              },
+              {
+                "type": "step-start"
+              },
+              {
+                "type": "tool-pushComponentTool",
+                "toolCallId": "functions.pushComponentTool:4",
+                "state": "input-available",
+                "input": {
+                  "path": "screen_30028-1/component/1778740937270.json"
+                }
+              },
+              {
+                "type": "data-tool-call-suspended",
+                "data": {
+                  "state": "data-tool-call-suspended",
+                  "runId": "0116c890-ba69-40a3-9385-d2cd0f3bb984",
+                  "toolCallId": "functions.pushComponentTool:4",
+                  "toolName": "pushComponentTool",
+                  "suspendPayload": {
+                    "type": "ask_approval_create_component",
+                    "purpose": "推送组件到前端",
+                    "filePath": "screen_30028-1/component/1778740937270.json",
+                    "component": {
+                      "id": 1778740937270,
+                      "component": {
+                        "prop": "echartstripBar",
+                        "width": 420,
+                        "height": 210,
+                        "name": "echart-stripBar"
+                      },
+                      "name": "条形图",
+                      "left": 0,
+                      "top": 0,
+                      "isLock": false,
+                      "zIndex": 0,
+                      "display": true,
+                      "img": "/img/bar2.20240514.png",
+                      "title": "条形图",
+                      "listenArgs": [],
+                      "cbArgs": [],
+                      "openFilter": false,
+                      "dataSource": {},
+                      "dataType": 0,
+                      "dataRemark": [
+                        {
+                          "key": "name",
+                          "map": "name",
+                          "decription": "类目"
+                        },
+                        {
+                          "key": "value",
+                          "map": "value",
+                          "decription": "值"
+                        },
+                        {
+                          "key": "seriesName",
+                          "map": "seriesName",
+                          "decription": "系列"
+                        }
+                      ],
+                      "events": [],
+                      "url": "",
+                      "path": "",
+                      "dataQuery": "",
+                      "loadAnimation": {
+                        "type": "none",
+                        "direction": "right",
+                        "duration": 1000,
+                        "delay": 0,
+                        "timingFunction": "linear"
+                      },
+                      "data": [
+                        {
+                          "name": "A",
+                          "seriesName": "系列一",
+                          "value": 2024
+                        },
+                        {
+                          "name": "A",
+                          "seriesName": "系列二",
+                          "value": 2378
+                        },
+                        {
+                          "name": "B",
+                          "seriesName": "系列一",
+                          "value": 1423
+                        },
+                        {
+                          "name": "B",
+                          "seriesName": "系列二",
+                          "value": 1779
+                        },
+                        {
+                          "name": "C",
+                          "seriesName": "系列一",
+                          "value": 1532
+                        },
+                        {
+                          "name": "C",
+                          "seriesName": "系列二",
+                          "value": 1788
+                        },
+                        {
+                          "name": "D",
+                          "seriesName": "系列一",
+                          "value": 1920
+                        },
+                        {
+                          "name": "D",
+                          "seriesName": "系列二",
+                          "value": 2232
+                        }
+                      ],
+                      "option": {
+                        "refresh": true,
+                        "stack": false,
+                        "dataSeriesName": [
+                          "系列一",
+                          "系列二"
+                        ],
+                        "seriesName": [
+                          "系列一",
+                          "系列二"
+                        ],
+                        "seriesTabsName": [
+                          {
+                            "name": "系列1",
+                            "value": "系列一"
+                          },
+                          {
+                            "name": "系列2",
+                            "value": "系列二"
+                          }
+                        ],
+                        "seriesColor": [
+                          {
+                            "type": "linear-gradient",
+                            "angle": "90",
+                            "colors": [
+                              {
+                                "color": "rgba(62,67,244,1)",
+                                "per": 0
+                              },
+                              {
+                                "color": "rgba(137,181,252,1)",
+                                "per": 100
+                              }
+                            ]
+                          },
+                          {
+                            "type": "linear-gradient",
+                            "angle": "90",
+                            "colors": [
+                              {
+                                "color": "rgba(62,67,244,1)",
+                                "per": 0
+                              },
+                              {
+                                "color": "rgba(61,227,251,1)",
+                                "per": 100
+                              }
+                            ]
+                          }
+                        ],
+                        "seriesColorpicker": [
+                          "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)",
+                          "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)"
+                        ],
+                        "seriesOpacity": [
+                          100,
+                          100
+                        ],
+                        "extremeShow": [
+                          false,
+                          false
+                        ],
+                        "extremeType": [
+                          "max",
+                          "max"
+                        ],
+                        "extremeColor": [
+                          {
+                            "type": "linear-gradient",
+                            "angle": "90",
+                            "colors": [
+                              {
+                                "color": "rgba(62,67,244,1)",
+                                "per": 0
+                              },
+                              {
+                                "color": "rgba(61,227,251,1)",
+                                "per": 100
+                              }
+                            ]
+                          },
+                          {
+                            "type": "linear-gradient",
+                            "angle": "90",
+                            "colors": [
+                              {
+                                "color": "rgba(62,67,244,1)",
+                                "per": 0
+                              },
+                              {
+                                "color": "rgba(137,181,252,1)",
+                                "per": 100
+                              }
+                            ]
+                          }
+                        ],
+                        "extremeOpacity": [
+                          100,
+                          100
+                        ],
+                        "extremeColorpicker": [
+                          "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)",
+                          "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)"
+                        ],
+                        "barGap": 50,
+                        "barCategoryGap": 60,
+                        "barBorderRadius": "default",
+                        "barBackgroundColor": "rgba(255, 255, 255, 0)",
+                        "gridLeft": 45,
+                        "gridTop": 30,
+                        "gridRight": 45,
+                        "gridBottom": 30,
+                        "legendShow": true,
+                        "legendWidth": 800,
+                        "legendHeight": 800,
+                        "legendItemWidth": 10,
+                        "legendItemHeight": 10,
+                        "legendItemGap": 20,
+                        "legendFontFamily": "siayuan-normal",
+                        "legendFontSize": 12,
+                        "legendColor": "rgba(255, 255, 255, 1)",
+                        "legendFontStyle": "normal",
+                        "legendFontWeight": "normal",
+                        "legendTextLeftPadding": 5,
+                        "legendSelectedMode": true,
+                        "legendGrid": {
+                          "top": 0,
+                          "left": "center"
+                        },
+                        "legendOffsetX": 0,
+                        "legendOffsetY": 0,
+                        "legendOrient": "horizontal",
+                        "xNameFontSize": 16,
+                        "yNameFontSize": 16,
+                        "seriesLabelShow": false,
+                        "seriesLabelColor": "rgba(255,255,255,1)",
+                        "seriesLabelFontFamily": "siayuan-normal",
+                        "seriesLabelFontSize": 14,
+                        "seriesLabelFontWeight": "normal",
+                        "seriesLabelFontStyle": "normal",
+                        "seriesLabelOffsetX": 0,
+                        "seriesLabelOffsetY": 0,
+                        "seriesLabelSuffix": "",
+                        "yAxisInverse": true,
+                        "xAxisInverse": false,
+                        "xAxisShow": true,
+                        "yAxisShow": true,
+                        "xAxisLabelShow": true,
+                        "yAxisLabelShow": true,
+                        "yAxisType": "category",
+                        "yAxisInterval": 0,
+                        "yAxisRotate": 0,
+                        "xAxisMin": "0",
+                        "xAxisMax": "",
+                        "xAxisMargin": 8,
+                        "yAxisMargin": 8,
+                        "xAxisFontFamily": "siayuan-normal",
+                        "yAxisFontFamily": "siayuan-normal",
+                        "xAxisFontSize": 12,
+                        "yAxisFontSize": 12,
+                        "xAxisColor": "rgba(209, 209, 209, 1)",
+                        "yAxisColor": "rgba(209, 209, 209, 0.7)",
+                        "xAxisFontStyle": "normal",
+                        "yAxisFontStyle": "normal",
+                        "xAxisFontWeight": "normal",
+                        "yAxisFontWeight": "normal",
+                        "xAxisNameShow": false,
+                        "xAxisName": "单位",
+                        "xAxisNameFontFamily": "siayuan-normal",
+                        "xAxisNameFontSize": 14,
+                        "xAxisNameColor": "rgba(209, 209, 209, 1)",
+                        "xAxisNameFontStyle": "normal",
+                        "xAxisNameFontWeight": "normal",
+                        "xAxisNameGap": 26,
+                        "xAxisLineShow": false,
+                        "yAxisLineShow": false,
+                        "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+                        "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+                        "xAxisLineWidth": 1,
+                        "yAxisLineWidth": 1,
+                        "xAxisLineOpacity": 0.5,
+                        "yAxisLineOpacity": 0.5,
+                        "xAxisTickShow": false,
+                        "yAxisTickShow": false,
+                        "xAxisTickColor": "#65686f",
+                        "yAxisTickColor": "#65686f",
+                        "xAxisTickWidth": 1,
+                        "yAxisTickWidth": 1,
+                        "xAxisTickLength": 2,
+                        "yAxisTickLength": 2,
+                        "xAxisSplitLineShow": false,
+                        "yAxisSplitLineShow": true,
+                        "yAxisSplitLineInterval": 0,
+                        "xAxisSplitLineWidth": 1,
+                        "yAxisSplitLineWidth": 1,
+                        "xAxisSplitLineColor": "#383d47",
+                        "yAxisSplitLineColor": "rgba(56, 61, 71, 1)",
+                        "dataLoop": false,
+                        "dataLoopInterval": 5,
+                        "dataLoopDisplayRows": 4,
+                        "dataLoopRollNum": 1,
+                        "dataZoomShow": false,
+                        "moveHandleSize": 10,
+                        "moveHandleColor": "#d2dbee",
+                        "moveHandleEmphasisColor": "#d2dbee",
+                        "dataZoomRight": 20,
+                        "tooltipLoop": false,
+                        "tooltipLoopInterval": 3,
+                        "tooltipTriggerOn": true,
+                        "tooltipOffsetX": 50,
+                        "tooltipOffsetY": 30,
+                        "tooltipBackground": "",
+                        "tooltipWidth": 120,
+                        "tooltipHeight": 110,
+                        "tooltipPaddingTop": 13,
+                        "tooltipPaddingBottom": 10,
+                        "tooltipPaddingLeft": 12,
+                        "tooltipPaddingRight": 12,
+                        "tooltipNameFontFamily": "siayuan-normal",
+                        "tooltipNameFontSize": 16,
+                        "tooltipNameColor": "rgba(255, 255, 255, 1)",
+                        "tooltipNameFontWeight": "normal",
+                        "tooltipNameFontStyle": "normal",
+                        "tooltipAlign": "left",
+                        "tooltipNameOffsetX": 0,
+                        "tooltipNameOffsetY": 0,
+                        "tooltipArrLineHeight": 5,
+                        "tooltipSeriesNameFontFamily": "siayuan-normal",
+                        "tooltipSeriesNameFontSize": 18,
+                        "tooltipSeriesNameColor": "rgba(255, 255, 255, 1)",
+                        "tooltipSeriesNameFontWeight": "normal",
+                        "tooltipSeriesNameFontStyle": "normal",
+                        "tooltipValueFontFamily": "siayuan-normal",
+                        "tooltipValueFontSize": 12,
+                        "tooltipValueColor": "rgba(255, 255, 255, 1)",
+                        "tooltipValueFontWeight": "normal",
+                        "tooltipValueFontStyle": "normal",
+                        "tooltipUnit": [
+                          "",
+                          ""
+                        ],
+                        "tooltipUnitFontFamily": "siayuan-normal",
+                        "tooltipUnitFontSize": 12,
+                        "tooltipUnitColor": "rgba(255, 255, 255, 1)",
+                        "tooltipUnitFontWeight": "normal",
+                        "tooltipUnitFontStyle": "normal",
+                        "tooltipUnitOffsetX": 0,
+                        "tooltipUnitOffsetY": 0,
+                        "tooltipMarkerSize": 10,
+                        "dataUnitName": [
+                          "系列一",
+                          "系列二"
+                        ],
+                        "unitTabsName": [
+                          {
+                            "name": "后缀1",
+                            "value": "个"
+                          },
+                          {
+                            "name": "后缀2",
+                            "value": "个"
+                          }
+                        ],
+                        "tooltipAxisPointerWidth": 1,
+                        "tooltipAxisPointerColor": "rgba(255, 255, 255, 1)",
+                        "tooltipLabelGapSapce": 5
+                      },
+                      "icon": "icon-bar",
+                      "csvType": 0,
+                      "callbackArgs": [],
+                      "dataMethod": "get",
+                      "requestHeader": "{}",
+                      "requestBody": "{}",
+                      "crossOrigin": false,
+                      "needCookie": false,
+                      "autoRefresh": false,
+                      "sql": "SELECT * FROM",
+                      "dataFormatter": "(data, callbackArgs) => {      return data  }",
+                      "time": 30,
+                      "_draftId": 1778740937270
+                    }
+                  },
+                  "resumeSchema": "{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"type\":\"object\",\"properties\":{\"approved\":{\"description\":\"用户是否批准操作\",\"type\":\"boolean\"},\"componentId\":{\"description\":\"前端为组件分配的真实 ID\",\"type\":\"number\"}},\"additionalProperties\":false}"
+                },
+                "id": "functions.pushComponentTool:4"
+              },
+              {
+                "type": "data-usage",
+                "data": {
+                  "inputTokens": 18947,
+                  "outputTokens": 35,
+                  "totalTokens": 18982,
+                  "reasoningTokens": 0,
+                  "cachedInputTokens": 2048,
+                  "raw": {
+                    "inputTokens": 18947,
+                    "outputTokens": 35,
+                    "totalTokens": 18982,
+                    "reasoningTokens": 0,
+                    "cachedInputTokens": 2048
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "clientTools": {
+          "listAvailableActions": {
+            "description": "在配置交互事件时 使用组件的标识数组(props) 批量列出组件所有可以支持的行为，返回 { prop: [{label, value}] } 结构",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "props": {
+                  "description": "组件的 prop 标识数组，位于组件JsonSchema的 component.prop字段 如 ['bar', 'line']",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "props"
+              ],
+              "additionalProperties": false
+            },
+            "outputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "description": "行为名称",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "行为标识",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "listAvailableEvents": {
+            "description": "在配置交互事件时 使用组件的标识数组(props) 批量列出组件所有可以触发事件的方式，返回 { prop: [{label, value}] } 结构",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "props": {
+                  "description": "组件的 prop 标识数组，位于组件JsonSchema的 component.prop字段 如 ['bar', 'line']",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "props"
+              ],
+              "additionalProperties": false
+            },
+            "outputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "description": "事件名称",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "事件标识",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "routeChange": {
+            "description": "用于前端路由跳转。支持三种跳转目标：root（大屏首页，无需 targetId）、panel（动态面板，需提供 targetId）、encode（终端面板，需提供 targetId）。",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "targetType": {
+                  "description": "跳转目标类型 root:大屏首页;panel:动态面板;encode:终端面板",
+                  "type": "string",
+                  "enum": [
+                    "root",
+                    "encode",
+                    "panel"
+                  ]
+                },
+                "targetId": {
+                  "description": "跳转目标ID,只有在targetType为panel或encode时才需要提供",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "targetType"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "listLayoutTemplates": {
+            "description": "输出可用的布局模板列表，目前仅包含名称和描述，后续可根据需要增加其他信息",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "scene": {
+                  "description": "布局场景，默认为空，表示不区分场景",
+                  "type": "string"
+                },
+                "theme": {
+                  "description": "布局主题类型，默认为空，表示不区分主题",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "getLayoutTemplateDetail": {
+            "description": "根据布局模板ID获取布局模板的详细信息，输入为布局模板ID，输出为包含布局模板详细信息的对象",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "布局模板ID",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "applyLayoutTemplate": {
+            "description": "将模板应用到当前大屏",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "布局模板ID",
+                  "type": "string"
+                },
+                "options": {
+                  "description": "布局模板自定义配置，包含目标大屏ID、生成图层ID集合等信息，格式为JSON字符串，具体内容根据实际需求定义，例如：{\"targetScreenId\": \"123\", \"generateLayerIds\": [\"layer1\", \"layer2\"]}",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "updateLayoutTemplate": {
+            "description": "将替换模板应用到当前大屏",
+            "inputSchema": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "布局模板ID",
+                  "type": "string"
+                },
+                "options": {
+                  "description": "布局模板自定义配置，包含目标大屏ID、生成图层ID集合等信息，格式为JSON字符串，具体内容根据实际需求定义，例如：{\"targetScreenId\": \"123\", \"generateLayerIds\": [\"layer1\", \"layer2\"]}",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "threadId": "822a0cd8-7ddd-4859-b0ce-2726320f1b6f",
+        "resourceId": "30028",
+        "runId": "0116c890-ba69-40a3-9385-d2cd0f3bb984",
+        "resumeData": {
+          "componentId": 3102846
+        }
+      },
+      "chunks": [
+        {
+          "type": "tool-output-available",
+          "toolCallId": "functions.pushComponentTool:4",
+          "output": {
+            "success": true,
+            "componentId": 3102846,
+            "message": "组件已创建，真实 ID: 3102846"
+          }
+        },
+        {
+          "type": "finish-step"
+        },
+        {
+          "type": "start-step"
+        },
+        {
+          "type": "text-start",
+          "id": "txt-0"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "已成功"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "为您"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "添加"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "一个"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "条形"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "图"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "组件"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "！\n\n"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "**"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "组件"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "详情"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "："
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "**\n"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "-"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": " **"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "名称"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "**："
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "条形"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "图"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "\n"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "-"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": " **"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "组件"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "ID"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "**："
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "310"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "284"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "6"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "\n"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "-"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": " **"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "类型"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "**："
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "ech"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "art"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "strip"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "Bar"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "（"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "横向"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "柱状"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "图"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "）\n\n"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "条形"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "图"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "已"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "创建"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "并"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "放置"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "在大"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "屏"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "上"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "，"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "您"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "可以在"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "画布"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "上看到"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "它"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "。"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "如需"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "调整"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "位置"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "、"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "尺寸"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "或"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "数据"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "配置"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "，"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "请"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "随时"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "告诉我"
+        },
+        {
+          "type": "text-delta",
+          "id": "txt-0",
+          "delta": "。"
+        },
+        {
+          "type": "text-end",
+          "id": "txt-0"
+        },
+        {
+          "type": "finish-step"
+        },
+        {
+          "type": "finish"
+        }
+      ]
+    }
+  ]
+}

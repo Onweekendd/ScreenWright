@@ -1,0 +1,67 @@
+{
+  "nodes": {
+    "16754:256": {
+      "document": {
+        "id": "16754:256",
+        "name": "城市治理、海洋经济、数字营销、文创影视等",
+        "type": "TEXT",
+        "blendMode": "PASS_THROUGH",
+        "fills": [
+          {
+            "type": "SOLID",
+            "visible": true,
+            "opacity": 1,
+            "blendMode": "NORMAL",
+            "color": {
+              "r": 0.0117647061124444,
+              "g": 0.062745101749897,
+              "b": 0.20392157137393951
+            },
+            "boundVariables": {}
+          }
+        ],
+        "strokes": [],
+        "strokeWeight": 0.44867491722106934,
+        "strokeAlign": "OUTSIDE",
+        "absoluteBoundingBox": {
+          "x": 15823,
+          "y": -13097,
+          "width": 535,
+          "height": 30
+        },
+        "absoluteRenderBounds": {
+          "x": 15824.06640625,
+          "y": -13094.9697265625,
+          "width": 532.609375,
+          "height": 24.1279296875
+        },
+        "constraints": { "horizontal": "CENTER", "vertical": "CENTER" },
+        "effects": [],
+        "interactions": [],
+        "characters": "城市治理、海洋经济、数字营销、文创影视等",
+        "characterStyleOverrides": [
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        ],
+        "styleOverrideTable": {},
+        "style": {
+          "textAlignHorizontal": "LEFT",
+          "textAlignVertical": "TOP",
+          "textAutoResize": "WIDTH_AND_HEIGHT",
+          "fontFamily": "Abel",
+          "fontPostScriptName": "Regular",
+          "fontStyle": "Regular",
+          "fontSize": 26,
+          "fontWeight": 400,
+          "letterSpacing": 3,
+          "letterSpacingUnit": "PERCENT",
+          "lineHeightPx": 30,
+          "lineHeightUnit": "PIXELS"
+        },
+        "lineTypes": ["NONE"],
+        "lineIndentations": [0],
+        "layoutVersion": 4,
+        "complexStrokeProperties": { "strokeType": "BASIC" }
+      }
+    }
+  }
+}

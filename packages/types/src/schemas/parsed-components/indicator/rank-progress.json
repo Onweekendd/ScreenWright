@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "id": 42,
+    "name": "排名进度",
+    "prop": "rank-progress",
+    "componentName": "rank-progress",
+    "first_level_menu": "指标",
+    "second_level_menu": "",
+    "thumbnail": "/img/rankProgress.eb9c9243.png"
+  },
+  "config": {
+    "title": "排名进度",
+    "name": "排名进度",
+    "display": true,
+    "icon": "icon-circle",
+    "img": "/img/rankProgress.eb9c9243.png",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 500,
+      "height": 300,
+      "name": "rank-progress",
+      "prop": "rank-progress"
+    },
+    "top": 0,
+    "left": 0,
+    "time": 30,
+    "dataMethod": "get",
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "isLock": false,
+    "dataQuery": "",
+    "dataType": 0,
+    "data": [
+      {
+        "name": "广州",
+        "value": 9999
+      },
+      {
+        "name": "深圳",
+        "value": 9000
+      },
+      {
+        "name": "佛山",
+        "value": 8000
+      },
+      {
+        "name": "东莞",
+        "value": 7000
+      },
+      {
+        "name": "湛江",
+        "value": 6000
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "name",
+        "map": "name",
+        "decription": "标签"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=&gt;{\r\nreturn data\r\n}",
+    "option": {
+      "name": {
+        "textTranslateX": 0,
+        "textTranslateY": 0,
+        "fontSize": 16,
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "fontFamily": "sans-serif",
+        "fontColor": "rgba(255,255,255,1)",
+        "letterSpacing": 0,
+        "isTextShadow": false,
+        "showBg": true,
+        "textShadow": {
+          "x": 0,
+          "y": 0,
+          "blur": 0,
+          "color": "rgba(255,255,255,1)",
+          "extend": 0
+        }
+      },
+      "value": {
+        "textTranslateX": 0,
+        "textTranslateY": 0,
+        "fontSize": 16,
+        "fontWeight": "normal",
+        "fontStyle": "normal",
+        "fontFamily": "sans-serif",
+        "fontColor": "rgba(255,255,255,1)",
+        "letterSpacing": 0,
+        "isTextShadow": false,
+        "textShadow": {
+          "x": 0,
+          "y": 0,
+          "blur": 0,
+          "color": "rgba(255,255,255,1)",
+          "extend": 0
+        }
+      },
+      "bar": {
+        "isScroll": false,
+        "scrollType": "bar",
+        "showNum": 5,
+        "showCircle": true,
+        "width": 100,
+        "height": 14,
+        "margin": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "seriesTabs": [
+        {
+          "tabName": "排名1",
+          "name": "广州",
+          "color": "rgba(238,214,124,1.00)"
+        },
+        {
+          "tabName": "排名2",
+          "name": "深圳",
+          "color": "rgba(208,208,208,1.00)"
+        },
+        {
+          "tabName": "排名3",
+          "name": "佛山",
+          "color": "rgba(189,139,86,1.00)"
+        },
+        {
+          "tabName": "排名4",
+          "name": "东莞",
+          "color": "rgba(28,254,255,1.00)"
+        },
+        {
+          "tabName": "排名5",
+          "name": "湛江",
+          "color": "rgba(28,254,255,1.00)"
+        }
+      ]
+    }
+  },
+  "template": [
+    {
+      "name": "广州",
+      "value": 9999
+    },
+    {
+      "name": "深圳",
+      "value": 9000
+    },
+    {
+      "name": "佛山",
+      "value": 8000
+    },
+    {
+      "name": "东莞",
+      "value": 7000
+    },
+    {
+      "name": "湛江",
+      "value": 6000
+    }
+  ]
+}

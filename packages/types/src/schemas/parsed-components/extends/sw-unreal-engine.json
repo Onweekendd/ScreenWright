@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "id": 143,
+    "name": "UE模板",
+    "prop": "sw-unreal-engine",
+    "componentName": "sw-unreal-engine",
+    "first_level_menu": "扩展",
+    "second_level_menu": "",
+    "thumbnail": "/img/ueVessel.d88605dd.jpg"
+  },
+  "config": {
+    "title": "UE模板",
+    "name": "UE模板",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/ueVessel.d88605dd.jpg",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "./scatter",
+    "data": [
+      {
+        "text": "UE模板"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "text",
+        "map": "text",
+        "decription": "文本"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "unitPavenType": "percent",
+    "component": {
+      "width": 100,
+      "height": 100,
+      "name": "sw-unreal-engine",
+      "prop": "sw-unreal-engine"
+    },
+    "presetChild": [],
+    "option": {
+      "muted": true,
+      "initLoad": false,
+      "id": "",
+      "url": "",
+      "publishPath": "",
+      "cover": "",
+      "version": "1",
+      "sceneJsonPath": "",
+      "sceneList": [],
+      "bluePrintOption": []
+    }
+  },
+  "template": []
+}

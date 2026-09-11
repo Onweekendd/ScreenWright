@@ -1,0 +1,162 @@
+{
+  "meta": {
+    "id": 54,
+    "name": "图例",
+    "prop": "swLegend",
+    "componentName": "sw-legend",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/legend.34c8ff86.jpg"
+  },
+  "config": {
+    "title": "图例",
+    "name": "图例",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/legend.34c8ff86.jpg",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 150,
+      "height": 134,
+      "name": "sw-legend",
+      "prop": "swLegend"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "label": "选项A",
+        "value": 1,
+        "isChecked": false,
+        "children": [
+          {
+            "label": "选项A-1",
+            "value": 1.1,
+            "isChecked": false
+          },
+          {
+            "label": "选项A-2",
+            "value": 1.2,
+            "isChecked": false
+          }
+        ]
+      },
+      {
+        "label": "选项B",
+        "value": 2,
+        "isChecked": true
+      },
+      {
+        "label": "选项C",
+        "value": 3,
+        "isChecked": false
+      },
+      {
+        "label": "选项D",
+        "value": 4,
+        "isChecked": false
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "label",
+        "map": "label",
+        "decription": "名称"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "isChecked",
+        "map": "isChecked",
+        "decription": "勾选"
+      },
+      {
+        "key": "children",
+        "map": "children",
+        "decription": "子类"
+      }
+    ],
+    "option": {
+      "checkboxPaddingTop": 0,
+      "checkboxPaddingBottom": 0,
+      "checkboxPaddingLeft": 0,
+      "checkboxPaddingRight": 0,
+      "checkboxWidth": 14,
+      "checkboxHeight": 14,
+      "checkboxBorderColor": "rgba(59, 244, 255, 1)",
+      "checkboxBackgroundColor": "rgba(0, 17, 52, 0.8)",
+      "checkboxBorderColorIsChecked": "rgba(59, 244, 255, 1)",
+      "checkboxBackgroundColorIsChecked": "rgba(59, 244, 255, 1)",
+      "checkboxCheckPositionX": 4,
+      "checkboxCheckPositionY": 1,
+      "checkboxCheckColor": "rgba(0, 17, 52, 0.8)",
+      "labelFontFamily": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "labelFontSize": 14,
+      "labelColor": "rgba(255, 255, 255, 1)",
+      "labelFontWeight": "normal",
+      "labelFontStyle": "normal",
+      "labelLetterSpacing": 0,
+      "labelFontFamilyIsChecked": "Source Han Sans CN-Normal, Source Han Sans CN",
+      "labelFontSizeIsChecked": 14,
+      "labelColorIsChecked": "rgba(255, 255, 255, 1)",
+      "labelFontWeightIsChecked": "normal",
+      "labelFontStyleIsChecked": "normal",
+      "labelLetterSpacingIsChecked": 0,
+      "backgroundBackgroundType": "color",
+      "backgroundBackgroundColor": "rgba(0, 17, 52, 0.8)",
+      "backgroundBackgroundImage": "",
+      "backgroundBorderColor": "rgba(24, 56, 121, 1)",
+      "backgroundBorderRadius": 10
+    }
+  },
+  "template": [
+    {
+      "label": "选项A",
+      "value": 1,
+      "isChecked": false,
+      "children": [
+        {
+          "label": "选项A-1",
+          "value": 1.1,
+          "isChecked": false
+        },
+        {
+          "label": "选项A-2",
+          "value": 1.2,
+          "isChecked": false
+        }
+      ]
+    },
+    {
+      "label": "选项B",
+      "value": 2,
+      "isChecked": true
+    },
+    {
+      "label": "选项C",
+      "value": 3,
+      "isChecked": false
+    },
+    {
+      "label": "选项D",
+      "value": 4,
+      "isChecked": false
+    }
+  ]
+}

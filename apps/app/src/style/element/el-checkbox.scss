@@ -1,0 +1,20 @@
+@import "src/style/mixins/element.scss";
+.el-checkbox {
+  margin-right: 10px;
+  .el-checkbox__inner {
+    background-color: #181b24 !important;
+    border: 1px solid #393b4a !important;
+    border-radius: 2px;
+    &:hover {
+      box-shadow: 0 0 0 1px $default-hover-border-color inset !important;
+    }
+  }
+  &.is-checked .el-checkbox__inner {
+    border-color: $checkbox-border-color !important;
+    background: linear-gradient(180deg, $checkbox-gradient-start-color 0%, $checkbox-gradient-end-color 100%);
+  }
+  .el-checkbox__label {
+    color: #bfbfbf;
+    font-size: 12px;
+  }
+}

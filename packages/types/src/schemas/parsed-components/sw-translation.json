@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "id": 136,
+    "name": "译文转换",
+    "prop": "sw-translation",
+    "componentName": "sw-translation",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/default.1026.png"
+  },
+  "config": {
+    "title": "译文转换",
+    "name": "译文转换",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/default.1026.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 100,
+      "height": 100,
+      "name": "sw-translation",
+      "prop": "sw-translation"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "data": [
+      {
+        "zh": "欢迎使用我们的多语言翻译系统！这个组件可以轻松实现网站内容的国际化。",
+        "en": "Welcome to our multilingual translation system! This component easily enables website internationalization.",
+        "vi": "Chào mừng bạn đến với hệ thống dịch đa ngôn ngữ của chúng tôi! Thành phần này dễ dàng cho phép quốc tế hóa trang web.",
+        "th": "ยินดีต้อนรับสู่ระบบแปลภาษาหลายภาษาของเรา! องค์ประกอบนี้ช่วยให้สามารถทำให้เว็บไซต์เป็นสากลได้อย่างง่ายดาย"
+      }
+    ],
+    "dataRemark": [
+      {
+        "key": "zh",
+        "map": "zh",
+        "decription": "中文"
+      },
+      {
+        "key": "en",
+        "map": "en",
+        "decription": "英文"
+      }
+    ],
+    "option": {
+      "defaultKey": "zh",
+      "initLoad": false,
+      "dictList": [
+        {
+          "id": "1",
+          "name": "译文1",
+          "value": "zh",
+          "alias": "中文"
+        },
+        {
+          "id": "2",
+          "name": "译文2",
+          "value": "en",
+          "alias": "英文"
+        },
+        {
+          "id": "3",
+          "name": "译文3",
+          "value": "vi",
+          "alias": "越南语"
+        },
+        {
+          "id": "4",
+          "name": "译文4",
+          "value": "th",
+          "alias": "泰文"
+        }
+      ]
+    }
+  },
+  "template": [
+    {
+      "label": "区域点击",
+      "value": 1
+    }
+  ]
+}

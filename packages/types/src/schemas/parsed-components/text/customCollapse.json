@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "id": 105,
+    "name": "折叠面板",
+    "prop": "customCollapse",
+    "componentName": "customCollapse",
+    "first_level_menu": "文字",
+    "second_level_menu": "",
+    "thumbnail": "/img/customCollapse.202403181111.gif"
+  },
+  "config": {
+    "title": "折叠面板",
+    "name": "折叠面板",
+    "display": true,
+    "icon": "icon-banner",
+    "img": "/img/customCollapse.202403181111.gif",
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "top": 0,
+    "left": 0,
+    "dataMethod": "get",
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": "{}",
+    "requestBody": "{}",
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "sql": "SELECT * FROM",
+    "time": 30,
+    "url": "",
+    "data": [],
+    "dataRemark": [
+      {
+        "key": "title",
+        "map": "title",
+        "decription": "标题"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "数值"
+      },
+      {
+        "key": "type",
+        "map": "type",
+        "decription": "类型"
+      }
+    ],
+    "listenArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 450,
+      "height": 860,
+      "name": "customCollapse",
+      "prop": "customCollapse"
+    },
+    "option": {
+      "type": "accordion",
+      "accordionKeys": "1,2,3",
+      "titleHeight": 53,
+      "contentHeight": 230,
+      "paddingTop": 0,
+      "paddingLeft": 0,
+      "backgroudSize": "100% 100%",
+      "titleBgSize": "100% 100%",
+      "backgroudImage": "",
+      "titleBgImage": "version-test/assets/defaultImg/collapse-title.png",
+      "fontColor": "rgba(255, 255, 255, 1)",
+      "fontSize": 16,
+      "letterSpacing": 4,
+      "fontWeight": false,
+      "fontFamily": "sans-serif",
+      "fontStyle": false,
+      "textAlign": "right",
+      "textTranslateX": -60,
+      "textTranslateY": 0,
+      "isTextShadow": false,
+      "textShadow": {
+        "color": "rgba(255, 255, 255, 1)",
+        "x": 0,
+        "y": 0,
+        "blur": 0,
+        "extend": 0
+      },
+      "imageWidth": 88,
+      "imageHeight": 100,
+      "translateX": -18,
+      "translateY": -5,
+      "radiusTop": 0,
+      "radiusRight": 5,
+      "radiusBottom": 0,
+      "radiusLeft": 0,
+      "contentBgSize": "100% 100%",
+      "contentBgImage": "version-test/assets/defaultImg/collapse-content.png",
+      "paddingTop2": 12,
+      "paddingLeft2": 12,
+      "fontColor2": "rgba(255, 255, 255, 1)",
+      "fontSize2": 20,
+      "letterSpacing2": 0,
+      "fontWeight2": false,
+      "fontFamily2": "sans-serif",
+      "fontStyle2": false,
+      "lineHeight2": 40,
+      "isTextShadow2": false,
+      "textShadow2": {
+        "color": "rgba(255, 255, 255, 1)",
+        "x": 0,
+        "y": 0,
+        "blur": 0,
+        "extend": 0
+      },
+      "seriesTabsList": [
+        {
+          "name": "系列1",
+          "type": "image",
+          "value": "version-test/assets/defaultImg/default.png",
+          "imageSize": "cover",
+          "title": "标题一"
+        },
+        {
+          "name": "系列2",
+          "type": "video",
+          "value": "version-test/assets/defaultImg/video.mp4",
+          "imageSize": "cover",
+          "title": "标题二"
+        },
+        {
+          "name": "系列3",
+          "type": "text",
+          "value": "平台提供直观友好的用户界面，无需深入的编程支持，用户可以轻松构建数字孪生三维场景。我们的平台还提供高效的场景配置工具和预设模板，用户可以快速选择和应用预设模板，从而大幅缩短搭建时间。",
+          "imageSize": "cover",
+          "title": "标题三"
+        }
+      ]
+    }
+  },
+  "template": []
+}

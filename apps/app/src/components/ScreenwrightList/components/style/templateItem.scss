@@ -1,0 +1,74 @@
+.content__info {
+  position: relative;
+  display: flex;
+  height: calc(100% - 46px);
+  align-items: center;
+  cursor: pointer;
+  &.is-default::after,
+  &.is-multi::after,
+  &.is-template::after {
+    content: "模板";
+    color: #ffffff;
+    font-size: 12px;
+    font-style: normal;
+    text-align: center;
+    letter-spacing: 1px;
+    width: 30px;
+    height: 16px;
+    line-height: 14px;
+    padding: 2px 2px 2px 4px;
+    border-radius: 5px;
+    background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+  &.is-multi::after {
+    content: "多人";
+  }
+  &.is-default::after {
+    content: "";
+    color: transparent;
+    background: transparent;
+  }
+  img {
+    height: auto;
+    width: 100%;
+    max-height: 100%;
+    transition: all 0.5s ease;
+    object-fit: contain;
+  }
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+    .template-menu {
+      display: inline-flex;
+    }
+  }
+}
+.content__main {
+  font-size: 12px;
+  width: 100%;
+  height: 46px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  justify-content: space-between;
+  background: #1d262e;
+  box-sizing: border-box;
+  padding: 0 10px;
+  color: #bcc9d4;
+  .content__name {
+    width: 150px !important;
+    padding: 0 5px;
+    line-height: 28px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+}

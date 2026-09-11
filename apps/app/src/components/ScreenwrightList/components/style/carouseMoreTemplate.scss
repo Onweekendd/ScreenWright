@@ -1,0 +1,47 @@
+.default-temp-list {
+  z-index: 1;
+  width: calc(100% - 20px);
+  height: 100%;
+  margin-left: 20px;
+  // margin: 0 20px;
+  overflow: hidden;
+  background-color: #181a24;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  &.entryAni {
+    animation-name: entryAni;
+  }
+  &.exitAni {
+    animation-name: exitAni;
+  }
+
+  .page-list {
+    height: 30px;
+    line-height: 30px;
+  }
+
+  @keyframes entryAni {
+    0% {
+      opacity: 1;
+      transform: translateX(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes exitAni {
+    0% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(100%);
+    }
+  }
+}

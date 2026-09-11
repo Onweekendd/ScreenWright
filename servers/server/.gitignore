@@ -1,0 +1,29 @@
+output.txt 
+node_modules 
+dist 
+.mastra 
+.env.development 
+*.db 
+*.db-* 
+public
+agent-workspace/screen_*
+agent-workspace/tasks/**
+agent-workspace/plan/**
+agent-workspace/echart-options/**
+agent-workspace/api-registry/**
+agent-workspace/skills/overviews/**
+
+# LLM 录制数据（RECORD_LLM 生成）
+llm-records/
+
+# Artifact App 项目、Session 与本地预览运行数据
+agent-workspace/artifact-app/
+
+# eval 运行产物（含完整请求体：system prompt / 工具定义 / 历史消息，按敏感数据管）
+evals/runs/
+
+# 素材库本地 FS 存储（替代 MinIO，运行时生成）
+blob-storage/
+
+# 单机版 SQLite 数据文件
+.data/

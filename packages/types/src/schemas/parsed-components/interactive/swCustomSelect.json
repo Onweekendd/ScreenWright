@@ -1,0 +1,378 @@
+{
+  "meta": {
+    "id": 53,
+    "name": "下拉框",
+    "prop": "swCustomSelect",
+    "componentName": "sw-customselect",
+    "first_level_menu": "交互",
+    "second_level_menu": "",
+    "thumbnail": "/img/select.20240514.png"
+  },
+  "config": {
+    "title": "下拉框",
+    "name": "下拉框",
+    "display": true,
+    "icon": "icon-tabs",
+    "img": "/img/select.20240514.png",
+    "callbackArgs": [],
+    "events": [],
+    "encodes": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "component": {
+      "width": 240,
+      "height": 48,
+      "name": "sw-customselect",
+      "prop": "swCustomSelect"
+    },
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataFormatter": "(data,callbackArgs)=>{\r\nreturn data\r\n}",
+    "dataType": 0,
+    "dataSource": {},
+    "dataRemark": [
+      {
+        "key": "label",
+        "map": "label",
+        "decription": "标签"
+      },
+      {
+        "key": "value",
+        "map": "value",
+        "decription": "值"
+      },
+      {
+        "key": "disabled",
+        "map": "disabled",
+        "decription": "禁用"
+      }
+    ],
+    "data": [
+      {
+        "label": "广州",
+        "value": "10",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "韶关",
+        "value": "20",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "深圳",
+        "value": "30",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "珠海",
+        "value": "40",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "汕头",
+        "value": "50",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "佛山",
+        "value": "60",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "江门",
+        "value": "70",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "湛江",
+        "value": "80",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "茂名",
+        "value": "90",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "肇庆",
+        "value": "120",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "惠州",
+        "value": "130",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "梅州",
+        "value": "140",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "汕尾",
+        "value": "150",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "河源",
+        "value": "160",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "阳江",
+        "value": "170",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "清远",
+        "value": "180",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "东莞",
+        "value": "190",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "中山",
+        "value": "200",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "潮州",
+        "value": "210",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "揭阳",
+        "value": "220",
+        "disabled": false,
+        "select": false
+      },
+      {
+        "label": "云浮",
+        "value": "230",
+        "disabled": false,
+        "select": false
+      }
+    ],
+    "option": {
+      "defaultIndex": 1,
+      "related": false,
+      "placeholder": "请选择",
+      "indent": 20,
+      "boxHeight": 16,
+      "boxFontSize": 16,
+      "boxFontFamily": "SourceHanSansCN-Normal,SourceHanSansCN",
+      "boxlineHeight": 72,
+      "boxBackgroundType": "color",
+      "boxBackground": "rgba(25, 30, 40, 1)",
+      "boxColor": "rgba(255,255,255,1)",
+      "boxBackgroundImage": "data:image/png;base64,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",
+      "boxLetterSpacing": 0,
+      "boxFontStyle": "normal",
+      "boxFontWeight": "normal",
+      "boxTextAlign": "center",
+      "boxLabelOffsetX": 0,
+      "boxLabelOffsetY": 0,
+      "boxBorderColor": "rgba(0,0,0,0)",
+      "boxBorderWidth": 2,
+      "boxRadius": 0,
+      "dropDownIcon": "",
+      "dropDownIconSize": 16,
+      "dropDownHeight": 164,
+      "contentColor": "rgba(255,255,255,1)",
+      "topOffset": 2,
+      "dropDownPosition": "bottom",
+      "scrollBarWidth": 2,
+      "scrollBgColor": "rgba(0,120,255,1)",
+      "barBgColor": "rgba(255,255,255,0)",
+      "optionHeight": 46,
+      "optionIndent": 12,
+      "optionSpace": 2,
+      "defaultHeight": 42,
+      "defaultTextAlign": "center",
+      "defaultFontSize": 16,
+      "defaultLabelOffsetX": 0,
+      "defaultLabelOffsetY": 0,
+      "defaultFontFamily": "SourceHanSansCN-Normal,SourceHanSansCN",
+      "defaultlineHeight": 16,
+      "defaultColor": "rgba(66,231,251,1)",
+      "defaultBackgroundType": "color",
+      "defaultBackground": "rgba(0,0,0,0.2)",
+      "defaultBackgroundImage": "",
+      "defaultLetterSpacing": 0,
+      "defaultFontStyle": "normal",
+      "defaultFontWeight": "normal",
+      "hoverFontSize": 16,
+      "hoverFontFamily": "SourceHanSansCN-Normal,SourceHanSansCN",
+      "hoverlineHeight": 0,
+      "hoverBackgroundType": "color",
+      "hoverColor": "rgba(255,255,255,1)",
+      "hoverBackground": "rgba(255,255,255,0)",
+      "hoverBackgroundImage": "",
+      "hoverLetterSpacing": 0,
+      "hoverLabelOffsetX": 0,
+      "hoverLabelOffsetY": 0,
+      "hoverTextAlign": "center",
+      "hoverFontStyle": "normal",
+      "hoverFontWeight": "normal",
+      "dropdownBackgroundColor": "#2d2f38",
+      "rightMargin": 30,
+      "hoverHeight": 16
+    }
+  },
+  "template": [
+    {
+      "label": "广州",
+      "value": "10",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "韶关",
+      "value": "20",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "深圳",
+      "value": "30",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "珠海",
+      "value": "40",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "汕头",
+      "value": "50",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "佛山",
+      "value": "60",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "江门",
+      "value": "70",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "湛江",
+      "value": "80",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "茂名",
+      "value": "90",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "肇庆",
+      "value": "120",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "惠州",
+      "value": "130",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "梅州",
+      "value": "140",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "汕尾",
+      "value": "150",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "河源",
+      "value": "160",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "阳江",
+      "value": "170",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "清远",
+      "value": "180",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "东莞",
+      "value": "190",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "中山",
+      "value": "200",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "潮州",
+      "value": "210",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "揭阳",
+      "value": "220",
+      "disabled": false,
+      "select": false
+    },
+    {
+      "label": "云浮",
+      "value": "230",
+      "disabled": false,
+      "select": false
+    }
+  ]
+}

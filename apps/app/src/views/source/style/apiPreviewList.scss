@@ -1,0 +1,22 @@
+.api-preview-list {
+  margin-top: 18px;
+  :deep(.el-tabs__item) {
+    --el-text-color-primary: #fff;
+    &:hover {
+      color: #fff;
+    }
+    &.is-active {
+      color: #642cff;
+    }
+  }
+  :deep(.el-tabs__active-bar) {
+    background-color: #642cff;
+  }
+  :deep(.el-tabs) {
+    .el-tabs__nav-wrap {
+      &::after {
+        background-color: #363636;
+      }
+    }
+  }
+}

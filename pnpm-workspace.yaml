@@ -1,0 +1,20 @@
+packages:
+  - apps/*
+  - servers/*
+  - packages/*
+
+patchedDependencies:
+  '@mastra/core@1.59.0': patches/@mastra__core.patch
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/engines'
+  - better-sqlite3
+  - canvas
+  - esbuild
+  - prisma
+  - sharp
+  - simple-git-hooks
+  - vue-demi
+  - vue3-sketch-ruler
+

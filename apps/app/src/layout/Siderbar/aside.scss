@@ -1,0 +1,139 @@
+@import "src/style/theme.scss";
+
+.aside-container {
+  color: $sw-text;
+  font-size: 12px;
+
+  // ---- 一级菜单列 ----
+  .aside-primary {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: $sw-surface-2;
+  }
+
+  .aside-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px 8px 0;
+
+    .menu_item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 4px;
+      margin-bottom: 4px;
+      border-radius: 8px;
+      color: $sw-text-dim;
+      cursor: pointer;
+      transition:
+        color 0.15s,
+        background-color 0.15s;
+
+      .menu_item-label {
+        font-size: 12px;
+        line-height: 1;
+      }
+
+      &:hover {
+        color: #e7e3f5;
+        background-color: $sw-hover-bg;
+      }
+      &.is-active {
+        color: $sw-text-strong;
+        background-color: $sw-active-bg;
+        .sw-icon {
+          color: $sw-purple-light;
+        }
+      }
+    }
+  }
+
+  .aside-user {
+    flex-shrink: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // ---- 二级菜单列 ----
+  .aside-secondary {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    // 比一级列略浅一档，左上角切圆角后能露出下面深色，圆角才看得见
+    background: $sw-surface-1;
+    border-top-left-radius: 12px;
+    overflow: hidden;
+  }
+}
+
+// 二级菜单树（scoped 无法命中 Siderbar 里的 .aside-tree，放这里）
+.aside-tree {
+  padding: 10px 10px 20px;
+
+  .el-tree {
+    background: transparent;
+    color: $sw-text;
+
+    .el-tree-node__content {
+      box-sizing: border-box;
+      height: 38px;
+      margin: 2px 0;
+      border-radius: 6px;
+      transition: background-color 0.15s;
+
+      &:hover {
+        background-color: $sw-hover-bg;
+      }
+    }
+
+    .el-tree-node:focus > .el-tree-node__content {
+      background-color: transparent;
+    }
+
+    .el-tree-node.is-current > .el-tree-node__content {
+      color: $sw-text-strong;
+      background-color: $sw-tree-active-bg;
+      box-shadow: inset 2px 0 0 $sw-active-bar;
+    }
+
+    .custom-tree {
+      display: block;
+      width: 100%;
+      height: 100%;
+      &:hover .custom-tree-more {
+        opacity: 1;
+      }
+    }
+
+    &.drag-outside > .el-tree-node {
+      pointer-events: none;
+    }
+    &.drag-outside > .el-tree-node:nth-child(2) {
+      border: 1px dashed $sw-purple-soft;
+      & > .el-tree-node__children {
+        pointer-events: visible;
+      }
+    }
+  }
+}
+
+.custom-tree-popover {
+  padding: 2px;
+  min-width: 60px;
+  border: none;
+  margin-right: 0 !important;
+  .tooltip .item {
+    padding: 2px;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+  }
+}

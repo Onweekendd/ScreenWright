@@ -1,0 +1,1029 @@
+{
+  "caseId": "shared-group",
+  "screenId": 77,
+  "note": "1920×1080，根级只有一个分组：#4177「分组」1200×300 @(0,0)，组里两个图表——#4175 条形图 600×300 @(0,0)、#4176 折线柱形图 600×300 @(600,0)。\nA2（往分组里建组件）/ A5（把子组件移出分组）/ A7（解散分组）/ A8（复制分组）共用。\n来源：screen 77 的接口原始响应，按前端 cacheWorker.buildCacheEntry 的规则解析成 ParsedLargeScreenInfo（dataFilterArr/aniFrameSet/statusAnimation 从 JSON 字符串 parse，encodedControl 原本是 null、按 parseIfNeeded 的 fallback 取 []）。\na-group / three-components / event 是同一块屏（77）在三个编辑阶段导出的快照，所以 invitationCode 与 name 相同；种屏时 id 会被换成 9001 起的新值，三者互不影响。\n两个子组件的 parent 都是 4177，而 config 只列根级的 4177——这是真实结构，别往 config 里补子组件 id：L0「config 引用无悬挂」只查存在性，补了不报错，但从此和真实数据不是一回事了。\n改它之前想清楚：删掉任一子组件，A5/A7 就没有「两侧 children 都更新」的可比对象了；动分组的 1200×300 或子组件坐标，A2/A5/A7 里跟包围盒有关的断言都得重算期望值。\ninvitationCode 已抹成全零占位——真实邀请码是大屏访问凭证，不进仓库；eval 全程不读它。",
+  "authoredAt": "2026-08-31",
+  "screen": {
+    "createdBy": "onweekend",
+    "createdTime": "2026-09-01 12:10:33",
+    "updatedBy": "onweekend",
+    "updatedTime": "2026-09-01 12:10:55",
+    "id": 77,
+    "moduleId": null,
+    "config": [
+      4177
+    ],
+    "name": "123",
+    "detail": {
+      "width": "1920",
+      "height": "1080",
+      "scale": 1,
+      "initLoad": false,
+      "backgroundImage": "",
+      "backgroundColor": "rgba(35, 38, 48, 1)",
+      "showBackgroundImage": false,
+      "showScreenAdaptation": false,
+      "adaptationNorm": "default",
+      "adaptationType": 2,
+      "showScreenFilter": false,
+      "screenFilterInfo": {
+        "gaussianBlur": 0,
+        "brightness": 100,
+        "contrast": 100,
+        "grayscale": 0,
+        "hue": 0,
+        "saturate": 100,
+        "invert": 0,
+        "sepia": 0
+      },
+      "showWaterMark": true,
+      "waterMark": {
+        "text": "Screenwright凡拓数创",
+        "fontFamily": "sans-serif",
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontSize": 30,
+        "color": "rgba(100,100,100,0.5)"
+      },
+      "gridDistance": 1,
+      "query": {},
+      "controlWebsocketUrl": "",
+      "heartbeatInterval": 15,
+      "terminalEnableArr": {},
+      "name": "123"
+    },
+    "backgroundUrl": null,
+    "layers": [
+      {
+        "title": "分组",
+        "name": "分组",
+        "display": true,
+        "isLock": false,
+        "children": [
+          {
+            "name": "折线柱形图",
+            "title": "折线柱形图",
+            "display": true,
+            "icon": "icon-bar",
+            "img": "/img/bar4.20240514.png",
+            "csvType": 0,
+            "callbackArgs": [],
+            "events": [],
+            "loadAnimation": {
+              "type": "none",
+              "opacityOpen": false,
+              "timingFunction": "linear",
+              "direction": "right",
+              "duration": 1000,
+              "delay": 0
+            },
+            "dataMethod": "get",
+            "dataType": 0,
+            "dataSource": {},
+            "requestHeader": "{}",
+            "requestBody": "{}",
+            "crossOrigin": false,
+            "needCookie": false,
+            "autoRefresh": false,
+            "dataQuery": "",
+            "isLock": false,
+            "sql": "SELECT * FROM",
+            "data": [
+              {
+                "seriesName": "系列一",
+                "name": "A",
+                "value": 2024
+              },
+              {
+                "seriesName": "系列二",
+                "name": "A",
+                "value": 2378
+              },
+              {
+                "seriesName": "系列一",
+                "name": "B",
+                "value": 1423
+              },
+              {
+                "seriesName": "系列二",
+                "name": "B",
+                "value": 1779
+              },
+              {
+                "seriesName": "系列一",
+                "name": "C",
+                "value": 1532
+              },
+              {
+                "seriesName": "系列二",
+                "name": "C",
+                "value": 1788
+              },
+              {
+                "seriesName": "系列一",
+                "name": "D",
+                "value": 1920
+              },
+              {
+                "seriesName": "系列二",
+                "name": "D",
+                "value": 2232
+              }
+            ],
+            "dataRemark": [
+              {
+                "key": "name",
+                "map": "name",
+                "decription": "类目"
+              },
+              {
+                "key": "value",
+                "map": "value",
+                "decription": "值"
+              },
+              {
+                "key": "seriesName",
+                "map": "seriesName",
+                "decription": "系列"
+              }
+            ],
+            "openFilter": false,
+            "listenArgs": [],
+            "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+            "url": "",
+            "path": "",
+            "time": 30,
+            "component": {
+              "width": 600,
+              "height": 300,
+              "name": "echart-lineAndBar",
+              "prop": "echartlineAndBar"
+            },
+            "option": {
+              "refresh": true,
+              "dataSeriesName": [
+                "系列一",
+                "系列二"
+              ],
+              "seriesName": [
+                "系列一",
+                "系列二"
+              ],
+              "seriesTabsName": [
+                {
+                  "name": "系列1",
+                  "value": "系列一"
+                },
+                {
+                  "name": "系列2",
+                  "value": "系列二"
+                }
+              ],
+              "seriesType": [
+                "bar",
+                "line"
+              ],
+              "seriesBarColor": [
+                {
+                  "type": "linear-gradient",
+                  "angle": "0",
+                  "colors": [
+                    {
+                      "color": "rgba(62,67,244,1)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(137,181,252,1)",
+                      "per": 100
+                    }
+                  ]
+                },
+                {
+                  "type": "linear-gradient",
+                  "angle": "0",
+                  "colors": [
+                    {
+                      "color": "rgba(62,67,244,1)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(61,227,251,1)",
+                      "per": 100
+                    }
+                  ]
+                }
+              ],
+              "seriesBarOpacity": [
+                100,
+                100
+              ],
+              "seriesAreaOpacity": [
+                0,
+                0
+              ],
+              "seriesAreaColor": [
+                {
+                  "type": "linear-gradient",
+                  "angle": "0",
+                  "colors": [
+                    {
+                      "color": "rgba(61,229,252,0)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(61,229,252,1)",
+                      "per": 100
+                    }
+                  ]
+                },
+                {
+                  "type": "linear-gradient",
+                  "angle": "0",
+                  "colors": [
+                    {
+                      "color": "rgba(62,67,244,0)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(62,67,244,1)",
+                      "per": 100
+                    }
+                  ]
+                }
+              ],
+              "seriesLineColor": [
+                "#3DE5FC",
+                "#3e43f4"
+              ],
+              "seriesLineWidth": [
+                2,
+                2
+              ],
+              "seriesSmoothShow": [
+                false,
+                false
+              ],
+              "seriesSmooth": [
+                0.5,
+                0.5
+              ],
+              "seriesConnectNulls": [
+                false,
+                false
+              ],
+              "seriesSymbolShow": [
+                true,
+                true
+              ],
+              "seriesSymbol": [
+                "circle",
+                "circle"
+              ],
+              "seriesSymbolImage": [
+                "",
+                ""
+              ],
+              "seriesSymbolWidth": [
+                10,
+                10
+              ],
+              "seriesSymbolHeight": [
+                10,
+                10
+              ],
+              "seriesItemColor": [
+                "#3DE5FC",
+                "#3e43f4"
+              ],
+              "seriesItemBorderWidth": [
+                0,
+                0
+              ],
+              "seriesItemBorderColor": [
+                "rgba(255,255,255,1)",
+                "rgba(255,255,255,1)"
+              ],
+              "seriesLabelShow": [
+                false,
+                false
+              ],
+              "seriesLabelColor": [
+                "rgba(255,255,255,1)",
+                "rgba(255,255,255,1)"
+              ],
+              "seriesLabelFontFamily": [
+                "siayuan-normal",
+                "siayuan-normal"
+              ],
+              "seriesLabelFontSize": [
+                14,
+                14
+              ],
+              "seriesLabelFontWeight": [
+                "normal",
+                "normal"
+              ],
+              "seriesLabelFontStyle": [
+                "normal",
+                "normal"
+              ],
+              "seriesLabelOffsetX": [
+                0,
+                0
+              ],
+              "seriesLabelOffsetY": [
+                0,
+                0
+              ],
+              "barGap": 70,
+              "barCategoryGap": 80,
+              "gridLeft": 80,
+              "gridTop": 60,
+              "gridRight": 70,
+              "gridBottom": 60,
+              "legendShow": true,
+              "legendWidth": 800,
+              "legendHeight": 800,
+              "legendItemWidth": 20,
+              "legendItemHeight": 10,
+              "legendItemGap": 20,
+              "legendFontFamily": "siayuan-normal",
+              "legendFontSize": 16,
+              "legendColor": "rgba(255, 255, 255, 1)",
+              "legendFontStyle": "normal",
+              "legendFontWeight": "normal",
+              "legendTextLeftPadding": 0,
+              "legendSelectedMode": true,
+              "legendGrid": {
+                "top": 0,
+                "left": "center"
+              },
+              "legendOffsetX": 0,
+              "legendOffsetY": 0,
+              "xNameFontSize": 16,
+              "yNameFontSize": 16,
+              "legendOrient": "horizontal",
+              "yAxisInverse": [
+                false,
+                false
+              ],
+              "xAxisInverse": false,
+              "xAxisShow": true,
+              "yAxisShow": [
+                true,
+                true
+              ],
+              "xAxisLabelShow": true,
+              "yAxisLabelShow": [
+                true,
+                true
+              ],
+              "xAxisType": "category",
+              "xAxisInterval": 0,
+              "xAxisRotate": 0,
+              "yAxisMin": [
+                "0",
+                "0"
+              ],
+              "yAxisMax": [
+                "",
+                ""
+              ],
+              "xAxisMargin": 8,
+              "yAxisMargin": [
+                8,
+                8
+              ],
+              "xAxisFontFamily": "siayuan-normal",
+              "yAxisFontFamily": [
+                "siayuan-normal",
+                "siayuan-normal"
+              ],
+              "xAxisFontSize": 18,
+              "yAxisFontSize": [
+                18,
+                18
+              ],
+              "xAxisColor": "rgba(209, 209, 209, 1)",
+              "yAxisColor": [
+                "rgba(209, 209, 209, 1)",
+                "rgba(209, 209, 209, 1)"
+              ],
+              "xAxisFontStyle": "normal",
+              "yAxisFontStyle": [
+                "normal",
+                "normal"
+              ],
+              "xAxisFontWeight": "normal",
+              "yAxisFontWeight": [
+                "normal",
+                "normal"
+              ],
+              "yAxisNameShow": [
+                true,
+                true
+              ],
+              "yAxisName": [
+                "单位",
+                "单位"
+              ],
+              "yAxisNameFontFamily": [
+                "siayuan-normal",
+                "siayuan-normal"
+              ],
+              "yAxisNameFontSize": [
+                14,
+                14
+              ],
+              "yAxisNameColor": [
+                "rgba(209, 209, 209, 1)",
+                "rgba(209, 209, 209, 1)"
+              ],
+              "yAxisNameFontStyle": [
+                "normal",
+                "normal"
+              ],
+              "yAxisNameFontWeight": [
+                "normal",
+                "normal"
+              ],
+              "yAxisNamePaddingTop": [
+                0,
+                0
+              ],
+              "yAxisNamePaddingBottom": [
+                0,
+                0
+              ],
+              "yAxisNamePaddingLeft": [
+                0,
+                45
+              ],
+              "yAxisNamePaddingRight": [
+                40,
+                0
+              ],
+              "xAxisLineShow": true,
+              "yAxisLineShow": [
+                false,
+                false
+              ],
+              "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+              "yAxisLineColor": [
+                "rgba(209, 209, 209, 0.5)",
+                "rgba(209, 209, 209, 0.5)"
+              ],
+              "xAxisLineWidth": 1,
+              "yAxisLineWidth": [
+                1,
+                1
+              ],
+              "xAxisLineOpacity": 0.5,
+              "yAxisLineOpacity": [
+                0.5,
+                0.5
+              ],
+              "xAxisTickShow": true,
+              "yAxisTickShow": [
+                false,
+                false
+              ],
+              "xAxisTickColor": "#65686f",
+              "yAxisTickColor": [
+                "#65686f",
+                "#65686f"
+              ],
+              "xAxisTickWidth": 1,
+              "yAxisTickWidth": [
+                1,
+                1
+              ],
+              "xAxisTickLength": 2,
+              "yAxisTickLength": [
+                2,
+                2
+              ],
+              "xAxisSplitLineShow": false,
+              "yAxisSplitLineShow": [
+                true,
+                false
+              ],
+              "xAxisSplitLineInterval": 0,
+              "xAxisSplitLineWidth": 1,
+              "yAxisSplitLineWidth": [
+                1,
+                1
+              ],
+              "xAxisSplitLineColor": "#383d47",
+              "yAxisSplitLineColor": [
+                "#383d47",
+                "#383d47"
+              ],
+              "barBackgroundColor": "rgba(52, 55, 64, 1)",
+              "dataLoop": false,
+              "dataLoopInterval": 5,
+              "dataLoopDisplayRows": 4,
+              "dataLoopRollNum": 1,
+              "tooltipLoop": false,
+              "tooltipLoopInterval": 3,
+              "tooltipTriggerOn": true,
+              "tooltipOffsetX": 0,
+              "tooltipOffsetY": 0,
+              "tooltipBackground": "",
+              "tooltipWidth": 200,
+              "tooltipHeight": 100,
+              "tooltipPaddingTop": 0,
+              "tooltipPaddingBottom": 0,
+              "tooltipPaddingLeft": 0,
+              "tooltipPaddingRight": 0,
+              "tooltipNameFontFamily": "siayuan-normal",
+              "tooltipNameFontSize": 18,
+              "tooltipNameColor": "rgba(255, 255, 255, 1)",
+              "tooltipNameFontWeight": "normal",
+              "tooltipNameFontStyle": "normal",
+              "tooltipAlign": "left",
+              "tooltipNameOffsetX": 0,
+              "tooltipNameOffsetY": 0,
+              "tooltipArrLineHeight": 12,
+              "tooltipSeriesNameFontFamily": "siayuan-normal",
+              "tooltipSeriesNameFontSize": 18,
+              "tooltipSeriesNameColor": "rgba(255, 255, 255, 1)",
+              "tooltipSeriesNameFontWeight": "normal",
+              "tooltipSeriesNameFontStyle": "normal",
+              "tooltipValueFontFamily": "siayuan-normal",
+              "tooltipValueFontSize": 18,
+              "tooltipValueColor": "rgba(255, 255, 255, 1)",
+              "tooltipValueFontWeight": "normal",
+              "tooltipValueFontStyle": "normal",
+              "tooltipUnit": [
+                "",
+                ""
+              ],
+              "tooltipUnitFontFamily": "siayuan-normal",
+              "tooltipUnitFontSize": 18,
+              "tooltipUnitColor": "rgba(255, 255, 255, 1)",
+              "tooltipUnitFontWeight": "normal",
+              "tooltipUnitFontStyle": "normal",
+              "tooltipUnitOffsetX": 0,
+              "tooltipUnitOffsetY": 0,
+              "tooltipMarkerSize": 10,
+              "dataUnitName": [
+                "系列一",
+                "系列二"
+              ],
+              "unitTabsName": [
+                {
+                  "name": "后缀1",
+                  "value": "个"
+                },
+                {
+                  "name": "后缀2",
+                  "value": "个"
+                }
+              ],
+              "tooltipAxisPointerWidth": 1,
+              "tooltipAxisPointerColor": "rgba(255, 255, 255, 1)",
+              "xAxisLabelCustom": []
+            },
+            "id": 4176,
+            "left": 600,
+            "top": 0,
+            "zIndex": 2,
+            "verticalConst": "Top",
+            "horizontalConst": "Left",
+            "parent": 4177
+          },
+          {
+            "name": "条形图",
+            "title": "条形图",
+            "display": true,
+            "icon": "icon-bar",
+            "img": "/img/bar2.20240514.png",
+            "csvType": 0,
+            "callbackArgs": [],
+            "events": [],
+            "loadAnimation": {
+              "type": "none",
+              "opacityOpen": false,
+              "timingFunction": "linear",
+              "direction": "right",
+              "duration": 1000,
+              "delay": 0
+            },
+            "dataMethod": "get",
+            "dataType": 0,
+            "dataSource": {},
+            "requestHeader": "{}",
+            "requestBody": "{}",
+            "crossOrigin": false,
+            "needCookie": false,
+            "autoRefresh": false,
+            "dataQuery": "",
+            "isLock": false,
+            "sql": "SELECT * FROM",
+            "data": [
+              {
+                "seriesName": "系列一",
+                "name": "A",
+                "value": 2024
+              },
+              {
+                "seriesName": "系列二",
+                "name": "A",
+                "value": 2378
+              },
+              {
+                "seriesName": "系列一",
+                "name": "B",
+                "value": 1423
+              },
+              {
+                "seriesName": "系列二",
+                "name": "B",
+                "value": 1779
+              },
+              {
+                "seriesName": "系列一",
+                "name": "C",
+                "value": 1532
+              },
+              {
+                "seriesName": "系列二",
+                "name": "C",
+                "value": 1788
+              },
+              {
+                "seriesName": "系列一",
+                "name": "D",
+                "value": 1920
+              },
+              {
+                "seriesName": "系列二",
+                "name": "D",
+                "value": 2232
+              }
+            ],
+            "dataRemark": [
+              {
+                "key": "name",
+                "map": "name",
+                "decription": "类目"
+              },
+              {
+                "key": "value",
+                "map": "value",
+                "decription": "值"
+              },
+              {
+                "key": "seriesName",
+                "map": "seriesName",
+                "decription": "系列"
+              }
+            ],
+            "openFilter": false,
+            "listenArgs": [],
+            "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+            "url": "",
+            "path": "",
+            "time": 30,
+            "component": {
+              "width": 600,
+              "height": 300,
+              "name": "echart-stripBar",
+              "prop": "echartstripBar"
+            },
+            "option": {
+              "refresh": true,
+              "stack": false,
+              "dataSeriesName": [
+                "系列一",
+                "系列二"
+              ],
+              "seriesName": [
+                "系列一",
+                "系列二"
+              ],
+              "seriesTabsName": [
+                {
+                  "name": "系列1",
+                  "value": "系列一"
+                },
+                {
+                  "name": "系列2",
+                  "value": "系列二"
+                }
+              ],
+              "seriesColor": [
+                {
+                  "type": "linear-gradient",
+                  "angle": "90",
+                  "colors": [
+                    {
+                      "color": "rgba(62,67,244,1)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(137,181,252,1)",
+                      "per": 100
+                    }
+                  ]
+                },
+                {
+                  "type": "linear-gradient",
+                  "angle": "90",
+                  "colors": [
+                    {
+                      "color": "rgba(62,67,244,1)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(61,227,251,1)",
+                      "per": 100
+                    }
+                  ]
+                }
+              ],
+              "seriesColorpicker": [
+                "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)",
+                "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)"
+              ],
+              "seriesOpacity": [
+                100,
+                100
+              ],
+              "extremeShow": [
+                false,
+                false
+              ],
+              "extremeType": [
+                "max",
+                "max"
+              ],
+              "extremeColor": [
+                {
+                  "type": "linear-gradient",
+                  "angle": "90",
+                  "colors": [
+                    {
+                      "color": "rgba(62,67,244,1)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(61,227,251,1)",
+                      "per": 100
+                    }
+                  ]
+                },
+                {
+                  "type": "linear-gradient",
+                  "angle": "90",
+                  "colors": [
+                    {
+                      "color": "rgba(62,67,244,1)",
+                      "per": 0
+                    },
+                    {
+                      "color": "rgba(137,181,252,1)",
+                      "per": 100
+                    }
+                  ]
+                }
+              ],
+              "extremeOpacity": [
+                100,
+                100
+              ],
+              "extremeColorpicker": [
+                "linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)",
+                "linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)"
+              ],
+              "barGap": 50,
+              "barCategoryGap": 60,
+              "barBorderRadius": "default",
+              "gridLeft": 60,
+              "gridTop": 50,
+              "gridRight": 70,
+              "gridBottom": 60,
+              "legendShow": true,
+              "legendWidth": 800,
+              "legendHeight": 800,
+              "legendItemWidth": 20,
+              "legendItemHeight": 10,
+              "legendItemGap": 20,
+              "legendFontFamily": "siayuan-normal",
+              "legendFontSize": 16,
+              "legendColor": "rgba(255, 255, 255, 1)",
+              "legendFontStyle": "normal",
+              "legendFontWeight": "normal",
+              "legendTextLeftPadding": 0,
+              "legendSelectedMode": true,
+              "legendGrid": {
+                "top": 0,
+                "left": "center"
+              },
+              "legendOffsetX": 0,
+              "legendOffsetY": 0,
+              "xNameFontSize": 16,
+              "yNameFontSize": 16,
+              "seriesLabelShow": false,
+              "seriesLabelColor": "rgba(255,255,255,1)",
+              "seriesLabelFontFamily": "siayuan-normal",
+              "seriesLabelFontSize": 14,
+              "seriesLabelFontWeight": "normal",
+              "seriesLabelFontStyle": "normal",
+              "seriesLabelOffsetX": 0,
+              "seriesLabelOffsetY": 0,
+              "seriesLabelSuffix": "",
+              "legendOrient": "horizontal",
+              "yAxisInverse": true,
+              "xAxisInverse": false,
+              "xAxisShow": true,
+              "yAxisShow": true,
+              "xAxisLabelShow": true,
+              "yAxisLabelShow": true,
+              "yAxisType": "category",
+              "yAxisInterval": 0,
+              "yAxisRotate": 0,
+              "xAxisMin": "0",
+              "xAxisMax": "",
+              "xAxisMargin": 8,
+              "yAxisMargin": 8,
+              "xAxisFontFamily": "siayuan-normal",
+              "yAxisFontFamily": "siayuan-normal",
+              "xAxisFontSize": 18,
+              "yAxisFontSize": 18,
+              "xAxisColor": "rgba(209, 209, 209, 1)",
+              "yAxisColor": "rgba(209, 209, 209, 1)",
+              "xAxisFontStyle": "normal",
+              "yAxisFontStyle": "normal",
+              "xAxisFontWeight": "normal",
+              "yAxisFontWeight": "normal",
+              "xAxisNameShow": false,
+              "xAxisName": "单位",
+              "xAxisNameFontFamily": "siayuan-normal",
+              "xAxisNameFontSize": 14,
+              "xAxisNameColor": "rgba(209, 209, 209, 1)",
+              "xAxisNameFontStyle": "normal",
+              "xAxisNameFontWeight": "normal",
+              "xAxisNameGap": 26,
+              "xAxisLineShow": false,
+              "yAxisLineShow": true,
+              "xAxisLineColor": "rgba(209, 209, 209, 0.5)",
+              "yAxisLineColor": "rgba(209, 209, 209, 0.5)",
+              "xAxisLineWidth": 1,
+              "yAxisLineWidth": 1,
+              "xAxisLineOpacity": 0.5,
+              "yAxisLineOpacity": 0.5,
+              "xAxisTickShow": false,
+              "yAxisTickShow": true,
+              "xAxisTickColor": "#65686f",
+              "yAxisTickColor": "#65686f",
+              "xAxisTickWidth": 1,
+              "yAxisTickWidth": 1,
+              "xAxisTickLength": 2,
+              "yAxisTickLength": 2,
+              "xAxisSplitLineShow": true,
+              "yAxisSplitLineShow": false,
+              "yAxisSplitLineInterval": 0,
+              "xAxisSplitLineWidth": 1,
+              "yAxisSplitLineWidth": 1,
+              "xAxisSplitLineColor": "#383d47",
+              "yAxisSplitLineColor": "#383d47",
+              "barBackgroundColor": "rgba(255, 255, 255, 0)",
+              "dataLoop": false,
+              "dataLoopInterval": 5,
+              "dataLoopDisplayRows": 4,
+              "dataLoopRollNum": 1,
+              "dataZoomShow": false,
+              "moveHandleSize": 10,
+              "moveHandleColor": "#d2dbee",
+              "moveHandleEmphasisColor": "#d2dbee",
+              "dataZoomRight": 20,
+              "tooltipLoop": false,
+              "tooltipLoopInterval": 3,
+              "tooltipTriggerOn": true,
+              "tooltipOffsetX": 0,
+              "tooltipOffsetY": 0,
+              "tooltipBackground": "",
+              "tooltipWidth": 200,
+              "tooltipHeight": 100,
+              "tooltipPaddingTop": 0,
+              "tooltipPaddingBottom": 0,
+              "tooltipPaddingLeft": 0,
+              "tooltipPaddingRight": 0,
+              "tooltipNameFontFamily": "siayuan-normal",
+              "tooltipNameFontSize": 18,
+              "tooltipNameColor": "rgba(255, 255, 255, 1)",
+              "tooltipNameFontWeight": "normal",
+              "tooltipNameFontStyle": "normal",
+              "tooltipAlign": "left",
+              "tooltipNameOffsetX": 0,
+              "tooltipNameOffsetY": 0,
+              "tooltipArrLineHeight": 12,
+              "tooltipSeriesNameFontFamily": "siayuan-normal",
+              "tooltipSeriesNameFontSize": 18,
+              "tooltipSeriesNameColor": "rgba(255, 255, 255, 1)",
+              "tooltipSeriesNameFontWeight": "normal",
+              "tooltipSeriesNameFontStyle": "normal",
+              "tooltipValueFontFamily": "siayuan-normal",
+              "tooltipValueFontSize": 18,
+              "tooltipValueColor": "rgba(255, 255, 255, 1)",
+              "tooltipValueFontWeight": "normal",
+              "tooltipValueFontStyle": "normal",
+              "tooltipUnit": [
+                "",
+                ""
+              ],
+              "tooltipUnitFontFamily": "siayuan-normal",
+              "tooltipUnitFontSize": 18,
+              "tooltipUnitColor": "rgba(255, 255, 255, 1)",
+              "tooltipUnitFontWeight": "normal",
+              "tooltipUnitFontStyle": "normal",
+              "tooltipUnitOffsetX": 0,
+              "tooltipUnitOffsetY": 0,
+              "tooltipMarkerSize": 10,
+              "dataUnitName": [
+                "系列一",
+                "系列二"
+              ],
+              "unitTabsName": [
+                {
+                  "name": "后缀1",
+                  "value": "个"
+                },
+                {
+                  "name": "后缀2",
+                  "value": "个"
+                }
+              ],
+              "tooltipAxisPointerWidth": 1,
+              "tooltipAxisPointerColor": "rgba(255, 255, 255, 1)"
+            },
+            "id": 4175,
+            "left": 0,
+            "top": 0,
+            "zIndex": 1,
+            "verticalConst": "Top",
+            "horizontalConst": "Left",
+            "parent": 4177
+          }
+        ],
+        "loadAnimation": {
+          "type": "none",
+          "opacityOpen": false,
+          "timingFunction": "linear",
+          "direction": "right",
+          "duration": 1000,
+          "delay": 0
+        },
+        "top": 0,
+        "left": 0,
+        "component": {
+          "width": 1200,
+          "height": 300,
+          "name": "sw-folder",
+          "prop": "sw-folder"
+        },
+        "isExpand": true,
+        "isOuter": true,
+        "option": {
+          "transform": false,
+          "perspective": 0,
+          "originX": 50,
+          "originY": 50,
+          "rotateX": 0,
+          "rotateY": 0,
+          "rotateZ": 0,
+          "skewX": 0,
+          "skewY": 0,
+          "scaleX": 100,
+          "scaleY": 100,
+          "translateX": 0,
+          "translateY": 0,
+          "translateZ": 0,
+          "originGrid": {
+            "left": "center",
+            "top": "center"
+          }
+        },
+        "id": 4177,
+        "zIndex": 1
+      }
+    ],
+    "password": "",
+    "status": null,
+    "userId": 71,
+    "type": 1,
+    "expirationTime": null,
+    "groupId": 0,
+    "invitationCode": "00000000-0000-0000-0000-000000000000",
+    "versionCode": "1",
+    "versionDesc": null,
+    "dataFilterArr": {},
+    "aniFrameSet": {},
+    "statusAnimation": {},
+    "hasPassword": null,
+    "hasExpirationTime": null,
+    "encodedControl": []
+  }
+}

@@ -1,0 +1,6 @@
+# sidecar 打包中间产物 / 产物
+/.sidecar-build
+/src-tauri/resources
+/src-tauri/binaries
+/src-tauri/target
+/src-tauri/gen/schemas

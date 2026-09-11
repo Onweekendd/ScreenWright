@@ -1,0 +1,245 @@
+{
+  "meta": {
+    "id": 91,
+    "name": "3D图片列表",
+    "prop": "imagesList3d",
+    "componentName": "imagesList3d",
+    "first_level_menu": "展项",
+    "second_level_menu": "",
+    "thumbnail": "/img/imagesList3d.12as1026.gif"
+  },
+  "config": {
+    "title": "3D图片列表",
+    "name": "3D图片列表",
+    "display": true,
+    "icon": "icon-scatter",
+    "img": "/img/imagesList3d.12as1026.gif",
+    "callbackArgs": [],
+    "events": [],
+    "loadAnimation": {
+      "type": "none",
+      "opacityOpen": false,
+      "timingFunction": "linear",
+      "direction": "right",
+      "duration": 1000,
+      "delay": 0
+    },
+    "dataType": 0,
+    "dataSource": {},
+    "requestHeader": {},
+    "requestBody": {},
+    "crossOrigin": false,
+    "needCookie": false,
+    "autoRefresh": false,
+    "dataQuery": "",
+    "isLock": false,
+    "dataMethod": "get",
+    "path": "",
+    "time": 30,
+    "url": "",
+    "data": [],
+    "dataRemark": [
+      {
+        "key": "id",
+        "map": "id",
+        "decription": "ID"
+      },
+      {
+        "key": "title",
+        "map": "title",
+        "decription": "标题"
+      },
+      {
+        "key": "content",
+        "map": "content",
+        "decription": "内容"
+      },
+      {
+        "key": "src",
+        "map": "src",
+        "decription": "图片地址"
+      }
+    ],
+    "openFilter": false,
+    "listenArgs": [],
+    "cbArgs": [],
+    "dataFormatter": "(data, callbackArgs) => {\r\n    return data\r\n}",
+    "component": {
+      "width": 1000,
+      "height": 600,
+      "name": "imagesList3d",
+      "prop": "imagesList3d"
+    },
+    "option": {
+      "translateX": 0,
+      "translateY": -50,
+      "translateZ": 0,
+      "rotateX": -10,
+      "rotateY": 0,
+      "rotateZ": 0,
+      "perspective": 1000,
+      "rotateDirection": 0,
+      "rotateSpeed": 60,
+      "durationOfStay": 2,
+      "isLink": false,
+      "imgWidth": 120,
+      "imgHeight": 170,
+      "radius": 360,
+      "invertedImage": true,
+      "activeObj": {
+        "fontSize": 16,
+        "fontWeight": false,
+        "fontStyle": false,
+        "fontFamily": "sans-serif",
+        "fontColor": "rgba(255, 255, 255, 1)",
+        "letterSpacing": 2,
+        "textTranslateX": 0,
+        "textTranslateY": 0,
+        "isTextShadow": false,
+        "textShadow": {
+          "x": 0,
+          "y": 0,
+          "blur": 0,
+          "color": "rgba(255, 255, 255, 1)",
+          "extend": 0
+        },
+        "paddingTop": 0,
+        "paddingBottom": 0,
+        "fontSize2": 14,
+        "fontWeight2": false,
+        "fontStyle2": false,
+        "fontFamily2": "sans-serif",
+        "fontColor2": "rgba(255, 255, 255, 1)",
+        "letterSpacing2": 2,
+        "textTranslateX2": 0,
+        "textTranslateY2": 0,
+        "isTextShadow2": false,
+        "textShadow2": {
+          "x": 0,
+          "y": 0,
+          "blur": 0,
+          "color": "rgba(255, 255, 255, 1)",
+          "extend": 0
+        },
+        "scaleZoom": 1.15
+      },
+      "defaultObj": {
+        "fontSize": 16,
+        "fontWeight": false,
+        "fontStyle": false,
+        "fontFamily": "sans-serif",
+        "fontColor": "rgba(255, 255, 255, 1)",
+        "letterSpacing": 2,
+        "textTranslateX": 0,
+        "textTranslateY": 0,
+        "isTextShadow": false,
+        "textShadow": {
+          "x": 0,
+          "y": 0,
+          "blur": 0,
+          "color": "rgba(255, 255, 255, 1)",
+          "extend": 0
+        },
+        "paddingTop": 0,
+        "paddingBottom": 0,
+        "fontSize2": 14,
+        "fontWeight2": false,
+        "fontStyle2": false,
+        "fontFamily2": "sans-serif",
+        "fontColor2": "rgba(255, 255, 255, 1)",
+        "letterSpacing2": 2,
+        "textTranslateX2": 0,
+        "textTranslateY2": 0,
+        "isTextShadow2": false,
+        "textShadow2": {
+          "x": 0,
+          "y": 0,
+          "blur": 0,
+          "color": "rgba(255, 255, 255, 1)",
+          "extend": 0
+        }
+      },
+      "seriesTabsList": [
+        {
+          "id": "1",
+          "name": "图片1",
+          "activeObj": {
+            "imageSrc": "version-test/assets/defaultImg/3dactive.png"
+          },
+          "defaultObj": {
+            "link": "",
+            "title": "标题",
+            "content": "描述文本",
+            "imageSrc": "version-test/assets/defaultImg/3ddefault.png"
+          }
+        },
+        {
+          "id": "2",
+          "name": "图片2",
+          "activeObj": {
+            "imageSrc": "version-test/assets/defaultImg/3dactive.png"
+          },
+          "defaultObj": {
+            "link": "",
+            "title": "标题",
+            "content": "描述文本",
+            "imageSrc": "version-test/assets/defaultImg/3ddefault.png"
+          }
+        },
+        {
+          "id": "3",
+          "name": "图片3",
+          "activeObj": {
+            "imageSrc": "version-test/assets/defaultImg/3dactive.png"
+          },
+          "defaultObj": {
+            "link": "",
+            "title": "标题",
+            "content": "描述文本",
+            "imageSrc": "version-test/assets/defaultImg/3ddefault.png"
+          }
+        },
+        {
+          "id": "4",
+          "name": "图片4",
+          "activeObj": {
+            "imageSrc": "version-test/assets/defaultImg/3dactive.png"
+          },
+          "defaultObj": {
+            "link": "",
+            "title": "标题",
+            "content": "描述文本",
+            "imageSrc": "version-test/assets/defaultImg/3ddefault.png"
+          }
+        },
+        {
+          "id": "5",
+          "name": "图片5",
+          "activeObj": {
+            "imageSrc": "version-test/assets/defaultImg/3dactive.png"
+          },
+          "defaultObj": {
+            "link": "",
+            "title": "标题",
+            "content": "描述文本",
+            "imageSrc": "version-test/assets/defaultImg/3ddefault.png"
+          }
+        },
+        {
+          "id": "6",
+          "name": "图片6",
+          "activeObj": {
+            "imageSrc": "version-test/assets/defaultImg/3dactive.png"
+          },
+          "defaultObj": {
+            "link": "",
+            "title": "标题",
+            "content": "描述文本",
+            "imageSrc": "version-test/assets/defaultImg/3ddefault.png"
+          }
+        }
+      ]
+    }
+  },
+  "template": []
+}

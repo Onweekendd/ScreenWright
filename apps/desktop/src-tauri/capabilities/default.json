@@ -1,0 +1,23 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Screenwright 桌面端默认能力集",
+  "windows": ["main", "preview-*"],
+  "permissions": [
+    "core:default",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-close",
+    "core:window:allow-set-focus",
+    "core:window:allow-minimize",
+    "core:window:allow-maximize",
+    "core:window:allow-unmaximize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-is-maximized",
+    "core:window:allow-start-dragging",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [{ "name": "binaries/node", "sidecar": true, "args": true }]
+    },
+    "shell:allow-kill"
+  ]
+}

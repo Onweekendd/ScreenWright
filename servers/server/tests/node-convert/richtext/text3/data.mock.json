@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "id": "14789:1456",
+      "name": "欢迎来到思明区数字内容创作公共服务平台",
+      "type": "TEXT",
+      "layout": "layout_184df1",
+      "text": "欢迎来到思明区数字内容创作公共服务平台",
+      "textStyle": "style_072978",
+      "fills": "fill_a26768"
+    }
+  ],
+  "components": {},
+  "componentSets": {},
+  "globalVars": {
+    "styles": {
+      "layout_184df1": {
+        "mode": "none",
+        "sizing": {},
+        "dimensions": { "width": 3412, "height": 164 },
+        "absolutePosition": { "x": 0, "y": 0 }
+      },
+      "style_072978": {
+        "fontFamily": "FZLTHProS",
+        "fontWeight": 400,
+        "fontSize": 164,
+        "letterSpacing": "6.097560975609756%",
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP"
+      },
+      "fill_a26768": [
+        {
+          "type": "GRADIENT_LINEAR",
+          "gradient": "linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 100%)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+@import "src/style/mixins/element.scss";
+.body-content {
+  border: 1px solid #363636;
+  color: rgba(218, 218, 218, 0.4);
+  border-radius: 6px;
+  font-size: 14px;
+  min-height: 120px;
+  .content-list {
+    border-bottom: 1px solid rgba(218, 218, 218, 0.1);
+  }
+  .form-header {
+    background: rgba(40, 40, 40, 0.522);
+    border-bottom: 1px solid rgba(218, 218, 218, 0.1);
+    height: 30px;
+    line-height: 30px;
+    box-sizing: border-box;
+  }
+  .list {
+    flex: 1 0 25%;
+    text-align: center;
+    border-right: 1px solid rgba(218, 218, 218, 0.1);
+    box-sizing: border-box;
+    @include common-element-style(".el-input__wrapper");
+    @include common-element-style(".el-select__wrapper");
+    &:last-child {
+      border: none;
+    }
+  }
+  .list-item {
+    padding: 10px 12px;
+    &.icon-delete {
+      color: #f56c6c;
+      cursor: pointer;
+      .del-text {
+        margin-left: 5px;
+      }
+    }
+  }
+  .add-list {
+    margin: 10px 0;
+    color: #642cff;
+    cursor: pointer;
+  }
+  .form-content {
+    overflow: hidden;
+    height: 200px;
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "id": 119,
+    "name": "Artifact 应用预览",
+    "prop": "artifact-app-preview",
+    "componentName": "artifact-app-preview",
+    "first_level_menu": "面板",
+    "second_level_menu": "",
+    "thumbnail": ""
+  },
+  "config": {
+    "title": "Artifact 应用预览",
+    "name": "Artifact 应用预览",
+    "display": true,
+    "left": 0,
+    "top": 0,
+    "isLock": false,
+    "zIndex": 0,
+    "img": "",
+    "events": [],
+    "cbArgs": [],
+    "listenArgs": [],
+    "dataType": 0,
+    "dataSource": {},
+    "data": [],
+    "loadAnimation": {
+      "type": "none",
+      "timingFunction": "linear",
+      "duration": 0,
+      "delay": 0
+    },
+    "component": {
+      "width": 960,
+      "height": 600,
+      "name": "Artifact 应用预览",
+      "prop": "artifact-app-preview"
+    },
+    "option": {
+      "appId": "",
+      "allowInteraction": true,
+      "previewMode": "development",
+      "showStatus": true
+    }
+  },
+  "template": []
+}

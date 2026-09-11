@@ -13,7 +13,6 @@ import ftvideoFrostedGlass from "./mediaFrostedGlass/ftvideoFrostedGlass.vue";
 import ctVideoPanelGlobal from "./mediaGlobal/ctVideoPanelGlobal.vue";
 import ftEmbedAudioGlobal from "./mediaGlobal/ft-embed-audioGlobal.vue";
 import ftOpenVideoGlobal from "./mediaGlobal/ft-open-videoGlobal.vue";
-import ftH5playerGlobal from "./mediaGlobal/ftH5playerGlobal.vue";
 import ftImgBorderGlobal from "./mediaGlobal/ftimgBorderGlobal.vue";
 import ftImgGlobal from "./mediaGlobal/ftimgGlobal.vue";
 import ftSwiperCardGlobal from "./mediaGlobal/ftSwiperCardGlobal.vue";
@@ -46,9 +45,6 @@ export type ConfigTab = {
 
 // FtIframe 的配置面板留在 app 本地（依赖大屏编辑器 useUpdateInstance 等能力），未在此注册
 export const MediaConfigComponent: Partial<Record<MediaEnum, ConfigTab[]>> = {
-  [MediaEnum.FtH5player]: [
-    { label: "全局", value: optionType.global, component: ftH5playerGlobal },
-  ],
   [MediaEnum.FtEmbedAudio]: [
     { label: "全局", value: optionType.global, component: ftEmbedAudioGlobal },
   ],

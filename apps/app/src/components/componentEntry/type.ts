@@ -34,7 +34,6 @@ export const renderIndicatorComponentType: IndicatorEnum[] = [
 // 媒体组件
 export { MediaEnum as mediaEnum };
 export const renderMediaComponentType: MediaEnum[] = [
-  MediaEnum.FtH5player,
   MediaEnum.FtSwiperCard,
   MediaEnum.FtEmbedAudio,
   MediaEnum.FtIframe,

@@ -88,7 +88,6 @@ import { subtabsDataSchema, subtabsOptionSchema } from "./interactive/subtabs";
 import { ctVideoPanelDataSchema, ctVideoPanelOptionSchema } from "./media/ctVideoPanel";
 import { swEmbedAudioDataSchema, swEmbedAudioOptionSchema } from "./media/sw-embed-audio";
 import { swOpenVideoDataSchema, swOpenVideoOptionSchema } from "./media/sw-open-video";
-import { swH5playerDataSchema, swH5playerOptionSchema } from "./media/swH5player";
 import { ftiframeDataSchema, ftiframeOptionSchema } from "./media/swiframe";
 import { ftimgDataSchema, ftimgOptionSchema } from "./media/swimg";
 import { ftswiperDataSchema, ftswiperOptionSchema } from "./media/swswiper";
@@ -163,7 +162,6 @@ export const componentPropSchemaMap = {
   "rank-progress": { data: rankProgressDataSchema, option: rankProgressOptionSchema },
   rasterProgressBar: { data: rasterProgressBarDataSchema, option: rasterProgressBarOptionSchema },
   "sw-embed-audio": { data: swEmbedAudioDataSchema, option: swEmbedAudioOptionSchema },
-  ftH5player: { data: swH5playerDataSchema, option: swH5playerOptionSchema },
   ftiframe: { data: ftiframeDataSchema, option: ftiframeOptionSchema },
   ftimg: { data: ftimgDataSchema, option: ftimgOptionSchema },
   ftOpenVideo: { data: swOpenVideoDataSchema, option: swOpenVideoOptionSchema },

@@ -97,7 +97,6 @@ export * from "./interactive/subtabs";
 export * from "./media/ctVideoPanel";
 export * from "./media/sw-embed-audio";
 export * from "./media/sw-open-video";
-export * from "./media/swH5player";
 export * from "./media/swiframe";
 export * from "./media/swimg";
 export * from "./media/swswiper";

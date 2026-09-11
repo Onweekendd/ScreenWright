@@ -1,16 +1,7 @@
 <template>
   <div class="video-box" :style="videoStyle">
-    <hk-video-player
-      v-if="videoData.url && videoData.type === 'hk'"
-      class="video-view"
-      :video-data="videoData"
-      :option="option"
-      :object-fit="objectFit"
-      :element="element"
-      @video-end="sendVideoEnd"
-    />
     <video-hls
-      v-else-if="videoData.url"
+      v-if="videoData.url"
       class="video-view"
       :video-id="videoId"
       :video-data="videoData"
@@ -30,7 +21,6 @@ import { computed } from "vue";
 import type { ComponentType } from "@screenwright/types";
 
 import type { VideoItem, VideoOption } from "../../types";
-import HkVideoPlayer from "./HkVideoPlayer.vue";
 import VideoHls from "./VideoHls.vue";
 
 const props = defineProps<{

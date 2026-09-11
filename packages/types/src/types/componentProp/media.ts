@@ -8,8 +8,6 @@
  * @description 各种媒体组件的类型标识
  */
 export enum MediaEnum {
-  /** H5播放器 */
-  FtH5player = "swH5player",
   /** 轮播卡片 */
   FtSwiperCard = "swSwiperCard",
   /** 嵌入音频 */

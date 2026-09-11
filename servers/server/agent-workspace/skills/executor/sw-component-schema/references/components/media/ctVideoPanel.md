@@ -33,7 +33,6 @@ type dataChart = VideoPanelDataItem[];
 | `mixBlendMode` | string | "normal" | 混合模式 |
 | `controler` | boolean | false | 是否显示控制器 |
 | `autoPlay` | boolean | true | 是否自动播放 |
-| `hkVideoPlayerMode` | number | 0 | 海康视频播放模式 |
 | `loopPlay` | boolean | true | 是否循环播放 |
 | `muted` | boolean | true | 是否静音 |
 | `autoHidden` | boolean | false | 是否自动隐藏 |

@@ -10,16 +10,6 @@
     </div>
     <div class="content__main">
       <span class="content__name">{{ item.name }}</span>
-      <div class="content__menulist">
-        <span
-          class="content__status"
-          :class="{
-            'content__status--active color-purple': item.status
-          }"
-        >
-          {{ getStatusName(item.status) }}
-        </span>
-      </div>
     </div>
   </gridItem>
 </template>
@@ -35,14 +25,7 @@ defineProps<{
   item: ScreenItem;
   permissionMap: Map<any, any>;
 }>();
-const getStatusName = (status: boolean | null) => {
-  return status ? "已发布" : "未发布";
-};
 </script>
 <style lang="scss" scoped>
-.color-purple {
-  color: #9483ff !important;
-}
-
 @import "../style/templateItem.scss";
 </style>

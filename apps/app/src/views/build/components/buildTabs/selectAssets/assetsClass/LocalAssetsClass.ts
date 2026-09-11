@@ -10,8 +10,6 @@ import { AssetsMenuKeyEnum } from "../assetsMenuType";
 import type { ApiParams, AssetItem, GroupItem } from "./types";
 import { validateFileByResourceType } from "./uploadValidators";
 
-// const { MINIO_BASE_URL } = process.env;
-// const { WEB_APP_MINIO_BASE_URL } = (window as any).webconfig;
 /**
  * 本应用资产类
  * 提供本应用专用资产的管理功能，支持资产的增删改查，但不支持分组管理

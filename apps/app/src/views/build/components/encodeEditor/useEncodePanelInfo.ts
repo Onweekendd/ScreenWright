@@ -7,7 +7,6 @@ import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
 import { useAlignmentWasm } from "../buildRender/hooks/useAlignmentWasm";
 import type { ComponentType } from "../buildRender/type";
-import type { PanelInitConfig } from "../common/useCommonPanelInfo";
 import { useCommonPanelInfo } from "../common/useCommonPanelInfo";
 import { useEncodePanelData } from "./useEncodePanelData";
 
@@ -81,8 +80,8 @@ export const useEncodePanelInfo = createGlobalState(() => {
   };
 
   // 编码面板特有的初始化逻辑
-  const initPanelDataWithEncodeLogic = async (dynamicPanelId: number, config?: PanelInitConfig) => {
-    await commonInfoHooks.initPanelData(dynamicPanelId, config);
+  const initPanelDataWithEncodeLogic = async (dynamicPanelId: number) => {
+    await commonInfoHooks.initPanelData(dynamicPanelId);
 
     if (commonInfoHooks.activeStatus.value?.config) {
       commonInfoHooks.updateComponentList(commonInfoHooks.activeStatus.value.config);
@@ -113,8 +112,8 @@ export const useEncodePanelInfo = createGlobalState(() => {
   };
 
   // 编码面板特有的初始化方法
-  const initialize = async (config?: PanelInitConfig) => {
-    await initPanelDataWithEncodeLogic(Number(route.value.params.cid), config);
+  const initialize = async () => {
+    await initPanelDataWithEncodeLogic(Number(route.value.params.cid));
   };
 
   return {

@@ -9,14 +9,13 @@ interface TcpUdpMessage {
   [key: string]: any;
 }
 
-/** 纯逻辑：只读 window.webconfig / process.env，无 app 耦合 */
+/** 纯逻辑：只读 process.env，无 app 耦合 */
 function getTcpNoticeWebsocketUrl(): string {
   let url = "";
   let websocketHost = "";
   let protocol = "";
   const { VITE_API_BASE_URL } = process.env || {};
-  const { WEB_APP_API_BASE_URL } = window.webconfig || {};
-  const baseURL = WEB_APP_API_BASE_URL || VITE_API_BASE_URL;
+  const baseURL = VITE_API_BASE_URL;
   if (baseURL) {
     websocketHost = baseURL.slice(baseURL.indexOf("//")).split(":")[0] + "/bi-application";
     protocol = baseURL.slice(0, baseURL.indexOf("//")) === "https:" ? "wss:" : "ws:";

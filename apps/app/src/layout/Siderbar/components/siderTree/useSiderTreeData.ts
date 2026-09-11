@@ -137,7 +137,6 @@ export const useSiderTreeData = createGlobalState(() => {
    */
   const getTreeData = async (isCheckedFirst = true) => {
     const paths = getDataBasePath("get");
-    console.log(paths, "paths");
     if (paths && paths.dataBase && paths.dataPath) {
       const { dataBase, dataPath } = paths;
       if (!dataBase || !dataPath) {

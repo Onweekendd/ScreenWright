@@ -36,12 +36,6 @@ const makeVideoFileFromDisk = (filename: string) => {
 };
 
 describe("assetsUpload", () => {
-  beforeEach(() => {
-    (window as unknown as { webconfig: Partial<WebConfig> }).webconfig = {
-      WEB_APP_MINIO_BASE_URL: "http://minio.example.com"
-    };
-  });
-
   describe("组件渲染", () => {
     it("renders upload trigger area correctly", () => {
       // Arrange

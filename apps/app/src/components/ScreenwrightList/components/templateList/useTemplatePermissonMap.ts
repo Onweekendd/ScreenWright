@@ -9,7 +9,6 @@ import type { ScreenItem } from "@/model/Visual";
  * 是因为 templateMenu.vue 仍按 `permissionMap.get(item.id).xxx` 读取。
  */
 const ALL_ALLOWED = {
-  release: true,
   copy: true,
   modify: true,
   export: true,

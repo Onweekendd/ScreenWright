@@ -3,7 +3,6 @@ import type { memberListRes, queryPageInvitationReq, queryPageInvitationRes, Tea
 import { BaseName } from "@/utils/config";
 import { request } from "@/utils/service";
 
-const { WEB_APP_MINIO_BASE_URL } = (window as any).webconfig;
 const { MINIO_BASE_URL } = process.env;
 // 获取团队成员-列表
 export const getMemberList = (data: TeamListReq) =>
@@ -61,7 +60,7 @@ export const queryPageInvitation = (params: queryPageInvitationReq) =>
 
 export const getZipFile = (url: string) =>
   request<{ data: any }>({
-    url: (WEB_APP_MINIO_BASE_URL || MINIO_BASE_URL) + url,
+    url: MINIO_BASE_URL + url,
     method: "get",
     timeout: 0,
     responseType: "blob"

@@ -98,29 +98,15 @@ export function getMenuTree() {
 }
 
 /**
- * 角色权益（getRoleEquities）。
- * 关键：必须返回完整 userInfo，否则前端 setRoleEquitiesInfo 会用默认空对象覆盖登录态 userInfo。
+ * 当前用户信息（getCurrentUser）。开源单机版没有付费套餐/容量限额概念，
+ * 只返回真实用户资料，供前端展示用户名/角色，以及 createdBy 等字段取值。
  */
-export async function getRoleEquities(userId: number) {
+export async function getCurrentUser(userId: number) {
   const user = await prismaClient.biUser.findUnique({ where: { id: userId } });
   if (!user) {
     throw new HTTPException(404, { message: "用户不存在" });
   }
-  const userInfo = toUser(user);
-  return ok({
-    largeScreenNum: 100,
-    sceneNum: 100,
-    resourceCapacity: 100,
-    exportLargeScreenNum: 100,
-    exportSceneNum: 100,
-    uePlug: true,
-    watermark: false,
-    cityScenesNum: 100,
-    exportCityScenesNum: 100,
-    cityWatermark: false,
-    roleAuthorizationList: userInfo.roleAuthorizationList,
-    userInfo
-  });
+  return ok(toUser(user));
 }
 
 export function isSuperAdmin(role: number) {

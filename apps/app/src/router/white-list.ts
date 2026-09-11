@@ -1,8 +1,8 @@
 import { type RouteLocationNormalized } from "vue-router";
 
 /** 独立渲染页白名单：跳过菜单 / 动态路由 / 权益初始化（匹配路由 path） */
-const whiteList: string[] = ["/shareScreen"];
-const whiteListName: string[] = ["shareScreen", "terminal", "screenPage"];
+const whiteList: string[] = [];
+const whiteListName: string[] = ["terminal", "screenPage"];
 
 /** 免登录白名单（匹配路由 name） */
 // const whiteListByName: string[] = []
@@ -18,6 +18,7 @@ const isWhiteList = (to: RouteLocationNormalized) => {
   // return whiteList.some((path) => to.path.startsWith(path))
 };
 
-const whiteEquitiesInfo = ["view"];
+/** 跳过「拉取当前用户信息」的路由（匹配路由 name） */
+const whiteUserFetchList = ["view"];
 
-export { isWhiteList, whiteEquitiesInfo, whiteList };
+export { isWhiteList, whiteList, whiteUserFetchList };

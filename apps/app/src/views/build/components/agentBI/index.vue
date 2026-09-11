@@ -94,7 +94,8 @@ defineExpose({ drawerWidth, visible });
 <style lang="scss">
 @use "./styles/variables" as *;
 
-/* overlay 本身不拦截点击，但 drawer 面板本身需要可交互 */
+/* overlay 本身不拦截点击，但 drawer 面板本身需要可交互
+   （:modal="false" 时该容器无 .el-overlay 类，且 inset:0 为内联样式，所以避让标题栏的偏移写在 .el-drawer 上） */
 .agent-bi-overlay {
   pointer-events: none;
 
@@ -113,6 +114,12 @@ defineExpose({ drawerWidth, visible });
   font-size: 13px;
   color: $color-text-primary;
   font-family: $font-family-panel;
+  /* append-to-body 后铺满视口，桌面端要避开顶部自定义标题栏（Web 端该变量为 0）。
+     多套一层 .rtl 是为了压过 element-plus 同权重的 .el-drawer.rtl { top: 0; height: 100% } */
+  &.rtl {
+    top: var(--sw-titlebar-height, 0px);
+    height: calc(100% - var(--sw-titlebar-height, 0px));
+  }
 
   &.is-resizing {
     transition: none !important;

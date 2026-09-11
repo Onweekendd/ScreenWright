@@ -72,8 +72,7 @@ import type { ParamsType, Props } from "./useAIChatQA";
 import { useAIChatQA } from "./useAIChatQA";
 
 const { VITE_API_BASE_URL } = process.env;
-const { WEB_APP_API_BASE_URL } = window.webconfig ?? {};
-const BASEURL = WEB_APP_API_BASE_URL || VITE_API_BASE_URL;
+const BASEURL = VITE_API_BASE_URL;
 
 const props = defineProps<Props>();
 

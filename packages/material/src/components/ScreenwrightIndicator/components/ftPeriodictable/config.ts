@@ -1,6 +1,5 @@
 // 环境变量
 const { MINIO_BASE_URL } = process.env;
-const { WEB_APP_MINIO_BASE_URL } = (window as any).webconfig;
 export const ftPeriodictableConfig = {
   jsonData: {
     sceneVersionId: 4,
@@ -14,7 +13,7 @@ export const ftPeriodictableConfig = {
       mapZoom: 12
     },
     statesAnimation: [],
-    baseUrl: WEB_APP_MINIO_BASE_URL || MINIO_BASE_URL,
+    baseUrl: MINIO_BASE_URL,
     curScene: {
       name: "状态1",
       environment: {

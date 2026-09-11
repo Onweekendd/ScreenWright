@@ -1,5 +1,4 @@
 import type { updateModelReq } from "@/model/DataModel";
-import type { ScreenVersion } from "@/model/Version";
 import type { ScreenReq } from "@/model/Visual";
 
 import { DisplayApi } from "./displayApi";
@@ -40,15 +39,6 @@ class ModelApi {
       return this.displayApi.getScreenVersionList(id);
     } else if (this.path.includes("/build")) {
       return this.displayApi.getScreenVersionList(id);
-    }
-    return Promise.resolve();
-  }
-  // 发布函数
-  publishScreenVersion(params: ScreenVersion) {
-    if (this.path === "/display") {
-      return this.displayApi.publishScreen(params);
-    } else if (this.path.includes("/build")) {
-      return this.displayApi.publishScreen(params);
     }
     return Promise.resolve();
   }

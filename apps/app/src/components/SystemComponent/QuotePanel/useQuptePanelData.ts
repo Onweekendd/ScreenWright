@@ -1,10 +1,9 @@
 import { ref } from "vue";
-import { useRoute } from "vue-router";
 
 import { ElMessage } from "element-plus";
 import { get } from "lodash-es";
 
-import { getOpenQuote, getQuoteScreenObj } from "@/api/visual";
+import { getQuoteScreenObj } from "@/api/visual";
 import { useBluePrint } from "@/hooks/useBluePrint";
 import { pipeValidator } from "@/utils/pipeValidator";
 import { getVersionCode } from "@/utils/version";
@@ -14,7 +13,6 @@ export const useQuotePanelData = () => {
   const loading = ref(false);
   const { tranFormBluePrint } = useBluePrint();
   const { groupData } = useGlobalComponentData();
-  const route = useRoute();
   const handleEmptyTemplate = (layers: ComponentType[] | string[]) => {
     if (layers.length === 0) {
       ElMessage.info("该大屏未配置组件！");
@@ -48,9 +46,7 @@ export const useQuotePanelData = () => {
     }
     try {
       loading.value = true;
-      const isShare = route.path.includes("shareScreen");
-      const api = isShare ? getOpenQuote : getQuoteScreenObj;
-      const response = await api(
+      const response = await getQuoteScreenObj(
         {
           // 大屏id
           largeScreenId: Number(target.value),

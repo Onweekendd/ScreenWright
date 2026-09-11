@@ -14,9 +14,9 @@ Screenwright 的桌面端外壳，基于 [Tauri 2](https://tauri.app)。
 - `pnpm desktop:build` 报 `os error 32`（file in use）→ 多半是上次卡死的 build 进程树没退（含 `makensis.exe` 挂着锁），
   用 `Get-CimInstance Win32_Process | ? CommandLine -match 'tauri|makensis' | % { Stop-Process $_.ProcessId -Force }` 清掉再跑。
 - 装机版启动一直卡在加载视频进不去 → 后端首启预热慢（加载 23MB `mastra.db`、MCP 自连重试），前端守卫在
-  `router.beforeEach` 里 `await getRoleEquitiesInfo()` 时被拒 → `router.isReady()` 永不 resolve → `app.mount` 不执行。
+  `router.beforeEach` 里 `await fetchCurrentUser()` 时被拒 → `router.isReady()` 永不 resolve → `app.mount` 不执行。
   两处修：① `router/permission.ts` 全守卫 try/catch + `withRetry`，失败也 `next()`；
-  ② `lib.rs` `wait_backend_ready` 改为轮询 `GET /user/roleEquities/...` 拿到 **HTTP 200** 才算就绪（TCP 通 ≠ 路由挂载好），超时放宽到 120s。
+  ② `lib.rs` `wait_backend_ready` 改为轮询 `GET /user/current/BI` 拿到 **HTTP 200** 才算就绪（TCP 通 ≠ 路由挂载好），超时放宽到 120s。
 - Windows `resource_dir()` / `app_data_dir()` 带 `\\?\` 扩展长度前缀，`lib.rs` 用 `strip_verbatim()` 剥掉，
   给 node 传原生反斜杠路径（`fwd()` 只用于 `file:` URL）。
 

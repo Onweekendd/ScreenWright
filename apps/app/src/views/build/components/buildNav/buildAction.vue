@@ -7,29 +7,16 @@
     <actionItem :isActive="configShow" type="iconfont-youce" content="右侧栏" @click="handleConfigShow" />
     <actionItem type="iconfont-picture" content="导出图片" @click="handleExportImage" />
     <controlItem @click="handlePreview" name="预览" enName="preview" type="iconfont-preview" :compact="compact" />
-    <controlItem
-      @click="handlePublish"
-      name="发布"
-      enName="release"
-      type="iconfont-icon_fabu"
-      :compact="compact"
-      v-if="isShowPublish"
-    />
     <buildClose @close="close" />
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 withDefaults(defineProps<{ compact?: boolean }>(), { compact: false });
 
 import { ElMessage } from "element-plus";
 
-import { getScreenMeta } from "@/api/visual";
-import publishInfo from "@/components/ScreenwrightList/components/templateList/components/publishInfo/publishInfo.vue";
-import { useDialog } from "@/hooks/useDialog";
-import { useUserStore } from "@/store/modules/user";
 import { isDesktop } from "@/utils/platform";
 import { removeSurroundingQuotes } from "@/utils/utils";
 import { getVersionCode, setVersionCode } from "@/utils/version";
@@ -44,9 +31,7 @@ import buildClose from "./buildClose.vue";
 
 const router = useRouter();
 const route = useRoute();
-const { userInfo } = useUserStore();
 const { navInfo } = useLargeScreenInfo();
-const { dialog } = useDialog();
 const { restore } = useRestore();
 const {
   sideShow,
@@ -61,10 +46,6 @@ const {
   undo
 } = useNavAction();
 const { visible } = useAgentBISessions();
-
-const isShowPublish = computed(() => {
-  return userInfo.id === navInfo.value.userId;
-});
 
 // 桌面端（Tauri）：弹出子窗口预览，避免 window.open 走系统浏览器 / 丢失应用上下文
 const openPreviewInDesktopWindow = async (href: string) => {
@@ -122,26 +103,6 @@ const close = () => {
     window.localStorage.setItem("versionCodeList", JSON.stringify(versionCodeList));
   } else {
     router.push({ path: "/display" });
-  }
-};
-const handlePublish = async () => {
-  const res = await getScreenMeta(navInfo.value.id);
-  if (res.success) {
-    dialog({
-      DialogProps: {
-        title: "发布详情",
-        width: "550px",
-        beforeClose: async (done: any) => {
-          done();
-        }
-      },
-      componentProps: {
-        item: res.result,
-        type: "/display"
-      } as any,
-      component: publishInfo,
-      center: true
-    });
   }
 };
 </script>

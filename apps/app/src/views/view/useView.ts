@@ -21,7 +21,6 @@ import type { ComponentType } from "../build/components/buildRender/type";
 import { useEncodePanelInfo } from "../build/components/encodeEditor/useEncodePanelInfo";
 import { usePanelInfo } from "../build/components/panelEditor/usePanelInfo";
 import { useGlobalComponentData } from "../build/useGlobalComponentData";
-import { useAuth } from "./useAuth";
 import { useEncodeCommunication } from "./useEncodeCommunication";
 
 /**
@@ -108,8 +107,6 @@ export function useView() {
     return activeStatus.value?.id || encodeActiveStatus.value?.id;
   });
 
-  const { init: initAuth } = useAuth();
-
   // 根据路由参数自动选择配置的计算属性
   const currentConfig = computed(() => {
     if (!route || !route.params || !route.query) {
@@ -148,18 +145,9 @@ export function useView() {
    * @function initTerminalPanel
    * @description 执行终端面板逻辑，包括通信初始化、面板信息获取和组件列表设置
    */
-  const initTerminalPanel = async (
-    panelId: number,
-    { isShare = false, password = "" }: { isShare?: boolean; password?: string } = { isShare: false }
-  ) => {
-    await initEncodePanelData(panelId, {
-      isShare,
-      password
-    });
+  const initTerminalPanel = async (panelId: number) => {
+    await initEncodePanelData(panelId);
     initTerminalCommunication();
-    if (isShare) {
-      return;
-    }
 
     encodeActiveStatusId.value = (route.query.status as string)
       ? (route.query.status as string)
@@ -244,14 +232,8 @@ export function useView() {
    * @function initDefaultView
    * @description 当没有特定面板配置时，使用默认的组数据初始化视图并启动屏幕通信
    */
-  const initDefaultView = async (
-    id: string,
-    { isShare = false, password = "" }: { isShare?: boolean; password?: string } = { isShare: false }
-  ) => {
-    await initLargeScreen(Number(id), {
-      isShare,
-      password
-    });
+  const initDefaultView = async (id: string) => {
+    await initLargeScreen(Number(id));
 
     await onBeforeEnter();
 
@@ -349,11 +331,6 @@ export function useView() {
    */
   const init = async () => {
     loadingScreenData.value = true;
-    const authRes = await initAuth(); // 如果需要权限验证，可以取消注释
-    if (!authRes) {
-      loadingScreenData.value = false;
-      return;
-    }
     await initPreView();
     const allTopDynamicPanel = Array.from(allComponentMap.value.values()).filter((component) =>
       renderSystemComponentType.some(

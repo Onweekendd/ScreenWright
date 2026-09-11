@@ -69,8 +69,6 @@ function isHttpOrHttpsProtocol(): boolean {
  * @returns
  */
 export const setMinioUrl = (url: string, toAbsolutePath: boolean = false): string => {
-  const { WEB_APP_MINIO_BASE_URL } = window.webconfig || {};
-
   const pattern = /(data:image)|(http[s]?:\/\/)/;
   if (!isString(url)) {
     return "";
@@ -121,5 +119,5 @@ export const setMinioUrl = (url: string, toAbsolutePath: boolean = false): strin
     }
   }
 
-  return pattern.test(url) ? url : (WEB_APP_MINIO_BASE_URL || MINIO_BASE_URL) + url;
+  return pattern.test(url) ? url : MINIO_BASE_URL + url;
 };

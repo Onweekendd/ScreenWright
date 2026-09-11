@@ -1,9 +1,8 @@
 export {};
 
 declare global {
+  /** 仅离线导出包内联注入，运行时读取前要判空 */
   interface WebConfig {
-    /** 系统接口服务 */
-    WEB_APP_API_BASE_URL?: string;
     /** 终端控制websocket地址 */
     controlWebsocketUrl?: string;
     /** tcp通知websocket地址 */
@@ -12,6 +11,6 @@ declare global {
   }
 
   interface Window {
-    webconfig: WebConfig;
+    webconfig?: WebConfig;
   }
 }

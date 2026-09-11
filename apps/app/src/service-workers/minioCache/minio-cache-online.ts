@@ -18,13 +18,13 @@ registerRoute(({ url }) => {
 }, new ForceCacheStrategy());
 
 /**
- * 匹配本地字体文件请求（/src/style/fonts/ 路径下的字体）
+ * 匹配本地字体文件请求（/lib/fonts/ 路径下的字体）
  */
 registerRoute(({ url }) => {
-  const isFontPath = url.pathname.includes("/src/style/fonts/");
+  const isFontPath = url.pathname.includes("/lib/fonts/");
   const isFontFile = /\.(woff|woff2|ttf|otf|eot)$/i.test(url.pathname);
   return isFontPath && isFontFile;
 }, new ForceCacheStrategy());
 
 console.log("[SW] MinIO 媒体资源缓存策略已激活（仅图片和视频）");
-console.log("[SW] 本地字体文件缓存策略已激活（/src/style/fonts/）");
+console.log("[SW] 本地字体文件缓存策略已激活（/lib/fonts/）");

@@ -5,6 +5,7 @@ import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
 import type { ComponentType, direction } from "../type";
 import { handleGroupByParent, saveParentGroupData } from "../utils";
+import { getComponentElement } from "./mouseHandleUtils";
 import { DualAxisSnapManager } from "./snapState";
 import { useAction } from "./useAction";
 import { useAlignmentWasm } from "./useAlignmentWasm";
@@ -358,8 +359,8 @@ export const useMousePointHandle = (
   const mouseStartX = e.clientX;
   const mouseStartY = e.clientY;
 
-  const componentElement = document.getElementById(`${selectedComponent.id}`);
-  console.log(componentElement, "组件元素");
+  // 与拖拽同一套解析（画布内按 data-id 找），避免物料内部的裸数字 id 撞上组件 id
+  const componentElement = getComponentElement(`${selectedComponent.id}`);
   if (!componentElement) {
     return;
   }

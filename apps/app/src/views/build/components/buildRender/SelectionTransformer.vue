@@ -24,6 +24,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import { PanelType } from "./core/SystemComponent/type";
 import { ANCHOR_CURSORS, ANCHOR_POINTS, computeAnchorStyles } from "./hooks/anchorGeometry";
+import { getComponentElement } from "./hooks/mouseHandleUtils";
 import { useAction } from "./hooks/useAction";
 import { useAddKeyboard } from "./hooks/useAddKeyboard";
 import { useEditStore } from "./hooks/useEditStore";
@@ -162,7 +163,8 @@ function canvasScaleFromDom(): { crr: DOMRect; sx: number; sy: number } | null {
 }
 
 function elCanvasRect(id: string, ctx: { crr: DOMRect; sx: number; sy: number }): Rect | null {
-  const el = document.getElementById(id);
+  // 与拖拽写位置同一套解析（画布内按 data-id 找），避免物料内部的裸数字 id 撞上组件 id
+  const el = getComponentElement(id);
   if (!el) {
     return null;
   }
@@ -274,7 +276,7 @@ function startMultiResize(e: MouseEvent, point: direction) {
 
   const members = selectedItems.value.map((it) => ({
     it,
-    el: document.getElementById(String(it.id)),
+    el: getComponentElement(String(it.id)),
     rect: itemPxRect(it),
     percent: it.unitPavenType === "percent"
   }));

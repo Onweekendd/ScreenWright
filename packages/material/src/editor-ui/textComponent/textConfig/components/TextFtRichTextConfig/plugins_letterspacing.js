@@ -1,7 +1,11 @@
 /**
  * letterspacing
+ *
+ * 只在真正加载了 tinymce.min.js 的环境（主编辑器）里注册插件；
+ * 离线导出的只读预览包不带 tinymce，模块顶层直接引用全局 tinymce 会在加载时报 ReferenceError。
  */
-tinymce.PluginManager.add("letterspacing", function (editor, url) {
+if (typeof tinymce !== "undefined") {
+  tinymce.PluginManager.add("letterspacing", function (editor, url) {
   const pluginName = "字体间距";
   const global$1 = tinymce.util.Tools.resolve("tinymce.util.Tools");
   const letterspacing_val = editor.getParam("letterspacing", "0px 1px 2px 4px 6px 8px 10px 20px 40px");
@@ -68,4 +72,5 @@ tinymce.PluginManager.add("letterspacing", function (editor, url) {
       callback(items);
     }
   });
-});
+  });
+}

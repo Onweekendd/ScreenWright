@@ -1,7 +1,6 @@
 import type { LayerInfo, SceneObjectExplosion } from "./action";
 import type {
   BarEchartEnum,
-  EquipmentEnum,
   ExhibitEnum,
   ExtendsEnum,
   InteractiveEnum,
@@ -652,12 +651,6 @@ interface FtSignaturePad {
   };
 }
 
-interface IotMutualEvent {
-  [key: `${EquipmentEnum.IotMutual}-${number}`]: {
-    handleClick: () => void;
-  };
-}
-
 // interface FtTranslationEvent {
 //   // 译文转换
 //   [key: `${ExhibitEnum.FtTranslation}-${number}`]: {
@@ -728,7 +721,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   ftVuePartEvents &
   FtSimpleBarrageEvents &
   PageReloadEvents &
-  IotMutualEvent &
   // FtTranslationEvent &
   FtUnrealEngineEvents &
   FtRotateEvent &
@@ -794,7 +786,6 @@ export type toAddEvent =
   | scrollPickerEvents
   | ImagesList3dEvents
   | FtSignaturePad
-  | IotMutualEvent
   | FtTurnPageEvents
   // | FtTranslationEvent
   | FtUnrealEngineEvents

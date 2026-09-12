@@ -161,6 +161,5 @@ encodes?: Array<{
 | 导航跳转 | `"jump"` `"openUrl"` |
 | 广播消息 | `"broadcast"` `"setBroadcast"` |
 | API 指令 | `"apiInstruction"` |
-| IoT 控制 | `"iotControl"` |
 | 缩放位移 | `"scale"` `"translate"` |
 | 视频控制 | `"videoPlay"` `"videoPause"` `"videoSeek"` |

@@ -1,7 +1,6 @@
 # ComponentSchema - 动画与 Minio 扩展字段
 
 > Source: `packages/type/src/schemas/animation.ts` / `minio.ts`
-> iotConfig 已移至 [component-base-data.md](component-base-data.md)
 
 ## 目录
 1. [loadAnimation - 加载动画配置](#1-loadanimation---加载动画配置)

@@ -19,7 +19,6 @@ import type {
   ListenArg,
   TempPool
 } from "./filter";
-import type { IotConfig, OperateCode } from "./iot-config";
 import type { ComponentMinioAsset, MinioResource } from "./minio-resource";
 
 // ============================================
@@ -32,9 +31,6 @@ export { FolderEnum };
 
 // 重新导出数据类型
 export { DataType };
-
-// 重新导出 IoT 配置类型
-export type { IotConfig, OperateCode };
 
 // 重新导出动画类型
 export type { Animation };
@@ -215,9 +211,6 @@ export interface StandardComponentType<
 
   /** 预设子组件列表（可选） */
   presetChild?: ChildComponent[];
-
-  /** IoT配置（可选） */
-  iotConfig?: IotConfig;
 
   /** 素材库条目列表（可选）。注意不是 MinioResource，见 ComponentMinioAsset 的说明 */
   minioArr?: ComponentMinioAsset[];

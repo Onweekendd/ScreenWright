@@ -3,7 +3,6 @@ import { z } from "zod";
 // 导入组件枚举类型和动作相关枚举
 import {
   BarEchartEnum,
-  EquipmentEnum,
   ExhibitEnum,
   extendsEnum,
   FolderEnum,
@@ -43,9 +42,6 @@ export const mediaEnumSchema = z.enum(Object.values(mediaEnum));
 /** 展品类型枚举 Schema */
 export const ExhibitEnumTypeSchema = z.enum(Object.values(ExhibitEnum));
 
-/** 设备类型枚举 Schema */
-export const EquipmentEnumTypeSchema = z.enum(Object.values(EquipmentEnum));
-
 /** 文件夹类型枚举 Schema */
 export const FolderTypeSchema = z.enum(Object.values(FolderEnum));
 
@@ -82,7 +78,6 @@ export const allComponentTypeSchema = z.union([
   indicatorEchartEnumSchema,
   mediaEnumSchema,
   ExhibitEnumTypeSchema,
-  EquipmentEnumTypeSchema,
   FolderTypeSchema,
   extendsEnumTypeSchema,
   indicatorEnumSchema,

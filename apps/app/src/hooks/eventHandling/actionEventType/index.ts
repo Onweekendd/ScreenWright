@@ -9,7 +9,6 @@ import type {
   projectEchartType,
   scatterEchartType
 } from "@/views/build/components/buildRender/core/BaseComponent/type";
-import type { EquipmentEnumType } from "@/views/build/components/buildRender/core/EquipmentComponent/type";
 import type { ExhibitEnumType } from "@/views/build/components/buildRender/core/ExhibitComponent/type";
 import type { extendsEnumType } from "@/views/build/components/buildRender/core/ExtendsComponents/type";
 import type { sceneEnumType } from "@/views/build/components/buildRender/core/SceneComponent/type";
@@ -642,11 +641,6 @@ interface FtSignaturePad {
   };
 }
 
-interface IotMutualEvent {
-  [key: `${EquipmentEnumType.IotMutual}-${number}`]: {
-    handleClick: () => void;
-  };
-}
 interface videoProgressEvents {
   [key: `${interactiveEnum.videoProgress}-${string}`]: {
     /**
@@ -727,7 +721,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   ftVuePartEvents &
   FtSimpleBarrageEvents &
   PageReloadEvents &
-  IotMutualEvent &
   // FtTranslationEvent &
   FtUnrealEngineEvents &
   FtRotateEvent &
@@ -793,7 +786,6 @@ export type toAddEvent =
   | scrollPickerEvents
   | ImagesList3dEvents
   | FtSignaturePad
-  | IotMutualEvent
   | FtTurnPageEvents
   // | FtTranslationEvent
   | FtUnrealEngineEvents

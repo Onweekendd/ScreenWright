@@ -40,10 +40,6 @@
       "types": "./dist/extends.d.ts",
       "import": "./dist/extends.js"
     },
-    "./equipment": {
-      "types": "./dist/equipment.d.ts",
-      "import": "./dist/equipment.js"
-    },
     "./dist/style.css": "./dist/style.css"
   },
   "sideEffects": true,

@@ -18,7 +18,6 @@ export type { AllComponentType, EchartComponentType } from "./componentProp";
 export {
   AllEchartEnum,
   BarEchartEnum,
-  EquipmentEnum,
   ExhibitEnum,
   ExtendsChildComponentEnum,
   extendsChildComponentEnum,
@@ -57,7 +56,6 @@ export { indicatorEnum, interactiveEnum, mediaEnum, textEnum, threeComponentEnum
 export type {
   AllEchartType,
   BarEchartType,
-  EquipmentEnumType,
   ExhibitEnumType,
   extendsChildComponentEnumType,
   extendsEnumType,
@@ -91,10 +89,8 @@ export type {
   DbItem,
   Filter,
   IotAddress,
-  IotConfig,
   ListenArg,
   MinioResource,
-  OperateCode,
   PanelState,
   StandardComponentType,
   SystemComponentProps,
@@ -186,6 +182,3 @@ export { echartsTabEnum } from "./ui-tabs";
 // 素材/资源相关（从主包下沉，物料包共享）
 export type { MenuItemForRender, ScreenVersion } from "./asset";
 export { FileTypeEnum, ResourceTypeEnum } from "./asset";
-
-// IoT 设备相关类型（从主包 dataIotConfig/type 下沉，物料包共享）
-export * from "./iot";

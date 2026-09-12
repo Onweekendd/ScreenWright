@@ -2,7 +2,6 @@ import type { AllComponentType, ComponentType, DataSourceType } from "./componen
 import {
   allComponentType,
   BarEchartEnum,
-  EquipmentEnum,
   ExhibitEnum,
   extendsEnum,
   indicatorEchartEnum,
@@ -384,8 +383,7 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
     interactiveEnum.FtCustomSelect,
-    interactiveEnum.ScrollPicker,
-    EquipmentEnum.IotSubTabs
+    interactiveEnum.ScrollPicker
   ],
 
   [ActionTypeEnum.UpdateConfig]: [

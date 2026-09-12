@@ -9,7 +9,7 @@
         style="width: 100%"
         @change="handleChange"
       >
-        <el-option v-for="item in cPreDataType" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option v-for="item in preDataType" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
     </el-form-item>
     <!-- 静态数据 -->
@@ -31,23 +31,17 @@
     <template v-if="selectTargetData[0].dataType === 4">
       <dataWebScoket />
     </template>
-    <template v-if="selectTargetData[0].dataType === 5">
-      <dataIotConfig />
-    </template>
   </el-form>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 import { useCallbackArguments } from "@/hooks/callbackArguments/useCallbackArguments";
-import type { EquipmentEnumType } from "@/views/build/components/buildRender/core/EquipmentComponent/type";
-import { EquipmentComponentType } from "@/views/build/components/buildRender/core/EquipmentComponent/type";
 import { DataSourceType } from "@/views/source/type";
 
 import { useUpdateInstance } from "../../useUpdateInstance";
 import dataApi from "./dataApi.vue";
 import dataCsv from "./dataCsv.vue";
-import dataIotConfig from "./dataIotConfig/index.vue";
 import dataSql from "./dataSql.vue";
 import dataStaticData from "./dataStaticData.vue";
 import dataWebScoket from "./dataWebScoket.vue";
@@ -66,30 +60,15 @@ const preDataType = ref([
   { label: "SQL数据库", value: 1 },
   { label: "API接口", value: 2 },
   { label: "CSV文件", value: 3 },
-  { label: "WebSocket", value: 4 },
-  { label: "物联设备", value: 5 }
+  { label: "WebSocket", value: 4 }
 ]);
-const cPreDataType = computed(() => {
-  if (selectTargetData.value && selectTargetData.value[0]) {
-    const props = selectTargetData.value[0].component.prop;
-    if (EquipmentComponentType.includes(props as EquipmentEnumType)) {
-      return preDataType.value;
-    }
-    return preDataType.value.filter((item) => {
-      return item.value !== 5;
-    });
-  }
-
-  return preDataType.value;
-});
 const handleSetOptions = () => {
   console.log(selectTargetData.value[0].dataType, "selectTargetData[0].dataType");
   const optionsMapKey: Record<string, DataSourceType> = {
     "1": DataSourceType.DB,
     "2": DataSourceType.API,
     "3": DataSourceType.LOCAL,
-    "4": DataSourceType.WEBSOCKET,
-    "5": DataSourceType.TCPUDP
+    "4": DataSourceType.WEBSOCKET
   };
   const type = optionsMapKey[selectTargetData.value[0].dataType];
   if (type) {

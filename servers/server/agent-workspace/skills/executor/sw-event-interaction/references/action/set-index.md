@@ -1,6 +1,6 @@
 # setIndex — 设置选中项
 
-适用于 `subtabs` / `multiSubtabs` / `rollSubtabs` / `ft-customselect` / `scrollPicker` / `iot-subTabs` 组件，设置当前选中项的索引。
+适用于 `subtabs` / `multiSubtabs` / `rollSubtabs` / `ft-customselect` / `scrollPicker` 组件，设置当前选中项的索引。
 
 ## 字段
 

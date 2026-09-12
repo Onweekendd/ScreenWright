@@ -5,7 +5,6 @@ import type { AllComponentType, SceneEnum, ThreeComponentEnum } from "./componen
 import {
   allComponentType,
   BarEchartEnum,
-  EquipmentEnum,
   ExhibitEnum,
   extendsChildComponentEnum,
   extendsEnum,
@@ -286,9 +285,6 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     interactiveEnum.FtPageTurning,
     interactiveEnum.FtDateTimePicker,
     interactiveEnum.ScrollPicker,
-    EquipmentEnum.IotMutual,
-    EquipmentEnum.IotSubTabs,
-    EquipmentEnum.IotGeneralEquipment,
     textEnum.FtProgress,
     textEnum.FtTextWordCloud,
     mediaEnum.CtVideoPanel,
@@ -312,20 +308,17 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
   [EventTypeEnum.Controls]: [mediaEnum.FtVideo],
   [EventTypeEnum.MouseEnter]: [
     interactiveEnum.Subtabs,
-    EquipmentEnum.IotSubTabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
     interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect,
-    EquipmentEnum.IotSubTabs
+    interactiveEnum.FtCustomSelect
   ],
   [EventTypeEnum.MouseLeave]: [
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
     interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect,
-    EquipmentEnum.IotSubTabs
+    interactiveEnum.FtCustomSelect
   ],
   [EventTypeEnum.UeToFunEvent]: [
     extendsChildComponentEnum.UeVessel_UeMessageReceiver,
@@ -515,12 +508,7 @@ export const EncodeEvent2ComponentType: Record<EncodeEventTypeEnum, AllComponent
     ExhibitEnum.ImagesList3d,
     sceneEnum.EchartcommonMap,
     sceneEnum.EchartGlmap,
-    EquipmentEnum.IotGeneralEquipment,
     interactiveEnum.FormSwitch,
-    EquipmentEnum.IotFormSlider,
-    EquipmentEnum.IotFormSwitch,
-    EquipmentEnum.IotSubTabs,
-    EquipmentEnum.IotMutual,
     ThirdPartEnum.VuePart,
     interactiveEnum.FtIntegrationMutual,
     ExhibitEnum.FtTurnPage
@@ -608,11 +596,6 @@ export const allowEventComponentList = [
   "sw-swiperCard-v2",
   "sw-topo-container",
   ExhibitEnum.FtSignaturePad,
-  EquipmentEnum.IotGeneralEquipment,
-  EquipmentEnum.IotFormSlider,
-  EquipmentEnum.IotFormSwitch,
-  EquipmentEnum.IotSubTabs,
-  EquipmentEnum.IotMutual,
   extendsEnum.UePeerStreaming,
   extendsEnum.UePixelStreaming,
   extendsEnum.UeVessel,

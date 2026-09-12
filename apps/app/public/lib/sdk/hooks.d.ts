@@ -5,7 +5,7 @@ import { useEventHandling } from '@screenwright/composables';
 import * as vue from 'vue';
 import * as _screenwright_types_types_action from '@screenwright/types/types/action';
 import * as _screenwright_types from '@screenwright/types';
-import { ComponentType, SystemComponentProps, Action as Action$1, PanelState, FolderEnum, ActionAnimation, AllComponentType, Animation, BindComponent, Callback, CallbackManager, CallbackSource, CallbackTarget, ChildComponent, ComponentMinioAsset, Condition, DataRemark, DataSourceType, DataType, DbItem, AllEchartEnum, EncodeAction, EncodeEvent, EquipmentEnum, Event as Event$1, ExhibitEnum, Filter, IotAddress, IotConfig, ListenArg, MinioResource, OperateCode, PanelEnum, StandardComponentType, TempPool, ThirdPartEnum, WebSocketDataSource, ExtendsChildComponentEnum, ExtendsEnum, IndicatorEnum, InteractiveEnum, MediaEnum, SceneEnum, TextEnum, ThreeComponentEnum, EventTypeEnum } from '@screenwright/types';
+import { ComponentType, SystemComponentProps, Action as Action$1, PanelState, FolderEnum, ActionAnimation, AllComponentType, Animation, BindComponent, Callback, CallbackManager, CallbackSource, CallbackTarget, ChildComponent, ComponentMinioAsset, Condition, DataRemark, DataSourceType, DataType, DbItem, AllEchartEnum, EncodeAction, EncodeEvent, Event as Event$1, ExhibitEnum, Filter, IotAddress, ListenArg, MinioResource, PanelEnum, StandardComponentType, TempPool, ThirdPartEnum, WebSocketDataSource, ExtendsChildComponentEnum, ExtendsEnum, IndicatorEnum, InteractiveEnum, MediaEnum, SceneEnum, TextEnum, ThreeComponentEnum, EventTypeEnum } from '@screenwright/types';
 
 /**
  * 素材库文件分类
@@ -222,14 +222,12 @@ declare const CoreType_EncodeEvent: typeof EncodeEvent;
 declare const CoreType_Filter: typeof Filter;
 type CoreType_IComponent = IComponent;
 declare const CoreType_IotAddress: typeof IotAddress;
-declare const CoreType_IotConfig: typeof IotConfig;
 type CoreType_LayerInfo = LayerInfo;
 declare const CoreType_ListenArg: typeof ListenArg;
 type CoreType_MenuOptionsItemType = MenuOptionsItemType;
 declare const CoreType_MinioResource: typeof MinioResource;
 type CoreType_MouseEventButton = MouseEventButton;
 declare const CoreType_MouseEventButton: typeof MouseEventButton;
-declare const CoreType_OperateCode: typeof OperateCode;
 declare const CoreType_PanelEnum: typeof PanelEnum;
 type CoreType_Scale = Scale;
 type CoreType_SceneObjectExplosion = SceneObjectExplosion;
@@ -243,7 +241,7 @@ type CoreType_direction = direction;
 declare const CoreType_direction: typeof direction;
 declare const CoreType_renderFolderType: typeof renderFolderType;
 declare namespace CoreType {
-  export { type CoreType_Action as Action, CoreType_ActionAnimation as ActionAnimation, CoreType_AllComponentType as AllComponentType, CoreType_Animation as Animation, CoreType_BindComponent as BindComponent, CoreType_Callback as Callback, CoreType_CallbackManager as CallbackManager, CoreType_CallbackSource as CallbackSource, CoreType_CallbackTarget as CallbackTarget, CoreType_ChildComponent as ChildComponent, CoreType_ComponentMinioAsset as ComponentMinioAsset, CoreType_ComponentType as ComponentType, CoreType_Condition as Condition, CoreType_ContextMenuType as ContextMenuType, CoreType_DataRemark as DataRemark, CoreType_DataSourceType as DataSourceType, CoreType_DataType as DataType, CoreType_DbItem as DbItem, CoreType_DragKeyEnum as DragKeyEnum, AllEchartEnum as EchartEnum, type CoreType_EditCanvasType as EditCanvasType, CoreType_EditCanvasTypeEnum as EditCanvasTypeEnum, CoreType_EncodeAction as EncodeAction, CoreType_EncodeEvent as EncodeEvent, EquipmentEnum as EquipmentEnumType, Event$1 as Event, ExhibitEnum as ExhibitEnumType, CoreType_Filter as Filter, FolderEnum as FolderType, type CoreType_IComponent as IComponent, CoreType_IotAddress as IotAddress, CoreType_IotConfig as IotConfig, IotConfig as IotConfigLocal, type CoreType_LayerInfo as LayerInfo, CoreType_ListenArg as ListenArg, type CoreType_MenuOptionsItemType as MenuOptionsItemType, CoreType_MinioResource as MinioResource, CoreType_MouseEventButton as MouseEventButton, CoreType_OperateCode as OperateCode, CoreType_PanelEnum as PanelEnum, type CoreType_Scale as Scale, type CoreType_SceneObjectExplosion as SceneObjectExplosion, CoreType_StandardComponentType as StandardComponentType, type CoreType_TargetChartType as TargetChartType, CoreType_TempPool as TempPool, ThirdPartEnum as ThirdPartEnumType, type CoreType_Translate as Translate, type CoreType_Ue4Config as Ue4Config, CoreType_WebSocketDataSource as WebSocketDataSource, CoreType_direction as direction, ExtendsChildComponentEnum as extendsChildComponentEnumType, ExtendsEnum as extendsEnumType, IndicatorEnum as indicatorEnum, InteractiveEnum as interactiveEnum, MediaEnum as mediaEnum, CoreType_renderFolderType as renderFolderType, SceneEnum as sceneEnumType, TextEnum as textEnum, ThreeComponentEnum as threeComponentEnum };
+  export { type CoreType_Action as Action, CoreType_ActionAnimation as ActionAnimation, CoreType_AllComponentType as AllComponentType, CoreType_Animation as Animation, CoreType_BindComponent as BindComponent, CoreType_Callback as Callback, CoreType_CallbackManager as CallbackManager, CoreType_CallbackSource as CallbackSource, CoreType_CallbackTarget as CallbackTarget, CoreType_ChildComponent as ChildComponent, CoreType_ComponentMinioAsset as ComponentMinioAsset, CoreType_ComponentType as ComponentType, CoreType_Condition as Condition, CoreType_ContextMenuType as ContextMenuType, CoreType_DataRemark as DataRemark, CoreType_DataSourceType as DataSourceType, CoreType_DataType as DataType, CoreType_DbItem as DbItem, CoreType_DragKeyEnum as DragKeyEnum, AllEchartEnum as EchartEnum, type CoreType_EditCanvasType as EditCanvasType, CoreType_EditCanvasTypeEnum as EditCanvasTypeEnum, CoreType_EncodeAction as EncodeAction, CoreType_EncodeEvent as EncodeEvent, Event$1 as Event, ExhibitEnum as ExhibitEnumType, CoreType_Filter as Filter, FolderEnum as FolderType, type CoreType_IComponent as IComponent, CoreType_IotAddress as IotAddress, type CoreType_LayerInfo as LayerInfo, CoreType_ListenArg as ListenArg, type CoreType_MenuOptionsItemType as MenuOptionsItemType, CoreType_MinioResource as MinioResource, CoreType_MouseEventButton as MouseEventButton, CoreType_PanelEnum as PanelEnum, type CoreType_Scale as Scale, type CoreType_SceneObjectExplosion as SceneObjectExplosion, CoreType_StandardComponentType as StandardComponentType, type CoreType_TargetChartType as TargetChartType, CoreType_TempPool as TempPool, ThirdPartEnum as ThirdPartEnumType, type CoreType_Translate as Translate, type CoreType_Ue4Config as Ue4Config, CoreType_WebSocketDataSource as WebSocketDataSource, CoreType_direction as direction, ExtendsChildComponentEnum as extendsChildComponentEnumType, ExtendsEnum as extendsEnumType, IndicatorEnum as indicatorEnum, InteractiveEnum as interactiveEnum, MediaEnum as mediaEnum, CoreType_renderFolderType as renderFolderType, SceneEnum as sceneEnumType, TextEnum as textEnum, ThreeComponentEnum as threeComponentEnum };
 }
 
 declare const sdk: {
@@ -1025,22 +1023,6 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -1051,22 +1033,6 @@ declare const sdk: {
                         verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                         horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
@@ -1855,22 +1821,6 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -2242,22 +2192,6 @@ declare const sdk: {
                         opacityOpen?: boolean | undefined;
                     };
                     presetChild?: /*elided*/ any[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
@@ -2268,22 +2202,6 @@ declare const sdk: {
                     verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                     horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 }[] | undefined;
-                iotConfig?: {
-                    operateCode: OperateCode;
-                    iotAddress?: string | undefined;
-                    productBrandId?: string | undefined;
-                    productCategoryId?: string | undefined;
-                    productCode?: string | undefined;
-                    groupId?: string | undefined;
-                    deviceGroupId?: string | undefined;
-                    deviceId?: string | undefined;
-                    integratedControlId?: string | undefined;
-                    operateDescription?: string | undefined;
-                    params?: Record<string, any> | undefined;
-                    circuitIndex?: number | undefined;
-                    selectedStatus?: number | undefined;
-                    deviceType?: "single" | "integrated" | undefined;
-                } | undefined;
                 minioArr?: {
                     [x: string]: unknown;
                     id: number;
@@ -2346,7 +2264,6 @@ declare const sdk: {
                 mark?: Record<string, any> | undefined;
                 isEncodedControl?: boolean | undefined;
                 zIndexMap?: Record<string, any> | undefined;
-                isQuickEdit?: boolean | undefined;
             };
             backgroundUrl: string | null;
             id: number;
@@ -3182,22 +3099,6 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -3208,22 +3109,6 @@ declare const sdk: {
                         verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                         horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
@@ -4012,22 +3897,6 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -4399,22 +4268,6 @@ declare const sdk: {
                         opacityOpen?: boolean | undefined;
                     };
                     presetChild?: /*elided*/ any[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
@@ -4425,22 +4278,6 @@ declare const sdk: {
                     verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                     horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 }[] | undefined;
-                iotConfig?: {
-                    operateCode: OperateCode;
-                    iotAddress?: string | undefined;
-                    productBrandId?: string | undefined;
-                    productCategoryId?: string | undefined;
-                    productCode?: string | undefined;
-                    groupId?: string | undefined;
-                    deviceGroupId?: string | undefined;
-                    deviceId?: string | undefined;
-                    integratedControlId?: string | undefined;
-                    operateDescription?: string | undefined;
-                    params?: Record<string, any> | undefined;
-                    circuitIndex?: number | undefined;
-                    selectedStatus?: number | undefined;
-                    deviceType?: "single" | "integrated" | undefined;
-                } | undefined;
                 minioArr?: {
                     [x: string]: unknown;
                     id: number;
@@ -4503,7 +4340,6 @@ declare const sdk: {
                 mark?: Record<string, any> | undefined;
                 isEncodedControl?: boolean | undefined;
                 zIndexMap?: Record<string, any> | undefined;
-                isQuickEdit?: boolean | undefined;
             };
             backgroundUrl: string | null;
             id: number;
@@ -4566,10 +4402,7 @@ declare const sdk: {
         isLoad: vue.Ref<boolean, boolean>;
         groupData: vue.Ref<ComponentType[], ComponentType[]>;
         setDetail2Config: (res: _screenwright_types.LargeScreeInfo) => void;
-        initLargeScreen: (id: number, shareConfig?: {
-            isShare: boolean;
-            password?: string;
-        }) => Promise<void>;
+        initLargeScreen: (id: number) => Promise<void>;
         initLargeScreenData: (res: _screenwright_types.LargeScreeInfo) => Promise<void>;
         initCallbackArguments: (componentList: ComponentType[] | ChildComponent[]) => void;
     };
@@ -4635,7 +4468,6 @@ declare const sdk: {
         isDynamicPanel: () => boolean;
         isEncodePanel: () => boolean;
         isBuild: () => boolean;
-        isQuickEdit: () => boolean;
         scrollIntoViewTree: (id: string) => void;
     };
     useGlobalAnimation: () => {
@@ -5965,22 +5797,6 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
@@ -5991,22 +5807,6 @@ declare const screenwright: {
                             verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                             horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         }[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -6795,22 +6595,6 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
@@ -7182,22 +6966,6 @@ declare const screenwright: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -7208,22 +6976,6 @@ declare const screenwright: {
                         verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                         horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
@@ -7286,7 +7038,6 @@ declare const screenwright: {
                     mark?: Record<string, any> | undefined;
                     isEncodedControl?: boolean | undefined;
                     zIndexMap?: Record<string, any> | undefined;
-                    isQuickEdit?: boolean | undefined;
                 };
                 backgroundUrl: string | null;
                 id: number;
@@ -8122,22 +7873,6 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
@@ -8148,22 +7883,6 @@ declare const screenwright: {
                             verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                             horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         }[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -8952,22 +8671,6 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
@@ -9339,22 +9042,6 @@ declare const screenwright: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
@@ -9365,22 +9052,6 @@ declare const screenwright: {
                         verticalConst?: _screenwright_types.verticalConstEnum | undefined;
                         horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
@@ -9443,7 +9114,6 @@ declare const screenwright: {
                     mark?: Record<string, any> | undefined;
                     isEncodedControl?: boolean | undefined;
                     zIndexMap?: Record<string, any> | undefined;
-                    isQuickEdit?: boolean | undefined;
                 };
                 backgroundUrl: string | null;
                 id: number;
@@ -9506,10 +9176,7 @@ declare const screenwright: {
             isLoad: vue.Ref<boolean, boolean>;
             groupData: vue.Ref<ComponentType[], ComponentType[]>;
             setDetail2Config: (res: _screenwright_types.LargeScreeInfo) => void;
-            initLargeScreen: (id: number, shareConfig?: {
-                isShare: boolean;
-                password?: string;
-            }) => Promise<void>;
+            initLargeScreen: (id: number) => Promise<void>;
             initLargeScreenData: (res: _screenwright_types.LargeScreeInfo) => Promise<void>;
             initCallbackArguments: (componentList: ComponentType[] | ChildComponent[]) => void;
         };
@@ -9575,7 +9242,6 @@ declare const screenwright: {
             isDynamicPanel: () => boolean;
             isEncodePanel: () => boolean;
             isBuild: () => boolean;
-            isQuickEdit: () => boolean;
             scrollIntoViewTree: (id: string) => void;
         };
         useGlobalAnimation: () => {

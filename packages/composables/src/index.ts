@@ -34,6 +34,3 @@ export * from "./utils/imageCompress";
 export * from "./utils/messageBox";
 export * from "./utils/minioUrl";
 export * from "./utils/websocket";
-
-// IoT API 服务（从主包 api/iot 下沉，裸 axios 实例 + 动态 baseUrl，物联组件与 dataIotConfig 共享）
-export * from "./api/iot";

@@ -85,10 +85,6 @@ export { SceneEnum, sceneEnum } from "./scene";
 export type { ExhibitEnumType } from "./exhibit";
 export { ExhibitEnum } from "./exhibit";
 
-// 设备组件类型
-export type { EquipmentEnumType } from "./equipment";
-export { EquipmentEnum } from "./equipment";
-
 // 第三方组件类型
 export type { ThirdPartEnumType } from "./third-party";
 export { ThirdPartEnum } from "./third-party";
@@ -99,7 +95,6 @@ export { ExtendsChildComponentEnum, extendsChildComponentEnum, ExtendsEnum, exte
 
 // 导入所有枚举类型以创建联合类型
 import type { EchartComponentType } from "./echart";
-import { EquipmentEnum } from "./equipment";
 import { ExhibitEnum } from "./exhibit";
 import { ExtendsChildComponentEnum, ExtendsEnum } from "./extends";
 import { IndicatorEnum } from "./indicator";
@@ -143,7 +138,6 @@ export const allComponentType: AllComponentType[] = [
   ...Object.values(ExhibitEnum),
   ...Object.values(ExtendsChildComponentEnum),
   ...Object.values(ExtendsEnum),
-  ...Object.values(EquipmentEnum),
   ...Object.values(FolderEnum)
 ];
 
@@ -161,7 +155,6 @@ export type AllComponentType =
   | ThreeComponentEnum
   | SceneEnum
   | ExhibitEnum
-  | EquipmentEnum
   | ThirdPartEnum
   | FolderEnum
   | ExtendsChildComponentEnum

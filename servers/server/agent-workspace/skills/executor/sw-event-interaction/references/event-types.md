@@ -34,12 +34,12 @@
   {
     "value": "mouseEnter",
     "label": "鼠标移入",
-    "note": "适用于 subtabs、multiSubtabs、rollSubtabs、ft-mutual、ft-customselect、iot-subTabs"
+    "note": "适用于 subtabs、multiSubtabs、rollSubtabs、ft-mutual、ft-customselect"
   },
   {
     "value": "mouseLeave",
     "label": "鼠标移出",
-    "note": "适用于 subtabs、multiSubtabs、rollSubtabs、ft-mutual、ft-customselect、iot-subTabs"
+    "note": "适用于 subtabs、multiSubtabs、rollSubtabs、ft-mutual、ft-customselect"
   },
   {
     "value": "ueToFunEvent",

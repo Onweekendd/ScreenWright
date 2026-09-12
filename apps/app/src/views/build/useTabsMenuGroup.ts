@@ -205,7 +205,6 @@ export const useTabsMenuGroup = createGlobalState(() => {
       tabsList.value = res.result.records;
 
       tabsGroupMenu.value = processModuleInfoList(tabsList.value);
-      console.log(tabsGroupMenu.value, " tabsGroupMenu.value ");
     }
   };
 
@@ -215,8 +214,6 @@ export const useTabsMenuGroup = createGlobalState(() => {
    * @param option - 素材数据获取选项，包含标题、菜单组项、大屏ID等信息
    */
   const getMaterialData = async (option: GetMaterialDataOption): Promise<void> => {
-    console.log("🔍 开始获取素材数据:", option);
-
     if (!assetsData.value || assetsData.value.length === 0) {
       console.warn("assetsData 为空，无法获取素材数据");
       return;
@@ -250,7 +247,6 @@ export const useTabsMenuGroup = createGlobalState(() => {
 
     // 处理重置更新
     if (option.resetUpdate) {
-      console.log("🔄 重置更新数据");
       targetChild.pageNum = 1;
       targetChild.children = [];
       targetChild.total = 0;
@@ -258,18 +254,14 @@ export const useTabsMenuGroup = createGlobalState(() => {
 
     // 检查是否还有更多数据需要加载
     if (targetChild.total > 0 && targetChild.children.length >= targetChild.total) {
-      console.log("✅ 数据已全部加载完成");
       return;
     }
 
-    console.log("📡 开始分页加载...");
     const updatedChild = await assetsMenuManager.loadAssetDataWithPagination(targetChild, config.key, option.largeId);
 
     // 更新引用，确保响应式更新
     menuGroup.children[childIndex] = updatedChild;
     assetsData.value = [...assetsData.value];
-
-    console.log("✅ 素材数据更新完成");
   };
 
   /**

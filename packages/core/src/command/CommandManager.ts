@@ -77,11 +77,6 @@ export class CommandManager {
     // 清空重做栈
     this.redoStack = [];
 
-    console.log("命令已添加到历史记录:", {
-      command: command.getDescription(),
-      undoStackSize: this.undoStack.length
-    });
-
     this.notify();
   }
 
@@ -114,12 +109,6 @@ export class CommandManager {
         // 撤销成功，从撤销栈移除，添加到重做栈
         this.undoStack = this.undoStack.slice(0, -1);
         this.addToRedoStack(command);
-
-        console.log("命令撤销成功:", {
-          command: command.getDescription(),
-          undoStackSize: this.undoStack.length,
-          redoStackSize: this.redoStack.length
-        });
 
         this.notify();
       }
@@ -164,12 +153,6 @@ export class CommandManager {
         // 重做成功，从重做栈移除，添加到撤销栈
         this.redoStack = this.redoStack.slice(0, -1);
         this.addToUndoStack(command);
-
-        console.log("命令重做成功:", {
-          command: command.getDescription(),
-          undoStackSize: this.undoStack.length,
-          redoStackSize: this.redoStack.length
-        });
 
         this.notify();
       }
@@ -264,8 +247,6 @@ export class CommandManager {
     this.undoStack = [];
     this.redoStack = [];
 
-    console.log("历史记录已清空");
-
     this.notify();
   }
 
@@ -291,8 +272,6 @@ export class CommandManager {
     if (oldComponentId === newComponentId) {
       return;
     }
-
-    console.log(`更新历史记录中的组件ID: ${oldComponentId} -> ${newComponentId}`);
 
     // 更新撤销栈中的组件ID
     this.undoStack.forEach((command) => {

@@ -85,14 +85,12 @@ export class CacheWorkerManager {
     // 处理不需要响应的消息
     switch (type) {
       case "CACHE_COMPLETE":
-        console.log("缓存操作完成:", payload);
         // 可以在这里触发全局事件或回调
         break;
       case "CACHE_ERROR":
         console.error("缓存操作失败:", payload.error);
         break;
       default:
-        console.log("收到Worker消息:", type, payload);
     }
   }
 

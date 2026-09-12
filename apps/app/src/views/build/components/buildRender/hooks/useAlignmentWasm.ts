@@ -82,8 +82,6 @@ export const useAlignmentWasm = createGlobalState(() => {
         biAlignmentInstance.value = new BIAlignmentInstance(tolerance.value);
 
         wasmInitialized.value = true;
-
-        console.log("[WASM] BIAlignmentInstance 初始化成功");
       } catch (error) {
         console.error("[WASM] 初始化失败:", error);
         throw error;

@@ -3,11 +3,13 @@ import type { ChunkType } from "@mastra/core/stream";
 
 import { withRecordingTurn } from "@/recording/recording-scope";
 
+import { memory } from "../../storage/storage";
 import { commitScreenSnapshot } from "../version-history";
 import { renameBackgroundChunk } from "./background-chunk";
 import type { BgEventChunk } from "./bg-event-dedup";
 import { BgEventDedup } from "./bg-event-dedup";
 import { createBIChatTurnStream } from "./bi-chat-turn-stream";
+import { markToolCallsInterrupted } from "./interrupted-tool-call";
 import { extractUserMessageId, extractUserMessageText } from "./turn-message";
 import type { BIChatRequest } from "./types";
 
@@ -109,6 +111,11 @@ class BIChatStreamSession {
   private readonly bgToolCallIds = new Set<string>();
   /** bg task 事件双发去重台账；判重规则与窗口成因见 ./bg-event-dedup */
   private readonly bgEventDedup = new BgEventDedup();
+  /**
+   * 已发起(tool-input-available)但还没等到结果(tool-output-available/-error/-denied)的
+   * 前台 toolCallId。正常收尾时必为空——dispose()/fail() 才会撞上非空的情况，见那两处注释。
+   */
+  private readonly pendingToolCallIds = new Set<string>();
 
   private readonly threadId: string;
   private readonly resourceId: string;
@@ -210,9 +217,25 @@ class BIChatStreamSession {
           if (chunk.data?.toolCallId && this.bgToolCallIds.has(chunk.data.toolCallId)) {
             continue; // 后台那次挂起的重复通报：丢帧，理由见方法注释
           }
+          // 挂起等审批走的是 runId resume，不是「悄悄断在半路」，不算 pending。
+          if (chunk.data?.toolCallId) {
+            this.pendingToolCallIds.delete(chunk.data.toolCallId);
+          }
           this.sawMainSuspend = true;
         } else if (chunk.type === BG_SUSPEND_TYPE && chunk.data?.taskId) {
           this.suspendedBgTasks.add(chunk.data.taskId); // 记下，等 attachTaskStream 收到终态再清
+        }
+        // 前台工具调用的起止：中途 dispose()/fail() 时，留在这里的就是被掐断的那些。
+        // 委派到后台的调用(bgToolCallIds)另有 suspend/resume 路线，交给 markPendingToolCallsInterrupted 排除。
+        if (chunk.type === "tool-input-available" && chunk.toolCallId) {
+          this.pendingToolCallIds.add(chunk.toolCallId);
+        } else if (
+          chunk.toolCallId &&
+          (chunk.type === "tool-output-available" ||
+            chunk.type === "tool-output-error" ||
+            chunk.type === "tool-output-denied")
+        ) {
+          this.pendingToolCallIds.delete(chunk.toolCallId);
         }
         await this.push(chunk as ChunkType);
         if (chunk.type === "tool-output-available" && chunk.toolCallId === args.terminateAfterToolCallId) {
@@ -434,9 +457,34 @@ class BIChatStreamSession {
     }
     this.closed = true;
     this.clearIdle();
+    void this.markPendingToolCallsInterrupted();
     this.abort.abort();
     this.writer.abort(err).catch(() => {});
     this.onClosed(this);
+  }
+
+  /**
+   * dispose()/fail() 撞上"工具已发起、还没等到结果"时，给这些 toolCallId 补一个
+   * 占位结果再撤——不然它们会被 Mastra 落盘时当作不完整的 tool-call 整个过滤掉，
+   * 下一轮历史里就像没发生过；工具的副作用却是真实的。具体写法见 ./interrupted-tool-call。
+   *
+   * fire-and-forget：dispose()/fail() 本身不等它，失败只记日志，不影响会话收尾。
+   */
+  private async markPendingToolCallsInterrupted(): Promise<void> {
+    if (this.pendingToolCallIds.size === 0) {
+      return;
+    }
+    // bgToolCallIds：委派到后台的调用另有 suspend/resume 路线，任务仍在真实跑着，不算「断在半路」。
+    const toolCallIds = [...this.pendingToolCallIds].filter((id) => !this.bgToolCallIds.has(id));
+    this.pendingToolCallIds.clear();
+    if (toolCallIds.length === 0) {
+      return;
+    }
+    try {
+      await markToolCallsInterrupted({ memory, threadId: this.threadId, resourceId: this.resourceId, toolCallIds });
+    } catch (e) {
+      console.error("[stream-session] 标记中断工具调用失败", e);
+    }
   }
 
   /**
@@ -458,6 +506,7 @@ class BIChatStreamSession {
 
   /** 客户端断连：停上游 + 关流 */
   private dispose() {
+    void this.markPendingToolCallsInterrupted();
     this.abort.abort();
     this.close();
   }

@@ -2,133 +2,64 @@
 
 [![CI](https://github.com/Onweekendd/ScreenWright/actions/workflows/ci.yml/badge.svg)](https://github.com/Onweekendd/ScreenWright/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/Onweekendd/ScreenWright)](https://github.com/Onweekendd/ScreenWright/releases/latest) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**AI 原生的数据大屏 / BI 可视化编辑器。** 用自然语言、设计稿或一张截图，让 Agent 帮你把大屏搭出来、连上数据、配好联动——而不只是"生成一段配置让你自己粘"。
-
-Agent 直接操作画布：创建组件、修改属性、配置事件、接入数据、分组排版、验证数据链路，每一步实时同步到编辑器，改动前可审批，改完可回溯。
+AI 原生的数据大屏 / BI 可视化编辑器。跟 Agent 描述需求，或者给一个 Figma 链接，它会直接在画布上创建组件、接上数据、配好联动，产出一个可以继续在编辑器里改的大屏。
 
 > Monorepo：`apps/app`（Vue 3 编辑器）+ `servers/server`（Hono + Mastra Agent 服务）+ `packages/*`（框架无关的核心与物料）+ `apps/desktop`（Tauri 桌面端）。
 
----
-
-## ✨ Agent 能做什么
-
-### 1. 说一句话，搭一块大屏
-
-- **需求 → 大屏**（`requirement-to-bi` workflow）：输入业务需求，Agent 做语义分区、挑物料、生成组件 Schema、排版落地。
-- **Figma → 大屏**（`figma-to-bi` workflow + Figma MCP）：读取 Figma 设计稿节点，语义布局 Agent 识别一级区域与功能分组，映射为可编辑组件。
-- **图片 → 大屏**（`codia-to-bi` workflow + Vision Agent）：一张截图也能还原成可编辑大屏。
-- **模板范式沉淀**：模板提取 Agent 把真实大屏去实例化为可复用布局模板，向量化后供后续任务检索复用。
-
-### 2. 多 Agent 协作，而非一个大 Prompt
-
-| Agent | 职责 |
-|---|---|
-| **BI-Agent**（主 Agent） | 规划与执行大脑：小任务直接写，大任务拆 Task 并发委派 |
-| **BI 执行 Agent** | 施工入口：创建/编辑/复制/删除组件、配置事件与过滤器，按需深读 Skill references |
-| **数据流验证 Agent** | 配置完成后校验过滤器 / 回调参数 / 事件链路，返回逐项通过/失败的结构化报告 |
-| **语义布局 Agent** | 识别大屏一级区域与内部功能分组 |
-| **Vision Agent** | 图片理解与识别 |
-| **模板提取 Agent** | 从真实大屏抽取可复用布局范式 |
-| **Playwright 截图 Agent** | 驱动浏览器截图，用于视觉自检 |
-| **Title / Compaction Agent** | 会话标题生成、长上下文压缩 |
-
-主 Agent 通过 **Task V2 任务系统**建立施工单，一轮可并行派发多个执行 Agent 处理互不重叠的任务组；子 Agent 失败后主 Agent 接力补救，而不是"假装完成"。
-
-### 3. 三种工作模式
-
-- **Plan**：只读 + 规划，写工具被系统级剥离，产出计划待确认。
-- **Ask before edit**：每次改动前弹审批，默认模式。
-- **Auto edit**：放手让它干。
-
-### 4. 40+ 领域工具，覆盖大屏编辑全链路
-
-```
-组件    create_component / copy_component / move_component / group_component / ungroup_component / add_panel_state
-文件    read_file / edit_files / delete_file（每次编辑逐项同步到前端画布）
-数据    configureComponentData / createDataFilterTool / configureCallbackArgs
-联动    createEventTemplate / createConditionTemplate / createActionTemplate / listAvailableEvents / listAvailableActions
-图表    createEchartOption（专用物料不满足时兜底手写 option，tsc 自校验）
-自检    simulateEvent（数据流干跑）/ 委派数据流验证 Agent / Playwright 截图
-模板    save_ai_template / apply_ai_template
-交互    ask_user_question / todoWrite / enterPlanMode / submitPlan
-```
-
-工具分「常驻」与「动态注入」两层：高频工具落在稳定前缀里吃 prompt cache，低频工具经 `ToolSearchProcessor` 按语境召回——这套划分基于 100+ 条 eval 线程的命中统计，而非拍脑袋。
-
-### 5. Skills 体系：领域知识按需加载
-
-`servers/server/agent-workspace/skills/` 下维护组件 Schema、数据流、事件交互、Vue 片段、模板构建等 Skill。Agent 先读 `SKILL.md` 概览做规划，执行时再 `skill_read` 深入 references，避免把整个知识库塞进上下文。
-
-### 6. Artifact App：从"配大屏"到"写应用"
-
-内置 **Pi coding agent** 子系统：在隔离沙箱里创建 Vue 3 + Vite + Tailwind 项目，Agent 编写代码、启动 Vite 开发服务器、通过代理提供实时预览。主 Agent 可通过 `delegate-app-code` 把前端编码任务委派给它。配套 `create-screenwright-app` 脚手架。
-
-### 7. 工程化：可观测、可评测、可热切换
-
-- **模型热切换**：在「设置」页配置模型（OpenAI 兼容端点），每次运行重新解析，无需重启。
-- **记忆与 RAG**：Mastra Memory 持久化会话线程；组件库向量化，Agent 语义检索物料。
-- **多会话 Tab**：同一大屏内多个对话并行流式输出，画布写入全局串行，审批弹窗按 Tab 隔离。
-- **Eval harness**：`servers/server/evals/` 内置用例、fixtures 与运行器，Prompt / 工具改动可回归。
-- **Agent Trace**：`apps/agent-trace` 独立追踪台，回看每一轮实际发给模型的请求与原始响应。
-- **上下文治理**：Token 限制、图片消息清洗、工具参数消毒、长对话自动压缩。
+![ScreenWright 对话生成大屏效果图](artifact.png)
 
 ---
 
-## 🧩 编辑器本身
+## 能做什么
 
-- **76+ 物料组件**：图表（ECharts）、文本、指标、媒体、交互、设备、展示、扩展，以及 ECharts GL 3D 地图 / 飞线 / 路径 / 点位编辑器。
-- **事件与数据联动**：可视化配置事件 → 条件 → 行为，数据过滤器与回调参数，跨组件下钻。
-- **动态面板 / 分组 / 布局约束**，WASM 实现的对齐辅助线（R-tree 空间索引）。
-- **地图数据在线获取**（阿里 DataV），支持省市区自动下钻。
-- **导出静态包**：一键导出可脱离编辑器运行的 HTML 大屏。
-- **Figma 规范助手插件**（`packages/figma-helper`）。
-- **桌面端**：Tauri 2 打包，内置 Node sidecar，SQLite 单机运行，免登录。
+把需求描述清楚，Agent 会自己做语义分区、挑组件、生成 Schema、排版，实时同步到画布，改动前可以审批，也可以回溯。也可以给一个 Figma 链接：设计稿数据来自我们自己的 `packages/figma-helper` 插件（在 Figma 里把节点提取、简化成结构化数据），Agent 拿到这份数据后走确定性的规则转换生成组件树，不需要再重新识别一遍版式。
+
+组件能力覆盖不到的效果，内置的 Artifact App 子系统可以在沙箱里直接写 Vue 代码并实时预览。数据接好之后 Agent 会自己跑一遍数据流做校验。做好的大屏可以存成模板，之后复用。
+
+编辑器本身带了 76+ 物料组件（图表、文本、指标、媒体、交互、地图下钻等），可以导出成脱离编辑器运行的静态包。桌面端用 Tauri 打包，SQLite 本地跑，不需要登录。
 
 ---
 
-## 🏗 架构
+## 架构
 
+编辑器（`apps/app`）和 Agent 服务（`servers/server`）是两个独立进程：编辑器管画布渲染和交互，Agent 服务管规划、调用工具、读写大屏数据，两者之间用 SSE 流式通信。
+
+编辑器内部按"核心逻辑 / 框架适配"分层：`packages/core` 是不依赖任何 UI 框架的编辑器核心（画布状态、组件树、事件系统），`packages/composables` 把它包装成 Vue 的 composable 给 `apps/app` 用。这样拆是为了以后核心逻辑要迁移到别的框架，或者做无头（headless）场景时，不用把这部分逻辑重写一遍。
+
+物料组件（`packages/material`）和类型 / Zod Schema（`packages/types`）各自独立成包——编辑器和 Agent 服务都要用同一套组件定义和数据结构，独立出来两边引用同一份；物料也因此可以单独打包发布，不用绑着整个编辑器一起发。
+
+桌面端（`apps/desktop`）是 Tauri 壳，把编辑器和 Agent 服务一起打进安装包，用内置的 Node sidecar 跑 Agent 服务，数据库换成本地 SQLite。
+
+### 大屏怎么保持最新
+
+大屏组件树存成两块：大屏和版本信息在 `LargeScreen` / `LargeScreenVersion` 表，每个组件单独一行存在 `Layers` 表里，前端读取时递归拼成完整的组件树。
+
+用户在画布上手动拖拽、改属性，走的是普通 REST 接口，改一下就立即提交一次，没有防抖也没有乐观锁。Agent 修改是另一条路：工具调用完之后，通过 Mastra 的 suspend/resume 把算好的组件结果，从同一条对话 SSE 流推给前端，前端合并进画布状态后，再回调同一套 REST 接口落库——两条路径最终都写同一张表。Agent 那边另外维护一份工作区文件镜像（由前端整屏同步生成），供它的读写文件类工具使用。
+
+```mermaid
+flowchart LR
+    U[用户手动编辑] -->|REST| DB[(Layers 表)]
+    T[Agent 工具调用] -->|suspend/resume| SSE[对话 SSE 流]
+    SSE --> C[前端合并进画布]
+    C -->|REST| DB
+    T -.镜像.-> WS[工作区文件]
 ```
-┌────────────────────────────────────────────────────────────────┐
-│  apps/app  ── Vue 3 编辑器（画布 / 物料 / AgentBI 对话面板）      │
-│      ▲ SSE 流式 + 实时画布同步                                    │
-│      │                                                          │
-│  servers/server ── Hono + Mastra                                 │
-│    ├─ agents/     主 Agent · 执行 Agent · 验证 Agent · Vision …   │
-│    ├─ tools/      40+ 大屏领域工具                                │
-│    ├─ workflows/  requirement-to-bi · figma-to-bi · codia-to-bi  │
-│    ├─ mcp/        Figma · Playwright                             │
-│    ├─ processors/ 模式守卫 · 工具检索 · 参数消毒                   │
-│    └─ artifact-app/  Pi coding agent 沙箱 + 预览代理              │
-│                                                                  │
-│  packages/core        框架无关的编辑器核心逻辑                     │
-│  packages/composables Vue 适配层                                  │
-│  packages/material    物料组件                                    │
-│  packages/types       类型系统 + Zod Schema                       │
-└────────────────────────────────────────────────────────────────┘
-```
+
+同一浏览器里多个对话 Tab 同时跑 Agent 时，画布写入靠前端内存里的一个 Promise 队列做串行化，避免几个 Tab 互相打断。
 
 | 目录 | 说明 |
 |---|---|
-| `apps/app` | 主编辑器（Vue 3 + Vite + Element Plus + ECharts + Three.js） |
+| `apps/app` | 主编辑器（Vue 3 + Vite + ECharts + Three.js） |
 | `apps/desktop` | Tauri 2 桌面壳 |
-| `apps/agent-trace` | Agent 请求/响应追踪台（Next.js） |
-| `apps/artifact-app-template` | Artifact App 项目模板 |
-| `servers/server` | Agent 服务（Hono + Mastra + Prisma/SQLite + libsql） |
-| `servers/mock-server` | 带 Swagger 的 Mock API |
-| `servers/asset-server` | 静态资源服务 |
+| `servers/server` | Agent 服务（Hono + Mastra + Prisma/SQLite） |
 | `packages/core` | 编辑器核心（不依赖任何 UI 框架） |
 | `packages/composables` | core 的 Vue composable 封装 |
 | `packages/material` | 物料组件包 |
 | `packages/types` | 类型与 Zod Schema |
-| `packages/ui` | UI 组件库 |
-| `packages/alignment-wasm` | Rust/WASM 对齐辅助线 |
-| `packages/figma-helper` | Figma 插件 |
-| `packages/create-app` | `create-screenwright-app` 脚手架 |
 
 ---
 
-## 🚀 快速开始
+## 快速开始
 
 **环境要求**：Node ≥ 22.13，pnpm 10（`corepack enable` 即可）。
 
@@ -175,30 +106,40 @@ pnpm desktop:package    # 构建 sidecar 并打包安装程序
 
 ---
 
-## 🛠 常用命令
+## 技术栈
 
-```bash
-pnpm dev                 # 编辑器开发
-pnpm server:dev          # Agent 服务开发
-pnpm dev:agent-trace     # 追踪台
-pnpm build               # 生产构建
-pnpm check-types         # 全仓类型检查
-pnpm test                # 全仓类型检查 + 单元测试（turbo pipeline）
-pnpm build:lib           # 构建 SDK（screenwright.umd.js）
-```
+Vue 3 · TypeScript · Vite · Mastra Agent · Hono · Prisma · SQLite · Tauri 2 · pnpm workspace / Turborepo
 
 ---
 
-## 🧰 技术栈
+## Roadmap
 
-**前端** Vue 3.5 · TypeScript · Vite · Pinia · Element Plus · ECharts 5 / ECharts GL · Three.js · Monaco · Tailwind
-**Agent** Mastra · Vercel AI SDK · Zod · MCP（Figma / Playwright）· Pi SDK
-**服务** Hono · Prisma 7 · SQLite / libsql · MinIO（可选）
-**桌面** Tauri 2 · Rust
-**工程** pnpm workspace · Turborepo · Vitest · Husky · ESLint / Prettier / Stylelint
+- **图片转大屏**（自研，替代目前对 Codia 的依赖）
+  - 截图 / 参考图 → 版面区域切分与层级识别
+  - 区域内容 → 组件类型与配置的还原（图表类型、文本、指标卡等）
+  - 和现有 Figma 链路共用同一套语义布局 Agent，而不是另起一条路径
+
+- **文档 / 图片 / 视频向量化**
+  - 先覆盖 PDF、常见图片格式，视频先从关键帧和字幕入手
+  - 向量化后可以在对话中被检索、引用，作为生成大屏时的素材或背景资料
+  - 长期可以支撑基于这些资料的问答、指标解释这类场景
+
+- **数据源接入**（BI 系统的核心，优先级最高）
+  - 常见关系型数据库直连（MySQL、PostgreSQL 等）
+  - 数据源的连接管理、Schema 识别，辅助 Agent 判断该用什么图表
+  - 视情况再扩展到时序库 / NoSQL
+
+- **用户编辑与 Agent 编辑的并发保护**
+  - 目前两条路径都是直接写库，没有乐观锁，理论上会后写覆盖前写
+  - 打算做成最小可行的冲突检测（比如基于版本号/时间戳），而不是复杂的实时协同
+
+- **Artifact App 的构建与沙箱化**
+  - 现在的 LocalSandbox 就是本地子进程 + 固定工作目录，代码里也写明了不提供文件系统/进程/网络层面的隔离，不能跑不可信代码
+  - 计划换成真正隔离的沙箱（容器化），Agent 生成的代码不应该是直接在宿主机上跑的
+  - 补上构建/导出链路，让 Artifact App 也能像大屏一样导出成可独立部署的产物，而不是只能停留在预览代理里
 
 ---
 
-## 📄 License
+## License
 
 [MIT](LICENSE)

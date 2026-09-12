@@ -1,3 +1,8 @@
+# 统一签出换行符为 LF：Windows 自建 runner 上 core.autocrlf=true 会把仓库里的 LF 文本文件
+# 签出成 CRLF，vue-part 的 .vue 伴生文件解析/回写对换行符是按字节比较的，CRLF 签出会导致
+# 未改动的文件被判定为"变了"而被整屏回写，进而在 component-edit / data-read 测试里跟预期字节不一致。
+* text=auto eol=lf
+
 # 静态资源 / 构建产物 / 第三方库，不参与 GitHub 语言统计
 apps/*/public/** linguist-vendored
 servers/server/src/lib/process-manager/static-server/public/** linguist-vendored

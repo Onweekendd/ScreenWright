@@ -1,4 +1,4 @@
-# 多级下拉框 (ftCascader)
+# 多级下拉框 (swCascader)
 
 ## dataChart 数据格式
 

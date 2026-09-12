@@ -1,4 +1,4 @@
-# 分页 (ftPageQuery)
+# 分页 (swPageQuery)
 
 ## dataChart 数据格式
 

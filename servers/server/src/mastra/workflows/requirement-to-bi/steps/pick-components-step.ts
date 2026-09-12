@@ -5,7 +5,7 @@ import { screenComposerAgent } from "@/mastra/agents/screen-composer-agent";
 import { vector } from "@/mastra/vector";
 import { embeddingModel } from "@/mastra/vector/embeddingModel";
 
-import { checkDataKeys, checkOptionTypes, describePropSchema } from "../component-schema";
+import { checkColumnWidths, checkDataKeys, checkOptionTypes, describePropSchema } from "../component-schema";
 import { retryGenerate } from "../retry";
 import { type ContentItem, contentItemSchema, type ContentKind, type Rect, type SolvedZone } from "../types";
 
@@ -167,6 +167,7 @@ export const pickComponentsStep = createStep({
         let keyFeedback = "";
         let chosen: Omit<z.infer<typeof pickedComponentSchema>, "contentId"> | null = null;
         let matched = candidates[0];
+        let validated = false;
 
         for (let attempt = 1; attempt <= MAX_KEY_ATTEMPTS; attempt += 1) {
           const result = await retryGenerate(`选组件「${content.name}」（第 ${attempt} 次）`, () =>
@@ -216,13 +217,18 @@ ${candidateBlock}
           // option 的类型错和 data 的键错一起反馈：两者都只有在这里还改得动——
           // 落盘那层对它们都只是 warning，到浏览器才炸
           const optionProblems = checkOptionTypes(matched.prop, chosen.option);
-          if (check.ok && optionProblems.length === 0) {
+          // 列驱动组件（轮播表格这类）还得查列宽总和有没有超出这块区的实际宽度，
+          // 不然形状对、总量超，渲染出来就是挤压或溢出
+          const columnWidthProblem = checkColumnWidths(matched.prop, chosen.option, item.rect.width);
+          if (check.ok && optionProblems.length === 0 && !columnWidthProblem) {
+            validated = true;
             break;
           }
 
           keyFeedback =
             `\n\n## 上一次的输出对不上 ${matched.prop} 的 schema，请改正后重新输出\n` +
             optionProblems.map((problem) => `- option.${problem}\n`).join("") +
+            (columnWidthProblem ? `- option.${columnWidthProblem}\n` : "") +
             (check.missing.length > 0 ? `- 缺少必须有的字段：${check.missing.join("、")}\n` : "") +
             (check.extra.length > 0
               ? `- 多了 schema 里没有的字段：${check.extra.join("、")}（这些会被静默丢弃，文字请改放 option）\n`
@@ -231,12 +237,16 @@ ${candidateBlock}
           console.warn(`[requirement-to-bi] 「${content.name}」第 ${attempt}/${MAX_KEY_ATTEMPTS} 次未对齐`, {
             prop: matched.prop,
             ...check,
-            optionProblems
+            optionProblems,
+            columnWidthProblem
           });
         }
 
-        if (!chosen) {
-          throw new Error(`「${content.name}」连续 ${MAX_KEY_ATTEMPTS} 次没能产出组件选型`);
+        // 两轮都没对齐 schema 时不能放行：`chosen` 这时依然非空（模型总归返回了点什么），
+        // 之前只判断 `!chosen` 会让最后一次没对齐的坏结果照样落地——键错位、option 类型错
+        // 都是渲染时会真炸的问题，不是「差不多就行」。
+        if (!chosen || !validated) {
+          throw new Error(`「${content.name}」连续 ${MAX_KEY_ATTEMPTS} 次没能对齐 ${matched.prop} 的字段结构`);
         }
 
         picked.push({

@@ -1,4 +1,4 @@
-# ftdatetime (实时时间) 配置说明
+# swdatetime (实时时间) 配置说明
 
 ## dataChart 数据格式
 
@@ -13,7 +13,7 @@ type dataChart = never[];
 
 ## option 完整字段参考
 
-基于配置文件：ftdatetimeGlobal.vue
+基于配置文件：swdatetimeGlobal.vue
 
 ### 基础配置
 

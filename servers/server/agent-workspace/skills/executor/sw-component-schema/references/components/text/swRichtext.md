@@ -1,4 +1,4 @@
-# ftRichtext (富文本) 配置说明
+# swRichtext (富文本) 配置说明
 
 ## dataChart 数据格式
 
@@ -21,7 +21,7 @@ type dataChart = FtRichtextDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：ftRichtextGlobal.vue / ftRichtextLoadingEffect.vue
+基于配置文件：swRichtextGlobal.vue / swRichtextLoadingEffect.vue
 
 ### 内容配置
 

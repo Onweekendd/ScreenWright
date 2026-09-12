@@ -1,4 +1,4 @@
-# 时间轴 (ftTimerShaft)
+# 时间轴 (swTimerShaft)
 
 ## dataChart 数据格式
 

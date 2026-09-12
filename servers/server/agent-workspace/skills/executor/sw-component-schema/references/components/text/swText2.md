@@ -1,4 +1,4 @@
-# ftText2 (状态文本框) 配置说明
+# swText2 (状态文本框) 配置说明
 
 ## dataChart 数据格式
 
@@ -21,7 +21,7 @@ type dataChart = FtText2DataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：ftText2Global.vue / ftText2LoadingEffect.vue / ftText2SpecifiedStyle.vue
+基于配置文件：swText2Global.vue / swText2LoadingEffect.vue / swText2SpecifiedStyle.vue
 
 ### 基础配置
 

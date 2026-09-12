@@ -9,8 +9,8 @@
 | 进度条     | 进度条     | echartprogress    | [echartprogress.md](echartprogress.md)       |
 | 环形图     | 环形图     | echartring        | [echartring.md](echartring.md)               |
 | 字符云     | 字符云     | echartwordcloud   | [echartwordcloud.md](echartwordcloud.md)     |
-| 环比同比图 | 环比同比图 | ftdynamicratio    | [ftdynamicratio.md](ftdynamicratio.md)       |
-| 翻牌器     | 翻牌器     | ftFlopPerformance | [ftFlopPerformance.md](ftFlopPerformance.md) |
+| 环比同比图 | 环比同比图 | swdynamicratio    | [swdynamicratio.md](swdynamicratio.md)       |
+| 翻牌器     | 翻牌器     | swFlopPerformance | [swFlopPerformance.md](swFlopPerformance.md) |
 | 图片墙     | 图片墙     | ftPeriodictable   | [ftPeriodictable.md](ftPeriodictable.md)     |
 | 图标占比图 | 图标占比图 | iconRatio         | [iconRatio.md](iconRatio.md)                 |
 | 分类占比条 | 分类占比条 | sortRatioBar      | [sortRatioBar.md](sortRatioBar.md)           |

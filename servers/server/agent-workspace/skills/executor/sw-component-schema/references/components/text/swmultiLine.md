@@ -1,4 +1,4 @@
-# ftmultiLine (多行文本) 配置说明
+# swmultiLine (多行文本) 配置说明
 
 ## dataChart 数据格式
 
@@ -24,7 +24,7 @@ type dataChart = FtMultiLineDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：ftmultiLineGlobal.vue
+基于配置文件：swmultiLineGlobal.vue
 
 ### 基础配置
 

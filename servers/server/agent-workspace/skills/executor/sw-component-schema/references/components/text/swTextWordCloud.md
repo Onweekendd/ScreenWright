@@ -1,4 +1,4 @@
-# ftTextWordCloud (词云) 配置说明
+# swTextWordCloud (词云) 配置说明
 
 ## dataChart 数据格式
 
@@ -24,7 +24,7 @@ type dataChart = FtTextWordCloudDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：ftTextWordCloudGlobal.vue / ftTextWordCloudSeries.vue
+基于配置文件：swTextWordCloudGlobal.vue / swTextWordCloudSeries.vue
 
 ### 基础配置
 

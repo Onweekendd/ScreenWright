@@ -23,7 +23,7 @@ type dataChart = CustomTableListDataItem[];
 
 ## option 完整字段参考
 
-本组件与 ftScroll/ftProgress 结构不同，采用卡片式自由布局，主要由三个配置块组成。
+本组件与 swScroll/swProgress 结构不同，采用卡片式自由布局，主要由三个配置块组成。
 
 ### column 列定义（自由布局元素）
 

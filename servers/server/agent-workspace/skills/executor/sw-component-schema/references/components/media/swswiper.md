@@ -1,4 +1,4 @@
-# ftswiper (轮播图) 配置说明
+# swswiper (轮播图) 配置说明
 
 ## dataChart 数据格式
 

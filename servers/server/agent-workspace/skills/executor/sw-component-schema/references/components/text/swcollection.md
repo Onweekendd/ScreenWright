@@ -1,4 +1,4 @@
-# ftcollection (卡片滚动) 配置说明
+# swcollection (卡片滚动) 配置说明
 
 ## dataChart 数据格式
 
@@ -24,7 +24,7 @@ type dataChart = FtcollectionDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：ftcollectionGlobal.vue / ftcollectionCardSetting.vue / ftcollectionTitle.vue / ftcollectionSeries.vue
+基于配置文件：swcollectionGlobal.vue / swcollectionCardSetting.vue / swcollectionTitle.vue / swcollectionSeries.vue
 
 ### 滚动配置
 

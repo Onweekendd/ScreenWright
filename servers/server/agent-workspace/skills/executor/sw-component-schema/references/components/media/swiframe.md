@@ -1,4 +1,4 @@
-# iframe (ftiframe) 配置说明
+# iframe (swiframe) 配置说明
 
 ## dataChart 数据格式
 
@@ -21,7 +21,7 @@ type dataChart = FtiframeDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：ftiframeGlobal.vue
+基于配置文件：swiframeGlobal.vue
 
 ### URL配置
 

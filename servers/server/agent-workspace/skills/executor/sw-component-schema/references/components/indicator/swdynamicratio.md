@@ -1,4 +1,4 @@
-# 环比同比图 (ftdynamicratio) 配置说明
+# 环比同比图 (swdynamicratio) 配置说明
 
 ## dataChart 数据格式
 

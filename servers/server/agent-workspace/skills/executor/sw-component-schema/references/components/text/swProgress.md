@@ -1,4 +1,4 @@
-# ftProgress (进度条表格) 配置说明
+# swProgress (进度条表格) 配置说明
 
 ## dataChart 数据格式
 
@@ -23,7 +23,7 @@ type dataChart = ProgressDataItem[];
 
 ## option 完整字段参考
 
-总计 **110+ 个配置字段**，与 ftScroll 轮播表格共享大部分结构，额外增加进度条相关字段。
+总计 **110+ 个配置字段**，与 swScroll 轮播表格共享大部分结构，额外增加进度条相关字段。
 
 ### 基础配置 (14字段)
 
@@ -44,7 +44,7 @@ type dataChart = ProgressDataItem[];
 | `index` | boolean | true | 显示序号 |
 | `scrollCount` | number | 1 | 每次滚动行数 |
 
-注意：与 ftScroll 相比，本组件没有 `textStyleShow`、`scrollTimeType`、`scrollSingleTime` 字段。
+注意：与 swScroll 相比，本组件没有 `textStyleShow`、`scrollTimeType`、`scrollSingleTime` 字段。
 
 ### 表头配置 (14字段)
 
@@ -64,7 +64,7 @@ type dataChart = ProgressDataItem[];
 | `headerShow` | boolean | 是否显示表头 |
 | `headerTextAlign` | string | 表头对齐 |
 
-注意：与 ftScroll 相比，本组件没有 `borderShow`、`activeKeys` 字段。
+注意：与 swScroll 相比，本组件没有 `borderShow`、`activeKeys` 字段。
 
 ### 列定义
 
@@ -81,9 +81,9 @@ type dataChart = ProgressDataItem[];
 
 ### 其余配置组
 
-其余配置组（选中、阴影、行序号、主体、行样式X轴、列样式Y轴、列图片、后缀、状态图标、样式指定）与 ftScroll 结构完全一致，字段名和类型相同。详见 ftScroll 配置说明。
+其余配置组（选中、阴影、行序号、主体、行样式X轴、列样式Y轴、列图片、后缀、状态图标、样式指定）与 swScroll 结构完全一致，字段名和类型相同。详见 swScroll 配置说明。
 
-注意：与 ftScroll 相比，本组件没有 `progressYConfig` 和 `globalScrollYTrack*`/`globalScrollYThumb*` 滚动条字段。
+注意：与 swScroll 相比，本组件没有 `progressYConfig` 和 `globalScrollYTrack*`/`globalScrollYThumb*` 滚动条字段。
 
 ---
 

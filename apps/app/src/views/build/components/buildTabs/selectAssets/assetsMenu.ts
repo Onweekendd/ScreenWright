@@ -213,25 +213,11 @@ export class AssetsMenuManager {
       apiParams.time = 1;
     }
 
-    console.log("📄 分页请求参数:", {
-      assetType: option.key,
-      current: apiParams.current,
-      size: apiParams.size,
-      groupId: apiParams.groupId
-    });
-
     // 直接使用资产类获取数据
     const result = await assetsClass.getAssets(apiParams);
 
     const rowData = result.results;
     const UIRenderData = assetsClass.transformAssetsData(rowData);
-
-    console.log("📄 分页请求结果:", {
-      assetType: option.key,
-      returnedCount: result.results.length,
-      total: result.total,
-      expectedSize: apiParams.size
-    });
 
     return {
       ...result,
@@ -263,13 +249,6 @@ export class AssetsMenuManager {
         }
       });
 
-      console.log("📄 分页状态更新前:", {
-        currentPage: menuGroupItem.pageNum,
-        existingChildrenCount: menuGroupItem.children.length,
-        newAssetsCount: assets.length,
-        pageSize: menuGroupItem.pageSize
-      });
-
       // 更新子项数据：第一页覆盖，后续页追加
       if (menuGroupItem.pageNum === 1) {
         menuGroupItem.children = assets as unknown as MenuItemForRender[];
@@ -286,12 +265,6 @@ export class AssetsMenuManager {
       // 更新总数：使用已加载的数据量
       // 注意：这里我们使用已加载的数据量作为总数，因为API可能不返回准确的总数
       menuGroupItem.total = total;
-
-      console.log("📄 分页状态更新后:", {
-        currentPage: menuGroupItem.pageNum,
-        totalChildren: menuGroupItem.children.length,
-        hasMoreData: assets.length === menuGroupItem.pageSize
-      });
 
       return menuGroupItem;
     } catch (error) {

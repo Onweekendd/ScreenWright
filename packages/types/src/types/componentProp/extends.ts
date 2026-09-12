@@ -34,8 +34,6 @@ export enum ExtendsEnum {
   FtWeather = "sw-weather",
   /** 遮罩层 */
   FtMaskLayer = "sw-mask-layer",
-  /** 360全景图 */
-  PhotoSphereViewer = "photo-sphere-viewer"
 }
 
 /**

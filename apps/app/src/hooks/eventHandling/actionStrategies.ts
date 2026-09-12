@@ -1,15 +1,12 @@
 import { EventTypeEnum, type TotalPanelEventMap } from "@screenwright/types";
 
 import { mediaEnum } from "@/components/componentEntry/type";
-import { handleTranslate, initTranslationData } from "@/utils/translation/translation";
 import { ActionTypeEnum } from "@/views/build/components/buildConfig/constants/action";
-import { ExhibitEnumType } from "@/views/build/components/buildRender/core/ExhibitComponent/type";
 import { extendsEnumType } from "@/views/build/components/buildRender/core/ExtendsComponents/type";
 import { sceneEnumType } from "@/views/build/components/buildRender/core/SceneComponent/type";
 import { PanelType } from "@/views/build/components/buildRender/core/SystemComponent/type";
 import type { AnimationTrigger } from "@/views/build/components/buildRender/hooks/useGlobalAnimation";
 import type { Action, ComponentType } from "@/views/build/components/buildRender/type";
-import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
 import {
   setAnimationOnDynamicPanelStateChange,
@@ -1763,45 +1760,6 @@ export class ToNextStatusStrategy extends ActionStrategy<ActionExecutionParams> 
 }
 
 /**
- * 译文转换动作策略
- */
-export class ConvertTranslationStrategy extends ActionStrategy<ActionExecutionParams> {
-  execute({ componentIds, isConditionSatisfied, translation }: ActionExecutionParams): void {
-    if (!isConditionSatisfied || !translation) {
-      return;
-    }
-
-    const { globalComponentMap } = useGlobalComponentData();
-    componentIds.forEach((componentId) => {
-      const thisComponent = globalComponentMap.value.get(componentId.toString());
-
-      if (thisComponent && thisComponent.data && thisComponent.option) {
-        const translationData = initTranslationData(thisComponent.data, thisComponent.option);
-        handleTranslate(globalComponentMap.value, translationData, translation as string);
-      }
-    });
-  }
-}
-
-/**
- * 旋转组件-点击
- */
-export class ClickRotateComponentStrategy extends ActionStrategy<ActionExecutionParams> {
-  execute({ componentIds, isConditionSatisfied, eventList }: ActionExecutionParams): void {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    componentIds.forEach((componentId) => {
-      const event = eventList[`${ExhibitEnumType.FtRotate}-${componentId}`];
-      if (!event) {
-        return;
-      }
-      event?.handleClick?.();
-    });
-  }
-}
-
-/**
  * 动作策略工厂
  */
 export class ActionStrategyFactory {
@@ -1863,9 +1821,7 @@ export class ActionStrategyFactory {
     [ActionTypeEnum.PauseScroll]: new pauseScrollStrategy(),
     [ActionTypeEnum.StartScroll]: new startScrollStrategy(),
     [ActionTypeEnum.toPrevStatus]: new ToPrevStatusStrategy(),
-    [ActionTypeEnum.toNextStatus]: new ToNextStatusStrategy(),
-    [ActionTypeEnum.convertTranslation]: new ConvertTranslationStrategy(),
-    [ActionTypeEnum.ClickRotateComponent]: new ClickRotateComponentStrategy()
+    [ActionTypeEnum.toNextStatus]: new ToNextStatusStrategy()
     // 其他动作策略可以在这里添加
   };
 

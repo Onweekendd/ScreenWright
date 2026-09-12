@@ -125,22 +125,12 @@ declare const ComponentFlatSchema: z.ZodObject<{
         }>, z.ZodEnum<{
             ringIndicator3d: import("..").ExhibitEnum.RingIndicator3d;
             ringIndicator3dNew: import("..").ExhibitEnum.ringIndicator3dNew;
-            "sw-slidecard-v1": import("..").ExhibitEnum.FtSlidecardV1;
             imagesList3d: import("..").ExhibitEnum.ImagesList3d;
-            "sw-qachat": import("..").ExhibitEnum.FtQachat;
             "pdfjs-viewer": import("..").ExhibitEnum.PdfjsViewer;
             "sw-particles": import("..").ExhibitEnum.FtParticles;
-            "sw-rotateCube": import("..").ExhibitEnum.FtRotateCube;
             "sw-signaturePad": import("..").ExhibitEnum.FtSignaturePad;
-            CurvedTrackList: import("..").ExhibitEnum.CurvedTrackList;
-            "sw-translation": import("..").ExhibitEnum.FtTranslation;
-            "sw-carousel-image-v2": import("..").ExhibitEnum.FtCarouselImageV2;
-            "sw-turn-page": import("..").ExhibitEnum.FtTurnPage;
             "sw-filter": import("..").ExhibitEnum.FtFilter;
-            "sw-flex-decoration": import("..").ExhibitEnum.FtFlexDecoration;
-            "sw-nine-patch": import("..").ExhibitEnum.FtNinePatch;
             verticalCard: import("..").ExhibitEnum.verticalCard;
-            "sw-rotate": import("..").ExhibitEnum.FtRotate;
         }>, z.ZodEnum<{
             "sw-folder": import("..").FolderEnum.group;
         }>, z.ZodEnum<{
@@ -157,9 +147,7 @@ declare const ComponentFlatSchema: z.ZodObject<{
             "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
             "sw-weather": import("..").ExtendsEnum.FtWeather;
             "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
-            "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
         }>, z.ZodEnum<{
-            swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
             rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
             iconRatio: import("..").IndicatorEnum.IconRatio;
             sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
@@ -186,7 +174,6 @@ declare const ComponentFlatSchema: z.ZodObject<{
             swPageTurning: import("..").InteractiveEnum.FtPageTurning;
             subtabs: import("..").InteractiveEnum.Subtabs;
             "sw-mutual": import("..").InteractiveEnum.FtMutual;
-            "sw-integration-mutual": import("..").InteractiveEnum.FtIntegrationMutual;
             "sw-search": import("..").InteractiveEnum.FtSearch;
             swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
             videoProgress: import("..").InteractiveEnum.videoProgress;
@@ -282,8 +269,6 @@ declare const ComponentFlatSchema: z.ZodObject<{
     }, z.core.$strip>>>;
     activeStatusId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     minioArr: z.ZodOptional<z.ZodArray<z.ZodType<import('..').ComponentMinioAsset, unknown, z.core.$ZodTypeInternals<import('..').ComponentMinioAsset, unknown>>>>;
-    enableDataAnalysis: z.ZodOptional<z.ZodBoolean>;
-    dataAnalysisName: z.ZodOptional<z.ZodString>;
     parent: z.ZodOptional<z.ZodNumber>;
     unitPavenType: z.ZodOptional<z.ZodPipe<z.ZodUnion<readonly [z.ZodLiteral<"percent">, z.ZodLiteral<"">]>, z.ZodTransform<"percent" | undefined, "" | "percent">>>;
     parentDynamicPanelId: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
@@ -4698,67 +4683,6 @@ declare const pageReloadOptionSchema: z.ZodObject<{
 type pageReloadOption = z.infer<typeof pageReloadOptionSchema>;
 
 import { z } from 'zod';
-declare const photoSphereViewerDataSchema: z.ZodArray<z.ZodObject<{
-    value: z.ZodString;
-}, z.core.$strip>>;
-type photoSphereViewerData = z.infer<typeof photoSphereViewerDataSchema>;
-declare const photoSphereViewerOptionSchema: z.ZodObject<{
-    muted: z.ZodBoolean;
-    initLoad: z.ZodBoolean;
-    cover: z.ZodString;
-    minFov: z.ZodNumber;
-    maxFov: z.ZodNumber;
-    defaultZoomLvl: z.ZodNumber;
-    fisheye: z.ZodBoolean;
-    defaultYaw: z.ZodNumber;
-    defaultPitch: z.ZodNumber;
-    loadingImg: z.ZodString;
-    loadingTxt: z.ZodString;
-    mousewheel: z.ZodBoolean;
-    mousemove: z.ZodBoolean;
-    keyboard: z.ZodString;
-    mousewheelCtrlKey: z.ZodBoolean;
-    touchmoveTwoFingers: z.ZodBoolean;
-    sphereCorrection: z.ZodObject<{
-        pan: z.ZodNumber;
-        tilt: z.ZodNumber;
-        roll: z.ZodNumber;
-    }, z.core.$strip>;
-    moveSpeed: z.ZodNumber;
-    zoomSpeed: z.ZodNumber;
-    moveInertia: z.ZodNumber;
-    withCredentials: z.ZodBoolean;
-    canvasBackground: z.ZodString;
-    rendererParameters: z.ZodObject<{
-        alpha: z.ZodBoolean;
-        antialias: z.ZodBoolean;
-    }, z.core.$strip>;
-    showNavbar: z.ZodBoolean;
-    navbarList: z.ZodArray<z.ZodString>;
-    autostart: z.ZodBoolean;
-    autostartDelay: z.ZodNumber;
-    autostartOnIdle: z.ZodBoolean;
-    autorotateSpeed: z.ZodNumber;
-    autorotatePitch: z.ZodNumber;
-    showMarkers: z.ZodBoolean;
-    showGallery: z.ZodBoolean;
-    visibleOnLoad: z.ZodBoolean;
-    thumbnailSize: z.ZodObject<{
-        width: z.ZodNumber;
-        height: z.ZodNumber;
-    }, z.core.$strip>;
-    galleryItems: z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        name: z.ZodString;
-        panorama: z.ZodString;
-        thumbnail: z.ZodString;
-        caption: z.ZodString;
-        markers: z.ZodArray<z.ZodUnknown>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-type photoSphereViewerOption = z.infer<typeof photoSphereViewerOptionSchema>;
-
-import { z } from 'zod';
 declare const simpleBarrageDataSchema: z.ZodArray<z.ZodObject<{
     text: z.ZodString;
 }, z.core.$strip>>;
@@ -5002,44 +4926,6 @@ declare const swMaskLayerOptionSchema: z.ZodObject<{
     backdropFilterSaturate: z.ZodNumber;
 }, z.core.$strip>;
 type ftMaskLayerOption = z.infer<typeof swMaskLayerOptionSchema>;
-
-import { z } from 'zod';
-/**
- * 拓扑容器 (ft-topo-container)
- * 扩展
- *
- * ## 数据结构
- * 无数据字段（data为空数组）
- */
-declare const swTopoContainerDataSchema: z.ZodArray<z.ZodNever>;
-type ftTopoContainerData = z.infer<typeof swTopoContainerDataSchema>;
-declare const swTopoContainerOptionSchema: z.ZodObject<{
-    topoBgType: z.ZodString;
-    topoBgColor: z.ZodString;
-    topoBgImage: z.ZodString;
-    topoData: z.ZodObject<{
-        nodes: z.ZodArray<z.ZodUnknown>;
-        edges: z.ZodArray<z.ZodUnknown>;
-    }, z.core.$strip>;
-    perspective: z.ZodNumber;
-    originX: z.ZodNumber;
-    originY: z.ZodNumber;
-    rotateX: z.ZodNumber;
-    rotateY: z.ZodNumber;
-    rotateZ: z.ZodNumber;
-    skewX: z.ZodNumber;
-    skewY: z.ZodNumber;
-    scaleX: z.ZodNumber;
-    scaleY: z.ZodNumber;
-    translateX: z.ZodNumber;
-    translateY: z.ZodNumber;
-    translateZ: z.ZodNumber;
-    originGrid: z.ZodObject<{
-        left: z.ZodString;
-        top: z.ZodString;
-    }, z.core.$strip>;
-}, z.core.$strip>;
-type ftTopoContainerOption = z.infer<typeof swTopoContainerOptionSchema>;
 
 import { z } from 'zod';
 declare const swUnrealEngineDataSchema: z.ZodArray<z.ZodObject<{
@@ -5851,40 +5737,6 @@ declare const swFlopPerformanceOptionSchema: z.ZodObject<{
     randomRange: z.ZodNumber;
 }, z.core.$strip>;
 type ftFlopPerformanceOption = z.infer<typeof swFlopPerformanceOptionSchema>;
-
-import { z } from 'zod';
-/**
- * 图片墙 (ftPeriodictable)
- * 指标
- *
- * ## 数据结构
- *
- * 无数据字段（data 为空数组）。
- *
- * @example
- * ```typescript
- * const data: ftPeriodictableData = [];
- * ```
- */
-declare const swPeriodictableDataSchema: z.ZodArray<z.ZodObject<{}, z.core.$strip>>;
-type ftPeriodictableData = z.infer<typeof swPeriodictableDataSchema>;
-/**
- * 图片墙配置选项 Schema
- */
-declare const swPeriodictableOptionSchema: z.ZodObject<{
-    images: z.ZodArray<z.ZodObject<{
-        url: z.ZodString;
-    }, z.core.$strip>>;
-    offsetX: z.ZodNumber;
-    offsetY: z.ZodNumber;
-    rows: z.ZodNumber;
-    imageWidth: z.ZodNumber;
-    imageHeight: z.ZodNumber;
-    rowSpace: z.ZodNumber;
-    columnSpace: z.ZodNumber;
-    duration: z.ZodNumber;
-}, z.core.$strip>;
-type ftPeriodictableOption = z.infer<typeof swPeriodictableOptionSchema>;
 
 import { z } from 'zod';
 declare const formCheckboxDataSchema: z.ZodArray<z.ZodObject<{
@@ -6811,36 +6663,6 @@ declare const subtabsOptionSchema: z.ZodObject<{
     }, z.core.$loose>>;
 }, z.core.$strip>;
 type subtabsOption = z.infer<typeof subtabsOptionSchema>;
-
-import { z } from 'zod';
-declare const swIntegrationMutualDataSchema: z.ZodArray<z.ZodObject<{
-    label: z.ZodString;
-    value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-}, z.core.$strip>>;
-type ftIntegrationMutualData = z.infer<typeof swIntegrationMutualDataSchema>;
-/**
- * 集成交互控制配置选项 Schema
- */
-declare const swIntegrationMutualOptionSchema: z.ZodObject<{
-    fontSize: z.ZodNumber;
-    fontFamily: z.ZodString;
-    fontColor: z.ZodString;
-    rotateX: z.ZodNumber;
-    rotateY: z.ZodNumber;
-    rotateZ: z.ZodNumber;
-    skewX: z.ZodNumber;
-    skewY: z.ZodNumber;
-    textTranslateX: z.ZodNumber;
-    textTranslateY: z.ZodNumber;
-    bgImage: z.ZodString;
-    isHovered: z.ZodBoolean;
-    hoverFontSize: z.ZodNumber;
-    hoverFontFamily: z.ZodString;
-    hoverFontColor: z.ZodString;
-    hoverBgImage: z.ZodString;
-    isCursorPointer: z.ZodString;
-}, z.core.$strip>;
-type ftIntegrationMutualOption = z.infer<typeof swIntegrationMutualOptionSchema>;
 
 import { z } from 'zod';
 declare const swMutualDataSchema: z.ZodArray<z.ZodObject<{
@@ -13922,22 +13744,6 @@ declare const componentPropSchemaMap: {
             iconSize: z.ZodArray<z.ZodNumber>;
         }, z.core.$strip>;
     };
-    readonly ftPeriodictable: {
-        readonly data: z.ZodArray<z.ZodObject<{}, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            images: z.ZodArray<z.ZodObject<{
-                url: z.ZodString;
-            }, z.core.$strip>>;
-            offsetX: z.ZodNumber;
-            offsetY: z.ZodNumber;
-            rows: z.ZodNumber;
-            imageWidth: z.ZodNumber;
-            imageHeight: z.ZodNumber;
-            rowSpace: z.ZodNumber;
-            columnSpace: z.ZodNumber;
-            duration: z.ZodNumber;
-        }, z.core.$strip>;
-    };
     readonly "custom-component": {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
@@ -14435,31 +14241,6 @@ declare const componentPropSchemaMap: {
             buttonColor: z.ZodString;
             buttonFontStyle: z.ZodString;
             buttonFontWeight: z.ZodString;
-        }, z.core.$strip>;
-    };
-    readonly "sw-integration-mutual": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            label: z.ZodString;
-            value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            fontSize: z.ZodNumber;
-            fontFamily: z.ZodString;
-            fontColor: z.ZodString;
-            rotateX: z.ZodNumber;
-            rotateY: z.ZodNumber;
-            rotateZ: z.ZodNumber;
-            skewX: z.ZodNumber;
-            skewY: z.ZodNumber;
-            textTranslateX: z.ZodNumber;
-            textTranslateY: z.ZodNumber;
-            bgImage: z.ZodString;
-            isHovered: z.ZodBoolean;
-            hoverFontSize: z.ZodNumber;
-            hoverFontFamily: z.ZodString;
-            hoverFontColor: z.ZodString;
-            hoverBgImage: z.ZodString;
-            isCursorPointer: z.ZodString;
         }, z.core.$strip>;
     };
     readonly ftLegend: {
@@ -15586,35 +15367,6 @@ declare const componentPropSchemaMap: {
             backdropFilterSaturate: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly "sw-topo-container": {
-        readonly data: z.ZodArray<z.ZodNever>;
-        readonly option: z.ZodObject<{
-            topoBgType: z.ZodString;
-            topoBgColor: z.ZodString;
-            topoBgImage: z.ZodString;
-            topoData: z.ZodObject<{
-                nodes: z.ZodArray<z.ZodUnknown>;
-                edges: z.ZodArray<z.ZodUnknown>;
-            }, z.core.$strip>;
-            perspective: z.ZodNumber;
-            originX: z.ZodNumber;
-            originY: z.ZodNumber;
-            rotateX: z.ZodNumber;
-            rotateY: z.ZodNumber;
-            rotateZ: z.ZodNumber;
-            skewX: z.ZodNumber;
-            skewY: z.ZodNumber;
-            scaleX: z.ZodNumber;
-            scaleY: z.ZodNumber;
-            translateX: z.ZodNumber;
-            translateY: z.ZodNumber;
-            translateZ: z.ZodNumber;
-            originGrid: z.ZodObject<{
-                left: z.ZodString;
-                top: z.ZodString;
-            }, z.core.$strip>;
-        }, z.core.$strip>;
-    };
     readonly "sw-unreal-engine": {
         readonly data: z.ZodArray<z.ZodObject<{
             text: z.ZodString;
@@ -15687,65 +15439,6 @@ declare const componentPropSchemaMap: {
             opacity: z.ZodNumber;
             pageReloadType: z.ZodString;
             pageReloadTypeClick: z.ZodString;
-        }, z.core.$strip>;
-    };
-    readonly "photo-sphere-viewer": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            value: z.ZodString;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            muted: z.ZodBoolean;
-            initLoad: z.ZodBoolean;
-            cover: z.ZodString;
-            minFov: z.ZodNumber;
-            maxFov: z.ZodNumber;
-            defaultZoomLvl: z.ZodNumber;
-            fisheye: z.ZodBoolean;
-            defaultYaw: z.ZodNumber;
-            defaultPitch: z.ZodNumber;
-            loadingImg: z.ZodString;
-            loadingTxt: z.ZodString;
-            mousewheel: z.ZodBoolean;
-            mousemove: z.ZodBoolean;
-            keyboard: z.ZodString;
-            mousewheelCtrlKey: z.ZodBoolean;
-            touchmoveTwoFingers: z.ZodBoolean;
-            sphereCorrection: z.ZodObject<{
-                pan: z.ZodNumber;
-                tilt: z.ZodNumber;
-                roll: z.ZodNumber;
-            }, z.core.$strip>;
-            moveSpeed: z.ZodNumber;
-            zoomSpeed: z.ZodNumber;
-            moveInertia: z.ZodNumber;
-            withCredentials: z.ZodBoolean;
-            canvasBackground: z.ZodString;
-            rendererParameters: z.ZodObject<{
-                alpha: z.ZodBoolean;
-                antialias: z.ZodBoolean;
-            }, z.core.$strip>;
-            showNavbar: z.ZodBoolean;
-            navbarList: z.ZodArray<z.ZodString>;
-            autostart: z.ZodBoolean;
-            autostartDelay: z.ZodNumber;
-            autostartOnIdle: z.ZodBoolean;
-            autorotateSpeed: z.ZodNumber;
-            autorotatePitch: z.ZodNumber;
-            showMarkers: z.ZodBoolean;
-            showGallery: z.ZodBoolean;
-            visibleOnLoad: z.ZodBoolean;
-            thumbnailSize: z.ZodObject<{
-                width: z.ZodNumber;
-                height: z.ZodNumber;
-            }, z.core.$strip>;
-            galleryItems: z.ZodArray<z.ZodObject<{
-                id: z.ZodString;
-                name: z.ZodString;
-                panorama: z.ZodString;
-                thumbnail: z.ZodString;
-                caption: z.ZodString;
-                markers: z.ZodArray<z.ZodUnknown>;
-            }, z.core.$strip>>;
         }, z.core.$strip>;
     };
     readonly "simple-barrage": {
@@ -16908,22 +16601,12 @@ declare const mediaEnumSchema: z.ZodEnum<{
 declare const ExhibitEnumTypeSchema: z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
-    "sw-slidecard-v1": ExhibitEnum.FtSlidecardV1;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "sw-qachat": ExhibitEnum.FtQachat;
     "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
     "sw-particles": ExhibitEnum.FtParticles;
-    "sw-rotateCube": ExhibitEnum.FtRotateCube;
     "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    CurvedTrackList: ExhibitEnum.CurvedTrackList;
-    "sw-translation": ExhibitEnum.FtTranslation;
-    "sw-carousel-image-v2": ExhibitEnum.FtCarouselImageV2;
-    "sw-turn-page": ExhibitEnum.FtTurnPage;
     "sw-filter": ExhibitEnum.FtFilter;
-    "sw-flex-decoration": ExhibitEnum.FtFlexDecoration;
-    "sw-nine-patch": ExhibitEnum.FtNinePatch;
     verticalCard: ExhibitEnum.verticalCard;
-    "sw-rotate": ExhibitEnum.FtRotate;
 }>;
 /** 文件夹类型枚举 Schema */
 declare const FolderTypeSchema: z.ZodEnum<{
@@ -16931,7 +16614,6 @@ declare const FolderTypeSchema: z.ZodEnum<{
 }>;
 /** 指标类型枚举 Schema */
 declare const indicatorEnumSchema: z.ZodEnum<{
-    swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
@@ -16960,7 +16642,6 @@ declare const interactiveEnumSchema: z.ZodEnum<{
     swPageTurning: import("..").InteractiveEnum.FtPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
     "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-integration-mutual": import("..").InteractiveEnum.FtIntegrationMutual;
     "sw-search": import("..").InteractiveEnum.FtSearch;
     swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
@@ -17012,7 +16693,6 @@ declare const extendsEnumTypeSchema: z.ZodEnum<{
     "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
     "sw-weather": import("..").ExtendsEnum.FtWeather;
     "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
-    "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
 }>;
 /** 面板类型枚举 Schema */
 declare const PanelEnumSchema: z.ZodEnum<{
@@ -17082,22 +16762,12 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
 }>, z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
-    "sw-slidecard-v1": ExhibitEnum.FtSlidecardV1;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "sw-qachat": ExhibitEnum.FtQachat;
     "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
     "sw-particles": ExhibitEnum.FtParticles;
-    "sw-rotateCube": ExhibitEnum.FtRotateCube;
     "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    CurvedTrackList: ExhibitEnum.CurvedTrackList;
-    "sw-translation": ExhibitEnum.FtTranslation;
-    "sw-carousel-image-v2": ExhibitEnum.FtCarouselImageV2;
-    "sw-turn-page": ExhibitEnum.FtTurnPage;
     "sw-filter": ExhibitEnum.FtFilter;
-    "sw-flex-decoration": ExhibitEnum.FtFlexDecoration;
-    "sw-nine-patch": ExhibitEnum.FtNinePatch;
     verticalCard: ExhibitEnum.verticalCard;
-    "sw-rotate": ExhibitEnum.FtRotate;
 }>, z.ZodEnum<{
     "sw-folder": FolderEnum.group;
 }>, z.ZodEnum<{
@@ -17114,9 +16784,7 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
     "sw-weather": import("..").ExtendsEnum.FtWeather;
     "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
-    "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
 }>, z.ZodEnum<{
-    swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
@@ -17143,7 +16811,6 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     swPageTurning: import("..").InteractiveEnum.FtPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
     "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-integration-mutual": import("..").InteractiveEnum.FtIntegrationMutual;
     "sw-search": import("..").InteractiveEnum.FtSearch;
     swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
@@ -17635,17 +17302,9 @@ declare enum ActionTypeEnum {
      */
     toNextStatus = "toNextStatus",
     /**
-     * @description 译文转换
-     */
-    convertTranslation = "convertTranslation",
-    /**
      * 切换蓝图
      * */
     SwitchBlueprintTab = "switchBlueprintTab",
-    /**
-     * 旋转组件-点击触发
-     * */
-    ClickRotateComponent = "ClickRotateComponent",
     /**
      * 同步视频进度
      * */
@@ -18701,14 +18360,6 @@ interface FtMutualEvents {
         handleClick: (info: any) => void;
     };
 }
-interface FtIntegrationMutualEvents {
-    [key: `${InteractiveEnum.FtIntegrationMutual}-${string}`]: {
-        /**
-         * @description 点击事件
-         */
-        handleClick: (info: any) => void;
-    };
-}
 interface FtLegendEvents {
     [key: `${InteractiveEnum.FtLegend}-${string}`]: {
         /**
@@ -18865,25 +18516,6 @@ interface CustomTableListEvents {
          * @description 点击事件
          */
         handleClick: (info: any) => void;
-    };
-}
-interface FtSlidecardV1Events {
-    [key: `${ExhibitEnum.FtSlidecardV1}-${string}`]: {
-        /**
-         * @description 点击事件
-         */
-        handleClick: (info: any) => void;
-        handlePrevClick: () => void;
-        handleNextClick: () => void;
-    };
-}
-interface FtTurnPageEvents {
-    [key: `${ExhibitEnum.FtTurnPage}-${string}`]: {
-        /**
-         * @description 点击事件
-         */
-        handlePrevClick: () => void;
-        handleNextClick: () => void;
     };
 }
 interface EchartcommonMapEvents {
@@ -19170,13 +18802,8 @@ interface FtSignaturePad {
         onTranslateImage: () => void;
     };
 }
-interface FtRotateEvent {
-    [key: `${ExhibitEnum.FtRotate}-${number}`]: {
-        handleClick: () => void;
-    };
-}
-type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtIntegrationMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & FtSlidecardV1Events & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & FtUnrealEngineEvents & FtRotateEvent & videoProgressEvents;
-type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtIntegrationMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | FtSlidecardV1Events | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | pdfEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtTurnPageEvents | FtUnrealEngineEvents | FtRotateEvent | videoProgressEvents;
+type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & FtUnrealEngineEvents & videoProgressEvents;
+type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | pdfEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtUnrealEngineEvents | videoProgressEvents;
 
 import { Animation } from './component-animation';
 import { AllComponentType, ExtendsChildComponentEnum, FolderEnum } from './componentProp';
@@ -19218,16 +18845,6 @@ interface ChildComponent<Option = any> extends Omit<StandardComponentType, "comp
     };
     option: Option;
     [key: string]: any;
-}
-declare enum verticalConstEnum {
-    Top = "Top",
-    Bottom = "Bottom",
-    Center = "Center"
-}
-declare enum horizontalConstEnum {
-    Left = "Left",
-    Right = "Right",
-    Center = "Center"
 }
 /**
  * 标准组件类型
@@ -19304,18 +18921,10 @@ interface StandardComponentType<ComponentProp extends AllComponentType = AllComp
     presetChild?: ChildComponent[];
     /** 素材库条目列表（可选）。注意不是 MinioResource，见 ComponentMinioAsset 的说明 */
     minioArr?: ComponentMinioAsset[];
-    /** 是否启用数据分析（可选） */
-    enableDataAnalysis?: boolean;
-    /** 数据分析名称（可选） */
-    dataAnalysisName?: string;
     /** 父组件ID（可选） */
     parent?: number;
     /** 单位铺满类型（可选） */
     unitPavenType?: "percent";
-    /** @description 约束布局 纵向 */
-    verticalConst?: verticalConstEnum;
-    /** @description 约束布局 横向 */
-    horizontalConst?: horizontalConstEnum;
 }
 /**
  * 组件类型（允许任意扩展字段）
@@ -19560,38 +19169,18 @@ declare enum ExhibitEnum {
     RingIndicator3d = "ringIndicator3d",
     /** 3D环形指示器新版 */
     ringIndicator3dNew = "ringIndicator3dNew",
-    /** 滑动卡片V1 */
-    FtSlidecardV1 = "sw-slidecard-v1",
     /** 3D图片列表 */
     ImagesList3d = "imagesList3d",
-    /** AI问答 */
-    FtQachat = "sw-qachat",
     /** PDF查看器 */
     PdfjsViewer = "pdfjs-viewer",
     /** 空间粒子 */
     FtParticles = "sw-particles",
-    /** 3D立方体 */
-    FtRotateCube = "sw-rotateCube",
     /** 签名板 */
     FtSignaturePad = "sw-signaturePad",
-    /** 曲线轨道列表 */
-    CurvedTrackList = "CurvedTrackList",
-    /** 译文转换 */
-    FtTranslation = "sw-translation",
-    /** 轮播图V2 */
-    FtCarouselImageV2 = "sw-carousel-image-v2",
-    /** 翻页组件 */
-    FtTurnPage = "sw-turn-page",
     /** 滤镜组件 */
     FtFilter = "sw-filter",
-    /** 弹性装饰 */
-    FtFlexDecoration = "sw-flex-decoration",
-    /** 点九图 */
-    FtNinePatch = "sw-nine-patch",
     /** 垂直卡片 */
-    verticalCard = "verticalCard",
-    /** 旋转组件 */
-    FtRotate = "sw-rotate"
+    verticalCard = "verticalCard"
 }
 /** @deprecated 使用 ExhibitEnum 代替 */
 type ExhibitEnumType = ExhibitEnum;
@@ -19630,9 +19219,7 @@ declare enum ExtendsEnum {
     /** 天气 */
     FtWeather = "sw-weather",
     /** 遮罩层 */
-    FtMaskLayer = "sw-mask-layer",
-    /** 360全景图 */
-    PhotoSphereViewer = "photo-sphere-viewer"
+    FtMaskLayer = "sw-mask-layer"
 }
 /**
  * 扩展子组件枚举
@@ -19708,8 +19295,6 @@ type AllComponentType = EchartComponentType | PanelEnum | TextEnum | IndicatorEn
  * @description 各种指标组件的类型标识
  */
 declare enum IndicatorEnum {
-    /** 周期表 */
-    FtPeriodictable = "swPeriodictable",
     /** 光栅进度条 */
     RasterProgressBar = "rasterProgressBar",
     /** 图标占比 */
@@ -19773,8 +19358,6 @@ declare enum InteractiveEnum {
     Subtabs = "subtabs",
     /** 互斥组件 */
     FtMutual = "sw-mutual",
-    /** 集成交互 */
-    FtIntegrationMutual = "sw-integration-mutual",
     /** 搜索 */
     FtSearch = "sw-search",
     /** 时间轴 */
@@ -20220,43 +19803,7 @@ declare enum EventTypeEnum {
     /**
      * @description 滚动结束
      */
-    ScrollEnd = "scrollEnd",
-    /**
-     * @description 卡片开始翻转
-     */
-    startRotate = "startRotate",
-    /**
-     * @description 卡片开始翻转结束
-     */
-    endRotate = "endRotate",
-    /**
-     * @description 卡片开始放大
-     */
-    startScaleRotate = "startScaleRotate",
-    /**
-     * @description 卡片开始放大结束
-     */
-    endScaleRotate = "endScaleRotate",
-    /**
-     * @description 卡片开始缩小
-     */
-    startSmallRotate = "startSmallRotate",
-    /**
-     * @description 卡片开始放大结束
-     */
-    endSmallRotate = "endSmallRotate",
-    /**
-     * @description 反向开始翻转
-     */
-    reversalStartRotate = "reversalStartRotate",
-    /**
-     * @description 反向翻转结束
-     */
-    reversalEndRotate = "reversalEndRotate",
-    /**
-     * @description 当翻到最后一页时
-     */
-    flipTheBookFinalPage = "flipTheBookFinalPage"
+    ScrollEnd = "scrollEnd"
 }
 declare enum EncodeEventTypeEnum {
     /**
@@ -20669,7 +20216,7 @@ export { AllEchartEnum, BarEchartEnum, ExhibitEnum, ExtendsChildComponentEnum, e
 export { indicatorEnum, interactiveEnum, mediaEnum, textEnum, threeComponentEnum } from './componentProp';
 type { AllEchartType, BarEchartType, ExhibitEnumType, extendsChildComponentEnumType, extendsEnumType, FolderType, indicatorEchartType, lineEchartsType, otherEchartType, PanelType, pieEchartType, projectEchartType, ringEchartType, scatterEchartType, sceneEnumType, ThirdPartEnumType } from './componentProp';
 type { Animation, BindComponent, Callback, CallbackManager, CallbackRelation, CallbackSource, CallbackTarget, ChildComponent, ComponentMinioAsset, ComponentType, DataRemark, DataSourceType, DbItem, Filter, IotAddress, ListenArg, MinioResource, PanelState, StandardComponentType, SystemComponentProps, WebSocketDataSource } from './component';
-export { DataType, horizontalConstEnum, verticalConstEnum } from './component';
+export { DataType } from './component';
 type { EncodeEvent, Event, eventToTriggerFunction } from './event';
 export { allowEventComponentList, EncodeEvent2ComponentType, EncodeEventList, EncodeEventTypeEnum, Event2ComponentType, EventList, EventTypeEnum } from './event';
 type { toAddEvent, TotalPanelEventMap } from './component-event';
@@ -20699,11 +20246,7 @@ declare enum AdaptationType {
     /**
      * 原分辨率溢出滚动
      */
-    overflow = 3,
-    /**
-     * 按约束布局自适应
-     */
-    constraint = 4
+    overflow = 3
 }
 declare const adaptationType: {
     label: string;
@@ -22087,22 +21630,14 @@ declare const sdk: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;
@@ -22885,12 +22420,8 @@ declare const sdk: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -23256,22 +22787,14 @@ declare const sdk: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 }[] | undefined;
                 minioArr?: {
                     [x: string]: unknown;
                     id: number;
                 }[] | undefined;
-                enableDataAnalysis?: boolean | undefined;
-                dataAnalysisName?: string | undefined;
                 parent?: number | undefined;
                 unitPavenType?: "percent" | undefined;
-                verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 width?: never | undefined;
                 height?: never | undefined;
                 parentDynamicPanelId?: number[] | undefined;
@@ -24163,22 +23686,14 @@ declare const sdk: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;
@@ -24961,12 +24476,8 @@ declare const sdk: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -25332,22 +24843,14 @@ declare const sdk: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 }[] | undefined;
                 minioArr?: {
                     [x: string]: unknown;
                     id: number;
                 }[] | undefined;
-                enableDataAnalysis?: boolean | undefined;
-                dataAnalysisName?: string | undefined;
                 parent?: number | undefined;
                 unitPavenType?: "percent" | undefined;
-                verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 width?: never | undefined;
                 height?: never | undefined;
                 parentDynamicPanelId?: number[] | undefined;
@@ -26861,22 +26364,14 @@ declare const screenwright: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         }[] | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -27659,12 +27154,8 @@ declare const screenwright: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             parent?: number | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                             width?: never | undefined;
                             height?: never | undefined;
                             parentDynamicPanelId?: number[] | undefined;
@@ -28030,22 +27521,14 @@ declare const screenwright: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;
@@ -28937,22 +28420,14 @@ declare const screenwright: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         }[] | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -29735,12 +29210,8 @@ declare const screenwright: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             parent?: number | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                             width?: never | undefined;
                             height?: never | undefined;
                             parentDynamicPanelId?: number[] | undefined;
@@ -30106,22 +29577,14 @@ declare const screenwright: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;

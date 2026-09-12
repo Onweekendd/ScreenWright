@@ -63,10 +63,6 @@
     "lodash-es": "4.17.21"
   },
   "peerDependencies": {
-    "@photo-sphere-viewer/autorotate-plugin": "^5.13.4",
-    "@photo-sphere-viewer/core": "^5.13.4",
-    "@photo-sphere-viewer/gallery-plugin": "^5.13.4",
-    "@photo-sphere-viewer/markers-plugin": "^5.13.4",
     "axios": "1.4.0",
     "echarts": "^5.6.0",
     "echarts-gl": "^2.0.9",
@@ -86,10 +82,6 @@
   "devDependencies": {
     "axios": "1.4.0",
     "@element-plus/icons-vue": "^2.1.0",
-    "@photo-sphere-viewer/autorotate-plugin": "^5.13.4",
-    "@photo-sphere-viewer/core": "^5.13.4",
-    "@photo-sphere-viewer/gallery-plugin": "^5.13.4",
-    "@photo-sphere-viewer/markers-plugin": "^5.13.4",
     "@screenwright/eslint-config": "workspace:*",
     "@tinymce/tinymce-vue": "^6.1.0",
     "@screenwright/ui": "workspace:*",

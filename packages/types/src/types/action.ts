@@ -347,19 +347,9 @@ export enum ActionTypeEnum {
   toNextStatus = "toNextStatus",
 
   /**
-   * @description 译文转换
-   */
-
-  convertTranslation = "convertTranslation",
-
-  /**
    * 切换蓝图
    * */
   SwitchBlueprintTab = "switchBlueprintTab",
-  /**
-   * 旋转组件-点击触发
-   * */
-  ClickRotateComponent = "ClickRotateComponent",
   /**
    * 同步视频进度
    * */
@@ -586,24 +576,13 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
   [ActionTypeEnum.VoiceControlStart]: [interactiveEnum.FtVoiceControl],
   [ActionTypeEnum.VoiceControlStop]: [interactiveEnum.FtVoiceControl],
   [ActionTypeEnum.JumpPage]: [ExhibitEnum.PdfjsViewer],
-  [ActionTypeEnum.prevPage]: [
-    ExhibitEnum.PdfjsViewer,
-    ExhibitEnum.FtSlidecardV1,
-    ExhibitEnum.FtTurnPage,
-    MediaEnum.CtVideoPanel
-  ],
-  [ActionTypeEnum.nextPage]: [
-    ExhibitEnum.PdfjsViewer,
-    ExhibitEnum.FtSlidecardV1,
-    ExhibitEnum.FtTurnPage,
-    MediaEnum.CtVideoPanel
-  ],
+  [ActionTypeEnum.prevPage]: [ExhibitEnum.PdfjsViewer, MediaEnum.CtVideoPanel],
+  [ActionTypeEnum.nextPage]: [ExhibitEnum.PdfjsViewer, MediaEnum.CtVideoPanel],
   [ActionTypeEnum.OnExport]: [ExhibitEnum.FtSignaturePad],
   [ActionTypeEnum.OnClear]: [ExhibitEnum.FtSignaturePad],
   [ActionTypeEnum.OnRedo]: [ExhibitEnum.FtSignaturePad],
   [ActionTypeEnum.OnUndo]: [ExhibitEnum.FtSignaturePad],
   [ActionTypeEnum.Signature]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.convertTranslation]: [ExhibitEnum.FtTranslation],
   [ActionTypeEnum.OnTranslateImage]: [],
 
   [ActionTypeEnum.TurnOnPatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
@@ -613,7 +592,6 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
   [ActionTypeEnum.StartScroll]: [PanelEnum.dynamicPanel],
   [ActionTypeEnum.toPrevStatus]: [PanelEnum.dynamicPanel],
   [ActionTypeEnum.toNextStatus]: [PanelEnum.dynamicPanel],
-  [ActionTypeEnum.ClickRotateComponent]: [ExhibitEnum.FtRotate]
 };
 
 export const ActionList: { label: string; value: ActionTypeEnum }[] = [
@@ -681,9 +659,6 @@ export const ActionList: { label: string; value: ActionTypeEnum }[] = [
   { label: "内容滚动开始", value: ActionTypeEnum.StartScroll },
   { label: "上一个状态", value: ActionTypeEnum.toPrevStatus },
   { label: "下一个状态", value: ActionTypeEnum.toNextStatus },
-  { label: "译文转换", value: ActionTypeEnum.convertTranslation },
-  // 旋转组件-点击触发
-  { label: "点击触发", value: ActionTypeEnum.ClickRotateComponent },
   { label: "同步视频进度", value: ActionTypeEnum.SwitchVideoProgress }
 ];
 

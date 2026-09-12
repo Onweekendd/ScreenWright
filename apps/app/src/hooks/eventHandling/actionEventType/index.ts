@@ -14,7 +14,6 @@ import type { extendsEnumType } from "@/views/build/components/buildRender/core/
 import type { sceneEnumType } from "@/views/build/components/buildRender/core/SceneComponent/type";
 import type { PanelType } from "@/views/build/components/buildRender/core/SystemComponent/type";
 import type { ThirdPartEnumType } from "@/views/build/components/buildRender/core/ThirdParty/type";
-import type { LayerInfo, SceneObjectExplosion } from "@/views/build/components/buildRender/type";
 
 /**
  * 组件属性映射事件
@@ -39,53 +38,6 @@ interface DynamicPanelEvents {
      * 设置巡检方法
      */
     setupPatrolAction: (type: "turnOnPatrol" | "pausePatrol" | "restartPatrol" | "pauseScroll" | "startScroll") => void;
-  };
-}
-
-interface ThreeSceneEvents {
-  [key: `${sceneEnumType.ThreeScene}-${number}`]: {
-    /**
-     * 场景面板切换场景状态方法
-     */
-    updateSceneStatusIndex: (index: number) => void;
-    updateSceneObjectVisible: (index: string | string[], visible: boolean) => void;
-    updateSceneChildComponentVisible: (index: any[], visible: boolean) => void;
-    setMapBoxBom: (element: HTMLElement, index: string, boxOffsetX: number, boxOffsetY: number) => void;
-    handleSceneFunction: (func: string) => void;
-    setAnimationPlay: (animation: string) => void;
-    setAnimationPause: (animation: string) => void;
-    setStateAnimationPlay: (animation: string, state: number) => void;
-    handleSceneObjectExplosion: (sceneObjectExplosion: SceneObjectExplosion) => void;
-  };
-}
-interface IndustrySceneEvents {
-  [key: `${sceneEnumType.IndustryScene}-${number}`]: {
-    /**
-     * 场景面板切换场景状态方法
-     */
-    updateSceneStatusIndex: (index: number) => void;
-    updateSceneObjectVisible: (index: string | string[], visible: boolean) => void;
-    updateSceneChildComponentVisible: (index: any[], visible: boolean) => void;
-    setMapBoxBom: (element: HTMLElement, index: string, boxOffsetX: number, boxOffsetY: number) => void;
-    handleSceneFunction: (func: string) => void;
-    setAnimationPlay: (animation: string) => void;
-    setAnimationPause: (animation: string) => void;
-    setStateAnimationPlay: (animation: string, state: number) => void;
-    switchSceneLevel: (sceneLevelId: number) => void;
-  };
-}
-
-interface CitySceneEvents {
-  [key: `${sceneEnumType.Maptalks}-${number}`]: {
-    /**
-     * 场景面板切换场景状态方法
-     */
-    updateSceneStatusIndex: (index: number) => void;
-    updateSceneObjectVisible: (index: string | string[], visible: boolean) => void;
-    /** 切换城市模板视角（0-based） */
-    switchSceneRoamIndex: (index: number) => void;
-    handleSceneFunction: (func: string) => void;
-    updateFocusBIMLayer: (layerInfo: LayerInfo) => void;
   };
 }
 
@@ -128,15 +80,6 @@ interface RollSubtabsEvents {
 
 interface FtMutualEvents {
   [key: `${interactiveEnum.FtMutual}-${string}`]: {
-    /**
-     * @description 点击事件
-     */
-    handleClick: (info: any) => void;
-  };
-}
-
-interface FtIntegrationMutualEvents {
-  [key: `${interactiveEnum.FtIntegrationMutual}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -308,27 +251,6 @@ interface CustomTableListEvents {
      * @description 点击事件
      */
     handleClick: (info: any) => void;
-  };
-}
-
-interface FtSlidecardV1Events {
-  [key: `${ExhibitEnumType.FtSlidecardV1}-${string}`]: {
-    /**
-     * @description 点击事件
-     */
-    handleClick: (info: any) => void;
-    handlePrevClick: () => void;
-    handleNextClick: () => void;
-  };
-}
-
-interface FtTurnPageEvents {
-  [key: `${ExhibitEnumType.FtTurnPage}-${string}`]: {
-    /**
-     * @description 点击事件
-     */
-    handlePrevClick: () => void;
-    handleNextClick: () => void;
   };
 }
 
@@ -651,30 +573,11 @@ interface videoProgressEvents {
   };
 }
 
-// interface FtTranslationEvent {
-//   // 译文转换
-//   [key: `${ExhibitEnumType.FtTranslation}-${number}`]: {
-//     convertTranslation: (key: string) => void;
-//   };
-// }
-
-interface FtRotateEvent {
-  // 旋转组件
-  [key: `${ExhibitEnumType.FtRotate}-${number}`]: {
-    // 旋转组件-点击触发
-    handleClick: () => void;
-  };
-}
-
 export type TotalPanelEventMap = DynamicPanelEvents &
-  ThreeSceneEvents &
-  IndustrySceneEvents &
-  CitySceneEvents &
   SubtabsEvents &
   MultiSubtabsEvents &
   RollSubtabsEvents &
   FtMutualEvents &
-  FtIntegrationMutualEvents &
   FtLegendEvents &
   FtSearchEvents &
   FtCustomSelectEvents &
@@ -693,7 +596,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   FtScrollEvents &
   FtSwiperCardEvents &
   CustomTableListEvents &
-  FtSlidecardV1Events &
   EchartcommonMapEvents &
   EchartGlMapEvents &
   ftParticlesEvents &
@@ -721,21 +623,15 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   ftVuePartEvents &
   FtSimpleBarrageEvents &
   PageReloadEvents &
-  // FtTranslationEvent &
   FtUnrealEngineEvents &
-  FtRotateEvent &
   videoProgressEvents;
 
 export type toAddEvent =
   | DynamicPanelEvents
-  | ThreeSceneEvents
-  | IndustrySceneEvents
-  | CitySceneEvents
   | SubtabsEvents
   | MultiSubtabsEvents
   | RollSubtabsEvents
   | FtMutualEvents
-  | FtIntegrationMutualEvents
   | FtLegendEvents
   | FtSearchEvents
   | FtCustomSelectEvents
@@ -754,7 +650,6 @@ export type toAddEvent =
   | FtScrollEvents
   | FtSwiperCardEvents
   | CustomTableListEvents
-  | FtSlidecardV1Events
   | EchartcommonMapEvents
   | EchartGlMapEvents
   | ftParticlesEvents
@@ -786,8 +681,5 @@ export type toAddEvent =
   | scrollPickerEvents
   | ImagesList3dEvents
   | FtSignaturePad
-  | FtTurnPageEvents
-  // | FtTranslationEvent
   | FtUnrealEngineEvents
-  | FtRotateEvent
   | videoProgressEvents;

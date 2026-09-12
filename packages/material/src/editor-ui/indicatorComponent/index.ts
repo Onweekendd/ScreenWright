@@ -5,7 +5,6 @@ import { IndicatorEnum } from "@screenwright/types";
 import echartringGlobal from "./indicatorGlobal/echartringGlobal.vue";
 import ftdynamicratioGlobal from "./indicatorGlobal/ftdynamicratioGlobal.vue";
 import ftFlopPerformanceGlobal from "./indicatorGlobal/ftFlopPerformanceGlobal.vue";
-import ftPeriodictableGlobal from "./indicatorGlobal/ftPeriodictableGlobal.vue";
 import iconRatioGlobal from "./indicatorGlobal/iconRatioGlobal.vue";
 import rankProgressGlobal from "./indicatorGlobal/rank-progressGlobal.vue";
 import rasterProgressBarGlobal from "./indicatorGlobal/rasterProgressBarGlobal.vue";
@@ -42,7 +41,6 @@ export type ConfigTab = {
 };
 
 export const IndicatorConfigComponent: Record<IndicatorEnum, ConfigTab[]> = {
-  [IndicatorEnum.FtPeriodictable]: [{ label: "全局", value: optionType.global, component: ftPeriodictableGlobal }],
   [IndicatorEnum.EchartRing]: [{ label: "全局", value: optionType.global, component: echartringGlobal }],
   [IndicatorEnum.RasterProgressBar]: [
     { label: "全局", value: optionType.global, component: rasterProgressBarGlobal },

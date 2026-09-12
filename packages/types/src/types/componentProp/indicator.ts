@@ -8,8 +8,6 @@
  * @description 各种指标组件的类型标识
  */
 export enum IndicatorEnum {
-  /** 周期表 */
-  FtPeriodictable = "swPeriodictable",
   /** 光栅进度条 */
   RasterProgressBar = "rasterProgressBar",
   /** 图标占比 */

@@ -162,44 +162,6 @@ export enum EventTypeEnum {
    * @description 滚动结束
    */
   ScrollEnd = "scrollEnd",
-  /**
-   * @description 卡片开始翻转
-   */
-  startRotate = "startRotate",
-  /**
-   * @description 卡片开始翻转结束
-   */
-  endRotate = "endRotate",
-
-  /**
-   * @description 卡片开始放大
-   */
-  startScaleRotate = "startScaleRotate",
-  /**
-   * @description 卡片开始放大结束
-   */
-  endScaleRotate = "endScaleRotate",
-
-  /**
-   * @description 卡片开始缩小
-   */
-  startSmallRotate = "startSmallRotate",
-  /**
-   * @description 卡片开始放大结束
-   */
-  endSmallRotate = "endSmallRotate",
-  /**
-   * @description 反向开始翻转
-   */
-  reversalStartRotate = "reversalStartRotate",
-  /**
-   * @description 反向翻转结束
-   */
-  reversalEndRotate = "reversalEndRotate",
-  /**
-   * @description 当翻到最后一页时
-   */
-  flipTheBookFinalPage = "flipTheBookFinalPage"
 }
 
 export enum EncodeEventTypeEnum {
@@ -291,7 +253,6 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     textEnum.FtScroll,
     mediaEnum.FtSwiperCard,
     textEnum.CustomTableList,
-    ExhibitEnum.FtSlidecardV1,
     ExhibitEnum.ImagesList3d,
     sceneEnum.EchartcommonMap,
     sceneEnum.EchartGlmap,
@@ -299,8 +260,6 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     ThirdPartEnum.VuePart,
     ExhibitEnum.RingIndicator3d,
     ExhibitEnum.ringIndicator3dNew,
-    ExhibitEnum.CurvedTrackList,
-    ExhibitEnum.FtTurnPage,
     interactiveEnum.videoProgress
   ],
   [EventTypeEnum.ContextmenuClick]: [interactiveEnum.FtMutual],
@@ -384,16 +343,7 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
   [EventTypeEnum.CardEndExpand]: [ExhibitEnum.verticalCard],
   [EventTypeEnum.CardStartCollapse]: [ExhibitEnum.verticalCard],
   [EventTypeEnum.CardEndCollapse]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.ScrollEnd]: [PanelEnum.dynamicPanel],
-  [EventTypeEnum.startRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.endRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.startScaleRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.endScaleRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.startSmallRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.endSmallRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.reversalStartRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.reversalEndRotate]: [ExhibitEnum.FtRotate],
-  [EventTypeEnum.flipTheBookFinalPage]: [ExhibitEnum.FtTurnPage]
+  [EventTypeEnum.ScrollEnd]: [PanelEnum.dynamicPanel]
 };
 
 /**
@@ -435,15 +385,6 @@ export const EventList: { label: string; value: EventTypeEnum }[] = [
   { label: "卡片展开结束", value: EventTypeEnum.CardEndExpand },
   { label: "卡片开始收缩", value: EventTypeEnum.CardStartCollapse },
   { label: "卡片收缩结束", value: EventTypeEnum.CardEndCollapse },
-  { label: "卡片开始翻转", value: EventTypeEnum.startRotate },
-  { label: "卡片开始翻转结束", value: EventTypeEnum.endRotate },
-  { label: "卡片开始放大", value: EventTypeEnum.startScaleRotate },
-  { label: "卡片开始放大结束", value: EventTypeEnum.endScaleRotate },
-  { label: "卡片开始缩小", value: EventTypeEnum.startSmallRotate },
-  { label: "卡片结束放大结束", value: EventTypeEnum.endSmallRotate },
-  { label: "反向开始翻转", value: EventTypeEnum.reversalStartRotate },
-  { label: "反向翻转结束", value: EventTypeEnum.reversalEndRotate },
-  { label: "当翻到最后一页时", value: EventTypeEnum.flipTheBookFinalPage },
   { label: "滚动结束", value: EventTypeEnum.ScrollEnd }
 ];
 
@@ -504,14 +445,11 @@ export const EncodeEvent2ComponentType: Record<EncodeEventTypeEnum, AllComponent
     textEnum.FtScroll,
     mediaEnum.FtSwiperCard,
     textEnum.CustomTableList,
-    ExhibitEnum.FtSlidecardV1,
     ExhibitEnum.ImagesList3d,
     sceneEnum.EchartcommonMap,
     sceneEnum.EchartGlmap,
     interactiveEnum.FormSwitch,
-    ThirdPartEnum.VuePart,
-    interactiveEnum.FtIntegrationMutual,
-    ExhibitEnum.FtTurnPage
+    ThirdPartEnum.VuePart
   ],
   [EncodeEventTypeEnum.VideoControls]: [mediaEnum.FtVideo, interactiveEnum.videoProgress],
   [EncodeEventTypeEnum.SignatureSubmit]: [ExhibitEnum.FtSignaturePad]
@@ -574,7 +512,6 @@ export const allowEventComponentList = [
   "imagesList3d",
   "ringIndicator3d",
   "ringIndicator3dNew",
-  ExhibitEnum.CurvedTrackList,
   "threeSceneIconList",
   "threeSceneTwinIconList",
   "threeSceneTwinPanelIconList",
@@ -591,18 +528,13 @@ export const allowEventComponentList = [
   "map-project",
   mediaEnum.FtSwiperCard,
   interactiveEnum.FtVoiceControl,
-  "sw-slidecard-v1",
   textEnum.FtCollection,
-  "sw-swiperCard-v2",
-  "sw-topo-container",
   ExhibitEnum.FtSignaturePad,
   extendsEnum.UePeerStreaming,
   extendsEnum.UePixelStreaming,
   extendsEnum.UeVessel,
-  ExhibitEnum.FtTurnPage,
   ExhibitEnum.verticalCard,
   PanelEnum.dynamicPanel,
-  ExhibitEnum.FtRotate,
   interactiveEnum.videoProgress
 ];
 

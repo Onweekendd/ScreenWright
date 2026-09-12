@@ -90,12 +90,6 @@
             </el-form-item>
           </template>
 
-          <template v-if="componentProp === 'sw-topo-container'">
-            <el-form-item label="选择对象" :label-width="85">
-              <configSelect :option="selectNodesOptions" v-model="currentEvent.nodesId" @change="update" />
-            </el-form-item>
-          </template>
-
           <el-form-item label="条件" :label-width="85" v-if="unConditionalJudgment">
             <conditionView
               :conditions="currentEvent.conditions"
@@ -356,14 +350,6 @@ const drawerVisible = () => {
   conditionConfigRef.value.visible = true;
   console.log("drawerVisible");
 };
-
-const selectNodesOptions = computed(() => {
-  return (
-    selectTargetData.value[0].option?.topoData?.nodes?.map((item: any, index: any) => {
-      return { label: item.text?.value || `节点${index + 1}`, value: item.id };
-    }) || []
-  );
-});
 
 // 在Vue组件中初始化
 onMounted(() => {

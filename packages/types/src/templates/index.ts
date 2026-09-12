@@ -319,10 +319,6 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
     case ActionTypeEnum.JumpPage:
       return { ...base, animation: defaultAnimation(), currentpage: 1 };
 
-    // 译文
-    case ActionTypeEnum.convertTranslation:
-      return { ...base, translation: "zh" };
-
     // TCP/UDP (SwitchTCState)
     case ActionTypeEnum.SwitchTCState:
       return {

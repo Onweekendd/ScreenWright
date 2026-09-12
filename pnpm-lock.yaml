@@ -134,21 +134,6 @@ importers:
       '@mastra/client-js':
         specifier: 1.40.0
         version: 1.40.0(ai@6.0.111(zod@4.4.3))(express@5.2.1)(rxjs@7.8.2)(zod@4.4.3)
-      '@photo-sphere-viewer/autorotate-plugin':
-        specifier: ^5.13.4
-        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
-      '@photo-sphere-viewer/core':
-        specifier: ^5.13.4
-        version: 5.14.0
-      '@photo-sphere-viewer/gallery-plugin':
-        specifier: ^5.13.4
-        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
-      '@photo-sphere-viewer/markers-plugin':
-        specifier: ^5.13.4
-        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
-      '@photo-sphere-viewer/virtual-tour-plugin':
-        specifier: ^5.13.4
-        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
       '@screenwright/alignment-wasm':
         specifier: workspace:*
         version: link:../../packages/alignment-wasm
@@ -738,18 +723,6 @@ importers:
       '@element-plus/icons-vue':
         specifier: ^2.1.0
         version: 2.3.2(vue@3.5.21(typescript@5.9.2))
-      '@photo-sphere-viewer/autorotate-plugin':
-        specifier: ^5.13.4
-        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
-      '@photo-sphere-viewer/core':
-        specifier: ^5.13.4
-        version: 5.14.0
-      '@photo-sphere-viewer/gallery-plugin':
-        specifier: ^5.13.4
-        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
-      '@photo-sphere-viewer/markers-plugin':
-        specifier: ^5.13.4
-        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
       '@screenwright/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -4010,29 +3983,6 @@ packages:
   '@parcel/watcher@2.5.1':
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
-
-  '@photo-sphere-viewer/autorotate-plugin@5.14.0':
-    resolution: {integrity: sha512-8y+guV3/hN9GJ1eTRoRIk/phtEO5JFLzjTrB5dH+b3frr1J+7oxujE3d2dLDFPeJAcTqhlo0eojaQviOEPUdkQ==}
-    peerDependencies:
-      '@photo-sphere-viewer/core': 5.14.0
-
-  '@photo-sphere-viewer/core@5.14.0':
-    resolution: {integrity: sha512-V0JeDSB1D2Q60Zqn7+0FPjq8gqbKEwuxMzNdTLydefkQugVztLvdZykO+4k5XTpweZ2QAWPH/QOI1xZbsdvR9A==}
-
-  '@photo-sphere-viewer/gallery-plugin@5.14.0':
-    resolution: {integrity: sha512-fmRJkxuWo0IjX7JcEMut6iLtEDhCs19AnhKGrs+7KGeBR8/j1MXDbFUC6fb/su8RLxNmBJ8ztkKluXYXXmXtSg==}
-    peerDependencies:
-      '@photo-sphere-viewer/core': 5.14.0
-
-  '@photo-sphere-viewer/markers-plugin@5.14.0':
-    resolution: {integrity: sha512-w7txVHtLxXMS61m0EbNjgvdNXQYRh6Aa0oatft5oruKgoXLg/UlCu1mG6Btg+zrNsG05W2zl4gRM3fcWoVdneA==}
-    peerDependencies:
-      '@photo-sphere-viewer/core': 5.14.0
-
-  '@photo-sphere-viewer/virtual-tour-plugin@5.14.0':
-    resolution: {integrity: sha512-jpaAYaF3p2m/UeDLlZPOWnKspcl2FoEXlTKwDnfSIXr+jxU4hoWFeHUH7Y2htvGCxqPh2gNY1DSLsczK4Qf6Vg==}
-    peerDependencies:
-      '@photo-sphere-viewer/core': 5.14.0
 
   '@pinojs/redact@0.4.0':
     resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
@@ -15257,26 +15207,6 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.5.1
       '@parcel/watcher-win32-x64': 2.5.1
     optional: true
-
-  '@photo-sphere-viewer/autorotate-plugin@5.14.0(@photo-sphere-viewer/core@5.14.0)':
-    dependencies:
-      '@photo-sphere-viewer/core': 5.14.0
-
-  '@photo-sphere-viewer/core@5.14.0':
-    dependencies:
-      three: 0.179.1
-
-  '@photo-sphere-viewer/gallery-plugin@5.14.0(@photo-sphere-viewer/core@5.14.0)':
-    dependencies:
-      '@photo-sphere-viewer/core': 5.14.0
-
-  '@photo-sphere-viewer/markers-plugin@5.14.0(@photo-sphere-viewer/core@5.14.0)':
-    dependencies:
-      '@photo-sphere-viewer/core': 5.14.0
-
-  '@photo-sphere-viewer/virtual-tour-plugin@5.14.0(@photo-sphere-viewer/core@5.14.0)':
-    dependencies:
-      '@photo-sphere-viewer/core': 5.14.0
 
   '@pinojs/redact@0.4.0': {}
 

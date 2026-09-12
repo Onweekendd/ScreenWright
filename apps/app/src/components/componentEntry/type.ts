@@ -19,7 +19,6 @@ export const renderTextComponentType: TextEnum[] = [
 // 指标组件
 export { IndicatorEnum as indicatorEnum };
 export const renderIndicatorComponentType: IndicatorEnum[] = [
-  IndicatorEnum.FtPeriodictable,
   IndicatorEnum.RasterProgressBar,
   IndicatorEnum.IconRatio,
   IndicatorEnum.SortRatioBar,

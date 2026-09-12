@@ -1,4 +1,4 @@
-import { ExhibitEnum, InteractiveEnum } from "@screenwright/types";
+import { InteractiveEnum } from "@screenwright/types";
 
 import { interactiveEnum, mediaEnum, textEnum } from "@/components/componentEntry/type";
 import { extendsEnumType } from "@/views/build/components/buildRender/core/ExtendsComponents/type";
@@ -708,15 +708,9 @@ export const excludeDataConfig = [
   extendsEnumType.FullScreenSwitch,
   mediaEnum.FtImgBorder,
   // ExhibitEnumType.PdfjsViewer,
-  ExhibitEnumType.FtCarouselImageV2,
-  extendsEnumType.PhotoSphereViewer,
   PanelType.quotePanel,
   ExhibitEnumType.FtFilter,
-  ExhibitEnumType.FtTurnPage,
-  ExhibitEnumType.FtNinePatch,
   ExhibitEnumType.verticalCard,
   mediaEnum.FtSwiperCard,
-  ExhibitEnumType.CurvedTrackList,
-  ExhibitEnum.FtRotate,
   InteractiveEnum.videoProgress
 ];

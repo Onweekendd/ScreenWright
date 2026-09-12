@@ -8,7 +8,6 @@ import formSlider from "./components/formSlider/index.vue";
 import formSwitch from "./components/formSwitch/index.vue";
 import ftCascader from "./components/ftCascader/index.vue";
 import ftDateTimePicker from "./components/ftDateTimePicker/index.vue";
-import ftIntegrationMutual from "./components/ftIntegrationMutual/index.vue";
 import ftLegend from "./components/ftLegend/index.vue";
 import ftMutual from "./components/ftmutual/index.vue";
 import ftPageQuery from "./components/ftPageQuery/index.vue";
@@ -43,7 +42,6 @@ export const ScreenwrightInteractiveMap: Record<InteractiveEnum, Component> = {
   [InteractiveEnum.FtPageTurning]: ftPageTurning,
   [InteractiveEnum.Subtabs]: subtabs,
   [InteractiveEnum.FtMutual]: ftMutual,
-  [InteractiveEnum.FtIntegrationMutual]: ftIntegrationMutual,
   [InteractiveEnum.FtSearch]: ftSearch,
   [InteractiveEnum.FtTimerShaft]: ftTimerShaft,
   [InteractiveEnum.videoProgress]: videoProgress,

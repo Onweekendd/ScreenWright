@@ -1,4 +1,4 @@
-# ftSwiperCard (轮播卡片) 配置说明
+# swSwiperCard (轮播卡片) 配置说明
 
 ## dataChart 数据格式
 

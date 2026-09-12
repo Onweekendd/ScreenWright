@@ -1,19 +1,20 @@
-# 图片 (ftimg) 配置说明
+# 视频 (swvideo) 配置说明
 
 ## dataChart 数据格式
 
 ```typescript
-interface FtimgDataItem {
-  value: string;  // 图片地址
+interface FtvideoDataItem {
+  cover: string;  // 视频封面
+  value: string;  // 视频地址
 }
 
-type dataChart = FtimgDataItem[];
+type dataChart = FtvideoDataItem[];
 ```
 
 **示例**：
 ```json
 [
-  { "value": "version-test/assets/defaultImg/default.png" }
+  { "cover": "", "value": "version-test/assets/defaultImg/video.mp4" }
 ]
 ```
 
@@ -21,18 +22,30 @@ type dataChart = FtimgDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：ftimgGlobal.vue
+基于配置文件：swvideoGlobal.vue
 
 ### 基础配置
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `cover` | string | "" | 图片封面地址 |
-| `url` | string | "version-test/assets/defaultImg/default.png" | 图片地址 |
-| `duration` | string | "1000" | 过渡动画时长(毫秒) |
+| `cover` | string | "" | 视频封面地址 |
+| `url` | string | "version-test/assets/defaultImg/video.mp4" | 视频地址 |
+| `delayPlayTime` | number | 0 | 延迟播放时间(毫秒) |
 | `pointerEvents` | boolean | false | 是否响应鼠标事件 |
-| `opacity` | number | 1 | 透明度(0-1) |
 | `mixBlendMode` | string | "normal" | 混合模式(normal/multiply/screen等) |
+| `isBuildPlay` | boolean | true | 是否构建后播放 |
+| `opacity` | number | 1 | 透明度(0-1) |
+
+### 播放控制
+
+| 字段 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `controler` | boolean | false | 是否显示播放控件 |
+| `autoPlay` | boolean | true | 是否自动播放 |
+| `loopPlay` | boolean | true | 是否循环播放 |
+| `muted` | boolean | true | 是否静音 |
+| `autoHiden` | boolean | false | 是否自动隐藏控件 |
+| `playbackRate` | number | 1 | 播放速率 |
 
 ### 旋转配置
 
@@ -42,19 +55,6 @@ type dataChart = FtimgDataItem[];
 | `rotateX` | number | 0 | X轴旋转角度 |
 | `rotateY` | number | 0 | Y轴旋转角度 |
 | `rotateZ` | number | 0 | Z轴旋转角度 |
-
-### 动画配置
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `animationShow` | boolean | false | 动画开关 |
-| `animationLoop` | boolean | true | 是否循环动画 |
-| `animationSpeed` | `"constant" \| "slow-fast-slow" \| "start-slow" \| "end-slow"` | "constant" | 动画速度模式（匀速/慢快慢/低速开始/低速结束） |
-| `animationSpeedNum` | number | 1 | 动画速度数值 |
-| `animationTime` | number | 3 | 动画时长(秒) |
-| `animationDelayed` | number | 0 | 动画延迟(秒) |
-| `animationInterval` | number | 0 | 动画间隔(秒) |
-| `animationType` | `"default" \| "opacity" \| "zoom" \| "clockwise" \| "counterclockwise" \| "backAndForth" \| "upOrDown" \| "customize"` | "opacity" | 动画类型（默认/透明度/缩放/顺时针旋转/逆时针旋转/回旋转/上下平移/自定义） |
 
 ### 滤镜效果
 
@@ -88,13 +88,6 @@ type dataChart = FtimgDataItem[];
 | `shadowFuzzy` | number | 8 | 阴影模糊度 |
 | `shadowExtension` | number | 0 | 阴影扩展 |
 
-### 图片预览
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `openReview` | boolean | false | 是否开启图片预览 |
-| `reviewImageWidth` | number | 50 | 预览图片宽度 |
-
 ### 背景滤镜
 
 | 字段 | 类型 | 默认值 | 说明 |
@@ -107,42 +100,27 @@ type dataChart = FtimgDataItem[];
 
 ## 常用配置示例
 
-### 基础图片展示
+### 自动播放循环视频
 ```json
 {
-  "url": "image.png",
-  "opacity": 1,
-  "pointerEvents": false,
-  "mixBlendMode": "normal"
+  "url": "video.mp4",
+  "autoPlay": true,
+  "loopPlay": true,
+  "muted": true,
+  "controler": false,
+  "opacity": 1
 }
 ```
 
-### 带入场动画的图片
+### 带滤镜效果的视频
 ```json
 {
-  "url": "logo.png",
-  "animationShow": true,
-  "animationLoop": true,
-  "animationType": "opacity",
-  "animationTime": 3,
-  "animationDelayed": 0,
-  "animationSpeed": "constant",
-  "animationSpeedNum": 1
-}
-```
-
-### 带滤镜效果的图片
-```json
-{
-  "url": "photo.png",
+  "url": "video.mp4",
   "brightnessShow": true,
   "brightness": 120,
   "contrastShow": true,
   "contrast": 110,
-  "shadowShow": true,
-  "shadowColor": "rgba(0,0,0,0.5)",
-  "shadowX": 2,
-  "shadowY": 2,
-  "shadowFuzzy": 10
+  "gaussianBlurShow": true,
+  "gaussianBlur": 3
 }
 ```

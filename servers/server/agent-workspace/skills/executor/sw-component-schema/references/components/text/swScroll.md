@@ -1,4 +1,4 @@
-# ftScroll (轮播表格) 配置说明
+# swScroll (轮播表格) 配置说明
 
 ## dataChart 数据格式
 
@@ -11,13 +11,24 @@ interface ScrollDataItem {
 type dataChart = ScrollDataItem[];
 ```
 
-**示例**：
+**示例**（字段名只是示意，实际生成时要换成业务真实字段名，见下方警告）：
 ```json
 [
   { "accidentType": "car", "status": "已解决", "time": "07:33:40", "content": "左侧OBU无响应" },
   { "accidentType": "config", "status": "处理中", "time": "07:31:22", "content": "金链路5G基站信号丢失" }
 ]
 ```
+
+---
+
+## ⚠️ 列相关字段必须严格对齐（最常踩的坑，会导致漏列/显示不全）
+
+这个组件几乎所有配置都是"按列分组的数组"，下标 i 对应第 i 列。生成时必须保证：
+
+1. **`column` 的每一项 `alias` 必须等于 `data` 里真实存在的字段名**——不要照抄上面示例里的 `accidentType`/`status`/`time`/`content`，那只是占位符。`dataRemark` 的 `key` 也必须是 `data` 的真实字段名（不是自造的语义名）。
+2. **`column.length` 必须等于 `header.length`、`columnWidth.length`、`align.length`**，以及本文档"列样式/Y轴""后缀配置""状态图标配置""样式指定配置"里列出的所有 `seriesY*`/`suffix*`/`statusConfig*`/`styleAssign*` 数组的长度——只要有一个数组比其余的短，对应下标缺失的那一列就会不显示或渲染异常（即"表格显示不全"）。
+3. 有多少个业务字段要展示，就建多少列；`data` 里出现的字段而 `column` 没覆盖到的，不会显示在表格里。
+4. 二维数组（`statusConfigValue`/`statusConfigImg`/`styleAssign*` 等）也要按列数配齐外层长度，某一列不需要特殊配置时用空数组 `[]` 占位，不能整体少一项导致后面的列错位。
 
 ---
 

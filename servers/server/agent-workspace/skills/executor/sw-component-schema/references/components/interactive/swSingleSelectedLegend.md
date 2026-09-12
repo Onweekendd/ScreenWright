@@ -1,4 +1,4 @@
-# 图例 (ftLegend)
+# 单选框 (swSingleSelectedLegend)
 
 ## dataChart 数据格式
 
@@ -7,10 +7,6 @@
 | label | string | 选项名称 |
 | value | string \| number | 选项值 |
 | isChecked | boolean | 是否选中（可选） |
-| children | array | 子类列表（可选） |
-| children[].label | string | 子类名称 |
-| children[].value | string \| number | 子类值 |
-| children[].isChecked | boolean | 子类是否选中（可选） |
 
 ## option 字段说明
 

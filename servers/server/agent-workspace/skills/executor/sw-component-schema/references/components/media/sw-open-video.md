@@ -1,4 +1,4 @@
-# ft-open-video (开场视频) 配置说明
+# sw-open-video (开场视频) 配置说明
 
 ## dataChart 数据格式
 

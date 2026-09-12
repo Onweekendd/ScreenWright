@@ -1,4 +1,4 @@
-# 翻牌器 (ftFlopPerformance) 配置说明
+# 翻牌器 (swFlopPerformance) 配置说明
 
 ## dataChart 数据格式
 

@@ -319,6 +319,55 @@ export const checkOptionTypes = (prop: string, option?: Record<string, unknown>)
 };
 
 /**
+ * 列宽字段名——目前只有轮播表格 / 进度条表格这两个列驱动组件是这个形状：
+ * 一个序号列宽 + 一个按列平铺的宽度数组，两者相加就是内容总宽度。
+ *
+ * 实测过一次真实案例：`seriesYWidth` 四列加起来 660px、`rowWidth` 再加 60px，
+ * 组件实际只有 432px 宽——列配置本身就比容器宽，渲染必然挤压。`checkOptionTypes` 只查
+ * 「数组 vs 标量」这一维，查不出这种"形状对、总量超"的问题，得单独补一条。
+ */
+const COLUMN_WIDTH_FIELDS: Partial<Record<ComponentProp, { row?: string; columns: string }>> = {
+  swScroll: { row: "rowWidth", columns: "seriesYWidth" },
+  swProgress: { row: "rowWidth", columns: "seriesYWidth" }
+};
+
+/**
+ * 校验列驱动组件的列宽总和是否超出组件实际宽度。
+ *
+ * 只在这批组件真的有 `row`/`columns` 两个宽度字段时才查；没有对应字段名的组件、
+ * 或者字段值形状不对（不是数组/不是数字）时一律放行，不强行断言。
+ */
+export const checkColumnWidths = (
+  prop: string,
+  option: Record<string, unknown> | undefined,
+  containerWidth: number
+): string | null => {
+  const fields = isKnownProp(prop) ? COLUMN_WIDTH_FIELDS[prop] : undefined;
+  if (!fields || !option) {
+    return null;
+  }
+
+  const columns = option[fields.columns];
+  if (!Array.isArray(columns) || columns.length === 0) {
+    return null;
+  }
+
+  const columnsTotal = columns.reduce((sum: number, w) => sum + (typeof w === "number" ? w : 0), 0);
+  const rowField = fields.row ? option[fields.row] : undefined;
+  const rowWidth = typeof rowField === "number" ? rowField : 0;
+  const total = columnsTotal + rowWidth;
+
+  if (total > containerWidth) {
+    const rowPart = fields.row ? `序号列 ${rowWidth}px + ` : "";
+    return (
+      `${fields.columns} 各列宽度加起来是 ${columnsTotal}px，${rowPart}总共 ${total}px，` +
+      `超过了这块区实际宽度 ${containerWidth}px，会挤压或溢出，请把列宽按比例调小`
+    );
+  }
+  return null;
+};
+
+/**
  * 校验生成的 data 的**键集**是否与 schema 对得上。
  *
  * 只查键不查值：值的类型交给落盘时的 `validateComponentContent` 兜（那一层本来就要跑），

@@ -1,4 +1,4 @@
-# 翻页 (ftPageTurning)
+# 翻页 (swPageTurning)
 
 ## dataChart 数据格式
 

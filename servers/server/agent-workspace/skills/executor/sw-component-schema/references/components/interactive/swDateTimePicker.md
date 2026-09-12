@@ -1,4 +1,4 @@
-# 时间范围选择器 (ftDateTimePicker)
+# 时间范围选择器 (swDateTimePicker)
 
 ## dataChart 数据格式
 

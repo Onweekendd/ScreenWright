@@ -1,4 +1,4 @@
-# 下拉框 (ftCustomSelect)
+# 下拉框 (swCustomSelect)
 
 ## dataChart 数据格式
 

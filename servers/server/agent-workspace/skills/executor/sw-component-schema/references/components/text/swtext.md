@@ -1,4 +1,4 @@
-# fttext (文本框/跑马灯/超链接) 配置说明
+# swtext (文本框/跑马灯/超链接) 配置说明
 
 ## dataChart 数据格式
 
@@ -21,7 +21,7 @@ type dataChart = FtTextDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：fttextGlobal.vue
+基于配置文件：swtextGlobal.vue
 
 本组件通过 `type` 字段区分三种模式：
 - `"text"` — 文本框（静态文本展示）

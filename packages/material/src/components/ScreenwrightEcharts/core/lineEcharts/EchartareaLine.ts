@@ -360,9 +360,7 @@ class EchartareaLine extends BaseChart {
             label: {
               show: this.validData(this.seriesLabelShow[index], false), //开启显示
               position: "top", //在上方显示,
-              formatter: this.option.xAxisLabelCustom?.[index]
-                ? this.option.xAxisLabelCustom[index]
-                : (name: any) => name.value,
+              formatter: (name: any) => name.value,
               //数值样式
               fontFamily: this.seriesLabelFontFamily[index] || "Source Han Sans CN-Normal, Source Han Sans CN",
               fontStyle: this.seriesLabelFontStyle[index] || "normal",

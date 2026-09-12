@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * 翻牌器v3 (ftFlopPerformance)
+ * 翻牌器 (ftFlopPerformance)
  * 指标
  *
  * ## 数据结构
@@ -28,7 +28,7 @@ export const swFlopPerformanceDataSchema = z.array(swFlopPerformanceDataItemSche
 export type ftFlopPerformanceData = z.infer<typeof swFlopPerformanceDataSchema>;
 
 /**
- * 翻牌器v3配置选项 Schema
+ * 翻牌器配置选项 Schema
  */
 export const swFlopPerformanceOptionSchema = z.object({
   // ============ 播放配置 ============

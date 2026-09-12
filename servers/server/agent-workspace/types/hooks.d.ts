@@ -160,12 +160,10 @@ declare const ComponentFlatSchema: z.ZodObject<{
             "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
         }>, z.ZodEnum<{
             swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
-            "sw-countup-v2": import("..").IndicatorEnum.FtCountupV2;
             rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
             iconRatio: import("..").IndicatorEnum.IconRatio;
             sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
             swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-            swflop: import("..").IndicatorEnum.FtFlop;
             swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
             echartring: import("..").IndicatorEnum.EchartRing;
             "rank-progress": import("..").IndicatorEnum.RankProgress;
@@ -5757,72 +5755,6 @@ declare const sortRatioBarOptionSchema: z.ZodObject<{
 type SortRatioBarOption = z.infer<typeof sortRatioBarOptionSchema>;
 
 import { z } from 'zod';
-declare const swCountupV2DataSchema: z.ZodArray<z.ZodObject<{
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type ftCountupV2Data = z.infer<typeof swCountupV2DataSchema>;
-/**
- * 翻牌器v2配置选项 Schema
- */
-declare const swCountupV2OptionSchema: z.ZodObject<{
-    autoplay: z.ZodBoolean;
-    intervalTime: z.ZodNumber;
-    whole: z.ZodBoolean;
-    decimals: z.ZodNumber;
-    span: z.ZodNumber;
-    splitx: z.ZodNumber;
-    splity: z.ZodNumber;
-    letterSpace: z.ZodNumber;
-    useGrouping: z.ZodBoolean;
-    makeComplete: z.ZodBoolean;
-    completeCount: z.ZodNumber;
-    type: z.ZodString;
-    pointSize: z.ZodNumber;
-    borderColor: z.ZodString;
-    borderTopWidth: z.ZodNumber;
-    borderBottomWidth: z.ZodNumber;
-    borderLeftWidth: z.ZodNumber;
-    borderRightWidth: z.ZodNumber;
-    backgroundBorder: z.ZodString;
-    backgroundColor: z.ZodString;
-    backgroundImage: z.ZodString;
-    fontFamily: z.ZodString;
-    fontSize: z.ZodNumber;
-    spanWidth: z.ZodNumber;
-    spanHeight: z.ZodNumber;
-    spanMangin: z.ZodNumber;
-    color: z.ZodString;
-    fontLinearColor: z.ZodString;
-    fontWeight: z.ZodString;
-    fontStyle: z.ZodString;
-    prefixInline: z.ZodString;
-    prefixText: z.ZodString;
-    prefixTextAlign: z.ZodString;
-    prefixSplitx: z.ZodNumber;
-    prefixSplity: z.ZodNumber;
-    prefixFontFamily: z.ZodString;
-    prefixFontSize: z.ZodNumber;
-    prefixColor: z.ZodString;
-    prefixFontWeight: z.ZodString;
-    prefixFontStyle: z.ZodString;
-    suffixInline: z.ZodString;
-    suffixText: z.ZodString;
-    suffixTextAlign: z.ZodString;
-    suffixSplitx: z.ZodNumber;
-    suffixSplity: z.ZodNumber;
-    suffixFontFamily: z.ZodString;
-    suffixFontSize: z.ZodNumber;
-    suffixColor: z.ZodString;
-    suffixFontWeight: z.ZodString;
-    suffixFontStyle: z.ZodString;
-    autoIncrement: z.ZodBoolean;
-    incrementTotal: z.ZodNumber;
-    incrementFrequency: z.ZodNumber;
-    randomRange: z.ZodNumber;
-}, z.core.$strip>;
-type ftCountupV2Option = z.infer<typeof swCountupV2OptionSchema>;
-
-import { z } from 'zod';
 declare const ftdynamicratioDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodNumber;
 }, z.core.$strip>>;
@@ -5859,67 +5791,12 @@ declare const ftdynamicratioOptionSchema: z.ZodObject<{
 type ftdynamicratioOption = z.infer<typeof ftdynamicratioOptionSchema>;
 
 import { z } from 'zod';
-declare const ftflopDataSchema: z.ZodArray<z.ZodObject<{
-    backgroundColor: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-    prefixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-    value: z.ZodCoercedString<unknown>;
-    suffixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-}, z.core.$strip>>;
-type FtflopData = z.infer<typeof ftflopDataSchema>;
-/**
- * 颜色块配置选项 Schema
- */
-declare const ftflopOptionSchema: z.ZodObject<{
-    padding: z.ZodDefault<z.ZodOptional<z.ZodCoercedNumber<unknown>>>;
-    suffixInline: z.ZodUnion<readonly [z.ZodString, z.ZodPipe<z.ZodBoolean, z.ZodTransform<"inline-block" | "block", boolean>>]>;
-    whole: z.ZodBoolean;
-    decimals: z.ZodNumber;
-    span: z.ZodNumber;
-    splitx: z.ZodNumber;
-    splity: z.ZodNumber;
-    type: z.ZodString;
-    borderColor: z.ZodString;
-    borderTopWidth: z.ZodNumber;
-    borderBottomWidth: z.ZodNumber;
-    borderLeftWidth: z.ZodNumber;
-    borderRightWidth: z.ZodNumber;
-    backgroundBorder: z.ZodString;
-    backgroundColor: z.ZodString;
-    backgroundImage: z.ZodString;
-    fontFamily: z.ZodString;
-    fontSize: z.ZodNumber;
-    color: z.ZodString;
-    fontWeight: z.ZodString;
-    fontStyle: z.ZodString;
-    textAlign: z.ZodString;
-    prefixText: z.ZodString;
-    prefixTextAlign: z.ZodString;
-    prefixSplitx: z.ZodNumber;
-    prefixSplity: z.ZodNumber;
-    prefixFontFamily: z.ZodString;
-    prefixFontSize: z.ZodNumber;
-    prefixColor: z.ZodString;
-    prefixFontWeight: z.ZodString;
-    prefixFontStyle: z.ZodString;
-    suffixText: z.ZodString;
-    suffixTextAlign: z.ZodString;
-    suffixSplitx: z.ZodNumber;
-    suffixSplity: z.ZodNumber;
-    suffixFontFamily: z.ZodString;
-    suffixFontSize: z.ZodNumber;
-    suffixColor: z.ZodString;
-    suffixFontWeight: z.ZodString;
-    suffixFontStyle: z.ZodString;
-}, z.core.$strip>;
-type FtflopOption = z.infer<typeof ftflopOptionSchema>;
-
-import { z } from 'zod';
 declare const swFlopPerformanceDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodNumber;
 }, z.core.$strip>>;
 type ftFlopPerformanceData = z.infer<typeof swFlopPerformanceDataSchema>;
 /**
- * 翻牌器v3配置选项 Schema
+ * 翻牌器配置选项 Schema
  */
 declare const swFlopPerformanceOptionSchema: z.ZodObject<{
     autoplay: z.ZodBoolean;
@@ -13838,56 +13715,6 @@ declare const componentPropSchemaMap: {
             drawOutOfBound: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftflop: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            backgroundColor: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-            prefixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-            value: z.ZodCoercedString<unknown>;
-            suffixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            padding: z.ZodDefault<z.ZodOptional<z.ZodCoercedNumber<unknown>>>;
-            suffixInline: z.ZodUnion<readonly [z.ZodString, z.ZodPipe<z.ZodBoolean, z.ZodTransform<"inline-block" | "block", boolean>>]>;
-            whole: z.ZodBoolean;
-            decimals: z.ZodNumber;
-            span: z.ZodNumber;
-            splitx: z.ZodNumber;
-            splity: z.ZodNumber;
-            type: z.ZodString;
-            borderColor: z.ZodString;
-            borderTopWidth: z.ZodNumber;
-            borderBottomWidth: z.ZodNumber;
-            borderLeftWidth: z.ZodNumber;
-            borderRightWidth: z.ZodNumber;
-            backgroundBorder: z.ZodString;
-            backgroundColor: z.ZodString;
-            backgroundImage: z.ZodString;
-            fontFamily: z.ZodString;
-            fontSize: z.ZodNumber;
-            color: z.ZodString;
-            fontWeight: z.ZodString;
-            fontStyle: z.ZodString;
-            textAlign: z.ZodString;
-            prefixText: z.ZodString;
-            prefixTextAlign: z.ZodString;
-            prefixSplitx: z.ZodNumber;
-            prefixSplity: z.ZodNumber;
-            prefixFontFamily: z.ZodString;
-            prefixFontSize: z.ZodNumber;
-            prefixColor: z.ZodString;
-            prefixFontWeight: z.ZodString;
-            prefixFontStyle: z.ZodString;
-            suffixText: z.ZodString;
-            suffixTextAlign: z.ZodString;
-            suffixSplitx: z.ZodNumber;
-            suffixSplity: z.ZodNumber;
-            suffixFontFamily: z.ZodString;
-            suffixFontSize: z.ZodNumber;
-            suffixColor: z.ZodString;
-            suffixFontWeight: z.ZodString;
-            suffixFontStyle: z.ZodString;
-        }, z.core.$strip>;
-    };
     readonly iconRatio: {
         readonly data: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
@@ -14007,67 +13834,6 @@ declare const componentPropSchemaMap: {
             xAxisSplitLineShow: z.ZodBoolean;
             xAxisSplitLineWidth: z.ZodNumber;
             xAxisSplitLineColor: z.ZodString;
-        }, z.core.$strip>;
-    };
-    readonly "sw-countup-v2": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            autoplay: z.ZodBoolean;
-            intervalTime: z.ZodNumber;
-            whole: z.ZodBoolean;
-            decimals: z.ZodNumber;
-            span: z.ZodNumber;
-            splitx: z.ZodNumber;
-            splity: z.ZodNumber;
-            letterSpace: z.ZodNumber;
-            useGrouping: z.ZodBoolean;
-            makeComplete: z.ZodBoolean;
-            completeCount: z.ZodNumber;
-            type: z.ZodString;
-            pointSize: z.ZodNumber;
-            borderColor: z.ZodString;
-            borderTopWidth: z.ZodNumber;
-            borderBottomWidth: z.ZodNumber;
-            borderLeftWidth: z.ZodNumber;
-            borderRightWidth: z.ZodNumber;
-            backgroundBorder: z.ZodString;
-            backgroundColor: z.ZodString;
-            backgroundImage: z.ZodString;
-            fontFamily: z.ZodString;
-            fontSize: z.ZodNumber;
-            spanWidth: z.ZodNumber;
-            spanHeight: z.ZodNumber;
-            spanMangin: z.ZodNumber;
-            color: z.ZodString;
-            fontLinearColor: z.ZodString;
-            fontWeight: z.ZodString;
-            fontStyle: z.ZodString;
-            prefixInline: z.ZodString;
-            prefixText: z.ZodString;
-            prefixTextAlign: z.ZodString;
-            prefixSplitx: z.ZodNumber;
-            prefixSplity: z.ZodNumber;
-            prefixFontFamily: z.ZodString;
-            prefixFontSize: z.ZodNumber;
-            prefixColor: z.ZodString;
-            prefixFontWeight: z.ZodString;
-            prefixFontStyle: z.ZodString;
-            suffixInline: z.ZodString;
-            suffixText: z.ZodString;
-            suffixTextAlign: z.ZodString;
-            suffixSplitx: z.ZodNumber;
-            suffixSplity: z.ZodNumber;
-            suffixFontFamily: z.ZodString;
-            suffixFontSize: z.ZodNumber;
-            suffixColor: z.ZodString;
-            suffixFontWeight: z.ZodString;
-            suffixFontStyle: z.ZodString;
-            autoIncrement: z.ZodBoolean;
-            incrementTotal: z.ZodNumber;
-            incrementFrequency: z.ZodNumber;
-            randomRange: z.ZodNumber;
         }, z.core.$strip>;
     };
     readonly ftFlopPerformance: {
@@ -17166,12 +16932,10 @@ declare const FolderTypeSchema: z.ZodEnum<{
 /** 指标类型枚举 Schema */
 declare const indicatorEnumSchema: z.ZodEnum<{
     swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
-    "sw-countup-v2": import("..").IndicatorEnum.FtCountupV2;
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
     swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swflop: import("..").IndicatorEnum.FtFlop;
     swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
@@ -17353,12 +17117,10 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
 }>, z.ZodEnum<{
     swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
-    "sw-countup-v2": import("..").IndicatorEnum.FtCountupV2;
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
     swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swflop: import("..").IndicatorEnum.FtFlop;
     swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
@@ -19948,8 +19710,6 @@ type AllComponentType = EchartComponentType | PanelEnum | TextEnum | IndicatorEn
 declare enum IndicatorEnum {
     /** 周期表 */
     FtPeriodictable = "swPeriodictable",
-    /** 数字翻牌器V2 */
-    FtCountupV2 = "sw-countup-v2",
     /** 光栅进度条 */
     RasterProgressBar = "rasterProgressBar",
     /** 图标占比 */
@@ -19959,8 +19719,6 @@ declare enum IndicatorEnum {
     /** 动态占比 */
     FtDynamicRatio = "swdynamicratio",
     /** 翻牌器 */
-    FtFlop = "swflop",
-    /** 翻牌器v3 */
     FtFlopPerformance = "swFlopPerformance",
     /** 环形图 */
     EchartRing = "echartring",

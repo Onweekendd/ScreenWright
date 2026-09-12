@@ -52,9 +52,7 @@ import { echartLiquidFillDataSchema, echartLiquidFillOptionSchema } from "./indi
 import { echartprogressDataSchema, echartprogressOptionSchema } from "./indicator/echartprogress";
 import { echartRingDataSchema, echartRingOptionSchema } from "./indicator/echartring";
 import { echartWordcloudDataSchema, echartWordcloudOptionSchema } from "./indicator/echartwordcloud";
-import { swCountupV2DataSchema, swCountupV2OptionSchema } from "./indicator/sw-countup-v2";
 import { ftdynamicratioDataSchema, ftdynamicratioOptionSchema } from "./indicator/swdynamicratio";
-import { ftflopDataSchema, ftflopOptionSchema } from "./indicator/swflop";
 import { swFlopPerformanceDataSchema, swFlopPerformanceOptionSchema } from "./indicator/swFlopPerformance";
 import { swPeriodictableDataSchema, swPeriodictableOptionSchema } from "./indicator/swPeriodictable";
 import { iconRatioDataSchema, iconRatioOptionSchema } from "./indicator/iconRatio";
@@ -65,7 +63,6 @@ import { formCheckboxDataSchema, formCheckboxOptionSchema } from "./interactive/
 import { formNavMenuDataSchema, formNavMenuOptionSchema } from "./interactive/formNavMenu";
 import { formSliderDataSchema, formSliderOptionSchema } from "./interactive/formSlider";
 import { formSwitchDataSchema, formSwitchOptionSchema } from "./interactive/formSwitch";
-import { swIntegrationMutualDataSchema, swIntegrationMutualOptionSchema } from "./interactive/sw-integration-mutual";
 import { swMutualDataSchema, swMutualOptionSchema } from "./interactive/sw-mutual";
 import { swSearchDataSchema, swSearchOptionSchema } from "./interactive/sw-search";
 import { swVoiceControlDataSchema, swVoiceControlOptionSchema } from "./interactive/sw-voice-control";
@@ -173,10 +170,8 @@ export const componentPropSchemaMap = {
   echartliquidFill: { data: echartLiquidFillDataSchema, option: echartLiquidFillOptionSchema },
   echartring: { data: echartRingDataSchema, option: echartRingOptionSchema },
   echartwordcloud: { data: echartWordcloudDataSchema, option: echartWordcloudOptionSchema },
-  ftflop: { data: ftflopDataSchema, option: ftflopOptionSchema },
   iconRatio: { data: iconRatioDataSchema, option: iconRatioOptionSchema },
   echartprogress: { data: echartprogressDataSchema, option: echartprogressOptionSchema },
-  "sw-countup-v2": { data: swCountupV2DataSchema, option: swCountupV2OptionSchema },
   ftFlopPerformance: { data: swFlopPerformanceDataSchema, option: swFlopPerformanceOptionSchema },
   ftdynamicratio: { data: ftdynamicratioDataSchema, option: ftdynamicratioOptionSchema },
   ftPeriodictable: { data: swPeriodictableDataSchema, option: swPeriodictableOptionSchema },
@@ -192,7 +187,6 @@ export const componentPropSchemaMap = {
   ftCascader: { data: swCascaderDataSchema, option: swCascaderOptionSchema },
   ftCustomSelect: { data: swCustomSelectDataSchema, option: swCustomSelectOptionSchema },
   ftDateTimePicker: { data: swDateTimePickerDataSchema, option: swDateTimePickerOptionSchema },
-  "sw-integration-mutual": { data: swIntegrationMutualDataSchema, option: swIntegrationMutualOptionSchema },
   ftLegend: { data: swLegendDataSchema, option: swLegendOptionSchema },
   "sw-mutual": { data: swMutualDataSchema, option: swMutualOptionSchema },
   ftPageQuery: { data: swPageQueryDataSchema, option: swPageQueryOptionSchema },

@@ -26,8 +26,6 @@ export const SPECIAL_TRANSLATION_BY_PROP = new Map<string | number, SpecialTrans
   [MediaEnum.FtSwiperV3, handleSwiper],
   [TextEnum.CustomCollapse, handleCustomCollapse],
   [TextEnum.FtRichtext, handleRichtextStrategy],
-  [IndicatorEnum.FtCountupV2, handleFtFlopStrategy],
-  [IndicatorEnum.FtFlop, handleFtFlopStrategy],
   [IndicatorEnum.FtFlopPerformance, handleFtFlopStrategy]
 ]);
 

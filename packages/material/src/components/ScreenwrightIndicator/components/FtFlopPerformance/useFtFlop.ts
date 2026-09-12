@@ -94,7 +94,8 @@ export function useFtFlop(props: { element: ComponentType }) {
   }));
 
   const styleParentName = computed(() => ({
-    transform: `translate(${((option.value.splitx / 100) * width.value) / 2}px, ${((option.value.splity / 100) * height.value) / 2}px)`,
+    marginLeft: `${((option.value.splitx / 100) * width.value) / 2}px`,
+    marginTop: `${((option.value.splity / 100) * height.value) / 2}px`,
     ...{
       backgroundImage: option.value.backgroundImage
         ? `url(${setMinioUrl(option.value.backgroundImage)})`
@@ -143,9 +144,8 @@ export function useFtFlop(props: { element: ComponentType }) {
     display: option.value.prefixInline,
     flex: option.value.prefixInline === "block" ? "1 0 100%" : "inherit",
     textAlign: option.value.prefixTextAlign,
-    transform: `translate(${((option.value.prefixSplitx / 100) * width.value) / 2}px, ${((option.value.prefixSplity / 100) * height.value) / 2}px)`,
-    // marginBottom: setPx(option.value.prefixSplity),
-    // marginRight: setPx(option.value.prefixSplitx),
+    marginRight: `${((option.value.prefixSplitx / 100) * width.value) / 2}px`,
+    marginBottom: `${((option.value.prefixSplity / 100) * height.value) / 2}px`,
     color: option.value.prefixColor || "#fff",
     fontSize: setPx(option.value.prefixFontSize || 64),
     fontWeight: option.value.prefixFontWeight,
@@ -158,9 +158,8 @@ export function useFtFlop(props: { element: ComponentType }) {
       display: option.value.suffixInline,
       flex: option.value.suffixInline === "block" ? "1 0 100%" : "inherit",
       textAlign: option.value.suffixTextAlign,
-      // marginTop: setPx(option.value.suffixSplity),
-      // marginLeft: setPx(option.value.suffixSplitx),
-      transform: `translate(${((option.value.suffixSplitx / 100) * width.value) / 2}px, ${((option.value.suffixSplity / 100) * height.value) / 2}px)`,
+      marginLeft: `${((option.value.suffixSplitx / 100) * width.value) / 2}px`,
+      marginTop: `${((option.value.suffixSplity / 100) * height.value) / 2}px`,
       color: option.value.suffixColor || "#fff",
       fontSize: setPx(option.value.suffixFontSize || 64),
       fontWeight: option.value.suffixFontWeight,

@@ -20,12 +20,10 @@ export const renderTextComponentType: TextEnum[] = [
 export { IndicatorEnum as indicatorEnum };
 export const renderIndicatorComponentType: IndicatorEnum[] = [
   IndicatorEnum.FtPeriodictable,
-  IndicatorEnum.FtCountupV2,
   IndicatorEnum.RasterProgressBar,
   IndicatorEnum.IconRatio,
   IndicatorEnum.SortRatioBar,
   IndicatorEnum.FtDynamicRatio,
-  IndicatorEnum.FtFlop,
   IndicatorEnum.FtFlopPerformance,
   IndicatorEnum.EchartRing,
   IndicatorEnum.RankProgress
@@ -67,7 +65,6 @@ export const renderInteractiveComponentType: InteractiveEnum[] = [
   InteractiveEnum.FtPageTurning,
   InteractiveEnum.Subtabs,
   InteractiveEnum.FtMutual,
-  InteractiveEnum.FtIntegrationMutual,
   InteractiveEnum.FtSearch,
   InteractiveEnum.FtTimerShaft,
   InteractiveEnum.videoProgress

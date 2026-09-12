@@ -1,4 +1,4 @@
-# 翻牌器v3 (ftFlopPerformance) 配置说明
+# 翻牌器 (ftFlopPerformance) 配置说明
 
 ## dataChart 数据格式
 
@@ -105,7 +105,7 @@ type dataChart = FlopPerformanceDataItem[];
 
 ## 常用配置示例
 
-### 基础翻牌器v3（图片模式）
+### 基础翻牌器（图片模式）
 
 ```json
 {
@@ -145,10 +145,3 @@ type dataChart = FlopPerformanceDataItem[];
   "completeCount": 8
 }
 ```
-
-### 与 v2 的关键差异
-
-- v3 默认 type 为 "img"，v2 默认为 "border"
-- v3 新增 `textAlign` 字段控制数字对齐
-- v3 没有 `pointSize`、`spanWidth`、`spanHeight`、`spanMangin`、`incrementTotal` 字段
-- v3 的边框默认宽度更大（10/16 vs 1/1）

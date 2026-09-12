@@ -44,8 +44,6 @@ export enum InteractiveEnum {
   Subtabs = "subtabs",
   /** 互斥组件 */
   FtMutual = "sw-mutual",
-  /** 集成交互 */
-  FtIntegrationMutual = "sw-integration-mutual",
   /** 搜索 */
   FtSearch = "sw-search",
   /** 时间轴 */

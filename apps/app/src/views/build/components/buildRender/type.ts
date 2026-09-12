@@ -20,10 +20,8 @@ import type {
   Event,
   Filter,
   IotAddress,
-  IotConfig,
   ListenArg,
   MinioResource,
-  OperateCode,
   StandardComponentType,
   TempPool,
   WebSocketDataSource
@@ -44,7 +42,6 @@ import {
 
 import type { AllEchartType } from "../buildRender/core/BaseComponent/type";
 import type { PanelState, PanelType } from "../buildRender/core/SystemComponent/type";
-import { EquipmentEnumType } from "./core/EquipmentComponent/type";
 import { ExhibitEnumType } from "./core/ExhibitComponent/type";
 import { extendsChildComponentEnumType, extendsEnumType } from "./core/ExtendsComponents/type";
 import type { sceneEnumType } from "./core/SceneComponent/type";
@@ -72,7 +69,6 @@ export {
   AllEchartType as EchartEnum,
   EncodeAction,
   EncodeEvent,
-  EquipmentEnumType,
   Event,
   ExhibitEnumType,
   extendsChildComponentEnumType,
@@ -82,12 +78,9 @@ export {
   indicatorEnum,
   interactiveEnum,
   IotAddress,
-  IotConfig,
-  IotConfig as IotConfigLocal,
   ListenArg,
   mediaEnum,
   MinioResource,
-  OperateCode,
   PanelType as PanelEnum,
   sceneEnumType,
   StandardComponentType,

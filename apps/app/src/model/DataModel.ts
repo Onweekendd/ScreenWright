@@ -27,11 +27,6 @@ export interface DataModelReq {
   detail: string;
 }
 
-export interface DataOpenReq {
-  id: number;
-  password?: string | null;
-}
-
 export interface updateModelReq {
   groupId: number | string;
   id: number;

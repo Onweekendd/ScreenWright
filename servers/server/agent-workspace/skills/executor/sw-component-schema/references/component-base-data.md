@@ -1,6 +1,6 @@
 # ComponentSchema - 数据源与数据配置字段
 
-> Source: `packages/type/src/schemas/component.ts` + `packages/type/src/schemas/data.ts` + `packages/type/src/schemas/iot-config.ts`
+> Source: `packages/type/src/schemas/component.ts` + `packages/type/src/schemas/data.ts`
 
 ## 目录
 1. [dataType - 数据类型枚举](#1-datatype---数据类型枚举)
@@ -11,8 +11,6 @@
 6. [listenArgs - 监听参数（过滤器输入）](#6-listenargs---监听参数过滤器输入)
 7. [cbArgs - 回调参数（过滤器输出）](#7-cbargs---回调参数过滤器输出)
 8. [openFilter - 过滤器开关](#8-openfilter---过滤器开关)
-9. [数据分析字段](#9-数据分析字段)
-10. [iotConfig - IoT 物联网配置](#10-iotconfig---iot-物联网配置)
 
 ---
 
@@ -30,7 +28,7 @@ dataType: "STATIC" | "SQL" | "CSV" | "API" | "WEBSOCKET" | "IOT"
 | `"CSV"` (3) | CSV 文件数据 |
 | `"API"` (2) | HTTP API 接口请求，需配置 `url` |
 | `"WEBSOCKET"` (4) | WebSocket 实时数据推送 |
-| `"IOT"` (5) | 物联网设备数据，需配合 `iotConfig` |
+| `"IOT"` (5) | TCP/UDP 设备数据源，`dataSource` 使用下方 IoT 类型配置 |
 
 ---
 
@@ -182,46 +180,3 @@ openFilter?: boolean  // 是否启用过滤器联动功能
   全程不检查 `openFilter`
 
 > 一个组件既发射又消费时（典型是数据容器）当然要开——那是因为它在消费，不是因为它在发射。
-
----
-
-## 9. 数据分析字段
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `enableDataAnalysis` | `boolean?` | 是否启用数据分析功能 |
-| `dataAnalysisName` | `string?` | 数据分析配置名称（对应平台内的分析任务名） |
-
----
-
-## 10. iotConfig - IoT 物联网配置
-
-`dataType = "IOT"` 时使用，配置物联网设备控制参数：
-
-```ts
-iotConfig?: {
-  operateCode: "SWITCH" | "VOLUME" | "BUTTON" | "LIST_WINDOWS" | "SWITCH_WINDOWS",
-  iotAddress?: string,           // 物联网地址
-  productBrandId?: string,       // 产品品牌 ID
-  productCategoryId?: string,    // 产品分类 ID
-  productCode?: string,          // 产品编码
-  groupId?: string,              // 分组 ID
-  deviceGroupId?: string,        // 设备分组 ID
-  deviceId?: string,             // 设备 ID
-  integratedControlId?: string,  // 集成控制 ID
-  operateDescription?: string,   // 操作描述
-  params?: Record<string, any>,  // 操作参数
-  circuitIndex?: number,         // 电路编号
-  selectedStatus?: number,       // 选中状态
-  deviceType?: "single" | "integrated"  // 设备类型
-}
-```
-
-**operateCode 说明：**
-| 值 | 控制类型 |
-|----|---------|
-| `"SWITCH"` | 开关控制（灯、设备开关） |
-| `"VOLUME"` | 音量控制 |
-| `"BUTTON"` | 按钮控制 |
-| `"LIST_WINDOWS"` | 窗口列表 |
-| `"SWITCH_WINDOWS"` | 窗口切换 |

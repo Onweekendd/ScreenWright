@@ -99,3 +99,4 @@ export interface FormProps {
 
 export type TreeRes = BaseEntity<Array<TreeResult>>;
 export type LoginRes = BaseEntity<LoginResult>;
+export type UserRes = BaseEntity<User>;

@@ -264,19 +264,6 @@ export function createSpecialComponentStrategy(deps: SpecialComponentStrategyDep
     async waitHostReady(host: HTMLElement) {
       const key = detectSpecialComponentKey(host);
 
-      if (key === "turnPage") {
-        const deadline = Date.now() + 10000;
-        while (Date.now() < deadline) {
-          const tp = host.querySelector(".ft-turn-page");
-          const hasCanvas = host.querySelector(".ft-turn-page canvas");
-          if (tp && tp.children.length > 0 && hasCanvas) {
-            break;
-          }
-          await Utils.sleep(120);
-        }
-        await Utils.sleep(800);
-      }
-
       if (key === "particles") {
         await waitSelectorNodesReady(host, [".particles-js-canvas-el", ".ext canvas", ".simple-particle canvas"], 8000);
         await Utils.sleep(500);
@@ -364,19 +351,6 @@ export function createSpecialComponentStrategy(deps: SpecialComponentStrategyDep
         const marker = detectSpecialComponentKey(host);
 
         let canvas: HTMLCanvasElement | null = null;
-
-        if (marker === "turnPage") {
-          const tp = host.querySelector(".ft-turn-page");
-          if (tp instanceof HTMLElement) {
-            canvas = await Html2CanvasCapture.toCanvas(tp, {
-              scale: CFG.layerScale,
-              backgroundColor: null
-            });
-            if (canvas) {
-              canvas = fitCanvasToDesignSize(canvas, w, h);
-            }
-          }
-        }
 
         if (!canvas && marker === "imagesList3d") {
           for (const useFreeze of [true, false]) {

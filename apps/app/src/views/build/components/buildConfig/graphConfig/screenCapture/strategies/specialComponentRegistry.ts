@@ -12,12 +12,6 @@ export interface SpecialComponentMarker {
 
 export const SPECIAL_COMPONENT_MARKERS: SpecialComponentMarker[] = [
   {
-    key: "turnPage",
-    label: "翻书组件",
-    selectors: [".ft-turn-page"],
-    readySelectors: [".ft-turn-page canvas", ".ft-turn-page > *"]
-  },
-  {
     key: "imagesList3d",
     label: "3D图片列表",
     selectors: [".imagesList3d"],
@@ -53,32 +47,11 @@ export const SPECIAL_COMPONENT_MARKERS: SpecialComponentMarker[] = [
     readySelectors: [".ft-swiper .el-carousel__item", ".ft-swiper img"]
   },
   {
-    key: "carouselImageV2",
-    label: "轮播图v2",
-    selectors: [".ft-carousel-image-v2"],
-    rasterSelectors: [".ft-carousel-image-v2", ".ws_images", "#wowslider-container"],
-    readySelectors: [".ft-carousel-image-v2 img", ".ws_images li", ".ws_images img"]
-  },
-  {
-    key: "slideCard",
-    label: "滑动卡片",
-    selectors: [".image-stack-container", ".stack"],
-    rasterSelectors: [".image-stack-container", ".stack"],
-    readySelectors: [".stack-item", ".stack .stack-item", ".stack img"]
-  },
-  {
     key: "verticalCard",
     label: "垂直卡片",
     selectors: [".vertical-card"],
     rasterSelectors: [".vertical-card", ".carousel-3d-container", ".carousel-3d-slider"],
     readySelectors: [".carousel-3d-slide", ".vertical-card img"]
-  },
-  {
-    key: "rotateCube",
-    label: "3D立方体",
-    selectors: [".cube-main"],
-    rasterSelectors: [".cube-main", ".cube-container", ".cube"],
-    readySelectors: [".cube-face-image img", ".cube img"]
   },
   {
     key: "particles",
@@ -96,15 +69,10 @@ const OVERFLOW_CHAIN_SELECTOR = [
   ".go-shape-box",
   ".ft-swiperCard",
   ".ft-swiper",
-  ".ft-carousel-image-v2",
-  ".ft-turn-page",
   ".imagesList3d",
   ".vertical-card",
-  ".cube-main",
   ".ringIndicator3d",
   ".ringIndicator3dNew",
-  ".image-stack-container",
-  ".stack",
   ".carousel",
   ".carousel-3d-container"
 ].join(", ");

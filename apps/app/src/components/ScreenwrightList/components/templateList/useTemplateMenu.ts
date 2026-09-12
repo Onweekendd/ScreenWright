@@ -1,4 +1,3 @@
-import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { ElMessage } from "element-plus";
@@ -9,21 +8,17 @@ import { dbManager, STORE_NAME } from "@/db";
 import { useDialog } from "@/hooks/useDialog";
 import { useGlobalLoading } from "@/hooks/useGlobalLoading";
 import type { ScreenItem } from "@/model/Visual";
-import { useUserStoreHook } from "@/store/modules/user";
 import to from "@/utils/await-to-js";
 import { handleMessageBox } from "@/utils/utils";
 import { setVersionCode } from "@/utils/version";
 
 import exportComponent from "./components/exportComponent/index.vue";
 import { ExportTypeEnum } from "./components/exportComponent/useExportComponent";
-import publishInfo from "./components/publishInfo/publishInfo.vue";
 import selectVersion from "./components/selectVersion/index.vue";
 import { outputExportFile } from "./exportfile";
 import templateAddForm from "./templateAddForm.vue";
 import { useModelApi } from "./useModelApi";
 import { useTemplateData } from "./useTemplateData";
-
-const { WEBSITE_PAY } = process.env;
 
 export const useTemplateMenu = (screenItem: ScreenItem) => {
   const route = useRoute();
@@ -31,33 +26,8 @@ export const useTemplateMenu = (screenItem: ScreenItem) => {
   const { loading } = useGlobalLoading();
   const { modelApi } = useModelApi();
   const { dialog } = useDialog();
-  const { roleEquitiesInfo } = useUserStoreHook();
-  const { currentNode, currentNodeTotal, treeData, listRefreshKey, refreshList, getSelectOptionsByNode } =
-    useTemplateData();
+  const { currentNode, treeData, listRefreshKey, refreshList, getSelectOptionsByNode } = useTemplateData();
 
-  const isLimit = computed(() => {
-    return currentNodeTotal.value >= (roleEquitiesInfo?.largeScreenNum || 9);
-  });
-
-  const handlePublish = () => {
-    const title = screenItem.status ? "发布详情" : "发布应用";
-    dialog({
-      DialogProps: {
-        title,
-        width: "550px",
-        beforeClose: async (done) => {
-          done();
-          refreshList(true);
-        }
-      },
-      componentProps: {
-        item: screenItem,
-        type: route.path
-      },
-      component: publishInfo,
-      center: true
-    });
-  };
   const checkItemBackgroundUrl = () => {
     let result = true;
     if (route.path === "/map") {
@@ -110,16 +80,6 @@ export const useTemplateMenu = (screenItem: ScreenItem) => {
     const result = checkItemBackgroundUrl();
     if (!result) {
       ElMessage.warning("空白场景不可复制！");
-      return;
-    }
-    if (isLimit.value) {
-      const isCanCopy = await handleMessageBox("您的会员权益不足，请前往升级！", {
-        confirmButtonText: "前往升级",
-        cancelButtonText: "取消"
-      });
-      if (isCanCopy && WEBSITE_PAY) {
-        window.open(WEBSITE_PAY);
-      }
       return;
     }
     const [error, resList] = await to(getScreenVersionList(screenItem.id));
@@ -238,54 +198,28 @@ export const useTemplateMenu = (screenItem: ScreenItem) => {
         versionCode: dataRes.versionCode
       })
     );
-    if (res && res.code === 984) {
-      const isToUpdate = await handleMessageBox("您的会员权益不足，请前往升级！", {
-        confirmButtonText: "前往升级",
-        cancelButtonText: "取消"
-      });
-      if (isToUpdate && process.env.WEBSITE_PAY) {
-        window.open(process.env.WEBSITE_PAY);
-      }
-      return;
-    }
     if (error || !res) {
       ElMessage.error("导出失败");
-      done();
-      return;
     }
-
     done();
   };
 
   /**
-   * 处理其他类型导出（离线应用、nginx服务器、exe程序）
+   * 处理离线应用导出
    * @param dataRes 验证后的导出数据
    * @param done 完成回调
    */
-  const handleOtherTypeExport = async (dataRes: any, done: () => void) => {
+  const handleOfflinePackageExport = async (dataRes: any, done: () => void) => {
     done();
 
-    // 设置版本号
+    // 导出走 Version-Code 请求头取对应版本的配置
     if (dataRes.versionCode) {
       setVersionCode(dataRes.versionCode);
     }
 
-    // 执行导出
-    const [error, res] = await to(
-      outputExportFile({
-        id: screenItem.id,
-        name: screenItem.name,
-        type: dataRes.exportTypeText,
-        prohibition: {
-          ihl: false,
-          ed: dataRes.expirationTime,
-          iwm: roleEquitiesInfo?.watermark || false
-        }
-      })
-    );
-
-    if (error || !res) {
-      ElMessage.error("导出失败");
+    const [error] = await to(outputExportFile({ id: screenItem.id, name: screenItem.name }));
+    if (error) {
+      ElMessage.error(error.message || "导出失败");
     }
   };
 
@@ -305,7 +239,7 @@ export const useTemplateMenu = (screenItem: ScreenItem) => {
     if (dataRes.exportType === ExportTypeEnum.PACKAGE_FILE) {
       await handlePackageFileExport(dataRes, done);
     } else {
-      await handleOtherTypeExport(dataRes, done);
+      await handleOfflinePackageExport(dataRes, done);
     }
   };
 
@@ -409,7 +343,6 @@ export const useTemplateMenu = (screenItem: ScreenItem) => {
   };
 
   return {
-    handlePublish,
     handleEdit,
     handlePreview,
     updateTemplate,

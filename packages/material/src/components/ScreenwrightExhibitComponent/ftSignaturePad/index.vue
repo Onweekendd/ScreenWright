@@ -293,50 +293,5 @@ $border-color: #e70;
     container-name: signature-container;
   }
 
-  .cube-cover {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    background-color: transparent;
-
-    cursor: grab;
-
-    &:active {
-      cursor: grabbing;
-    }
-  }
-
-  // 立方体容器
-  .cube-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    perspective: 20rem;
-
-    // 立方体
-    .cube {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      backface-visibility: hidden;
-      transition: transform 0.1s cubic-bezier(0.32, 0.05, 0.35, 1.6);
-    }
-
-    // 立方体面的图片
-    .cube-face-image {
-      display: block;
-      position: absolute;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-  }
 }
 </style>

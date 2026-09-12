@@ -5,9 +5,6 @@
       <div class="content__btn" @click="handleEdit">编辑</div>
     </div>
     <div class="content__view">
-      <el-tooltip content="发布" v-if="permissionMap.get(item.id).release">
-        <span @click="handlePublish" class="font-family iconfont iconfont-fabu1 fs-18" />
-      </el-tooltip>
       <el-tooltip content="复制" v-if="permissionMap.get(item.id).copy">
         <span @click="handleCopy" class="font-family iconfont iconfont-copy fs-14" />
       </el-tooltip>
@@ -32,8 +29,9 @@ const props = defineProps<{
   item: ScreenItem;
   permissionMap: Map<any, any>;
 }>();
-const { handlePublish, handleExport, handleCopy, handleEdit, handlePreview, deleteTemplate, updateTemplate } =
-  useTemplateMenu(props.item);
+const { handleExport, handleCopy, handleEdit, handlePreview, deleteTemplate, updateTemplate } = useTemplateMenu(
+  props.item
+);
 
 const emits = defineEmits(["mouseLeave"]);
 

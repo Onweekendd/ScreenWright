@@ -23,8 +23,7 @@ import { ElMessage } from "element-plus";
 
 import IconModal from "@/assets/icon/assets-icon-modal.png";
 import SwItemEmpty from "@/components/SwItemEmpty/index.vue";
-import { useUserStore } from "@/store/modules/user";
-import { getImageUrl, getVideoBase64, handleMessageBox } from "@/utils/utils";
+import { getImageUrl, getVideoBase64 } from "@/utils/utils";
 
 interface AssetUploadProps {
   modelValue: Record<string, any> | UploadFile | undefined | null;
@@ -48,21 +47,8 @@ const getTypeIcons = computed(() => {
   return imageUrl.value;
 });
 
-const { roleEquitiesInfo } = useUserStore();
 const imageUrl = ref("");
 
-const checkSize = async (size: number) => {
-  let result = true;
-  if (size / 1024 / 1024 > (roleEquitiesInfo?.resourceCapacity || 100)) {
-    result = false;
-    await handleMessageBox("您的会员权益不足，请前往升级！", {
-      confirmButtonText: "立即升级",
-      cancelButtonText: "取消"
-    });
-    return result;
-  }
-  return result;
-};
 function judgeFileType(fileInfo: UploadFile): string {
   // 获取文件名
   const fileName = fileInfo.name;
@@ -80,10 +66,6 @@ const onChange = async (file: UploadFile) => {
     return;
   }
   if (file && file.raw && file.size) {
-    const result = await checkSize(file.size);
-    if (!result) {
-      return;
-    }
     // imageUrl.value = await getImageUrl(file, props.accept)
     emits("change", file);
   } else {

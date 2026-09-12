@@ -3,19 +3,14 @@ import type { Component } from "vue";
 import { IndicatorEnum } from "@screenwright/types";
 
 import echartringGlobal from "./indicatorGlobal/echartringGlobal.vue";
-import ftCountupV2Global from "./indicatorGlobal/ft-countup-v2Global.vue";
 import ftdynamicratioGlobal from "./indicatorGlobal/ftdynamicratioGlobal.vue";
 import ftFlopPerformanceGlobal from "./indicatorGlobal/ftFlopPerformanceGlobal.vue";
-import ftFlopGlobal from "./indicatorGlobal/ftflopGlobal.vue";
-import ftPeriodictableGlobal from "./indicatorGlobal/ftPeriodictableGlobal.vue";
 import iconRatioGlobal from "./indicatorGlobal/iconRatioGlobal.vue";
 import rankProgressGlobal from "./indicatorGlobal/rank-progressGlobal.vue";
 import rasterProgressBarGlobal from "./indicatorGlobal/rasterProgressBarGlobal.vue";
 import sortRatioBarGlobal from "./indicatorGlobal/sortRatioBarGlobal.vue";
 
-import ftCountupV2Flip from "./indicatorFlip/ft-countup-v2Flip.vue";
 import ftFlopPerformanceFlip from "./indicatorFlip/ftFlopPerformanceFlip.vue";
-import ftFlopFlip from "./indicatorFlip/ftflopFlip.vue";
 
 import rasterProgressBarGrid from "./indicatorGrid/rasterProgressBarGrid.vue";
 import rasterProgressBarIndicator from "./indicatorIndicator/rasterProgressBarIndicator.vue";
@@ -46,12 +41,7 @@ export type ConfigTab = {
 };
 
 export const IndicatorConfigComponent: Record<IndicatorEnum, ConfigTab[]> = {
-  [IndicatorEnum.FtPeriodictable]: [{ label: "全局", value: optionType.global, component: ftPeriodictableGlobal }],
   [IndicatorEnum.EchartRing]: [{ label: "全局", value: optionType.global, component: echartringGlobal }],
-  [IndicatorEnum.FtCountupV2]: [
-    { label: "全局", value: optionType.global, component: ftCountupV2Global },
-    { label: "翻牌器", value: optionType.flip, component: ftCountupV2Flip }
-  ],
   [IndicatorEnum.RasterProgressBar]: [
     { label: "全局", value: optionType.global, component: rasterProgressBarGlobal },
     { label: "栅格", value: optionType.grid, component: rasterProgressBarGrid },
@@ -70,10 +60,6 @@ export const IndicatorConfigComponent: Record<IndicatorEnum, ConfigTab[]> = {
   [IndicatorEnum.FtDynamicRatio]: [
     { label: "全局", value: optionType.global, component: ftdynamicratioGlobal },
     { label: "样式", value: optionType.style, component: ftdynamicratioStyle }
-  ],
-  [IndicatorEnum.FtFlop]: [
-    { label: "全局", value: optionType.global, component: ftFlopGlobal },
-    { label: "翻牌器", value: optionType.flip, component: ftFlopFlip }
   ],
   [IndicatorEnum.FtFlopPerformance]: [
     { label: "全局", value: optionType.global, component: ftFlopPerformanceGlobal },

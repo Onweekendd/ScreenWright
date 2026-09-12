@@ -5,7 +5,6 @@ import { AnimationSchema } from "./animation";
 import { CallbackSchema, DataRemarkSchema, DataSourceTypeSchema, DataTypeSchema, ListenArgSchema } from "./data";
 import { allComponentTypeSchema } from "./enums";
 import { EncodeEventSchema, EventSchema } from "./event-action-condition";
-import { IotConfigSchema } from "./iot-config";
 import { ComponentMinioAssetSchema } from "./minio";
 
 // ============================================
@@ -161,14 +160,8 @@ export const ComponentFlatSchema = z
     panelData: z.array(PanelStateFlatSchema).describe("动态面板数据").optional(),
     /** 当前激活状态（可选） */
     activeStatusId: z.string().nullable().describe("当前激活状态").optional(),
-    /** IoT配置（可选） */
-    iotConfig: IotConfigSchema.describe("IoT配置").optional(),
     /** Minio资源列表（可选） */
     minioArr: z.array(ComponentMinioAssetSchema).describe("素材库条目列表").optional(),
-    /** 是否启用数据分析（可选） */
-    enableDataAnalysis: z.boolean().describe("是否启用数据分析").optional(),
-    /** 数据分析名称（可选） */
-    dataAnalysisName: z.string().describe("数据分析名称").optional(),
     /** 父组件ID（可选） */
     parent: z.number().describe("父组件ID").optional(),
     /** 铺满类型（可选） */
@@ -284,14 +277,8 @@ export const ChildComponentSchema = z.lazy(() =>
         )
         .describe("预设子组件列表")
         .optional(),
-      /** IoT配置（可选） */
-      iotConfig: IotConfigSchema.describe("IoT配置").optional(),
       /** Minio资源列表（可选） */
-      minioArr: z.array(ComponentMinioAssetSchema).describe("素材库条目列表").optional(),
-      /** 是否启用数据分析（可选） */
-      enableDataAnalysis: z.boolean().describe("是否启用数据分析").optional(),
-      /** 数据分析名称（可选） */
-      dataAnalysisName: z.string().describe("数据分析名称").optional()
+      minioArr: z.array(ComponentMinioAssetSchema).describe("素材库条目列表").optional()
     })
     .catchall(z.any().describe("其他任意属性"))
 );

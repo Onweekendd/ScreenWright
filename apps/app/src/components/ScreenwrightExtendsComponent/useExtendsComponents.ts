@@ -22,8 +22,7 @@ export const useExtendsComponents = () => {
     { name: ExtendsEnum.SimpleParticle, title: "上升粒子", component: materialMap[ExtendsEnum.SimpleParticle]! },
     { name: ExtendsEnum.SimpleBarrage, title: "弹幕组件", component: materialMap[ExtendsEnum.SimpleBarrage]! },
     { name: ExtendsEnum.FtDataContainer, title: "数据容器", component: materialMap[ExtendsEnum.FtDataContainer]! },
-    { name: ExtendsEnum.FtWeather, title: "天气", component: materialMap[ExtendsEnum.FtWeather]! },
-    { name: ExtendsEnum.PhotoSphereViewer, title: "360全景图", component: materialMap[ExtendsEnum.PhotoSphereViewer]! }
+    { name: ExtendsEnum.FtWeather, title: "天气", component: materialMap[ExtendsEnum.FtWeather]! }
   ]);
 
   return {

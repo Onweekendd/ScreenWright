@@ -53,12 +53,7 @@ import geojson from "@/assets/image/table/json.png";
 import shp from "@/assets/image/table/shp.png";
 import xls from "@/assets/image/table/xls.png";
 import xlsx from "@/assets/image/table/xls.png";
-import { useUserStore } from "@/store/modules/user";
 import { getToken } from "@/utils/auth";
-import { handleMessageBox } from "@/utils/utils";
-
-const { roleEquitiesInfo } = useUserStore();
-const { WEBSITE_PAY } = process.env;
 export interface Option {
   fileName?: string;
   type?: string;
@@ -119,21 +114,6 @@ const getTypeIcons = (type: keyof typeof iconList) => {
 };
 // , fileList: UploadFiles
 const onChange = async (file: UploadFile) => {
-  const resourceCapacity = (roleEquitiesInfo || {}).resourceCapacity;
-
-  file.size = file.size || 0;
-  // 文件大小-1024Mb/1G
-  if (file.size / 1024 / 1024 > (resourceCapacity || 100)) {
-    const isCanCopy = await handleMessageBox("您的会员权益不足，请前往升级！", {
-      confirmButtonText: "前往升级",
-      cancelButtonText: "取消"
-    });
-    if (isCanCopy && WEBSITE_PAY) {
-      window.open(WEBSITE_PAY);
-    }
-    return;
-    // return roleEquitiesMessage()
-  }
   if (!reg.test(file.name)) {
     ElMessage({
       showClose: true,

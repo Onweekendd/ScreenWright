@@ -13,8 +13,8 @@ import type {
   ScenePublishReq,
   ScenePublishRes,
   ScreenItem,
-  ScreenMeta,
   ScreenListRes,
+  ScreenMeta,
   ScreenReq,
   ScreenReqParams
 } from "@/model/Visual";
@@ -38,8 +38,7 @@ export const getScreenList = (data: ScreenReq | ScreenReqParams, base = "/largeS
   });
 
 export const cityScenesList = (data: cityScenesReq) => {
-  const { WEB_CITY_API_BASE_URL, WEB_APP_API_BASE_URL } = window.webconfig;
-  const city_api_url = WEB_CITY_API_BASE_URL || BASE_URL_CITY || WEB_APP_API_BASE_URL;
+  const city_api_url = BASE_URL_CITY;
   return request<ScreenListRes>({
     url: `${city_api_url}${systemBase}/tCityScenes/list`,
     method: "post",
@@ -125,16 +124,6 @@ export const getQuoteScreenObj = (params: quoteScreenReq, showLoading = true, ne
     url: `${systemBase}/largeScreen/quoteInfo`,
     method: "post",
     data: { ...params },
-    showLoading,
-    needAuthor
-  });
-
-// 获取发布引用面板配置（已回落 Screenwright）
-export const getOpenQuote = (params: quoteScreenReq, showLoading = true, needAuthor = true) =>
-  serverRequest<BaseEntity<LargeScreeInfo & { id: number }>>({
-    url: `${systemBase}/largeScreen/openQuote`,
-    method: "post",
-    data: { ...params, status: 1 },
     showLoading,
     needAuthor
   });

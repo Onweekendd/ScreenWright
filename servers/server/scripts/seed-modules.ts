@@ -19,7 +19,25 @@ async function seedModules() {
 
       await prismaClient.module.upsert({
         where: { name: item.name },
-        update: {},
+        // 名称可能被新版组件复用（例如翻牌器 v3 统一更名为“翻牌器”）。
+        // 必须同步覆盖已有记录，否则数据库会一直保留已下线组件的 prop，
+        // 导致素材可见但运行组件和编辑面板均无法匹配。
+        update: {
+          moduleId: item.id,
+          userId: item.user_id,
+          type: item.type,
+          javaScript: item.java_script,
+          level: item.level,
+          secondLevelMenu: item.second_level_menu,
+          firstLevelMenu: item.first_level_menu,
+          thumbnail: item.thumbnail,
+          createdBy: item.created_by,
+          createdTime: item.created_time,
+          updatedBy: item.updated_by,
+          updatedTime: item.updated_time,
+          template: item.template,
+          status: item.status
+        },
         create: {
           moduleId: item.id, // SQL 中的原始 ID
           userId: item.user_id,

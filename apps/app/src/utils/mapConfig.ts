@@ -2,8 +2,7 @@
 import { uuid } from "@/utils/utils";
 
 const { MINIO_DEFAULT_PREFIX } = process.env;
-const { WEB_APP_MINIO_DEFAULT_PREFIX } = (window as any).webconfig;
-const staticSourceUrl = `${WEB_APP_MINIO_DEFAULT_PREFIX || MINIO_DEFAULT_PREFIX}assets/scene`;
+const staticSourceUrl = `${MINIO_DEFAULT_PREFIX}assets/scene`;
 export const environment: Record<string, any> = {
   lightIconVisible: true, // 灯光图标显隐
   // 天空盒

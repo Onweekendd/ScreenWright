@@ -28,8 +28,7 @@ export default defineConfig({
         media: resolve(__dirname, "src/media.ts"),
         interactive: resolve(__dirname, "src/interactive.ts"),
         exhibit: resolve(__dirname, "src/exhibit.ts"),
-        extends: resolve(__dirname, "src/extends.ts"),
-        equipment: resolve(__dirname, "src/equipment.ts")
+        extends: resolve(__dirname, "src/extends.ts")
       },
       formats: ["es"],
       fileName: (_format, entryName) => `${entryName}.js`

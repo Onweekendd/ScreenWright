@@ -7,11 +7,10 @@ import { ElMessage } from "element-plus";
 import { isNil, isNull } from "lodash-es";
 
 import { uploadMinioScene } from "@/api/assets";
-import { useUserStoreHook } from "@/store/modules/user";
 import { BaseName } from "@/utils/config";
 import { setMinioUrl } from "@/utils/config";
 import { pipeValidator } from "@/utils/pipeValidator";
-import { batchCompressPic, getCoverUrl, handleMessageBox } from "@/utils/utils";
+import { batchCompressPic, getCoverUrl } from "@/utils/utils";
 import { FileTypeEnum, ResourceTypeEnum } from "@/views/build/components/buildTabs/assetsEditFrom/type";
 
 import type { FtUploadEmits, FtUploadProps } from "./SwUpload";
@@ -26,9 +25,7 @@ type fileTypeMapProps = Record<
   }
 >;
 
-const { WEBSITE_PAY } = process.env;
 export const useSwUpload = (props: FtUploadProps, emit: SetupContext<FtUploadEmits>["emit"]) => {
-  const { roleEquitiesInfo } = useUserStoreHook();
   const route = useRoute();
   const fileUrl = ref("");
   const fileTypeMap: fileTypeMapProps = {
@@ -60,25 +57,6 @@ export const useSwUpload = (props: FtUploadProps, emit: SetupContext<FtUploadEmi
       accept: ".pdf",
       resourceType: ResourceTypeEnum.video
     }
-  };
-
-  // 判断是否满足会员权益
-  const isEquities = async (size: number) => {
-    const resourceCapacity = (roleEquitiesInfo || {}).resourceCapacity;
-
-    let result = true;
-    if (size / 1024 / 1024 > (resourceCapacity || 100)) {
-      result = false;
-      const isCanJump = await handleMessageBox("您的会员权益不足，请前往升级！", {
-        confirmButtonText: "立即升级",
-        cancelButtonText: "取消"
-      });
-      if (isCanJump && WEBSITE_PAY) {
-        window.open(WEBSITE_PAY);
-      }
-      return result;
-    }
-    return result;
   };
 
   const handleScreenShot = async () => {
@@ -164,7 +142,6 @@ export const useSwUpload = (props: FtUploadProps, emit: SetupContext<FtUploadEmi
   const onChange = async (file: File | UploadFile) => {
     const result = await new pipeValidator()
       .add(() => isFileTypeValid(file))
-      .add(() => isEquities(file.size || 0))
       .add(() => isLimitSize(file.size || 0))
       .validate();
     if (!result) {

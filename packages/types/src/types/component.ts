@@ -19,7 +19,6 @@ import type {
   ListenArg,
   TempPool
 } from "./filter";
-import type { IotConfig, OperateCode } from "./iot-config";
 import type { ComponentMinioAsset, MinioResource } from "./minio-resource";
 
 // ============================================
@@ -32,9 +31,6 @@ export { FolderEnum };
 
 // 重新导出数据类型
 export { DataType };
-
-// 重新导出 IoT 配置类型
-export type { IotConfig, OperateCode };
 
 // 重新导出动画类型
 export type { Animation };
@@ -92,20 +88,6 @@ export interface ChildComponent<Option = any> extends Omit<StandardComponentType
   };
   option: Option;
   [key: string]: any;
-}
-
-export enum verticalConstEnum {
-  Top = "Top",
-  Bottom = "Bottom",
-  Center = "Center"
-  //   TopAndBottom = "TopAndBottom"
-}
-
-export enum horizontalConstEnum {
-  Left = "Left",
-  Right = "Right",
-  Center = "Center"
-  //   LeftAndRight = "LeftAndRight"
 }
 
 /**
@@ -216,29 +198,14 @@ export interface StandardComponentType<
   /** 预设子组件列表（可选） */
   presetChild?: ChildComponent[];
 
-  /** IoT配置（可选） */
-  iotConfig?: IotConfig;
-
   /** 素材库条目列表（可选）。注意不是 MinioResource，见 ComponentMinioAsset 的说明 */
   minioArr?: ComponentMinioAsset[];
-
-  /** 是否启用数据分析（可选） */
-  enableDataAnalysis?: boolean;
-
-  /** 数据分析名称（可选） */
-  dataAnalysisName?: string;
 
   /** 父组件ID（可选） */
   parent?: number;
 
   /** 单位铺满类型（可选） */
   unitPavenType?: "percent";
-
-  /** @description 约束布局 纵向 */
-  verticalConst?: verticalConstEnum;
-
-  /** @description 约束布局 横向 */
-  horizontalConst?: horizontalConstEnum;
 }
 
 /**

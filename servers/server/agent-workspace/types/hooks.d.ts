@@ -112,7 +112,6 @@ declare const ComponentFlatSchema: z.ZodObject<{
             echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
             echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
         }>, z.ZodEnum<{
-            swH5player: import("..").MediaEnum.FtH5player;
             swSwiperCard: import("..").MediaEnum.FtSwiperCard;
             "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
             swiframe: import("..").MediaEnum.FtIframe;
@@ -126,28 +125,12 @@ declare const ComponentFlatSchema: z.ZodObject<{
         }>, z.ZodEnum<{
             ringIndicator3d: import("..").ExhibitEnum.RingIndicator3d;
             ringIndicator3dNew: import("..").ExhibitEnum.ringIndicator3dNew;
-            "sw-slidecard-v1": import("..").ExhibitEnum.FtSlidecardV1;
             imagesList3d: import("..").ExhibitEnum.ImagesList3d;
-            "sw-qachat": import("..").ExhibitEnum.FtQachat;
             "pdfjs-viewer": import("..").ExhibitEnum.PdfjsViewer;
             "sw-particles": import("..").ExhibitEnum.FtParticles;
-            "sw-rotateCube": import("..").ExhibitEnum.FtRotateCube;
             "sw-signaturePad": import("..").ExhibitEnum.FtSignaturePad;
-            CurvedTrackList: import("..").ExhibitEnum.CurvedTrackList;
-            "sw-translation": import("..").ExhibitEnum.FtTranslation;
-            "sw-carousel-image-v2": import("..").ExhibitEnum.FtCarouselImageV2;
-            "sw-turn-page": import("..").ExhibitEnum.FtTurnPage;
             "sw-filter": import("..").ExhibitEnum.FtFilter;
-            "sw-flex-decoration": import("..").ExhibitEnum.FtFlexDecoration;
-            "sw-nine-patch": import("..").ExhibitEnum.FtNinePatch;
             verticalCard: import("..").ExhibitEnum.verticalCard;
-            "sw-rotate": import("..").ExhibitEnum.FtRotate;
-        }>, z.ZodEnum<{
-            iotGeneralEquipment: import("..").EquipmentEnum.IotGeneralEquipment;
-            iotFormSlider: import("..").EquipmentEnum.IotFormSlider;
-            iotFormSwitch: import("..").EquipmentEnum.IotFormSwitch;
-            iotSubtabs: import("..").EquipmentEnum.IotSubTabs;
-            iotMutual: import("..").EquipmentEnum.IotMutual;
         }>, z.ZodEnum<{
             "sw-folder": import("..").FolderEnum.group;
         }>, z.ZodEnum<{
@@ -164,15 +147,11 @@ declare const ComponentFlatSchema: z.ZodObject<{
             "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
             "sw-weather": import("..").ExtendsEnum.FtWeather;
             "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
-            "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
         }>, z.ZodEnum<{
-            swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
-            "sw-countup-v2": import("..").IndicatorEnum.FtCountupV2;
             rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
             iconRatio: import("..").IndicatorEnum.IconRatio;
             sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
             swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-            swflop: import("..").IndicatorEnum.FtFlop;
             swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
             echartring: import("..").IndicatorEnum.EchartRing;
             "rank-progress": import("..").IndicatorEnum.RankProgress;
@@ -195,7 +174,6 @@ declare const ComponentFlatSchema: z.ZodObject<{
             swPageTurning: import("..").InteractiveEnum.FtPageTurning;
             subtabs: import("..").InteractiveEnum.Subtabs;
             "sw-mutual": import("..").InteractiveEnum.FtMutual;
-            "sw-integration-mutual": import("..").InteractiveEnum.FtIntegrationMutual;
             "sw-search": import("..").InteractiveEnum.FtSearch;
             swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
             videoProgress: import("..").InteractiveEnum.videoProgress;
@@ -290,10 +268,7 @@ declare const ComponentFlatSchema: z.ZodObject<{
         adaptationType: z.ZodNumber;
     }, z.core.$strip>>>;
     activeStatusId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
-    iotConfig: z.ZodOptional<z.ZodType<import('..').IotConfig, unknown, z.core.$ZodTypeInternals<import('..').IotConfig, unknown>>>;
     minioArr: z.ZodOptional<z.ZodArray<z.ZodType<import('..').ComponentMinioAsset, unknown, z.core.$ZodTypeInternals<import('..').ComponentMinioAsset, unknown>>>>;
-    enableDataAnalysis: z.ZodOptional<z.ZodBoolean>;
-    dataAnalysisName: z.ZodOptional<z.ZodString>;
     parent: z.ZodOptional<z.ZodNumber>;
     unitPavenType: z.ZodOptional<z.ZodPipe<z.ZodUnion<readonly [z.ZodLiteral<"percent">, z.ZodLiteral<"">]>, z.ZodTransform<"percent" | undefined, "" | "percent">>>;
     parentDynamicPanelId: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
@@ -4050,9 +4025,9 @@ declare const echartthreePieOptionSchema: z.ZodObject<{
     legendShow: z.ZodBoolean;
     legendOrder: z.ZodEnum<{
         default: "default";
-        desc: "desc";
         ascending: "ascending";
         descending: "descending";
+        desc: "desc";
     }>;
     legendItemWidth: z.ZodNumber;
     legendItemHeight: z.ZodNumber;
@@ -4708,67 +4683,6 @@ declare const pageReloadOptionSchema: z.ZodObject<{
 type pageReloadOption = z.infer<typeof pageReloadOptionSchema>;
 
 import { z } from 'zod';
-declare const photoSphereViewerDataSchema: z.ZodArray<z.ZodObject<{
-    value: z.ZodString;
-}, z.core.$strip>>;
-type photoSphereViewerData = z.infer<typeof photoSphereViewerDataSchema>;
-declare const photoSphereViewerOptionSchema: z.ZodObject<{
-    muted: z.ZodBoolean;
-    initLoad: z.ZodBoolean;
-    cover: z.ZodString;
-    minFov: z.ZodNumber;
-    maxFov: z.ZodNumber;
-    defaultZoomLvl: z.ZodNumber;
-    fisheye: z.ZodBoolean;
-    defaultYaw: z.ZodNumber;
-    defaultPitch: z.ZodNumber;
-    loadingImg: z.ZodString;
-    loadingTxt: z.ZodString;
-    mousewheel: z.ZodBoolean;
-    mousemove: z.ZodBoolean;
-    keyboard: z.ZodString;
-    mousewheelCtrlKey: z.ZodBoolean;
-    touchmoveTwoFingers: z.ZodBoolean;
-    sphereCorrection: z.ZodObject<{
-        pan: z.ZodNumber;
-        tilt: z.ZodNumber;
-        roll: z.ZodNumber;
-    }, z.core.$strip>;
-    moveSpeed: z.ZodNumber;
-    zoomSpeed: z.ZodNumber;
-    moveInertia: z.ZodNumber;
-    withCredentials: z.ZodBoolean;
-    canvasBackground: z.ZodString;
-    rendererParameters: z.ZodObject<{
-        alpha: z.ZodBoolean;
-        antialias: z.ZodBoolean;
-    }, z.core.$strip>;
-    showNavbar: z.ZodBoolean;
-    navbarList: z.ZodArray<z.ZodString>;
-    autostart: z.ZodBoolean;
-    autostartDelay: z.ZodNumber;
-    autostartOnIdle: z.ZodBoolean;
-    autorotateSpeed: z.ZodNumber;
-    autorotatePitch: z.ZodNumber;
-    showMarkers: z.ZodBoolean;
-    showGallery: z.ZodBoolean;
-    visibleOnLoad: z.ZodBoolean;
-    thumbnailSize: z.ZodObject<{
-        width: z.ZodNumber;
-        height: z.ZodNumber;
-    }, z.core.$strip>;
-    galleryItems: z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        name: z.ZodString;
-        panorama: z.ZodString;
-        thumbnail: z.ZodString;
-        caption: z.ZodString;
-        markers: z.ZodArray<z.ZodUnknown>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-type photoSphereViewerOption = z.infer<typeof photoSphereViewerOptionSchema>;
-
-import { z } from 'zod';
 declare const simpleBarrageDataSchema: z.ZodArray<z.ZodObject<{
     text: z.ZodString;
 }, z.core.$strip>>;
@@ -5012,44 +4926,6 @@ declare const swMaskLayerOptionSchema: z.ZodObject<{
     backdropFilterSaturate: z.ZodNumber;
 }, z.core.$strip>;
 type ftMaskLayerOption = z.infer<typeof swMaskLayerOptionSchema>;
-
-import { z } from 'zod';
-/**
- * 拓扑容器 (ft-topo-container)
- * 扩展
- *
- * ## 数据结构
- * 无数据字段（data为空数组）
- */
-declare const swTopoContainerDataSchema: z.ZodArray<z.ZodNever>;
-type ftTopoContainerData = z.infer<typeof swTopoContainerDataSchema>;
-declare const swTopoContainerOptionSchema: z.ZodObject<{
-    topoBgType: z.ZodString;
-    topoBgColor: z.ZodString;
-    topoBgImage: z.ZodString;
-    topoData: z.ZodObject<{
-        nodes: z.ZodArray<z.ZodUnknown>;
-        edges: z.ZodArray<z.ZodUnknown>;
-    }, z.core.$strip>;
-    perspective: z.ZodNumber;
-    originX: z.ZodNumber;
-    originY: z.ZodNumber;
-    rotateX: z.ZodNumber;
-    rotateY: z.ZodNumber;
-    rotateZ: z.ZodNumber;
-    skewX: z.ZodNumber;
-    skewY: z.ZodNumber;
-    scaleX: z.ZodNumber;
-    scaleY: z.ZodNumber;
-    translateX: z.ZodNumber;
-    translateY: z.ZodNumber;
-    translateZ: z.ZodNumber;
-    originGrid: z.ZodObject<{
-        left: z.ZodString;
-        top: z.ZodString;
-    }, z.core.$strip>;
-}, z.core.$strip>;
-type ftTopoContainerOption = z.infer<typeof swTopoContainerOptionSchema>;
 
 import { z } from 'zod';
 declare const swUnrealEngineDataSchema: z.ZodArray<z.ZodObject<{
@@ -5765,72 +5641,6 @@ declare const sortRatioBarOptionSchema: z.ZodObject<{
 type SortRatioBarOption = z.infer<typeof sortRatioBarOptionSchema>;
 
 import { z } from 'zod';
-declare const swCountupV2DataSchema: z.ZodArray<z.ZodObject<{
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type ftCountupV2Data = z.infer<typeof swCountupV2DataSchema>;
-/**
- * 翻牌器v2配置选项 Schema
- */
-declare const swCountupV2OptionSchema: z.ZodObject<{
-    autoplay: z.ZodBoolean;
-    intervalTime: z.ZodNumber;
-    whole: z.ZodBoolean;
-    decimals: z.ZodNumber;
-    span: z.ZodNumber;
-    splitx: z.ZodNumber;
-    splity: z.ZodNumber;
-    letterSpace: z.ZodNumber;
-    useGrouping: z.ZodBoolean;
-    makeComplete: z.ZodBoolean;
-    completeCount: z.ZodNumber;
-    type: z.ZodString;
-    pointSize: z.ZodNumber;
-    borderColor: z.ZodString;
-    borderTopWidth: z.ZodNumber;
-    borderBottomWidth: z.ZodNumber;
-    borderLeftWidth: z.ZodNumber;
-    borderRightWidth: z.ZodNumber;
-    backgroundBorder: z.ZodString;
-    backgroundColor: z.ZodString;
-    backgroundImage: z.ZodString;
-    fontFamily: z.ZodString;
-    fontSize: z.ZodNumber;
-    spanWidth: z.ZodNumber;
-    spanHeight: z.ZodNumber;
-    spanMangin: z.ZodNumber;
-    color: z.ZodString;
-    fontLinearColor: z.ZodString;
-    fontWeight: z.ZodString;
-    fontStyle: z.ZodString;
-    prefixInline: z.ZodString;
-    prefixText: z.ZodString;
-    prefixTextAlign: z.ZodString;
-    prefixSplitx: z.ZodNumber;
-    prefixSplity: z.ZodNumber;
-    prefixFontFamily: z.ZodString;
-    prefixFontSize: z.ZodNumber;
-    prefixColor: z.ZodString;
-    prefixFontWeight: z.ZodString;
-    prefixFontStyle: z.ZodString;
-    suffixInline: z.ZodString;
-    suffixText: z.ZodString;
-    suffixTextAlign: z.ZodString;
-    suffixSplitx: z.ZodNumber;
-    suffixSplity: z.ZodNumber;
-    suffixFontFamily: z.ZodString;
-    suffixFontSize: z.ZodNumber;
-    suffixColor: z.ZodString;
-    suffixFontWeight: z.ZodString;
-    suffixFontStyle: z.ZodString;
-    autoIncrement: z.ZodBoolean;
-    incrementTotal: z.ZodNumber;
-    incrementFrequency: z.ZodNumber;
-    randomRange: z.ZodNumber;
-}, z.core.$strip>;
-type ftCountupV2Option = z.infer<typeof swCountupV2OptionSchema>;
-
-import { z } from 'zod';
 declare const ftdynamicratioDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodNumber;
 }, z.core.$strip>>;
@@ -5867,67 +5677,12 @@ declare const ftdynamicratioOptionSchema: z.ZodObject<{
 type ftdynamicratioOption = z.infer<typeof ftdynamicratioOptionSchema>;
 
 import { z } from 'zod';
-declare const ftflopDataSchema: z.ZodArray<z.ZodObject<{
-    backgroundColor: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-    prefixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-    value: z.ZodCoercedString<unknown>;
-    suffixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-}, z.core.$strip>>;
-type FtflopData = z.infer<typeof ftflopDataSchema>;
-/**
- * 颜色块配置选项 Schema
- */
-declare const ftflopOptionSchema: z.ZodObject<{
-    padding: z.ZodDefault<z.ZodOptional<z.ZodCoercedNumber<unknown>>>;
-    suffixInline: z.ZodUnion<readonly [z.ZodString, z.ZodPipe<z.ZodBoolean, z.ZodTransform<"inline-block" | "block", boolean>>]>;
-    whole: z.ZodBoolean;
-    decimals: z.ZodNumber;
-    span: z.ZodNumber;
-    splitx: z.ZodNumber;
-    splity: z.ZodNumber;
-    type: z.ZodString;
-    borderColor: z.ZodString;
-    borderTopWidth: z.ZodNumber;
-    borderBottomWidth: z.ZodNumber;
-    borderLeftWidth: z.ZodNumber;
-    borderRightWidth: z.ZodNumber;
-    backgroundBorder: z.ZodString;
-    backgroundColor: z.ZodString;
-    backgroundImage: z.ZodString;
-    fontFamily: z.ZodString;
-    fontSize: z.ZodNumber;
-    color: z.ZodString;
-    fontWeight: z.ZodString;
-    fontStyle: z.ZodString;
-    textAlign: z.ZodString;
-    prefixText: z.ZodString;
-    prefixTextAlign: z.ZodString;
-    prefixSplitx: z.ZodNumber;
-    prefixSplity: z.ZodNumber;
-    prefixFontFamily: z.ZodString;
-    prefixFontSize: z.ZodNumber;
-    prefixColor: z.ZodString;
-    prefixFontWeight: z.ZodString;
-    prefixFontStyle: z.ZodString;
-    suffixText: z.ZodString;
-    suffixTextAlign: z.ZodString;
-    suffixSplitx: z.ZodNumber;
-    suffixSplity: z.ZodNumber;
-    suffixFontFamily: z.ZodString;
-    suffixFontSize: z.ZodNumber;
-    suffixColor: z.ZodString;
-    suffixFontWeight: z.ZodString;
-    suffixFontStyle: z.ZodString;
-}, z.core.$strip>;
-type FtflopOption = z.infer<typeof ftflopOptionSchema>;
-
-import { z } from 'zod';
 declare const swFlopPerformanceDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodNumber;
 }, z.core.$strip>>;
 type ftFlopPerformanceData = z.infer<typeof swFlopPerformanceDataSchema>;
 /**
- * 翻牌器v3配置选项 Schema
+ * 翻牌器配置选项 Schema
  */
 declare const swFlopPerformanceOptionSchema: z.ZodObject<{
     autoplay: z.ZodBoolean;
@@ -5982,40 +5737,6 @@ declare const swFlopPerformanceOptionSchema: z.ZodObject<{
     randomRange: z.ZodNumber;
 }, z.core.$strip>;
 type ftFlopPerformanceOption = z.infer<typeof swFlopPerformanceOptionSchema>;
-
-import { z } from 'zod';
-/**
- * 图片墙 (ftPeriodictable)
- * 指标
- *
- * ## 数据结构
- *
- * 无数据字段（data 为空数组）。
- *
- * @example
- * ```typescript
- * const data: ftPeriodictableData = [];
- * ```
- */
-declare const swPeriodictableDataSchema: z.ZodArray<z.ZodObject<{}, z.core.$strip>>;
-type ftPeriodictableData = z.infer<typeof swPeriodictableDataSchema>;
-/**
- * 图片墙配置选项 Schema
- */
-declare const swPeriodictableOptionSchema: z.ZodObject<{
-    images: z.ZodArray<z.ZodObject<{
-        url: z.ZodString;
-    }, z.core.$strip>>;
-    offsetX: z.ZodNumber;
-    offsetY: z.ZodNumber;
-    rows: z.ZodNumber;
-    imageWidth: z.ZodNumber;
-    imageHeight: z.ZodNumber;
-    rowSpace: z.ZodNumber;
-    columnSpace: z.ZodNumber;
-    duration: z.ZodNumber;
-}, z.core.$strip>;
-type ftPeriodictableOption = z.infer<typeof swPeriodictableOptionSchema>;
 
 import { z } from 'zod';
 declare const formCheckboxDataSchema: z.ZodArray<z.ZodObject<{
@@ -6944,36 +6665,6 @@ declare const subtabsOptionSchema: z.ZodObject<{
 type subtabsOption = z.infer<typeof subtabsOptionSchema>;
 
 import { z } from 'zod';
-declare const swIntegrationMutualDataSchema: z.ZodArray<z.ZodObject<{
-    label: z.ZodString;
-    value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-}, z.core.$strip>>;
-type ftIntegrationMutualData = z.infer<typeof swIntegrationMutualDataSchema>;
-/**
- * 集成交互控制配置选项 Schema
- */
-declare const swIntegrationMutualOptionSchema: z.ZodObject<{
-    fontSize: z.ZodNumber;
-    fontFamily: z.ZodString;
-    fontColor: z.ZodString;
-    rotateX: z.ZodNumber;
-    rotateY: z.ZodNumber;
-    rotateZ: z.ZodNumber;
-    skewX: z.ZodNumber;
-    skewY: z.ZodNumber;
-    textTranslateX: z.ZodNumber;
-    textTranslateY: z.ZodNumber;
-    bgImage: z.ZodString;
-    isHovered: z.ZodBoolean;
-    hoverFontSize: z.ZodNumber;
-    hoverFontFamily: z.ZodString;
-    hoverFontColor: z.ZodString;
-    hoverBgImage: z.ZodString;
-    isCursorPointer: z.ZodString;
-}, z.core.$strip>;
-type ftIntegrationMutualOption = z.infer<typeof swIntegrationMutualOptionSchema>;
-
-import { z } from 'zod';
 declare const swMutualDataSchema: z.ZodArray<z.ZodObject<{
     label: z.ZodString;
     value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -7593,7 +7284,6 @@ declare const ctVideoPanelOptionSchema: z.ZodObject<{
     mixBlendMode: z.ZodString;
     controler: z.ZodBoolean;
     autoPlay: z.ZodBoolean;
-    hkVideoPlayerMode: z.ZodNumber;
     loopPlay: z.ZodBoolean;
     muted: z.ZodBoolean;
     autoHidden: z.ZodBoolean;
@@ -7779,23 +7469,6 @@ declare const swOpenVideoOptionSchema: z.ZodObject<{
     }, z.core.$strip>;
 }, z.core.$strip>;
 type FtOpenVideoOption = z.infer<typeof swOpenVideoOptionSchema>;
-
-import { z } from 'zod';
-declare const swH5playerDataSchema: z.ZodArray<z.ZodObject<{
-    value: z.ZodString;
-}, z.core.$strip>>;
-type FtH5playerData = z.infer<typeof swH5playerDataSchema>;
-/**
- * h5player配置选项 Schema
- */
-declare const swH5playerOptionSchema: z.ZodObject<{
-    borderSelect: z.ZodString;
-    borderWidth: z.ZodNumber;
-    border: z.ZodString;
-    background: z.ZodString;
-    splitNum: z.ZodNumber;
-}, z.core.$strip>;
-type FtH5playerOption = z.infer<typeof swH5playerOptionSchema>;
 
 import { z } from 'zod';
 declare const ftiframeDataSchema: z.ZodArray<z.ZodObject<{
@@ -8188,7 +7861,6 @@ declare const componentPropSchemaMap: {
             mixBlendMode: z.ZodString;
             controler: z.ZodBoolean;
             autoPlay: z.ZodBoolean;
-            hkVideoPlayerMode: z.ZodNumber;
             loopPlay: z.ZodBoolean;
             muted: z.ZodBoolean;
             autoHidden: z.ZodBoolean;
@@ -12436,9 +12108,9 @@ declare const componentPropSchemaMap: {
             legendShow: z.ZodBoolean;
             legendOrder: z.ZodEnum<{
                 default: "default";
-                desc: "desc";
                 ascending: "ascending";
                 descending: "descending";
+                desc: "desc";
             }>;
             legendItemWidth: z.ZodNumber;
             legendItemHeight: z.ZodNumber;
@@ -13208,18 +12880,6 @@ declare const componentPropSchemaMap: {
             autoHidden: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftH5player: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            value: z.ZodString;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            borderSelect: z.ZodString;
-            borderWidth: z.ZodNumber;
-            border: z.ZodString;
-            background: z.ZodString;
-            splitNum: z.ZodNumber;
-        }, z.core.$strip>;
-    };
     readonly ftiframe: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
@@ -13877,56 +13537,6 @@ declare const componentPropSchemaMap: {
             drawOutOfBound: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftflop: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            backgroundColor: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-            prefixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-            value: z.ZodCoercedString<unknown>;
-            suffixText: z.ZodDefault<z.ZodOptional<z.ZodString>>;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            padding: z.ZodDefault<z.ZodOptional<z.ZodCoercedNumber<unknown>>>;
-            suffixInline: z.ZodUnion<readonly [z.ZodString, z.ZodPipe<z.ZodBoolean, z.ZodTransform<"inline-block" | "block", boolean>>]>;
-            whole: z.ZodBoolean;
-            decimals: z.ZodNumber;
-            span: z.ZodNumber;
-            splitx: z.ZodNumber;
-            splity: z.ZodNumber;
-            type: z.ZodString;
-            borderColor: z.ZodString;
-            borderTopWidth: z.ZodNumber;
-            borderBottomWidth: z.ZodNumber;
-            borderLeftWidth: z.ZodNumber;
-            borderRightWidth: z.ZodNumber;
-            backgroundBorder: z.ZodString;
-            backgroundColor: z.ZodString;
-            backgroundImage: z.ZodString;
-            fontFamily: z.ZodString;
-            fontSize: z.ZodNumber;
-            color: z.ZodString;
-            fontWeight: z.ZodString;
-            fontStyle: z.ZodString;
-            textAlign: z.ZodString;
-            prefixText: z.ZodString;
-            prefixTextAlign: z.ZodString;
-            prefixSplitx: z.ZodNumber;
-            prefixSplity: z.ZodNumber;
-            prefixFontFamily: z.ZodString;
-            prefixFontSize: z.ZodNumber;
-            prefixColor: z.ZodString;
-            prefixFontWeight: z.ZodString;
-            prefixFontStyle: z.ZodString;
-            suffixText: z.ZodString;
-            suffixTextAlign: z.ZodString;
-            suffixSplitx: z.ZodNumber;
-            suffixSplity: z.ZodNumber;
-            suffixFontFamily: z.ZodString;
-            suffixFontSize: z.ZodNumber;
-            suffixColor: z.ZodString;
-            suffixFontWeight: z.ZodString;
-            suffixFontStyle: z.ZodString;
-        }, z.core.$strip>;
-    };
     readonly iconRatio: {
         readonly data: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
@@ -14048,67 +13658,6 @@ declare const componentPropSchemaMap: {
             xAxisSplitLineColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly "sw-countup-v2": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            autoplay: z.ZodBoolean;
-            intervalTime: z.ZodNumber;
-            whole: z.ZodBoolean;
-            decimals: z.ZodNumber;
-            span: z.ZodNumber;
-            splitx: z.ZodNumber;
-            splity: z.ZodNumber;
-            letterSpace: z.ZodNumber;
-            useGrouping: z.ZodBoolean;
-            makeComplete: z.ZodBoolean;
-            completeCount: z.ZodNumber;
-            type: z.ZodString;
-            pointSize: z.ZodNumber;
-            borderColor: z.ZodString;
-            borderTopWidth: z.ZodNumber;
-            borderBottomWidth: z.ZodNumber;
-            borderLeftWidth: z.ZodNumber;
-            borderRightWidth: z.ZodNumber;
-            backgroundBorder: z.ZodString;
-            backgroundColor: z.ZodString;
-            backgroundImage: z.ZodString;
-            fontFamily: z.ZodString;
-            fontSize: z.ZodNumber;
-            spanWidth: z.ZodNumber;
-            spanHeight: z.ZodNumber;
-            spanMangin: z.ZodNumber;
-            color: z.ZodString;
-            fontLinearColor: z.ZodString;
-            fontWeight: z.ZodString;
-            fontStyle: z.ZodString;
-            prefixInline: z.ZodString;
-            prefixText: z.ZodString;
-            prefixTextAlign: z.ZodString;
-            prefixSplitx: z.ZodNumber;
-            prefixSplity: z.ZodNumber;
-            prefixFontFamily: z.ZodString;
-            prefixFontSize: z.ZodNumber;
-            prefixColor: z.ZodString;
-            prefixFontWeight: z.ZodString;
-            prefixFontStyle: z.ZodString;
-            suffixInline: z.ZodString;
-            suffixText: z.ZodString;
-            suffixTextAlign: z.ZodString;
-            suffixSplitx: z.ZodNumber;
-            suffixSplity: z.ZodNumber;
-            suffixFontFamily: z.ZodString;
-            suffixFontSize: z.ZodNumber;
-            suffixColor: z.ZodString;
-            suffixFontWeight: z.ZodString;
-            suffixFontStyle: z.ZodString;
-            autoIncrement: z.ZodBoolean;
-            incrementTotal: z.ZodNumber;
-            incrementFrequency: z.ZodNumber;
-            randomRange: z.ZodNumber;
-        }, z.core.$strip>;
-    };
     readonly ftFlopPerformance: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodNumber;
@@ -14193,22 +13742,6 @@ declare const componentPropSchemaMap: {
             shadowExtension: z.ZodArray<z.ZodNumber>;
             iconColor: z.ZodArray<z.ZodString>;
             iconSize: z.ZodArray<z.ZodNumber>;
-        }, z.core.$strip>;
-    };
-    readonly ftPeriodictable: {
-        readonly data: z.ZodArray<z.ZodObject<{}, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            images: z.ZodArray<z.ZodObject<{
-                url: z.ZodString;
-            }, z.core.$strip>>;
-            offsetX: z.ZodNumber;
-            offsetY: z.ZodNumber;
-            rows: z.ZodNumber;
-            imageWidth: z.ZodNumber;
-            imageHeight: z.ZodNumber;
-            rowSpace: z.ZodNumber;
-            columnSpace: z.ZodNumber;
-            duration: z.ZodNumber;
         }, z.core.$strip>;
     };
     readonly "custom-component": {
@@ -14708,31 +14241,6 @@ declare const componentPropSchemaMap: {
             buttonColor: z.ZodString;
             buttonFontStyle: z.ZodString;
             buttonFontWeight: z.ZodString;
-        }, z.core.$strip>;
-    };
-    readonly "sw-integration-mutual": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            label: z.ZodString;
-            value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            fontSize: z.ZodNumber;
-            fontFamily: z.ZodString;
-            fontColor: z.ZodString;
-            rotateX: z.ZodNumber;
-            rotateY: z.ZodNumber;
-            rotateZ: z.ZodNumber;
-            skewX: z.ZodNumber;
-            skewY: z.ZodNumber;
-            textTranslateX: z.ZodNumber;
-            textTranslateY: z.ZodNumber;
-            bgImage: z.ZodString;
-            isHovered: z.ZodBoolean;
-            hoverFontSize: z.ZodNumber;
-            hoverFontFamily: z.ZodString;
-            hoverFontColor: z.ZodString;
-            hoverBgImage: z.ZodString;
-            isCursorPointer: z.ZodString;
         }, z.core.$strip>;
     };
     readonly ftLegend: {
@@ -15859,35 +15367,6 @@ declare const componentPropSchemaMap: {
             backdropFilterSaturate: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly "sw-topo-container": {
-        readonly data: z.ZodArray<z.ZodNever>;
-        readonly option: z.ZodObject<{
-            topoBgType: z.ZodString;
-            topoBgColor: z.ZodString;
-            topoBgImage: z.ZodString;
-            topoData: z.ZodObject<{
-                nodes: z.ZodArray<z.ZodUnknown>;
-                edges: z.ZodArray<z.ZodUnknown>;
-            }, z.core.$strip>;
-            perspective: z.ZodNumber;
-            originX: z.ZodNumber;
-            originY: z.ZodNumber;
-            rotateX: z.ZodNumber;
-            rotateY: z.ZodNumber;
-            rotateZ: z.ZodNumber;
-            skewX: z.ZodNumber;
-            skewY: z.ZodNumber;
-            scaleX: z.ZodNumber;
-            scaleY: z.ZodNumber;
-            translateX: z.ZodNumber;
-            translateY: z.ZodNumber;
-            translateZ: z.ZodNumber;
-            originGrid: z.ZodObject<{
-                left: z.ZodString;
-                top: z.ZodString;
-            }, z.core.$strip>;
-        }, z.core.$strip>;
-    };
     readonly "sw-unreal-engine": {
         readonly data: z.ZodArray<z.ZodObject<{
             text: z.ZodString;
@@ -15960,65 +15439,6 @@ declare const componentPropSchemaMap: {
             opacity: z.ZodNumber;
             pageReloadType: z.ZodString;
             pageReloadTypeClick: z.ZodString;
-        }, z.core.$strip>;
-    };
-    readonly "photo-sphere-viewer": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            value: z.ZodString;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            muted: z.ZodBoolean;
-            initLoad: z.ZodBoolean;
-            cover: z.ZodString;
-            minFov: z.ZodNumber;
-            maxFov: z.ZodNumber;
-            defaultZoomLvl: z.ZodNumber;
-            fisheye: z.ZodBoolean;
-            defaultYaw: z.ZodNumber;
-            defaultPitch: z.ZodNumber;
-            loadingImg: z.ZodString;
-            loadingTxt: z.ZodString;
-            mousewheel: z.ZodBoolean;
-            mousemove: z.ZodBoolean;
-            keyboard: z.ZodString;
-            mousewheelCtrlKey: z.ZodBoolean;
-            touchmoveTwoFingers: z.ZodBoolean;
-            sphereCorrection: z.ZodObject<{
-                pan: z.ZodNumber;
-                tilt: z.ZodNumber;
-                roll: z.ZodNumber;
-            }, z.core.$strip>;
-            moveSpeed: z.ZodNumber;
-            zoomSpeed: z.ZodNumber;
-            moveInertia: z.ZodNumber;
-            withCredentials: z.ZodBoolean;
-            canvasBackground: z.ZodString;
-            rendererParameters: z.ZodObject<{
-                alpha: z.ZodBoolean;
-                antialias: z.ZodBoolean;
-            }, z.core.$strip>;
-            showNavbar: z.ZodBoolean;
-            navbarList: z.ZodArray<z.ZodString>;
-            autostart: z.ZodBoolean;
-            autostartDelay: z.ZodNumber;
-            autostartOnIdle: z.ZodBoolean;
-            autorotateSpeed: z.ZodNumber;
-            autorotatePitch: z.ZodNumber;
-            showMarkers: z.ZodBoolean;
-            showGallery: z.ZodBoolean;
-            visibleOnLoad: z.ZodBoolean;
-            thumbnailSize: z.ZodObject<{
-                width: z.ZodNumber;
-                height: z.ZodNumber;
-            }, z.core.$strip>;
-            galleryItems: z.ZodArray<z.ZodObject<{
-                id: z.ZodString;
-                name: z.ZodString;
-                panorama: z.ZodString;
-                thumbnail: z.ZodString;
-                caption: z.ZodString;
-                markers: z.ZodArray<z.ZodUnknown>;
-            }, z.core.$strip>>;
         }, z.core.$strip>;
     };
     readonly "simple-barrage": {
@@ -17108,7 +16528,7 @@ declare const DataSourceTypeSchema: z.ZodSchema<DataSourceType>;
 declare const DataRemarkSchema: z.ZodSchema<DataRemark>;
 
 import { z } from 'zod';
-import { BarEchartEnum, EquipmentEnum, ExhibitEnum, FolderEnum, PanelEnum, ThirdPartEnum } from '../types/componentProp';
+import { BarEchartEnum, ExhibitEnum, FolderEnum, PanelEnum, ThirdPartEnum } from '../types/componentProp';
 /** 图表类型枚举 Schema */
 declare const BarEchartEnumSchema: z.ZodEnum<{
     echartstripBar: BarEchartEnum.echartstripBar;
@@ -17166,7 +16586,6 @@ declare const indicatorEchartEnumSchema: z.ZodEnum<{
 }>;
 /** 媒体类型枚举 Schema */
 declare const mediaEnumSchema: z.ZodEnum<{
-    swH5player: import("..").MediaEnum.FtH5player;
     swSwiperCard: import("..").MediaEnum.FtSwiperCard;
     "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
     swiframe: import("..").MediaEnum.FtIframe;
@@ -17182,30 +16601,12 @@ declare const mediaEnumSchema: z.ZodEnum<{
 declare const ExhibitEnumTypeSchema: z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
-    "sw-slidecard-v1": ExhibitEnum.FtSlidecardV1;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "sw-qachat": ExhibitEnum.FtQachat;
     "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
     "sw-particles": ExhibitEnum.FtParticles;
-    "sw-rotateCube": ExhibitEnum.FtRotateCube;
     "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    CurvedTrackList: ExhibitEnum.CurvedTrackList;
-    "sw-translation": ExhibitEnum.FtTranslation;
-    "sw-carousel-image-v2": ExhibitEnum.FtCarouselImageV2;
-    "sw-turn-page": ExhibitEnum.FtTurnPage;
     "sw-filter": ExhibitEnum.FtFilter;
-    "sw-flex-decoration": ExhibitEnum.FtFlexDecoration;
-    "sw-nine-patch": ExhibitEnum.FtNinePatch;
     verticalCard: ExhibitEnum.verticalCard;
-    "sw-rotate": ExhibitEnum.FtRotate;
-}>;
-/** 设备类型枚举 Schema */
-declare const EquipmentEnumTypeSchema: z.ZodEnum<{
-    iotGeneralEquipment: EquipmentEnum.IotGeneralEquipment;
-    iotFormSlider: EquipmentEnum.IotFormSlider;
-    iotFormSwitch: EquipmentEnum.IotFormSwitch;
-    iotSubtabs: EquipmentEnum.IotSubTabs;
-    iotMutual: EquipmentEnum.IotMutual;
 }>;
 /** 文件夹类型枚举 Schema */
 declare const FolderTypeSchema: z.ZodEnum<{
@@ -17213,13 +16614,10 @@ declare const FolderTypeSchema: z.ZodEnum<{
 }>;
 /** 指标类型枚举 Schema */
 declare const indicatorEnumSchema: z.ZodEnum<{
-    swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
-    "sw-countup-v2": import("..").IndicatorEnum.FtCountupV2;
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
     swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swflop: import("..").IndicatorEnum.FtFlop;
     swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
@@ -17244,7 +16642,6 @@ declare const interactiveEnumSchema: z.ZodEnum<{
     swPageTurning: import("..").InteractiveEnum.FtPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
     "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-integration-mutual": import("..").InteractiveEnum.FtIntegrationMutual;
     "sw-search": import("..").InteractiveEnum.FtSearch;
     swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
@@ -17296,7 +16693,6 @@ declare const extendsEnumTypeSchema: z.ZodEnum<{
     "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
     "sw-weather": import("..").ExtendsEnum.FtWeather;
     "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
-    "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
 }>;
 /** 面板类型枚举 Schema */
 declare const PanelEnumSchema: z.ZodEnum<{
@@ -17353,7 +16749,6 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
     echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
 }>, z.ZodEnum<{
-    swH5player: import("..").MediaEnum.FtH5player;
     swSwiperCard: import("..").MediaEnum.FtSwiperCard;
     "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
     swiframe: import("..").MediaEnum.FtIframe;
@@ -17367,28 +16762,12 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
 }>, z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
-    "sw-slidecard-v1": ExhibitEnum.FtSlidecardV1;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "sw-qachat": ExhibitEnum.FtQachat;
     "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
     "sw-particles": ExhibitEnum.FtParticles;
-    "sw-rotateCube": ExhibitEnum.FtRotateCube;
     "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    CurvedTrackList: ExhibitEnum.CurvedTrackList;
-    "sw-translation": ExhibitEnum.FtTranslation;
-    "sw-carousel-image-v2": ExhibitEnum.FtCarouselImageV2;
-    "sw-turn-page": ExhibitEnum.FtTurnPage;
     "sw-filter": ExhibitEnum.FtFilter;
-    "sw-flex-decoration": ExhibitEnum.FtFlexDecoration;
-    "sw-nine-patch": ExhibitEnum.FtNinePatch;
     verticalCard: ExhibitEnum.verticalCard;
-    "sw-rotate": ExhibitEnum.FtRotate;
-}>, z.ZodEnum<{
-    iotGeneralEquipment: EquipmentEnum.IotGeneralEquipment;
-    iotFormSlider: EquipmentEnum.IotFormSlider;
-    iotFormSwitch: EquipmentEnum.IotFormSwitch;
-    iotSubtabs: EquipmentEnum.IotSubTabs;
-    iotMutual: EquipmentEnum.IotMutual;
 }>, z.ZodEnum<{
     "sw-folder": FolderEnum.group;
 }>, z.ZodEnum<{
@@ -17405,15 +16784,11 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
     "sw-weather": import("..").ExtendsEnum.FtWeather;
     "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
-    "photo-sphere-viewer": import("..").ExtendsEnum.PhotoSphereViewer;
 }>, z.ZodEnum<{
-    swPeriodictable: import("..").IndicatorEnum.FtPeriodictable;
-    "sw-countup-v2": import("..").IndicatorEnum.FtCountupV2;
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
     swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swflop: import("..").IndicatorEnum.FtFlop;
     swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
@@ -17436,7 +16811,6 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     swPageTurning: import("..").InteractiveEnum.FtPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
     "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-integration-mutual": import("..").InteractiveEnum.FtIntegrationMutual;
     "sw-search": import("..").InteractiveEnum.FtSearch;
     swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
@@ -17515,18 +16889,12 @@ export { BindComponentSchema, ChildComponentSchema, ComponentFlatSchema, Compone
 
 export { AdaptationTypeSchema } from './config';
 export { CallbackSchema, DataRemarkSchema, DataSourceTypeSchema, DataTypeSchema, ListenArgSchema } from './data';
-export { allComponentTypeSchema, BarEchartEnumSchema, EquipmentEnumTypeSchema, ExhibitEnumTypeSchema, extendsEnumTypeSchema, FolderTypeSchema, indicatorEchartEnumSchema, indicatorEnumSchema, interactiveEnumSchema, lineEchartEnumSchema, mediaEnumSchema, otherEchartEnumSchema, PanelEnumSchema, pieEchartEnumSchema, projectEchartEnumSchema, ringEchartEnumSchema, scatterEchartEnumSchema, textEnumSchema, threeComponentEnumSchema } from './enums';
+export { allComponentTypeSchema, BarEchartEnumSchema, ExhibitEnumTypeSchema, extendsEnumTypeSchema, FolderTypeSchema, indicatorEchartEnumSchema, indicatorEnumSchema, interactiveEnumSchema, lineEchartEnumSchema, mediaEnumSchema, otherEchartEnumSchema, PanelEnumSchema, pieEchartEnumSchema, projectEchartEnumSchema, ringEchartEnumSchema, scatterEchartEnumSchema, textEnumSchema, threeComponentEnumSchema } from './enums';
 export { ActionAnimationSchema, ActionSchema, ConditionCompareEnumSchema, ConditionSchema, ConditionTypeEnumSchema, EncodeActionSchema, EncodeEventSchema, EventSchema } from './event-action-condition';
-export { IotConfigSchema } from './iot-config';
 export { LargeScreenDetailInfoSchema, parsedLargeScreenInfoObject, ParsedLargeScreenInfoSchema } from './large-screen';
 export { ComponentMinioAssetSchema, MinioResourceSchema } from './minio';
 export { ProhibitionSchema, ScreenFilterInfoSchema, TerminalEnableArrSchema, WaterMarkSchema } from './screen';
 export { isValidLargeScreen, safeParseLargeScreenInfo, validateParsedLargeScreenInfo } from './validation';
-
-import { z } from 'zod';
-import { IotConfig } from '../types';
-/** 物联网配置 Schema */
-declare const IotConfigSchema: z.ZodSchema<IotConfig>;
 
 import { z } from 'zod';
 import { LargeScreenDetailInfo, ParsedLargeScreenInfo } from '../types/large-screen';
@@ -17934,17 +17302,9 @@ declare enum ActionTypeEnum {
      */
     toNextStatus = "toNextStatus",
     /**
-     * @description 译文转换
-     */
-    convertTranslation = "convertTranslation",
-    /**
      * 切换蓝图
      * */
     SwitchBlueprintTab = "switchBlueprintTab",
-    /**
-     * 旋转组件-点击触发
-     * */
-    ClickRotateComponent = "ClickRotateComponent",
     /**
      * 同步视频进度
      * */
@@ -18888,7 +18248,7 @@ interface Animation {
 }
 
 import { LayerInfo, SceneObjectExplosion } from './action';
-import { BarEchartEnum, EquipmentEnum, ExhibitEnum, ExtendsEnum, InteractiveEnum, LineEchartEnum, MediaEnum, PanelEnum, PieEchartEnum, ProjectEchartEnum, ScatterEchartEnum, SceneEnum, TextEnum, ThirdPartEnum } from './componentProp';
+import { BarEchartEnum, ExhibitEnum, ExtendsEnum, InteractiveEnum, LineEchartEnum, MediaEnum, PanelEnum, PieEchartEnum, ProjectEchartEnum, ScatterEchartEnum, SceneEnum, TextEnum, ThirdPartEnum } from './componentProp';
 import { EventTypeEnum } from './event';
 /**
  * 组件属性映射事件
@@ -18994,14 +18354,6 @@ interface RollSubtabsEvents {
 }
 interface FtMutualEvents {
     [key: `${InteractiveEnum.FtMutual}-${string}`]: {
-        /**
-         * @description 点击事件
-         */
-        handleClick: (info: any) => void;
-    };
-}
-interface FtIntegrationMutualEvents {
-    [key: `${InteractiveEnum.FtIntegrationMutual}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -19164,25 +18516,6 @@ interface CustomTableListEvents {
          * @description 点击事件
          */
         handleClick: (info: any) => void;
-    };
-}
-interface FtSlidecardV1Events {
-    [key: `${ExhibitEnum.FtSlidecardV1}-${string}`]: {
-        /**
-         * @description 点击事件
-         */
-        handleClick: (info: any) => void;
-        handlePrevClick: () => void;
-        handleNextClick: () => void;
-    };
-}
-interface FtTurnPageEvents {
-    [key: `${ExhibitEnum.FtTurnPage}-${string}`]: {
-        /**
-         * @description 点击事件
-         */
-        handlePrevClick: () => void;
-        handleNextClick: () => void;
     };
 }
 interface EchartcommonMapEvents {
@@ -19469,18 +18802,8 @@ interface FtSignaturePad {
         onTranslateImage: () => void;
     };
 }
-interface IotMutualEvent {
-    [key: `${EquipmentEnum.IotMutual}-${number}`]: {
-        handleClick: () => void;
-    };
-}
-interface FtRotateEvent {
-    [key: `${ExhibitEnum.FtRotate}-${number}`]: {
-        handleClick: () => void;
-    };
-}
-type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtIntegrationMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & FtSlidecardV1Events & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & IotMutualEvent & FtUnrealEngineEvents & FtRotateEvent & videoProgressEvents;
-type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtIntegrationMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | FtSlidecardV1Events | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | pdfEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | IotMutualEvent | FtTurnPageEvents | FtUnrealEngineEvents | FtRotateEvent | videoProgressEvents;
+type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & FtUnrealEngineEvents & videoProgressEvents;
+type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | pdfEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtUnrealEngineEvents | videoProgressEvents;
 
 import { Animation } from './component-animation';
 import { AllComponentType, ExtendsChildComponentEnum, FolderEnum } from './componentProp';
@@ -19489,12 +18812,10 @@ import { DataSourceType, DbItem, IotAddress, WebSocketDataSource } from './data-
 import { DataType } from './data-type';
 import { EncodeEvent, Event } from './event';
 import { BindComponent, Callback, CallbackManager, CallbackRelation, CallbackSource, CallbackTarget, Filter, ListenArg, TempPool } from './filter';
-import { IotConfig, OperateCode } from './iot-config';
 import { ComponentMinioAsset, MinioResource } from './minio-resource';
 type { AllComponentType };
 
 
-type { IotConfig, OperateCode };
 type { Animation };
 type { BindComponent, Callback, CallbackManager, CallbackRelation, CallbackSource, CallbackTarget, Filter, ListenArg, TempPool };
 type { DataSourceType, DbItem, IotAddress, WebSocketDataSource };
@@ -19524,16 +18845,6 @@ interface ChildComponent<Option = any> extends Omit<StandardComponentType, "comp
     };
     option: Option;
     [key: string]: any;
-}
-declare enum verticalConstEnum {
-    Top = "Top",
-    Bottom = "Bottom",
-    Center = "Center"
-}
-declare enum horizontalConstEnum {
-    Left = "Left",
-    Right = "Right",
-    Center = "Center"
 }
 /**
  * 标准组件类型
@@ -19608,22 +18919,12 @@ interface StandardComponentType<ComponentProp extends AllComponentType = AllComp
     loadAnimation: Animation;
     /** 预设子组件列表（可选） */
     presetChild?: ChildComponent[];
-    /** IoT配置（可选） */
-    iotConfig?: IotConfig;
     /** 素材库条目列表（可选）。注意不是 MinioResource，见 ComponentMinioAsset 的说明 */
     minioArr?: ComponentMinioAsset[];
-    /** 是否启用数据分析（可选） */
-    enableDataAnalysis?: boolean;
-    /** 数据分析名称（可选） */
-    dataAnalysisName?: string;
     /** 父组件ID（可选） */
     parent?: number;
     /** 单位铺满类型（可选） */
     unitPavenType?: "percent";
-    /** @description 约束布局 纵向 */
-    verticalConst?: verticalConstEnum;
-    /** @description 约束布局 横向 */
-    horizontalConst?: horizontalConstEnum;
 }
 /**
  * 组件类型（允许任意扩展字段）
@@ -19856,29 +19157,6 @@ type indicatorEchartType = IndicatorEchartEnum;
 type AllEchartType = AllEchartEnum;
 
 /**
- * 设备组件类型
- * @description 物联网设备类组件的类型标识
- */
-/**
- * 设备组件枚举
- * @description 各种物联网设备组件的类型标识
- */
-declare enum EquipmentEnum {
-    /** 通用设备 */
-    IotGeneralEquipment = "iotGeneralEquipment",
-    /** 音量滑块 */
-    IotFormSlider = "iotFormSlider",
-    /** 开关 */
-    IotFormSwitch = "iotFormSwitch",
-    /** 页面切换 */
-    IotSubTabs = "iotSubtabs",
-    /** 设备控件 */
-    IotMutual = "iotMutual"
-}
-/** @deprecated 使用 EquipmentEnum 代替 */
-type EquipmentEnumType = EquipmentEnum;
-
-/**
  * 展品组件类型
  * @description 展品类组件的类型标识
  */
@@ -19891,38 +19169,18 @@ declare enum ExhibitEnum {
     RingIndicator3d = "ringIndicator3d",
     /** 3D环形指示器新版 */
     ringIndicator3dNew = "ringIndicator3dNew",
-    /** 滑动卡片V1 */
-    FtSlidecardV1 = "sw-slidecard-v1",
     /** 3D图片列表 */
     ImagesList3d = "imagesList3d",
-    /** AI问答 */
-    FtQachat = "sw-qachat",
     /** PDF查看器 */
     PdfjsViewer = "pdfjs-viewer",
     /** 空间粒子 */
     FtParticles = "sw-particles",
-    /** 3D立方体 */
-    FtRotateCube = "sw-rotateCube",
     /** 签名板 */
     FtSignaturePad = "sw-signaturePad",
-    /** 曲线轨道列表 */
-    CurvedTrackList = "CurvedTrackList",
-    /** 译文转换 */
-    FtTranslation = "sw-translation",
-    /** 轮播图V2 */
-    FtCarouselImageV2 = "sw-carousel-image-v2",
-    /** 翻页组件 */
-    FtTurnPage = "sw-turn-page",
     /** 滤镜组件 */
     FtFilter = "sw-filter",
-    /** 弹性装饰 */
-    FtFlexDecoration = "sw-flex-decoration",
-    /** 点九图 */
-    FtNinePatch = "sw-nine-patch",
     /** 垂直卡片 */
-    verticalCard = "verticalCard",
-    /** 旋转组件 */
-    FtRotate = "sw-rotate"
+    verticalCard = "verticalCard"
 }
 /** @deprecated 使用 ExhibitEnum 代替 */
 type ExhibitEnumType = ExhibitEnum;
@@ -19961,9 +19219,7 @@ declare enum ExtendsEnum {
     /** 天气 */
     FtWeather = "sw-weather",
     /** 遮罩层 */
-    FtMaskLayer = "sw-mask-layer",
-    /** 360全景图 */
-    PhotoSphereViewer = "photo-sphere-viewer"
+    FtMaskLayer = "sw-mask-layer"
 }
 /**
  * 扩展子组件枚举
@@ -19986,7 +19242,6 @@ declare const extendsChildComponentEnum: typeof ExtendsChildComponentEnum;
 type extendsChildComponentEnumType = ExtendsChildComponentEnum;
 
 import { AllEchartEnum, BarEchartEnum, IndicatorEchartEnum, indicatorEchartEnum, LineEchartEnum, lineEchartEnum, OtherEchartEnum, otherEchartEnum, PieEchartEnum, pieEchartEnum, ProjectEchartEnum, projectEchartEnum, RingEchartEnum, ringEchartEnum, ScatterEchartEnum, scatterEchartEnum, EchartComponentType } from './echart';
-import { EquipmentEnum } from './equipment';
 import { ExhibitEnum } from './exhibit';
 import { ExtendsChildComponentEnum, ExtendsEnum } from './extends';
 import { IndicatorEnum } from './indicator';
@@ -20010,8 +19265,6 @@ type { sceneEnumType } from './scene';
 export { SceneEnum, sceneEnum } from './scene';
 type { ExhibitEnumType } from './exhibit';
 export { ExhibitEnum } from './exhibit';
-type { EquipmentEnumType } from './equipment';
-export { EquipmentEnum } from './equipment';
 type { ThirdPartEnumType } from './third-party';
 export { ThirdPartEnum } from './third-party';
 type { extendsChildComponentEnumType, extendsEnumType } from './extends';
@@ -20031,7 +19284,7 @@ declare const allComponentType: AllComponentType[];
  * 所有组件类型的联合类型
  * @description 包含所有组件类型的联合类型，用于类型检查和约束
  */
-type AllComponentType = EchartComponentType | PanelEnum | TextEnum | IndicatorEnum | MediaEnum | InteractiveEnum | ThreeComponentEnum | SceneEnum | ExhibitEnum | EquipmentEnum | ThirdPartEnum | FolderEnum | ExtendsChildComponentEnum | ExtendsEnum;
+type AllComponentType = EchartComponentType | PanelEnum | TextEnum | IndicatorEnum | MediaEnum | InteractiveEnum | ThreeComponentEnum | SceneEnum | ExhibitEnum | ThirdPartEnum | FolderEnum | ExtendsChildComponentEnum | ExtendsEnum;
 
 /**
  * 指标组件类型
@@ -20042,10 +19295,6 @@ type AllComponentType = EchartComponentType | PanelEnum | TextEnum | IndicatorEn
  * @description 各种指标组件的类型标识
  */
 declare enum IndicatorEnum {
-    /** 周期表 */
-    FtPeriodictable = "swPeriodictable",
-    /** 数字翻牌器V2 */
-    FtCountupV2 = "sw-countup-v2",
     /** 光栅进度条 */
     RasterProgressBar = "rasterProgressBar",
     /** 图标占比 */
@@ -20055,8 +19304,6 @@ declare enum IndicatorEnum {
     /** 动态占比 */
     FtDynamicRatio = "swdynamicratio",
     /** 翻牌器 */
-    FtFlop = "swflop",
-    /** 翻牌器v3 */
     FtFlopPerformance = "swFlopPerformance",
     /** 环形图 */
     EchartRing = "echartring",
@@ -20111,8 +19358,6 @@ declare enum InteractiveEnum {
     Subtabs = "subtabs",
     /** 互斥组件 */
     FtMutual = "sw-mutual",
-    /** 集成交互 */
-    FtIntegrationMutual = "sw-integration-mutual",
     /** 搜索 */
     FtSearch = "sw-search",
     /** 时间轴 */
@@ -20132,8 +19377,6 @@ declare const interactiveEnum: typeof InteractiveEnum;
  * @description 各种媒体组件的类型标识
  */
 declare enum MediaEnum {
-    /** H5播放器 */
-    FtH5player = "swH5player",
     /** 轮播卡片 */
     FtSwiperCard = "swSwiperCard",
     /** 嵌入音频 */
@@ -20560,43 +19803,7 @@ declare enum EventTypeEnum {
     /**
      * @description 滚动结束
      */
-    ScrollEnd = "scrollEnd",
-    /**
-     * @description 卡片开始翻转
-     */
-    startRotate = "startRotate",
-    /**
-     * @description 卡片开始翻转结束
-     */
-    endRotate = "endRotate",
-    /**
-     * @description 卡片开始放大
-     */
-    startScaleRotate = "startScaleRotate",
-    /**
-     * @description 卡片开始放大结束
-     */
-    endScaleRotate = "endScaleRotate",
-    /**
-     * @description 卡片开始缩小
-     */
-    startSmallRotate = "startSmallRotate",
-    /**
-     * @description 卡片开始放大结束
-     */
-    endSmallRotate = "endSmallRotate",
-    /**
-     * @description 反向开始翻转
-     */
-    reversalStartRotate = "reversalStartRotate",
-    /**
-     * @description 反向翻转结束
-     */
-    reversalEndRotate = "reversalEndRotate",
-    /**
-     * @description 当翻到最后一页时
-     */
-    flipTheBookFinalPage = "flipTheBookFinalPage"
+    ScrollEnd = "scrollEnd"
 }
 declare enum EncodeEventTypeEnum {
     /**
@@ -21005,11 +20212,11 @@ type { LargeScreeInfo, LargeScreenDetailInfo, ParsedLargeScreenInfo, Prohibition
 export { AdaptationType, adaptationType } from './large-screen';
 type { ArtifactAppPreviewData, ArtifactAppPreviewMode, ArtifactAppPreviewOption } from './artifact-app-preview';
 type { AllComponentType, EchartComponentType } from './componentProp';
-export { AllEchartEnum, BarEchartEnum, EquipmentEnum, ExhibitEnum, ExtendsChildComponentEnum, extendsChildComponentEnum, ExtendsEnum, extendsEnum, FolderEnum, IndicatorEchartEnum, indicatorEchartEnum, IndicatorEnum, InteractiveEnum, LineEchartEnum, lineEchartEnum, MediaEnum, OtherEchartEnum, otherEchartEnum, PanelEnum, PieEchartEnum, pieEchartEnum, ProjectEchartEnum, projectEchartEnum, RingEchartEnum, ringEchartEnum, ScatterEchartEnum, scatterEchartEnum, SceneEnum, sceneEnum, TextEnum, ThirdPartEnum, ThreeComponentEnum } from './componentProp';
+export { AllEchartEnum, BarEchartEnum, ExhibitEnum, ExtendsChildComponentEnum, extendsChildComponentEnum, ExtendsEnum, extendsEnum, FolderEnum, IndicatorEchartEnum, indicatorEchartEnum, IndicatorEnum, InteractiveEnum, LineEchartEnum, lineEchartEnum, MediaEnum, OtherEchartEnum, otherEchartEnum, PanelEnum, PieEchartEnum, pieEchartEnum, ProjectEchartEnum, projectEchartEnum, RingEchartEnum, ringEchartEnum, ScatterEchartEnum, scatterEchartEnum, SceneEnum, sceneEnum, TextEnum, ThirdPartEnum, ThreeComponentEnum } from './componentProp';
 export { indicatorEnum, interactiveEnum, mediaEnum, textEnum, threeComponentEnum } from './componentProp';
-type { AllEchartType, BarEchartType, EquipmentEnumType, ExhibitEnumType, extendsChildComponentEnumType, extendsEnumType, FolderType, indicatorEchartType, lineEchartsType, otherEchartType, PanelType, pieEchartType, projectEchartType, ringEchartType, scatterEchartType, sceneEnumType, ThirdPartEnumType } from './componentProp';
-type { Animation, BindComponent, Callback, CallbackManager, CallbackRelation, CallbackSource, CallbackTarget, ChildComponent, ComponentMinioAsset, ComponentType, DataRemark, DataSourceType, DbItem, Filter, IotAddress, IotConfig, ListenArg, MinioResource, OperateCode, PanelState, StandardComponentType, SystemComponentProps, WebSocketDataSource } from './component';
-export { DataType, horizontalConstEnum, verticalConstEnum } from './component';
+type { AllEchartType, BarEchartType, ExhibitEnumType, extendsChildComponentEnumType, extendsEnumType, FolderType, indicatorEchartType, lineEchartsType, otherEchartType, PanelType, pieEchartType, projectEchartType, ringEchartType, scatterEchartType, sceneEnumType, ThirdPartEnumType } from './componentProp';
+type { Animation, BindComponent, Callback, CallbackManager, CallbackRelation, CallbackSource, CallbackTarget, ChildComponent, ComponentMinioAsset, ComponentType, DataRemark, DataSourceType, DbItem, Filter, IotAddress, ListenArg, MinioResource, PanelState, StandardComponentType, SystemComponentProps, WebSocketDataSource } from './component';
+export { DataType } from './component';
 type { EncodeEvent, Event, eventToTriggerFunction } from './event';
 export { allowEventComponentList, EncodeEvent2ComponentType, EncodeEventList, EncodeEventTypeEnum, Event2ComponentType, EventList, EventTypeEnum } from './event';
 type { toAddEvent, TotalPanelEventMap } from './component-event';
@@ -21020,658 +20227,6 @@ type { CityConfig, FontFile, GeoFile, HtmlGenerateOptions, ResourceFile, SceneCo
 export { echartsTabEnum } from './ui-tabs';
 type { MenuItemForRender, ScreenVersion } from './asset';
 export { FileTypeEnum, ResourceTypeEnum } from './asset';
-
-/**
- * 物联操作码类型
- * @description 定义物联网设备的操作类型
- */
-type OperateCode = "SWITCH" | "VOLUME" | "BUTTON" | "LIST_WINDOWS" | "SWITCH_WINDOWS";
-/**
- * 物联网配置接口
- * @description 定义物联网设备的控制参数和配置信息
- */
-interface IotConfig {
-    /** 操作码，定义设备控制类型 */
-    operateCode: OperateCode;
-    /** 物联网地址（可选） */
-    iotAddress?: string;
-    /** 产品品牌 ID（可选） */
-    productBrandId?: string;
-    /** 产品分类 ID（可选） */
-    productCategoryId?: string;
-    /** 产品编码（可选） */
-    productCode?: string;
-    /** 分组 ID（可选） */
-    groupId?: string;
-    /** 设备分组 ID（可选） */
-    deviceGroupId?: string;
-    /** 设备 ID（可选） */
-    deviceId?: string;
-    /** 集成控制 ID（可选） */
-    integratedControlId?: string;
-    /** 操作描述（可选） */
-    operateDescription?: string;
-    /** 操作参数，键值对形式（可选） */
-    params?: Record<string, any>;
-    /** 电路编号（可选） */
-    circuitIndex?: number;
-    /** 选中的状态（可选） */
-    selectedStatus?: number;
-    /** 设备类型：单设备或集成设备（可选） */
-    deviceType?: "single" | "integrated";
-}
-
-interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    code: number;
-    result: T;
-    timestamp: number;
-    requestId: string;
-    onlTable: any;
-}
-/**
- * 产品项类型
- */
-interface ProductItem {
-    /**
-     * 创建人
-     */
-    createdBy: string;
-    /**
-     * 创建时间(ISO格式字符串){
-    createdBy: "system",
-    createdTime: "2025-06-23 16:54:14",
-    updatedBy: "system",
-    updatedTime: "2025-08-11 09:25:21",
-    id: 1,
-    userId: null,
-    categoryName: "继电器",
-    isSystemDefined: true,
-    displayOrder: 0,
-    remark: "继电器",
-  }
-     */
-    createdTime: string;
-    /**
-     * 更新人
-     */
-    updatedBy: string;
-    /**
-     * 更新时间(ISO格式字符串)
-     */
-    updatedTime: string;
-    /**
-     * 产品ID
-     */
-    id: number;
-    /**
-     * 用户ID
-     */
-    userId: number;
-    /**
-     * 产品名称
-     */
-    productName: string;
-    /**
-     * 产品分类
-     */
-    productCategory: string;
-    /**
-     * 网络类型
-     */
-    networkType: string;
-    /**
-     * 备注信息
-     */
-    remark: string;
-    /**
-     * 产品编码
-     */
-    code: string;
-}
-interface SelectObj {
-    /** 创建人 */
-    createdBy: string;
-    /** 创建时间 */
-    createdTime: string;
-    /** 更新人 */
-    updatedBy: string;
-    /** 更新时间 */
-    updatedTime: string;
-    /** ID */
-    id: number;
-    /** 用户ID */
-    userId: number;
-    /** 设备名称 */
-    deviceName: string;
-    /** 分组ID */
-    groupId: number;
-    /** 分组名称 */
-    groupName: string;
-    /** 产品名称 */
-    productName: string;
-    /** 产品编码 */
-    productCode: string;
-    /** 产品分类ID */
-    productId: number;
-    /** 产品分类名称 */
-    productCategoryName: string;
-    productCategoryId: string;
-    /** 是否启用 */
-    isEnabled: boolean;
-    /** 设备状态 */
-    deviceStatus: boolean;
-    /** 配置信息 */
-    config: Config;
-    /** 设备信息 */
-    info: DeviceInfo;
-}
-interface OrderColumn {
-    /** 排序字段 */
-    [key: string]: "asc" | "desc";
-}
-interface RequestParams {
-    /** 查询对象 */
-    selectObj: Partial<SelectObj>;
-    /** 每页大小 */
-    pageSize: number;
-    /** 当前页码 */
-    current: number;
-    /** 排序字段 */
-    orderColumns: OrderColumn[];
-}
-/**
- * 设备操作参数类型
- */
-type DeviceOperateParams = {
-    deviceId: number;
-    operateCode: "LIST_WINDOWS";
-    params?: {
-        pattern: string;
-    };
-} | {
-    deviceId: number;
-    operateCode: "SWITCH_WINDOWS";
-    params: {
-        hwnd: number;
-    };
-} | {
-    deviceId: number;
-    operateCode: "BUTTON";
-    params: {
-        switchValue: 0;
-    };
-} | {
-    deviceId: number;
-    operateCode: "SWITCH";
-    params: {
-        switchValue: 1 | 0;
-    };
-} | {
-    deviceId: number;
-    operateCode: "VOLUME";
-    params: {
-        value: number;
-        type: "FIXED";
-    };
-};
-type DeviceOperateParamsWithCircuitIndex = DeviceOperateParams & {
-    params: {
-        circuitIndex?: number;
-    };
-};
-/**
- * 设备查询参数
- */
-interface DeviceQueryParams {
-    /** 分组ID */
-    groupId?: number | string;
-    /** 产品编码 */
-    productCode?: string;
-    /** 设备名称 */
-    deviceName?: string;
-    /** 产品ID */
-    productId?: number;
-}
-/**
- * 电路信息
- */
-interface CircuitInfo {
-    /**
-     * 电路编号
-     */
-    circuit: number;
-    /**
-     * 电路索引
-     */
-    circuitIndex: number;
-    /**
-     * 状态名称
-     */
-    switchName: "开" | "开启中" | "关" | "关闭中";
-    /**
-     * 切换值
-     */
-    switchValue: "1" | "11" | "0" | "10";
-}
-interface Config {
-    /**
-     * 本地端口号
-     */
-    localPort: number;
-    /**
-     * 端口号
-     */
-    port: number;
-    /**
-     * IP地址
-     */
-    ip: string;
-    /**
-     * 本地IP地址
-     */
-    localIp: string;
-    /**
-     * 是否支持急停(存在这个字段就是有；如果没有这个组件就是普通的开关)
-     */
-    stopSupport?: "Y";
-    /**
-     * 电路名称列表
-     */
-    circuitName?: CircuitInfo[];
-}
-interface DeviceRecord {
-    createdBy: string;
-    createdTime: string;
-    updatedBy: string;
-    updatedTime: string;
-    id: number;
-    userId: number;
-    deviceName: string;
-    groupId: number;
-    groupName: string;
-    productName: string;
-    productCode: string;
-    productCategoryId: number;
-    productCategoryName: string;
-    isEnabled: boolean;
-    deviceStatus: boolean;
-    config: Config;
-    info: DeviceInfo;
-}
-/**
- * 设备信息
- */
-interface DeviceInfo {
-    /**
-     * 状态名称
-     */
-    switchName: "开" | "开启中" | "关" | "关闭中";
-    /**
-     * 切换值
-     */
-    switchValue: "1" | "11" | "0" | "10";
-    /**
-     * 音量名称
-     */
-    volume: number;
-    /**
-     * 电路名称列表
-     */
-    circuitName?: CircuitInfo[];
-}
-interface PaginationResult<T> {
-    size: number;
-    current: number;
-    pages: number;
-    records: T;
-    total: number;
-}
-/**
- * 设备分组项类型
- */
-interface DeviceGroup {
-    /**
-     * 创建人
-     */
-    createdBy: string;
-    /**
-     * 创建时间(ISO格式字符串)
-     */
-    createdTime: string;
-    /**
-     * 更新人
-     */
-    updatedBy: string;
-    /**
-     * 更新时间(ISO格式字符串)
-     */
-    updatedTime: string;
-    /**
-     * 分组ID
-     */
-    id: number;
-    /**
-     * 用户ID
-     */
-    userId: number;
-    /**
-     * 分组名称
-     */
-    groupName: string;
-    /**
-     * 排序序号
-     */
-    sortOrder: number;
-    /**
-     * 备注信息
-     */
-    remark: string;
-}
-/**
- * 表示一个窗口的信息
- */
-interface WindowInfo {
-    /**
-     * 窗口句柄，一个唯一的标识符
-     */
-    hwnd: number;
-    /**
-     * 窗口标题，即窗口的名称或描述
-     */
-    title: string;
-}
-/**
- * 设备控制配置项
- */
-interface DeviceControlConfig {
-    /**
-     * 操作代码
-     */
-    code: string;
-    /**
-     * 设备ID
-     */
-    deviceId: number;
-    /**
-     * 设备名称
-     */
-    deviceName: string;
-    /**
-     * 分组ID
-     */
-    groupId: number;
-    /**
-     * 分组名称
-     */
-    groupName: string;
-    /**
-     * 产品ID
-     */
-    productId: number;
-    /**
-     * 产品名称
-     */
-    productName: string;
-    /**
-     * 产品代码
-     */
-    productCode: string;
-    /**
-     * 产品类别ID
-     */
-    productCategoryId: number;
-    /**
-     * 产品类别名称
-     */
-    productCategoryName: string;
-    /**
-     * 是否启用
-     */
-    isEnabled: boolean;
-    /**
-     * 操作间隔（单位：秒）
-     */
-    operateInterval: number;
-    /**
-     * 操作代码
-     */
-    operateCode: string;
-    /**
-     * 排序顺序
-     */
-    sortOrder: number;
-    /**
-     * 操作描述
-     */
-    operateDescription: string;
-    /**
-     * 操作参数
-     */
-    params: {
-        [key in DeviceOperateAttributeName]?: any;
-    };
-}
-/**
- * 设备控制配置列表
- */
-interface DeviceControlConfigList {
-    /**
-     * 创建者
-     */
-    createdBy: string;
-    /**
-     * 创建时间
-     */
-    createdTime: string;
-    /**
-     * 更新者
-     */
-    updatedBy: string;
-    /**
-     * 更新时间
-     */
-    updatedTime: string;
-    /**
-     * 唯一标识符
-     */
-    id: number;
-    /**
-     * 用户ID
-     */
-    userId: number;
-    /**
-     * 名称
-     */
-    name: string;
-    /**
-     * 是否启用
-     */
-    isEnabled: boolean;
-    /**
-     * 排序顺序
-     */
-    sortOrder: number;
-    /**
-     * 设备集合名称
-     */
-    deviceCollectionName: string;
-    /**
-     * 设备控制配置项列表
-     */
-    deviceControlConfigList: DeviceControlConfig[];
-}
-/**
- * 设备操作属性选项
- */
-interface DeviceOperateAttributeOption {
-    /**
-     * 显示标签
-     */
-    label: string;
-    /**
-     * 选项值
-     */
-    value: string | number;
-}
-/**
- * 设备操作属性
- */
-type DeviceOperateAttributeName = "x" | "y" | "button" | "double" | "command" | "type" | "value" | "switchValue" | "hwnd" | "key";
-interface DeviceOperateAttribute {
-    /**
-     * 显示名称
-     */
-    displayName: string;
-    /**
-     * 属性名称
-     */
-    attributeName: DeviceOperateAttributeName;
-    /**
-     * 属性类型
-     */
-    attributeType: DeviceOperateAttributeType;
-    /**
-     * 默认值
-     */
-    defaultValue: string | number | boolean | null;
-    /**
-     * 是否必填
-     */
-    required: boolean;
-    /**
-     * 子属性列表
-     */
-    subAttributes: DeviceOperateAttribute[];
-    /**
-     * 选项列表（当attributeType为OPTION时使用）
-     */
-    options: DeviceOperateAttributeOption[];
-}
-/**
- * 设备操作项
- */
-interface DeviceOperateItem {
-    /**
-     * 操作代码
-     */
-    code: DeviceOperateCode;
-    /**
-     * 操作描述
-     */
-    description: string;
-    /**
-     * 操作属性列表
-     */
-    attributes: DeviceOperateAttribute[];
-}
-/**
- * 设备操作代码枚举
- */
-declare enum DeviceOperateCode {
-    /** 获取窗口列表 */
-    LIST_WINDOWS = "LIST_WINDOWS",
-    /** 初始化音量 */
-    INIT_VOLUME = "INIT_VOLUME",
-    /** 鼠标点击 */
-    MOUSE_CLICK = "MOUSE_CLICK",
-    /** 打开进程 */
-    OPEN_PROGRAM = "OPEN_PROGRAM",
-    /** 音量控制 */
-    VOLUME = "VOLUME",
-    /** 更新设备状态 */
-    UPDATE_STATUS = "UPDATE_STATUS",
-    /** 开关控制 */
-    SWITCH = "SWITCH",
-    /** 关闭窗口 */
-    CLOSE_WINDOWS = "CLOSE_WINDOWS",
-    /** 发送键盘指令 */
-    SEND_KEY = "SEND_KEY",
-    /** 选择窗口 */
-    SWITCH_WINDOWS = "SWITCH_WINDOWS"
-}
-/**
- * 设备操作属性类型枚举
- */
-declare enum DeviceOperateAttributeType {
-    /** 整数类型 */
-    INT = "INT",
-    /** 字符串类型 */
-    STRING = "STRING",
-    /** 布尔类型 */
-    BOOLEAN = "BOOLEAN",
-    /** 选项类型 */
-    OPTION = "OPTION"
-}
-/**
- * 常用操作代码常量
- */
-declare const COMMON_OPERATE_CODES: {
-    readonly LIST_WINDOWS: DeviceOperateCode.LIST_WINDOWS;
-    readonly INIT_VOLUME: DeviceOperateCode.INIT_VOLUME;
-    readonly MOUSE_CLICK: DeviceOperateCode.MOUSE_CLICK;
-    readonly OPEN_PROGRAM: DeviceOperateCode.OPEN_PROGRAM;
-    readonly VOLUME: DeviceOperateCode.VOLUME;
-    readonly UPDATE_STATUS: DeviceOperateCode.UPDATE_STATUS;
-    readonly SWITCH: DeviceOperateCode.SWITCH;
-    readonly CLOSE_WINDOWS: DeviceOperateCode.CLOSE_WINDOWS;
-    readonly SEND_KEY: DeviceOperateCode.SEND_KEY;
-    readonly SWITCH_WINDOWS: DeviceOperateCode.SWITCH_WINDOWS;
-};
-/**
- * 类型守卫：检查是否为有效的操作代码
- */
-declare function isValidOperateCode(code: string): code is DeviceOperateCode;
-/**
- * 类型守卫：检查是否为有效的属性类型
- */
-declare function isValidAttributeType(type: string): type is DeviceOperateAttributeType;
-/**
- * 产品分类类型
- */
-interface ProductCategory {
-    /**
-     * 创建人
-     */
-    createdBy: string;
-    /**
-     * 创建时间
-     */
-    createdTime: string;
-    /**
-     * 更新人
-     */
-    updatedBy: string;
-    /**
-     * 更新时间
-     */
-    updatedTime: string;
-    /**
-     * 分类ID
-     */
-    id: number;
-    /**
-     * 用户ID
-     */
-    userId: number | null;
-    /**
-     * 分类名称
-     */
-    categoryName: string;
-    /**
-     * 是否系统定义
-     */
-    isSystemDefined: boolean;
-    /**
-     * 显示顺序
-     */
-    displayOrder: number;
-    /**
-     * 备注信息
-     */
-    remark: string;
-}
 
 import { ActiveAnimationList, AnimationItem } from './animation/custom-animation';
 import { StatusAnimationResponse } from './animation/status-animation';
@@ -21691,11 +20246,7 @@ declare enum AdaptationType {
     /**
      * 原分辨率溢出滚动
      */
-    overflow = 3,
-    /**
-     * 按约束布局自适应
-     */
-    constraint = 4
+    overflow = 3
 }
 declare const adaptationType: {
     label: string;
@@ -21822,8 +20373,6 @@ interface LargeScreenDetailInfo {
     isEncodedControl?: boolean;
     /** z-index映射：组件z-index层级映射（可选） */
     zIndexMap?: Record<string, any>;
-    /** 是否启用快速编辑：是否启用快速编辑模式（可选） */
-    isQuickEdit?: boolean;
 }
 /**
  * 动画帧设置接口
@@ -22276,14 +20825,12 @@ declare const CoreType_EncodeEvent: typeof EncodeEvent;
 declare const CoreType_Filter: typeof Filter;
 type CoreType_IComponent = IComponent;
 declare const CoreType_IotAddress: typeof IotAddress;
-declare const CoreType_IotConfig: typeof IotConfig;
 type CoreType_LayerInfo = LayerInfo;
 declare const CoreType_ListenArg: typeof ListenArg;
 type CoreType_MenuOptionsItemType = MenuOptionsItemType;
 declare const CoreType_MinioResource: typeof MinioResource;
 type CoreType_MouseEventButton = MouseEventButton;
 declare const CoreType_MouseEventButton: typeof MouseEventButton;
-declare const CoreType_OperateCode: typeof OperateCode;
 declare const CoreType_PanelEnum: typeof PanelEnum;
 type CoreType_Scale = Scale;
 type CoreType_SceneObjectExplosion = SceneObjectExplosion;
@@ -22297,7 +20844,7 @@ type CoreType_direction = direction;
 declare const CoreType_direction: typeof direction;
 declare const CoreType_renderFolderType: typeof renderFolderType;
 declare namespace CoreType {
-  export { type CoreType_Action as Action, CoreType_ActionAnimation as ActionAnimation, CoreType_AllComponentType as AllComponentType, CoreType_Animation as Animation, CoreType_BindComponent as BindComponent, CoreType_Callback as Callback, CoreType_CallbackManager as CallbackManager, CoreType_CallbackSource as CallbackSource, CoreType_CallbackTarget as CallbackTarget, CoreType_ChildComponent as ChildComponent, CoreType_ComponentMinioAsset as ComponentMinioAsset, CoreType_ComponentType as ComponentType, CoreType_Condition as Condition, CoreType_ContextMenuType as ContextMenuType, CoreType_DataRemark as DataRemark, CoreType_DataSourceType as DataSourceType, CoreType_DataType as DataType, CoreType_DbItem as DbItem, CoreType_DragKeyEnum as DragKeyEnum, AllEchartEnum as EchartEnum, type CoreType_EditCanvasType as EditCanvasType, CoreType_EditCanvasTypeEnum as EditCanvasTypeEnum, CoreType_EncodeAction as EncodeAction, CoreType_EncodeEvent as EncodeEvent, EquipmentEnum as EquipmentEnumType, Event$1 as Event, ExhibitEnum as ExhibitEnumType, CoreType_Filter as Filter, FolderEnum as FolderType, type CoreType_IComponent as IComponent, CoreType_IotAddress as IotAddress, CoreType_IotConfig as IotConfig, IotConfig as IotConfigLocal, type CoreType_LayerInfo as LayerInfo, CoreType_ListenArg as ListenArg, type CoreType_MenuOptionsItemType as MenuOptionsItemType, CoreType_MinioResource as MinioResource, CoreType_MouseEventButton as MouseEventButton, CoreType_OperateCode as OperateCode, CoreType_PanelEnum as PanelEnum, type CoreType_Scale as Scale, type CoreType_SceneObjectExplosion as SceneObjectExplosion, CoreType_StandardComponentType as StandardComponentType, type CoreType_TargetChartType as TargetChartType, CoreType_TempPool as TempPool, ThirdPartEnum as ThirdPartEnumType, type CoreType_Translate as Translate, type CoreType_Ue4Config as Ue4Config, CoreType_WebSocketDataSource as WebSocketDataSource, CoreType_direction as direction, ExtendsChildComponentEnum as extendsChildComponentEnumType, ExtendsEnum as extendsEnumType, IndicatorEnum as indicatorEnum, InteractiveEnum as interactiveEnum, MediaEnum as mediaEnum, CoreType_renderFolderType as renderFolderType, SceneEnum as sceneEnumType, TextEnum as textEnum, ThreeComponentEnum as threeComponentEnum };
+  export { type CoreType_Action as Action, CoreType_ActionAnimation as ActionAnimation, CoreType_AllComponentType as AllComponentType, CoreType_Animation as Animation, CoreType_BindComponent as BindComponent, CoreType_Callback as Callback, CoreType_CallbackManager as CallbackManager, CoreType_CallbackSource as CallbackSource, CoreType_CallbackTarget as CallbackTarget, CoreType_ChildComponent as ChildComponent, CoreType_ComponentMinioAsset as ComponentMinioAsset, CoreType_ComponentType as ComponentType, CoreType_Condition as Condition, CoreType_ContextMenuType as ContextMenuType, CoreType_DataRemark as DataRemark, CoreType_DataSourceType as DataSourceType, CoreType_DataType as DataType, CoreType_DbItem as DbItem, CoreType_DragKeyEnum as DragKeyEnum, AllEchartEnum as EchartEnum, type CoreType_EditCanvasType as EditCanvasType, CoreType_EditCanvasTypeEnum as EditCanvasTypeEnum, CoreType_EncodeAction as EncodeAction, CoreType_EncodeEvent as EncodeEvent, Event$1 as Event, ExhibitEnum as ExhibitEnumType, CoreType_Filter as Filter, FolderEnum as FolderType, type CoreType_IComponent as IComponent, CoreType_IotAddress as IotAddress, type CoreType_LayerInfo as LayerInfo, CoreType_ListenArg as ListenArg, type CoreType_MenuOptionsItemType as MenuOptionsItemType, CoreType_MinioResource as MinioResource, CoreType_MouseEventButton as MouseEventButton, CoreType_PanelEnum as PanelEnum, type CoreType_Scale as Scale, type CoreType_SceneObjectExplosion as SceneObjectExplosion, CoreType_StandardComponentType as StandardComponentType, type CoreType_TargetChartType as TargetChartType, CoreType_TempPool as TempPool, ThirdPartEnum as ThirdPartEnumType, type CoreType_Translate as Translate, type CoreType_Ue4Config as Ue4Config, CoreType_WebSocketDataSource as WebSocketDataSource, CoreType_direction as direction, ExtendsChildComponentEnum as extendsChildComponentEnumType, ExtendsEnum as extendsEnumType, IndicatorEnum as indicatorEnum, InteractiveEnum as interactiveEnum, MediaEnum as mediaEnum, CoreType_renderFolderType as renderFolderType, SceneEnum as sceneEnumType, TextEnum as textEnum, ThreeComponentEnum as threeComponentEnum };
 }
 
 declare const sdk: {
@@ -23079,58 +21626,18 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;
@@ -23909,32 +22416,12 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -24296,58 +22783,18 @@ declare const sdk: {
                         opacityOpen?: boolean | undefined;
                     };
                     presetChild?: /*elided*/ any[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 }[] | undefined;
-                iotConfig?: {
-                    operateCode: OperateCode;
-                    iotAddress?: string | undefined;
-                    productBrandId?: string | undefined;
-                    productCategoryId?: string | undefined;
-                    productCode?: string | undefined;
-                    groupId?: string | undefined;
-                    deviceGroupId?: string | undefined;
-                    deviceId?: string | undefined;
-                    integratedControlId?: string | undefined;
-                    operateDescription?: string | undefined;
-                    params?: Record<string, any> | undefined;
-                    circuitIndex?: number | undefined;
-                    selectedStatus?: number | undefined;
-                    deviceType?: "single" | "integrated" | undefined;
-                } | undefined;
                 minioArr?: {
                     [x: string]: unknown;
                     id: number;
                 }[] | undefined;
-                enableDataAnalysis?: boolean | undefined;
-                dataAnalysisName?: string | undefined;
                 parent?: number | undefined;
                 unitPavenType?: "percent" | undefined;
-                verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 width?: never | undefined;
                 height?: never | undefined;
                 parentDynamicPanelId?: number[] | undefined;
@@ -24400,7 +22847,6 @@ declare const sdk: {
                 mark?: Record<string, any> | undefined;
                 isEncodedControl?: boolean | undefined;
                 zIndexMap?: Record<string, any> | undefined;
-                isQuickEdit?: boolean | undefined;
             };
             backgroundUrl: string | null;
             id: number;
@@ -25236,58 +23682,18 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;
@@ -26066,32 +24472,12 @@ declare const sdk: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -26453,58 +24839,18 @@ declare const sdk: {
                         opacityOpen?: boolean | undefined;
                     };
                     presetChild?: /*elided*/ any[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 }[] | undefined;
-                iotConfig?: {
-                    operateCode: OperateCode;
-                    iotAddress?: string | undefined;
-                    productBrandId?: string | undefined;
-                    productCategoryId?: string | undefined;
-                    productCode?: string | undefined;
-                    groupId?: string | undefined;
-                    deviceGroupId?: string | undefined;
-                    deviceId?: string | undefined;
-                    integratedControlId?: string | undefined;
-                    operateDescription?: string | undefined;
-                    params?: Record<string, any> | undefined;
-                    circuitIndex?: number | undefined;
-                    selectedStatus?: number | undefined;
-                    deviceType?: "single" | "integrated" | undefined;
-                } | undefined;
                 minioArr?: {
                     [x: string]: unknown;
                     id: number;
                 }[] | undefined;
-                enableDataAnalysis?: boolean | undefined;
-                dataAnalysisName?: string | undefined;
                 parent?: number | undefined;
                 unitPavenType?: "percent" | undefined;
-                verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                 width?: never | undefined;
                 height?: never | undefined;
                 parentDynamicPanelId?: number[] | undefined;
@@ -26557,7 +24903,6 @@ declare const sdk: {
                 mark?: Record<string, any> | undefined;
                 isEncodedControl?: boolean | undefined;
                 zIndexMap?: Record<string, any> | undefined;
-                isQuickEdit?: boolean | undefined;
             };
             backgroundUrl: string | null;
             id: number;
@@ -26620,10 +24965,7 @@ declare const sdk: {
         isLoad: vue.Ref<boolean, boolean>;
         groupData: vue.Ref<ComponentType[], ComponentType[]>;
         setDetail2Config: (res: _screenwright_types.LargeScreeInfo) => void;
-        initLargeScreen: (id: number, shareConfig?: {
-            isShare: boolean;
-            password?: string;
-        }) => Promise<void>;
+        initLargeScreen: (id: number) => Promise<void>;
         initLargeScreenData: (res: _screenwright_types.LargeScreeInfo) => Promise<void>;
         initCallbackArguments: (componentList: ComponentType[] | ChildComponent[]) => void;
     };
@@ -26689,7 +25031,6 @@ declare const sdk: {
         isDynamicPanel: () => boolean;
         isEncodePanel: () => boolean;
         isBuild: () => boolean;
-        isQuickEdit: () => boolean;
         scrollIntoViewTree: (id: string) => void;
     };
     useGlobalAnimation: () => {
@@ -28019,58 +26360,18 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         }[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -28849,32 +27150,12 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             parent?: number | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                             width?: never | undefined;
                             height?: never | undefined;
                             parentDynamicPanelId?: number[] | undefined;
@@ -29236,58 +27517,18 @@ declare const screenwright: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;
@@ -29340,7 +27581,6 @@ declare const screenwright: {
                     mark?: Record<string, any> | undefined;
                     isEncodedControl?: boolean | undefined;
                     zIndexMap?: Record<string, any> | undefined;
-                    isQuickEdit?: boolean | undefined;
                 };
                 backgroundUrl: string | null;
                 id: number;
@@ -30176,58 +28416,18 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         }[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         parent?: number | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                         width?: never | undefined;
                         height?: never | undefined;
                         parentDynamicPanelId?: number[] | undefined;
@@ -31006,32 +29206,12 @@ declare const screenwright: {
                                 opacityOpen?: boolean | undefined;
                             };
                             presetChild?: /*elided*/ any[] | undefined;
-                            iotConfig?: {
-                                operateCode: OperateCode;
-                                iotAddress?: string | undefined;
-                                productBrandId?: string | undefined;
-                                productCategoryId?: string | undefined;
-                                productCode?: string | undefined;
-                                groupId?: string | undefined;
-                                deviceGroupId?: string | undefined;
-                                deviceId?: string | undefined;
-                                integratedControlId?: string | undefined;
-                                operateDescription?: string | undefined;
-                                params?: Record<string, any> | undefined;
-                                circuitIndex?: number | undefined;
-                                selectedStatus?: number | undefined;
-                                deviceType?: "single" | "integrated" | undefined;
-                            } | undefined;
                             minioArr?: {
                                 [x: string]: unknown;
                                 id: number;
                             }[] | undefined;
-                            enableDataAnalysis?: boolean | undefined;
-                            dataAnalysisName?: string | undefined;
                             parent?: number | undefined;
                             unitPavenType?: "percent" | undefined;
-                            verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                            horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                             width?: never | undefined;
                             height?: never | undefined;
                             parentDynamicPanelId?: number[] | undefined;
@@ -31393,58 +29573,18 @@ declare const screenwright: {
                             opacityOpen?: boolean | undefined;
                         };
                         presetChild?: /*elided*/ any[] | undefined;
-                        iotConfig?: {
-                            operateCode: OperateCode;
-                            iotAddress?: string | undefined;
-                            productBrandId?: string | undefined;
-                            productCategoryId?: string | undefined;
-                            productCode?: string | undefined;
-                            groupId?: string | undefined;
-                            deviceGroupId?: string | undefined;
-                            deviceId?: string | undefined;
-                            integratedControlId?: string | undefined;
-                            operateDescription?: string | undefined;
-                            params?: Record<string, any> | undefined;
-                            circuitIndex?: number | undefined;
-                            selectedStatus?: number | undefined;
-                            deviceType?: "single" | "integrated" | undefined;
-                        } | undefined;
                         minioArr?: {
                             [x: string]: unknown;
                             id: number;
                         }[] | undefined;
-                        enableDataAnalysis?: boolean | undefined;
-                        dataAnalysisName?: string | undefined;
                         unitPavenType?: "percent" | undefined;
-                        verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                        horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     }[] | undefined;
-                    iotConfig?: {
-                        operateCode: OperateCode;
-                        iotAddress?: string | undefined;
-                        productBrandId?: string | undefined;
-                        productCategoryId?: string | undefined;
-                        productCode?: string | undefined;
-                        groupId?: string | undefined;
-                        deviceGroupId?: string | undefined;
-                        deviceId?: string | undefined;
-                        integratedControlId?: string | undefined;
-                        operateDescription?: string | undefined;
-                        params?: Record<string, any> | undefined;
-                        circuitIndex?: number | undefined;
-                        selectedStatus?: number | undefined;
-                        deviceType?: "single" | "integrated" | undefined;
-                    } | undefined;
                     minioArr?: {
                         [x: string]: unknown;
                         id: number;
                     }[] | undefined;
-                    enableDataAnalysis?: boolean | undefined;
-                    dataAnalysisName?: string | undefined;
                     parent?: number | undefined;
                     unitPavenType?: "percent" | undefined;
-                    verticalConst?: _screenwright_types.verticalConstEnum | undefined;
-                    horizontalConst?: _screenwright_types.horizontalConstEnum | undefined;
                     width?: never | undefined;
                     height?: never | undefined;
                     parentDynamicPanelId?: number[] | undefined;
@@ -31497,7 +29637,6 @@ declare const screenwright: {
                     mark?: Record<string, any> | undefined;
                     isEncodedControl?: boolean | undefined;
                     zIndexMap?: Record<string, any> | undefined;
-                    isQuickEdit?: boolean | undefined;
                 };
                 backgroundUrl: string | null;
                 id: number;
@@ -31560,10 +29699,7 @@ declare const screenwright: {
             isLoad: vue.Ref<boolean, boolean>;
             groupData: vue.Ref<ComponentType[], ComponentType[]>;
             setDetail2Config: (res: _screenwright_types.LargeScreeInfo) => void;
-            initLargeScreen: (id: number, shareConfig?: {
-                isShare: boolean;
-                password?: string;
-            }) => Promise<void>;
+            initLargeScreen: (id: number) => Promise<void>;
             initLargeScreenData: (res: _screenwright_types.LargeScreeInfo) => Promise<void>;
             initCallbackArguments: (componentList: ComponentType[] | ChildComponent[]) => void;
         };
@@ -31629,7 +29765,6 @@ declare const screenwright: {
             isDynamicPanel: () => boolean;
             isEncodePanel: () => boolean;
             isBuild: () => boolean;
-            isQuickEdit: () => boolean;
             scrollIntoViewTree: (id: string) => void;
         };
         useGlobalAnimation: () => {

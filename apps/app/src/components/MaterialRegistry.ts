@@ -7,7 +7,6 @@ import {
   ScreenwrightIndicatorMap,
   ScreenwrightInteractiveMap
 } from "@screenwright/material";
-import { ScreenwrightEquipmentComponentMap } from "@screenwright/material";
 import type { AllComponentType } from "@screenwright/types";
 
 import { ScreenwrightExtendsChildComponentMap, ScreenwrightExtendsComponentMap } from "@/components/ScreenwrightExtendsComponent/index";
@@ -62,7 +61,6 @@ class MaterialRegistry {
       ...ScreenwrightExtendsChildComponentMap,
       ...ScreenwrightTextComponentMap,
       ...ScreenwrightExhibitComponentMap,
-      ...ScreenwrightEquipmentComponentMap,
       ...ScreenwrightIndicatorMap,
       ...ScreenwrightInteractiveMap,
       ...ScreenwrightMediaMap,

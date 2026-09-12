@@ -2,11 +2,8 @@ import { ref } from "vue";
 
 import { defineStore } from "pinia";
 
-import { getRoleEquities, getRouteData, openCheckEquities } from "@/api/login";
-import type { DataOpenReq } from "@/model/DataModel";
+import { getCurrentUser, getRouteData } from "@/api/login";
 import type { TreeResult, User } from "@/model/Login";
-import type { UserRoleEquities } from "@/model/Role";
-import { UserRoleModel } from "@/model/Role";
 import { resetRouter } from "@/router/index";
 import store from "@/store";
 import { getActive, removeToken, setActive } from "@/utils/auth";
@@ -24,7 +21,6 @@ export interface MenuToRouteProps {
 
 export const useUserStore = defineStore("User", () => {
   const userInfo = ref<User>(getActive("userInfo") || null);
-  const roleEquitiesInfo = ref<UserRoleEquities>();
   const asyncRoute = ref<MenuToRouteProps[]>([]);
   const menuList = ref<TreeResult[]>([]);
   const filterRoute = ["/cityMap", "/map", "/interfaceDebugger", "/pluginLibrary", "/aiReconstruction"];
@@ -37,31 +33,13 @@ export const useUserStore = defineStore("User", () => {
     setActive("userInfo", userInfoData);
   };
 
-  const setRoleEquitiesInfo = (roleEquitiesInfoData: UserRoleEquities) => {
-    roleEquitiesInfo.value = roleEquitiesInfoData;
-    if (roleEquitiesInfo.value.userInfo) {
-      setUserInfo(roleEquitiesInfo.value.userInfo as User);
-    }
-  };
-
-  const getRoleEquitiesInfo = async (): Promise<UserRoleEquities> => {
-    const res = await getRoleEquities();
-    let result = new UserRoleModel();
+  /** 拉取当前用户信息（开源单机版恒为默认超管），用于展示用户名/角色及 createdBy 等字段取值 */
+  const fetchCurrentUser = async (): Promise<User> => {
+    const res = await getCurrentUser();
     if (res.success) {
-      result = res.result;
+      setUserInfo(res.result);
     }
-    setRoleEquitiesInfo(result);
-    return result;
-  };
-
-  const getShareScreenRoleEquitiesInfo = async (data: DataOpenReq): Promise<UserRoleEquities> => {
-    const res = await openCheckEquities(data);
-    let result = new UserRoleModel();
-    if (res.success) {
-      result = res.result;
-    }
-    setRoleEquitiesInfo(result);
-    return result;
+    return userInfo.value;
   };
 
   const getMenuRoute = (routesList: Array<TreeResult>): MenuToRouteProps[] => {
@@ -118,13 +96,10 @@ export const useUserStore = defineStore("User", () => {
     isRequestMenu,
     asyncRoute,
     menuList,
-    roleEquitiesInfo,
     setUserInfo,
     getRouteList,
-    setRoleEquitiesInfo,
     logout,
-    getRoleEquitiesInfo,
-    getShareScreenRoleEquitiesInfo
+    fetchCurrentUser
   };
 });
 

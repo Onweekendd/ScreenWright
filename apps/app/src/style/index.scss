@@ -14,4 +14,7 @@
 @import "./iconfont/iconfont.css";
 @import "./animationOut.scss";
 @import "./element/index.scss";
+// 字体文件只在 public/lib/fonts 放一份（导出离线包也用它）；app 按 public 绝对路径引用，
+// 避免 vite 再哈希拷一份进 static/ 把 dist 撑大一倍（桌面端会把整个 dist 编进二进制）。
+$fonts-dir: "/lib/fonts";
 @import "./fontface.scss";

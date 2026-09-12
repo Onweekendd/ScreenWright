@@ -195,16 +195,7 @@ export const radarShape: { label: string; value: radarShapeType }[] = [
   { label: "圆环", value: "circle" }
 ];
 
-// ftFlexDecoration 预设配置（从 app buildConfig/constants/flexDecorationPreset 下沉，纯数据无外部依赖）
-import { ConfigType, DecorationPreset, FlexTypes } from "./flexDecorationPreset";
-export { ConfigType, DecorationPreset, FlexTypes };
-export const flexDecorationConfig = {
-  FlexTypes,
-  ConfigType,
-  DecorationPreset
-};
-
-// 时间函数（ftRotate 动画配置，从 app buildConfig/constants/animation 下沉）
+// 时间函数（从 app buildConfig/constants/animation 下沉）
 export type timingFunctionType = "none" | "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out";
 export const timingFunction: { label: string; value: timingFunctionType }[] = [
   { label: "无", value: "none" },

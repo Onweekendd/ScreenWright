@@ -1,9 +1,7 @@
 import { ref, watch } from "vue";
 
-const { WEB_APP_SYSTEM_NAME } = window.webconfig;
-
 /** 项目标题 */
-const VITE_APP_TITLE = WEB_APP_SYSTEM_NAME || "BI平台";
+const VITE_APP_TITLE = "BI平台";
 
 /** 动态标题 */
 const dynamicTitle = ref<string>("");

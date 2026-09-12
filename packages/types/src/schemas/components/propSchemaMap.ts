@@ -35,12 +35,10 @@ import { echartzebraBarAndLineDataSchema, echartzebraBarAndLineOptionSchema } fr
 import { swDataContainerDataSchema, swDataContainerOptionSchema } from "./extends/sw-dataContainer";
 import { swDigitalHumanDataSchema, swDigitalHumanOptionSchema } from "./extends/sw-digital-human";
 import { swMaskLayerDataSchema, swMaskLayerOptionSchema } from "./extends/sw-mask-layer";
-import { swTopoContainerDataSchema, swTopoContainerOptionSchema } from "./extends/sw-topo-container";
 import { swUnrealEngineDataSchema, swUnrealEngineOptionSchema } from "./extends/sw-unreal-engine";
 import { swWeatherDataSchema, swWeatherOptionSchema } from "./extends/sw-weather";
 import { fullScreenSwitchDataSchema, fullScreenSwitchOptionSchema } from "./extends/fullScreenSwitch";
 import { pageReloadDataSchema, pageReloadOptionSchema } from "./extends/pageReload";
-import { photoSphereViewerDataSchema, photoSphereViewerOptionSchema } from "./extends/photo-sphere-viewer";
 import { simpleBarrageDataSchema, simpleBarrageOptionSchema } from "./extends/simple-barrage";
 import { simpleParticleDataSchema, simpleParticleOptionSchema } from "./extends/simple-particle";
 import { simpleStarDataSchema, simpleStarOptionSchema } from "./extends/simpleStar";
@@ -52,11 +50,8 @@ import { echartLiquidFillDataSchema, echartLiquidFillOptionSchema } from "./indi
 import { echartprogressDataSchema, echartprogressOptionSchema } from "./indicator/echartprogress";
 import { echartRingDataSchema, echartRingOptionSchema } from "./indicator/echartring";
 import { echartWordcloudDataSchema, echartWordcloudOptionSchema } from "./indicator/echartwordcloud";
-import { swCountupV2DataSchema, swCountupV2OptionSchema } from "./indicator/sw-countup-v2";
 import { ftdynamicratioDataSchema, ftdynamicratioOptionSchema } from "./indicator/swdynamicratio";
-import { ftflopDataSchema, ftflopOptionSchema } from "./indicator/swflop";
 import { swFlopPerformanceDataSchema, swFlopPerformanceOptionSchema } from "./indicator/swFlopPerformance";
-import { swPeriodictableDataSchema, swPeriodictableOptionSchema } from "./indicator/swPeriodictable";
 import { iconRatioDataSchema, iconRatioOptionSchema } from "./indicator/iconRatio";
 import { rankProgressDataSchema, rankProgressOptionSchema } from "./indicator/rank-progress";
 import { rasterProgressBarDataSchema, rasterProgressBarOptionSchema } from "./indicator/rasterProgressBar";
@@ -65,7 +60,6 @@ import { formCheckboxDataSchema, formCheckboxOptionSchema } from "./interactive/
 import { formNavMenuDataSchema, formNavMenuOptionSchema } from "./interactive/formNavMenu";
 import { formSliderDataSchema, formSliderOptionSchema } from "./interactive/formSlider";
 import { formSwitchDataSchema, formSwitchOptionSchema } from "./interactive/formSwitch";
-import { swIntegrationMutualDataSchema, swIntegrationMutualOptionSchema } from "./interactive/sw-integration-mutual";
 import { swMutualDataSchema, swMutualOptionSchema } from "./interactive/sw-mutual";
 import { swSearchDataSchema, swSearchOptionSchema } from "./interactive/sw-search";
 import { swVoiceControlDataSchema, swVoiceControlOptionSchema } from "./interactive/sw-voice-control";
@@ -88,7 +82,6 @@ import { subtabsDataSchema, subtabsOptionSchema } from "./interactive/subtabs";
 import { ctVideoPanelDataSchema, ctVideoPanelOptionSchema } from "./media/ctVideoPanel";
 import { swEmbedAudioDataSchema, swEmbedAudioOptionSchema } from "./media/sw-embed-audio";
 import { swOpenVideoDataSchema, swOpenVideoOptionSchema } from "./media/sw-open-video";
-import { swH5playerDataSchema, swH5playerOptionSchema } from "./media/swH5player";
 import { ftiframeDataSchema, ftiframeOptionSchema } from "./media/swiframe";
 import { ftimgDataSchema, ftimgOptionSchema } from "./media/swimg";
 import { ftswiperDataSchema, ftswiperOptionSchema } from "./media/swswiper";
@@ -163,7 +156,6 @@ export const componentPropSchemaMap = {
   "rank-progress": { data: rankProgressDataSchema, option: rankProgressOptionSchema },
   rasterProgressBar: { data: rasterProgressBarDataSchema, option: rasterProgressBarOptionSchema },
   "sw-embed-audio": { data: swEmbedAudioDataSchema, option: swEmbedAudioOptionSchema },
-  ftH5player: { data: swH5playerDataSchema, option: swH5playerOptionSchema },
   ftiframe: { data: ftiframeDataSchema, option: ftiframeOptionSchema },
   ftimg: { data: ftimgDataSchema, option: ftimgOptionSchema },
   ftOpenVideo: { data: swOpenVideoDataSchema, option: swOpenVideoOptionSchema },
@@ -175,13 +167,10 @@ export const componentPropSchemaMap = {
   echartliquidFill: { data: echartLiquidFillDataSchema, option: echartLiquidFillOptionSchema },
   echartring: { data: echartRingDataSchema, option: echartRingOptionSchema },
   echartwordcloud: { data: echartWordcloudDataSchema, option: echartWordcloudOptionSchema },
-  ftflop: { data: ftflopDataSchema, option: ftflopOptionSchema },
   iconRatio: { data: iconRatioDataSchema, option: iconRatioOptionSchema },
   echartprogress: { data: echartprogressDataSchema, option: echartprogressOptionSchema },
-  "sw-countup-v2": { data: swCountupV2DataSchema, option: swCountupV2OptionSchema },
   ftFlopPerformance: { data: swFlopPerformanceDataSchema, option: swFlopPerformanceOptionSchema },
   ftdynamicratio: { data: ftdynamicratioDataSchema, option: ftdynamicratioOptionSchema },
-  ftPeriodictable: { data: swPeriodictableDataSchema, option: swPeriodictableOptionSchema },
   "custom-component": { data: customComponentDataSchema, option: customComponentOptionSchema },
   datav: { data: datavDataSchema, option: datavOptionSchema },
   echartcommon: { data: echartcommonDataSchema, option: echartcommonOptionSchema },
@@ -194,7 +183,6 @@ export const componentPropSchemaMap = {
   ftCascader: { data: swCascaderDataSchema, option: swCascaderOptionSchema },
   ftCustomSelect: { data: swCustomSelectDataSchema, option: swCustomSelectOptionSchema },
   ftDateTimePicker: { data: swDateTimePickerDataSchema, option: swDateTimePickerOptionSchema },
-  "sw-integration-mutual": { data: swIntegrationMutualDataSchema, option: swIntegrationMutualOptionSchema },
   ftLegend: { data: swLegendDataSchema, option: swLegendOptionSchema },
   "sw-mutual": { data: swMutualDataSchema, option: swMutualOptionSchema },
   ftPageQuery: { data: swPageQueryDataSchema, option: swPageQueryOptionSchema },
@@ -212,12 +200,10 @@ export const componentPropSchemaMap = {
   "sw-dataContainer": { data: swDataContainerDataSchema, option: swDataContainerOptionSchema },
   "sw-digital-human": { data: swDigitalHumanDataSchema, option: swDigitalHumanOptionSchema },
   "sw-mask-layer": { data: swMaskLayerDataSchema, option: swMaskLayerOptionSchema },
-  "sw-topo-container": { data: swTopoContainerDataSchema, option: swTopoContainerOptionSchema },
   "sw-unreal-engine": { data: swUnrealEngineDataSchema, option: swUnrealEngineOptionSchema },
   "sw-weather": { data: swWeatherDataSchema, option: swWeatherOptionSchema },
   fullScreenSwitch: { data: fullScreenSwitchDataSchema, option: fullScreenSwitchOptionSchema },
   pageReload: { data: pageReloadDataSchema, option: pageReloadOptionSchema },
-  "photo-sphere-viewer": { data: photoSphereViewerDataSchema, option: photoSphereViewerOptionSchema },
   "simple-barrage": { data: simpleBarrageDataSchema, option: simpleBarrageOptionSchema },
   "simple-particle": { data: simpleParticleDataSchema, option: simpleParticleOptionSchema },
   simpleStar: { data: simpleStarDataSchema, option: simpleStarOptionSchema },

@@ -37,24 +37,12 @@ declare global {
     | EventTypeEnum.CardEndCollapse
     | EventTypeEnum.ScrollEnd;
 
+  /**
+   * 仅供「离线导出包」使用：导出的静态 HTML 在打包时把这份配置内联进 index.html
+   * （见 exportTemplate.ts 的 renderIndexHtml），运行 app 本身不再依赖它——
+   * 接口/minio 等地址已改为构建期直接读 process.env，不再支持运行时用 webconfig.js 覆盖。
+   */
   interface WebConfig {
-    /** 打包主目录 */
-    WEB_APP_PUBLIC_PATH?: string;
-    /** 系统接口服务 */
-    WEB_APP_API_BASE_URL?: string;
-    /** minio服务 */
-    WEB_APP_MINIO_BASE_URL?: string;
-    /** minio服务对应的库: version-test/ */
-    WEB_APP_MINIO_DEFAULT_PREFIX?: string;
-    /** 资源下载 */
-    WEB_APP_RESOURCE_BASE_URL?: string;
-    /** 说明文档 */
-    WEB_APP_DOCUMENT?: string;
-    /** 城市编辑器 */
-    WEB_APP_CITY_EDITOR?: string;
-    /** 私有化部署 */
-    WEB_APP_PRIVATE_DEPLOYMENT?: boolean;
-
     /** 终端控制websocket地址 */
     controlWebsocketUrl?: string;
     /** tcp通知websocket地址 */
@@ -108,7 +96,8 @@ declare global {
     allComponentMap?: Map<string, ComponentType>;
 
     playerStream: any;
-    webconfig: WebConfig;
+    /** 只有离线导出包会内联注入，正常运行的 app 里不存在，读取前要判空 */
+    webconfig?: WebConfig;
     screenwright: {
       sdk: ScreenwrightSdk;
     };

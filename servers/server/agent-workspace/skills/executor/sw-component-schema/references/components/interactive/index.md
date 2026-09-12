@@ -1,6 +1,6 @@
 # 交互组件 (interactive) 索引
 
-共 21 个交互组件。
+共 20 个交互组件。
 
 | 组件           | 中文名         | prop                   | 参考文件                                                      |
 | -------------- | -------------- | ---------------------- | ------------------------------------------------------------- |
@@ -11,7 +11,6 @@
 | 多级下拉框     | 多级下拉框     | ftCascader             | [ftCascader.md](ftCascader.md)                                |
 | 下拉框         | 下拉框         | ftCustomSelect         | [ftCustomSelect.md](ftCustomSelect.md)                        |
 | 时间范围选择器 | 时间范围选择器 | ftDateTimePicker       | [ftDateTimePicker.md](ftDateTimePicker.md)                    |
-| 集成交互控制   | 集成交互控制   | ft-integration-mutual  | [ft-integration-mutual.md](ft-integration-mutual.md)          |
 | 图例           | 图例           | ftLegend               | [ftLegend.md](ftLegend.md)                                    |
 | 交互组件       | 交互组件       | ft-mutual              | [ft-mutual.md](ft-mutual.md)                                  |
 | 分页           | 分页           | ftPageQuery            | [ftPageQuery.md](ftPageQuery.md)                              |

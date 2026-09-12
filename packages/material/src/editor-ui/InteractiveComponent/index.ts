@@ -10,7 +10,6 @@ import formSwitchGlobal from "./InteractiveGlobal/formSwitchGlobal.vue";
 import ftCascaderGlobal from "./InteractiveGlobal/ftCascaderGlobal.vue";
 import ftCustomSelectGlobal from "./InteractiveGlobal/ftCustomSelectGlobal.vue";
 import ftDateTimePickerGlobal from "./InteractiveGlobal/ftDateTimePickerGlobal.vue";
-import ftIntegrationMutualGlobal from "./InteractiveGlobal/ft-integration-mutualGlobal.vue";
 import ftLegendGlobal from "./InteractiveGlobal/ftLegendGlobal.vue";
 import ftMutualGlobal from "./InteractiveGlobal/ft-mutualGlobal.vue";
 import ftPageQueryGlobal from "./InteractiveGlobal/ftPageQueryGlobal.vue";
@@ -29,7 +28,6 @@ import videoProgressGlobal from "./InteractiveGlobal/videoProgressGlobal.vue";
 // ── Style ──
 import ftCascaderStyle from "./InteractiveStyle/ftCascaderStyle.vue";
 import ftCustomSelectStyle from "./InteractiveStyle/ftCustomSelectStyle.vue";
-import ftIntegrationMutualStyle from "./InteractiveStyle/ft-integration-mutualStyle.vue";
 import ftLegendStyle from "./InteractiveStyle/ftLegendStyle.vue";
 import ftMutualStyle from "./InteractiveStyle/ft-mutualStyle.vue";
 import ftPageQueryStyle from "./InteractiveStyle/ftPageQueryStyle.vue";
@@ -165,10 +163,6 @@ export const InteractiveConfigComponent: Record<InteractiveEnum, ConfigTab[]> = 
   [InteractiveEnum.FtMutual]: [
     { label: "全局", value: optionType.global, component: ftMutualGlobal },
     { label: "样式", value: optionType.style, component: ftMutualStyle }
-  ],
-  [InteractiveEnum.FtIntegrationMutual]: [
-    { label: "全局", value: optionType.global, component: ftIntegrationMutualGlobal },
-    { label: "样式", value: optionType.style, component: ftIntegrationMutualStyle }
   ],
   [InteractiveEnum.FtSearch]: [
     { label: "全局", value: optionType.global, component: ftSearchGlobal },

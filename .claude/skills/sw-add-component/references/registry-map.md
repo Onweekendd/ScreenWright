@@ -12,7 +12,6 @@
 | `scene.ts` | `SceneEnum` | 场景组件（3D、地图） |
 | `three-component.ts` | `ThreeComponentEnum` | 3D 子组件 |
 | `exhibit.ts` | `ExhibitEnum` | 展示组件 |
-| `equipment.ts` | `EquipmentEnum` | 设备组件 |
 | `panel.ts` | `PanelEnum` | 面板组件 |
 | `third-party.ts` | `ThirdPartEnum` | 三方组件 |
 | `extends.ts` | `ExtendsEnum` | 扩展组件 |
@@ -30,7 +29,6 @@
 | `ScreenwrightIndicatorMap` | `ScreenwrightIndicator/` | 指标组件 |
 | `ScreenwrightSceneComponentMap` | `ScreenwrightSceneComponent/` | 场景组件 |
 | `ScreenwrightExhibitComponentMap` | `ScreenwrightExhibitComponent/` | 展示组件 |
-| `ScreenwrightEquipmentComponentMap` | `ScreenwrightEquipmentComponent/` | 设备组件 |
 | `ScreenwrightExtendsComponentMap` | `ScreenwrightExtendsComponent/` | 扩展组件 |
 | `ScreenwrightThirdPartComponentMap` | `ScreenwrightThirdPartComponent/` | 三方组件 |
 | `SystemComponentMap` | `SystemComponent/` | 系统组件 |
@@ -53,7 +51,6 @@
 | `indicatorComponent.ts` | 指标组件 |
 | `sceneComponent.ts` | 场景组件 |
 | `exhibitComponent.ts` | 展示组件 |
-| `equipmentComponent.ts` | 设备组件 |
 | `extendsComponent.ts` | 扩展组件 |
 | `thirdPartComponent.ts` | 三方组件 |
 | `systemComponent.ts` | 系统组件 |
@@ -85,7 +82,6 @@ importPath = "InteractiveComponent/Interactive"
 | 文本 | `"TextComponent/Text"` |
 | 媒体 | `"MediaComponent/Media"` |
 | 指标 | `"IndicatorComponent/Indicator"` |
-| 设备 | `"EquipmentComponent/Equipment"` |
 | 场景 | `"SceneComponent/Scene"` |
 | 扩展 | `"ExtendsComponent/Extends"` |
 | 三方 | `"ThirdPartComponent/ThirdPart"` |

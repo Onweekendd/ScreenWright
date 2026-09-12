@@ -7,7 +7,6 @@ import { ElMessage } from "element-plus";
 import { omit } from "lodash-es";
 
 import { getLargeScreenInfo } from "@/api/build";
-import { openScreenData } from "@/api/dataSource";
 import { useCallbackArguments } from "@/hooks/callbackArguments/useCallbackArguments";
 import to from "@/utils/await-to-js";
 import { getVersionCode } from "@/utils/version";
@@ -43,29 +42,8 @@ export const useInitLargeScreenData = createGlobalState(() => {
   const { initializeWasm } = useAlignmentWasm();
   const isLoad = ref(false);
   const loading = ref(false);
-  /**
-   * 统一的屏幕数据获取方法
-   * 根据是否为分享模式选择不同的API调用
-   * @param id - 屏幕ID
-   * @param isShare - 是否为分享模式
-   * @param password - 分享密码（仅在分享模式下需要）
-   * @returns API调用结果
-   */
-  const fetchScreenData = async (id: number, isShare = false, password?: string) => {
-    if (isShare) {
-      return await to(openScreenData({ id, password }));
-    } else {
-      return await to(getLargeScreenInfo(id));
-    }
-  };
 
-  const initLargeScreen = async (
-    id: number,
-    shareConfig: {
-      isShare: boolean;
-      password?: string;
-    } = { isShare: false }
-  ) => {
+  const initLargeScreen = async (id: number) => {
     loading.value = true;
     isLoad.value = false;
 
@@ -76,10 +54,7 @@ export const useInitLargeScreenData = createGlobalState(() => {
     };
 
     if (isDataNotCacheInMemory() || (await checkCacheDataIsExpired())) {
-      const { isShare, password } = shareConfig;
-
-      // 使用统一的数据获取方法
-      const [error, res] = await fetchScreenData(id, isShare, password);
+      const [error, res] = await to(getLargeScreenInfo(id));
       if (error || !res) {
         loading.value = false;
         return;
@@ -89,7 +64,7 @@ export const useInitLargeScreenData = createGlobalState(() => {
 
       if (isBuild()) {
         await initializeWasm();
-        initCache(isShare, password);
+        initCache();
       }
 
       loading.value = false;
@@ -116,11 +91,11 @@ export const useInitLargeScreenData = createGlobalState(() => {
     }
   };
 
-  const initCache = async (isShare = false, password?: string) => {
+  const initCache = async () => {
     if (!navInfo.value.id) {
       return;
     }
-    const [error, res] = await fetchScreenData(navInfo.value.id, isShare, password);
+    const [error, res] = await to(getLargeScreenInfo(navInfo.value.id));
     if (error || !res) {
       return;
     }

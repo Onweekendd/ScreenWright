@@ -14,11 +14,7 @@ const freeAPI = [
   "/user/login",
   "/user/register",
   "/largeScreen/open",
-  "/largeScreenAgg/openCheckEquities",
-  "/largeScreenAgg/openCheck",
   "/largeScreenAgg/open",
-  "/largeScreen/autoPassword",
-  "/largeScreenAgg/autoPassword",
   "/data/local/getLocalData",
   "/data/db/executeSql",
   "/data/api/connect",
@@ -83,7 +79,7 @@ function createServiceWithoutCache() {
 /** 创建请求方法 */
 function createRequest(service: AxiosInstance) {
   const { VITE_API_BASE_URL } = process.env;
-  const BASE_URL = window.webconfig.WEB_APP_API_BASE_URL || VITE_API_BASE_URL;
+  const BASE_URL = VITE_API_BASE_URL;
 
   return function <T>(
     config: AxiosRequestConfig & {

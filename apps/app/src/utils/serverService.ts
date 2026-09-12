@@ -11,11 +11,7 @@ const freeAPI = [
   "/user/login",
   "/user/register",
   "/largeScreen/open",
-  "/largeScreenAgg/openCheckEquities",
-  "/largeScreenAgg/openCheck",
   "/largeScreenAgg/open",
-  "/largeScreen/autoPassword",
-  "/largeScreenAgg/autoPassword",
   "/application/isSuperAdmin"
 ];
 

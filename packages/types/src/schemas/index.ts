@@ -32,7 +32,6 @@ export { CallbackSchema, DataRemarkSchema, DataSourceTypeSchema, DataTypeSchema,
 export {
   allComponentTypeSchema,
   BarEchartEnumSchema,
-  EquipmentEnumTypeSchema,
   ExhibitEnumTypeSchema,
   extendsEnumTypeSchema,
   FolderTypeSchema,
@@ -60,7 +59,6 @@ export {
   EncodeEventSchema,
   EventSchema
 } from "./event-action-condition";
-export { IotConfigSchema } from "./iot-config";
 export { LargeScreenDetailInfoSchema, parsedLargeScreenInfoObject, ParsedLargeScreenInfoSchema } from "./large-screen";
 export { ComponentMinioAssetSchema, MinioResourceSchema } from "./minio";
 export { ProhibitionSchema, ScreenFilterInfoSchema, TerminalEnableArrSchema, WaterMarkSchema } from "./screen";

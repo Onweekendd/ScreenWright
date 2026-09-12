@@ -5,7 +5,6 @@
       <loadAnimation v-if="!isThreeSceneChild && !hasUEChild && !isThreeMapChild" />
       <callbackOptions v-if="isInteraction || hasUEChild || hanUnrealEngine" />
       <customEvent v-if="(isInteraction && isCustomEvents) || hasUEChild || hanUnrealEngine" />
-      <integrationEncodeEvent v-if="isIntegrationEncode" />
     </el-form>
   </div>
 </template>
@@ -17,17 +16,11 @@ import { eventList } from "../constants/index";
 import { useUpdateInstance } from "../useUpdateInstance";
 import callbackOptions from "./components/callbackArgument/callbackOptions.vue";
 import controlEncodes from "./components/controlEncodes/index.vue";
-import integrationEncodeEvent from "./components/integrationEncodeEvent/index.vue";
 import customEvent from "./components/interactiveConfig/customEvent.vue";
 import loadAnimation from "./components/loadAnimation.vue";
 
 const { editConfig } = useEditStore();
 const { selectTargetData } = useUpdateInstance();
-const isIntegrationEncode = computed(() => {
-  return (
-    selectTargetData.value.length === 1 && ["sw-integration-mutual"].includes(selectTargetData.value[0].component.prop)
-  );
-});
 const isThreeMapChild = computed(() => {
   return (
     selectTargetData.value.length === 1 && ["threeMap-mapGlIcon"].includes(selectTargetData.value[0].component.name)

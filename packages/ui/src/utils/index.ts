@@ -12,15 +12,13 @@ export const BaseName = {
 
 // minio资源域名公共拼接方法
 export const setMinioUrl = (url: string) => {
-  const { WEB_APP_MINIO_BASE_URL } = (window as any).webconfig;
-
   const pattern = /(data:image)|(http[s]?:\/\/)/;
   if (!isString(url)) {
     return "";
   }
   if (!url || isNil(url)) return ""; // 若为空(null/undefined)直接返回空不做判断操作
   if (url && (url.slice(0, 2) == "./" || url.slice(0, 5) == "/img/")) return url;
-  return pattern.test(url) ? url : (WEB_APP_MINIO_BASE_URL || MINIO_BASE_URL) + url;
+  return pattern.test(url) ? url : MINIO_BASE_URL + url;
 };
 
 export const uuid = (len = 36) => {

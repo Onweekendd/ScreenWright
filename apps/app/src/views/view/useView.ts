@@ -1,14 +1,10 @@
 import type { CSSProperties } from "vue";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import { useWindowSize } from "@vueuse/core";
-
-import type { LargeScreenDetailInfo } from "@screenwright/types";
 
 import { mediaEnum } from "@/components/componentEntry/type";
 import { useGlobalLoading } from "@/hooks/useGlobalLoading";
 import { useScreenScale } from "@/hooks/useScreenScale";
-import { handleConstraint } from "@/utils/constraint";
 import { useEditStore } from "@/views/build/components/buildRender/hooks/useEditStore";
 import { useInitLargeScreenData } from "@/views/build/useInitLargeScreenData";
 
@@ -21,7 +17,6 @@ import type { ComponentType } from "../build/components/buildRender/type";
 import { useEncodePanelInfo } from "../build/components/encodeEditor/useEncodePanelInfo";
 import { usePanelInfo } from "../build/components/panelEditor/usePanelInfo";
 import { useGlobalComponentData } from "../build/useGlobalComponentData";
-import { useAuth } from "./useAuth";
 import { useEncodeCommunication } from "./useEncodeCommunication";
 
 /**
@@ -81,8 +76,6 @@ export const getOverflowStyle = (config: any): CSSProperties => {
  */
 export function useView() {
   const route = useRoute();
-  const { width: windowW, height: windowH } = useWindowSize();
-  const oldCpL = ref<ComponentType[] | null>(null);
   const { componentList, editConfig, isBuild } = useEditStore();
   const { groupData, initLargeScreen } = useInitLargeScreenData();
   const { panelInfo, panelData, panelConfig, activeStatus, initPanelData, activeStatusId } = usePanelInfo();
@@ -107,8 +100,6 @@ export function useView() {
   const statusId = computed<string | undefined>(() => {
     return activeStatus.value?.id || encodeActiveStatus.value?.id;
   });
-
-  const { init: initAuth } = useAuth();
 
   // 根据路由参数自动选择配置的计算属性
   const currentConfig = computed(() => {
@@ -148,18 +139,9 @@ export function useView() {
    * @function initTerminalPanel
    * @description 执行终端面板逻辑，包括通信初始化、面板信息获取和组件列表设置
    */
-  const initTerminalPanel = async (
-    panelId: number,
-    { isShare = false, password = "" }: { isShare?: boolean; password?: string } = { isShare: false }
-  ) => {
-    await initEncodePanelData(panelId, {
-      isShare,
-      password
-    });
+  const initTerminalPanel = async (panelId: number) => {
+    await initEncodePanelData(panelId);
     initTerminalCommunication();
-    if (isShare) {
-      return;
-    }
 
     encodeActiveStatusId.value = (route.query.status as string)
       ? (route.query.status as string)
@@ -244,58 +226,15 @@ export function useView() {
    * @function initDefaultView
    * @description 当没有特定面板配置时，使用默认的组数据初始化视图并启动屏幕通信
    */
-  const initDefaultView = async (
-    id: string,
-    { isShare = false, password = "" }: { isShare?: boolean; password?: string } = { isShare: false }
-  ) => {
-    await initLargeScreen(Number(id), {
-      isShare,
-      password
-    });
+  const initDefaultView = async (id: string) => {
+    await initLargeScreen(Number(id));
 
     await onBeforeEnter();
 
     await onEnter();
 
     initScreenCommunication();
-
-    initConstraint();
   };
-
-  const initConstraint = () => {
-    if (oldCpL.value === null) {
-      oldCpL.value = JSON.parse(JSON.stringify(componentList.value));
-    } else {
-      console.log("已有数值", oldCpL.value);
-    }
-
-    if (editConfig.value.adaptationType !== 4 || !editConfig.value) {
-      return;
-    }
-    // const { width, height } = editConfig.value;
-    // const designW = Number(width);
-    // const designH = Number(height);
-    // const safeW = Number.isFinite(designW) && designW !== 0 ? designW : 1;
-    // const safeH = Number.isFinite(designH) && designH !== 0 ? designH : 1;
-
-    componentList.value = handleConstraint(
-      {
-        viewport: {
-          width: Number(windowW.value),
-          height: Number(windowH.value)
-        }
-      },
-      oldCpL.value as ComponentType[],
-      editConfig.value as LargeScreenDetailInfo
-    );
-  };
-
-  watch(
-    () => [windowW.value, windowH.value],
-    () => {
-      initConstraint();
-    }
-  );
 
   /**
    * 进入默认视图
@@ -349,11 +288,6 @@ export function useView() {
    */
   const init = async () => {
     loadingScreenData.value = true;
-    const authRes = await initAuth(); // 如果需要权限验证，可以取消注释
-    if (!authRes) {
-      loadingScreenData.value = false;
-      return;
-    }
     await initPreView();
     const allTopDynamicPanel = Array.from(allComponentMap.value.values()).filter((component) =>
       renderSystemComponentType.some(

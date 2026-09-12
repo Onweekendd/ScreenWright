@@ -22,9 +22,6 @@
       </el-tooltip>
     </div>
 
-    <div class="expiration-date">
-      <DeadlineTime v-model="expirationTime" :hasExpirationTime="hasExpirationTime" />
-    </div>
     <div class="select-content">
       已选中版本：
       <span>{{ item.name }} - V{{ selectVersionCode }}</span>
@@ -43,7 +40,6 @@ import { inject, onMounted } from "vue";
 import { dialogInjectionKey } from "@/components/Dialog/constant";
 import type { ScreenItem } from "@/model/Visual";
 
-import DeadlineTime from "../publishInfo/DeadlineTime.vue";
 import versionList from "../selectVersion/versionList.vue";
 import { exportOption, useExportComponent } from "./useExportComponent";
 
@@ -52,8 +48,7 @@ interface Props {
   item: ScreenItem;
 }
 const props = defineProps<Props>();
-const { exportType, selectVersionCode, listData, expirationTime, hasExpirationTime, initData, validate, handleSelect } =
-  useExportComponent(props.item);
+const { exportType, selectVersionCode, listData, initData, validate, handleSelect } = useExportComponent(props.item);
 onMounted(() => {
   initData();
 });
@@ -91,10 +86,6 @@ defineExpose({
       border-color: #ffffff;
     }
   }
-}
-.expiration-date {
-  margin: 10px 0;
-  color: #999999;
 }
 .select-content {
   margin: 10px 0 10px 0;

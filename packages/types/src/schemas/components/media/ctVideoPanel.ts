@@ -46,7 +46,6 @@ export const ctVideoPanelOptionSchema = z.object({
   mixBlendMode: z.string().describe("混合模式"),
   controler: z.boolean().describe("是否显示控制器"),
   autoPlay: z.boolean().describe("是否自动播放"),
-  hkVideoPlayerMode: z.number().describe("海康视频播放模式"),
   loopPlay: z.boolean().describe("是否循环播放"),
   muted: z.boolean().describe("是否静音"),
   autoHidden: z.boolean().describe("是否自动隐藏"),

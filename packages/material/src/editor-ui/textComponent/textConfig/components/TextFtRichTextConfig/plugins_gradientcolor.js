@@ -3,8 +3,12 @@
  *
  * 选中文字后点击按钮，通过 TinyMCE 对话框选择起始色、结束色、方向，
  * 将选中内容包裹为带渐变 CSS 样式的 <span>。
+ *
+ * 只在真正加载了 tinymce.min.js 的环境（主编辑器）里注册插件；
+ * 离线导出的只读预览包不带 tinymce，模块顶层直接引用全局 tinymce 会在加载时报 ReferenceError。
  */
-tinymce.PluginManager.add("gradientcolor", function (editor) {
+if (typeof tinymce !== "undefined") {
+  tinymce.PluginManager.add("gradientcolor", function (editor) {
   const pluginName = "渐变色";
 
   /**
@@ -95,4 +99,5 @@ tinymce.PluginManager.add("gradientcolor", function (editor) {
       });
     }
   });
-});
+  });
+}

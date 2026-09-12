@@ -71,7 +71,7 @@ export function isVideoPrimaryHost(host: HTMLElement): boolean {
     return !!host.querySelector(".ft-video, .ft-open-video");
   }
   const hasChart = !!host.querySelector("[_echarts_instance_]");
-  const hasSpecial3d = !!host.querySelector(".imagesList3d, .ft-swiperCard, .ft-swiper, .ringIndicator3d, .cube-main");
+  const hasSpecial3d = !!host.querySelector(".imagesList3d, .ft-swiperCard, .ft-swiper, .ringIndicator3d");
   if (hasChart || hasSpecial3d) {
     return false;
   }

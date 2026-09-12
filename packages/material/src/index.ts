@@ -1,7 +1,6 @@
 export { ScreenwrightEchartsMap } from "./components/ScreenwrightEcharts";
 export { ScreenwrightTextComponent } from "./components/ScreenwrightText";
 export { ScreenwrightExhibitComponentMap } from "./components/ScreenwrightExhibitComponent";
-export { ScreenwrightEquipmentComponentMap } from "./components/ScreenwrightEquipmentComponent";
 export { ScreenwrightIndicatorMap } from "./components/ScreenwrightIndicator";
 export { ScreenwrightInteractiveMap } from "./components/ScreenwrightInteractive";
 export {

@@ -8,10 +8,6 @@
  * @description 各种指标组件的类型标识
  */
 export enum IndicatorEnum {
-  /** 周期表 */
-  FtPeriodictable = "swPeriodictable",
-  /** 数字翻牌器V2 */
-  FtCountupV2 = "sw-countup-v2",
   /** 光栅进度条 */
   RasterProgressBar = "rasterProgressBar",
   /** 图标占比 */
@@ -21,8 +17,6 @@ export enum IndicatorEnum {
   /** 动态占比 */
   FtDynamicRatio = "swdynamicratio",
   /** 翻牌器 */
-  FtFlop = "swflop",
-  /** 翻牌器v3 */
   FtFlopPerformance = "swFlopPerformance",
   /** 环形图 */
   EchartRing = "echartring",

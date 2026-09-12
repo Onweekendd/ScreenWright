@@ -1,8 +1,6 @@
 import { type ComponentType, IndicatorEnum, MediaEnum, PanelEnum, TextEnum } from "@screenwright/types";
 import { filter, forEach, map, reduce } from "lodash-es";
 
-import { ExhibitEnumType } from "@/views/build/components/buildRender/type";
-
 import { handleComponentData } from "./handleComponentData";
 import { handleCustomCollapse } from "./strategies/customCollapseStrategies";
 import { handleFtFlopStrategy } from "./strategies/ftFlopStrategies";
@@ -15,8 +13,7 @@ import type { dictListType, SpecialTranslateHandler, TranslateContext, Translati
 export const EXCLUDED_COMPONENT_PROPS = new Set<string | number>([
   PanelEnum.dynamicPanel,
   PanelEnum.encodePanel,
-  PanelEnum.quotePanel,
-  ExhibitEnumType.FtTranslation
+  PanelEnum.quotePanel
 ]);
 
 /** 挂接特殊翻译 */
@@ -26,8 +23,6 @@ export const SPECIAL_TRANSLATION_BY_PROP = new Map<string | number, SpecialTrans
   [MediaEnum.FtSwiperV3, handleSwiper],
   [TextEnum.CustomCollapse, handleCustomCollapse],
   [TextEnum.FtRichtext, handleRichtextStrategy],
-  [IndicatorEnum.FtCountupV2, handleFtFlopStrategy],
-  [IndicatorEnum.FtFlop, handleFtFlopStrategy],
   [IndicatorEnum.FtFlopPerformance, handleFtFlopStrategy]
 ]);
 

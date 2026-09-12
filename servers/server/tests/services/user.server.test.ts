@@ -9,7 +9,7 @@ vi.mock("@/mastra/storage/prisma", () => ({
   }
 }));
 
-import { getMenuTree, getRoleEquities, isSuperAdmin } from "@/mastra/services/user.server";
+import { getCurrentUser, getMenuTree, isSuperAdmin } from "@/mastra/services/user.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 /** 构造一个完整的 BiUser 行（用 as never 绕过 Prisma 精确类型） */
@@ -60,26 +60,24 @@ describe("getMenuTree", () => {
   });
 });
 
-describe("getRoleEquities", () => {
-  it("必须返回完整 userInfo（前端会用它填充用户态）", async () => {
+describe("getCurrentUser", () => {
+  it("返回完整用户资料（前端会用它填充用户态）", async () => {
     vi.mocked(prismaClient.biUser.findUnique).mockResolvedValue(baseUser() as never);
-    const res = await getRoleEquities(1);
+    const res = await getCurrentUser(1);
     expect(res.success).toBe(true);
-    expect(res.result.userInfo).toBeTruthy();
-    expect(res.result.userInfo.userName).toBe("admin");
-    expect(res.result.userInfo.roleAuthorizationList[0].roleName).toBe("ADMIN");
-    expect(res.result.largeScreenNum).toBeGreaterThan(0);
+    expect(res.result.userName).toBe("admin");
+    expect(res.result.roleAuthorizationList[0].roleName).toBe("ADMIN");
   });
 
   it("普通用户 roleAuthorizationList 为 USER", async () => {
     vi.mocked(prismaClient.biUser.findUnique).mockResolvedValue({ ...baseUser(), role: 1 } as never);
-    const res = await getRoleEquities(1);
-    expect(res.result.userInfo.roleAuthorizationList[0].roleName).toBe("USER");
+    const res = await getCurrentUser(1);
+    expect(res.result.roleAuthorizationList[0].roleName).toBe("USER");
   });
 
   it("用户不存在 → 抛 404", async () => {
     vi.mocked(prismaClient.biUser.findUnique).mockResolvedValue(null);
-    await expect(getRoleEquities(999)).rejects.toThrow();
+    await expect(getCurrentUser(999)).rejects.toThrow();
   });
 });
 

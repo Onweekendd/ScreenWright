@@ -19,7 +19,6 @@ import SendAIManMsg from "./actions/SendAIManMsg.vue";
 import SendUE4Msg from "./actions/SendUE4Msg.vue";
 import SetDelay from "./actions/SetDelay.vue";
 import SetIndex from "./actions/SetIndex.vue";
-import SetLanguage from "./actions/SetLanguage.vue";
 import SetStateAnimation from "./actions/SetStateAnimation.vue";
 import ShowHide from "./actions/Show&Hide.vue";
 import SwiperCardChangeIndexPage from "./actions/SwiperCardChangeIndexPage.vue";
@@ -99,7 +98,6 @@ export const actionComponentMap: Record<string, Component> = {
   [ActionTypeEnum.RestartPatrol]: SetDelay,
   [ActionTypeEnum.toPrevStatus]: SetDelay,
   [ActionTypeEnum.toNextStatus]: SetDelay,
-  [ActionTypeEnum.convertTranslation]: SetLanguage,
   [ActionTypeEnum.PauseScroll]: SetDelay,
   [ActionTypeEnum.StartScroll]: SetDelay
 };

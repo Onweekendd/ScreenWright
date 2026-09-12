@@ -6,7 +6,6 @@ import FtMaskLayer from "./FtMaskLayer/index.vue";
 import FtWeather from "./FtWeather/index.vue";
 import FullScreenSwitch from "./FullScreenSwitch/index.vue";
 import PageReload from "./PageReload/index.vue";
-import photoSphereViewer from "./photoSphereViewer/index.vue";
 import SimpleBarrage from "./SimpleBarrage/index.vue";
 import SimpleParticle from "./SimpleParticle/index.vue";
 import SimpleStar from "./SimpleStar/index.vue";
@@ -23,5 +22,4 @@ export const ScreenwrightExtendsComponentMap: Partial<
   [ExtendsEnum.FtDataContainer]: FtDataContainer,
   [ExtendsEnum.FtWeather]: FtWeather,
   [ExtendsEnum.FtMaskLayer]: FtMaskLayer,
-  [ExtendsEnum.PhotoSphereViewer]: photoSphereViewer,
 };

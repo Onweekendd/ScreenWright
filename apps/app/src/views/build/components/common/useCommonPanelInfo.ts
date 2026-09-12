@@ -11,11 +11,6 @@ import type { SystemComponentProps } from "../buildRender/core/SystemComponent/t
 import { useAlignmentWasm } from "../buildRender/hooks/useAlignmentWasm";
 import type { useCommonPanelData } from "./useCommonPanelData";
 
-export interface PanelInitConfig {
-  isShare: boolean;
-  password?: string;
-}
-
 export interface CommonPanelInfoOptions {
   componentMapKey: "allComponentMap" | "encodeComponentMap";
   paramKey: "cid" | "id";
@@ -93,16 +88,7 @@ export const useCommonPanelInfo = (options: CommonPanelInfoOptions) => {
     setActiveStatusId(targetStatusId);
   };
 
-  const initPanelDataFromRemoteData = async (dynamicPanelId: number, config?: PanelInitConfig) => {
-    /**
-     * 从终端发布链接中提取出大屏Id
-     * 注意： 只有终端面板会执行此方法
-     * @returns 大屏Id
-     */
-    const getShareScreenId = () => {
-      return parseInt((route.value.params.id as string).split("-")[4]) || null;
-    };
-
+  const initPanelDataFromRemoteData = async (dynamicPanelId: number) => {
     const checkPanelExist = () => {
       if (!componentMap.value.get(`${dynamicPanelId}`)) {
         ElMessage.error("面板不存在");
@@ -112,9 +98,7 @@ export const useCommonPanelInfo = (options: CommonPanelInfoOptions) => {
       return true;
     };
 
-    const largeScreenId = config?.isShare ? getShareScreenId() : Number(route.value.params.id);
-
-    await initLargeScreen(Number(largeScreenId), config);
+    await initLargeScreen(Number(route.value.params.id));
 
     if (!checkPanelExist()) {
       return;
@@ -153,7 +137,7 @@ export const useCommonPanelInfo = (options: CommonPanelInfoOptions) => {
   };
 
   // 初始化面板数据
-  const initPanelData = async (dynamicPanelId: number, config?: PanelInitConfig) => {
+  const initPanelData = async (dynamicPanelId: number) => {
     const isDataCacheInMemory = () => {
       return groupData.value && groupData.value.length > 0 && componentMap.value;
     };
@@ -161,14 +145,14 @@ export const useCommonPanelInfo = (options: CommonPanelInfoOptions) => {
     if (isDataCacheInMemory() && !(await checkCacheDataIsExpired())) {
       initPanelDataFromLocalData(dynamicPanelId);
     } else {
-      await initPanelDataFromRemoteData(dynamicPanelId, config);
+      await initPanelDataFromRemoteData(dynamicPanelId);
     }
   };
 
   // 初始化方法
-  const initialize = async (config?: PanelInitConfig) => {
+  const initialize = async () => {
     await nextTick();
-    await initPanelData(Number(route.value.params[paramKey]), config);
+    await initPanelData(Number(route.value.params[paramKey]));
   };
 
   // 使用数据管理 hooks 中的 addPanelStatus

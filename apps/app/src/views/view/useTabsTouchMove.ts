@@ -1,7 +1,7 @@
 // 若需要手动解绑，引入Vue的生命周期钩子（自动解绑版无需）
 // import { onUnmounted, ref } from "vue";
 
-import { type ComponentType, EquipmentEnum, InteractiveEnum } from "@screenwright/types";
+import { type ComponentType, InteractiveEnum } from "@screenwright/types";
 
 import { useActionEvent } from "@/hooks/eventHandling/useActionEvent";
 
@@ -17,7 +17,7 @@ export const useTabsTouchMove = () => {
     // 1. 获取目标DOM容器（子标签滚动的容器）
     const renderDom = document.getElementById("render-container");
     // 2. 原业务：过滤需要跟随画布滑动的子标签配置
-    const isTouchingScroll = [InteractiveEnum.Subtabs, EquipmentEnum.IotSubTabs];
+    const isTouchingScroll = [InteractiveEnum.Subtabs];
     const filterTouchingScroll = componentList
       .filter((v) => isTouchingScroll.includes(v.component.prop as InteractiveEnum))
       .filter((v) => v.option.followCanvasSlide);

@@ -9,11 +9,6 @@ enableMapSet();
 // buildComponentMap 给这些组件补装 parentDynamicPanelId 时因对象不可扩展而抛错。
 setAutoFreeze(false);
 
-// vi.hoisted 在所有模块加载之前执行，确保 service.ts / cacheService.ts 初始化时 window.webconfig 已存在
-vi.hoisted(() => {
-  Object.assign(window, { webconfig: { WEB_APP_API_BASE_URL: "" } });
-});
-
 // 用于在 vi.mock factory 和测试代码之间共享 handleUpdateResponse 引用
 // vi.hoisted 保证此变量在 vi.mock factory 执行时已存在
 const shared = vi.hoisted(() => ({

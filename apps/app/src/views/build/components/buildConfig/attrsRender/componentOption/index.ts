@@ -1,5 +1,4 @@
 import { baseComponentOptions } from "./baseComponent";
-import { equipmentEnumComponentOptions } from "./equipmentComponent";
 import { exhibitEnumComponentOptions } from "./exhibitComponent";
 import { extendsComponentOptions } from "./extendsComponent";
 import { iframeComponentOptions } from "./iframeComponent";
@@ -21,7 +20,6 @@ export const componentOption = {
   ...systemComponentOptions,
   ...interactiveEnumComponentOptions,
   ...exhibitEnumComponentOptions,
-  ...equipmentEnumComponentOptions,
   ...indicatorComponentOptions,
   ...thirdPartEnumComponentOptions
 };

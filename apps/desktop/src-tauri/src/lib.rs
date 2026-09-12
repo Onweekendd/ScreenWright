@@ -14,7 +14,7 @@ struct Backend(Mutex<Option<CommandChild>>);
 const BACKEND_PORT: u16 = 4111;
 const READY_TIMEOUT: Duration = Duration::from_secs(120);
 /// 前端首屏第一个要命的接口，返回 200 才算「真就绪」（TCP 通了不代表路由已挂载）
-const READY_PROBE_PATH: &str = "/user/roleEquities/infoByApplicationCode/BI";
+const READY_PROBE_PATH: &str = "/user/current/BI";
 
 static LOG_PATH: OnceLock<PathBuf> = OnceLock::new();
 
@@ -211,10 +211,18 @@ fn wait_backend_ready() {
     log(format!("等待后端超时（{READY_TIMEOUT:?}），仍打开窗口"));
 }
 
+/// 导出功能在 Tauri webview 里没有浏览器原生下载，前端拿到目标路径后把字节内容传过来直接落盘。
+#[tauri::command]
+fn save_file(path: String, contents: Vec<u8>) -> Result<(), String> {
+    std::fs::write(&path, contents).map_err(|e| e.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
+        .invoke_handler(tauri::generate_handler![save_file])
         .setup(|app| {
             if let Ok(d) = app.path().app_data_dir() {
                 let _ = std::fs::create_dir_all(&d);

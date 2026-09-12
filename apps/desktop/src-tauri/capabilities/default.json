@@ -18,6 +18,7 @@
       "identifier": "shell:allow-execute",
       "allow": [{ "name": "binaries/node", "sidecar": true, "args": true }]
     },
-    "shell:allow-kill"
+    "shell:allow-kill",
+    "dialog:allow-save"
   ]
 }

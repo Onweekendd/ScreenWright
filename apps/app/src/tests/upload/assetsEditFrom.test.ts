@@ -104,9 +104,6 @@ const createTestComponent = (props: Props) =>
 describe("useAssetsEdit", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (window as unknown as { webconfig: Partial<WebConfig> }).webconfig = {
-      WEB_APP_MINIO_BASE_URL: "http://minio.example.com"
-    };
   });
 
   describe("编辑模式初始化", () => {

@@ -1,5 +1,5 @@
 export { ScreenwrightExhibitComponentMap as component } from "./components/ScreenwrightExhibitComponent";
-export { default as markdownView } from "./components/ScreenwrightExhibitComponent/ftQachat/aiChatQA/markdownView.vue";
+export { default as markdownView } from "./components/ScreenwrightExhibitComponent/utils/markdownView.vue";
 export { getPdfPageAsImage } from "./components/ScreenwrightExhibitComponent/pdfjsViewer/usePdfViewer";
 export { ExhibitConfigComponent as editor, optionType } from "./editor-ui/exhibitComponent/index";
 

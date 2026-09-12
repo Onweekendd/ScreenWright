@@ -194,7 +194,7 @@ public handleCallback({ sourceComponent, throwValue }) {
 
 | `dataChange` 实际抛了 | 组件（路径相对 `packages/material/src/components/`） |
 |---|---|
-| 组件对象 `props.element` | scrollTable、ftRotate（含 8 个旋转 trigger）、ftSlidecardV1（`:44` 的 click 也是）、ftTurnPage、ctVideoPanel、ftSwiperCard、openVideo、ftvideo `useFtVideo.ts:680` |
+| 组件对象 `props.element` | scrollTable、ctVideoPanel、ftSwiperCard、openVideo、ftvideo `useFtVideo.ts:680` |
 | 整个数组 | customTableList、ftProgresstable、ftTextWordCloud、ftcollection、ringIndicator3d(New)、verticalCard、ftvideo `useFtVideo.ts:332,603`、formNavMenu `useNavMenu.ts:254,291` |
 | 非数据值 | ftTimerShaft 抛 `option.value`；ftVoiceControl 抛字符串；formNavMenu `:389` 抛 `defaultActive` 字符串 |
 

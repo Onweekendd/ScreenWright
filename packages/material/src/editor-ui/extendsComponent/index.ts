@@ -7,7 +7,6 @@ import ftMaskLayerGlobal from "./extendsGlobal/ft-mask-layerGlobal.vue";
 import fullScreenSwitchGlobal from "./extendsGlobal/fullScreenSwitchGlobal.vue";
 import ftWeatherGlobal from "./extendsGlobal/ft-weatherGlobal.vue";
 import pageReloadGlobal from "./extendsGlobal/pageReloadGlobal.vue";
-import photoSphereViewerGlobal from "./extendsGlobal/photo-sphere-viewerGlobal.vue";
 import simpleBarrageGlobal from "./extendsGlobal/simple-barrageGlobal.vue";
 import simpleParticleGlobal from "./extendsGlobal/simple-particleGlobal.vue";
 import simpleStarGlobal from "./extendsGlobal/simpleStarGlobal.vue";
@@ -15,7 +14,6 @@ import ftMaskLayerFrostedGlass from "./extendsFrostedGlass/ft-mask-layerFrostedG
 import simpleBarrageBarrageStyle from "./extendsBarrageStyle/simple-barrageBarrageStyle.vue";
 import simpleBarrageNewOption from "./extendsNewOption/simple-barrageNewOption.vue";
 import simpleParticleParticleStyle from "./extendsParticleStyle/simple-particleParticleStyle.vue";
-import photoSphereViewerPictureList from "./extendsPictureList/photo-sphere-viewerPictureList.vue";
 import ftWeatherSeries from "./extendsSeries/ft-weatherSeries.vue";
 import ftWeatherStyle from "./extendsStyle/ft-weatherStyle.vue";
 
@@ -62,9 +60,5 @@ export const ExtendsConfigComponent: Partial<Record<ExtendsEnum, ConfigTab[]>> =
     { label: "全局", value: optionType.global, component: simpleBarrageGlobal },
     { label: "弹幕样式", value: optionType.barrageStyle, component: simpleBarrageBarrageStyle },
     { label: "新增配置", value: optionType.newOption, component: simpleBarrageNewOption }
-  ],
-  [ExtendsEnum.PhotoSphereViewer]: [
-    { label: "全局", value: optionType.global, component: photoSphereViewerGlobal },
-    { label: "图库", value: optionType.pictureList, component: photoSphereViewerPictureList }
   ]
 };

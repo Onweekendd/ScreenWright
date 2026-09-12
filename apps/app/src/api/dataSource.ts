@@ -2,15 +2,7 @@ import type { LargeScreeInfo } from "@screenwright/types";
 import type { AxiosRequestConfig } from "axios";
 
 import type { BaseEntity } from "@/model/BaseEntity";
-import type {
-  DataModelReq,
-  DataModelRes,
-  DataOpenReq,
-  DataSceneReq,
-  dbModelReq,
-  dbModelRes,
-  TcpUdpReq
-} from "@/model/DataModel";
+import type { DataModelReq, DataModelRes, DataSceneReq, dbModelReq, dbModelRes, TcpUdpReq } from "@/model/DataModel";
 import type { ScreenModuleRes } from "@/model/Library";
 import { BaseName } from "@/utils/config";
 import { serverRequest } from "@/utils/serverService";
@@ -176,22 +168,6 @@ export const updateScreenGroup = (params: { name: string; id: string }) =>
 export const addScreenData = (params: DataModelReq) =>
   serverRequest<BaseEntity<null>>({
     url: `${BaseName.Online}/largeScreenAgg/save`,
-    method: "POST",
-    data: { ...params }
-  });
-
-//获取发布预览大屏验证状态
-export const openCheckData = (params: DataOpenReq) =>
-  serverRequest<BaseEntity<boolean>>({
-    url: `${BaseName.Online}/largeScreenAgg/openCheck`,
-    method: "POST",
-    data: { ...params }
-  });
-
-//获取发布预览大屏数据
-export const openScreenData = (params: DataOpenReq) =>
-  serverRequest<BaseEntity<LargeScreeInfo> & { [key: string]: any }>({
-    url: `${BaseName.Online}/largeScreenAgg/open`,
     method: "POST",
     data: { ...params }
   });

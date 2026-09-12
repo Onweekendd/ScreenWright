@@ -19,13 +19,10 @@ export const renderTextComponentType: TextEnum[] = [
 // 指标组件
 export { IndicatorEnum as indicatorEnum };
 export const renderIndicatorComponentType: IndicatorEnum[] = [
-  IndicatorEnum.FtPeriodictable,
-  IndicatorEnum.FtCountupV2,
   IndicatorEnum.RasterProgressBar,
   IndicatorEnum.IconRatio,
   IndicatorEnum.SortRatioBar,
   IndicatorEnum.FtDynamicRatio,
-  IndicatorEnum.FtFlop,
   IndicatorEnum.FtFlopPerformance,
   IndicatorEnum.EchartRing,
   IndicatorEnum.RankProgress
@@ -34,7 +31,6 @@ export const renderIndicatorComponentType: IndicatorEnum[] = [
 // 媒体组件
 export { MediaEnum as mediaEnum };
 export const renderMediaComponentType: MediaEnum[] = [
-  MediaEnum.FtH5player,
   MediaEnum.FtSwiperCard,
   MediaEnum.FtEmbedAudio,
   MediaEnum.FtIframe,
@@ -68,7 +64,6 @@ export const renderInteractiveComponentType: InteractiveEnum[] = [
   InteractiveEnum.FtPageTurning,
   InteractiveEnum.Subtabs,
   InteractiveEnum.FtMutual,
-  InteractiveEnum.FtIntegrationMutual,
   InteractiveEnum.FtSearch,
   InteractiveEnum.FtTimerShaft,
   InteractiveEnum.videoProgress

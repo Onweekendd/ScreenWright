@@ -62,22 +62,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     meta: {
       title: "动态面板预览"
     }
-  },
-  {
-    path: "/shareScreen/:id",
-    name: "shareScreen",
-    component: () => import("@/views/shareScreen/index.vue"),
-    meta: {
-      title: "发布预览"
-    }
-  },
-  {
-    path: "/invalid",
-    name: "invalid",
-    component: () => import("@/views/invalid/index.vue"),
-    meta: {
-      title: "无效页面"
-    }
   }
   // {
   //   path: "/staticPrview",

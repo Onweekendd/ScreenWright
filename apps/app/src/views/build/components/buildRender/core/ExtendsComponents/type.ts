@@ -26,8 +26,7 @@ export const extendsComponentType: ExtendsEnum[] = [
   ExtendsEnum.SimpleBarrage,
   ExtendsEnum.FtDataContainer,
   ExtendsEnum.FtWeather,
-  ExtendsEnum.FtMaskLayer,
-  ExtendsEnum.PhotoSphereViewer
+  ExtendsEnum.FtMaskLayer
 ];
 
 export const childComponentType: ExtendsChildComponentEnum[] = [ExtendsChildComponentEnum.UeVessel_UeMessageReceiver];

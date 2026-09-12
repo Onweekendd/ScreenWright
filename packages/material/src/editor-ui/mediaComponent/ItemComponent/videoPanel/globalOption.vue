@@ -156,17 +156,6 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="hk播放模式" :label-width="secondLabelWidth">
-          <el-select
-            style="width: 100%"
-            popper-class="sw-select-dropdown"
-            v-model="selectTargetData[0].option.hkVideoPlayerMode"
-            @change="update"
-          >
-            <el-option v-for="item in playerType" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-
         <!-- <div class="flex flex-center-between flex-wrap">
         <el-form-item label="默认动作">
           <el-checkbox v-model="selectTargetData[0].option.openDelayLoading" @change="update" />
@@ -332,7 +321,7 @@ import { useFontStyleAttrs } from "../../../components/configTextStyle/useTextSt
 import { firstLabelWidth, secondLabelWidth } from "../../../constants";
 import { useUpdateInstance } from "../../../useUpdateInstance";
 import { backgroundImageType, backgroundType, mixBlendMode, objectFit } from "../dict";
-import type { dictNumber, dictString } from "../type";
+import type { dictString } from "../type";
 
 const { update, selectTargetData } = useUpdateInstance();
 
@@ -358,11 +347,6 @@ const pagerAniOption = reactive<dictString[]>([
   { label: "从下到上", value: "entrance-in-bottom" },
   { label: "从右到左", value: "entrance-in-right" },
   { label: "从左到右", value: "entrance-in-left" }
-]);
-
-const playerType = reactive<dictNumber[]>([
-  { label: "普通模式", value: 0 },
-  { label: "高级模式", value: 1 }
 ]);
 
 interface TargetDataOption {

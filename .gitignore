@@ -50,4 +50,9 @@ agentbi-architecture.html
 apps/app/dev-dist/
 apps/app/public/worker/vueWorker/
 apps/app/public/cdn/geo-provinces/
+apps/app/public/lib/vendor/
+apps/app/public/lib/screenwright.umd.js
+apps/app/public/lib/screenwright.css
+apps/app/public/lib/fontface.css
+apps/app/public/lib/assets/
 .playwright-mcp/

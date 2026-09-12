@@ -21,9 +21,8 @@ const systemWSNotice = (isOpen: boolean): void => {
     if (heartbeatTimer) clearInterval(heartbeatTimer);
     return;
   }
-  if (location.pathname.includes("/shareScreen/") || location.pathname.includes("/view/")) return;
+  if (location.pathname.includes("/view/")) return;
   const { VITE_API_BASE_URL } = process.env;
-  const { WEB_APP_API_BASE_URL } = window.webconfig;
 
   // 定义收到消息的数据结构
   interface ReceivedMsg {
@@ -74,7 +73,7 @@ const systemWSNotice = (isOpen: boolean): void => {
   // 实例连接
   const setupMsg = (token: string): void => {
     if (!token) return;
-    const baseURL = WEB_APP_API_BASE_URL || VITE_API_BASE_URL || "";
+    const baseURL = VITE_API_BASE_URL || "";
     const websocketHost = baseURL.slice(baseURL.indexOf("//"));
     const protocol = baseURL.slice(0, baseURL.indexOf("//")) === "https:" ? "wss:" : "ws:";
     // 特殊处理
@@ -114,10 +113,6 @@ const initConnectTCPAndUDP = (isOpen: boolean): void => {
     (window as any).tcpNoticeWebsocket?.onclose();
     return;
   }
-  // if (location.pathname.match(/(\/view\/|\/shareScreen\/|index.html)/g)) {
-  //   const { VUE_APP_API_BASE_URL } = process.env
-  //   const { WEB_APP_API_BASE_URL } = window.webconfig
-
   // 定义收到消息的数据结构
   interface ReceivedMsg {
     id: string;
@@ -130,18 +125,17 @@ const initConnectTCPAndUDP = (isOpen: boolean): void => {
 
   // 实例Websocketconfig
   (window as any).tcpNoticeWebsocket = new WebSocketConfig({
-    src: (window.webconfig as any).tcpNoticeWebsocketUrl || getTcpNoticeWebsocketUrl(),
+    src: (window as any).webconfig?.tcpNoticeWebsocketUrl || getTcpNoticeWebsocketUrl(),
     longConnect: true
   });
 
   // 注册接收数据⽅法
-  (window.webconfig as any).tcpNoticeWebsocket?.localSocket(receivedMsg);
+  (window as any).tcpNoticeWebsocket?.localSocket(receivedMsg);
 };
 
 const getWsProtocolAndHost = (): { protocol: string; wshost: string } => {
   const { VUE_APP_API_BASE_URL } = process.env;
-  const { WEB_APP_API_BASE_URL } = window.webconfig;
-  const baseURL = WEB_APP_API_BASE_URL || VUE_APP_API_BASE_URL || "";
+  const baseURL = VUE_APP_API_BASE_URL || "";
   const wshost = baseURL.slice(baseURL.indexOf("//"));
   const protocol = baseURL.slice(0, baseURL.indexOf("//")) === "https:" ? "wss:" : "ws:";
   return {

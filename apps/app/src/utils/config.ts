@@ -1,3 +1,5 @@
+import { invoke, isTauri } from "@tauri-apps/api/core";
+import { save } from "@tauri-apps/plugin-dialog";
 import { isNil, isString } from "lodash-es";
 
 const { PUBLIC_PATH, MINIO_BASE_URL } = process.env;
@@ -73,8 +75,6 @@ function isHttpOrHttpsProtocol() {
  * @returns
  */
 export const setMinioUrl = (url: string | null | undefined, toAbsolutePath: boolean = false) => {
-  const { WEB_APP_MINIO_BASE_URL } = (window as any).webconfig;
-
   const pattern = /(data:image)|(http[s]?:\/\/)/;
   if (!isString(url)) {
     return "";
@@ -123,16 +123,36 @@ export const setMinioUrl = (url: string | null | undefined, toAbsolutePath: bool
     }
   }
 
-  return pattern.test(url) ? url : (WEB_APP_MINIO_BASE_URL || MINIO_BASE_URL) + url;
+  return pattern.test(url) ? url : MINIO_BASE_URL + url;
 };
 
-export function downFile(url: Blob | string, saveName?: string) {
-  if (url instanceof Blob) {
-    url = URL.createObjectURL(url); // 创建blob地址
+/** Tauri webview 没有浏览器原生下载：弹原生保存对话框，再把字节内容交给 Rust 端落盘 */
+const downFileInTauri = async (blob: Blob, fileName: string): Promise<boolean> => {
+  const path = await save({ defaultPath: fileName });
+  if (!path) {
+    return false; // 用户取消了保存
   }
+  const bytes = Array.from(new Uint8Array(await blob.arrayBuffer()));
+  await invoke("save_file", { path, contents: bytes });
+  return true;
+};
+
+/**
+ * 触发一次文件下载/保存。浏览器环境走 `<a download>` 触发原生下载；
+ * Tauri 桌面端没有这套机制（webview 不接管下载），改走系统保存对话框 + Rust 端写盘。
+ * 返回值仅在 Tauri 下有意义：false 表示用户取消了保存。
+ */
+export async function downFile(url: Blob | string, saveName?: string): Promise<boolean> {
+  const fileName = saveName || (typeof url === "string" ? url.slice(url.lastIndexOf("/") + 1) : "download");
+
+  if (isTauri()) {
+    const blob = url instanceof Blob ? url : await fetch(url).then((res) => res.blob());
+    return downFileInTauri(blob, fileName);
+  }
+
+  const objectUrl = url instanceof Blob ? URL.createObjectURL(url) : url;
   const aLink = document.createElement("a");
-  const fileName = saveName || url.slice(url.lastIndexOf("/") + 1);
-  aLink.href = url;
+  aLink.href = objectUrl;
   aLink.download = fileName || ""; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
   let event;
   if (window.MouseEvent) {
@@ -142,6 +162,7 @@ export function downFile(url: Blob | string, saveName?: string) {
     event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
   }
   aLink.dispatchEvent(event);
+  return true;
 }
 
 export const fontFamily = [

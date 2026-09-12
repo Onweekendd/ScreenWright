@@ -27,11 +27,7 @@ import { ElMessage } from "element-plus";
 
 import { importScreenPackage } from "@/api/version";
 import { useNotify } from "@/hooks/useNotify";
-import { useUserStore } from "@/store/modules/user";
 import to from "@/utils/await-to-js";
-import { roleEquitiesMessage } from "@/utils/utils";
-
-import { useTemplateData } from "./useTemplateData";
 
 const UPLOAD_PROGRESS_PERCENT_ID = "sw-upload-progress-percent";
 
@@ -39,8 +35,6 @@ const disabled = ref(false);
 const accept = ref(".zip");
 const title = ref("导入应用");
 const { notify } = useNotify();
-const { total } = useTemplateData();
-const { roleEquitiesInfo } = useUserStore();
 
 let progressNotify: ReturnType<typeof notify> | null = null;
 let progressPercentEl: HTMLElement | null = null;
@@ -86,10 +80,6 @@ const showUploadProgressNotify = async (fileName: string, percent: number) => {
 
 const handleChange = async (file: UploadFile) => {
   if (disabled.value) {
-    return;
-  }
-  if (total.value >= (roleEquitiesInfo?.largeScreenNum || 9)) {
-    roleEquitiesMessage();
     return;
   }
 
@@ -149,9 +139,6 @@ const handleError = (error: unknown) => {
 
 const handleErrorResponse = (code: number, message: string) => {
   switch (code) {
-    case 985:
-      roleEquitiesMessage();
-      break;
     case 901:
       ElMessage.warning(message);
       break;

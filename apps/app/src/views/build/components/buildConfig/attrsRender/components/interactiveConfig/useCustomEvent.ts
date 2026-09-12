@@ -75,7 +75,7 @@ export const useCustomEvent = createGlobalState(() => {
     return selectTargetData.value[0].component.prop as string;
   });
   const unConditionalJudgment = computed(() => {
-    return !["threescene", "sw-topo-container"].includes(componentProp.value);
+    return componentProp.value !== "threescene";
   });
 
   // 事件选择模型集合

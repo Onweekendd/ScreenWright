@@ -1,7 +1,6 @@
 import type { LayerInfo, SceneObjectExplosion } from "./action";
 import type {
   BarEchartEnum,
-  EquipmentEnum,
   ExhibitEnum,
   ExtendsEnum,
   InteractiveEnum,
@@ -129,15 +128,6 @@ interface RollSubtabsEvents {
 
 interface FtMutualEvents {
   [key: `${InteractiveEnum.FtMutual}-${string}`]: {
-    /**
-     * @description 点击事件
-     */
-    handleClick: (info: any) => void;
-  };
-}
-
-interface FtIntegrationMutualEvents {
-  [key: `${InteractiveEnum.FtIntegrationMutual}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -319,27 +309,6 @@ interface CustomTableListEvents {
      * @description 点击事件
      */
     handleClick: (info: any) => void;
-  };
-}
-
-interface FtSlidecardV1Events {
-  [key: `${ExhibitEnum.FtSlidecardV1}-${string}`]: {
-    /**
-     * @description 点击事件
-     */
-    handleClick: (info: any) => void;
-    handlePrevClick: () => void;
-    handleNextClick: () => void;
-  };
-}
-
-interface FtTurnPageEvents {
-  [key: `${ExhibitEnum.FtTurnPage}-${string}`]: {
-    /**
-     * @description 点击事件
-     */
-    handlePrevClick: () => void;
-    handleNextClick: () => void;
   };
 }
 
@@ -652,26 +621,6 @@ interface FtSignaturePad {
   };
 }
 
-interface IotMutualEvent {
-  [key: `${EquipmentEnum.IotMutual}-${number}`]: {
-    handleClick: () => void;
-  };
-}
-
-// interface FtTranslationEvent {
-//   // 译文转换
-//   [key: `${ExhibitEnum.FtTranslation}-${number}`]: {
-//     convertTranslation: (key: string) => void;
-//   };
-// }
-
-interface FtRotateEvent {
-  // 旋转组件
-  [key: `${ExhibitEnum.FtRotate}-${number}`]: {
-    // 旋转组件-点击触发
-    handleClick: () => void;
-  };
-}
 
 export type TotalPanelEventMap = DynamicPanelEvents &
   ThreeSceneEvents &
@@ -681,7 +630,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   MultiSubtabsEvents &
   RollSubtabsEvents &
   FtMutualEvents &
-  FtIntegrationMutualEvents &
   FtLegendEvents &
   FtSearchEvents &
   FtCustomSelectEvents &
@@ -700,7 +648,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   FtScrollEvents &
   FtSwiperCardEvents &
   CustomTableListEvents &
-  FtSlidecardV1Events &
   EchartcommonMapEvents &
   EchartGlMapEvents &
   ftParticlesEvents &
@@ -728,10 +675,7 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   ftVuePartEvents &
   FtSimpleBarrageEvents &
   PageReloadEvents &
-  IotMutualEvent &
-  // FtTranslationEvent &
   FtUnrealEngineEvents &
-  FtRotateEvent &
   videoProgressEvents;
 
 export type toAddEvent =
@@ -743,7 +687,6 @@ export type toAddEvent =
   | MultiSubtabsEvents
   | RollSubtabsEvents
   | FtMutualEvents
-  | FtIntegrationMutualEvents
   | FtLegendEvents
   | FtSearchEvents
   | FtCustomSelectEvents
@@ -762,7 +705,6 @@ export type toAddEvent =
   | FtScrollEvents
   | FtSwiperCardEvents
   | CustomTableListEvents
-  | FtSlidecardV1Events
   | EchartcommonMapEvents
   | EchartGlMapEvents
   | ftParticlesEvents
@@ -794,9 +736,5 @@ export type toAddEvent =
   | scrollPickerEvents
   | ImagesList3dEvents
   | FtSignaturePad
-  | IotMutualEvent
-  | FtTurnPageEvents
-  // | FtTranslationEvent
   | FtUnrealEngineEvents
-  | FtRotateEvent
   | videoProgressEvents;

@@ -23,11 +23,7 @@ const freeAPI = [
   "/user/login",
   "/user/register",
   "/largeScreen/open",
-  "/largeScreenAgg/openCheckEquities",
-  "/largeScreenAgg/openCheck",
   "/largeScreenAgg/open",
-  "/largeScreen/autoPassword",
-  "/largeScreenAgg/autoPassword",
   "/data/local/getLocalData",
   "/data/db/executeSql",
   "/data/api/connect",
@@ -154,10 +150,7 @@ function createRequestWithCache(service: AxiosInstance, resolveBaseURL: () => st
 const serviceWithCache = createServiceWithCache();
 
 /** 用于需要缓存的网络请求的方法（带缓存，指向 Java 后端） */
-export const requestWithCache = createRequestWithCache(
-  serviceWithCache,
-  () => window.webconfig.WEB_APP_API_BASE_URL || import.meta.env.VITE_API_BASE_URL
-);
+export const requestWithCache = createRequestWithCache(serviceWithCache, () => import.meta.env.VITE_API_BASE_URL);
 
 /**
  * 指向 Screenwright（Node）后端、同样带缓存拦截器的请求方法。

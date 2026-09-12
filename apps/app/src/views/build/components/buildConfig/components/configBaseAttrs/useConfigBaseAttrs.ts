@@ -1,9 +1,7 @@
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 
-// import { horizontalConstEnum, verticalConstEnum } from "./configLayoutConstraint/type";
-import { horizontalConstEnum, verticalConstEnum } from "@screenwright/types";
 import { ElMessage } from "element-plus";
-import { has, isUndefined } from "lodash-es";
+import { isUndefined } from "lodash-es";
 
 import { useScreenEditor } from "@/core-adapter/useScreenEditor";
 import { useAction } from "@/views/build/components/buildRender/hooks/useAction";
@@ -30,24 +28,6 @@ export const useConfigBaseAttrs = () => {
     isDynamicPanel: isPanel()
   });
   const globalText = ref("");
-
-  const enableDataAnalysisComputed = computed({
-    get() {
-      return selectTargetData.value[0].enableDataAnalysis ?? false;
-    },
-    set(value) {
-      selectTargetData.value[0].enableDataAnalysis = value;
-    }
-  });
-
-  const dataAnalysisNameComputed = computed({
-    get() {
-      return selectTargetData.value[0].dataAnalysisName ?? "";
-    },
-    set(value) {
-      selectTargetData.value[0].dataAnalysisName = value;
-    }
-  });
 
   // 计算是否为编码面板
   const isEncodePanel = computed(() => {
@@ -98,54 +78,6 @@ export const useConfigBaseAttrs = () => {
     }
   };
 
-  const initConstraint = () => {
-    // verticalConst horizontalConst
-    if (!selectTargetData.value || !selectTargetData.value[0]) {
-      return;
-    }
-    if (!has(selectTargetData.value[0], "verticalConst")) {
-      selectTargetData.value[0].verticalConst = verticalConstEnum.Top;
-      selectTargetData.value[0].horizontalConst = horizontalConstEnum.Left;
-      console.log("init constraintSetting", selectTargetData.value[0]);
-      // update();
-    }
-  };
-
-  const constraintSettings = computed({
-    get() {
-      return {
-        verticalConst: selectTargetData.value[0].verticalConst || verticalConstEnum.Top,
-        horizontalConst: selectTargetData.value[0].horizontalConst || horizontalConstEnum.Left
-      };
-    },
-    set(val) {
-      selectTargetData.value[0].verticalConst = val.verticalConst;
-      selectTargetData.value[0].horizontalConst = val.horizontalConst;
-    }
-  });
-
-  watch(
-    () => selectTargetData.value && selectTargetData.value[0] && selectTargetData.value[0].id,
-    async () => {
-      // nVal, oVal
-      // console.log("选中目标变化，更新 globalText", oVal);
-      // const prevComponent = allComponentMap.value.get(`${oVal}`);
-      // if (prevComponent && globalText.value.length > 0) {
-      //   if (prevComponent.name.length === 0) {
-      //     prevComponent.name = globalText.value;
-      //     const isGroup = prevComponent.children && prevComponent.children.length > 0;
-      //     if (isGroup) {
-      //       saveParentGroupData(prevComponent);
-      //     } else {
-      //       updateComponentLayers(prevComponent, { fullUpdateGroup: false });
-      //     }
-      //     globalText.value = "";
-      //   }
-      // }
-
-      initConstraint();
-    }
-  );
   const handleBlur = () => {
     const target = selectTargetData.value[0];
     console.log("失去焦点", target.name);
@@ -254,11 +186,8 @@ export const useConfigBaseAttrs = () => {
     selectTargetData,
     isLock,
     isEncodePanel,
-    enableDataAnalysisComputed,
-    dataAnalysisNameComputed,
     isClickable,
     positionType,
-    constraintSettings,
 
     // 方法
     handleDirectionChange,
@@ -267,7 +196,6 @@ export const useConfigBaseAttrs = () => {
     getCursorClass,
     update,
     handleBlur,
-    handleFocus,
-    initConstraint
+    handleFocus
   };
 };

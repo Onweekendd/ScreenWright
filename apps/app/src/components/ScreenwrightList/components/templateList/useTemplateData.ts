@@ -15,10 +15,9 @@ import { useSiderTreeData } from "@/layout/Siderbar/components/siderTree/useSide
 import type { DataModelReq } from "@/model/DataModel";
 import type { ScreenItem, ScreenReq } from "@/model/Visual";
 import { StockType } from "@/model/Visual";
-import { useUserStoreHook } from "@/store/modules/user";
 import to from "@/utils/await-to-js";
 import { configOpt } from "@/utils/configOptions";
-import { roleEquitiesMessage, uuid } from "@/utils/utils";
+import { uuid } from "@/utils/utils";
 import { setVersionCode } from "@/utils/version";
 
 import { generateLayersByFigma, generateLayersByPSD, getDataFromPSD, getModuleConfigById } from "./components/utils";
@@ -34,7 +33,6 @@ enum sortType {
 }
 export const useTemplateData = createGlobalState(() => {
   const { modelApi } = useModelApi();
-  const { roleEquitiesInfo } = useUserStoreHook();
   const { curMenuLabel, currentNode, treeData, refreshKey, getNodeById } = useSiderTreeData();
   const { dialog } = useDialog();
   const router = useRouter();
@@ -136,10 +134,6 @@ export const useTemplateData = createGlobalState(() => {
     if (!currentNode.value) {
       return;
     }
-    const limitTotal = treeData.value[0].count || 0;
-    if (limitTotal >= (roleEquitiesInfo?.largeScreenNum || 9)) {
-      return roleEquitiesMessage();
-    }
 
     dialog({
       DialogProps: {
@@ -157,7 +151,6 @@ export const useTemplateData = createGlobalState(() => {
       closeBefore: async (componentData, done) => {
         // componentData.setLoading(true);
         const dataRes = await componentData.validate();
-        console.log(dataRes, "dataRes");
         if (dataRes.success) {
           if (dataRes.type === 1) {
             // 模版
@@ -200,7 +193,6 @@ export const useTemplateData = createGlobalState(() => {
   };
 
   const handleImportDesign = async (params: any, done: () => void) => {
-    console.log("import design", params);
     const loadingInstance = ElLoading.service({
       lock: true,
       text: "",
@@ -214,7 +206,9 @@ export const useTemplateData = createGlobalState(() => {
     const generalFunc = isPsd ? generateLayersByPSD : generateLayersByFigma;
     const funcParams = isPsd ? cData : figma;
     const { option } = figma || {};
-    if (!funcParams) return false;
+    if (!funcParams) {
+      return false;
+    }
     const displayForm = ref({
       name: "",
       status: false,
@@ -231,11 +225,8 @@ export const useTemplateData = createGlobalState(() => {
     displayForm.value.groupId = groupId || "";
 
     let renderCount = false;
-    console.log("displayForm.value", params);
     const paramsReq = getAddParams(params);
-    console.log("paramsReq", paramsReq);
     const [error, res] = await to(modelApi.value.addScreenData(paramsReq));
-    console.log("res", res);
     if (error) {
       ElMessage.error("新建大屏失败");
       return false;
@@ -277,8 +268,9 @@ export const useTemplateData = createGlobalState(() => {
     };
     panelConfig.panelData.push(newPanelData);
     await generalFunc(funcParams, result, async (config: any) => {
-      if (renderCount) return;
-      console.log("进来了renderCount", renderCount);
+      if (renderCount) {
+        return;
+      }
       renderCount = true;
       panelConfig.panelData[0].config = config;
       await updateLayers({
@@ -293,7 +285,6 @@ export const useTemplateData = createGlobalState(() => {
       done();
       ElMessage.success("导入成功");
     });
-    console.log("renderCountzzzzzzzzzzz", renderCount);
     return true;
   };
 
@@ -313,8 +304,6 @@ export const useTemplateData = createGlobalState(() => {
       },
       component: designImportForm,
       async closeBefore(componentData, done) {
-        console.log("componentData", componentData);
-
         const formData = componentData.formData;
         await handleImportDesign(formData, done);
       }

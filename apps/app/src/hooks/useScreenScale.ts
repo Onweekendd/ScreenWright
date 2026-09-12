@@ -186,20 +186,6 @@ export function getFillStyle(scaleRatio: ScaleRatio, scaleX: number, scaleY: num
 }
 
 /**
- * 获取约束布局自适应样式
- */
-export function getConstraintStyleConfig(): WrapperStyle {
-  return {
-    width: "100%",
-    height: "100%",
-    transform: `scale(${1})`,
-    transformOrigin: "left top",
-    left: "0",
-    top: "0"
-  };
-}
-
-/**
  * 获取溢出滚动模式的样式
  * @description 不进行缩放，使用原始尺寸，通过 overflow:scroll 滚动查看
  * @param scaleRatio - 缩放比例信息
@@ -267,9 +253,6 @@ export function useScreenScale(editConfig: Ref<LargeScreenDetailInfo>) {
     switch (adaptationType) {
       case AdaptationType.scale:
         return getScaleAdaptationStyle(scaleRatio, isPanel());
-
-      case AdaptationType.constraint:
-        return getConstraintStyleConfig();
 
       case AdaptationType.fill:
         return getFillStyle(scaleRatio, scaleRatio.scaleX, scaleRatio.scaleY);

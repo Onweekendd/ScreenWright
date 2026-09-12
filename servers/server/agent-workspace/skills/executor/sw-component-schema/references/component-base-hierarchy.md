@@ -125,8 +125,7 @@ ChildComponentSchema = {
   name, left, top, isLock, zIndex, display, data, img, title,
   listenArgs, cbArgs?, openFilter, dataSource, dataRemark, events,
   encodes?, url?, path?, dataQuery?,
-  loadAnimation, presetChild?, minioArr?,
-  enableDataAnalysis?, dataAnalysisName?
+  loadAnimation, presetChild?, minioArr?
   // + catchall: 允许任意扩展字段
 }
 ```

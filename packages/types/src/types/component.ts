@@ -90,20 +90,6 @@ export interface ChildComponent<Option = any> extends Omit<StandardComponentType
   [key: string]: any;
 }
 
-export enum verticalConstEnum {
-  Top = "Top",
-  Bottom = "Bottom",
-  Center = "Center"
-  //   TopAndBottom = "TopAndBottom"
-}
-
-export enum horizontalConstEnum {
-  Left = "Left",
-  Right = "Right",
-  Center = "Center"
-  //   LeftAndRight = "LeftAndRight"
-}
-
 /**
  * 标准组件类型
  * @description 标准化组件的基础类型定义，包含组件的所有核心属性
@@ -215,23 +201,11 @@ export interface StandardComponentType<
   /** 素材库条目列表（可选）。注意不是 MinioResource，见 ComponentMinioAsset 的说明 */
   minioArr?: ComponentMinioAsset[];
 
-  /** 是否启用数据分析（可选） */
-  enableDataAnalysis?: boolean;
-
-  /** 数据分析名称（可选） */
-  dataAnalysisName?: string;
-
   /** 父组件ID（可选） */
   parent?: number;
 
   /** 单位铺满类型（可选） */
   unitPavenType?: "percent";
-
-  /** @description 约束布局 纵向 */
-  verticalConst?: verticalConstEnum;
-
-  /** @description 约束布局 横向 */
-  horizontalConst?: horizontalConstEnum;
 }
 
 /**

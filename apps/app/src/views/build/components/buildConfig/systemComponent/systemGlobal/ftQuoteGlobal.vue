@@ -1,22 +1,5 @@
 <template>
   <div class="ft-quote-global">
-    <el-form-item :label-width="firstLabelWidth">
-      <template #label>
-        <span
-          >数据分析
-          <el-tooltip class="item" effect="dark" placement="right">
-            <Icon type="QuestionFilled" size="14" style="position: relative; top: 3px" />
-            <template #content>
-              <p>启动数据分析，会同步该图层数据到关联知识库，提供给数字人做数据分析等操作</p>
-            </template>
-          </el-tooltip>
-        </span>
-      </template>
-      <el-checkbox v-model="selectTargetData[0].enableDataAnalysis" @change="update" />
-    </el-form-item>
-    <el-form-item :label-width="firstLabelWidth" label="数据分析名称" v-if="selectTargetData[0].enableDataAnalysis">
-      <sw-input v-model="dataAnalysisNameComputed" @change="update" placeholder="请输入数据分析名称" />
-    </el-form-item>
     <el-form-item label="启用滚动条" :label-width="firstLabelWidth">
       <el-checkbox v-model="selectTargetData[0].option.enableScroll" @change="update" />
     </el-form-item>
@@ -91,7 +74,6 @@ import { getScreenVersionList } from "@/api/version";
 import { getScreenList } from "@/api/visual";
 import ScreenwrightSeriesTabs from "@/components/ScreenwrightSeriesTabs/index.vue";
 import SwCollapseItem from "@/components/SwCollapseItem/index.vue";
-import SwInput from "@/components/SwInput/index.vue";
 import SwInputNumber from "@/components/SwInputNumber/index.vue";
 import Icon from "@/components/Icon/index.vue";
 import { useUserStore } from "@/store/modules/user";
@@ -124,18 +106,6 @@ const option = ref([
   { label: "渐隐渐现", value: "opacity" }
 ]);
 const currentTab = ref("大屏1");
-
-// 数据分析名称的 computed 属性
-const dataAnalysisNameComputed = computed({
-  get() {
-    return selectTargetData.value[0]?.dataAnalysisName ?? "";
-  },
-  set(value) {
-    if (selectTargetData.value[0]) {
-      selectTargetData.value[0].dataAnalysisName = value;
-    }
-  }
-});
 
 watch(
   () => currentTab.value,

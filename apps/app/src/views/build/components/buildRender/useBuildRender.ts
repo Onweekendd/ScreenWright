@@ -6,7 +6,6 @@ import type { LargeScreenDetailInfo } from "@screenwright/types";
 import { textEnum } from "@/components/componentEntry/type";
 import { setMinioUrl } from "@/utils/config";
 
-import { AdaptationType } from "../buildConfig/graphConfig/options";
 import { PanelType } from "./core/SystemComponent/type";
 import { useBaseRender } from "./hooks/useBaseRender";
 import { useFtTextEdit } from "./hooks/useFtTextEdit";
@@ -69,30 +68,18 @@ export const useBuildRender = (props: {
 
   // 重写 editorStyle 来支持滤镜和滚动
   const editorStyle = computed(() => {
-    const { width, height, enableScroll, adaptationType } = editConfig.value;
+    const { width, height, enableScroll } = editConfig.value;
     const { width: _, height: __, ...btStyleWithoutSize } = baseRender.btStyleAttrs.value;
 
-    if (adaptationType === AdaptationType.constraint && !isBuild.value) {
-      return {
-        width: "100%",
-        height: "100%",
-        transform: `scale(1.001,1.001)`,
-        transformOrigin: "top left",
-        ...filterAttrs.value,
-        ...btStyleWithoutSize,
-        ...getOverflow(enableScroll)
-      };
-    } else {
-      return {
-        width: width + "px",
-        height: height + "px",
-        transform: `scale(1.001,1.001)`,
-        transformOrigin: "top left",
-        ...filterAttrs.value,
-        ...btStyleWithoutSize,
-        ...getOverflow(enableScroll)
-      };
-    }
+    return {
+      width: width + "px",
+      height: height + "px",
+      transform: `scale(1.001,1.001)`,
+      transformOrigin: "top left",
+      ...filterAttrs.value,
+      ...btStyleWithoutSize,
+      ...getOverflow(enableScroll)
+    };
   });
 
   // 重写 btStyleAttrs 来支持 build 页面特有的样式

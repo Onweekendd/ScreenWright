@@ -96,7 +96,7 @@ export type {
   SystemComponentProps,
   WebSocketDataSource
 } from "./component";
-export { DataType, horizontalConstEnum, verticalConstEnum } from "./component";
+export { DataType } from "./component";
 
 // Event 相关类型
 export type { EncodeEvent, Event, eventToTriggerFunction } from "./event";

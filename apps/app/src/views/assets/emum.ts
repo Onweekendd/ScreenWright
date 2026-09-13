@@ -69,7 +69,8 @@ export const getFileType = (currentNode: Ref<MenuItem | null>, treeData: Ref<Men
   }
   const typeMap: { [key: string]: FileTypeEnum } = {
     pageGroups: FileTypeEnum.personalPageAssets,
-    modelGroups: FileTypeEnum.personalSceneAssets
+    modelGroups: FileTypeEnum.personalSceneAssets,
+    systemGroups: FileTypeEnum.systemMaterial
   };
   const targetName = currentNode.value.name;
   if (typeMap[targetName]) {

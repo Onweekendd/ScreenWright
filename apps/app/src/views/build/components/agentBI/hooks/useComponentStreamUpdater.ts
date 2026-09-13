@@ -1,6 +1,6 @@
 import { AgentMode, type ResumeData, type SuspendPayload, SuspendType } from "@screenwright/server/rpc";
-import { ComponentSchema, type ComponentType, FolderEnum } from "@screenwright/types";
-import { cloneDeep, isEqual, merge } from "lodash-es";
+import { ComponentSchema, type ComponentType } from "@screenwright/types";
+import { cloneDeep } from "lodash-es";
 
 import { updateLargeScreen } from "@/api/library";
 import { useScreenEditor } from "@/core-adapter/useScreenEditor";
@@ -61,75 +61,7 @@ export function useComponentStreamUpdater(
   const createdComponentPayload = (created: ComponentType | undefined, componentId: number, label = "组件创建成功") =>
     created ? { component: cloneDeep(created) } : { error: `${label}（id=${componentId}）但找不到对应实例` };
 
-  const { updateCallbackRelation, emitFilterTrigger, callbackArgumentsManager, initCallbackRelation } =
-    useCallbackArguments();
-
-  /**
-   * 同步组件回调参数的 source 关系：移除旧 cbArgs 的 source 条目，添加新 cbArgs 的 source 条目。
-   * 与 useCallbackOption.ts 的 addCallbackRelation / removeCallbackRelation 逻辑一致，
-   * 但接受显式 component 参数，不依赖 selectTargetData。
-   * @param component - 更新后的组件（含新 cbArgs）
-   * @param prevCbArgs - 更新前的 cbArgs 快照，用于清理旧关系
-   */
-  const syncCallbackSources = (component: ComponentType, prevCbArgs: ComponentType["cbArgs"]) => {
-    // 移除旧 source 条目
-    prevCbArgs?.forEach((oldCb) => {
-      const oldKey = oldCb.value?.target?.value?.trim();
-      if (!oldKey) {
-        return;
-      }
-      const rel = callbackArgumentsManager.value[oldKey];
-      if (!rel?.source) {
-        return;
-      }
-      rel.source = rel.source.filter((s) => !(s.id === component.id && s.cbId === oldCb.id));
-      if (!rel.source.length && !rel.target?.length) {
-        delete callbackArgumentsManager.value[oldKey];
-      }
-    });
-
-    // 添加新 source 条目
-    component.cbArgs?.forEach((cb) => {
-      const key = cb.value?.target?.value?.trim();
-      if (!key) {
-        return;
-      }
-      if (!callbackArgumentsManager.value[key]) {
-        initCallbackRelation(key);
-      }
-      const rel = callbackArgumentsManager.value[key];
-      if (rel && !rel.source.find((s) => s.id === component.id && s.cbId === cb.id)) {
-        rel.source.push({ id: component.id, name: component.name, cbId: cb.id });
-      }
-    });
-  };
-
-  /**
-   * 组件挂在分组里时，改完它要把父分组的包围盒重算一遍并落盘。
-   *
-   * 分组的位置与尺寸是**由成员位置唯一决定的派生值**，不是谁编辑出来的属性——挪一个成员，
-   * 分组框就该跟着变。这条规则只有一份，在 core 的 reflowGroup 里（用户在属性面板拖成员时
-   * 走的也是它，见 useConfigBaseAttrs）。后端推来的更新此前不跑这一步，于是 AI 改成员位置之后
-   * 分组框停在旧尺寸。
-   *
-   * 后端也算了同一个值并写进了工作区，但**不通过协议传过来**：派生值由用得着的人自己算，
-   * 传过来的一律不采信（core 写入 API 约定④）。两边跑的是同一个函数、同样的输入，结果必然一致。
-   */
-  const reflowParentGroup = async (component: ComponentType) => {
-    if (component.parent === undefined || component.parent === null) {
-      return;
-    }
-    const parent = allComponentMap.value.get(`${component.parent}`);
-    if (!parent || parent.component.prop !== FolderEnum.group) {
-      return;
-    }
-    editor.component.reflowGroup(parent);
-    await updateComponentLayers(parent, {
-      fullUpdateGroup: false,
-      syncWorkspace: false,
-      updateHistoryType: UpdateHistoryTypeEnum.SKIP
-    });
-  };
+  const { emitFilterTrigger } = useCallbackArguments();
 
   /**
    * 将后端推送的组件增量合并到前端已有的组件实例上，并触发图层更新和关联关系同步。
@@ -143,19 +75,9 @@ export function useComponentStreamUpdater(
     parsed: ComponentType,
     placement?: ComponentPlacement
   ) => {
-    const prevOpenFilter = rawComponent.openFilter;
-    const prevCbArgs = cloneDeep(rawComponent.cbArgs ?? []);
-    const prevListenArgs = cloneDeep(rawComponent.listenArgs ?? []);
-
-    merge(rawComponent, parsed);
-
-    // useBaseFilter 对 component.data 是浅层 watch（只响应引用替换），merge 就地改值不会触发。
-    // 手动替换引用以确保组件重新渲染。option 同理（部分组件有浅层 option watcher）。
-    if (parsed.data !== undefined) {
-      rawComponent.data = Array.isArray(rawComponent.data) ? [...rawComponent.data] : rawComponent.data;
-    }
-    if (parsed.option !== undefined) {
-      rawComponent.option = { ...rawComponent.option };
+    const update = editor.component.applyUpdate(parsed, { strategy: "merge" });
+    if (!update) {
+      throw new Error(`组件 ${parsed.id} 不存在`);
     }
 
     const status = placement?.parentType === "dynamicPanel" ? true : isPanel();
@@ -168,21 +90,15 @@ export function useComponentStreamUpdater(
       syncWorkspace: false
     });
 
-    await reflowParentGroup(rawComponent);
-
-    const cbArgsChanged = !isEqual(prevCbArgs, rawComponent.cbArgs);
-    const openFilterChanged = prevOpenFilter !== rawComponent.openFilter;
-    const listenArgsChanged = !isEqual(prevListenArgs, rawComponent.listenArgs);
-
-    // cbArgs 变化：直接操作 callbackArgumentsManager.value（与 useCallbackOption.ts 路径一致）
-    if (cbArgsChanged) {
-      syncCallbackSources(rawComponent, prevCbArgs);
+    if (update.parentGroup) {
+      await updateComponentLayers(update.parentGroup, {
+        fullUpdateGroup: false,
+        syncWorkspace: false,
+        updateHistoryType: UpdateHistoryTypeEnum.SKIP
+      });
     }
-    // openFilter 变化：重建 target 侧关系（class 路径对 target 是正确的）
-    if (openFilterChanged) {
-      updateCallbackRelation(rawComponent);
-    }
-    if (openFilterChanged || listenArgsChanged) {
+
+    if (update.openFilterChanged || update.listenArgsChanged) {
       await emitFilterTrigger(`${rawComponent.id}`);
     }
   };

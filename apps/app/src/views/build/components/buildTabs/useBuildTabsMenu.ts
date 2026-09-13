@@ -114,7 +114,10 @@ export const useBuildTabsMenu = (props: {
    * 获取文件类型
    */
   const fileType = computed<FileTypeEnum>(() => {
-    const fileTypeMap = new Map<string, FileTypeEnum>([["本应用资产", FileTypeEnum.personalScreen]]);
+    const fileTypeMap = new Map<string, FileTypeEnum>([
+      ["本应用资产", FileTypeEnum.personalScreen],
+      ["系统素材", FileTypeEnum.systemMaterial]
+    ]);
     return fileTypeMap.get(props.title) || FileTypeEnum.personalPageAssets;
   });
 

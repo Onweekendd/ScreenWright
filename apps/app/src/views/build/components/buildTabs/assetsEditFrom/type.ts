@@ -57,7 +57,9 @@ export enum FileTypeEnum {
   /** 个人场景资产 */
   personalSceneAssets = 3,
   /** 城市编辑器资产 */
-  cityEditorAssets = 4
+  cityEditorAssets = 4,
+  /** 系统内置素材（全局只读） */
+  systemMaterial = 5
 }
 
 export enum EditTypeEnum {

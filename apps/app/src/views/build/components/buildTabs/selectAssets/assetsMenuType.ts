@@ -6,6 +6,8 @@ import type { FileTypeEnum } from "@/views/build/components/buildTabs/assetsEdit
 
 /** 资产菜单键值枚举 */
 export enum AssetsMenuKeyEnum {
+  /** 系统内置素材 */
+  systemMaterial = "systemMaterial",
   /** 资产库 */
   assetsCloud = "assetsCloud",
   /** 本应用资产 */
@@ -87,6 +89,8 @@ export interface MenuItemForRender {
   isVideo?: boolean | undefined | null;
   moduleId?: number;
   url?: string;
+  /** 卡片缩略图；实际添加到画布仍使用 url/img */
+  cover?: string;
   fileType?: string;
   type?: string;
   assetType?: FileTypeEnum;

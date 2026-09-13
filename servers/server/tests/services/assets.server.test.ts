@@ -25,7 +25,15 @@ vi.mock("@/lib/storage/blob-store", () => ({
 }));
 
 import { deleteBlob, saveBlob } from "@/lib/storage/blob-store";
-import { addGroup, deleteFile, listGroups, pageFiles, uploadFile, usedSize } from "@/mastra/services/assets.server";
+import {
+  addGroup,
+  deleteFile,
+  listGroups,
+  pageFiles,
+  pageSystemMaterials,
+  uploadFile,
+  usedSize
+} from "@/mastra/services/assets.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 const now = new Date("2025-01-01T00:00:00.000Z");
@@ -63,6 +71,26 @@ describe("pageFiles", () => {
     expect(res.result.total).toBe(1);
     expect(res.result.records[0].url).toContain("/blobs/");
     expect(typeof res.result.records[0].layerIds).toBe("string");
+  });
+});
+
+describe("pageSystemMaterials", () => {
+  it("只查询全局系统素材，并支持分组分页", async () => {
+    vi.mocked(prismaClient.minioFile.count).mockResolvedValue(1);
+    vi.mocked(prismaClient.minioFile.findMany).mockResolvedValue([
+      fileRow({ userId: null, fileType: 5, groupId: 7 }) as never
+    ]);
+
+    const res = await pageSystemMaterials({ current: 2, size: 10, groupId: 7 });
+
+    expect(res.result.total).toBe(1);
+    expect(prismaClient.minioFile.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ userId: null, fileType: 5, groupId: 7 }),
+        skip: 10,
+        take: 10
+      })
+    );
   });
 });
 
@@ -118,5 +146,6 @@ describe("listGroups（素材树）", () => {
     vi.mocked(prismaClient.minioFile.count).mockResolvedValue(0);
     const res = await listGroups(1);
     expect(res.result.pageGroups.list).toHaveLength(1);
+    expect(res.result.systemGroups.list).toHaveLength(1);
   });
 });

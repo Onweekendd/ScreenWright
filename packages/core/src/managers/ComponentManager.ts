@@ -15,10 +15,29 @@ import { assignComponentAttrs, calculateGroupDimensions, getMaxIndex } from "../
 import type { EditorState } from "../state/EditorState";
 import type { ComponentId, ComponentPlacement } from "../types/placement";
 import type { EditorCoreState } from "../types/state";
+import { deepClone } from "../utils/deepClone";
+import { mergeComponentUpdate, replaceComponentSnapshot } from "../utils/mergeComponentUpdate";
 import { BaseManager } from "./BaseManager";
 
 /** 一个分组至少要有这么多成员才成立；不足就该解散（见 dissolveIfUnderfilled）。 */
 const GROUP_MIN_MEMBERS = 2;
+
+export interface ComponentUpdateResult {
+  /** 保持原引用、已应用更新的画布组件。 */
+  component: ComponentType;
+  /** 组件属于分组时，被重新计算包围盒的父分组。 */
+  parentGroup?: ComponentType;
+  cbArgsChanged: boolean;
+  openFilterChanged: boolean;
+  listenArgsChanged: boolean;
+}
+
+export interface ComponentUpdateOptions {
+  /** merge 用于协议增量；replace 用于组件文件的完整快照。 */
+  strategy: "merge" | "replace";
+}
+
+const jsonFieldEqual = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right);
 
 /**
  * 组件管理：负责组件树（layers）的读取/设置，以及各类组件映射（map）的派生。
@@ -471,6 +490,66 @@ export class ComponentManager extends BaseManager<EditorCoreState> {
     // 它自己若是分组，包围盒同样由 children 定——调用方传进来的那份一律不采信
     this.reflowGroup(component);
     this.reflowGroups(touched);
+  }
+
+  /**
+   * 将完整或增量组件配置应用到画布中的现有组件。
+   *
+   * 这是前端流更新、Node 服务和 eval 共用的组件更新语义：
+   * - 保留现有组件对象引用；
+   * - merge 策略递归合并对象、整段替换数组；replace 策略应用完整快照；
+   * - 刷新 data / option 顶层引用，供浅层订阅者感知变化；
+   * - 同步回调参数关系；
+   * - 重算组件自身及父分组的派生包围盒。
+   *
+   * @returns null 表示该组件不在当前大屏树中。
+   */
+  applyUpdate(update: ComponentType, options: ComponentUpdateOptions): ComponentUpdateResult | null {
+    const component = this.find(update.id);
+    if (!component) {
+      return null;
+    }
+
+    const previousCbArgs = deepClone(component.cbArgs ?? []);
+    const previousListenArgs = deepClone(component.listenArgs ?? []);
+    const previousOpenFilter = component.openFilter;
+    const previousCallbackComponent = {
+      ...component,
+      cbArgs: previousCbArgs,
+      listenArgs: previousListenArgs,
+      openFilter: previousOpenFilter
+    } as ComponentType;
+
+    if (options.strategy === "replace") {
+      replaceComponentSnapshot(component, update);
+    } else {
+      mergeComponentUpdate(component, update);
+    }
+
+    // data / option 在部分宿主中只有浅层订阅；显式换引用，避免内容已变但视图不刷新。
+    if (update.data !== undefined) {
+      component.data = deepClone(component.data);
+    }
+    if (update.option !== undefined) {
+      component.option = deepClone(component.option);
+    }
+
+    const cbArgsChanged = !jsonFieldEqual(previousCbArgs, component.cbArgs ?? []);
+    const listenArgsChanged = !jsonFieldEqual(previousListenArgs, component.listenArgs ?? []);
+    const openFilterChanged = previousOpenFilter !== component.openFilter;
+    if (cbArgsChanged || listenArgsChanged || openFilterChanged) {
+      this.callbackArguments.removeComponentFromCallbacks(previousCallbackComponent);
+      this.callbackArguments.addCallbackArgument(component);
+    }
+
+    this.reflowGroup(component);
+    const parent = component.parent === undefined || component.parent === null ? null : this.find(component.parent);
+    const parentGroup = parent?.component.prop === FolderEnum.group ? parent : undefined;
+    if (parentGroup) {
+      this.reflowGroup(parentGroup);
+    }
+
+    return { component, parentGroup, cbArgsChanged, openFilterChanged, listenArgsChanged };
   }
 
   /**

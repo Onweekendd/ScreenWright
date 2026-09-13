@@ -120,7 +120,16 @@ export const minioPage = (data: assetItemReq) =>
     data
   });
 
-// 组合案例 / 用户资产（groupLayerData/*）、系统素材（minioLargeSystem/*）：依赖 Screenwright 内部素材云，开源版移除
+/** 系统内置素材（数据库记录，全局只读） */
+export const systemMaterialPage = (data: assetItemReq) =>
+  serverRequest<DetailListRes>({
+    url: `${BaseName.System}/systemMaterial/page`,
+    method: "post",
+    showLoading: false,
+    data
+  });
+
+// 组合案例 / 用户资产（groupLayerData/*）：依赖 Screenwright 内部素材云，开源版移除
 
 // 分组列表数据
 export const getAssetsGroup = (base = "/minioGroup") =>

@@ -109,6 +109,7 @@ export const useSiderTreeData = createGlobalState(() => {
       list: dfsTreeData(group.list)
     });
     const pageGroups = processGroup(result.pageGroups);
+    const systemGroups = processGroup(result.systemGroups);
     // 处理defaultMenu某一项的通用函数
     const processMenuItem = (index: number, group: any) => {
       defaultMenu[index].count = "";
@@ -128,8 +129,18 @@ export const useSiderTreeData = createGlobalState(() => {
         }
       ];
     };
-    // 开源版「我的资源」只剩「页面资产」一项（场景资产 / 系统页面资产已移除）
     processMenuItem(0, pageGroups);
+    defaultMenu[1].count = systemGroups.allCount;
+    defaultMenu[1].children = systemGroups.list.map((it: any) => ({
+      ...it,
+      count: it.count,
+      pid: defaultMenu[1].id,
+      icon: "folder-close",
+      outsider: true,
+      add: false,
+      uuid: uuid(6),
+      isNotMore: true
+    }));
   };
 
   /**

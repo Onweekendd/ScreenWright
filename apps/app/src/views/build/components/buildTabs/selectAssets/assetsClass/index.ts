@@ -5,16 +5,18 @@ import { AssetsMenuKeyEnum } from "../assetsMenuType";
 import AiTemplateClass from "./AiTemplateClass";
 import AssetsCloudClass from "./AssetsCloudClass";
 import LocalAssetsClass from "./LocalAssetsClass";
+import SystemMaterialClass from "./SystemMaterialClass";
 import type { AssetItem, GroupItem } from "./types";
 
 // 导出所有资产类
-export { AiTemplateClass, AssetsCloudClass, LocalAssetsClass };
+export { AiTemplateClass, AssetsCloudClass, LocalAssetsClass, SystemMaterialClass };
 
 // 导出类型定义
 export * from "./types";
 
 // 标题到 AssetsMenuKeyEnum 的映射
 export const TITLE_TO_KEY_MAP: Record<string, AssetsMenuKeyEnum> = {
+  系统素材: AssetsMenuKeyEnum.systemMaterial,
   资产库: AssetsMenuKeyEnum.assetsCloud,
   本应用资产: AssetsMenuKeyEnum.localAssets,
   AI模板: AssetsMenuKeyEnum.aiTemplate
@@ -22,6 +24,7 @@ export const TITLE_TO_KEY_MAP: Record<string, AssetsMenuKeyEnum> = {
 
 // FileTypeEnum 到标题的映射
 export const FILE_TYPE_TO_TITLE_MAP: Record<number, string> = {
+  [FileTypeEnum.systemMaterial]: "系统素材",
   [FileTypeEnum.personalScreen]: "本应用资产",
   [FileTypeEnum.personalPageAssets]: "资产库",
   [FileTypeEnum.cityEditorAssets]: "城市编辑器资产"
@@ -30,6 +33,7 @@ export const FILE_TYPE_TO_TITLE_MAP: Record<number, string> = {
 // 资产类工厂，根据 AssetsMenuKeyEnum 创建对应的资产类实例
 export const createAssetsClass = (key: AssetsMenuKeyEnum): AssetsBaseClass<any, any> => {
   const assetClassMap = new Map<AssetsMenuKeyEnum, () => AssetsBaseClass<any, any>>([
+    [AssetsMenuKeyEnum.systemMaterial, () => new SystemMaterialClass()],
     [AssetsMenuKeyEnum.localAssets, () => new LocalAssetsClass()],
     [AssetsMenuKeyEnum.assetsCloud, () => new AssetsCloudClass()],
     [AssetsMenuKeyEnum.aiTemplate, () => new AiTemplateClass()]

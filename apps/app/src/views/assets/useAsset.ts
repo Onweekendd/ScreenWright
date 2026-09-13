@@ -4,8 +4,7 @@ import { createGlobalState } from "@vueuse/core";
 
 import { ElMessage } from "element-plus";
 
-import { getVisualAssetUsedSize } from "@/api/assets";
-import { getVisualAssetDetailList } from "@/api/assets";
+import { getVisualAssetDetailList, getVisualAssetUsedSize, systemMaterialPage } from "@/api/assets";
 import { useSiderTreeData } from "@/layout/Siderbar/components/siderTree/useSiderTreeData";
 import type { assetItem, assetItemReq } from "@/model/Assets";
 import to from "@/utils/await-to-js";
@@ -64,7 +63,8 @@ export const useAsset = createGlobalState(() => {
       transformParams.resourceType = params.value.resourceType.join(",");
       transformParams.fileType = fileType.value;
     }
-    const [error, res] = await to(getVisualAssetDetailList(transformParams));
+    const pageApi = fileType.value === FileTypeEnum.systemMaterial ? systemMaterialPage : getVisualAssetDetailList;
+    const [error, res] = await to(pageApi(transformParams));
     if (error) {
       ElMessage.error(error.message);
       return;
@@ -84,7 +84,7 @@ export const useAsset = createGlobalState(() => {
     if (fileType.value && fileType.value === FileTypeEnum.personalPageAssets) {
       getUsedSize();
     }
-    // 开源版「我的资源」只有「页面资产」，系统页面资产 / 场景资产已移除，统一走普通列表
+    // 有子分组的中间节点只负责展开，不直接请求列表。
     if (currentNode.value && currentNode.value.pid && currentNode.value.children && currentNode.value.children.length) {
       return;
     }

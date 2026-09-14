@@ -43,7 +43,7 @@ const isHasGroup = computed(() => selectTargetData.value.some((v) => v && v.chil
   height: 100%;
   overflow: hidden;
   color: #b4b7c1;
-  background: #232630;
+  background: var(--sw-panel-bg);
   border-left: 1px solid #000000;
   transition: width 0.3s;
   position: relative;

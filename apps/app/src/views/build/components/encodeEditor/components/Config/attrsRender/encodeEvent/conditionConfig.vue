@@ -119,7 +119,7 @@ defineExpose({
   }
   .el-drawer__body {
     width: 100%;
-    background-color: #232630;
+    background-color: var(--sw-panel-bg);
   }
   .layout-config {
     .el-drawer.config-drawer {
@@ -129,12 +129,12 @@ defineExpose({
   .condition-control {
     font-size: 12px;
     cursor: pointer;
-    border: 1px solid #8a56e8;
+    border: 1px solid var(--sw-theme-color);
     border-radius: 4px 4px;
     padding: 5px 5px;
     margin-bottom: 5px;
     text-align: center;
-    color: #8a56e8;
+    color: var(--sw-theme-color);
   }
   .content-pad-row {
     display: flex;
@@ -170,13 +170,13 @@ defineExpose({
       align-items: center;
       justify-content: center;
       margin: 0 5px;
-      border: 1px solid #8a56e8;
+      border: 1px solid var(--sw-theme-color);
       font-size: 12px;
     }
 
     .btn-define {
       color: #ffffff;
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     }
   }
   .editor-view {

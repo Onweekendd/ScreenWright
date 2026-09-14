@@ -3,7 +3,7 @@
     <statusManager v-if="!isScenePopupPanel" />
 
     <div class="build-side-bar-title">
-      图层管理
+      图层
 
       <buildComponentSearch type="panel" style="top: 2px" />
     </div>
@@ -69,14 +69,11 @@ const dblclickHandle = async (e: MouseEvent, element: any) => {
   height: 100%;
   overflow: hidden;
   color: #b4b7c1;
-  background: #232630;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background: var(--sw-panel-bg);
   border-right: 1px solid #000000;
   position: relative;
   outline: none;
   transition: width 0.3s;
-  background-image: url("@/assets/image/bg/bi_left_bg.png");
   .build-side-bar-title {
     box-sizing: border-box;
     line-height: 36px;

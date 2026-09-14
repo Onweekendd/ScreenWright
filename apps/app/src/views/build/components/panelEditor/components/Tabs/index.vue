@@ -48,17 +48,25 @@ const UIRenderData = computed<AllModuleForRender | AllAssetsForRender>(() => {
 // 获取数据
 const initMaterialData = async (option: {
   title: string;
-  menuGroup: AssetsGroupForRender;
+  menuGroup?: AssetsGroupForRender;
   resetUpdate: boolean;
   updateGroup: boolean;
 }) => {
-  if (option.updateGroup) {
+  const shouldRefreshGroups = option.updateGroup || !option.menuGroup;
+  if (shouldRefreshGroups) {
     await updatedMaterialLibraryItem(option.title);
   }
 
-  getMaterialData({
+  const menuGroupItem = shouldRefreshGroups
+    ? assetsData.value.find((item) => item.title === option.title)?.children[0]
+    : option.menuGroup;
+  if (!menuGroupItem) {
+    return;
+  }
+
+  await getMaterialData({
     title: option.title,
-    menuGroupItem: option.menuGroup,
+    menuGroupItem,
     largeId: route.params.id,
     resetUpdate: option.resetUpdate
   });

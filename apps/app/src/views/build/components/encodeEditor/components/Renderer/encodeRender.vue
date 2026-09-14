@@ -150,7 +150,7 @@ const {
   position: relative;
   width: 100%;
   height: 100%;
-  // background: #232630;
+  // background: var(--sw-panel-bg);
   box-shadow: var(--el-box-shadow);
   background-size: 100% 100%;
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOAQMAAAAlhr+SAAAABlBMVEUqLjNSXWS1zSUzAAAAD0lEQVQI12NgwADMYIQBAACrAAd4ROv5AAAAAElFTkSuQmCC)

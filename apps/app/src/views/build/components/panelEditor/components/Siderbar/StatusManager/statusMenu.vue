@@ -54,7 +54,7 @@ const buildStyle = computed(() => {
   -webkit-box-shadow: 0 2px 6px rgb(0 0 0 / 10%);
   box-shadow: 0 2px 6px rgb(0 0 0 / 10%);
   padding: 0;
-  background: #232630;
+  background: var(--sw-panel-bg);
   color: #b4b7c1;
   .build-menu-item {
     z-index: 10000;
@@ -66,7 +66,7 @@ const buildStyle = computed(() => {
     text-align: center;
     color: #ddd;
     &:hover {
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       color: #fff;
     }
     &.is-disabled {

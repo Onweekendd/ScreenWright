@@ -249,7 +249,7 @@ const dragEnd = (): void => {
   &.ghost {
     opacity: 0.6;
     color: #fff !important;
-    background: #4e52f2 !important;
+    background: var(--sw-theme-color) !important;
     cursor: move;
   }
 
@@ -259,7 +259,7 @@ const dragEnd = (): void => {
   }
 
   &.active {
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
+    background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
     color: #ffffff !important;
     span:nth-child(2) {
       width: 77px;

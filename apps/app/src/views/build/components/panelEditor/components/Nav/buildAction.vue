@@ -6,7 +6,7 @@
     <actionItem :isActive="sideShow" type="iconfont-zuoce" content="左侧栏" @click="handleSideShow" />
     <actionItem :isActive="configShow" type="iconfont-youce" content="右侧栏" @click="handleConfigShow" />
     <actionItem type="iconfont-picture" content="导出图片" @click="handleExportImage" />
-    <controlItem @click="handlePreview" name="预览" enName="preview" type="iconfont-preview" style="margin-top: 8px" />
+    <controlItem @click="handlePreview" name="预览" enName="preview" type="iconfont-preview" />
     <buildClose @close="close" />
   </div>
 </template>
@@ -30,7 +30,8 @@ const {
   sideShow,
   configShow,
   canUndo,
-  canRedo,
+  canRedo,
+
   redo,
   handleSideShow,
   handleConfigShow,
@@ -56,7 +57,8 @@ const close = () => {
   router.back();
   setIsLoad(false);
   activeStatusId.value = "";
-};</script>
+};
+</script>
 <style lang="scss" scoped>
 .build-action {
   height: 100%;

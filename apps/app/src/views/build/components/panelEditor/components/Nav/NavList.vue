@@ -81,6 +81,6 @@ const handleNavigationItemClick = (item: NavigationControlItem): void => {
 </script>
 <style lang="scss" scoped>
 .build-nav-list {
-  padding-top: 6px;
+  gap: 8px;
 }
 </style>

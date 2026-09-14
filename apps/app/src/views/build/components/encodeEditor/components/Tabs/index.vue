@@ -70,9 +70,14 @@ const handleClick = async (item: MenuItemForRender) => {
 };
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .build-tabs {
   width: 100%;
   height: 37px;
-  background-color: rgb(55, 58, 71);
+  align-items: center;
+  padding: 0 4px;
+  background-color: $sw-title-bg;
+  border-bottom: 1px solid $sw-border;
+  gap: 2px;
 }
 </style>

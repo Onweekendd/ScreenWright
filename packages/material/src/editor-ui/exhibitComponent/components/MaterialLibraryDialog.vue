@@ -136,7 +136,7 @@ onMounted(() => {
 .material-library-container {
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #232630;
+  background-color: var(--sw-panel-bg);
   color: #fff;
   height: 553px;
   .image-grid {
@@ -178,22 +178,22 @@ onMounted(() => {
 
     &.cancel-btn {
       background: transparent;
-      color: #8b58e7;
-      border: 1px solid rgba(139, 88, 231, 0.5);
+      color: var(--sw-theme-color);
+      border: 1px solid color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
 
       &:hover {
-        background: rgba(139, 88, 231, 0.1);
-        border-color: #8b58e7;
+        background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
+        border-color: var(--sw-theme-color);
       }
     }
 
     &.confirm-btn {
-      background: #8b58e7;
+      background: var(--sw-theme-color);
       color: #fff;
       margin-left: 12px;
 
       &:hover {
-        background: lighten(#8b58e7, 10%);
+        background: color-mix(in srgb, var(--sw-theme-color) 90%, white);
       }
     }
   }

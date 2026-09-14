@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
 .tox .tox-toolbar,
 .tox .tox-toolbar__primary,
 .tox .tox-toolbar__overflow {
-  background: linear-gradient(180deg, #8b58e7, #642cff);
+  background: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
 }
 .tox-tinymce-aux .tox-toolbar__overflow {
   top: calc(-500px - 210px) !important;
@@ -152,7 +152,7 @@ onBeforeUnmount(() => {
     .tox-tbtn {
       cursor: pointer;
       &:hover {
-        background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+        background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       }
       &:focus {
         background: transparent;
@@ -160,7 +160,7 @@ onBeforeUnmount(() => {
     }
     .tox-tbtn--enabled,
     .tox-tbtn--enabled:hover {
-      background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     }
     .tox-tbtn svg {
       fill: #b4b7c1;

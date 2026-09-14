@@ -32,8 +32,8 @@ const handleDelete = () => {
   aspect-ratio: 1;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #232630;
-  border: 1px solid rgba(139, 88, 231, 0.2);
+  background-color: var(--sw-panel-bg);
+  border: 1px solid color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
 
   img {
     width: 100%;
@@ -48,7 +48,7 @@ const handleDelete = () => {
     right: 0;
     padding: 8px;
     background: rgba(35, 38, 48, 0.8);
-    color: #8b58e7;
+    color: var(--sw-theme-color);
     font-size: 12px;
     opacity: 0;
     transition: opacity 0.3s;
@@ -71,10 +71,10 @@ const handleDelete = () => {
     :deep(.el-button--danger) {
       background-color: rgba(35, 38, 48, 0.8);
       border-color: transparent;
-      color: #8b58e7;
+      color: var(--sw-theme-color);
 
       &:hover {
-        background-color: rgba(139, 88, 231, 0.2);
+        background-color: color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
         color: #fff;
       }
     }

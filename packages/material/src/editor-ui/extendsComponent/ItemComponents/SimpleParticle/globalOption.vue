@@ -46,8 +46,8 @@ console.log(selectTargetData.value[0], "selectTargetData.value[0]");
   }
 
   &.is-checked .el-switch__core {
-    background-color: #642cff !important;
-    border-color: #642cff !important;
+    background-color: var(--sw-theme-color) !important;
+    border-color: var(--sw-theme-color) !important;
   }
 
   .el-switch__core {

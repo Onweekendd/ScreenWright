@@ -123,7 +123,7 @@ const onParticlesReStart = () => {
   .el-button {
     color: #ffffff;
     width: 90%;
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     border-color: transparent;
     border-radius: 4px;
     text-align: center;

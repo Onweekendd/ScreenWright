@@ -2,17 +2,17 @@
   <div class="default-content-item" :class="bgClass" />
 </template>
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed } from "vue";
 
 interface Props {
-  type?: "default" | "icon" | "upload"
+  type?: "default" | "icon" | "upload";
 }
 const props = withDefaults(defineProps<Props>(), {
   type: "default"
-})
+});
 const bgClass = computed(() => {
-  return props.type
-})
+  return props.type;
+});
 </script>
 <style lang="scss" scoped>
 .default-content-item {

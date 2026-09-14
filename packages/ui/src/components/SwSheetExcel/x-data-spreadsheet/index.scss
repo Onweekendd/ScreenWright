@@ -1246,9 +1246,9 @@ form fieldset {
 }
 
 .x-spreadsheet {
-  background-color: #232630 !important;
+  background-color: var(--sw-panel-bg) !important;
   .x-spreadsheet-overlayer textarea {
-    background-color: #232630 !important;
+    background-color: var(--sw-panel-bg) !important;
     color: #ffffff !important;
     text-align: center;
   }
@@ -1273,14 +1273,14 @@ form fieldset {
 #xspreadsheet {
   height: 100%;
   :v-deep(.x-spreadsheet-overlayer textarea) {
-    background-color: #232630 !important;
+    background-color: var(--sw-panel-bg) !important;
     color: #ffffff !important;
     text-align: center;
   }
   :v-deep(.x-spreadsheet) {
-    background-color: #232630 !important;
+    background-color: var(--sw-panel-bg) !important;
     .x-spreadsheet-sheet {
-      background-color: #232630;
+      background-color: var(--sw-panel-bg);
       .x-spreadsheet-scrollbar {
         background-color: #181a24;
         & > div {

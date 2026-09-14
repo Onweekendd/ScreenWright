@@ -26,7 +26,7 @@ const { input, omitProps, handleChange } = useSwSlider(props, emit);
     background-color: #0f1014 !important;
   }
   :deep(.el-slider__bar) {
-    background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     opacity: 0.8;
   }
   :deep(.el-slider__button) {
@@ -34,7 +34,7 @@ const { input, omitProps, handleChange } = useSwSlider(props, emit);
     height: 13px;
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid rgb(100, 44, 255);
+    border: 2px solid var(--sw-theme-color);
     position: relative;
     top: 2px;
   }

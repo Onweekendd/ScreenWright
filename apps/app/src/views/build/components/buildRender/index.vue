@@ -69,7 +69,7 @@
     <!-- 水印 -->
     <GridWaterMark v-if="disabled" />
     <!-- 选中态框 + 拖动 + 缩放锚点 -->
-    <SelectionTransformer :disabled="disabled" :on-db-click="handleDbClick" />
+    <SelectionTransformer :edit-config="editConfig" :disabled="disabled" :on-db-click="handleDbClick" />
   </div>
 </template>
 <script setup lang="ts">

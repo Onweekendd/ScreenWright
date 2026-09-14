@@ -1,5 +1,7 @@
 import { throttle } from "lodash-es";
 
+import type { LargeScreenDetailInfo } from "@screenwright/types";
+
 import { useScreenEditor } from "@/core-adapter/useScreenEditor";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
@@ -209,10 +211,11 @@ const updateComponentAttributes = (
 export const useMousePointHandle = (
   e: MouseEvent,
   resizePoint: direction,
-  option: { isDynamicPanel: boolean } = { isDynamicPanel: false }
+  option: { isDynamicPanel: boolean; editConfig?: LargeScreenDetailInfo } = { isDynamicPanel: false }
 ) => {
   const editor = useScreenEditor();
-  const { selectTargetData, editConfig, selectTargetDataId } = useEditStore();
+  const { selectTargetData, editConfig: globalEditConfig, selectTargetDataId } = useEditStore();
+  const editConfig = option.editConfig ?? globalEditConfig.value;
   const selectedComponent = selectTargetData.value[0];
 
   e.stopPropagation();
@@ -268,8 +271,8 @@ export const useMousePointHandle = (
    */
   const getContainerSize = (): ContainerSize => {
     return {
-      width: parseInt(editConfig.value.width) || DEFAULT_CANVAS_WIDTH,
-      height: parseInt(editConfig.value.height) || DEFAULT_CANVAS_HEIGHT
+      width: parseInt(editConfig.width) || DEFAULT_CANVAS_WIDTH,
+      height: parseInt(editConfig.height) || DEFAULT_CANVAS_HEIGHT
     };
   };
 
@@ -355,7 +358,7 @@ export const useMousePointHandle = (
   };
   const initialDimensions: Dimensions = { ...initialPosition, ...initialPixelSize };
 
-  const canvasScale = editConfig.value.scale || 1;
+  const canvasScale = editConfig.scale || 1;
   const mouseStartX = e.clientX;
   const mouseStartY = e.clientY;
 
@@ -372,8 +375,8 @@ export const useMousePointHandle = (
     biAlignmentInstance.value.cache_reference_shapes(
       0,
       0,
-      Number(editConfig.value.width),
-      Number(editConfig.value.height),
+      Number(editConfig.width),
+      Number(editConfig.height),
       selectTargetDataId.value
     );
   }

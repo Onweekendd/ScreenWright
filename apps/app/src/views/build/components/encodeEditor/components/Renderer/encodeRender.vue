@@ -65,7 +65,12 @@
       </div>
     </div>
     <!-- 选中态框 + 拖动 + 缩放锚点 -->
-    <SelectionTransformer is-dynamic-panel :disabled="disabled" :on-db-click="handleDbClick" />
+    <SelectionTransformer
+      :edit-config="editConfig"
+      is-dynamic-panel
+      :disabled="disabled"
+      :on-db-click="handleDbClick"
+    />
   </div>
 </template>
 <script setup lang="ts">

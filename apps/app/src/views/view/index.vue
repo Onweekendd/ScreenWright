@@ -3,7 +3,7 @@
   <div class="bi-view" :style="overFlowStyle">
     <div
       class="loading-mask-scene"
-      style="width: 100%; height: 100%; background-color: #232630"
+      style="width: 100%; height: 100%; background-color: var(--sw-panel-bg)"
       v-if="loadingScreenData"
     >
       <video src="/video/loading/loading-mask-scene.webm" autoplay loop muted />

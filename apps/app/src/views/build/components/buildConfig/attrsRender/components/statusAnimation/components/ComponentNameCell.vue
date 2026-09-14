@@ -123,7 +123,7 @@ onMounted(() => {
 
 .highlight {
   background-color: rgba(0, 142, 255, 0.1);
-  background-image: linear-gradient(180deg, #8b58e7, #642cff) !important;
+  background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) !important;
   color: white !important;
   position: relative;
 }

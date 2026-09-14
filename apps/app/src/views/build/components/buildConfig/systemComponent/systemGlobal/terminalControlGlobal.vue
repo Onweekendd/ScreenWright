@@ -133,7 +133,7 @@ const openEncodeEditor = () => {
 
 .panelBtn {
   text-align: center;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
   border-radius: 5px 5px;
   padding: 8px 0;
   margin: 5px 20px 0;

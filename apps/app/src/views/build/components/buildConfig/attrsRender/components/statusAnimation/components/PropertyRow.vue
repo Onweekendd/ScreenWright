@@ -108,12 +108,12 @@ const onRightClick = async (e: MouseEvent) => {
 
       .property-cell {
         background: var(--hover-bg);
-        border-color: rgba(139, 88, 231, 0.4);
+        border-color: color-mix(in srgb, var(--sw-theme-color) 40%, transparent);
       }
 
       .value-cell {
-        background: rgba(139, 88, 231, 0.05);
-        border-color: rgba(139, 88, 231, 0.2);
+        background: color-mix(in srgb, var(--sw-theme-color) 5%, transparent);
+        border-color: color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
       }
     }
 
@@ -125,7 +125,7 @@ const onRightClick = async (e: MouseEvent) => {
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent 0%, rgba(139, 88, 231, 0.1) 50%, transparent 100%);
+      background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--sw-theme-color) 10%, transparent) 50%, transparent 100%);
       transition: left 0.5s ease;
     }
 
@@ -140,8 +140,8 @@ const onRightClick = async (e: MouseEvent) => {
     &.highlight {
       color: white;
       background-color: rgba(0, 142, 255, 0.1);
-      background-image: linear-gradient(180deg, #8b58e7, #642cff);
-      border-color: rgba(139, 88, 231, 0.8);
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
+      border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
       box-shadow: var(--shadow-property);
       position: relative;
       z-index: 10;
@@ -197,9 +197,9 @@ const onRightClick = async (e: MouseEvent) => {
       //   background: linear-gradient(
       //     90deg,
       //     transparent 0%,
-      //     rgba(139, 88, 231, 0.1) 20%,
-      //     rgba(139, 88, 231, 0.3) 50%,
-      //     rgba(139, 88, 231, 0.1) 80%,
+      //     color-mix(in srgb, var(--sw-theme-color) 10%, transparent) 20%,
+      //     color-mix(in srgb, var(--sw-theme-color) 30%, transparent) 50%,
+      //     color-mix(in srgb, var(--sw-theme-color) 10%, transparent) 80%,
       //     transparent 100%
       //   );
       //   transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);

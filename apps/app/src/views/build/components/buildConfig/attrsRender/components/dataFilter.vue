@@ -4,7 +4,7 @@
       <el-checkbox v-model="selectTargetData[0].openFilter" @change="handleOpenFilter"> 数据过滤器: </el-checkbox>
       <span v-if="selectTargetData[0].listenArgs.length === 0"> 当前未添加过滤器</span>
       <span v-else
-        >已添加<span style="color: #3e43f4">{{ currentFilterNum }}</span
+        >已添加<span style="color: var(--sw-theme-color)">{{ currentFilterNum }}</span
         >个过滤器</span
       >
       <el-tooltip effect="dark" placement="top">
@@ -124,7 +124,7 @@ onBeforeUnmount(() => {
   border: 1px solid;
   cursor: pointer;
   border-radius: 4px;
-  border-image: linear-gradient(180deg, rgb(139, 88, 231), rgb(100, 44, 255)) 1 1;
+  border-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) 1 1;
 }
 .filter-ownList {
   width: 304px;

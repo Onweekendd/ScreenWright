@@ -191,7 +191,7 @@ const onLoadNode = (node: any, resolve: (data: TreeNode[]) => void) => {
       &:hover,
       &:hover::before {
         color: #f0eaff;
-        background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+        background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       }
       &::before {
         content: "";
@@ -206,7 +206,7 @@ const onLoadNode = (node: any, resolve: (data: TreeNode[]) => void) => {
       &.custom-tree-highlight,
       &.custom-tree-highlight::before {
         color: #f0eaff;
-        background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+        background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       }
     }
     .el-tree-node__content {

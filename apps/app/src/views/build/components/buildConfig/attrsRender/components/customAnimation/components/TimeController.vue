@@ -246,7 +246,7 @@ const getTimeTagWidth = (item: ComponentSettingItem): number => {
 .time-tag {
   height: 30%;
   flex-shrink: 0;
-  background-image: linear-gradient(180deg, #8b58e7, #642cff);
+  background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
   position: relative;
 
   &.disabled {

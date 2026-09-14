@@ -294,7 +294,7 @@ onMounted(() => {
     .click-icon {
       cursor: pointer;
       &:hover {
-        color: #8b58e7;
+        color: var(--sw-theme-color);
       }
     }
   }
@@ -316,7 +316,7 @@ onMounted(() => {
       height: 36px;
       cursor: pointer;
       // &:hover {
-      //   background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      //   background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
       // }
       .icon {
         font-size: 16px;
@@ -324,7 +324,7 @@ onMounted(() => {
       }
     }
     .select {
-      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
     }
     .animation-name {
       white-space: nowrap;

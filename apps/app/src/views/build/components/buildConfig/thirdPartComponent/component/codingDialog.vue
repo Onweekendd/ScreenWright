@@ -65,8 +65,8 @@ onMounted(() => {
       cursor: pointer;
       border-radius: 0.02rem;
       &.primary {
-        border-color: #642cff;
-        background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+        border-color: var(--sw-theme-color);
+        background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       }
     }
   }

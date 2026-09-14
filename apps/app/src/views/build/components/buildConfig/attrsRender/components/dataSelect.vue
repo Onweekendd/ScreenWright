@@ -67,7 +67,7 @@ onMounted(() => {
     min-height: 28px;
   }
   .purple-btn {
-    background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
+    background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
     color: #fff;
     border: 0px !important;
     border-radius: 3px 3px 3px 3px;

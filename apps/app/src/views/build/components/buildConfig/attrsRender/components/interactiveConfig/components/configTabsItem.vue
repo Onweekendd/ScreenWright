@@ -307,13 +307,13 @@ function updateEventList(index: number | null) {
       position: relative;
       color: #b4b7c1;
       &.is-active {
-        color: #8a56e8;
+        color: var(--sw-theme-color);
       }
       &.is-active::after {
         content: "";
         width: 100%;
         height: 2px;
-        background-color: #8a56e8;
+        background-color: var(--sw-theme-color);
         position: absolute;
         bottom: 0;
         left: 0;

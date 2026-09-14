@@ -17,6 +17,7 @@ const createAnimation = () => {
 </script>
 
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .status-animation-container {
   width: 100%;
   .create-animation {
@@ -26,10 +27,10 @@ const createAnimation = () => {
     padding: 5px 10px;
     border-radius: 3px;
     margin-bottom: 10px;
-    background-color: #383b49;
+    background-color: $sw-control-bg;
     &:hover {
       color: #ffffff;
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     }
   }
 }

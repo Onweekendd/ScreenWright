@@ -110,10 +110,10 @@ const addCondition = () => {
   .condition-control {
     line-height: 26px;
     cursor: pointer;
-    border: 1px solid #8a56e8;
+    border: 1px solid var(--sw-theme-color);
     border-radius: 4px 4px;
     text-align: center;
-    color: #8a56e8;
+    color: var(--sw-theme-color);
   }
 }
 </style>

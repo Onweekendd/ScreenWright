@@ -126,9 +126,9 @@ const isHighlighted = (rowId: string): boolean => {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(139, 88, 231, 0.1) 20%,
-      rgba(139, 88, 231, 0.3) 50%,
-      rgba(139, 88, 231, 0.1) 80%,
+      color-mix(in srgb, var(--sw-theme-color) 10%, transparent) 20%,
+      color-mix(in srgb, var(--sw-theme-color) 30%, transparent) 50%,
+      color-mix(in srgb, var(--sw-theme-color) 10%, transparent) 80%,
       transparent 100%
     );
     transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -156,7 +156,7 @@ const isHighlighted = (rowId: string): boolean => {
   &.highlight {
     color: white;
     background-color: rgba(0, 142, 255, 0.1);
-    background-image: linear-gradient(180deg, #8b58e7, #642cff) !important;
+    background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) !important;
     box-shadow: var(--shadow-group);
     position: relative;
     z-index: 10;

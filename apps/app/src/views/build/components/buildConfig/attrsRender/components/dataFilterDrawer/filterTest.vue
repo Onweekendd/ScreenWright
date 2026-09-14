@@ -26,7 +26,7 @@ const { testInput, testOutput, closeFilterTest } = useFilterTest();
   width: 30%;
   height: calc(100% - 36px);
   padding: 20px 16px;
-  background-color: #232630;
+  background-color: var(--sw-panel-bg);
   border-right: none;
   color: #fff;
   font-size: 12px;

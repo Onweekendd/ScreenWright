@@ -342,7 +342,7 @@ export function highlightComponent(componentId: number, highLightTime = 2000, sc
   const el = document.getElementById(`animation-${componentId}`);
   if (el) {
     // 高亮效果
-    el.style.color = "#8b58e7";
+    el.style.color = "var(--sw-theme-color)";
     setTimeout(() => {
       el.style.color = "#b4b7c1";
     }, highLightTime);

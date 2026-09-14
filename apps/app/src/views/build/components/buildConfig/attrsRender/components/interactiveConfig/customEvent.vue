@@ -427,8 +427,8 @@ watch(
   width: fit-content;
   padding: 5px 5px;
   text-align: center;
-  color: #8a56e8;
-  border: 1px solid #8a56e8;
+  color: var(--sw-theme-color);
+  border: 1px solid var(--sw-theme-color);
   border-radius: 4px 4px;
   cursor: pointer;
   line-height: 18px;

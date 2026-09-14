@@ -367,7 +367,7 @@ $popover-bg-hover: #252831;
 $popover-border-color: #393b4a;
 $popover-text-primary: #8b8d98;
 $popover-text-secondary: #6b6d7a;
-$popover-text-purple: #8b5cf6;
+$popover-text-purple: var(--sw-theme-color);
 $popover-text-purple-light: #a855f7;
 
 .filter-box {

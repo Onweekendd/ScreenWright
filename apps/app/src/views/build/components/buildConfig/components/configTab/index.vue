@@ -53,46 +53,71 @@ watch(
 );
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .config-tab {
+  display: flex;
   height: 36px;
-  color: #ffffff;
+  color: $sw-text;
   border-radius: 0;
   font-family:
     Source Han Sans CN-Normal,
     Source Han Sans CN;
   font-weight: 400;
   text-align: center;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
-  background-color: rgb(55, 58, 71);
+  border-bottom: 1px solid $sw-border;
+  background-color: $sw-title-bg;
   font-size: 12px;
   line-height: 30px;
   margin-bottom: 20px;
   .config-tab-item {
-    width: 100%;
+    position: relative;
+    flex: 1;
     height: 100%;
     cursor: pointer;
+    transition:
+      color 0.15s,
+      background-color 0.15s;
     .title-content {
       line-height: 8px;
       height: 100%;
-      color: #b4b7c1;
+      color: $sw-text-dim;
+      transition: color 0.15s;
       .en {
         position: relative;
         top: 5px;
         transform: scale(0.6);
+        opacity: 0.75;
       }
     }
     .iconfont {
-      color: #b4b7c1;
+      color: $sw-text-dim;
+      transition: color 0.15s;
     }
-    &.active {
-      color: #ffffff;
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    &:hover:not(.active) {
+      background-color: $sw-hover-bg;
       .title-content {
-        color: #ffffff;
+        color: $sw-text-strong;
       }
       .iconfont {
-        color: #ffffff;
+        color: $sw-text-strong;
+      }
+    }
+    &.active {
+      background-color: $sw-active-bg;
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background: $sw-active-bar;
+      }
+      .title-content {
+        color: var(--sw-theme-color);
+      }
+      .iconfont {
+        color: var(--sw-theme-color);
       }
     }
   }

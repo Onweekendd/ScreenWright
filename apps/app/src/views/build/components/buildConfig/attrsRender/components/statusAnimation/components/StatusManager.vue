@@ -388,14 +388,14 @@ const handleDragEnd = async () => {
   .el-input-number__decrease,
   .el-input-number__increase {
     width: 28px !important;
-    background: rgba(139, 88, 231, 0.1);
-    border: 1px solid rgba(139, 88, 231, 0.3) !important;
+    background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sw-theme-color) 30%, transparent) !important;
     color: var(--text-primary);
     transition: all 0.3s ease;
 
     &:hover {
       background: var(--primary-gradient);
-      border-color: rgba(139, 88, 231, 0.8) !important;
+      border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent) !important;
       transform: scale(1.05);
     }
   }
@@ -409,13 +409,13 @@ const handleDragEnd = async () => {
     transition: all 0.3s ease;
 
     &:hover {
-      border-color: rgba(139, 88, 231, 0.5) !important;
+      border-color: color-mix(in srgb, var(--sw-theme-color) 50%, transparent) !important;
       background: rgba(255, 255, 255, 0.08) !important;
     }
 
     &.is-focus {
-      border-color: rgba(139, 88, 231, 0.8) !important;
-      box-shadow: 0 0 0 2px rgba(139, 88, 231, 0.2) !important;
+      border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent) !important;
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--sw-theme-color) 20%, transparent) !important;
     }
 
     .el-input__inner {
@@ -537,8 +537,8 @@ const handleDragEnd = async () => {
           // 拖拽时的样式
           &.sortable-ghost {
             opacity: 0.5;
-            background: rgba(139, 88, 231, 0.1);
-            border: 2px dashed rgba(139, 88, 231, 0.5);
+            background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
+            border: 2px dashed color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
           }
 
           &.sortable-chosen {
@@ -577,7 +577,7 @@ const handleDragEnd = async () => {
 
               :deep(.el-input__wrapper) {
                 background: rgba(255, 255, 255, 0.1) !important;
-                border: 1px solid rgba(139, 88, 231, 0.5) !important;
+                border: 1px solid color-mix(in srgb, var(--sw-theme-color) 50%, transparent) !important;
                 border-radius: 4px !important;
 
                 .el-input__inner {
@@ -597,7 +597,7 @@ const handleDragEnd = async () => {
               height: 3px;
               background: var(--primary-gradient);
               border-radius: 2px 2px 0 0;
-              box-shadow: 0 -2px 8px rgba(139, 88, 231, 0.6);
+              box-shadow: 0 -2px 8px color-mix(in srgb, var(--sw-theme-color) 60%, transparent);
             }
           }
 
@@ -625,13 +625,13 @@ const handleDragEnd = async () => {
 
           &.active {
             background: var(--primary-gradient);
-            border-color: rgba(139, 88, 231, 0.8);
+            border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
             box-shadow: var(--shadow-heavy);
             z-index: 10;
 
             .status-name {
               font-size: 12px;
-              color: rgba(139, 88, 231);
+              color: var(--sw-theme-color);
               font-weight: 600;
             }
 
@@ -643,13 +643,13 @@ const handleDragEnd = async () => {
               transform: translateY(-2px);
 
               .status-name {
-                color: rgba(139, 88, 231) !important;
+                color: var(--sw-theme-color) !important;
               }
             }
           }
 
           &.editing {
-            border-color: rgba(139, 88, 231, 0.8);
+            border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
           }
 
           &:last-child {
@@ -658,8 +658,8 @@ const handleDragEnd = async () => {
 
           // 添加状态按钮样式
           &.add-status-tab {
-            background: rgba(139, 88, 231, 0.05);
-            border: 2px dashed rgba(139, 88, 231, 0.3);
+            background: color-mix(in srgb, var(--sw-theme-color) 5%, transparent);
+            border: 2px dashed color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
             border-radius: 6px;
             transition: all 0.3s ease;
 
@@ -668,7 +668,7 @@ const handleDragEnd = async () => {
               align-items: center;
               justify-content: center;
               gap: 4px;
-              color: rgba(139, 88, 231, 0.8);
+              color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
 
               .add-status-text {
                 white-space: nowrap;
@@ -678,12 +678,12 @@ const handleDragEnd = async () => {
             }
 
             &:hover {
-              background: rgba(139, 88, 231, 0.1);
-              border-color: rgba(139, 88, 231, 0.6);
+              background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
+              border-color: color-mix(in srgb, var(--sw-theme-color) 60%, transparent);
               transform: none;
 
               .tab-content {
-                color: rgba(139, 88, 231, 1);
+                color: var(--sw-theme-color);
               }
 
               .tab-hover-effect {
@@ -724,7 +724,7 @@ const handleDragEnd = async () => {
     transition: all 0.2s ease;
 
     &:hover {
-      background: rgba(139, 88, 231, 0.1);
+      background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
     }
 
     &.danger {

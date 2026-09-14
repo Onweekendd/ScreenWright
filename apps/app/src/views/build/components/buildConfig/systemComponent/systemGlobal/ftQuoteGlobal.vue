@@ -291,7 +291,7 @@ onMounted(async () => {
   line-height: 40px;
   margin: 5px auto;
   text-align: center;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
   border-radius: 5px 5px;
   cursor: pointer;
   color: #fff;

@@ -650,7 +650,7 @@ onMounted(() => {
     cursor: pointer;
 
     &.locked {
-      color: #6132e4;
+      color: var(--sw-theme-color);
     }
   }
 }

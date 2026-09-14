@@ -138,8 +138,8 @@ const deleteItem = (item: string) => {
   font-size: 12px;
   height: 22px;
   padding: 0;
-  color: #9483ff !important;
-  border: 1px solid #9483ff !important;
+  color: var(--sw-theme-color) !important;
+  border: 1px solid var(--sw-theme-color) !important;
 }
 .callback-icon {
   margin-left: 7px;

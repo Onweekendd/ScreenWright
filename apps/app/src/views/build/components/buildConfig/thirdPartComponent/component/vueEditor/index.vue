@@ -149,7 +149,7 @@ const changeTags = (info: itemTabs) => {
       cursor: pointer;
       &.active {
         color: #ffffff;
-        background-image: linear-gradient(to bottom, #8b58e7, #642cff);
+        background-image: linear-gradient(to bottom, var(--sw-theme-color), var(--sw-theme-color));
       }
     }
   }

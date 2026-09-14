@@ -196,7 +196,7 @@ const handleCancel = async (item: Filter) => {
 <style lang="scss" scoped>
 .data-filter-drawer {
   :deep(.el-drawer) {
-    --el-drawer-bg-color: #232630;
+    --el-drawer-bg-color: var(--sw-panel-bg);
     .el-drawer__header {
       font-size: 12px !important;
       height: 36px;
@@ -215,7 +215,7 @@ const handleCancel = async (item: Filter) => {
       flex-direction: column;
       height: 100%;
       box-sizing: border-box;
-      background-color: #232630;
+      background-color: var(--sw-panel-bg);
       color: #b4b7c1;
       padding: 16px;
       font-size: 12px !important;

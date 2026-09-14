@@ -591,14 +591,6 @@ interface PageReloadEvents {
   };
 }
 
-// pdf事件
-interface pdfEvents {
-  [key: `${ExhibitEnum.PdfjsViewer}-${number}`]: {
-    handlePrevClick: (type: string) => void;
-    handleNextClick: (type: string) => void;
-    handlePageChange: (currentPage: number) => void;
-  };
-}
 interface scrollPickerEvents {
   [key: `${InteractiveEnum.ScrollPicker}-${number}`]: {
     handleClick: (actionSelect: { label: string; value: string; s: string }) => void;
@@ -732,7 +724,6 @@ export type toAddEvent =
   | ftVuePartEvents
   | FtSimpleBarrageEvents
   | PageReloadEvents
-  | pdfEvents
   | scrollPickerEvents
   | ImagesList3dEvents
   | FtSignaturePad

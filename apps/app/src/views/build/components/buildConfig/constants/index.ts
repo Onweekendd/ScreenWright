@@ -707,7 +707,6 @@ export const excludeDataConfig = [
   extendsEnumType.SimpleStar,
   extendsEnumType.FullScreenSwitch,
   mediaEnum.FtImgBorder,
-  // ExhibitEnumType.PdfjsViewer,
   PanelType.quotePanel,
   ExhibitEnumType.FtFilter,
   ExhibitEnumType.verticalCard,

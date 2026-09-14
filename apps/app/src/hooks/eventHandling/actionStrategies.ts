@@ -1316,34 +1316,6 @@ export class SetIndexStrategy extends ActionStrategy<ActionExecutionParams> {
   }
 }
 
-export class JumpPageStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    eventList,
-    animation,
-    currentpage
-  }: ActionExecutionParams): Promise<void> {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.handlePageChange) {
-        return;
-      }
-      event.handlePageChange(currentpage);
-    });
-  }
-}
-
 export class prevPageStrategy extends ActionStrategy<ActionExecutionParams> {
   async execute({
     componentIds,
@@ -1806,7 +1778,6 @@ export class ActionStrategyFactory {
     [ActionTypeEnum.SendUe4MsgStatic]: new sendUE4MessageStrategy(),
     [ActionTypeEnum.SendAIManMsgStatic]: new sendAIManMsgStaticStrategy(),
     [ActionTypeEnum.SwitchBlueprintTab]: new SwitchBlueprintTab(),
-    [ActionTypeEnum.JumpPage]: new JumpPageStrategy(),
     [ActionTypeEnum.nextPage]: new nextPageStrategy(),
     [ActionTypeEnum.prevPage]: new prevPageStrategy(),
     [ActionTypeEnum.SwiperCardChangeIndex]: new swiperCardChangeIndexStrategy(),

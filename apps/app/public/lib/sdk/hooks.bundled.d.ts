@@ -126,7 +126,6 @@ declare const ComponentFlatSchema: z.ZodObject<{
             ringIndicator3d: import("..").ExhibitEnum.RingIndicator3d;
             ringIndicator3dNew: import("..").ExhibitEnum.ringIndicator3dNew;
             imagesList3d: import("..").ExhibitEnum.ImagesList3d;
-            "pdfjs-viewer": import("..").ExhibitEnum.PdfjsViewer;
             "sw-particles": import("..").ExhibitEnum.FtParticles;
             "sw-signaturePad": import("..").ExhibitEnum.FtSignaturePad;
             "sw-filter": import("..").ExhibitEnum.FtFilter;
@@ -8194,7 +8193,7 @@ declare const componentPropSchemaMap: {
             columns: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftcollection: {
+    readonly swcollection: {
         readonly data: z.ZodArray<z.ZodObject<{
             src: z.ZodString;
             title: z.ZodString;
@@ -8236,7 +8235,7 @@ declare const componentPropSchemaMap: {
             titleBackgroundImage: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftdatetime: {
+    readonly swdatetime: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             format: z.ZodString;
@@ -8251,7 +8250,7 @@ declare const componentPropSchemaMap: {
             backgroundColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftmultiLine: {
+    readonly swmultiLine: {
         readonly data: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             src: z.ZodString;
@@ -8292,7 +8291,7 @@ declare const componentPropSchemaMap: {
             iconMargin: z.ZodArray<z.ZodNumber>;
         }, z.core.$strip>;
     };
-    readonly ftProgress: {
+    readonly swProgress: {
         readonly data: z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>;
         readonly option: z.ZodObject<{
             refresh: z.ZodBoolean;
@@ -8439,7 +8438,7 @@ declare const componentPropSchemaMap: {
             styleAssignBgLeft: z.ZodOptional<z.ZodArray<z.ZodArray<z.ZodNumber>>>;
         }, z.core.$strip>;
     };
-    readonly ftRichtext: {
+    readonly swRichtext: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8453,7 +8452,7 @@ declare const componentPropSchemaMap: {
             scrollInterval: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftScroll: {
+    readonly swScroll: {
         readonly data: z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean]>>>;
         readonly option: z.ZodObject<{
             refresh: z.ZodBoolean;
@@ -8629,7 +8628,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>>;
         }, z.core.$strip>;
     };
-    readonly ftText2: {
+    readonly swText2: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8671,7 +8670,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>>;
         }, z.core.$strip>;
     };
-    readonly fttext: {
+    readonly swtext: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8730,7 +8729,7 @@ declare const componentPropSchemaMap: {
             rotateZ: z.ZodOptional<z.ZodNumber>;
         }, z.core.$strict>;
     };
-    readonly ftTextWordCloud: {
+    readonly swTextWordCloud: {
         readonly data: z.ZodArray<z.ZodObject<{
             text: z.ZodString;
             value: z.ZodNumber;
@@ -12880,7 +12879,7 @@ declare const componentPropSchemaMap: {
             autoHidden: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftiframe: {
+    readonly swiframe: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -12915,7 +12914,7 @@ declare const componentPropSchemaMap: {
             isQuoteReload: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftimg: {
+    readonly swimg: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -12981,7 +12980,7 @@ declare const componentPropSchemaMap: {
             backdropFilterSaturate: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftOpenVideo: {
+    readonly "sw-open-video": {
         readonly data: z.ZodArray<z.ZodObject<{
             cover: z.ZodString;
             value: z.ZodString;
@@ -13056,7 +13055,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>;
         }, z.core.$strip>;
     };
-    readonly ftSwiperCard: {
+    readonly swSwiperCard: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             globalConfig: z.ZodObject<{
@@ -13149,7 +13148,7 @@ declare const componentPropSchemaMap: {
             refresh: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftswiper: {
+    readonly swswiper: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             type: z.ZodString;
@@ -13221,7 +13220,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>;
         }, z.core.$strip>;
     };
-    readonly ftvideo: {
+    readonly swvideo: {
         readonly data: z.ZodArray<z.ZodObject<{
             cover: z.ZodString;
             value: z.ZodString;
@@ -13658,7 +13657,7 @@ declare const componentPropSchemaMap: {
             xAxisSplitLineColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftFlopPerformance: {
+    readonly swFlopPerformance: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodNumber;
         }, z.core.$strip>>;
@@ -13715,7 +13714,7 @@ declare const componentPropSchemaMap: {
             randomRange: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftdynamicratio: {
+    readonly swdynamicratio: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodNumber;
         }, z.core.$strip>>;
@@ -14072,7 +14071,7 @@ declare const componentPropSchemaMap: {
             fontPaddingLeft: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftCascader: {
+    readonly swCascader: {
         readonly data: z.ZodArray<z.ZodType<import('.').CascaderItem, unknown, z.core.$ZodTypeInternals<import('.').CascaderItem, unknown>>>;
         readonly option: z.ZodObject<{
             defaultIndex: z.ZodNumber;
@@ -14124,7 +14123,7 @@ declare const componentPropSchemaMap: {
             menuHoverBackgroundImage: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftCustomSelect: {
+    readonly swCustomSelect: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14197,7 +14196,7 @@ declare const componentPropSchemaMap: {
             hoverHeight: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftDateTimePicker: {
+    readonly swDateTimePicker: {
         readonly data: z.ZodArray<z.ZodObject<{
             startTime: z.ZodString;
             endTime: z.ZodString;
@@ -14243,7 +14242,7 @@ declare const componentPropSchemaMap: {
             buttonFontWeight: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftLegend: {
+    readonly swLegend: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14335,7 +14334,7 @@ declare const componentPropSchemaMap: {
             opacity: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftPageQuery: {
+    readonly swPageQuery: {
         readonly data: z.ZodArray<z.ZodObject<{
             pageIndex: z.ZodNumber;
             pageTotal: z.ZodNumber;
@@ -14393,7 +14392,7 @@ declare const componentPropSchemaMap: {
             checkedBorderColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftPageTurning: {
+    readonly swPageTurning: {
         readonly data: z.ZodArray<z.ZodObject<{
             pageIndex: z.ZodNumber;
             pageTotal: z.ZodNumber;
@@ -14474,7 +14473,7 @@ declare const componentPropSchemaMap: {
             buttonIconHeight: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftSingleSelectedLegend: {
+    readonly swSingleSelectedLegend: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14513,7 +14512,7 @@ declare const componentPropSchemaMap: {
             backgroundBorderRadius: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftTimerShaft: {
+    readonly swTimerShaft: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -16602,7 +16601,6 @@ declare const ExhibitEnumTypeSchema: z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
     "sw-particles": ExhibitEnum.FtParticles;
     "sw-signaturePad": ExhibitEnum.FtSignaturePad;
     "sw-filter": ExhibitEnum.FtFilter;
@@ -16763,7 +16761,6 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
     "sw-particles": ExhibitEnum.FtParticles;
     "sw-signaturePad": ExhibitEnum.FtSignaturePad;
     "sw-filter": ExhibitEnum.FtFilter;
@@ -17269,10 +17266,6 @@ declare enum ActionTypeEnum {
      * @description 签名
      */
     Signature = "signature",
-    /**
-     * @description 跳转页码
-     */
-    JumpPage = "jumpPage",
     /**
      * @description 轮巡开启
      */
@@ -17787,7 +17780,6 @@ interface Action {
     /** @description 事件选择模型集合 */
     option?: Record<string, any>;
     /** @description 当前页码 */
-    currentpage?: number;
     /** @description 译文转换 */
     translation?: string;
 }
@@ -18197,7 +18189,9 @@ declare enum FileTypeEnum {
     /** 个人场景资产 */
     personalSceneAssets = 3,
     /** 城市编辑器资产 */
-    cityEditorAssets = 4
+    cityEditorAssets = 4,
+    /** 系统内置素材（全局只读） */
+    systemMaterial = 5
 }
 /** UI 渲染单项类型（素材选择器菜单项） */
 interface MenuItemForRender {
@@ -18772,13 +18766,6 @@ interface PageReloadEvents {
         handleClick: () => void;
     };
 }
-interface pdfEvents {
-    [key: `${ExhibitEnum.PdfjsViewer}-${number}`]: {
-        handlePrevClick: (type: string) => void;
-        handleNextClick: (type: string) => void;
-        handlePageChange: (currentPage: number) => void;
-    };
-}
 interface scrollPickerEvents {
     [key: `${InteractiveEnum.ScrollPicker}-${number}`]: {
         handleClick: (actionSelect: {
@@ -18803,7 +18790,7 @@ interface FtSignaturePad {
     };
 }
 type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & FtUnrealEngineEvents & videoProgressEvents;
-type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | pdfEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtUnrealEngineEvents | videoProgressEvents;
+type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtUnrealEngineEvents | videoProgressEvents;
 
 import { Animation } from './component-animation';
 import { AllComponentType, ExtendsChildComponentEnum, FolderEnum } from './componentProp';
@@ -19171,8 +19158,6 @@ declare enum ExhibitEnum {
     ringIndicator3dNew = "ringIndicator3dNew",
     /** 3D图片列表 */
     ImagesList3d = "imagesList3d",
-    /** PDF查看器 */
-    PdfjsViewer = "pdfjs-viewer",
     /** 空间粒子 */
     FtParticles = "sw-particles",
     /** 签名板 */
@@ -20621,7 +20606,9 @@ declare enum FileTypeEnum {
     /** 个人场景资产 */
     personalSceneAssets = 3,
     /** 城市编辑器资产 */
-    cityEditorAssets = 4
+    cityEditorAssets = 4,
+    /** 系统内置素材（全局只读） */
+    systemMaterial = 5
 }
 
 /** UI渲染单项类型 */
@@ -20633,6 +20620,8 @@ interface MenuItemForRender {
     isVideo?: boolean | undefined | null;
     moduleId?: number;
     url?: string;
+    /** 卡片缩略图；实际添加到画布仍使用 url/img */
+    cover?: string;
     fileType?: string;
     type?: string;
     assetType?: FileTypeEnum;
@@ -21172,7 +21161,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -21562,7 +21550,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -21942,7 +21929,6 @@ declare const sdk: {
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -22350,7 +22336,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -22719,7 +22704,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -23228,7 +23212,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -23618,7 +23601,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -23998,7 +23980,6 @@ declare const sdk: {
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -24406,7 +24387,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -24775,7 +24755,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -25906,7 +25885,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -26296,7 +26274,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -26676,7 +26653,6 @@ declare const screenwright: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -27084,7 +27060,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -27453,7 +27428,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -27962,7 +27936,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -28352,7 +28325,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -28732,7 +28704,6 @@ declare const screenwright: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -29140,7 +29111,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -29509,7 +29479,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];

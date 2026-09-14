@@ -310,10 +310,6 @@ export enum ActionTypeEnum {
    */
   Signature = "signature",
   /**
-   * @description 跳转页码
-   */
-  JumpPage = "jumpPage",
-  /**
    * @description 轮巡开启
    */
   TurnOnPatrol = "turnOnPatrol",
@@ -575,9 +571,8 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
   [ActionTypeEnum.SwitchVideoProgress]: [mediaEnum.FtVideo],
   [ActionTypeEnum.VoiceControlStart]: [interactiveEnum.FtVoiceControl],
   [ActionTypeEnum.VoiceControlStop]: [interactiveEnum.FtVoiceControl],
-  [ActionTypeEnum.JumpPage]: [ExhibitEnum.PdfjsViewer],
-  [ActionTypeEnum.prevPage]: [ExhibitEnum.PdfjsViewer, MediaEnum.CtVideoPanel],
-  [ActionTypeEnum.nextPage]: [ExhibitEnum.PdfjsViewer, MediaEnum.CtVideoPanel],
+  [ActionTypeEnum.prevPage]: [MediaEnum.CtVideoPanel],
+  [ActionTypeEnum.nextPage]: [MediaEnum.CtVideoPanel],
   [ActionTypeEnum.OnExport]: [ExhibitEnum.FtSignaturePad],
   [ActionTypeEnum.OnClear]: [ExhibitEnum.FtSignaturePad],
   [ActionTypeEnum.OnRedo]: [ExhibitEnum.FtSignaturePad],
@@ -651,7 +646,6 @@ export const ActionList: { label: string; value: ActionTypeEnum }[] = [
   { label: "重做", value: ActionTypeEnum.OnRedo },
   { label: "撤销", value: ActionTypeEnum.OnUndo },
   { label: "传递图片", value: ActionTypeEnum.OnTranslateImage },
-  { label: "跳转页码", value: ActionTypeEnum.JumpPage },
   { label: "轮巡开启", value: ActionTypeEnum.TurnOnPatrol },
   { label: "轮巡暂停", value: ActionTypeEnum.PausePatrol },
   { label: "轮巡重启", value: ActionTypeEnum.RestartPatrol },
@@ -1218,9 +1212,6 @@ export interface Action {
 
   /** @description 事件选择模型集合 */
   option?: Record<string, any>;
-
-  /** @description 当前页码 */
-  currentpage?: number;
 
   /** @description 译文转换 */
   translation?: string;

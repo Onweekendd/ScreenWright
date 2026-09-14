@@ -52,7 +52,6 @@
   { "value": "voiceControlStop",                "label": "麦克风结束",          "group": "语音" },
   { "value": "prevPage",                         "label": "上一页",             "group": "分页" },
   { "value": "nextPage",                         "label": "下一页",             "group": "分页" },
-  { "value": "jumpPage",                         "label": "跳转页码",           "group": "分页" },
   { "value": "onExport",                         "label": "导出",               "group": "签名板" },
   { "value": "onClear",                          "label": "清除",               "group": "签名板" },
   { "value": "onRedo",                           "label": "重做",               "group": "签名板" },

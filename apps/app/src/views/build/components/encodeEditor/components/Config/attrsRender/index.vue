@@ -72,7 +72,6 @@ const excludeDataConfig = [
   extendsEnumType.SimpleStar,
   extendsEnumType.FullScreenSwitch,
   mediaEnum.FtImgBorder,
-  ExhibitEnumType.PdfjsViewer,
   InteractiveEnum.videoProgress
 ];
 

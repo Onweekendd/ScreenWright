@@ -11,7 +11,6 @@ import ftFilterGlobal from "./exhibitGlobal/ft-filterGlobal.vue";
 import ftParticlesGlobal from "./exhibitGlobal/ft-particlesGlobal.vue";
 import ftSignaturePadGlobal from "./exhibitGlobal/ft-signaturePadGlobal.vue";
 import imagesList3dGlobal from "./exhibitGlobal/imagesList3dGlobal.vue";
-import pdfjsViewerGlobal from "./exhibitGlobal/pdfjs-viewerGlobal.vue";
 import ringIndicator3dGlobal from "./exhibitGlobal/ringIndicator3dGlobal.vue";
 import ringIndicator3dNewGlobal from "./exhibitGlobal/ringIndicator3dNewGlobal.vue";
 import verticalCardGlobal from "./exhibitGlobal/verticalCardGlobal.vue";
@@ -59,9 +58,6 @@ export const ExhibitConfigComponent: Partial<Record<ExhibitEnum, ConfigTab[]>> =
     { label: "全局", value: optionType.global, component: imagesList3dGlobal },
     { label: "底图", value: optionType.baseMap, component: imagesList3dBaseMap },
     { label: "图片列表", value: optionType.picList, component: imagesList3dPicList }
-  ],
-  [ExhibitEnum.PdfjsViewer]: [
-    { label: "全局", value: optionType.global, component: pdfjsViewerGlobal }
   ],
   [ExhibitEnum.FtParticles]: [
     { label: "基础配置", value: optionType.global, component: ftParticlesGlobal },

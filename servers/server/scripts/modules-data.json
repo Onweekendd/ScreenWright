@@ -1768,23 +1768,6 @@
     "status": 1
   },
   {
-    "id": 119,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"title\":\"PDF容器v1\",\"name\":\"PDF容器v1\",\"display\":true,\"icon\":\"icon-video\",\"img\":\"/img/pdfjs-viewer.20241203.gif\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"time\":30,\"dataType\":0,\"dataMethod\":\"get\",\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"data\":[],\"dataRemark\":[],\"listenArgs\":[],\"cbArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":500,\"height\":570,\"name\":\"pdfjs-viewer\",\"prop\":\"pdfjs-viewer\"},\"option\":{\"showAll\":false,\"showPage\":true,\"current\":1,\"zoomValue\":1.2,\"fontSize\":12,\"fontWeight\":\"\",\"fontStyle\":\"\",\"fontFamily\":\"sans-serif\",\"fontColor\":\"rgba(255, 255, 255, 1)\",\"textTranslateX\":0,\"textTranslateY\":0,\"backgroundColor\":\"rgba(0, 0, 0, 0.5)\",\"pdfUrl\":\"version-test/assets/defaultImg/default.pdf\"}}",
-    "level": 0,
-    "second_level_menu": "",
-    "first_level_menu": "展项",
-    "name": "PDF容器v1",
-    "thumbnail": "/img/pdfjs-viewer.20241203.gif",
-    "created_by": "admin",
-    "created_time": "2022-07-23T09:55:32.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[]",
-    "status": 1
-  },
-  {
     "id": 126,
     "user_id": null,
     "type": 0,

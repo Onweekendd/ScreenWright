@@ -323,7 +323,6 @@ export const ActionSchema: z.ZodSchema<Action> = z.object({
   /** 事件选择模型集合 */
   option: z.record(z.string(), z.any()).optional().describe("事件选择模型集合"),
   /** 当前页码 */
-  currentpage: z.number().optional().describe("当前页码"),
   /** 译文转换 */
   translation: z.string().optional().describe("译文转换"),
   /** 2.5D 地图标牌选中状态切换配置 */

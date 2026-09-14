@@ -202,7 +202,6 @@ export const templateActions = (): Action => {
     videoStartTime: 0,
     videoEndTime: 0,
     option: {},
-    currentpage: 1,
     translation: "zh",
     blueprintKey: "",
     timeFastIn: 10,
@@ -433,10 +432,6 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
         projectParamValue: {},
         projectParamCode: ""
       };
-
-    // 分页 / 轮巡
-    case ActionTypeEnum.JumpPage:
-      return { ...base, animation: defaultAnimation(), currentpage: 1 };
 
     // TCP/UDP (SwitchTCState)
     case ActionTypeEnum.SwitchTCState:

@@ -14,8 +14,6 @@ export enum ExhibitEnum {
   ringIndicator3dNew = "ringIndicator3dNew",
   /** 3D图片列表 */
   ImagesList3d = "imagesList3d",
-  /** PDF查看器 */
-  PdfjsViewer = "pdfjs-viewer",
   /** 空间粒子 */
   FtParticles = "sw-particles",
   /** 签名板 */

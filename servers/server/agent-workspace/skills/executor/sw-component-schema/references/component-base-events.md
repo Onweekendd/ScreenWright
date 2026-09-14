@@ -113,7 +113,6 @@ encodes?: EncodeEventSchema[]  // 加密事件列表（可选）
   sceneChildComponent?: { nameList, childComponentInfoList, visible },
   videoStartTime?: number,
   videoEndTime?: number,
-  currentpage?: number,
   option?: Record<string, any>,     // 事件选择模型集合
   setBroadcastId?: string | null,
   screenThemeId?: number,

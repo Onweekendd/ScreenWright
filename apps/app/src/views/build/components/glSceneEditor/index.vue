@@ -755,14 +755,15 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 @import "src/style/mixins/element.scss";
 
 .gl-scene-editor-page {
   min-height: 100vh;
   padding: 14px 16px 16px;
   box-sizing: border-box;
-  background: #1c1f29;
-  color: #eef2ff;
+  background: $sw-bg;
+  color: $sw-text;
 }
 
 .gl-scene-editor-back {
@@ -775,7 +776,7 @@ onBeforeUnmount(() => {
   border: 1px solid color-mix(in srgb, var(--sw-theme-color) 35%, transparent);
   border-radius: 6px;
   background: linear-gradient(180deg, color-mix(in srgb, var(--sw-theme-color) 20%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 14%, transparent) 100%);
-  color: #d8cfff;
+  color: color-mix(in srgb, var(--sw-theme-color) 25%, white);
   font-size: 12px;
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
@@ -784,7 +785,7 @@ onBeforeUnmount(() => {
 .gl-scene-editor-back:hover {
   border-color: color-mix(in srgb, var(--sw-theme-color) 68%, transparent);
   background: color-mix(in srgb, var(--sw-theme-color) 23%, transparent);
-  color: #ffffff;
+  color: $sw-text-strong;
 }
 
 .gl-scene-editor-layout {
@@ -796,7 +797,7 @@ onBeforeUnmount(() => {
 
 .stage-panel {
   padding: 8px;
-  border: 1px solid #000000;
+  border: 1px solid $sw-border;
   background: var(--sw-panel-bg);
 }
 
@@ -817,7 +818,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  border: 1px solid #000000;
+  border: 1px solid $sw-border;
   background: var(--sw-panel-bg);
 }
 
@@ -827,18 +828,18 @@ onBeforeUnmount(() => {
   gap: 12px;
   min-height: 52px;
   padding: 0 14px;
-  border-bottom: 1px solid #373a47;
+  border-bottom: 1px solid $sw-border;
 }
 
 .scene-sidebar__title {
   font-size: 14px;
   font-weight: 600;
-  color: #ffffff;
+  color: $sw-text-strong;
 }
 
 .scene-sidebar__subtitle {
   font-size: 12px;
-  color: #8e97ab;
+  color: $sw-text-muted;
 }
 
 .scene-sidebar__section {
@@ -867,7 +868,7 @@ onBeforeUnmount(() => {
   border: none;
   padding: 0;
   background: transparent;
-  color: #b4b7c1;
+  color: $sw-text-dim;
   cursor: pointer;
   transition: color 0.2s ease;
 }
@@ -891,7 +892,7 @@ onBeforeUnmount(() => {
 
 .scene-collapse__body :deep(.ft-series-tabs) {
   margin-bottom: 0;
-  background: #3d404c;
+  background: $sw-control-bg;
   opacity: 1;
 }
 
@@ -934,7 +935,7 @@ onBeforeUnmount(() => {
   padding: 0;
   font-size: 12px;
   line-height: 32px;
-  color: #b4b7c1;
+  color: $sw-text-dim;
 }
 
 .scene-collapse__body :deep(.el-tabs__item.is-active) {
@@ -988,7 +989,7 @@ onBeforeUnmount(() => {
 .scene-roam-block__title {
   font-size: 12px;
   line-height: 20px;
-  color: #ffffff;
+  color: $sw-text-strong;
 }
 
 .scene-roam-panel {
@@ -1018,7 +1019,7 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   font-size: 12px;
-  color: #ffffff;
+  color: $sw-text-strong;
   line-height: 28px;
   white-space: nowrap;
 }
@@ -1082,29 +1083,29 @@ onBeforeUnmount(() => {
 .scene-roam-form :deep(.el-input__wrapper),
 .scene-roam-form :deep(.el-input-number .el-input__wrapper) {
   min-height: 28px;
-  border: 1px solid #282e3a !important;
-  background: #0f1014 !important;
+  border: 1px solid $default-border-color !important;
+  background: $default-bg-color !important;
   box-shadow: none !important;
 }
 
 .scene-roam-form :deep(.el-input__inner),
 .scene-roam-form :deep(.el-input-number .el-input__inner) {
   font-size: 12px;
-  color: #dce4f7 !important;
+  color: $sw-text-strong !important;
 }
 
 .scene-roam-form :deep(.el-input-number__decrease),
 .scene-roam-form :deep(.el-input-number__increase) {
   background: #181b24 !important;
   border-color: #393b4a !important;
-  color: #b4b7c1 !important;
+  color: $sw-text-dim !important;
 }
 
 .scene-collapse :deep(.el-collapse) {
   --el-collapse-content-bg-color: var(--sw-panel-bg);
   --el-collapse-border-color: transparent;
   --el-collapse-header-bg-color: var(--sw-panel-bg);
-  --el-collapse-header-text-color: #b4b7c1;
+  --el-collapse-header-text-color: #{$sw-text-dim};
 }
 
 .scene-collapse :deep(.el-collapse-item__header) {
@@ -1140,7 +1141,7 @@ onBeforeUnmount(() => {
 
 .gl-scene-editor-empty__title {
   font-size: 16px;
-  color: #ffffff;
+  color: $sw-text-strong;
 }
 
 @media (max-width: 1280px) {

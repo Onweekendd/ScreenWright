@@ -460,7 +460,7 @@ onBeforeUnmount(() => {
   position: absolute;
   z-index: 8;
   box-sizing: border-box;
-  border: 2px solid #5e62fb;
+  border: 2px solid var(--sw-theme-color);
   pointer-events: none;
 
   &__body {

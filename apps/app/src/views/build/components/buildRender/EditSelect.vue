@@ -98,7 +98,7 @@ watch(
     opacity: 1;
     border-width: 1px;
     border-style: solid;
-    border-color: #5e62fb;
+    border-color: var(--sw-theme-color);
   }
   .select-background {
     top: 2px;

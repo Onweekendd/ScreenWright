@@ -304,7 +304,7 @@ const shapeModalShow = computed(() => {
 
   // 多选时每个成员的 1px 细描边（整体框由 SelectionTransformer 画）
   &.is-multi-selected {
-    box-shadow: 0 0 0 1px rgba(94, 98, 251, 0.5) inset;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--sw-theme-color) 50%, transparent) inset;
   }
 
   &.lock {
@@ -336,7 +336,7 @@ const shapeModalShow = computed(() => {
     width: 16px;
     height: 16px;
     line-height: 16px;
-    background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     position: absolute;
     right: 0 !important;
     top: 0 !important;
@@ -352,7 +352,7 @@ const shapeModalShow = computed(() => {
     width: 32px;
     height: 16px;
     line-height: 16px;
-    background: linear-gradient(to right, #e8aa2e 0%, #e8aa2e 50%, #8b58e7 50%, #642cff 100%);
+    background: linear-gradient(to right, #e8aa2e 0%, #e8aa2e 50%, var(--sw-theme-color) 50%, var(--sw-theme-color) 100%);
     position: absolute;
     right: 0 !important;
     top: 0 !important;
@@ -370,7 +370,7 @@ const shapeModalShow = computed(() => {
 
   &:not(.isDragging) {
     .shape-modal:hover {
-      box-shadow: 0 0 0 2px #5e62fb inset;
+      box-shadow: 0 0 0 2px var(--sw-theme-color) inset;
     }
   }
 }

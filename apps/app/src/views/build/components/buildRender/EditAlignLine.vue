@@ -46,7 +46,7 @@ const useComponentStyle = (attr?: Partial<{ x: number; y: number }>) => {
 
 // 颜色
 const themeColor = computed(() => {
-  return "#5e62fb";
+  return "var(--sw-theme-color)";
 });
 
 // * 吸附距离

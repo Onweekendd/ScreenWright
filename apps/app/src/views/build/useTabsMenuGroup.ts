@@ -17,14 +17,15 @@ import { buildScreenVersionKey, buildScreenWorkspaceDir } from "@/utils/screenWo
 import { useAction } from "@/views/build/components/buildRender/hooks/useAction";
 import { assetsClassManager } from "@/views/build/components/buildTabs/selectAssets/assetsClass";
 import { assetsMenuManager } from "@/views/build/components/buildTabs/selectAssets/assetsMenu";
-import type {
-  AllAssetsForRender,
-  AllModuleForRender,
-  AssetsGroupForRender,
-  GetMaterialDataOption,
-  MenuItemForRender,
-  ModuleGroupForRender,
-  SingleModuleTypeForRender
+import {
+  type AllAssetsForRender,
+  type AllModuleForRender,
+  type AssetsGroupForRender,
+  AssetsMenuKeyEnum,
+  type GetMaterialDataOption,
+  type MenuItemForRender,
+  type ModuleGroupForRender,
+  type SingleModuleTypeForRender
 } from "@/views/build/components/buildTabs/selectAssets/assetsMenuType";
 
 import type { ComponentType } from "./components/buildRender/type";
@@ -270,10 +271,12 @@ export const useTabsMenuGroup = createGlobalState(() => {
    */
   const getMaterialLibraryList = async (): Promise<void> => {
     // 动态获取所有可用的资产类型，避免硬编码
-    const dataRes = assetsClassManager.getAllAssetTypes();
+    const dataRes = assetsClassManager
+      .getAllAssetTypes()
+      .filter((title) => assetsClassManager.titleToKey(title) !== AssetsMenuKeyEnum.aiTemplate);
     assetsData.value = [];
 
-    const res = await assetsMenuManager.getAssetsLibraryData(dataRes);
+    const res = await assetsMenuManager.getAssetsLibraryData(dataRes, false);
     if (res && res.libraryMapData) {
       assetsData.value = res.libraryMapData;
     }

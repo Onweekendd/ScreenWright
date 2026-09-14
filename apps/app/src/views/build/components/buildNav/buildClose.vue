@@ -1,6 +1,6 @@
 <template>
   <div class="build-close flex flex-center" @click="close">
-    <Icon color="#b4b7c1" type="iconfont-closeToHomepage" size="18" style="position: relative; top: -3px" />
+    <Icon type="iconfont-closeToHomepage" size="18" />
   </div>
 </template>
 <script setup lang="ts">
@@ -12,15 +12,24 @@ const close = () => {
 };
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .build-close {
-  background-image: url("@/assets/image/button/close_bg.png");
-  background-repeat: no-repeat;
-  background-size: contain;
   width: 46px;
   height: 46px;
-  color: #fff;
+  box-sizing: border-box;
+  background-color: $sw-surface-2;
+  border: 1px solid $sw-border;
+  border-radius: 8px;
+  color: $sw-text-dim;
   cursor: pointer;
-  position: relative;
-  top: 0px;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+  &:hover {
+    background-color: rgba(245, 108, 108, 0.12);
+    border-color: rgba(245, 108, 108, 0.4);
+    color: #f56c6c;
+  }
 }
 </style>

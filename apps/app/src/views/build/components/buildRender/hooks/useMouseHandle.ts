@@ -1,7 +1,10 @@
 // 处理组件移入移出操作
+import { unref, type MaybeRef } from "vue";
 import { useRoute } from "vue-router";
 
 import { throttle } from "lodash-es";
+
+import type { LargeScreenDetailInfo } from "@screenwright/types";
 
 import { useScreenEditor } from "@/core-adapter/useScreenEditor";
 import { sleep } from "@/utils/utils";
@@ -56,6 +59,7 @@ interface HandleDragMoveParams {
 
 interface MouseHandleOptions {
   isDynamicPanel?: boolean;
+  editConfig?: MaybeRef<LargeScreenDetailInfo>;
 }
 
 export const useMouseHandle = (props: MouseHandleOptions = {}) => {
@@ -71,7 +75,7 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
   // const { calculateAlignment, clearAlignmentGuides, updateSpatialIndex } = useAlignmentGuides();
   const {
     targetChart,
-    editConfig,
+    editConfig: globalEditConfig,
     editCanvas,
     componentList,
     selectTargetData,
@@ -81,6 +85,8 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
     setMousePosition,
     setTargetHoverChart
   } = useEditStore();
+
+  const getEditConfig = () => unref(props.editConfig) ?? globalEditConfig.value;
 
   // 获取动画相关的 hooks
   const { onComponentAddToCustomAnimation } = useCustomAnimation();
@@ -120,8 +126,8 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
     }
 
     const rect = renderDom.getBoundingClientRect();
-    const renderWidth = Number(editConfig.value.width) || rect.width;
-    const renderHeight = Number(editConfig.value.height) || rect.height;
+    const renderWidth = Number(getEditConfig().width) || rect.width;
+    const renderHeight = Number(getEditConfig().height) || rect.height;
     const scaleX = rect.width / renderWidth || 1;
     const scaleY = rect.height / renderHeight || 1;
 
@@ -522,7 +528,8 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
    * 开始拖拽操作（从 mousedownHandle 提取）
    */
   const startDrag = (e: MouseEvent, clickTarget?: ComponentType) => {
-    const scale = editConfig.value.scale || 0.6;
+    const editConfig = getEditConfig();
+    const scale = editConfig.scale || 0.6;
     setEditCanvas(EditCanvasTypeEnum.IS_DRAG, true);
 
     // 收集初始位置（使用纯函数）
@@ -539,8 +546,8 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
       biAlignmentInstance.value.cache_reference_shapes(
         0,
         0,
-        Number(editConfig.value.width),
-        Number(editConfig.value.height),
+        Number(editConfig.width),
+        Number(editConfig.height),
         selectTargetDataId.value
       );
     }
@@ -655,7 +662,7 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
    * 开始框选操作（从 mousedownBoxSelect 提取）
    */
   const startBoxSelect = (e: MouseEvent) => {
-    const scale = editConfig.value.scale || 0.6;
+    const scale = getEditConfig().scale || 0.6;
 
     // 记录起始位置
     const { startOffsetX, startOffsetY } = resolveCanvasStartPoint(e, scale);

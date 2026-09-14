@@ -178,7 +178,7 @@ const {
     line-height: 30px;
     text-align: center;
     color: #ffffff !important;
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     margin-bottom: 20px;
     border-radius: 5px 5px 0px 0px;
   }

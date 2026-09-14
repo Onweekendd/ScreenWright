@@ -136,7 +136,7 @@ const handleUpdateData = (resetUpdate = false, updateGroup = false) => {
 
   const option = {
     title: props.title,
-    menuGroup: props.menuGroup[currentActive.value] as AssetsGroupForRender,
+    menuGroup: props.menuGroup[currentActive.value] as AssetsGroupForRender | undefined,
     resetUpdate: resetUpdate,
     updateGroup: updateGroup
   };

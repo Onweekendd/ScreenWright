@@ -218,7 +218,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .image-preview-container {
   height: 580px;
-  background-color: #232630;
+  background-color: var(--sw-panel-bg);
   color: #fff;
   overflow-y: auto;
   overflow-x: hidden;
@@ -317,11 +317,11 @@ onMounted(() => {
       left: 10%;
       width: 80%;
       height: 1px;
-      background: rgba(139, 88, 231, 0.3);
+      background: color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
     }
 
     &:hover {
-      background-color: rgba(139, 88, 231, 0.2);
+      background-color: color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
 
       i,
       span {
@@ -331,13 +331,13 @@ onMounted(() => {
 
     i {
       font-size: 24px;
-      color: #8b58e7;
+      color: var(--sw-theme-color);
       margin-bottom: 4px;
       transition: color 0.3s;
     }
 
     span {
-      color: #8b58e7;
+      color: var(--sw-theme-color);
       font-size: 14px;
       transition: color 0.3s;
     }
@@ -345,11 +345,11 @@ onMounted(() => {
   .upload-panel {
     width: 100%;
     aspect-ratio: 1;
-    border: 1px dashed rgba(139, 88, 231, 0.5);
+    border: 1px dashed color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
     border-radius: 4px;
     display: grid;
     grid-template-rows: 1fr 1fr;
-    background-color: rgba(139, 88, 231, 0.1);
+    background-color: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
     overflow: hidden;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;

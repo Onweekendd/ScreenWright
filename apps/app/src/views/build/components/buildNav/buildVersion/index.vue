@@ -169,7 +169,7 @@ onMounted(async () => {
           height: 26px !important;
         }
         &:hover {
-          box-shadow: 0 0 0 1px #642cff inset !important;
+          box-shadow: 0 0 0 1px var(--sw-theme-color) inset !important;
         }
       }
     }

@@ -84,9 +84,9 @@ onMounted(() => {
 .sw-collapse-item {
   position: relative;
   :deep(.el-collapse) {
-    --el-collapse-content-bg-color: #232630;
+    --el-collapse-content-bg-color: var(--sw-panel-bg);
     --el-collapse-border-color: transparent;
-    --el-collapse-header-bg-color: #232630;
+    --el-collapse-header-bg-color: var(--sw-panel-bg);
     --el-collapse-header-text-color: #b4b7c1;
   }
   .sw-collapse-item-icon {

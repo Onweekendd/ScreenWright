@@ -86,7 +86,7 @@ onMounted(async () => {
       top: 1px;
     }
     .el-tree-node__content:hover {
-      background-image: linear-gradient(180deg, #8b58e7, #642cff) !important;
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) !important;
       color: #fff !important;
     }
     .el-tree-node {
@@ -107,7 +107,7 @@ onMounted(async () => {
       color: #fff;
       border: none;
       border-radius: 2px;
-      background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       margin-left: 10px;
     }
     .el-button--default {

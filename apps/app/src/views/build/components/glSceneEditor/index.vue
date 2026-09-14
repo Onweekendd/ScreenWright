@@ -755,14 +755,15 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 @import "src/style/mixins/element.scss";
 
 .gl-scene-editor-page {
   min-height: 100vh;
   padding: 14px 16px 16px;
   box-sizing: border-box;
-  background: #1c1f29;
-  color: #eef2ff;
+  background: $sw-bg;
+  color: $sw-text;
 }
 
 .gl-scene-editor-back {
@@ -772,19 +773,19 @@ onBeforeUnmount(() => {
   height: 28px;
   margin-bottom: 8px;
   padding: 0 10px;
-  border: 1px solid rgba(130, 96, 255, 0.35);
+  border: 1px solid color-mix(in srgb, var(--sw-theme-color) 35%, transparent);
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(113, 78, 245, 0.2) 0%, rgba(74, 40, 171, 0.14) 100%);
-  color: #d8cfff;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sw-theme-color) 20%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 14%, transparent) 100%);
+  color: color-mix(in srgb, var(--sw-theme-color) 25%, white);
   font-size: 12px;
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .gl-scene-editor-back:hover {
-  border-color: rgba(138, 108, 255, 0.68);
-  background: linear-gradient(180deg, rgba(123, 86, 255, 0.28) 0%, rgba(82, 46, 189, 0.18) 100%);
-  color: #ffffff;
+  border-color: color-mix(in srgb, var(--sw-theme-color) 68%, transparent);
+  background: color-mix(in srgb, var(--sw-theme-color) 23%, transparent);
+  color: $sw-text-strong;
 }
 
 .gl-scene-editor-layout {
@@ -796,8 +797,8 @@ onBeforeUnmount(() => {
 
 .stage-panel {
   padding: 8px;
-  border: 1px solid #000000;
-  background: #232630;
+  border: 1px solid $sw-border;
+  background: var(--sw-panel-bg);
 }
 
 .stage-frame {
@@ -817,8 +818,8 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  border: 1px solid #000000;
-  background: #232630;
+  border: 1px solid $sw-border;
+  background: var(--sw-panel-bg);
 }
 
 .scene-sidebar__header {
@@ -827,18 +828,18 @@ onBeforeUnmount(() => {
   gap: 12px;
   min-height: 52px;
   padding: 0 14px;
-  border-bottom: 1px solid #373a47;
+  border-bottom: 1px solid $sw-border;
 }
 
 .scene-sidebar__title {
   font-size: 14px;
   font-weight: 600;
-  color: #ffffff;
+  color: $sw-text-strong;
 }
 
 .scene-sidebar__subtitle {
   font-size: 12px;
-  color: #8e97ab;
+  color: $sw-text-muted;
 }
 
 .scene-sidebar__section {
@@ -867,13 +868,13 @@ onBeforeUnmount(() => {
   border: none;
   padding: 0;
   background: transparent;
-  color: #b4b7c1;
+  color: $sw-text-dim;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .scene-tool-button:hover {
-  color: #9483ff;
+  color: var(--sw-theme-color);
 }
 
 .scene-tool-button:disabled {
@@ -891,7 +892,7 @@ onBeforeUnmount(() => {
 
 .scene-collapse__body :deep(.ft-series-tabs) {
   margin-bottom: 0;
-  background: #3d404c;
+  background: $sw-control-bg;
   opacity: 1;
 }
 
@@ -934,11 +935,11 @@ onBeforeUnmount(() => {
   padding: 0;
   font-size: 12px;
   line-height: 32px;
-  color: #b4b7c1;
+  color: $sw-text-dim;
 }
 
 .scene-collapse__body :deep(.el-tabs__item.is-active) {
-  color: #9483ff !important;
+  color: var(--sw-theme-color) !important;
 }
 
 .scene-collapse__body :deep(.el-tabs__item.is-active::after) {
@@ -949,7 +950,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
 }
 
 .scene-collapse__body :deep(.ft-series-tabs i) {
@@ -988,7 +989,7 @@ onBeforeUnmount(() => {
 .scene-roam-block__title {
   font-size: 12px;
   line-height: 20px;
-  color: #ffffff;
+  color: $sw-text-strong;
 }
 
 .scene-roam-panel {
@@ -1018,7 +1019,7 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   font-size: 12px;
-  color: #ffffff;
+  color: $sw-text-strong;
   line-height: 28px;
   white-space: nowrap;
 }
@@ -1047,27 +1048,27 @@ onBeforeUnmount(() => {
 }
 
 .gl-scene-editor-page :deep(.el-button--primary) {
-  --el-button-bg-color: #714ef5;
-  --el-button-border-color: #714ef5;
-  --el-button-hover-bg-color: #8465fb;
-  --el-button-hover-border-color: #8465fb;
-  --el-button-active-bg-color: #5d35e7;
-  --el-button-active-border-color: #5d35e7;
-  --el-button-disabled-bg-color: #4d3a91;
-  --el-button-disabled-border-color: #4d3a91;
+  --el-button-bg-color: var(--sw-theme-color);
+  --el-button-border-color: var(--sw-theme-color);
+  --el-button-hover-bg-color: var(--sw-theme-color);
+  --el-button-hover-border-color: var(--sw-theme-color);
+  --el-button-active-bg-color: var(--sw-theme-color);
+  --el-button-active-border-color: var(--sw-theme-color);
+  --el-button-disabled-bg-color: var(--sw-theme-color);
+  --el-button-disabled-border-color: var(--sw-theme-color);
   border: none !important;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
-  box-shadow: 0 8px 18px rgba(100, 44, 255, 0.24);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--sw-theme-color) 24%, transparent);
 }
 
 .gl-scene-editor-page :deep(.el-button--primary:hover),
 .gl-scene-editor-page :deep(.el-button--primary:focus) {
-  background: linear-gradient(180deg, #9665ef 0%, #7241ff 100%) !important;
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
 }
 
 .gl-scene-editor-page :deep(.el-button--primary.is-disabled),
 .gl-scene-editor-page :deep(.el-button--primary.is-disabled:hover) {
-  background: linear-gradient(180deg, rgba(123, 97, 209, 0.72) 0%, rgba(90, 55, 179, 0.72) 100%) !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sw-theme-color) 72%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 72%, transparent) 100%) !important;
   box-shadow: none;
 }
 
@@ -1082,29 +1083,29 @@ onBeforeUnmount(() => {
 .scene-roam-form :deep(.el-input__wrapper),
 .scene-roam-form :deep(.el-input-number .el-input__wrapper) {
   min-height: 28px;
-  border: 1px solid #282e3a !important;
-  background: #0f1014 !important;
+  border: 1px solid $default-border-color !important;
+  background: $default-bg-color !important;
   box-shadow: none !important;
 }
 
 .scene-roam-form :deep(.el-input__inner),
 .scene-roam-form :deep(.el-input-number .el-input__inner) {
   font-size: 12px;
-  color: #dce4f7 !important;
+  color: $sw-text-strong !important;
 }
 
 .scene-roam-form :deep(.el-input-number__decrease),
 .scene-roam-form :deep(.el-input-number__increase) {
   background: #181b24 !important;
   border-color: #393b4a !important;
-  color: #b4b7c1 !important;
+  color: $sw-text-dim !important;
 }
 
 .scene-collapse :deep(.el-collapse) {
-  --el-collapse-content-bg-color: #232630;
+  --el-collapse-content-bg-color: var(--sw-panel-bg);
   --el-collapse-border-color: transparent;
-  --el-collapse-header-bg-color: #232630;
-  --el-collapse-header-text-color: #b4b7c1;
+  --el-collapse-header-bg-color: var(--sw-panel-bg);
+  --el-collapse-header-text-color: #{$sw-text-dim};
 }
 
 .scene-collapse :deep(.el-collapse-item__header) {
@@ -1140,7 +1141,7 @@ onBeforeUnmount(() => {
 
 .gl-scene-editor-empty__title {
   font-size: 16px;
-  color: #ffffff;
+  color: $sw-text-strong;
 }
 
 @media (max-width: 1280px) {

@@ -59,7 +59,7 @@ watch(loadingProgress, (val) => {
   width: 100%;
   height: 100%;
   font-size: 16px;
-  color: #642cff;
+  color: var(--sw-theme-color);
   position: fixed;
   top: 0;
   left: 0;

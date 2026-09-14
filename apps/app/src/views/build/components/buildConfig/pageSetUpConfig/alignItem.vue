@@ -24,11 +24,11 @@ defineProps<Props>();
   line-height: 25px;
   &.is-active {
     border: 1px solid;
-    border-image: linear-gradient(180deg, rgb(139, 88, 231), rgb(100, 44, 255)) 1 1;
+    border-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) 1 1;
   }
   &:hover {
     border: 1px solid;
-    border-image: linear-gradient(180deg, rgb(139, 88, 231), rgb(100, 44, 255)) 1 1;
+    border-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) 1 1;
   }
 }
 </style>

@@ -156,6 +156,8 @@ const dragEnd = (): void => {
 </script>
 
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
+
 .isPanelViewStatus {
   height: 212px;
   transition: height 0.25s linear;
@@ -200,7 +202,7 @@ const dragEnd = (): void => {
       // background-color: rgba(24, 27, 36, 0.2) !important;
       background-color: rgba(35, 39, 50, 0.8) !important;
       border: none !important;
-      color: #fff !important;
+      color: $sw-text-strong !important;
       padding: 0 10px !important;
       border-radius: 4px !important;
     }
@@ -220,7 +222,7 @@ const dragEnd = (): void => {
   padding-left: 15px;
   height: 30px;
   line-height: 30px;
-  color: #fff !important;
+  color: $sw-text-strong !important;
   margin-bottom: 1px;
   width: 100%;
   box-sizing: border-box;
@@ -234,8 +236,8 @@ const dragEnd = (): void => {
   font-size: 12px;
   &.is-over,
   &:hover {
-    color: #fff !important;
-    background-color: #313239;
+    color: $sw-text-strong !important;
+    background-color: $sw-control-bg;
     cursor: pointer;
   }
   &.is-hidden {
@@ -243,8 +245,8 @@ const dragEnd = (): void => {
   }
   &.ghost {
     opacity: 0.6;
-    color: #fff !important;
-    background: #4e52f2 !important;
+    color: $sw-text-strong !important;
+    background: var(--sw-theme-color) !important;
     cursor: move;
   }
 
@@ -254,8 +256,8 @@ const dragEnd = (): void => {
   }
 
   &.active {
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
-    color: #ffffff !important;
+    background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
+    color: $sw-text-strong !important;
     span:nth-child(2) {
       width: 77px;
       text-overflow: ellipsis;
@@ -267,8 +269,8 @@ const dragEnd = (): void => {
 .manage {
   height: 36px;
   line-height: 36px;
-  background: #3d404d;
-  color: #b4b7c1;
+  background: $sw-control-bg;
+  color: $sw-text-dim;
   .iconClose {
     transform: rotateX(180deg);
   }
@@ -279,7 +281,7 @@ const dragEnd = (): void => {
       margin: 0 5px;
       cursor: pointer;
       &:hover {
-        color: #ffffff;
+        color: $sw-text-strong;
       }
     }
   }

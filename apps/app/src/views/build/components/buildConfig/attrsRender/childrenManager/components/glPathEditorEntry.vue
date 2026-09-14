@@ -48,18 +48,18 @@ const handleOpenPathEditor = () => {
 .path-editor-entry-button {
   min-width: 96px;
   border: none !important;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
-  box-shadow: 0 6px 16px rgba(100, 44, 255, 0.22);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--sw-theme-color) 22%, transparent);
 }
 
 .path-editor-entry-button:hover,
 .path-editor-entry-button:focus {
-  background: linear-gradient(180deg, #9665ef 0%, #7241ff 100%) !important;
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
 }
 
 .path-editor-entry-button.is-disabled,
 .path-editor-entry-button.is-disabled:hover {
-  background: linear-gradient(180deg, rgba(123, 97, 209, 0.72) 0%, rgba(90, 55, 179, 0.72) 100%) !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sw-theme-color) 72%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 72%, transparent) 100%) !important;
   box-shadow: none;
 }
 </style>

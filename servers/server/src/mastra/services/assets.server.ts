@@ -7,6 +7,8 @@ import { pageOf } from "@/lib/http/page";
 import { blobUrl, deleteBlob, saveBlob } from "@/lib/storage/blob-store";
 import { prismaClient } from "@/mastra/storage/prisma";
 
+import { SYSTEM_MATERIAL_TYPE } from "./system-material-import";
+
 type FileRow = Awaited<ReturnType<typeof prismaClient.minioFile.findFirst>> & object;
 
 const jsonStr = (v: unknown, fallback = ""): string => {
@@ -67,6 +69,45 @@ export async function pageFiles(
   const [total, rows] = await Promise.all([
     prismaClient.minioFile.count({ where }),
     prismaClient.minioFile.findMany({ where, skip: (current - 1) * size, take: size, orderBy: [{ id: "desc" }] })
+  ]);
+  return ok(pageOf(rows.map(toAssetItem), total, current, size));
+}
+
+/** 全局只读的系统素材。记录归属 userId=null，并与用户素材隔离。 */
+export async function pageSystemMaterials(req: {
+  current?: number;
+  size?: number;
+  groupId?: number | string;
+  name?: string;
+  resourceType?: number | string;
+}) {
+  const current = Math.max(1, Number(req.current ?? 1));
+  const size = Math.max(1, Number(req.size ?? 20));
+  const where: Prisma.MinioFileWhereInput = { userId: null, fileType: SYSTEM_MATERIAL_TYPE };
+  if (req.name) {
+    where.name = { contains: String(req.name) };
+  }
+  const gid = Number(req.groupId);
+  if (Number.isFinite(gid) && gid > 0) {
+    where.groupId = gid;
+  }
+  const resourceTypes = String(req.resourceType ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .map(Number)
+    .filter((value) => Number.isFinite(value));
+  if (resourceTypes.length > 0) {
+    where.resourceType = { in: resourceTypes };
+  }
+  const [total, rows] = await Promise.all([
+    prismaClient.minioFile.count({ where }),
+    prismaClient.minioFile.findMany({
+      where,
+      skip: (current - 1) * size,
+      take: size,
+      orderBy: [{ name: "asc" }, { id: "asc" }]
+    })
   ]);
   return ok(pageOf(rows.map(toAssetItem), total, current, size));
 }
@@ -189,10 +230,9 @@ export function getLargeUse() {
 /**
  * 素材分组树（对齐 Java MinioGroupServiceImpl.getGroupList）
  * 前端 useSiderTreeData.handleAssetsData 只读 pageGroups → { list:[{...group,count}], allCount, groupCount, unCount }
- * （场景资产 modelGroups / 系统素材 systemXxx 开源版已移除）
- * MinioGroup.type: 1=页面资产；MinioFile.fileType: 2=页面资源
+ * MinioGroup.type: 1=页面资产、5=系统素材；MinioFile.fileType: 2=页面资源、5=系统素材
  */
-async function groupObjFor(userId: number, groupType: number, fileType: number) {
+async function groupObjFor(userId: number | null, groupType: number, fileType: number) {
   const groups = await prismaClient.minioGroup.findMany({
     where: { userId, type: groupType },
     orderBy: [{ id: "asc" }]
@@ -213,8 +253,11 @@ async function groupObjFor(userId: number, groupType: number, fileType: number) 
 }
 
 export async function listGroups(userId: number) {
-  const pageGroups = await groupObjFor(userId, 1, 2);
-  return ok({ pageGroups });
+  const [pageGroups, systemGroups] = await Promise.all([
+    groupObjFor(userId, 1, 2),
+    groupObjFor(null, SYSTEM_MATERIAL_TYPE, SYSTEM_MATERIAL_TYPE)
+  ]);
+  return ok({ pageGroups, systemGroups });
 }
 
 export async function addGroup(userId: number, userName: string, name: string, type = 0) {

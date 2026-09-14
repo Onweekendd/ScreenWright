@@ -45,13 +45,20 @@ const handleClick = (item: MenuOptionsItemType, disabled: boolean) => {
 };
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
+
 .build-side-bar-action {
   width: 100%;
   height: 39px;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid $sw-border;
 }
 .operation-item {
   cursor: pointer;
+  color: $sw-text-dim;
+  transition: color 0.15s;
+  &:hover:not(.is-disabled) {
+    color: $sw-text-strong;
+  }
   &.is-disabled {
     cursor: not-allowed;
     color: #606266;

@@ -21,7 +21,7 @@ export const useSelectAssets = () => {
     total: 0
   });
 
-  const headerData = ref(["系统资产", "资产库", "本应用资产"]);
+  const headerData = ref(["系统素材", "资产库", "本应用资产"]);
   // 存储数据
   const assetsSelectData = ref<SingleAssetsTypeForRender[]>([]);
   const assetsSide = ref<string>("");

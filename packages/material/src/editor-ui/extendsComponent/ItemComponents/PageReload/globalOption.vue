@@ -159,7 +159,7 @@ console.log(selectTargetData.value[0], "selectTargetData.value[0]");
   }
 
   :deep(.el-radio-button.is-active .el-radio-button__inner) {
-    background-color: #6c5ce7;
+    background-color: var(--sw-theme-color);
     text-align: center;
   }
 }

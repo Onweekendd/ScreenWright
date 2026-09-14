@@ -20,7 +20,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, toRef, watch } from "vue";
+
+import type { LargeScreenDetailInfo } from "@screenwright/types";
 
 import { PanelType } from "./core/SystemComponent/type";
 import { ANCHOR_CURSORS, ANCHOR_POINTS, computeAnchorStyles } from "./hooks/anchorGeometry";
@@ -38,6 +40,7 @@ const props = withDefaults(
   defineProps<{
     isDynamicPanel?: boolean;
     disabled?: boolean;
+    editConfig: LargeScreenDetailInfo;
     /** 透传 useBuildRender/useBaseRender 的 handleDbClick（文本编辑 / 进面板路由在那儿） */
     onDbClick?: (e: MouseEvent, item: ComponentType) => void;
   }>(),
@@ -51,18 +54,19 @@ interface Rect {
   height: number;
 }
 
-const { selectTargetData, targetChart, editCanvas, editConfig, setTargetSelectChart } = useEditStore();
+const { selectTargetData, targetChart, editCanvas, setTargetSelectChart } = useEditStore();
 const { KeyboardActiveMap } = useAddKeyboard();
 const { handleContextMenu } = useMenuAction();
 const { updateComponentLayers } = useAction({ isDynamicPanel: props.isDynamicPanel });
 const { dragCurrentSelection, getPointComponentsByLayer, selectNextComponentByPoint, mouseClickHandle } =
   useMouseHandle({
-    isDynamicPanel: props.isDynamicPanel
+    isDynamicPanel: props.isDynamicPanel,
+    editConfig: toRef(props, "editConfig")
   });
 
 const RENDER_CONTAINER_ID = "render-container";
-const renderW = () => Number(editConfig.value.width) || 1920;
-const renderH = () => Number(editConfig.value.height) || 1080;
+const renderW = () => Number(props.editConfig.width) || 1920;
+const renderH = () => Number(props.editConfig.height) || 1080;
 
 const frameEl = ref<HTMLElement | null>(null);
 /** 交互期间由 rAF / resize 逻辑写入的实时框，优先于 frameRect */
@@ -268,7 +272,7 @@ function startMultiResize(e: MouseEvent, point: direction) {
     return;
   }
   const dir = dirFlags(point);
-  const scale = Number(editConfig.value.scale) || 1;
+  const scale = Number(props.editConfig.scale) || 1;
   const startX = e.clientX;
   const startY = e.clientY;
   const rw = renderW();
@@ -363,7 +367,7 @@ const onHandleMouseDown = (e: MouseEvent, point: direction) => {
     startMultiResize(e, point);
   } else {
     // 单选：复用现有 resize（对齐吸附 / 分组 reflow / percent / 提交都在里面）
-    useMousePointHandle(e, point, { isDynamicPanel: props.isDynamicPanel });
+    useMousePointHandle(e, point, { isDynamicPanel: props.isDynamicPanel, editConfig: props.editConfig });
     startFrameSync(primary.value ? [String(primary.value.id)] : []);
   }
 };
@@ -460,7 +464,7 @@ onBeforeUnmount(() => {
   position: absolute;
   z-index: 8;
   box-sizing: border-box;
-  border: 2px solid #5e62fb;
+  border: 2px solid var(--sw-theme-color);
   pointer-events: none;
 
   &__body {

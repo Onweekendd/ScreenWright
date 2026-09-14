@@ -112,7 +112,7 @@ onUnmounted(() => {
 
 .spinner-ring {
   position: absolute;
-  border: 2px solid rgba(102, 126, 234, 0.3);
+  border: 2px solid color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
   border-radius: 50%;
   animation: spin 2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 }
@@ -122,7 +122,7 @@ onUnmounted(() => {
   height: 60px;
   top: 0;
   left: 0;
-  border-top-color: #667eea;
+  border-top-color: var(--sw-theme-color);
 }
 
 .spinner-ring:nth-child(2) {
@@ -130,7 +130,7 @@ onUnmounted(() => {
   height: 45px;
   top: 7.5px;
   left: 7.5px;
-  border-right-color: rgba(102, 126, 234, 0.8);
+  border-right-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
   animation-delay: -0.5s;
 }
 
@@ -139,7 +139,7 @@ onUnmounted(() => {
   height: 30px;
   top: 15px;
   left: 15px;
-  border-bottom-color: rgba(102, 126, 234, 0.6);
+  border-bottom-color: color-mix(in srgb, var(--sw-theme-color) 60%, transparent);
   animation-delay: -1s;
 }
 
@@ -148,14 +148,14 @@ onUnmounted(() => {
   height: 15px;
   top: 22.5px;
   left: 22.5px;
-  border-left-color: rgba(102, 126, 234, 0.4);
+  border-left-color: color-mix(in srgb, var(--sw-theme-color) 40%, transparent);
   animation-delay: -1.5s;
 }
 
 .loading-text {
   font-size: 14px;
   font-weight: 500;
-  color: #667eea;
+  color: var(--sw-theme-color);
   animation: fadeIn 1.5s ease-in-out infinite alternate;
 }
 

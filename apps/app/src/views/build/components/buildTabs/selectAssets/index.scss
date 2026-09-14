@@ -1,4 +1,6 @@
-$active-font-color: rgb(126, 73, 240);
+@import "src/style/theme.scss";
+
+$active-font-color: var(--sw-theme-color);
 .assetsType {
   :deep(.el-tabs__active-bar) {
     display: none;
@@ -19,7 +21,7 @@ $active-font-color: rgb(126, 73, 240);
         content: "";
         width: 100%;
         height: 2px;
-        background: rgb(126, 73, 240) !important;
+        background: var(--sw-theme-color) !important;
         position: absolute;
         top: calc(100% - 2px) !important;
         left: 0;
@@ -39,7 +41,7 @@ $active-font-color: rgb(126, 73, 240);
       color: #ffffff !important;
       background: rgba(80, 84, 99, 0.8) !important;
       position: relative;
-      background: rgb(126, 73, 240) !important;
+      background: var(--sw-theme-color) !important;
     }
   }
   .assetsType-child {
@@ -67,7 +69,7 @@ $active-font-color: rgb(126, 73, 240);
       }
       &.is-active {
         color: #ffffff !important;
-        background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
+        background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
         &::after {
           display: none;
         }
@@ -96,7 +98,7 @@ $active-font-color: rgb(126, 73, 240);
               border-radius: 4px;
               margin-bottom: 12px;
               position: relative;
-              background-color: #4b4d58 !important;
+              background-color: $sw-control-bg !important;
               overflow: hidden;
 
               .top-text {
@@ -146,7 +148,7 @@ $active-font-color: rgb(126, 73, 240);
               border-radius: 4px;
               margin-bottom: 12px;
               position: relative;
-              background-color: #4b4d58 !important;
+              background-color: $sw-control-bg !important;
               overflow: hidden;
 
               .assets-icon {

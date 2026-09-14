@@ -2,7 +2,7 @@
   <div class="config-lock">
     <div class="config-lock__card">
       <div class="config-lock__badge">
-        <Icon type="iconfont-ai242" :size="24" color="#a884ff" />
+        <Icon type="iconfont-ai242" :size="24" color="var(--sw-theme-color)" />
       </div>
       <p class="config-lock__title">图层已锁定</p>
       <p class="config-lock__desc">锁定的图层不能在画布中选中或修改属性</p>

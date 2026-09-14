@@ -70,34 +70,34 @@ const handleClick = () => {
   aspect-ratio: 1;
   border-radius: 4px;
   overflow: hidden;
-  background-color: #232630;
-  border: 1px solid rgba(139, 88, 231, 0.2);
+  background-color: var(--sw-panel-bg);
+  border: 1px solid color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
   cursor: pointer;
   transition: all 0.3s;
 
   &.is-selected {
-    border-color: #8b58e7;
-    box-shadow: 0 0 0 2px rgba(139, 88, 231, 0.5);
+    border-color: var(--sw-theme-color);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
   }
 
   &.is-invalid {
     cursor: not-allowed;
-    border-color: rgba(139, 88, 231, 0.1);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
     background-color: rgba(35, 38, 48, 0.8);
 
     &:hover {
       transform: none;
-      border-color: rgba(139, 88, 231, 0.1);
+      border-color: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
     }
   }
 
   &.is-used {
     cursor: not-allowed;
-    border-color: rgba(139, 88, 231, 0.3);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
 
     &:hover {
       transform: none;
-      border-color: rgba(139, 88, 231, 0.3);
+      border-color: color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
     }
 
     .image-used-mask {
@@ -118,7 +118,7 @@ const handleClick = () => {
     right: 0;
     padding: 4px 8px;
     background: rgba(35, 38, 48, 0.8);
-    color: #8b58e7;
+    color: var(--sw-theme-color);
     font-size: 12px;
 
     .image-title {
@@ -135,7 +135,7 @@ const handleClick = () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(139, 88, 231, 0.3);
+    background: color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -162,13 +162,13 @@ const handleClick = () => {
 
     i {
       font-size: 24px;
-      color: #8b58e7;
+      color: var(--sw-theme-color);
       margin-bottom: 8px;
     }
 
     span {
       font-size: 12px;
-      color: #8b58e7;
+      color: var(--sw-theme-color);
     }
   }
 
@@ -182,7 +182,7 @@ const handleClick = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: rgba(139, 88, 231, 0.5);
+    color: color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
 
     i {
       font-size: 24px;
@@ -195,7 +195,7 @@ const handleClick = () => {
   }
 
   &:hover {
-    border-color: #8b58e7;
+    border-color: var(--sw-theme-color);
     transform: translateY(-2px);
   }
 }

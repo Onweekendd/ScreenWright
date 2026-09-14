@@ -123,7 +123,7 @@ const handleAssets = () => {
   .el-button {
     width: 70px;
     height: 25px;
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     border-color: transparent;
     border-radius: 4px;
     text-align: center;
@@ -134,7 +134,7 @@ const handleAssets = () => {
     height: 103px;
     background: #1a1e27;
     border: 1px solid #333543;
-    &:hover { border-color: #642cff; }
+    &:hover { border-color: var(--sw-theme-color); }
   }
   &.is-has-url:hover .delete-wrapper { display: block; }
   img, video {

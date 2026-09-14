@@ -7,7 +7,7 @@
     }
   }
   .el-dialog {
-    --el-dialog-bg-color: #232630;
+    --el-dialog-bg-color: var(--sw-panel-bg);
     // transform: translateY(-50%);
     color: #ffffff;
     // top: 50%;

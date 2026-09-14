@@ -37,7 +37,7 @@ const { controlWebsocketUrl, heartbeatInterval, changeHeartbeatInterval } = useC
 @import "src/style/mixins/element.scss";
 .config-encode-control {
   :deep(.el-textarea) {
-    --el-border-color-hover: #642cff;
+    --el-border-color-hover: var(--sw-theme-color);
   }
 
   :deep(.el-textarea) {

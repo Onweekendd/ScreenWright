@@ -7,7 +7,7 @@
       @dragleave.prevent="handleDragLeave"
       @drop.prevent="handleDrop"
     >
-      <Icon type="UploadFilled" color="#8b58e7" size="28" />
+      <Icon type="UploadFilled" color="var(--sw-theme-color)" size="28" />
       <div class="el-upload__text">将文件拖到此处，或<em @click="() => openFileDialog()">点击上传</em></div>
     </div>
     <div class="el-upload__tip">支持jpg、png、gif格式，单个文件不超过5MB</div>
@@ -188,8 +188,8 @@ defineExpose({
     width: 204px;
     margin: 0 auto;
     margin-top: 10px;
-    background-color: rgba(139, 88, 231, 0.1);
-    border: 1px dashed rgba(139, 88, 231, 0.5);
+    background-color: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
     border-radius: 8px;
     padding: 20px 10px;
     height: 180px;
@@ -199,21 +199,21 @@ defineExpose({
       background: #181c25;
     }
     &:hover {
-      border-color: #8b58e7;
-      background-color: rgba(139, 88, 231, 0.2);
+      border-color: var(--sw-theme-color);
+      background-color: color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
     }
   }
   .el-upload__text {
-    color: #8b58e7;
+    color: var(--sw-theme-color);
     margin-top: 20px;
     em {
-      color: #8b58e7;
+      color: var(--sw-theme-color);
       font-style: normal;
       text-decoration: underline;
     }
   }
   .el-upload__tip {
-    color: rgba(139, 88, 231, 0.7);
+    color: color-mix(in srgb, var(--sw-theme-color) 70%, transparent);
     text-align: center;
     margin-top: 12px;
   }
@@ -224,31 +224,31 @@ defineExpose({
   .custom-button {
     border-radius: 8px;
     background-color: transparent;
-    border-color: rgba(139, 88, 231, 0.5);
-    color: #8b58e7;
+    border-color: color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
+    color: var(--sw-theme-color);
     padding: 10px 20px;
     height: 36px;
     font-size: 14px;
 
     &:hover {
-      background-color: rgba(139, 88, 231, 0.2);
-      border-color: #8b58e7;
+      background-color: color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
+      border-color: var(--sw-theme-color);
       color: #fff;
     }
 
     &.el-button--primary {
-      background-color: #8b58e7;
-      border-color: #8b58e7;
+      background-color: var(--sw-theme-color);
+      border-color: var(--sw-theme-color);
       color: #fff;
 
       &:hover {
-        background-color: lighten(#8b58e7, 10%);
-        border-color: lighten(#8b58e7, 10%);
+        background-color: color-mix(in srgb, var(--sw-theme-color) 90%, white);
+        border-color: color-mix(in srgb, var(--sw-theme-color) 90%, white);
       }
 
       &.is-loading {
-        background-color: rgba(139, 88, 231, 0.7);
-        border-color: rgba(139, 88, 231, 0.7);
+        background-color: color-mix(in srgb, var(--sw-theme-color) 70%, transparent);
+        border-color: color-mix(in srgb, var(--sw-theme-color) 70%, transparent);
       }
     }
   }

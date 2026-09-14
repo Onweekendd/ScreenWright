@@ -86,7 +86,7 @@ onMounted(() => {
       background-color: #3c3f4b !important;
     }
     tbody tr:nth-child(odd).el-table__row {
-      background-color: #232630 !important;
+      background-color: var(--sw-panel-bg) !important;
     }
     tbody tr:nth-child(even).el-table__row {
       background-color: #32343b !important;

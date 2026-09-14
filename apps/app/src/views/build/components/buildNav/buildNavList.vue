@@ -94,6 +94,6 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .build-nav-list {
-  padding-top: 6px;
+  gap: 8px;
 }
 </style>

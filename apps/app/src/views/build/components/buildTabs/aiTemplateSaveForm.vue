@@ -233,15 +233,15 @@ const handleCancel = () => {
   width: 100%;
 
   :deep(.el-tag) {
-    background-color: rgba(139, 88, 231, 0.18);
-    border-color: #642cff;
+    background-color: color-mix(in srgb, var(--sw-theme-color) 18%, transparent);
+    border-color: var(--sw-theme-color);
     color: #fff;
 
     .el-tag__close {
       color: #c6d0f5;
 
       &:hover {
-        background-color: #642cff;
+        background-color: var(--sw-theme-color);
         color: #fff;
       }
     }
@@ -279,8 +279,8 @@ const handleCancel = () => {
     }
 
     &.check {
-      border-color: #642cff;
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      border-color: var(--sw-theme-color);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     }
   }
 }

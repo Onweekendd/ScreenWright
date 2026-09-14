@@ -51,7 +51,7 @@ $layout-bg-color: $sw-bg;
   top: 50%;
   transform: translateY(-50%);
   color: #ffffff;
-  background: #232630;
+  background: var(--sw-panel-bg);
   .slot-title {
     position: relative;
     .model-title {
@@ -88,9 +88,9 @@ $layout-bg-color: $sw-bg;
       background-color: #3d404c;
       border-color: #3d404c;
       &.el-button--primary {
-        // background-color: #3e43f4;
-        border-color: #642cff;
-        background-image: linear-gradient(180deg, #8b58e7, #642cff);
+        // background-color: var(--sw-theme-color);
+        border-color: var(--sw-theme-color);
+        background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
       }
     }
   }
@@ -107,16 +107,19 @@ $layout-bg-color: $sw-bg;
   .el-radio__inner {
     background: transparent;
   }
+  .el-radio.is-checked .el-radio__label,
   .el-radio__input.is-checked + .el-radio__label {
-    color: #ffffff;
+    color: var(--sw-theme-color) !important;
   }
+  .el-radio.is-checked .el-radio__inner,
   .el-radio__input.is-checked .el-radio__inner {
-    border-color: #642cff;
-    background-color: transparent;
+    border-color: var(--sw-theme-color) !important;
+    background-color: transparent !important;
   }
+  .el-radio.is-checked .el-radio__inner::after,
   .el-radio__input.is-checked .el-radio__inner::after {
     width: 8px;
     height: 8px;
-    background-image: linear-gradient(180deg, #8b58e7, #642cff);
+    background: var(--sw-theme-color) !important;
   }
 }

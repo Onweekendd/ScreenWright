@@ -1,8 +1,5 @@
 <template>
-  <div :title="navInfo.name" class="build-nav-info flex flex-align-center">
-    <div class="logo">
-      <img :src="BiLogo" />
-    </div>
+  <div :title="navInfo.name" class="build-nav-info flex flex-align-center" :style="{ width: `${sideWidthPx}px` }">
     <div class="info">
       <span>
         {{ navInfo.name }}
@@ -15,8 +12,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import BiLogo from "@/assets/image/bg/BI_logo.png";
 import type { NavInfo } from "@/views/build/useLargeScreenInfo";
+import { useNavAction } from "@/views/build/useNavAction";
 
 import { useVersion } from "./buildVersion/useBuildVersion";
 
@@ -24,6 +21,7 @@ interface Props {
   navInfo: NavInfo;
 }
 defineProps<Props>();
+const { sideWidthPx } = useNavAction();
 const { setVersionDrawerShow } = useVersion();
 const openChangeVersion = () => {
   setVersionDrawerShow(true);

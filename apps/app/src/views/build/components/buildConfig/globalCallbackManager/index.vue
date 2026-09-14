@@ -195,7 +195,7 @@ onMounted(() => {
   .cb-chip {
     max-width: 100%;
     padding: 3px 8px;
-    border: 1px solid rgba($sw-purple-light, 0.5);
+    border: 1px solid color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
     border-radius: 4px;
     color: $sw-purple-light;
     white-space: nowrap;

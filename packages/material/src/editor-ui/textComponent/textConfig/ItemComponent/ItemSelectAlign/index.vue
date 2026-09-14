@@ -107,8 +107,8 @@ $bg-color: #1a1e27;
 $border-radius: 0px;
 $item-height: 25px;
 $inactive-border-color: #353745;
-$active-gradient-start: rgba(139, 88, 231, 1);
-$active-gradient-end: rgba(100, 44, 255, 1);
+$active-gradient-start: var(--sw-theme-color);
+$active-gradient-end: var(--sw-theme-color);
 $font-size: 14px;
 
 // 定义公共的混合样式

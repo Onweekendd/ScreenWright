@@ -282,6 +282,7 @@ const getContent = (display: boolean) => {
 </script>
 
 <style scoped lang="scss">
+@import "src/style/theme.scss";
 .dragArea {
   width: 100%;
 }
@@ -298,17 +299,19 @@ const getContent = (display: boolean) => {
   position: absolute;
   right: 14%;
   opacity: 0;
+  color: $sw-text-dim;
 }
 
 .lock {
   position: absolute;
   right: 10px;
   opacity: 1;
+  color: $sw-text-dim;
 }
 
 .menu__item {
-  margin-bottom: 1px;
-  width: 100%;
+  margin: 1px 6px;
+  width: calc(100% - 12px);
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -316,21 +319,25 @@ const getContent = (display: boolean) => {
   padding-right: 5px;
   position: relative;
   background-color: transparent;
+  border-radius: 6px;
   cursor: pointer;
   flex: none;
-  color: #bfbfbf !important;
+  color: $sw-text-dim !important;
   font-size: 12px;
+  transition: background-color 0.15s;
 
   .menu__icon {
-    color: #4e52f2;
-    margin-right: 5px;
-    width: 45px;
+    color: var(--sw-theme-color);
+    margin-right: 8px;
+    width: 44px;
     height: 30px;
     line-height: 30px;
     text-align: center;
     display: block;
-    border: 1px solid #3d3e42;
+    border-radius: 4px;
+    border: 1px solid $sw-border;
     background-color: #000000;
+    overflow: hidden;
     position: relative;
 
     img {
@@ -345,8 +352,8 @@ const getContent = (display: boolean) => {
   }
 
   &:hover {
-    color: #fff !important;
-    background-color: #313239;
+    color: $sw-text-strong !important;
+    background-color: $sw-hover-bg;
     cursor: pointer;
 
     .eye {
@@ -365,18 +372,22 @@ const getContent = (display: boolean) => {
   cursor: pointer;
   display: flex;
   align-items: center;
+  margin: 1px 6px;
   padding: 6px 6px;
-  color: #bfbfbf;
+  color: $sw-text-dim;
   font-size: 12px;
-  background-color: #3d404d;
+  background-color: transparent;
+  border-radius: 6px;
   position: relative;
   height: 48px;
-  width: 195px;
+  width: calc(100% - 12px);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  transition: background-color 0.15s;
 
   &:hover {
+    background-color: $sw-hover-bg;
     .eye {
       opacity: 1;
     }
@@ -384,7 +395,9 @@ const getContent = (display: boolean) => {
 }
 
 .is-active {
-  color: #fff;
-  background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
+  color: $sw-text-strong !important;
+  background-color: $sw-tree-active-bg !important;
+  background-image: none !important;
+  box-shadow: inset 2px 0 0 $sw-active-bar;
 }
 </style>

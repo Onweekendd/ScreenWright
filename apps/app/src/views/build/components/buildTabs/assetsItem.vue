@@ -131,8 +131,8 @@ const handleUpdateAssets = () => {
 .el-button {
   width: 70px;
   height: 25px;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8b58e7), to(#642cff));
-  background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(var(--sw-theme-color)), to(var(--sw-theme-color)));
+  background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
   border-color: transparent;
   border-radius: 4px;
   text-align: center;
@@ -153,7 +153,7 @@ const handleUpdateAssets = () => {
 
 .archive-icon {
   font-size: 32px;
-  color: #8b58e7;
+  color: var(--sw-theme-color);
   margin-bottom: 8px;
 }
 

@@ -70,9 +70,9 @@ const handleSend = () => {
     background-color: #3d404c;
     border-color: #3d404c;
     &.el-button--primary {
-      // background-color: #3e43f4;
-      border-color: #642cff;
-      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      // background-color: var(--sw-theme-color);
+      border-color: var(--sw-theme-color);
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
     }
   }
 }

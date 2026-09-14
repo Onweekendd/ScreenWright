@@ -1,12 +1,13 @@
+@import "src/style/theme.scss";
+
 .build-nav {
+  flex-shrink: 0;
   font-family:
     Source Han Sans CN-Normal,
     Source Han Sans CN;
-  background-image: url("@/assets/image/bg/bi_top_bg.png");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
   min-width: 810px;
-  height: 61px;
+  height: 66px;
+  box-sizing: border-box;
   overflow-x: auto;
   overflow-y: hidden;
 
@@ -24,8 +25,14 @@
     }
   }
 
-  .build-nav-right {
-    padding-top: 6px;
-    height: 100%;
+  .build-nav-bar {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 56px;
+    box-sizing: border-box;
+    padding: 5px 8px;
+    background: var(--sw-panel-bg);
+    border: 1px solid $sw-border;
+    border-radius: 12px;
   }
 }

@@ -48,7 +48,7 @@ const handleExport = () => {
 
     cursor: pointer;
     &.active {
-      background: linear-gradient(180deg, #8b58e7, #642cff);
+      background: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
     }
   }
 }

@@ -103,7 +103,12 @@ function handleLoaded(): void {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: radial-gradient(circle at 50% 20%, rgb(100 44 255 / 18%), transparent 45%), #0f1117;
+  background: radial-gradient(
+      circle at 50% 20%,
+      color-mix(in srgb, var(--sw-theme-color) 18%, transparent),
+      transparent 45%
+    ),
+    #0f1117;
 }
 
 .artifact-app-preview__empty-title {

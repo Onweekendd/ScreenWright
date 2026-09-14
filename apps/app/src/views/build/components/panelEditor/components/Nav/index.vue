@@ -1,10 +1,8 @@
 <template>
-  <div class="build-nav flex flex-justify-between flex-align-center">
-    <div class="build-nav-left flex">
-      <buildNavInfo :name="panelInfo.config.name ?? ''" />
+  <div class="build-nav flex flex-align-center">
+    <buildNavInfo :name="panelInfo.config.name ?? ''" />
+    <div class="build-nav-bar flex flex-justify-between flex-align-center">
       <buildNavList />
-    </div>
-    <div class="build-nav-right flex flex-justify-between flex-align-center">
       <buildAction />
     </div>
   </div>

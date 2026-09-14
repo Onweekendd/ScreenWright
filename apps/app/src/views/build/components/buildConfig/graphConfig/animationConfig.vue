@@ -128,24 +128,25 @@ const option = computed(() => {
 
 <style lang="scss" scoped>
 @import "src/style/mixins/element.scss";
+@import "src/style/theme.scss";
 @include common-element-style(".el-select__wrapper");
 
 .animation-option {
   width: calc(100% - 20px);
   height: calc(100% - 60px);
   padding: 10px 10px;
-  background-color: #232630;
+  background-color: var(--sw-panel-bg);
   .create-animation {
     cursor: pointer;
     width: fit-content;
     padding: 5px 10px;
     border-radius: 3px;
     margin-bottom: 10px;
-    background-color: #383b49;
+    background-color: $sw-control-bg;
     font-size: 12px;
     &:hover {
       color: #ffffff;
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     }
   }
 }

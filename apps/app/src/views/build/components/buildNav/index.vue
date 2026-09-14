@@ -1,10 +1,8 @@
 <template>
-  <div ref="navRef" class="build-nav flex flex-justify-between flex-align-center">
-    <div class="build-nav-left flex">
-      <buildNavInfo :navInfo="navInfo" />
+  <div ref="navRef" class="build-nav flex flex-align-center">
+    <buildNavInfo :navInfo="navInfo" />
+    <div class="build-nav-bar flex flex-justify-between flex-align-center">
       <buildNavList ref="buildNavListRef" :compact="compact" />
-    </div>
-    <div class="build-nav-right flex flex-justify-between flex-align-center">
       <buildAction :compact="compact" />
     </div>
   </div>

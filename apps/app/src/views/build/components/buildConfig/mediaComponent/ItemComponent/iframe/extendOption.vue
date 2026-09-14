@@ -314,7 +314,7 @@ onMounted(async () => {
 
 .reloadQuote {
   height: 26px;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
   padding: 5px 10px;
   font-size: 12px;
   line-height: 12px;

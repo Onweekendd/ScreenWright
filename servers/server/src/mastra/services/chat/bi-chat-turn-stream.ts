@@ -8,7 +8,7 @@
  */
 
 import { toAISdkStream } from "@mastra/ai-sdk";
-import type { AgentExecutionOptionsBase } from "@mastra/core/agent";
+import type { AgentExecutionOptionsBase, ToolsInput } from "@mastra/core/agent";
 import { RequestContext } from "@mastra/core/request-context";
 import type { ChunkType } from "@mastra/core/stream";
 import { jsonSchema } from "ai";
@@ -38,22 +38,25 @@ interface MemoryOptions {
 }
 
 /** 把前端传入的 clientTools 的 inputSchema 规整为 Mastra 可用的 jsonSchema */
-const normalizeClientTools = (rawClientTools: BIChatRequest["clientTools"]) => {
+const normalizeClientTools = (rawClientTools: BIChatRequest["clientTools"]): ToolsInput => {
   if (!rawClientTools) {
     return {};
   }
+  // Mastra bundles AI SDK v5 schema types while this app uses AI SDK v6. The runtime
+  // schema contract is compatible, but the two packages brand Schema with different
+  // unique symbols, so keep the assertion at this package boundary.
   return Object.fromEntries(
-    Object.entries(rawClientTools).map(([name, tool]) => {
-      const { inputSchema, ...rest } = tool as { inputSchema?: Record<string, unknown>; [k: string]: unknown };
+    Object.entries(rawClientTools).map(([name, clientTool]) => {
+      const inputSchema = clientTool.inputSchema ?? { type: "object", properties: {} };
       return [
         name,
         {
-          ...rest,
-          ...(inputSchema ? { inputSchema: jsonSchema(inputSchema as Parameters<typeof jsonSchema>[0]) } : {})
+          description: clientTool.description,
+          inputSchema: jsonSchema(inputSchema as Parameters<typeof jsonSchema>[0])
         }
       ];
     })
-  );
+  ) as unknown as ToolsInput;
 };
 
 /**

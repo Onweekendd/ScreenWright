@@ -66,6 +66,7 @@ watch(selectStatusId, (newStatusId: string) => {
 </script>
 
 <style lang="scss">
+@import "src/style/theme.scss";
 $left: 218px;
 $rowHeight: 26px;
 .status-animation-main {
@@ -83,7 +84,7 @@ $rowHeight: 26px;
   border-top-right-radius: 10px;
   min-width: 810px;
 
-  background-color: #383b49;
+  background-color: $sw-control-bg;
 
   .el-row {
     height: 100%;

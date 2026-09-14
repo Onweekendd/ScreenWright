@@ -3,7 +3,7 @@
     <statusManager v-if="!isScenePopupPanel" />
 
     <div class="build-side-bar-title">
-      图层管理
+      图层
 
       <buildComponentSearch type="panel" style="top: 2px" />
     </div>
@@ -64,34 +64,33 @@ const dblclickHandle = async (e: MouseEvent, element: any) => {
 };
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
+
 .build-side-bar {
   width: 196px;
   height: 100%;
   overflow: hidden;
-  color: #b4b7c1;
-  background: #232630;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  border-right: 1px solid #000000;
+  color: $sw-text-dim;
+  background: var(--sw-panel-bg);
+  border: 1px solid $sw-border;
+  border-radius: 12px;
   position: relative;
   outline: none;
   transition: width 0.3s;
-  background-image: url("@/assets/image/bg/bi_left_bg.png");
   .build-side-bar-title {
     box-sizing: border-box;
     line-height: 36px;
     width: 100%;
     height: 36px;
-    background-color: #373a47;
-    color: #b4b7c1 !important;
+    background-color: $sw-title-bg;
+    color: $sw-text-dim !important;
     font-family:
       Source Han Sans CN-Normal,
       Source Han Sans CN;
     font-weight: 400;
     text-align: center;
-    border-left: 1px solid #000;
+    border-bottom: 1px solid $sw-border;
     font-size: 12px !important;
-    border-right: 1px solid #000;
     position: relative;
   }
 }

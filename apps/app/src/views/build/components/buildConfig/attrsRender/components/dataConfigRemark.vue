@@ -69,7 +69,7 @@ const handleChange = () => {
     --el-table-header-bg-color: #2b2e37;
     --el-fill-color-blank: #2b2e37;
     --el-border-color-lighter: #2b2e37;
-    --el-table-tr-bg-color: #232630;
+    --el-table-tr-bg-color: var(--sw-panel-bg);
     --el-table-row-hover-bg-color: #2b2e37;
     .cell {
       padding-right: 0 !important;

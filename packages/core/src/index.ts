@@ -10,7 +10,7 @@ export { MemoryEditorState } from "./state/MemoryEditorState";
 
 // 管理器
 export { BaseManager } from "./managers/BaseManager";
-export { ComponentManager } from "./managers/ComponentManager";
+export { ComponentManager, type ComponentUpdateOptions, type ComponentUpdateResult } from "./managers/ComponentManager";
 export {
   DataFilterManager,
   type DataFilterManagerOptions,
@@ -122,6 +122,7 @@ export {
 export { deepClone } from "./utils/deepClone";
 export { extractComponentId } from "./utils/extractComponentId";
 export { mapValueWithDataRemark } from "./utils/mapValueWithDataRemark";
+export { mergeComponentUpdate, replaceComponentSnapshot } from "./utils/mergeComponentUpdate";
 
 // 数据过滤器引擎（纯 CoR 责任链 + 编译缓存 + 执行器 + 基类）
 export { BaseFilter } from "./filter/BaseFilter";

@@ -1,5 +1,5 @@
 <template>
-  <div class="build-config" :style="configStyle">
+  <div class="build-config" :style="configBarStyle">
     <div v-if="configShow" class="panel-resize-handle panel-resize-handle--left" @pointerdown="onPointerDown" />
     <template v-if="selectTargetData.length > 0">
       <template v-if="isHasGroup">
@@ -39,18 +39,27 @@ import pageSetUpConfig from "./pageSetUpConfig/index.vue";
 const { configStyle, projectFilterShow, configShow, configWidthPx, setConfigWidth } = useNavAction();
 const { selectTargetData } = useEditStore();
 const { onPointerDown } = usePanelResize(-1, () => configWidthPx.value, setConfigWidth);
+// 收起时宽度为 0，但 CSS 里的四周描边（border）不会跟着消失，会挤出一条 1-2px 的细线，这里收起时顺手把边框去掉
+const configBarStyle = computed(() => ({
+  ...configStyle.value,
+  border: configShow.value ? undefined : "none"
+}));
 const isHasGroup = computed(() => {
   const len = selectTargetData.value.length;
   return len === 1 && selectTargetData.value.some((v) => v && v.children && v.children.length > 0);
 });
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .build-config {
+  flex-shrink: 0;
   height: 100%;
+  box-sizing: border-box;
   overflow: hidden;
-  color: #b4b7c1;
-  background: #232630;
-  border-left: 1px solid #000000;
+  color: $sw-text;
+  background: var(--sw-panel-bg);
+  border: 1px solid $sw-border;
+  border-radius: 12px;
   transition: width 0.3s;
   position: relative;
 }
@@ -69,7 +78,7 @@ const isHasGroup = computed(() => {
     left: 0;
   }
   &:hover {
-    background-color: #7c42ee;
+    background-color: var(--sw-theme-color);
   }
 }
 </style>

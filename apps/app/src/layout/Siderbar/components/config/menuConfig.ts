@@ -147,8 +147,18 @@ const menuConfig: MenuConfig = {
       add: true,
       groupId: -2,
       uuid: "-22"
+    },
+    {
+      id: 5,
+      label: "系统素材",
+      name: "systemGroups",
+      icon: "folder-close",
+      children: [],
+      outsider: true,
+      add: false,
+      groupId: -2,
+      uuid: "-55"
     }
-    // 系统页面资产 / 场景资产 / 系统场景资产 / 其他资源(HDR)：依赖 Screenwright 内部素材云与自研三维引擎，开源版移除
   ],
   // 接口调试器 - 0是未分组 -1是除去未分组的 -2是所有的
   [URLKeys.InterfaceDebugger]: [

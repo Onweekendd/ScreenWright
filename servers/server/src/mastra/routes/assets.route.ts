@@ -10,6 +10,7 @@ import {
   getLargeUse,
   listGroups,
   pageFiles,
+  pageSystemMaterials,
   uploadFile
 } from "@/mastra/services/assets.server";
 import type { AuthVariables } from "@/middleware/auth";
@@ -68,6 +69,9 @@ assetsRouter.delete("/minio/deleteBatch", async (c) => {
 
 assetsRouter.get("/minio/getLargeUse/:id", (c) => c.json(getLargeUse()));
 
+/* -------- 系统素材（全局只读） -------- */
+assetsRouter.post("/systemMaterial/page", async (c) => c.json(await pageSystemMaterials(await jsonBody(c))));
+
 /* -------- 素材分组 -------- */
 assetsRouter.get("/minioGroup/list", async (c) => c.json(await listGroups(c.get("userId"))));
 assetsRouter.post("/minioGroup/add", async (c) => {
@@ -82,4 +86,4 @@ assetsRouter.delete("/minioGroup/delete/:id", async (c) =>
   c.json(await deleteGroup(c.get("userId"), Number(c.req.param("id"))))
 );
 
-// 系统素材（minioLargeSystem/*）/ 组合案例（groupLayerData/*）：依赖 Screenwright 内部素材云，开源版移除
+// 组合案例（groupLayerData/*）：依赖 Screenwright 内部素材云，开源版移除

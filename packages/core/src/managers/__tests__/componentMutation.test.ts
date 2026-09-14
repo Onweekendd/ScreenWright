@@ -177,6 +177,64 @@ describe("ComponentManager 写入 API", () => {
     });
   });
 
+  describe("applyUpdate", () => {
+    it("保留组件引用，并整体替换所有层级中缩短的数组", () => {
+      const component = leaf(9, {
+        data: [1, 2, 3],
+        option: { series: [{ name: "系列1" }, { name: "系列2" }, { name: "系列3" }] }
+      });
+      const { manager } = makeManager([component]);
+
+      const result = manager.applyUpdate(
+        leaf(9, {
+          data: [1, 2],
+          option: { series: [{ name: "系列1" }, { name: "系列2" }] }
+        }),
+        { strategy: "merge" }
+      );
+
+      expect(result?.component).toBe(component);
+      expect(component.data).toEqual([1, 2]);
+      expect((component.option as { series: unknown[] }).series).toEqual([{ name: "系列1" }, { name: "系列2" }]);
+    });
+
+    it("更新成员位置时重算父分组包围盒", () => {
+      const member = leaf(11, { left: 0, top: 0, parent: 1 });
+      const sibling = leaf(12, { left: 100, top: 0, parent: 1 });
+      const rootGroup = group(1, [member, sibling]);
+      const { manager } = makeManager([rootGroup]);
+      manager.reflowGroup(rootGroup);
+
+      const result = manager.applyUpdate(leaf(11, { left: -100, top: 0, parent: 1 }), { strategy: "merge" });
+
+      expect(result?.parentGroup).toBe(rootGroup);
+      expect(rootGroup.left).toBe(-100);
+      expect(rootGroup.component.width).toBe(300);
+    });
+
+    it("回调字段变化时清理旧关系并注册新关系", () => {
+      const component = source(9, "oldField");
+      const { manager, callbackArguments } = makeManager([component]);
+      callbackArguments.initCallbackArguments([component]);
+
+      const result = manager.applyUpdate(source(9, "newField"), { strategy: "merge" });
+      const relations = callbackArguments.getCallbackArgumentsManager();
+
+      expect(result?.cbArgsChanged).toBe(true);
+      expect(relations.oldField).toBeUndefined();
+      expect(relations.newField?.source.map((item) => item.id)).toEqual([9]);
+    });
+
+    it("完整快照替换会删除快照中不存在的字段", () => {
+      const component = leaf(9, { obsolete: true });
+      const { manager } = makeManager([component]);
+
+      manager.applyUpdate(leaf(9), { strategy: "replace" });
+
+      expect(component).not.toHaveProperty("obsolete");
+    });
+  });
+
   describe("move", () => {
     it("把组件从根级移进面板状态", () => {
       const layers = [panel(2, [{ id: "s1", config: [] }]), leaf(9)];

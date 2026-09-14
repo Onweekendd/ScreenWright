@@ -61,7 +61,7 @@ const getStepStatus = (step: { [key: string]: unknown }) => (step.status as stri
   }
 
   &.processing {
-    background: rgba($color-primary, 0.2);
+    background: color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
     color: $color-primary;
   }
 

@@ -7,7 +7,7 @@ import { syncScreenData } from "./screen-sync";
 
 /**
  * core 会重算的派生字段：位置在节点上、宽高在 component 上，与 core 的 assignComponentAttrs 同口径。
- * 目前 upsert 唯一会派生的就是分组包围盒（见 ComponentManager.reflowGroup）。这里只用来判断
+ * 目前 applyUpdate 唯一会派生的就是分组包围盒（见 ComponentManager.reflowGroup）。这里只用来判断
  * "core 有没有改掉 agent 写的值"，从而给 agent 一句提示；落盘统一交给整屏回写。
  */
 interface DerivedBox {
@@ -51,8 +51,8 @@ export interface ComponentEditOutcome {
  *
  * 三步：
  * 1. {@link ScreenReader} 从磁盘读出整屏（这是编辑**之前**的状态）；
- * 2. 把编辑后的那个组件内联成内存形态后 upsert 进树——core 顺带重算由树结构唯一决定的派生值
- *    （分组包围盒，见 ComponentManager.upsert → reflowGroup）。这条规则前端改属性面板时跑的
+ * 2. 把编辑后的那个组件内联成内存形态后 applyUpdate 到树上——core 顺带重算由树结构唯一决定的派生值
+ *    （分组包围盒，见 ComponentManager.applyUpdate → reflowGroup）。这条规则前端改属性面板时跑的
  *    是同一份函数，后端不跑的话 AI 挪完成员分组框就是旧的，工作区与画布一起错；
  * 3. `write` 为真时 syncScreenData 整屏落盘——与前端整屏保存同一个写入器，`_layout.json` /
  *    `_callback_flows` / `_event_flows` 这些同样由树结构派生、过去只有前端保存才刷新的索引，
@@ -93,7 +93,7 @@ const runComponentEdit = async (
     return null;
   }
 
-  // 父分组要在 upsert 之前拿：upsert 会就地改它的包围盒
+  // 父分组要在 applyUpdate 之前拿：applyUpdate 会就地改它的包围盒
   const parentId = existing.parent;
   const parent = parentId === undefined || parentId === null ? null : (editor.component.find(parentId) ?? null);
   const parentBoxBefore = parent ? boxOf(parent) : null;
@@ -101,13 +101,17 @@ const runComponentEdit = async (
   // 比较基准是 **agent 写进去的值**，不是树上的旧值：要判断的是「core 有没有否决这次编辑」
   const selfBoxBefore = boxOf(component);
 
-  // 断言这个节点就是它（约定②，幂等）；真正起作用的是它顺带跑的派生值重算
-  editor.component.upsert(component);
+  // 与前端流更新走同一份 core 规则：原地合并、数组替换、关系同步和派生值重算。
+  const update = editor.component.applyUpdate(component, { strategy: "replace" });
+  if (!update) {
+    return null;
+  }
+  const updatedComponent = update.component;
 
   const notices: string[] = [];
 
   // 组件自己的包围盒被 core 改了：只有分组会这样——它的尺寸是成员位置的函数，不是可编辑属性
-  if (!sameBox(selfBoxBefore, boxOf(component))) {
+  if (!sameBox(selfBoxBefore, boxOf(updatedComponent))) {
     notices.push(`分组 ${editedId} 的位置与尺寸由成员位置决定，已按成员重算覆盖`);
   }
 
@@ -125,7 +129,9 @@ const runComponentEdit = async (
     });
   }
 
-  return notices.length > 0 ? { component, notice: notices.join("；") } : { component };
+  return notices.length > 0
+    ? { component: updatedComponent, notice: notices.join("；") }
+    : { component: updatedComponent };
 };
 
 /**

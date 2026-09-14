@@ -146,8 +146,8 @@ const handleApply = async (tpl: TemplateCard) => {
 <style lang="scss" scoped>
 .ai-template-apply {
   padding: 16px;
-  background-color: #232630;
-  border: 1px solid rgba(139, 88, 231, 0.5);
+  background-color: var(--sw-panel-bg);
+  border: 1px solid color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
   border-radius: 10px;
 }
 
@@ -250,8 +250,8 @@ const handleApply = async (tpl: TemplateCard) => {
 
       .tag {
         padding: 1px 8px;
-        background-color: rgba(139, 88, 231, 0.18);
-        border: 1px solid #642cff;
+        background-color: color-mix(in srgb, var(--sw-theme-color) 18%, transparent);
+        border: 1px solid var(--sw-theme-color);
         border-radius: 10px;
         color: #c6d0f5;
         font-size: 11px;
@@ -261,8 +261,8 @@ const handleApply = async (tpl: TemplateCard) => {
 
   .apply-btn {
     flex: 0 0 auto;
-    border-color: #642cff;
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    border-color: var(--sw-theme-color);
+    background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
   }
 }
 

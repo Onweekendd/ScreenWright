@@ -24,9 +24,9 @@
   color: #b4b7c1;
   &.is-active {
     color: #fff;
-    box-shadow: 0 0 0 1px #642cff inset;
+    box-shadow: 0 0 0 1px var(--sw-theme-color) inset;
   }
 }
 .el-pagination button:not(:disabled):hover {
-  color: #642cff;
+  color: var(--sw-theme-color);
 }

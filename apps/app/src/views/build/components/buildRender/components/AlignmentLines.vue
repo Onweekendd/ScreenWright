@@ -156,12 +156,12 @@ const getHorizontalEndPoints = (line: { x: number[]; y: number }) => {
 
   &--vertical {
     // 垂直虚线：宽度为 0，border-left 显示虚线
-    border-left: 5px dashed #642cff;
+    border-left: 5px dashed var(--sw-theme-color);
   }
 
   &--horizontal {
     // 水平虚线：高度为 0，border-top 显示虚线
-    border-top: 5px dashed #642cff;
+    border-top: 5px dashed var(--sw-theme-color);
   }
 }
 
@@ -189,7 +189,7 @@ const getHorizontalEndPoints = (line: { x: number[]; y: number }) => {
 
   &:hover,
   &:hover::before {
-    background-color: #8b58e7;
+    background-color: var(--sw-theme-color);
   }
 }
 </style>

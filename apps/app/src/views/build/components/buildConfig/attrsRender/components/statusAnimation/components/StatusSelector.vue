@@ -17,7 +17,7 @@
               </div>
             </div>
           </template>
-          <Icon type="QuestionFilled" size="10" style="position: relative; color: #8b58e7" />
+          <Icon type="QuestionFilled" size="10" style="position: relative; color: var(--sw-theme-color)" />
         </el-tooltip>
       </span>
       <span v-else class="label-text">{{ props.label }}</span>
@@ -63,9 +63,9 @@ const cssVars = computed(() => ({
       cursor: pointer !important;
       padding: 0 4px;
       border-radius: 4px;
-      color: #8b58e7 !important;
-      background-color: rgba(173, 92, 248, 0.08);
-      border: 1px dashed rgba(139, 88, 231, 0.5);
+      color: var(--sw-theme-color) !important;
+      background-color: color-mix(in srgb, var(--sw-theme-color) 8%, transparent);
+      border: 1px dashed color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
       transform: translateY(-1px);
       box-shadow: 0 2px 8px rgba(64, 158, 255, 0.2);
 
@@ -99,7 +99,7 @@ const cssVars = computed(() => ({
       top: -20px;
       left: 0;
       font-size: 10px;
-      color: #8b58e7;
+      color: var(--sw-theme-color);
       background: rgba(64, 158, 255, 0.1);
       padding: 2px 4px;
       border-radius: 2px;
@@ -143,7 +143,7 @@ const cssVars = computed(() => ({
   gap: 4px;
 
   .animation-icon {
-    color: #8b58e7;
+    color: var(--sw-theme-color);
     font-size: 12px;
     cursor: help;
     transition: color 0.2s ease;

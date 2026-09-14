@@ -137,7 +137,7 @@ defineEmits<{
     font-weight: 600;
     color: $color-primary-name;
     line-height: 1.4;
-    background: linear-gradient(135deg, #b8a4ff 0%, #7c4dff 100%);
+    background: linear-gradient(135deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

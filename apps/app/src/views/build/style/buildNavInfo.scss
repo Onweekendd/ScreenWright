@@ -1,35 +1,51 @@
+@import "src/style/theme.scss";
+
 .build-nav-info {
+  flex-shrink: 0;
   box-sizing: border-box;
   font-size: 14px;
   font-family: Source Han Sans CN-Normal, Source Han Sans CN;
   color: #ffffff;
-  width: 204px !important;
-  height: 100%;
-  padding: 6px 4px 2px 8px;
+  min-width: 160px;
+  height: 56px;
+  margin-right: 8px;
+  padding: 8px 12px 8px 14px;
   line-height: 24px;
+  background: linear-gradient(135deg, $sw-surface-1 0%, $sw-surface-2 100%);
+  border: 1px solid $sw-border;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  overflow: hidden;
   position: relative;
 }
 .info {
-  font-size: 15px;
-  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: $sw-text-strong;
+  margin-left: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1;
   .tips {
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 400;
     width: 100%;
-    color: #8a8a8a;
+    color: $sw-text-muted;
   }
 
-  &:hover {
-    .version {
-      color: #ffffff;
-    }
-  }
   .version {
-    text-decoration: underline;
+    padding: 0 6px;
+    margin: -2px -6px 0 0;
+    border-radius: 4px;
+    color: $sw-text-dim;
     cursor: pointer;
-    font-size: 13px;
+    transition:
+      color 0.15s,
+      background-color 0.15s;
+    &:hover {
+      color: var(--sw-theme-color);
+      background-color: $sw-hover-bg;
+    }
   }
 }

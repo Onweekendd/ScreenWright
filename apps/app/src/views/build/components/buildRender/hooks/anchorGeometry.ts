@@ -20,7 +20,7 @@ export const ANCHOR_POINTS: direction[] = [
 /** 与 ANCHOR_POINTS 同序的 resize 光标前缀（`${x}-resize`） */
 export const ANCHOR_CURSORS = ["n", "e", "s", "w", "nw", "ne", "sw", "se"] as const;
 
-const THEME_COLOR = "#5e62fb";
+const THEME_COLOR = "var(--sw-theme-color)";
 
 export interface AnchorSize {
   size: number;

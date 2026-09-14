@@ -5,10 +5,6 @@
       class="assets-header flex flex-align-center"
     >
       <el-button type="primary" round :icon="Plus" @click="handleAdd">上传素材</el-button>
-      <div class="assets-header-text">
-        <span>{{ usedSize.useSize }}/</span>
-        <span>{{ usedSize.size }}</span>
-      </div>
     </div>
     <assetHeader
       @handleSelectAll="handleSelectAll"
@@ -51,7 +47,7 @@ import assetList from "./components/assetList.vue";
 import { useAsset } from "./useAsset";
 import { useAssetAction } from "./useAssetAction";
 
-const { usedSize, tableData, fileType, params, currentNode, total, getAssetsListData } = useAsset();
+const { tableData, fileType, params, currentNode, total, getAssetsListData } = useAsset();
 const { checkedItem, handleAdd, handleBatchDelete, handleSelectAllDelete } = useAssetAction({ getAssetsListData });
 const handlePagination = (val: PaginationEvent) => {
   params.value.current = val.page;

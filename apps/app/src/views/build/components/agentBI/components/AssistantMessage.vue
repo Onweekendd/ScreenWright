@@ -259,12 +259,12 @@ $timeline-item-top: 14px;
   @keyframes node-breath {
     0%,
     100% {
-      box-shadow: 0 0 0 0 rgba(124, 77, 255, 0.5);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
       opacity: 0.7;
     }
 
     50% {
-      box-shadow: 0 0 0 5px rgba(124, 77, 255, 0);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--sw-theme-color) 0%, transparent);
       opacity: 1;
     }
   }

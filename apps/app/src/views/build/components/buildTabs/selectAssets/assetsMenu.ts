@@ -127,10 +127,23 @@ export class AssetsMenuManager {
   /**
    * 批量获取资产库数据
    * @param assetTitles 资产标题数组
+   * @param loadGroups 是否立即请求分组，false 时仅返回类型标签
    * @returns 包含资产映射和资产数据的对象
    */
-  public async getAssetsLibraryData(assetTitles: string[]) {
+  public async getAssetsLibraryData(assetTitles: string[], loadGroups = true) {
     const libraryMap = assetTitles.map((title) => this.getAssetConfigByTitle(title)).filter(Boolean);
+
+    if (!loadGroups) {
+      return {
+        libraryMap,
+        libraryMapData: libraryMap.map((item) => ({
+          title: item!.title,
+          key: item!.key,
+          children: [],
+          isNeedAdd: item!.canAdd
+        })) as SingleAssetsTypeForRender[]
+      };
+    }
 
     const libraryMapData: SingleAssetsTypeForRender[] = [];
 

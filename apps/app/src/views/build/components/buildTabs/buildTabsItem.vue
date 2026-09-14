@@ -30,7 +30,7 @@
   </el-popover>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 
 import type { PopoverInstance } from "element-plus";
 
@@ -66,9 +66,10 @@ const { popoverVisible, handlePopoverVisible } = usePopoverVisible({
     }
   }
 });
-const handleShow = (title: string) => {
+const handleShow = async (title: string) => {
   currentTitle.value = title;
   handlePopoverVisible();
+  await nextTick();
   if (buildTabsMenuRef.value && buildTabsMenuRef.value.handleUpdateData) {
     buildTabsMenuRef.value.handleUpdateData(true);
   }
@@ -78,7 +79,7 @@ const emits = defineEmits(["click", "initMaterialData"]);
 
 const initMaterialData = (options: {
   title: string;
-  menuGroup: AssetsGroupForRender | MenuItemForRender | ModuleGroupForRender;
+  menuGroup?: AssetsGroupForRender | MenuItemForRender | ModuleGroupForRender;
   resetUpdate: boolean;
   updateGroup: boolean;
 }) => {
@@ -95,20 +96,22 @@ const dragendHandle = () => {
 };
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .build-tabs-item {
-  width: 84px;
-  height: 100%;
-  color: rgb(180, 183, 193);
+  width: 76px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  color: $sw-text-dim;
   font-size: 12px;
   cursor: pointer;
   user-select: none;
   transition:
-    border-color 0.3s,
-    background-color 0.3s,
-    color 0.3s;
+    background-color 0.15s,
+    color 0.15s;
   &:hover {
-    background-color: rgba(80, 84, 99, 0.8) !important;
-    color: #ffffff !important;
+    background-color: $sw-hover-bg !important;
+    color: $sw-text-strong !important;
   }
 }
 </style>

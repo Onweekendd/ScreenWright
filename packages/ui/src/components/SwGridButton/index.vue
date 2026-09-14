@@ -182,9 +182,9 @@ const handleGrid = (item: any, index: number) => {
     }
     .gridBox_item_active {
       border: 1px solid;
-      -o-border-image: linear-gradient(180deg, rgb(139, 88, 231), rgb(100, 44, 255)) 1 1;
-      border-image: -webkit-gradient(linear, left top, left bottom, from(rgb(139, 88, 231)), to(rgb(100, 44, 255))) 1 1;
-      border-image: linear-gradient(180deg, rgb(139, 88, 231), rgb(100, 44, 255)) 1 1;
+      -o-border-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) 1 1;
+      border-image: -webkit-gradient(linear, left top, left bottom, from(var(--sw-theme-color)), to(var(--sw-theme-color))) 1 1;
+      border-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color)) 1 1;
     }
   }
 }

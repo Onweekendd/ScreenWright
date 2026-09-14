@@ -374,7 +374,7 @@ onMounted(() => {
         .title {
           font-size: 14px;
           font-weight: 600;
-          color: rgba(139, 88, 231, 0.8);
+          color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
           line-height: 1.2;
         }
 
@@ -514,7 +514,7 @@ onMounted(() => {
 
             :deep(.el-input__wrapper) {
               background: rgba(255, 255, 255, 0.1);
-              border: 1px solid rgba(139, 88, 231, 0.5);
+              border: 1px solid color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
               border-radius: 6px;
 
               .el-input__inner {
@@ -546,7 +546,7 @@ onMounted(() => {
 
                 &:hover {
                   transform: scale(1.1);
-                  box-shadow: 0 4px 12px rgba(139, 88, 231, 0.4);
+                  box-shadow: 0 4px 12px color-mix(in srgb, var(--sw-theme-color) 40%, transparent);
                 }
               }
             }
@@ -562,7 +562,7 @@ onMounted(() => {
           height: 60%;
           background: var(--primary-light);
           border-radius: 0 2px 2px 0;
-          box-shadow: 0 0 10px rgba(139, 88, 231, 0.6);
+          box-shadow: 0 0 10px color-mix(in srgb, var(--sw-theme-color) 60%, transparent);
         }
 
         .hover-overlay {
@@ -575,7 +575,7 @@ onMounted(() => {
 
         &:hover {
           transform: translateX(4px);
-          border-color: rgba(139, 88, 231, 0.5);
+          border-color: color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
           box-shadow: var(--shadow-light);
 
           .hover-overlay {
@@ -597,7 +597,7 @@ onMounted(() => {
 
         &.select {
           background: var(--primary-gradient);
-          border-color: rgba(139, 88, 231, 0.8);
+          border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
           box-shadow: var(--shadow-heavy);
 
           .item-content {
@@ -606,7 +606,7 @@ onMounted(() => {
             }
 
             .animation-name {
-              color: rgba(139, 88, 231);
+              color: var(--sw-theme-color);
               font-weight: 600;
             }
 
@@ -622,8 +622,8 @@ onMounted(() => {
         }
 
         &.editing {
-          border-color: rgba(139, 88, 231, 0.8);
-          box-shadow: 0 0 0 2px rgba(139, 88, 231, 0.3);
+          border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
+          box-shadow: 0 0 0 2px color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
         }
       }
     }

@@ -194,12 +194,12 @@ onMounted(() => {
 
     &:hover {
       color: #fff;
-      background: rgba(99, 102, 241, 0.8);
+      background: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
     }
   }
 
   :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
-    background: #6366f1;
+    background: var(--sw-theme-color);
     box-shadow: none;
     color: #fff;
   }
@@ -232,11 +232,11 @@ onMounted(() => {
 // 禁用时的样式
 :deep(.el-slider.is-disabled) {
   .el-slider__bar {
-    background-color: rgba(99, 102, 241, 0.5);
+    background-color: color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
   }
 
   .el-slider__button {
-    background-color: rgba(99, 102, 241, 0.5);
+    background-color: color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
   }
 }
 </style>

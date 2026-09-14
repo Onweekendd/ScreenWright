@@ -535,7 +535,7 @@ onMounted(() => {
       cursor: pointer;
 
       &.locked {
-        color: #6132e4;
+        color: var(--sw-theme-color);
       }
     }
   }
@@ -624,7 +624,7 @@ onMounted(() => {
       transition: all 0.2s;
 
       &:hover {
-        background: #642cff;
+        background: var(--sw-theme-color);
       }
     }
   }
@@ -645,7 +645,7 @@ onMounted(() => {
       .el-dialog__close {
         color: #fff;
         &:hover {
-          color: #642cff;
+          color: var(--sw-theme-color);
         }
       }
     }

@@ -111,7 +111,7 @@ const getDisabledStatus = (resourceType: string) => {
     border: none;
 
     &.deleteBatchBtn {
-      background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     }
     &.is-disabled {
       background: #3d404c;

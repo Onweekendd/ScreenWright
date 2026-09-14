@@ -157,7 +157,7 @@ const isHighlighted = (componentId: string): boolean => {
 
     &:hover {
       box-shadow: var(--shadow-component);
-      border-color: rgba(139, 88, 231, 0.3);
+      border-color: color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
     }
 
     /* 右侧属性区域 */
@@ -209,11 +209,11 @@ const isHighlighted = (componentId: string): boolean => {
   border-radius: 8px;
   padding: 2px 0;
   margin: 0 4px;
-  border: 2px dashed rgba(139, 88, 231, 0.3);
+  border: 2px dashed color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: rgba(139, 88, 231, 0.5);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 50%, transparent);
     background: rgba(255, 255, 255, 0.05);
   }
 

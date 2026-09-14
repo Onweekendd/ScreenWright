@@ -68,8 +68,8 @@ const handleChange = (key: keyof StyleProps) => {
     text-align: center;
     cursor: pointer;
     &.btn_active {
-      border-color: #642cff;
-      color: #642cff;
+      border-color: var(--sw-theme-color);
+      color: var(--sw-theme-color);
     }
     &:nth-child(1) {
       margin-right: 12px;

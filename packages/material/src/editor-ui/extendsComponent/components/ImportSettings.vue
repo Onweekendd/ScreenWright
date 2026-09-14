@@ -70,14 +70,14 @@ const exportConfig = computed({
   &.is-plain,
   &:not(.is-plain) {
     color: #ffffff;
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     border-color: transparent;
     border-radius: 4px;
     text-align: center;
 
     &:hover,
     &:focus {
-      background-image: linear-gradient(180deg, #9d75ed 0%, #7446ff 100%);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       border-color: transparent;
       color: #ffffff;
     }

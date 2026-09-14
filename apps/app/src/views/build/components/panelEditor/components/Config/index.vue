@@ -38,13 +38,16 @@ const { selectTargetData } = useEditStore();
 const isHasGroup = computed(() => selectTargetData.value.some((v) => v && v.children && v.children.length > 0));
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
+
 .build-config {
   width: 340px;
   height: 100%;
   overflow: hidden;
-  color: #b4b7c1;
-  background: #232630;
-  border-left: 1px solid #000000;
+  color: $sw-text-dim;
+  background: var(--sw-panel-bg);
+  border: 1px solid $sw-border;
+  border-radius: 12px;
   transition: width 0.3s;
   position: relative;
 }

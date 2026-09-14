@@ -65,7 +65,12 @@
       </div>
     </div>
     <!-- 选中态框 + 拖动 + 缩放锚点 -->
-    <SelectionTransformer is-dynamic-panel :disabled="disabled" :on-db-click="handleDbClick" />
+    <SelectionTransformer
+      :edit-config="editConfig"
+      is-dynamic-panel
+      :disabled="disabled"
+      :on-db-click="handleDbClick"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -150,7 +155,7 @@ const {
   position: relative;
   width: 100%;
   height: 100%;
-  // background: #232630;
+  // background: var(--sw-panel-bg);
   box-shadow: var(--el-box-shadow);
   background-size: 100% 100%;
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOAQMAAAAlhr+SAAAABlBMVEUqLjNSXWS1zSUzAAAAD0lEQVQI12NgwADMYIQBAACrAAd4ROv5AAAAAElFTkSuQmCC)

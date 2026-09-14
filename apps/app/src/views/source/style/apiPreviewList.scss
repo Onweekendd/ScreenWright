@@ -6,11 +6,11 @@
       color: #fff;
     }
     &.is-active {
-      color: #642cff;
+      color: var(--sw-theme-color);
     }
   }
   :deep(.el-tabs__active-bar) {
-    background-color: #642cff;
+    background-color: var(--sw-theme-color);
   }
   :deep(.el-tabs) {
     .el-tabs__nav-wrap {

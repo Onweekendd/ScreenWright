@@ -164,4 +164,32 @@ describe("handlePushComponentUpdate", () => {
     expect(lastCallFor(9)?.[3]).toBe(false);
     expect(lastCallFor(100)).toBeUndefined();
   });
+
+  it("新数组比旧数组短时会整体替换 data 和 option 中的嵌套数组", async () => {
+    const { allComponentMap } = setup();
+    const component = allComponentMap.value.get("9")!;
+    component.data = [
+      { label: "Tab A", value: 1 },
+      { label: "Tab B", value: 2 },
+      { label: "Tab C", value: 3 }
+    ];
+    component.option = {
+      series: [{ name: "系列1" }, { name: "系列2" }, { name: "系列3" }]
+    };
+
+    await push({
+      ...leaf(9, 0, 0, 0),
+      data: [
+        { label: "Tab A", value: 1 },
+        { label: "Tab B", value: 2 }
+      ],
+      option: { series: [{ name: "系列1" }, { name: "系列2" }] }
+    });
+
+    expect(component.data).toEqual([
+      { label: "Tab A", value: 1 },
+      { label: "Tab B", value: 2 }
+    ]);
+    expect(component.option.series).toEqual([{ name: "系列1" }, { name: "系列2" }]);
+  });
 });

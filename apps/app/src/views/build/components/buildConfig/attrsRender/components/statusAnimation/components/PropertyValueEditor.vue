@@ -29,7 +29,7 @@
           v-model="localValue"
           size="small"
           @change="onChange"
-          :active-color="'#8b58e7'"
+          active-color="var(--sw-theme-color)"
           :inactive-color="'rgba(255, 255, 255, 0.2)'"
         />
         <div class="editor-indicator boolean-indicator" />
@@ -390,13 +390,13 @@ defineExpose({
         :deep(.el-input-number__decrease),
         :deep(.el-input-number__increase) {
           width: 26px !important;
-          background: rgba(139, 88, 231, 0.1);
-          border: 1px solid rgba(139, 88, 231, 0.3) !important;
+          background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--sw-theme-color) 30%, transparent) !important;
           color: var(--text-primary);
           transition: all 0.3s ease;
           &:hover {
             background: var(--primary-light);
-            border-color: rgba(139, 88, 231, 0.8) !important;
+            border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent) !important;
             transform: scale(1.05);
           }
         }
@@ -426,7 +426,7 @@ defineExpose({
 
       .boolean-switch {
         :deep(.el-switch__core) {
-          border: 2px solid rgba(139, 88, 231, 0.3);
+          border: 2px solid color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
           background-color: rgba(255, 255, 255, 0.1) !important;
           transition: all 0.3s ease;
 
@@ -436,7 +436,7 @@ defineExpose({
         }
 
         :deep(.el-switch__core.is-checked) {
-          border-color: #8b58e7;
+          border-color: var(--sw-theme-color);
           background: var(--primary-gradient) !important;
         }
       }
@@ -557,10 +557,10 @@ defineExpose({
 @keyframes booleanEditorPulse {
   0%,
   100% {
-    border-color: rgba(139, 88, 231, 0.1);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
   }
   50% {
-    border-color: rgba(139, 88, 231, 0.3);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
   }
 }
 
@@ -577,10 +577,10 @@ defineExpose({
 @keyframes textEditorShimmer {
   0%,
   100% {
-    border-color: rgba(139, 88, 231, 0.1);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
   }
   50% {
-    border-color: rgba(139, 88, 231, 0.3);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 30%, transparent);
   }
 }
 
@@ -621,27 +621,27 @@ defineExpose({
 @keyframes dragCompletePulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(139, 88, 231, 0.7);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--sw-theme-color) 70%, transparent);
     border-color: var(--border-color);
   }
   25% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 4px rgba(139, 88, 231, 0.4);
-    border-color: rgba(139, 88, 231, 0.8);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--sw-theme-color) 40%, transparent);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 80%, transparent);
   }
   50% {
     transform: scale(1.08);
-    box-shadow: 0 0 0 8px rgba(139, 88, 231, 0.2);
-    border-color: rgba(139, 88, 231, 1);
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
+    border-color: var(--sw-theme-color);
   }
   75% {
     transform: scale(1.02);
-    box-shadow: 0 0 0 4px rgba(139, 88, 231, 0.1);
-    border-color: rgba(139, 88, 231, 0.6);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
+    border-color: color-mix(in srgb, var(--sw-theme-color) 60%, transparent);
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(139, 88, 231, 0);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--sw-theme-color) 0%, transparent);
     border-color: var(--border-color);
   }
 }

@@ -63,7 +63,7 @@ defineExpose({
     border-color: #282e3a !important;
     box-shadow: none !important;
     &:hover {
-      box-shadow: 0 0 0 1px #642cff inset !important;
+      box-shadow: 0 0 0 1px var(--sw-theme-color) inset !important;
     }
   }
 }
@@ -75,7 +75,7 @@ defineExpose({
     color: #fff;
     border: none;
     border-radius: 2px;
-    background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     margin-left: 10px;
   }
 }

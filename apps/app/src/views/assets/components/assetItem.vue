@@ -228,7 +228,7 @@ const handleDelete = () => {
     .asset-menu {
       display: inline-flex;
     }
-    border-color: #642cff;
+    border-color: var(--sw-theme-color);
   }
 }
 .content__main {

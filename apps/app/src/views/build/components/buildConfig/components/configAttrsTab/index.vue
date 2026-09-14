@@ -33,7 +33,7 @@ const { input, options, handleChange } = useConfigAttrsTab(props, emits);
     height: 30px;
     line-height: 30px;
     border-radius: 5px 5px 0px 0px;
-    border-bottom: 2px solid #642cff;
+    border-bottom: 2px solid var(--sw-theme-color);
     background-color: #383b47;
     width: 100%;
     list-style: none;
@@ -41,7 +41,7 @@ const { input, options, handleChange } = useConfigAttrsTab(props, emits);
     font-weight: 500;
     cursor: pointer;
     &.is-active {
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       color: #fff;
     }
   }

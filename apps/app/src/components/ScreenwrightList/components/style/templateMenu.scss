@@ -27,7 +27,7 @@
       margin-right: 16px;
     }
     &:nth-child(2) {
-      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
     }
   }
   .content__view {
@@ -46,7 +46,7 @@
         height: 6px;
         border-radius: 50%;
         background-color: red;
-        box-shadow: 0 0 10px #703bfa;
+        box-shadow: 0 0 10px var(--sw-theme-color);
         position: absolute;
         right: -5px;
         top: -5px;

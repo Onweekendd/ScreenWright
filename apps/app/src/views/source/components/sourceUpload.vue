@@ -281,7 +281,7 @@ onMounted(() => {
       text-overflow: ellipsis;
       display: inline-block;
       white-space: nowrap;
-      color: #9483ff;
+      color: var(--sw-theme-color);
     }
     .text-tip {
       color: #848484;
@@ -295,7 +295,7 @@ onMounted(() => {
     top: 5px;
     right: 30px;
     &:hover {
-      color: #9483ff;
+      color: var(--sw-theme-color);
     }
   }
 }

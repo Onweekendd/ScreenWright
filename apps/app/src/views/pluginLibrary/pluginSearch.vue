@@ -36,7 +36,7 @@ const querySearch = () => {
     border-radius: 4px 4px;
     margin-left: 20px;
     &.primary {
-      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
     }
   }
   :deep(.el-input__inner) {

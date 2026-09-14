@@ -203,15 +203,15 @@ onBeforeMount(() => {
           width: 12px;
           height: 12px;
           border: 1px solid #333543;
-          background-color: #232630;
+          background-color: var(--sw-panel-bg);
         }
       }
       .is-checked {
         .el-radio__inner {
-          border: 1px solid rgb(100, 44, 255);
-          background-color: #232630;
+          border: 1px solid var(--sw-theme-color);
+          background-color: var(--sw-panel-bg);
           &::after {
-            background-color: rgb(100, 44, 255);
+            background-color: var(--sw-theme-color);
           }
         }
       }
@@ -226,7 +226,7 @@ onBeforeMount(() => {
   .el-cascader-menu .el-cascader-node.in-active-path {
     background-color: #383b47 !important;
     .el-cascader-node__label {
-      color: #6c5ce7;
+      color: var(--sw-theme-color);
     }
   }
 }

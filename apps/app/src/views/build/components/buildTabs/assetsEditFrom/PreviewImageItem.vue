@@ -146,7 +146,7 @@ const handleReplace = () => {
   }
 
   &:hover {
-    border-color: #8b58e7;
+    border-color: var(--sw-theme-color);
 
     .image-info,
     .image-actions {

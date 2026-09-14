@@ -7,7 +7,7 @@
       </div>
       <Icon
         :type="expanded ? 'iconfont-shangjiantou' : 'iconfont-xiajiantou'"
-        style="font-size: 11px; color: rgba(124, 77, 255, 0.6)"
+        style="font-size: 11px; color: color-mix(in srgb, var(--sw-theme-color) 60%, transparent)"
       />
     </div>
     <div v-if="expanded" class="todo-list">

@@ -13,7 +13,7 @@
       </div>
       <Icon
         :type="expanded ? 'iconfont-shangjiantou' : 'iconfont-xiajiantou'"
-        style="font-size: 11px; color: rgba(124, 77, 255, 0.6)"
+        style="font-size: 11px; color: color-mix(in srgb, var(--sw-theme-color) 60%, transparent)"
       />
     </div>
     <!-- 当前正在转化的组件 -->
@@ -322,7 +322,7 @@ const currentComponentTitle = computed(() => currentAddingComponent.value?.name 
 .loading-spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba($color-primary, 0.2);
+  border: 2px solid color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
   border-top-color: $color-primary;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -336,13 +336,17 @@ const currentComponentTitle = computed(() => currentAddingComponent.value?.name 
 .progress-bar {
   width: 100%;
   height: 4px;
-  background: rgba($color-primary, 0.2);
+  background: color-mix(in srgb, var(--sw-theme-color) 20%, transparent);
   border-radius: 2px;
   overflow: hidden;
 
   &__fill {
     height: 100%;
-    background: linear-gradient(90deg, $color-primary, lighten($color-primary, 10%));
+    background: linear-gradient(
+      90deg,
+      $color-primary,
+      color-mix(in srgb, var(--sw-theme-color) 90%, white)
+    );
     border-radius: 2px;
     transition: width 0.3s ease;
   }

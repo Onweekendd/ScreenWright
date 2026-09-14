@@ -145,7 +145,7 @@ export function useContextWindow() {
     if (r >= 70) {
       return "#ffb400";
     }
-    return "#7c4dff";
+    return "var(--sw-theme-color)";
   });
 
   /** 悬浮提示文案：展示剩余上下文百分比，L3 开启时额外说明会自动压缩 */

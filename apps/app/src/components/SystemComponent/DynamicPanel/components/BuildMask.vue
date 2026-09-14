@@ -42,7 +42,7 @@ const showTip = computed(() => {
   align-items: center;
   justify-content: center;
 
-  background: rgba(114, 40, 211, 0.1);
+  background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
 
   .tipInfo {
     z-index: 2;

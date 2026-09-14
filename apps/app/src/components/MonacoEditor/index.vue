@@ -19,6 +19,8 @@ const ensureThemesRegistered = () => {
     return;
   }
 
+  const themeColor = getComputedStyle(document.documentElement).getPropertyValue("--sw-theme-color").trim();
+
   monaco.editor.defineTheme("sw-config-dark", {
     base: "vs-dark",
     inherit: true,
@@ -40,7 +42,7 @@ const ensureThemesRegistered = () => {
       "editor.inactiveSelectionBackground": "#2A223F",
       "editor.lineHighlightBackground": "#131926",
       "editor.lineHighlightBorder": "#131926",
-      "editorCursor.foreground": "#8B5CF6",
+      "editorCursor.foreground": themeColor,
       "editorWhitespace.foreground": "#252D3B",
       "editorBracketMatch.background": "#2B3446",
       "editorBracketMatch.border": "#4E5A72",

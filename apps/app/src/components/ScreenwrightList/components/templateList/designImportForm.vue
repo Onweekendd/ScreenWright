@@ -234,7 +234,7 @@ defineExpose({
       height: 102px !important;
       min-width: 102px !important;
       &:hover {
-        box-shadow: 0 0 0 1px #642cff inset !important;
+        box-shadow: 0 0 0 1px var(--sw-theme-color) inset !important;
       }
     }
   }
@@ -273,7 +273,7 @@ defineExpose({
       position: absolute;
       top: 0;
       right: 0;
-      background: linear-gradient(180deg, #8b58e7, #642cff);
+      background: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
       height: 16px;
       line-height: 16px;
       padding: 0px 5px;
@@ -300,7 +300,7 @@ defineExpose({
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(90deg, #8b58e7 0px, #642cff 100%);
+    background-image: linear-gradient(90deg, var(--sw-theme-color) 0px, var(--sw-theme-color) 100%);
   }
   .form-footer {
     display: flex;
@@ -311,8 +311,8 @@ defineExpose({
       background-color: #3d404c;
       border-color: #3d404c;
       &.el-button--primary {
-        border-color: #642cff;
-        background-image: linear-gradient(180deg, #8b58e7, #642cff);
+        border-color: var(--sw-theme-color);
+        background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
       }
     }
   }

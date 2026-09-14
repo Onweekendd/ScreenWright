@@ -215,7 +215,7 @@ onMounted(() => {
     top: 25px !important;
     width: 48px !important;
     height: 2px;
-    background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+    background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     opacity: 0.8;
   }
   :deep(.el-tabs__item) {
@@ -236,7 +236,7 @@ onMounted(() => {
       Source Han Sans CN-Normal,
       Source Han Sans CN;
     font-weight: 400;
-    color: #9483ff !important;
+    color: var(--sw-theme-color) !important;
     line-height: 14px;
   }
   :deep(.el-tabs__nav) {

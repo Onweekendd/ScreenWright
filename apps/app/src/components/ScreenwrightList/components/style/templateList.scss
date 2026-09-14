@@ -48,6 +48,6 @@
     margin-right: 8px;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(90deg, #8b58e7 0px, #642cff 100%);
+    background-image: linear-gradient(90deg, var(--sw-theme-color) 0px, var(--sw-theme-color) 100%);
   }
 }

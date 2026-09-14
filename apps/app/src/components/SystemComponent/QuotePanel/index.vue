@@ -80,7 +80,7 @@ const { quotePanelData, loading, screenQuoteRef, panelViewStyle, panelZIndexStyl
     position: relative;
     padding: 0;
 
-    background: rgba(114, 40, 211, 0.1);
+    background: color-mix(in srgb, var(--sw-theme-color) 10%, transparent);
     .tipInfo {
       opacity: 0;
       color: #fff;

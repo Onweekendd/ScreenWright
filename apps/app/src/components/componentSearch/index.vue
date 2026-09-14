@@ -148,16 +148,24 @@ onBeforeMount(() => {
 </script>
 <style lang="scss">
 @import "src/style/mixins/element.scss";
+@import "src/style/theme.scss";
 .component-search {
   position: absolute;
   right: 10px;
   top: 10px;
+  display: flex;
+  align-items: center;
   cursor: pointer;
+  color: $sw-text-dim;
+  transition: color 0.15s;
+  &:hover {
+    color: var(--sw-theme-color);
+  }
 }
 .component-search-dialog {
   .el-dialog {
     padding: 10px !important;
-    background-color: #232630 !important;
+    background-color: var(--sw-panel-bg) !important;
     pointer-events: auto;
   }
   pointer-events: none;

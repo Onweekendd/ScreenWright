@@ -419,7 +419,7 @@ defineExpose({
       color: #fff;
       border: none;
       border-radius: 2px;
-      background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       margin-left: 10px;
     }
     .el-button--default {
@@ -432,7 +432,7 @@ defineExpose({
   }
 
   .is-active {
-    box-shadow: 0px 0px 5px 0px rgba(100, 44, 255, 1);
+    box-shadow: 0px 0px 5px 0px var(--sw-theme-color);
     .item-icon {
       opacity: 1 !important;
     }

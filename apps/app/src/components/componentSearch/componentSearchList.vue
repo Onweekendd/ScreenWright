@@ -115,6 +115,7 @@ onMounted(() => {
 });
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .component-search-list {
   margin-top: 10px;
   max-height: 200px;
@@ -125,7 +126,7 @@ onMounted(() => {
   column-gap: 11px;
 
   .menu-content-item {
-    background-color: #232630 !important;
+    background-color: var(--sw-panel-bg) !important;
     height: 98px !important;
     font-size: 12px;
     padding: 0 !important;
@@ -138,7 +139,7 @@ onMounted(() => {
       border-radius: 4px;
       margin-bottom: 12px; /* 项目之间的垂直间距 */
       position: relative;
-      background-color: #4b4d58 !important;
+      background-color: $sw-control-bg !important;
       overflow: hidden;
     }
 

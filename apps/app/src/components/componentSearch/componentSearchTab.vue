@@ -37,7 +37,7 @@ useTabsUpdate(props, emit);
     white-space: nowrap;
     user-select: none;
     &.is-active {
-      background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+      background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
       color: #fff;
     }
   }

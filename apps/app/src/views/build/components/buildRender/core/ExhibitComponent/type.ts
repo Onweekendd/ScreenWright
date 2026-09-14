@@ -8,7 +8,5 @@ export const exhibitComponentType: ExhibitEnum[] = [
   ExhibitEnum.RingIndicator3d,
   ExhibitEnum.ImagesList3d,
   ExhibitEnum.FtParticles,
-  ExhibitEnum.FtSignaturePad,
   ExhibitEnum.FtFilter,
-  ExhibitEnum.verticalCard
 ];

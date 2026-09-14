@@ -115,10 +115,6 @@ export interface SimpleBarrageListParams {
    */
   layerScrollId?: number;
 
-  /**
-   * 关联签名版组件id
-   */
-  layerSignId?: number;
 }
 
 export interface PaginationResult<T> {
@@ -143,7 +139,6 @@ export interface DataFilterItem {
   userId: number;
   name: string;
   layerScrollId: number;
-  layerSignId: number;
   sort: number | null;
   signUrl: string;
   status: number | null;

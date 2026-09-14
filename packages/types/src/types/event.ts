@@ -125,11 +125,6 @@ export enum EventTypeEnum {
   Controls = "controls",
 
   /**
-   * @description 签名提交
-   */
-  SignatureSubmit = "signatureSubmit",
-
-  /**
    * @description 视频控制
    */
   VideoControls = "videocontrols",
@@ -138,26 +133,6 @@ export enum EventTypeEnum {
    * @description 无事件
    */
   None = "",
-  /**
-   * @description 卡片下落结束
-   */
-  CardDropEnd = "cardDropEnd",
-  /**
-   * @description 卡片开始展开前
-   */
-  CardBeforeExpand = "cardBeforeExpand",
-  /**
-   * @description 卡片开始展开结束
-   */
-  CardEndExpand = "cardEndExpand",
-  /**
-   * @description 卡片开始收缩
-   */
-  CardStartCollapse = "cardStartCollapse",
-  /**
-   * @description 卡片收缩结束
-   */
-  CardEndCollapse = "cardEndCollapse",
   /**
    * @description 滚动结束
    */
@@ -180,10 +155,6 @@ export enum EncodeEventTypeEnum {
    */
   VideoControls = "videocontrols",
 
-  /**
-   * @description 签名提交
-   */
-  SignatureSubmit = "signatureSubmit"
 }
 
 /**
@@ -336,13 +307,7 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     sceneEnum.IndustryScene
     // "threescene" // TODO: 待添加组件
   ],
-  [EventTypeEnum.SignatureSubmit]: [ExhibitEnum.FtSignaturePad],
   [EventTypeEnum.VideoControls]: [mediaEnum.FtVideo],
-  [EventTypeEnum.CardDropEnd]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardBeforeExpand]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardEndExpand]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardStartCollapse]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardEndCollapse]: [ExhibitEnum.verticalCard],
   [EventTypeEnum.ScrollEnd]: [PanelEnum.dynamicPanel]
 };
 
@@ -379,12 +344,6 @@ export const EventList: { label: string; value: EventTypeEnum }[] = [
   { label: "场景初始化结束", value: EventTypeEnum.AfterSceneInit },
   { label: "场景切换状态结束", value: EventTypeEnum.AfterUpdateState },
   { label: "鼠标点击模型子节点", value: EventTypeEnum.ModelNodeClick },
-  { label: "签名提交", value: EventTypeEnum.SignatureSubmit },
-  { label: "卡片滑落结束", value: EventTypeEnum.CardDropEnd },
-  { label: "卡片开始展开前", value: EventTypeEnum.CardBeforeExpand },
-  { label: "卡片展开结束", value: EventTypeEnum.CardEndExpand },
-  { label: "卡片开始收缩", value: EventTypeEnum.CardStartCollapse },
-  { label: "卡片收缩结束", value: EventTypeEnum.CardEndCollapse },
   { label: "滚动结束", value: EventTypeEnum.ScrollEnd }
 ];
 
@@ -394,7 +353,6 @@ export const EventList: { label: string; value: EventTypeEnum }[] = [
 export const EncodeEventList: { label: string; value: EncodeEventTypeEnum | EventTypeEnum }[] = [
   { label: "鼠标点击", value: EncodeEventTypeEnum.Click },
   { label: "视频控制", value: EncodeEventTypeEnum.VideoControls },
-  { label: "签名提交", value: EncodeEventTypeEnum.SignatureSubmit }
 ];
 
 /**
@@ -452,7 +410,6 @@ export const EncodeEvent2ComponentType: Record<EncodeEventTypeEnum, AllComponent
     ThirdPartEnum.VuePart
   ],
   [EncodeEventTypeEnum.VideoControls]: [mediaEnum.FtVideo, interactiveEnum.videoProgress],
-  [EncodeEventTypeEnum.SignatureSubmit]: [ExhibitEnum.FtSignaturePad]
 };
 
 /**
@@ -529,11 +486,9 @@ export const allowEventComponentList = [
   mediaEnum.FtSwiperCard,
   interactiveEnum.FtVoiceControl,
   textEnum.FtCollection,
-  ExhibitEnum.FtSignaturePad,
   extendsEnum.UePeerStreaming,
   extendsEnum.UePixelStreaming,
   extendsEnum.UeVessel,
-  ExhibitEnum.verticalCard,
   PanelEnum.dynamicPanel,
   interactiveEnum.videoProgress
 ];

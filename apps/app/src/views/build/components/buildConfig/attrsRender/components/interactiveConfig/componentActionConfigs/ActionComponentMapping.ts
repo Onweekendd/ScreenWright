@@ -84,12 +84,6 @@ export const actionComponentMap: Record<string, Component> = {
   [ActionTypeEnum.nextPage]: ActionNextPage,
   [ActionTypeEnum.SwiperCardChangeIndex]: SwiperCardChangeIndexPage,
 
-  [ActionTypeEnum.OnExport]: SetDelay,
-  [ActionTypeEnum.OnClear]: SetDelay,
-  [ActionTypeEnum.OnRedo]: SetDelay,
-  [ActionTypeEnum.OnUndo]: SetDelay,
-  // [ActionTypeEnum.OnTranslateImage]: SetDelay,
-  [ActionTypeEnum.Signature]: SetDelay,
   [ActionTypeEnum.TurnOnPatrol]: SetDelay,
   [ActionTypeEnum.PausePatrol]: SetDelay,
 

@@ -69,7 +69,7 @@ export const Transform3DCapture = {
 
     root
       .querySelectorAll(
-        ".imagesList3d, .ft-swiperCard, .ft-swiper, .carousel, .vertical-card, .carousel-3d-container"
+        ".imagesList3d, .ft-swiperCard, .ft-swiper, .carousel, .carousel-3d-container"
       )
       .forEach((container) => {
         if (!(container instanceof HTMLElement)) {
@@ -152,7 +152,6 @@ export const Transform3DCapture = {
       ".spin-point",
       ".point-box",
       ".ground",
-      ".vertical-card",
       ".swiper-container",
       ".el-carousel",
       ".el-carousel__container"
@@ -206,7 +205,6 @@ export const Transform3DCapture = {
       ".spin-point",
       ".point-box",
       ".ground",
-      ".vertical-card",
     ];
     liveRoot.querySelectorAll("[data-id]").forEach((liveHost) => {
       const id = liveHost.getAttribute("data-id");

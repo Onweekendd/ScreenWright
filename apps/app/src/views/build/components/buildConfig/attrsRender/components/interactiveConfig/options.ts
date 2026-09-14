@@ -239,11 +239,6 @@ const delayOnlyActions = new Set([
   ActionTypeEnum.VoiceControlStop,
   ActionTypeEnum.prevPage,
   ActionTypeEnum.nextPage,
-  ActionTypeEnum.OnExport,
-  ActionTypeEnum.OnClear,
-  ActionTypeEnum.OnRedo,
-  ActionTypeEnum.OnUndo,
-  ActionTypeEnum.Signature,
   ActionTypeEnum.TurnOnPatrol,
   ActionTypeEnum.PausePatrol,
   ActionTypeEnum.RestartPatrol,
@@ -251,7 +246,6 @@ const delayOnlyActions = new Set([
   ActionTypeEnum.toNextStatus,
   ActionTypeEnum.MouseEnter,
   ActionTypeEnum.MouseLeave,
-  ActionTypeEnum.OnTranslateImage
 ]);
 
 /**
@@ -447,7 +441,7 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
         }
       };
 
-    // 仅需 animation.delay 的动作（视频控制、分页、签名板、轮巡等）
+    // 仅需 animation.delay 的动作（视频控制、分页、轮巡等）
     default:
       if (delayOnlyActions.has(actionType)) {
         return { ...base, animation: defaultAnimation() };

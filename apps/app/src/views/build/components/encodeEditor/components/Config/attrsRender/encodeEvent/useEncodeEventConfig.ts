@@ -100,10 +100,6 @@ export const useEncodeEventConfig = createGlobalState(() => {
           return component.component.prop === mediaEnum.FtVideo;
         }
 
-        if (currentEncodeEvent.value.trigger === EncodeEventTypeEnum.SignatureSubmit) {
-          return component.component.prop === extendsEnumType.SimpleBarrage;
-        }
-
         return true;
       })
       .map((component) => ({

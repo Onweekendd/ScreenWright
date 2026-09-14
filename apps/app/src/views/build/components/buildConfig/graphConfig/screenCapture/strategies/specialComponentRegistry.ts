@@ -47,13 +47,6 @@ export const SPECIAL_COMPONENT_MARKERS: SpecialComponentMarker[] = [
     readySelectors: [".ft-swiper .el-carousel__item", ".ft-swiper img"]
   },
   {
-    key: "verticalCard",
-    label: "垂直卡片",
-    selectors: [".vertical-card"],
-    rasterSelectors: [".vertical-card", ".carousel-3d-container", ".carousel-3d-slider"],
-    readySelectors: [".carousel-3d-slide", ".vertical-card img"]
-  },
-  {
     key: "particles",
     label: "上升粒子",
     selectors: [".particles-js-canvas-el", ".simple-particle", ".ext-container"],
@@ -70,7 +63,6 @@ const OVERFLOW_CHAIN_SELECTOR = [
   ".ft-swiperCard",
   ".ft-swiper",
   ".imagesList3d",
-  ".vertical-card",
   ".ringIndicator3d",
   ".ringIndicator3dNew",
   ".carousel",

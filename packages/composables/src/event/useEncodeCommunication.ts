@@ -1,5 +1,5 @@
 import { extractComponentId } from "@screenwright/core";
-import { type Action, EncodeEventTypeEnum, ExtendsEnum, interactiveEnum } from "@screenwright/types";
+import { type Action, EncodeEventTypeEnum, interactiveEnum } from "@screenwright/types";
 import { createGlobalState } from "@vueuse/core";
 import { ElMessage } from "element-plus";
 import { isNil } from "lodash-es";
@@ -245,16 +245,6 @@ const useEncodeCommunication = createGlobalState(() => {
 
         // 视频控件特有 TODO: 添加事件
         //   interRef.setVideoEvent?.(info?.label || "", info?.value)
-        return;
-      }
-
-      if (trigger === EncodeEventTypeEnum.SignatureSubmit) {
-        const event = (eventList.value as any)[`${ExtendsEnum.SimpleBarrage}-${component.id}`];
-        if (!event || !event.onSignaturePadSave) {
-          return;
-        }
-
-        event.onSignaturePadSave({ imageUrl: throwValue?.imageUrl || "" });
         return;
       }
 

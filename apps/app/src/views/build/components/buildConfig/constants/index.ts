@@ -709,7 +709,6 @@ export const excludeDataConfig = [
   mediaEnum.FtImgBorder,
   PanelType.quotePanel,
   ExhibitEnumType.FtFilter,
-  ExhibitEnumType.verticalCard,
   mediaEnum.FtSwiperCard,
   InteractiveEnum.videoProgress
 ];

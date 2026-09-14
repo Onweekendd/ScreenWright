@@ -522,7 +522,6 @@ interface ftVuePartEvents {
 
 interface FtSimpleBarrageEvents {
   [key: `${ExtendsEnum.SimpleBarrage}-${number}`]: {
-    onSignaturePadSave: ({ imageUrl }: { imageUrl: string }) => void;
     handleClick: () => void;
   };
 }
@@ -542,16 +541,6 @@ interface scrollPickerEvents {
 interface ImagesList3dEvents {
   [key: `${ExhibitEnumType.ImagesList3d}-${number}`]: {
     handleEvensChangeActiveSpinnerIndex: (actionSelect: string) => void;
-  };
-}
-
-interface FtSignaturePad {
-  [key: `${ExhibitEnumType.FtSignaturePad}-${number}`]: {
-    onExport: () => void;
-    onClear: () => void;
-    onRedo: () => void;
-    onUndo: () => void;
-    onTranslateImage: () => void;
   };
 }
 
@@ -671,6 +660,5 @@ export type toAddEvent =
   | PageReloadEvents
   | scrollPickerEvents
   | ImagesList3dEvents
-  | FtSignaturePad
   | FtUnrealEngineEvents
   | videoProgressEvents;

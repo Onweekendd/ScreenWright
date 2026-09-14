@@ -32,10 +32,6 @@ interface Props {
   height: number | string;
   /** @description 弹幕数据 */
   barrageData?: DataItem[];
-  /** @description 签名板数据 */
-  signatureData?: DataItem[];
-  /** @description 预添加弹幕数据 */
-  preAddData?: DataItem[];
   /** @description 是否可编辑模式 */
   editable?: boolean;
   /** @description 缩放值 */
@@ -43,20 +39,12 @@ interface Props {
 }
 
 /** @description 组件事件定义 */
-interface Emits {
-  (e: "on-round-complete"): void;
-}
-
 // 定义props和emits
 const props = withDefaults(defineProps<Props>(), {
   barrageData: () => [],
-  signatureData: () => [],
-  preAddData: () => [],
   editable: false,
   screenScale: 1
 });
-
-const emit = defineEmits<Emits>();
 
 // 响应式数据 (原data字段转换为ref)
 /** @description 停止计数 */
@@ -85,9 +73,9 @@ const roundCount = ref<number>(0);
 const containerRef = ref<HTMLElement>();
 
 // 计算属性
-/** @description 签名板数据 */
+/** @description 弹幕数据 */
 const totalData = computed(() => {
-  return [...props.signatureData, ...props.barrageData];
+  return props.barrageData;
 });
 
 // 监听器
@@ -320,10 +308,6 @@ const barrageAnimate = (divNode: CustomHTMLDivElement): void => {
 
         if (!props.option.loop) {
           return;
-        }
-
-        if (props.preAddData.length) {
-          emit("on-round-complete");
         }
 
         initBarrage();

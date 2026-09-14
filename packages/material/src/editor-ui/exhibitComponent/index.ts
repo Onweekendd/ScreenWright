@@ -4,20 +4,15 @@ import { ExhibitEnum } from "@screenwright/types";
 
 import ftParticlesAnimation from "./exhibitAnimation/ft-particlesAnimation.vue";
 import imagesList3dBaseMap from "./exhibitBaseMap/imagesList3dBaseMap.vue";
-import ftSignaturePadControl from "./exhibitControl/ft-signaturePadControl.vue";
-import ftSignaturePadEdit from "./exhibitEdit/ft-signaturePadEdit.vue";
 import ftFilterFilter from "./exhibitFilter/ft-filterFilter.vue";
 import ftFilterGlobal from "./exhibitGlobal/ft-filterGlobal.vue";
 import ftParticlesGlobal from "./exhibitGlobal/ft-particlesGlobal.vue";
-import ftSignaturePadGlobal from "./exhibitGlobal/ft-signaturePadGlobal.vue";
 import imagesList3dGlobal from "./exhibitGlobal/imagesList3dGlobal.vue";
 import ringIndicator3dGlobal from "./exhibitGlobal/ringIndicator3dGlobal.vue";
 import ringIndicator3dNewGlobal from "./exhibitGlobal/ringIndicator3dNewGlobal.vue";
-import verticalCardGlobal from "./exhibitGlobal/verticalCardGlobal.vue";
 import ftParticlesInteractive from "./exhibitInteractive/ft-particlesInteractive.vue";
 import ftParticlesLineOption from "./exhibitLineOption/ft-particlesLineOption.vue";
 import imagesList3dPicList from "./exhibitPicList/imagesList3dPicList.vue";
-import verticalCardPicList from "./exhibitPicList/verticalCardPicList.vue";
 import ringIndicator3dNewSign from "./exhibitSign/ringIndicator3dNewSign.vue";
 import ringIndicator3dSign from "./exhibitSign/ringIndicator3dSign.vue";
 
@@ -65,17 +60,8 @@ export const ExhibitConfigComponent: Partial<Record<ExhibitEnum, ConfigTab[]>> =
     { label: "动画配置", value: optionType.animation, component: ftParticlesAnimation },
     { label: "交互配置", value: optionType.interactive, component: ftParticlesInteractive }
   ],
-  [ExhibitEnum.FtSignaturePad]: [
-    { label: "基础配置", value: optionType.global, component: ftSignaturePadGlobal },
-    { label: "操作控制", value: optionType.edit, component: ftSignaturePadEdit },
-    { label: "配置控制", value: optionType.control, component: ftSignaturePadControl }
-  ],
   [ExhibitEnum.FtFilter]: [
     { label: "全局", value: optionType.global, component: ftFilterGlobal },
     { label: "滤镜", value: optionType.filter, component: ftFilterFilter }
   ],
-  [ExhibitEnum.verticalCard]: [
-    { label: "全局", value: optionType.global, component: verticalCardGlobal },
-    { label: "图片列表", value: optionType.picList, component: verticalCardPicList }
-  ]
 };

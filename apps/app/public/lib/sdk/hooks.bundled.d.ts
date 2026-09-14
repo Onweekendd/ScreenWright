@@ -127,9 +127,7 @@ declare const ComponentFlatSchema: z.ZodObject<{
             ringIndicator3dNew: import("..").ExhibitEnum.ringIndicator3dNew;
             imagesList3d: import("..").ExhibitEnum.ImagesList3d;
             "sw-particles": import("..").ExhibitEnum.FtParticles;
-            "sw-signaturePad": import("..").ExhibitEnum.FtSignaturePad;
             "sw-filter": import("..").ExhibitEnum.FtFilter;
-            verticalCard: import("..").ExhibitEnum.verticalCard;
         }>, z.ZodEnum<{
             "sw-folder": import("..").FolderEnum.group;
         }>, z.ZodEnum<{
@@ -16602,9 +16600,7 @@ declare const ExhibitEnumTypeSchema: z.ZodEnum<{
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
     "sw-particles": ExhibitEnum.FtParticles;
-    "sw-signaturePad": ExhibitEnum.FtSignaturePad;
     "sw-filter": ExhibitEnum.FtFilter;
-    verticalCard: ExhibitEnum.verticalCard;
 }>;
 /** 文件夹类型枚举 Schema */
 declare const FolderTypeSchema: z.ZodEnum<{
@@ -16762,9 +16758,7 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
     "sw-particles": ExhibitEnum.FtParticles;
-    "sw-signaturePad": ExhibitEnum.FtSignaturePad;
     "sw-filter": ExhibitEnum.FtFilter;
-    verticalCard: ExhibitEnum.verticalCard;
 }>, z.ZodEnum<{
     "sw-folder": FolderEnum.group;
 }>, z.ZodEnum<{
@@ -17242,30 +17236,6 @@ declare enum ActionTypeEnum {
      * @description 下一页
      */
     nextPage = "nextPage",
-    /**
-     * @description 导出
-     */
-    OnExport = "onExport",
-    /**
-     * @description 清除
-     */
-    OnClear = "onClear",
-    /**
-     * @description 重做
-     */
-    OnRedo = "onRedo",
-    /**
-     * @description 撤销
-     */
-    OnUndo = "onUndo",
-    /**
-     * @description 转换图像
-     */
-    OnTranslateImage = "onTranslateImage",
-    /**
-     * @description 签名
-     */
-    Signature = "signature",
     /**
      * @description 轮巡开启
      */
@@ -17779,7 +17749,6 @@ interface Action {
     videoEndTime?: number;
     /** @description 事件选择模型集合 */
     option?: Record<string, any>;
-    /** @description 当前页码 */
     /** @description 译文转换 */
     translation?: string;
 }
@@ -18755,9 +18724,6 @@ interface ftVuePartEvents {
 }
 interface FtSimpleBarrageEvents {
     [key: `${ExtendsEnum.SimpleBarrage}-${number}`]: {
-        onSignaturePadSave: ({ imageUrl }: {
-            imageUrl: string;
-        }) => void;
         handleClick: () => void;
     };
 }
@@ -18780,17 +18746,8 @@ interface ImagesList3dEvents {
         handleEvensChangeActiveSpinnerIndex: (actionSelect: string) => void;
     };
 }
-interface FtSignaturePad {
-    [key: `${ExhibitEnum.FtSignaturePad}-${number}`]: {
-        onExport: () => void;
-        onClear: () => void;
-        onRedo: () => void;
-        onUndo: () => void;
-        onTranslateImage: () => void;
-    };
-}
 type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & FtUnrealEngineEvents & videoProgressEvents;
-type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtUnrealEngineEvents | videoProgressEvents;
+type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | scrollPickerEvents | ImagesList3dEvents | FtUnrealEngineEvents | videoProgressEvents;
 
 import { Animation } from './component-animation';
 import { AllComponentType, ExtendsChildComponentEnum, FolderEnum } from './componentProp';
@@ -19160,12 +19117,8 @@ declare enum ExhibitEnum {
     ImagesList3d = "imagesList3d",
     /** 空间粒子 */
     FtParticles = "sw-particles",
-    /** 签名板 */
-    FtSignaturePad = "sw-signaturePad",
     /** 滤镜组件 */
-    FtFilter = "sw-filter",
-    /** 垂直卡片 */
-    verticalCard = "verticalCard"
+    FtFilter = "sw-filter"
 }
 /** @deprecated 使用 ExhibitEnum 代替 */
 type ExhibitEnumType = ExhibitEnum;
@@ -19754,10 +19707,6 @@ declare enum EventTypeEnum {
      */
     Controls = "controls",
     /**
-     * @description 签名提交
-     */
-    SignatureSubmit = "signatureSubmit",
-    /**
      * @description 视频控制
      */
     VideoControls = "videocontrols",
@@ -19765,26 +19714,6 @@ declare enum EventTypeEnum {
      * @description 无事件
      */
     None = "",
-    /**
-     * @description 卡片下落结束
-     */
-    CardDropEnd = "cardDropEnd",
-    /**
-     * @description 卡片开始展开前
-     */
-    CardBeforeExpand = "cardBeforeExpand",
-    /**
-     * @description 卡片开始展开结束
-     */
-    CardEndExpand = "cardEndExpand",
-    /**
-     * @description 卡片开始收缩
-     */
-    CardStartCollapse = "cardStartCollapse",
-    /**
-     * @description 卡片收缩结束
-     */
-    CardEndCollapse = "cardEndCollapse",
     /**
      * @description 滚动结束
      */
@@ -19802,11 +19731,7 @@ declare enum EncodeEventTypeEnum {
     /**
      * @description 视频控制
      */
-    VideoControls = "videocontrols",
-    /**
-     * @description 签名提交
-     */
-    SignatureSubmit = "signatureSubmit"
+    VideoControls = "videocontrols"
 }
 /**
  * @description 事件类型对应组件的映射表

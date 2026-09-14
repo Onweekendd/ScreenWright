@@ -16,12 +16,8 @@ export enum ExhibitEnum {
   ImagesList3d = "imagesList3d",
   /** 空间粒子 */
   FtParticles = "sw-particles",
-  /** 签名板 */
-  FtSignaturePad = "sw-signaturePad",
   /** 滤镜组件 */
   FtFilter = "sw-filter",
-  /** 垂直卡片 */
-  verticalCard = "verticalCard"
 }
 
 /** @deprecated 使用 ExhibitEnum 代替 */

@@ -281,35 +281,6 @@ export enum ActionTypeEnum {
   nextPage = "nextPage",
 
   /**
-   * @description 导出
-   */
-  OnExport = "onExport",
-
-  /**
-   * @description 清除
-   */
-  OnClear = "onClear",
-
-  /**
-   * @description 重做
-   */
-  OnRedo = "onRedo",
-
-  /**
-   * @description 撤销
-   */
-  OnUndo = "onUndo",
-
-  /**
-   * @description 转换图像
-   */
-  OnTranslateImage = "onTranslateImage",
-
-  /**
-   * @description 签名
-   */
-  Signature = "signature",
-  /**
    * @description 轮巡开启
    */
   TurnOnPatrol = "turnOnPatrol",
@@ -555,8 +526,7 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
   [ActionTypeEnum.SendAIManMsgStatic]: [extendsEnum.FtDigitalHuman],
   [ActionTypeEnum.SwiperCardChangeIndex]: [
     mediaEnum.FtSwiperCard,
-    ExhibitEnum.ImagesList3d, // TODO: 待添加组件
-    ExhibitEnum.verticalCard
+    ExhibitEnum.ImagesList3d // TODO: 待添加组件
   ],
   [ActionTypeEnum.ProjectSpecificFun]: [
     // "map-project" // TODO: 待添加组件
@@ -573,13 +543,6 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
   [ActionTypeEnum.VoiceControlStop]: [interactiveEnum.FtVoiceControl],
   [ActionTypeEnum.prevPage]: [MediaEnum.CtVideoPanel],
   [ActionTypeEnum.nextPage]: [MediaEnum.CtVideoPanel],
-  [ActionTypeEnum.OnExport]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnClear]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnRedo]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnUndo]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.Signature]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnTranslateImage]: [],
-
   [ActionTypeEnum.TurnOnPatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
   [ActionTypeEnum.PausePatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
   [ActionTypeEnum.RestartPatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
@@ -641,11 +604,6 @@ export const ActionList: { label: string; value: ActionTypeEnum }[] = [
   { label: "麦克风结束", value: ActionTypeEnum.VoiceControlStop },
   { label: "上一页", value: ActionTypeEnum.prevPage },
   { label: "下一页", value: ActionTypeEnum.nextPage },
-  { label: "导出", value: ActionTypeEnum.OnExport },
-  { label: "清除", value: ActionTypeEnum.OnClear },
-  { label: "重做", value: ActionTypeEnum.OnRedo },
-  { label: "撤销", value: ActionTypeEnum.OnUndo },
-  { label: "传递图片", value: ActionTypeEnum.OnTranslateImage },
   { label: "轮巡开启", value: ActionTypeEnum.TurnOnPatrol },
   { label: "轮巡暂停", value: ActionTypeEnum.PausePatrol },
   { label: "轮巡重启", value: ActionTypeEnum.RestartPatrol },

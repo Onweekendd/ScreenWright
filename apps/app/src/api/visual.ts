@@ -46,12 +46,6 @@ export const cityScenesList = (data: cityScenesReq) => {
   });
 };
 
-export const signaturePadSave = (data: any) =>
-  request<BaseEntity<any>>({
-    url: `${systemBase}/sign/save`,
-    method: "post",
-    data
-  });
 // 大屏复制
 export const copyScreenObj = (params: { id: string | number; versionCode: string }, baseUrl = "largeScreenAgg") =>
   request<BaseEntity<ScreenItem>>({

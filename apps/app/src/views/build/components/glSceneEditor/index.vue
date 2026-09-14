@@ -772,9 +772,9 @@ onBeforeUnmount(() => {
   height: 28px;
   margin-bottom: 8px;
   padding: 0 10px;
-  border: 1px solid rgba(130, 96, 255, 0.35);
+  border: 1px solid color-mix(in srgb, var(--sw-theme-color) 35%, transparent);
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(113, 78, 245, 0.2) 0%, rgba(74, 40, 171, 0.14) 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sw-theme-color) 20%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 14%, transparent) 100%);
   color: #d8cfff;
   font-size: 12px;
   cursor: pointer;
@@ -782,8 +782,8 @@ onBeforeUnmount(() => {
 }
 
 .gl-scene-editor-back:hover {
-  border-color: rgba(138, 108, 255, 0.68);
-  background: linear-gradient(180deg, rgba(123, 86, 255, 0.28) 0%, rgba(82, 46, 189, 0.18) 100%);
+  border-color: color-mix(in srgb, var(--sw-theme-color) 68%, transparent);
+  background: color-mix(in srgb, var(--sw-theme-color) 23%, transparent);
   color: #ffffff;
 }
 
@@ -797,7 +797,7 @@ onBeforeUnmount(() => {
 .stage-panel {
   padding: 8px;
   border: 1px solid #000000;
-  background: #232630;
+  background: var(--sw-panel-bg);
 }
 
 .stage-frame {
@@ -818,7 +818,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   overflow-y: auto;
   border: 1px solid #000000;
-  background: #232630;
+  background: var(--sw-panel-bg);
 }
 
 .scene-sidebar__header {
@@ -873,7 +873,7 @@ onBeforeUnmount(() => {
 }
 
 .scene-tool-button:hover {
-  color: #9483ff;
+  color: var(--sw-theme-color);
 }
 
 .scene-tool-button:disabled {
@@ -938,7 +938,7 @@ onBeforeUnmount(() => {
 }
 
 .scene-collapse__body :deep(.el-tabs__item.is-active) {
-  color: #9483ff !important;
+  color: var(--sw-theme-color) !important;
 }
 
 .scene-collapse__body :deep(.el-tabs__item.is-active::after) {
@@ -949,7 +949,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
 }
 
 .scene-collapse__body :deep(.ft-series-tabs i) {
@@ -1047,27 +1047,27 @@ onBeforeUnmount(() => {
 }
 
 .gl-scene-editor-page :deep(.el-button--primary) {
-  --el-button-bg-color: #714ef5;
-  --el-button-border-color: #714ef5;
-  --el-button-hover-bg-color: #8465fb;
-  --el-button-hover-border-color: #8465fb;
-  --el-button-active-bg-color: #5d35e7;
-  --el-button-active-border-color: #5d35e7;
-  --el-button-disabled-bg-color: #4d3a91;
-  --el-button-disabled-border-color: #4d3a91;
+  --el-button-bg-color: var(--sw-theme-color);
+  --el-button-border-color: var(--sw-theme-color);
+  --el-button-hover-bg-color: var(--sw-theme-color);
+  --el-button-hover-border-color: var(--sw-theme-color);
+  --el-button-active-bg-color: var(--sw-theme-color);
+  --el-button-active-border-color: var(--sw-theme-color);
+  --el-button-disabled-bg-color: var(--sw-theme-color);
+  --el-button-disabled-border-color: var(--sw-theme-color);
   border: none !important;
-  background: linear-gradient(180deg, #8b58e7 0%, #642cff 100%) !important;
-  box-shadow: 0 8px 18px rgba(100, 44, 255, 0.24);
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--sw-theme-color) 24%, transparent);
 }
 
 .gl-scene-editor-page :deep(.el-button--primary:hover),
 .gl-scene-editor-page :deep(.el-button--primary:focus) {
-  background: linear-gradient(180deg, #9665ef 0%, #7241ff 100%) !important;
+  background: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%) !important;
 }
 
 .gl-scene-editor-page :deep(.el-button--primary.is-disabled),
 .gl-scene-editor-page :deep(.el-button--primary.is-disabled:hover) {
-  background: linear-gradient(180deg, rgba(123, 97, 209, 0.72) 0%, rgba(90, 55, 179, 0.72) 100%) !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sw-theme-color) 72%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 72%, transparent) 100%) !important;
   box-shadow: none;
 }
 
@@ -1101,9 +1101,9 @@ onBeforeUnmount(() => {
 }
 
 .scene-collapse :deep(.el-collapse) {
-  --el-collapse-content-bg-color: #232630;
+  --el-collapse-content-bg-color: var(--sw-panel-bg);
   --el-collapse-border-color: transparent;
-  --el-collapse-header-bg-color: #232630;
+  --el-collapse-header-bg-color: var(--sw-panel-bg);
   --el-collapse-header-text-color: #b4b7c1;
 }
 

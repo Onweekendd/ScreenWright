@@ -17,20 +17,28 @@ interface Props {
 defineProps<Props>();
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .action-item {
   width: 25px;
   height: 25px !important;
   text-align: center;
   line-height: 25px !important;
-  background-color: #373a47 !important;
-  color: #b4b7c1;
+  background-color: transparent !important;
+  color: $sw-text-dim;
   font-size: 12px;
-  margin-right: 12px;
-  border-radius: 4px;
+  margin-right: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+  &:hover:not(.is-disabled):not(.active) {
+    background-color: $sw-hover-bg !important;
+    color: $sw-text-strong;
+  }
   &.active {
-    background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
-    color: #fff !important;
+    background-color: $sw-active-bg !important;
+    color: var(--sw-theme-color);
   }
   &.is-disabled {
     opacity: 0.25;

@@ -25,9 +25,10 @@ interface ControlItemProps {
 defineProps<ControlItemProps>();
 </script>
 <style lang="scss" scoped>
+@import "src/style/theme.scss";
 .control-item {
   box-sizing: border-box;
-  height: 100%;
+  height: 46px;
   // 不写死宽度，按内容自适应（padding 提供留白），避免短标签左右空一大片
   min-width: 56px;
   display: flex;
@@ -35,14 +36,32 @@ defineProps<ControlItemProps>();
   justify-content: center;
   align-items: center;
   padding: 0 12px;
-  color: #b4b7c1;
-  background-image: url("@/assets/image/button/top_bt_normal.png");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  color: $sw-text-dim;
+  background-color: $sw-surface-2;
+  border: 1px solid $sw-border;
+  border-radius: 8px;
   cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+
+  &:hover:not(.active) {
+    background-color: $sw-hover-bg;
+    border-color: color-mix(in srgb, var(--sw-theme-color) 40%, $sw-border);
+    color: $sw-text-strong;
+  }
 
   &.active {
-    background-image: url("@/assets/image/button/top_bt_select.png");
+    border-color: transparent;
+    background-color: transparent;
+    background-image: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--sw-theme-color) 72%, white) 0%,
+      var(--sw-theme-color) 48%,
+      color-mix(in srgb, var(--sw-theme-color) 78%, black) 100%
+    );
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--sw-theme-color) 28%, transparent);
     color: #fff;
   }
 
@@ -65,10 +84,8 @@ defineProps<ControlItemProps>();
   &.is-compact {
     width: 46px;
     min-width: 46px;
-    height: 46px;
     padding: 0;
     gap: 0;
-    background-size: 100% 100%;
   }
 }
 </style>

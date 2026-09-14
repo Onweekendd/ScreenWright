@@ -567,9 +567,9 @@ onBeforeUnmount(() => {
   height: 28px;
   margin-bottom: 8px;
   padding: 0 10px;
-  border: 1px solid rgba(130, 96, 255, 0.35);
+  border: 1px solid color-mix(in srgb, var(--sw-theme-color) 35%, transparent);
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(113, 78, 245, 0.2) 0%, rgba(74, 40, 171, 0.14) 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sw-theme-color) 20%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 14%, transparent) 100%);
   color: #d8cfff;
   font-size: 12px;
   cursor: pointer;
@@ -588,7 +588,7 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden;
   border: 1px solid #000;
-  background: #232630;
+  background: var(--sw-panel-bg);
   min-height: 0;
 }
 
@@ -652,7 +652,7 @@ onBeforeUnmount(() => {
 }
 
 .stage-tool-button.active {
-  background: rgba(113, 78, 245, 0.28);
+  background: color-mix(in srgb, var(--sw-theme-color) 28%, transparent);
   color: #ffffff;
 }
 
@@ -668,7 +668,7 @@ onBeforeUnmount(() => {
   padding: 14px;
   border: 1px solid #000;
   border-radius: 8px;
-  background: #232630;
+  background: var(--sw-panel-bg);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
   z-index: 20;
 }
@@ -737,7 +737,7 @@ onBeforeUnmount(() => {
   min-height: 0;
   overflow-y: auto;
   border: 1px solid #000;
-  background: #232630;
+  background: var(--sw-panel-bg);
 }
 
 .path-sidebar__header {
@@ -829,16 +829,16 @@ onBeforeUnmount(() => {
 
 .control-mode-group :deep(.el-radio__inner:hover),
 .control-mode-group :deep(.el-radio__input.is-focus .el-radio__inner) {
-  border-color: #8b5cf6;
+  border-color: var(--sw-theme-color);
 }
 
 .control-mode-group :deep(.el-radio__input.is-checked .el-radio__inner) {
-  border-color: #8b5cf6;
-  background: #8b5cf6;
+  border-color: var(--sw-theme-color);
+  background: var(--sw-theme-color);
 }
 
 .control-mode-group :deep(.el-radio__input.is-checked + .el-radio__label) {
-  color: #8b5cf6;
+  color: var(--sw-theme-color);
 }
 
 .path-form {

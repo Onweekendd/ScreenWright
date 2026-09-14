@@ -167,7 +167,7 @@ const paletteStyle = computed(() => {
 
 // 颜色
 const themeColor = computed(() => {
-  return "#5e62fb";
+  return "var(--sw-theme-color)";
 });
 
 watch([effectiveWidth, effectiveHeight], ([newWidth, newHeight]) => {
@@ -464,9 +464,11 @@ defineExpose({
   border-left: 1px dashed v-bind("themeColor") !important;
 }
 
-/* 坐标数值背景颜色 */
-#mb-ruler .indicator .value {
-  background-color: #ddd;
+/* 标尺指示值与参考线数值 */
+#mb-ruler .indicator .value,
+#mb-ruler .line .value {
+  color: #fff !important;
+  background-color: #18181c;
 }
 
 /* 删除按钮 */

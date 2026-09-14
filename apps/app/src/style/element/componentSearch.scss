@@ -8,7 +8,7 @@
 .component-search-dialog {
   .el-dialog {
     padding: 10px !important;
-    background-color: #232630 !important;
+    background-color: var(--sw-panel-bg) !important;
   }
   .component-search-header {
     height: 56px;

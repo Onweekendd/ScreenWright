@@ -32,8 +32,8 @@
   .el-picker-panel__footer {
     .el-button.is-plain {
       color: #ffffff;
-      border-color: #642cff;
-      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      border-color: var(--sw-theme-color);
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
     }
     .el-button.is-text:not(.is-disabled) {
       &:hover {
@@ -47,8 +47,8 @@
   .el-time-panel__footer {
     .el-time-panel__btn.confirm {
       color: #ffffff;
-      border-color: #642cff;
-      background-image: linear-gradient(180deg, #8b58e7, #642cff);
+      border-color: var(--sw-theme-color);
+      background-image: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
       border-radius: 4px;
     }
     .el-time-panel__btn.cancel {

@@ -30,7 +30,7 @@
     min-width: 116px !important;
     padding: 4px !important;
     background-color: #2a2f4a !important;
-    border: 1px solid rgba(124, 77, 255, 0.4) !important;
+    border: 1px solid color-mix(in srgb, var(--sw-theme-color) 40%, transparent) !important;
     border-radius: 10px !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
 
@@ -64,13 +64,13 @@
         width: 4px;
         height: 4px;
         border-radius: 50%;
-        background: #7c4dff;
+        background: var(--sw-theme-color);
         opacity: 0;
         transition: opacity 0.12s;
       }
 
       &.is-selected {
-        color: #7c4dff;
+        color: var(--sw-theme-color);
         font-weight: 600;
 
         &::before {
@@ -80,7 +80,7 @@
 
       &.is-hovering,
       &:hover {
-        background-color: rgba(124, 77, 255, 0.18) !important;
+        background-color: color-mix(in srgb, var(--sw-theme-color) 18%, transparent) !important;
         color: #e0e6f0 !important;
 
         &::before {

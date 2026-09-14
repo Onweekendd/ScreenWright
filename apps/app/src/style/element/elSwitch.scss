@@ -1,7 +1,7 @@
 .ft-switch.is-checked .el-switch__core {
-  background-color: #642cff !important;
-  border-color: #642cff !important;
-  background-image: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+  background-color: var(--sw-theme-color) !important;
+  border-color: var(--sw-theme-color) !important;
+  background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
 }
 .ft-switch .el-switch__core {
   height: 16px !important;

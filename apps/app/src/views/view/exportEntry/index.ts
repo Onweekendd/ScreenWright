@@ -13,6 +13,7 @@ import "@/style/box.scss";
 import "@/style/common.scss";
 import "@/style/element/index.scss";
 import "@/style/iconfont/iconfont.css";
+import "@/style/theme.scss";
 // 物料包（@screenwright/material）SFC 的 scoped 样式在其 dist/style.css 单独产物里，JS 不会自动带上。
 // 导出入口只经 vite.lib.config.ts 构建、恒定消费 material dist，故在此静态引入；
 // 配合 lib 配置的 cssCodeSplit:false + assetFileNames，会合并进最终 screenwright.css。

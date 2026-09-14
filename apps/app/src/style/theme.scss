@@ -4,19 +4,48 @@
 // 用法： @import "src/style/theme.scss";
 // ============================================================
 
-// —— 品牌紫 ——
-$sw-purple: #7c42ee;
-$sw-purple-light: #a884ff;
-$sw-purple-deep: #642cff;
-$sw-purple-soft: #8b58e7;
-$sw-purple-gradient: linear-gradient(180deg, #8b58e7 0%, #642cff 100%);
+// —— 品牌主题色 ——
+// 唯一需要配置的品牌色。组件统一消费 CSS 变量，以便后续支持运行时换肤。
+// 试验色：蓝紫色，比纯蓝更贴近 “AI” 的视觉语言，如果不满意直接改回 #38bdf8 即可。
+$sw-theme-color: #7c6ff0;
+
+:root {
+  --sw-theme-color: #{$sw-theme-color};
+
+  // Element Plus 的主色及交互态同样从唯一主题色派生。
+  --el-color-primary: var(--sw-theme-color);
+  --el-color-primary-dark-2: color-mix(in srgb, var(--sw-theme-color) 80%, black);
+  --el-color-primary-light-3: color-mix(in srgb, var(--sw-theme-color) 70%, white);
+  --el-color-primary-light-5: color-mix(in srgb, var(--sw-theme-color) 50%, white);
+  --el-color-primary-light-7: color-mix(in srgb, var(--sw-theme-color) 30%, white);
+  --el-color-primary-light-8: color-mix(in srgb, var(--sw-theme-color) 20%, white);
+  --el-color-primary-light-9: color-mix(in srgb, var(--sw-theme-color) 10%, white);
+
+  // 全局用量最大的深色面板底（弹窗 / 抽屉 / 编辑器面板等），用 CSS 变量而非 $scss 变量
+  // 是因为 packages/ui、packages/material 里的组件不引入 apps/app 的 theme.scss，
+  // 只能靠 :root 上的 CSS 变量跨包共享。
+  --sw-panel-bg: #2a2b36;
+}
+
+// 兼容现有 SCSS 调用；这些别名不再维护独立色值。
+$sw-purple: var(--sw-theme-color);
+$sw-purple-light: var(--sw-theme-color);
+$sw-purple-deep: var(--sw-theme-color);
+$sw-purple-soft: var(--sw-theme-color);
+$sw-purple-gradient: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
 
 // —— 表面 / 背景 ——
-$sw-bg: #181a24; // 主内容区
-$sw-surface-1: #1a1c26; // 侧边栏外层
-$sw-surface-2: #16181f; // 一级菜单列
-$sw-border: rgba(255, 255, 255, 0.06);
-$sw-divider: rgba(255, 255, 255, 0.05);
+// 试验色：偏中性的深灰，只带一点点冷色（蓝紫）倾向，避免饱和度太高看着发红/发紫。
+// 不满意可以整体改回旧值：
+// $sw-bg:#181a24 $sw-surface-1:#1a1c26 $sw-surface-2:#16181f --sw-panel-bg:#232630
+$sw-bg: #1e1f27; // 主内容区
+$sw-surface-1: #23242d; // 侧边栏外层
+$sw-surface-2: #1a1b22; // 一级菜单列
+$sw-panel-bg: var(--sw-panel-bg); // 弹窗 / 抽屉 / 编辑器面板底
+$sw-control-bg: #383844; // 面板内的按钮 / 芯片等控件底（原 #383b49 / #4b4d58）
+$sw-title-bg: color-mix(in srgb, var(--sw-theme-color) 12%, $sw-surface-2); // 标题栏/工具条底：中性面里掺一点主题色，比纯灰有品牌感，又不会像整块色块那么抢
+$sw-border: rgba(200, 205, 230, 0.08);
+$sw-divider: rgba(200, 205, 230, 0.06);
 
 // —— 文本 ——
 $sw-text: #c8ccd8;
@@ -25,7 +54,7 @@ $sw-text-muted: #8b90a0;
 $sw-text-strong: #ffffff;
 
 // —— 交互态 ——
-$sw-active-bg: rgba(124, 66, 238, 0.16);
-$sw-active-bar: #a884ff;
-$sw-hover-bg: rgba(255, 255, 255, 0.04);
-$sw-tree-active-bg: rgba(124, 66, 238, 0.14);
+$sw-active-bg: color-mix(in srgb, var(--sw-theme-color) 16%, transparent);
+$sw-active-bar: var(--sw-theme-color);
+$sw-hover-bg: rgba(200, 205, 230, 0.06);
+$sw-tree-active-bg: color-mix(in srgb, var(--sw-theme-color) 14%, transparent);

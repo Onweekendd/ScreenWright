@@ -2,7 +2,7 @@
 $default-bg-color: #0f1014;
 $default-text-color: #859094;
 $default-border-color: #282e3a;
-$default-hover-border-color: #642cff;
+$default-hover-border-color: var(--sw-theme-color);
 
 // 定义通用的mixin，基于变量设置样式
 @mixin common-element-style($selector, $use-deep: true, $border: false) {
@@ -42,8 +42,8 @@ $default-hover-border-color: #642cff;
 }
 
 $checkbox-border-color: $default-hover-border-color;
-$checkbox-gradient-start-color: #8b58e7;
-$checkbox-gradient-end-color: #642cff;
+$checkbox-gradient-start-color: var(--sw-theme-color);
+$checkbox-gradient-end-color: var(--sw-theme-color);
 
 // 定义名为checkbox-style的混合宏（这里假设不带参数情况方便说明）
 @mixin checkbox-style() {
@@ -57,24 +57,28 @@ $checkbox-gradient-end-color: #642cff;
         box-shadow: 0 0 0 1px $default-hover-border-color inset !important;
       }
     }
-    &.is-checked .el-checkbox__inner {
-      border-color: $checkbox-border-color !important;
-      background: linear-gradient(180deg, $checkbox-gradient-start-color 0%, $checkbox-gradient-end-color 100%);
-    }
     .el-checkbox__label {
       color: #bfbfbf;
       font-size: 12px;
     }
   }
+  :deep(.el-checkbox.is-checked .el-checkbox__inner),
+  :deep(.el-checkbox__input.is-checked .el-checkbox__inner),
+  :deep(.el-checkbox__input.is-indeterminate .el-checkbox__inner) {
+    border-color: $checkbox-border-color !important;
+    background: linear-gradient(180deg, $checkbox-gradient-start-color 0%, $checkbox-gradient-end-color 100%) !important;
+  }
 }
 
 @mixin radio-style() {
+  :deep(.el-radio.is-checked .el-radio__inner),
   :deep(.el-radio__input.is-checked .el-radio__inner) {
-    border-color: $default-hover-border-color;
-    background-color: transparent;
+    border-color: $default-hover-border-color !important;
+    background-color: transparent !important;
   }
+  :deep(.el-radio.is-checked .el-radio__label),
   :deep(.el-radio__input.is-checked + .el-radio__label) {
-    color: #fff;
+    color: $default-hover-border-color !important;
   }
   :deep(.el-radio__inner) {
     background-color: transparent !important;
@@ -82,10 +86,11 @@ $checkbox-gradient-end-color: #642cff;
       border-color: $default-hover-border-color;
     }
   }
-  :deep(.el-radio__inner:after) {
+  :deep(.el-radio.is-checked .el-radio__inner:after),
+  :deep(.el-radio__input.is-checked .el-radio__inner:after) {
     width: 8px;
     height: 8px;
-    background-image: linear-gradient(180deg, $checkbox-gradient-start-color, $default-hover-border-color);
+    background: $default-hover-border-color !important;
   }
 }
 

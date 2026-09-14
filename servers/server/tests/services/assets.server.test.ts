@@ -81,7 +81,7 @@ describe("pageSystemMaterials", () => {
       fileRow({ userId: null, fileType: 5, groupId: 7 }) as never
     ]);
 
-    const res = await pageSystemMaterials({ current: 2, size: 10, groupId: 7 });
+    const res = await pageSystemMaterials({ current: 2, size: 10, groupId: 7, resourceType: "" });
 
     expect(res.result.total).toBe(1);
     expect(prismaClient.minioFile.findMany).toHaveBeenCalledWith(
@@ -91,6 +91,8 @@ describe("pageSystemMaterials", () => {
         take: 10
       })
     );
+    const query = vi.mocked(prismaClient.minioFile.findMany).mock.calls[0][0]!;
+    expect(query.where).not.toHaveProperty("resourceType");
   });
 });
 

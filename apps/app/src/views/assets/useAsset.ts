@@ -4,7 +4,7 @@ import { createGlobalState } from "@vueuse/core";
 
 import { ElMessage } from "element-plus";
 
-import { getVisualAssetDetailList, getVisualAssetUsedSize, systemMaterialPage } from "@/api/assets";
+import { getVisualAssetDetailList, systemMaterialPage } from "@/api/assets";
 import { useSiderTreeData } from "@/layout/Siderbar/components/siderTree/useSiderTreeData";
 import type { assetItem, assetItemReq } from "@/model/Assets";
 import to from "@/utils/await-to-js";
@@ -27,10 +27,6 @@ export const useAsset = createGlobalState(() => {
     { label: "按修改时间排序", value: 1 },
     { label: "按新建时间排序", value: 2 }
   ]);
-  const usedSize = ref<{ size: string; useSize: string }>({
-    size: "",
-    useSize: ""
-  });
   const params = ref<typeTransformProps>({
     resourceType: [],
     current: 1,
@@ -44,15 +40,6 @@ export const useAsset = createGlobalState(() => {
   const optionsName = computed(() => {
     return sortTypeOptions.value.find((item) => item.value === params.value.time)?.label;
   });
-  const getUsedSize = async () => {
-    const [error, res] = await to(getVisualAssetUsedSize());
-    if (error) {
-      return;
-    }
-    if (res && res.result) {
-      usedSize.value = res.result;
-    }
-  };
   // 获取普通列表数据
   const getVisualAssetDetailListApi = async () => {
     const transformParams: assetItemReq = {
@@ -80,9 +67,6 @@ export const useAsset = createGlobalState(() => {
     await nextTick();
     if (!currentNode.value) {
       return;
-    }
-    if (fileType.value && fileType.value === FileTypeEnum.personalPageAssets) {
-      getUsedSize();
     }
     // 有子分组的中间节点只负责展开，不直接请求列表。
     if (currentNode.value && currentNode.value.pid && currentNode.value.children && currentNode.value.children.length) {
@@ -122,13 +106,11 @@ export const useAsset = createGlobalState(() => {
     params,
     total,
     fileType,
-    usedSize,
     optionsName,
     sortTypeOptions,
     tableData,
     currentNode,
     getFileType,
-    getUsedSize,
     getAssetsListData,
     handleSearch
   };

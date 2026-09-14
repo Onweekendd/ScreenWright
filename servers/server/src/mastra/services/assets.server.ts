@@ -93,7 +93,9 @@ export async function pageSystemMaterials(req: {
   }
   const resourceTypes = String(req.resourceType ?? "")
     .split(",")
-    .map((value) => Number(value.trim()))
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .map(Number)
     .filter((value) => Number.isFinite(value));
   if (resourceTypes.length > 0) {
     where.resourceType = { in: resourceTypes };

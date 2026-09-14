@@ -1,5 +1,5 @@
 import type { FileResourceInfo } from "@/components/SwUpload/SwUpload";
-import type { assetItemReq, DetailListRes, LargeUseRes, uploadFileReq, UsedSizeRes } from "@/model/Assets";
+import type { assetItemReq, DetailListRes, LargeUseRes, uploadFileReq } from "@/model/Assets";
 import type { BaseEntity } from "@/model/BaseEntity";
 import { BaseName } from "@/utils/config";
 import { serverRequest } from "@/utils/serverService";
@@ -13,13 +13,6 @@ const getFormData = (data = {}) => {
   }
   return formData;
 };
-export const getVisualAssetUsedSize = () =>
-  serverRequest<UsedSizeRes>({
-    url: `${BaseName.Online}/minioAgg/size/BI`,
-    method: "get",
-    showLoading: true
-  });
-
 /**
  * 素材列表数据
  */

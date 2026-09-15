@@ -2,12 +2,12 @@ import type { ComponentType } from "@screenwright/types";
 import { FolderEnum, PanelEnum } from "@screenwright/types";
 import { z } from "zod";
 
-import type { FtImg } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/FtImgStrategy";
+import type { SwImg } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/SwImgStrategy";
 import {
   createPanelState,
   type FtPanel
 } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/FtPanelStrategy";
-import type { FtRichtext } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/FtRichtextStrategy";
+import type { SwRichtext } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/SwRichtextStrategy";
 import type { FtSubtabs } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/FtSubtabStrategy";
 import type { Group } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/GroupStrategy";
 
@@ -17,7 +17,7 @@ import type { IValueStore } from "./stateManager";
 /**
  * 支持的组件类型联合
  */
-export type ConvertedComponent = FtRichtext | FtImg | Group | FtPanel | FtSubtabs;
+export type ConvertedComponent = SwRichtext | SwImg | Group | FtPanel | FtSubtabs;
 
 /**
  * 组件转换条目

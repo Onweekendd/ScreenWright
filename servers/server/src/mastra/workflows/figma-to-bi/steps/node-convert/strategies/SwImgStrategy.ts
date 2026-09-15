@@ -3,7 +3,7 @@ import type { MediaEnum } from "@screenwright/types";
 import {
   clampLayoutToMergeParent,
   extractLayout,
-  FT_IMG_MODULE_ID,
+  SW_IMG_MODULE_ID,
   getComponentDefaultConfigByModuleId,
   localPathToResourcePath,
   parseBackdropFilter,
@@ -15,7 +15,7 @@ import type { NormalizedNode } from "@/mastra/types/normalized-node-types";
 
 import type { ConvertParams, ConvertResult, ConvertStrategy } from "./types";
 
-export interface FtImgOption {
+export interface SwImgOption {
   cover: string;
   url: string;
   duration: string;
@@ -69,9 +69,9 @@ export interface FtImgOption {
   backdropFilterSaturate?: number;
 }
 
-export type FtImgData = { value: string }[];
+export type SwImgData = { value: string }[];
 
-export type FtImg = ComponentType<MediaEnum.FtImg, FtImgOption, FtImgData>;
+export type SwImg = ComponentType<MediaEnum.SwImg, SwImgOption, SwImgData>;
 
 function extractImageUrl(node: NormalizedNode): string {
   if (node.imgLocalPath) {
@@ -80,8 +80,8 @@ function extractImageUrl(node: NormalizedNode): string {
   return "./assets/assets/defaultImg/default.png";
 }
 
-function convertNodeToFtImgOption(node: NormalizedNode): Partial<FtImgOption> {
-  const option: Partial<FtImgOption> = {};
+function convertNodeToSwImgOption(node: NormalizedNode): Partial<SwImgOption> {
+  const option: Partial<SwImgOption> = {};
 
   if (node.opacity !== undefined && node.opacity !== 1) {
     option.opacity = node.opacity;
@@ -115,15 +115,15 @@ function convertNodeToFtImgOption(node: NormalizedNode): Partial<FtImgOption> {
   return option;
 }
 
-export class FtImgStrategy implements ConvertStrategy {
+export class SwImgStrategy implements ConvertStrategy {
   async convert({ node }: ConvertParams): Promise<ConvertResult> {
     const { node: normalizedNode, zIndex, depth } = node;
 
     const imageUrl = extractImageUrl(normalizedNode);
-    const convertedOption = convertNodeToFtImgOption(normalizedNode);
+    const convertedOption = convertNodeToSwImgOption(normalizedNode);
     const layout = extractLayout(normalizedNode);
 
-    const component: FtImg = (await getComponentDefaultConfigByModuleId(FT_IMG_MODULE_ID)) as FtImg;
+    const component: SwImg = (await getComponentDefaultConfigByModuleId(SW_IMG_MODULE_ID)) as SwImg;
 
     setComponentBaseProps(component, normalizedNode, clampLayoutToMergeParent(normalizedNode.id, layout));
 
@@ -135,6 +135,6 @@ export class FtImgStrategy implements ConvertStrategy {
     };
     component.zIndex = zIndex ?? depth;
 
-    return { component, message: "成功转换为 ftImg (默认)" };
+    return { component, message: "成功转换为 swImg (默认)" };
   }
 }

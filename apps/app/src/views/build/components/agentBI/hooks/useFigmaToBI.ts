@@ -67,7 +67,7 @@ export const useFigmaToBI = createGlobalState(() => {
 
   /**
    * 将组件的 Figma 图片 URL 上传到 MinIO，返回上传后的新 URL。
-   * 仅处理 FtImg 类型组件且 URL 为内网地址的情况，其他情况返回 null。
+   * 仅处理 SwImg 类型组件且 URL 为内网地址的情况，其他情况返回 null。
    *
    * @param component - 需要上传图片的 BI 组件
    * @returns 上传成功后的 MinIO URL，失败或不需要上传时返回 null

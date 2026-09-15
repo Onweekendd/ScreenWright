@@ -478,7 +478,7 @@ function pairToNormalized(pair: YogaPair, scale: number, parentAbsX = 0, parentA
 
   // Codia 把"这里应该有张图"识别成 Image 类型节点，但没能提取出实际图片资源时 imageSource
   // 是空字符串——此时没有任何可用的图片/颜色兜底数据（backgroundConfig 也不存在），保留这个
-  // 节点只会在下游转换出一个占位默认图的 ftImg 组件，内容与设计稿不符，故直接丢弃整个节点。
+  // 节点只会在下游转换出一个占位默认图的 swImg 组件，内容与设计稿不符，故直接丢弃整个节点。
   if (isImage && !imgLocalPath) {
     return null;
   }

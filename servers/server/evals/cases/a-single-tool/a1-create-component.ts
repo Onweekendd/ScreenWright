@@ -29,7 +29,7 @@ export const a1CreateComponent: EvalCase = {
 
   assert: (ctx): Assertion[] => {
     const created = newComponents(ctx.before, ctx.screen);
-    const wordClouds = hasProp(created, TextEnum.FtTextWordCloud);
+    const wordClouds = hasProp(created, TextEnum.SwTextWordCloud);
 
     return [
       {
@@ -48,7 +48,7 @@ export const a1CreateComponent: EvalCase = {
         detail:
           wordClouds.length > 0
             ? `id=${wordClouds.map((c) => c.id).join(",")}`
-            : `新增组件的类型是 ${created.map((c) => c.component.prop).join(", ") || "（无）"}，期望含 ${TextEnum.FtTextWordCloud}`
+            : `新增组件的类型是 ${created.map((c) => c.component.prop).join(", ") || "（无）"}，期望含 ${TextEnum.SwTextWordCloud}`
       },
       // 位置不较真「是不是在左边」——那是审美判断，agent 每次给的值都不一样。
       // 真正会坏事的是把组件放到画布外面，那是能精确判定的。

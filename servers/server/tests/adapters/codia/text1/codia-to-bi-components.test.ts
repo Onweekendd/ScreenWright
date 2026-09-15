@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { Data } from "@/mastra/types/codia";
 import type { NodeConvertOutput } from "@/mastra/workflows/figma-to-bi/steps/node-convert/NodeConverter";
 
-import ftRichtextDefault from "../../../node-convert/richtext/ftRichtext.json";
+import swRichtextDefault from "../../../node-convert/richtext/swRichtext.json";
 import mockResponse from "./data.mock.json";
-import ftImgDefault from "./ftImg.default-config.json";
+import swImgDefault from "./swImg.default-config.json";
 import ftPanelDefault from "./ftPanel.default-config.json";
 import { runCodiaToBIComponents } from "./helpers";
 
@@ -14,12 +14,12 @@ import { runCodiaToBIComponents } from "./helpers";
 //
 // getComponentDefaultConfigByModuleId 是唯一的 DB 依赖，这里换成从 fundb 实际导出的
 // 默认组件配置（43=图片 / 69=动态面板 / 113=富文本，见同目录 *.default-config.json 及
-// ../../../node-convert/richtext/ftRichtext.json），而不是手造的假数据。
+// ../../../node-convert/richtext/swRichtext.json），而不是手造的假数据。
 
 const DEFAULT_CONFIG_BY_MODULE_ID: Record<number, any> = {
-  43: ftImgDefault.config,
+  43: swImgDefault.config,
   69: ftPanelDefault.config,
-  113: ftRichtextDefault.config
+  113: swRichtextDefault.config
 };
 
 vi.mock("@/mastra/tools/utils", async () => {
@@ -78,10 +78,10 @@ describe("Codia 真实样本：从设计稿一路转到 BI 组件", () => {
     expect(text.top).toBe(26);
   });
 
-  it("普通图片节点转换为 ftImg 组件，url 直接透传 Codia CDN 直链", () => {
+  it("普通图片节点转换为 swImg 组件，url 直接透传 Codia CDN 直链", () => {
     const overlay = results.find((r) => r.nodeId === "ImageView_4650_747_2");
     expect(overlay?.success).toBe(true);
-    expect(overlay?.targetType).toBe("swimg"); // MediaEnum.FtImg 的实际值
+    expect(overlay?.targetType).toBe("swimg"); // MediaEnum.SwImg 的实际值
     expect((overlay!.component as any).option.url).toBe(
       "https://static.codia.ai/s/image_8b9b6d0e-96cd-45a9-b18b-ea3ecfa608d1.png"
     );

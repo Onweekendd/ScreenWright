@@ -17,7 +17,7 @@ let workflowSeq = 0;
  *
  * DB 依赖仅剩 getComponentDefaultConfigByModuleId（由调用方在测试文件里通过
  * vi.mock("@/mastra/tools/utils") 换成真实 DB 导出的默认组件配置样本，见同目录
- * ftImg.default-config.json / ftPanel.default-config.json）。
+ * swImg.default-config.json / ftPanel.default-config.json）。
  */
 export async function runCodiaToBIComponents(data: Data): Promise<NodeConvertOutput[]> {
   const root = await convertCodiaToNormalizedNode(data);

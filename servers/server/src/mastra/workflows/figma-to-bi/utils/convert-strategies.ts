@@ -4,9 +4,9 @@ import type { ConvertedComponent } from "@/mastra/state/componentConversionState
 import type { BfsTraversalStepNode } from "@/mastra/types/bfs-traversal-types";
 
 import type { NodeClassificationOutput } from "../steps/classification/rule-based-classification-step";
-import { FtImgStrategy } from "../steps/node-convert/strategies/FtImgStrategy";
+import { SwImgStrategy } from "../steps/node-convert/strategies/SwImgStrategy";
 import { FtPanelStrategy } from "../steps/node-convert/strategies/FtPanelStrategy";
-import { FtRichtextStrategy } from "../steps/node-convert/strategies/FtRichtextStrategy";
+import { SwRichtextStrategy } from "../steps/node-convert/strategies/SwRichtextStrategy";
 import { FtSubtabStrategy } from "../steps/node-convert/strategies/FtSubtabStrategy";
 import { GroupStrategy } from "../steps/node-convert/strategies/GroupStrategy";
 import { isSimpleImageNode, isTextNode } from "./node-type-guards";
@@ -29,16 +29,16 @@ export async function convertNodeByStrategy(params: ConvertNodeParams): Promise<
 
   try {
     switch (targetType) {
-      case textEnum.FtRichtext: {
+      case textEnum.SwRichtext: {
         if (!isTextNode({ node })) {
-          console.warn(`⚠️ 节点 ${nodeId} 被分类为 FtRichtext，但不是文本节点`);
+          console.warn(`⚠️ 节点 ${nodeId} 被分类为 SwRichtext，但不是文本节点`);
         }
-        const strategy = new FtRichtextStrategy();
+        const strategy = new SwRichtextStrategy();
         return strategy.convert({ node: postOrderNode, fileKey: "", workflowId: params.workflowId });
       }
 
-      case mediaEnum.FtImg: {
-        const strategy = new FtImgStrategy();
+      case mediaEnum.SwImg: {
+        const strategy = new SwImgStrategy();
         if (isSimpleImageNode({ node })) {
           return strategy.convert({ node: postOrderNode, fileKey: "", workflowId: params.workflowId });
         }

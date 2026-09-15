@@ -115,9 +115,9 @@ declare const ComponentFlatSchema: z.ZodObject<{
             swSwiperCard: import("..").MediaEnum.FtSwiperCard;
             "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
             swiframe: import("..").MediaEnum.FtIframe;
-            swimg: import("..").MediaEnum.FtImg;
+            swimg: import("..").MediaEnum.SwImg;
             "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-            swimgBorder: import("..").MediaEnum.FtImgBorder;
+            swimgBorder: import("..").MediaEnum.SwImgBorder;
             swswiper: import("..").MediaEnum.FtSwiper;
             swSwiperV3: import("..").MediaEnum.FtSwiperV3;
             swvideo: import("..").MediaEnum.FtVideo;
@@ -179,10 +179,10 @@ declare const ComponentFlatSchema: z.ZodObject<{
             videoProgress: import("..").InteractiveEnum.videoProgress;
         }>, z.ZodEnum<{
             customCollapse: import("..").TextEnum.CustomCollapse;
-            swRichtext: import("..").TextEnum.FtRichtext;
+            swRichtext: import("..").TextEnum.SwRichtext;
             swcollection: import("..").TextEnum.FtCollection;
             customTableList: import("..").TextEnum.CustomTableList;
-            swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
+            swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
             swmultiLine: import("..").TextEnum.FtMultiLine;
             swtext: import("..").TextEnum.FtText;
             swProgress: import("..").TextEnum.FtProgress;
@@ -7511,14 +7511,14 @@ declare const ftiframeOptionSchema: z.ZodObject<{
 type FtiframeOption = z.infer<typeof ftiframeOptionSchema>;
 
 import { z } from 'zod';
-declare const ftimgDataSchema: z.ZodArray<z.ZodObject<{
+declare const swimgDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodString;
 }, z.core.$strip>>;
-type FtimgData = z.infer<typeof ftimgDataSchema>;
+type SwimgData = z.infer<typeof swimgDataSchema>;
 /**
  * 图片配置选项 Schema
  */
-declare const ftimgOptionSchema: z.ZodObject<{
+declare const swimgOptionSchema: z.ZodObject<{
     cover: z.ZodString;
     url: z.ZodString;
     duration: z.ZodString;
@@ -7579,7 +7579,7 @@ declare const ftimgOptionSchema: z.ZodObject<{
     backdropFilterBlur: z.ZodNumber;
     backdropFilterSaturate: z.ZodNumber;
 }, z.core.$strip>;
-type FtimgOption = z.infer<typeof ftimgOptionSchema>;
+type SwimgOption = z.infer<typeof swimgOptionSchema>;
 
 import { z } from 'zod';
 /**
@@ -16589,9 +16589,9 @@ declare const mediaEnumSchema: z.ZodEnum<{
     swSwiperCard: import("..").MediaEnum.FtSwiperCard;
     "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
     swiframe: import("..").MediaEnum.FtIframe;
-    swimg: import("..").MediaEnum.FtImg;
+    swimg: import("..").MediaEnum.SwImg;
     "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-    swimgBorder: import("..").MediaEnum.FtImgBorder;
+    swimgBorder: import("..").MediaEnum.SwImgBorder;
     swswiper: import("..").MediaEnum.FtSwiper;
     swSwiperV3: import("..").MediaEnum.FtSwiperV3;
     swvideo: import("..").MediaEnum.FtVideo;
@@ -16649,10 +16649,10 @@ declare const interactiveEnumSchema: z.ZodEnum<{
 /** 文本类型枚举 Schema */
 declare const textEnumSchema: z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
-    swRichtext: import("..").TextEnum.FtRichtext;
+    swRichtext: import("..").TextEnum.SwRichtext;
     swcollection: import("..").TextEnum.FtCollection;
     customTableList: import("..").TextEnum.CustomTableList;
-    swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
+    swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
     swmultiLine: import("..").TextEnum.FtMultiLine;
     swtext: import("..").TextEnum.FtText;
     swProgress: import("..").TextEnum.FtProgress;
@@ -16752,9 +16752,9 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     swSwiperCard: import("..").MediaEnum.FtSwiperCard;
     "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
     swiframe: import("..").MediaEnum.FtIframe;
-    swimg: import("..").MediaEnum.FtImg;
+    swimg: import("..").MediaEnum.SwImg;
     "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-    swimgBorder: import("..").MediaEnum.FtImgBorder;
+    swimgBorder: import("..").MediaEnum.SwImgBorder;
     swswiper: import("..").MediaEnum.FtSwiper;
     swSwiperV3: import("..").MediaEnum.FtSwiperV3;
     swvideo: import("..").MediaEnum.FtVideo;
@@ -16816,10 +16816,10 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     videoProgress: import("..").InteractiveEnum.videoProgress;
 }>, z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
-    swRichtext: import("..").TextEnum.FtRichtext;
+    swRichtext: import("..").TextEnum.SwRichtext;
     swcollection: import("..").TextEnum.FtCollection;
     customTableList: import("..").TextEnum.CustomTableList;
-    swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
+    swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
     swmultiLine: import("..").TextEnum.FtMultiLine;
     swtext: import("..").TextEnum.FtText;
     swProgress: import("..").TextEnum.FtProgress;
@@ -18476,7 +18476,7 @@ interface FtProgressEvents {
     };
 }
 interface FtTextWordCloudEvents {
-    [key: `${TextEnum.FtTextWordCloud}-${string}`]: {
+    [key: `${TextEnum.SwTextWordCloud}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -19384,7 +19384,7 @@ declare enum MediaEnum {
     /** iframe */
     FtIframe = "swiframe",
     /** 图片 */
-    FtImg = "swimg",
+    SwImg = "swimg",
     /** 视频播放器 */
     FtOpenVideo = "sw-open-video",
     /** 图片边框 */
@@ -19463,13 +19463,13 @@ declare enum TextEnum {
     /** 自定义折叠面板 */
     CustomCollapse = "customCollapse",
     /** 富文本 */
-    FtRichtext = "swRichtext",
+    SwRichtext = "swRichtext",
     /** 集合组件 */
     FtCollection = "swcollection",
     /** 自定义表格列表 */
     CustomTableList = "customTableList",
     /** 文本词云 */
-    FtTextWordCloud = "swTextWordCloud",
+    SwTextWordCloud = "swTextWordCloud",
     /** 多行文本 */
     FtMultiLine = "swmultiLine",
     /** 基础文本 */

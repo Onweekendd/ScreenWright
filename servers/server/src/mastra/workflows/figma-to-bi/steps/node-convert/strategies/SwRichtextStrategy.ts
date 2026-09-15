@@ -3,7 +3,7 @@ import { type TextEnum } from "@screenwright/types";
 import type { ComponentFlatSchemaType } from "@/mastra/tools/utils";
 import {
   extractLayout,
-  FT_RICHTEXT_MODULE_ID,
+  SW_RICHTEXT_MODULE_ID,
   getComponentDefaultConfigByModuleId,
   rgbaToCss,
   setComponentBaseProps
@@ -13,7 +13,7 @@ import { isTextNode } from "@/mastra/workflows/figma-to-bi/utils/node-type-guard
 
 import type { ConvertParams, ConvertResult, ConvertStrategy } from "./types";
 
-export interface FtRichtextOption {
+export interface SwRichtextOption {
   content: string;
   textAnimationType?: "" | "typingEffect" | "jumpingEffect" | "fallingEffect";
   textAnimationTiming?: number;
@@ -23,17 +23,17 @@ export interface FtRichtextOption {
   scrollInterval?: number;
 }
 
-export type FtRichtextData = any[];
+export type SwRichtextData = any[];
 
-export type FtRichtext = ComponentFlatSchemaType & {
+export type SwRichtext = ComponentFlatSchemaType & {
   component: {
-    prop: TextEnum.FtRichtext;
+    prop: TextEnum.SwRichtext;
     width: number;
     height: number;
     name: string;
   };
-  option: FtRichtextOption;
-  data: FtRichtextData;
+  option: SwRichtextOption;
+  data: SwRichtextData;
 };
 
 type FillStyle = { type: "solid"; color: string } | { type: "gradient"; gradientCss: string };
@@ -289,7 +289,7 @@ class RichTextHtmlGenerator {
   }
 }
 
-function convertNodeToFtRichtextOption(_node: NormalizedNode, htmlContent: string): Partial<FtRichtextOption> {
+function convertNodeToSwRichtextOption(_node: NormalizedNode, htmlContent: string): Partial<SwRichtextOption> {
   return {
     content: htmlContent,
     textAnimationType: "",
@@ -298,23 +298,23 @@ function convertNodeToFtRichtextOption(_node: NormalizedNode, htmlContent: strin
   };
 }
 
-export class FtRichtextStrategy implements ConvertStrategy {
+export class SwRichtextStrategy implements ConvertStrategy {
   async convert({ node }: ConvertParams): Promise<ConvertResult> {
     const { node: normalizedNode, zIndex, depth } = node;
 
     if (!isTextNode({ node: normalizedNode })) {
-      console.warn(`⚠️ 节点 ${normalizedNode.id} 被分类为 FtRichtext，但不是文本节点`);
+      console.warn(`⚠️ 节点 ${normalizedNode.id} 被分类为 SwRichtext，但不是文本节点`);
     }
 
     const htmlContent = new RichTextHtmlGenerator(normalizedNode).generate();
-    const convertedOption = convertNodeToFtRichtextOption(normalizedNode, htmlContent);
+    const convertedOption = convertNodeToSwRichtextOption(normalizedNode, htmlContent);
     const layout = extractLayout(normalizedNode);
 
     // 富文本宽度补偿 5px：不同字体渲染宽度存在差异，原始布局宽度可能导致文字换行
     layout.width = (layout.width || 316) + 5;
     layout.height = layout.height || 268;
 
-    const component: FtRichtext = (await getComponentDefaultConfigByModuleId(FT_RICHTEXT_MODULE_ID)) as FtRichtext;
+    const component: SwRichtext = (await getComponentDefaultConfigByModuleId(SW_RICHTEXT_MODULE_ID)) as SwRichtext;
 
     setComponentBaseProps(component, normalizedNode, layout);
 
@@ -324,6 +324,6 @@ export class FtRichtextStrategy implements ConvertStrategy {
     };
     component.zIndex = zIndex ?? depth;
 
-    return { component, message: "成功转换为 ftRichtext" };
+    return { component, message: "成功转换为 swRichtext" };
   }
 }

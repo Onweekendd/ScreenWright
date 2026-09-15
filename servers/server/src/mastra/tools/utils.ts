@@ -13,9 +13,9 @@ import type { NormalizedNode } from "../types/normalized-node-types";
 let _idSeq = Date.now();
 const nextId = (): number => ++_idSeq;
 
-export const FT_IMG_MODULE_ID = 43;
+export const SW_IMG_MODULE_ID = 43;
 
-export const FT_RICHTEXT_MODULE_ID = 113;
+export const SW_RICHTEXT_MODULE_ID = 113;
 
 export const FT_PANEL_MODULE_ID = 69;
 

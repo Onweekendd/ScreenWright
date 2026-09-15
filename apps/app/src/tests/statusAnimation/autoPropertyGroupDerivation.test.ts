@@ -19,7 +19,7 @@ describe("自动属性组推导功能", () => {
   afterEach(() => {
     testUtils.cleanupTestEnvironment();
   });
-  it("应该为 FtImg 组件推导出正确的属性组", () => {
+  it("应该为 SwImg 组件推导出正确的属性组", () => {
     const groups = getComponentPropertyGroups(mediaEnum.SwImg);
 
     // 验证包含所有预期的属性组

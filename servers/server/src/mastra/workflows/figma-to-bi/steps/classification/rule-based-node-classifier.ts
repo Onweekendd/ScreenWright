@@ -133,7 +133,7 @@ export class RuleBasedNodeClassifier {
     };
 
     // 如果是图片节点，收集图片候选
-    if (targetType === MediaEnum.FtImg) {
+    if (targetType === MediaEnum.SwImg) {
       this.collectImageCandidate(bfsNode, classification);
     }
 
@@ -178,7 +178,7 @@ export class RuleBasedNodeClassifier {
 
     if (isImageNode(name)) {
       // 只有标记为 -image 的节点才转为图片
-      return MediaEnum.FtImg;
+      return MediaEnum.SwImg;
     }
 
     if (isGroupNode(name)) {
@@ -187,7 +187,7 @@ export class RuleBasedNodeClassifier {
 
     // 优先级 2: 检查节点类型
     if (this.isTextNode(bfsNode.node)) {
-      return TextEnum.FtRichtext;
+      return TextEnum.SwRichtext;
     }
 
     // 优先级 3: 默认规则
@@ -197,7 +197,7 @@ export class RuleBasedNodeClassifier {
     }
 
     // 其余未打标记的非文本节点（GROUP/VECTOR/RECTANGLE/INSTANCE 等）统一收敛为图片
-    return MediaEnum.FtImg;
+    return MediaEnum.SwImg;
   }
 
   /**

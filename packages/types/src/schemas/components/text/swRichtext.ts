@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * 富文本 (ftRichtext)
+ * 富文本 (swRichtext)
  * 文字
  *
  * ## 数据结构
@@ -11,7 +11,7 @@ import { z } from "zod";
  *
  * @example
  * ```typescript
- * const data: FtRichtextData = [
+ * const data: SwRichtextData = [
  *   { value: "<p>这是<strong>富文本</strong>内容</p>" }
  * ];
  * ```
@@ -25,7 +25,7 @@ const swRichtextDataItemSchema = z.object({
 // 数据数组 Schema
 export const swRichtextDataSchema = z.array(swRichtextDataItemSchema);
 
-export type FtRichtextData = z.infer<typeof swRichtextDataSchema>;
+export type SwRichtextData = z.infer<typeof swRichtextDataSchema>;
 
 // ==================== Option Schema ====================
 
@@ -47,4 +47,4 @@ export const swRichtextOptionSchema = z.object({
   scrollInterval: z.number().describe("滚动间隔")
 });
 
-export type FtRichtextOption = z.infer<typeof swRichtextOptionSchema>;
+export type SwRichtextOption = z.infer<typeof swRichtextOptionSchema>;

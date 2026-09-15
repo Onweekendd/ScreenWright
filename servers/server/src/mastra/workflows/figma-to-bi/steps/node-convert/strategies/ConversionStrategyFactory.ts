@@ -1,8 +1,8 @@
 import { FolderEnum, InteractiveEnum, mediaEnum, PanelEnum, textEnum } from "@screenwright/types";
 
-import { FtImgStrategy } from "./FtImgStrategy";
+import { SwImgStrategy } from "./SwImgStrategy";
 import { FtPanelStrategy } from "./FtPanelStrategy";
-import { FtRichtextStrategy } from "./FtRichtextStrategy";
+import { SwRichtextStrategy } from "./SwRichtextStrategy";
 import { FtSubtabStrategy } from "./FtSubtabStrategy";
 import { GroupStrategy } from "./GroupStrategy";
 import type { ConvertStrategy } from "./types";
@@ -14,8 +14,8 @@ import type { ConvertStrategy } from "./types";
  * 添加新组件类型时，只需在此注册一行，无需修改任何其他代码。
  */
 const strategyRegistry: Record<string, ConvertStrategy> = {
-  [textEnum.FtRichtext]: new FtRichtextStrategy(),
-  [mediaEnum.FtImg]: new FtImgStrategy(),
+  [textEnum.SwRichtext]: new SwRichtextStrategy(),
+  [mediaEnum.SwImg]: new SwImgStrategy(),
   [FolderEnum.group]: new GroupStrategy(),
   [PanelEnum.dynamicPanel]: new FtPanelStrategy(),
   [InteractiveEnum.Subtabs]: new FtSubtabStrategy()

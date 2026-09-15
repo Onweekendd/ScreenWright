@@ -1,10 +1,10 @@
 import type { FigmaNode } from "@/mastra/types/figma-type";
 import type { NormalizedNode } from "@/mastra/types/normalized-node-types";
-import { FtRichtextStrategy } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/FtRichtextStrategy";
+import { SwRichtextStrategy } from "@/mastra/workflows/figma-to-bi/steps/node-convert/strategies/SwRichtextStrategy";
 import { normalizeNodeLayout } from "@/mastra/workflows/figma-to-bi/steps/normalize-layout-step";
 import { resolveNodeStyles } from "@/mastra/workflows/figma-to-bi/steps/resolve-styles-step";
 
-import ftRichtextData from "./ftRichtext.json";
+import swRichtextData from "./swRichtext.json";
 
 interface MockData {
   globalVars: { styles: Record<string, unknown> };
@@ -24,12 +24,12 @@ export function makeMockDefaultConfig() {
     moduleId: 113,
     zIndex: 0,
     openFilter: false,
-    ...ftRichtextData.config
+    ...swRichtextData.config
   };
 }
 
 export async function runConvert(mockData: MockData) {
-  const strategy = new FtRichtextStrategy();
+  const strategy = new SwRichtextStrategy();
   const normalizedNode = buildNormalizedNode(mockData);
   return strategy.convert({
     fileKey: "test-file-key",

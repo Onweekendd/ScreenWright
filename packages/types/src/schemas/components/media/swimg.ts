@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * 图片 (ftimg)
+ * 图片 (swimg)
  * 媒体
  *
  * ## 数据结构
@@ -11,28 +11,28 @@ import { z } from "zod";
  *
  * @example
  * ```typescript
- * const data: FtimgData = [
+ * const data: SwimgData = [
  *   { value: "image.png" }
  * ];
  * ```
  */
 
 // Single data item Schema
-const ftimgDataItemSchema = z.object({
+const swimgDataItemSchema = z.object({
   value: z.string().describe("图片地址")
 });
 
 // Data array Schema
-export const ftimgDataSchema = z.array(ftimgDataItemSchema);
+export const swimgDataSchema = z.array(swimgDataItemSchema);
 
-export type FtimgData = z.infer<typeof ftimgDataSchema>;
+export type SwimgData = z.infer<typeof swimgDataSchema>;
 
 // ==================== Option Schema ====================
 
 /**
  * 图片配置选项 Schema
  */
-export const ftimgOptionSchema = z.object({
+export const swimgOptionSchema = z.object({
   // ============ 基础配置 ============
   cover: z.string().describe("图片封面地址"),
   url: z.string().describe("图片地址"),
@@ -107,4 +107,4 @@ export const ftimgOptionSchema = z.object({
   backdropFilterSaturate: z.number().describe("背景饱和度")
 });
 
-export type FtimgOption = z.infer<typeof ftimgOptionSchema>;
+export type SwimgOption = z.infer<typeof swimgOptionSchema>;

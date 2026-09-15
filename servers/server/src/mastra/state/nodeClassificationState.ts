@@ -13,8 +13,8 @@ export const nodeClassificationSchema = z.object({
     .enum([
       PanelEnum.dynamicPanel,
       FolderEnum.group,
-      MediaEnum.FtImg,
-      TextEnum.FtRichtext,
+      MediaEnum.SwImg,
+      TextEnum.SwRichtext,
       InteractiveEnum.Subtabs,
       "merge",
       "root"

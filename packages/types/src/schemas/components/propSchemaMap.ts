@@ -82,7 +82,7 @@ import { ctVideoPanelDataSchema, ctVideoPanelOptionSchema } from "./media/ctVide
 import { swEmbedAudioDataSchema, swEmbedAudioOptionSchema } from "./media/sw-embed-audio";
 import { swOpenVideoDataSchema, swOpenVideoOptionSchema } from "./media/sw-open-video";
 import { ftiframeDataSchema, ftiframeOptionSchema } from "./media/swiframe";
-import { ftimgDataSchema, ftimgOptionSchema } from "./media/swimg";
+import { swimgDataSchema, swimgOptionSchema } from "./media/swimg";
 import { ftswiperDataSchema, ftswiperOptionSchema } from "./media/swswiper";
 import { swSwiperCardDataSchema, swSwiperCardOptionSchema } from "./media/swSwiperCard";
 import { ftvideoDataSchema, ftvideoOptionSchema } from "./media/swvideo";
@@ -156,7 +156,7 @@ export const componentPropSchemaMap = {
   rasterProgressBar: { data: rasterProgressBarDataSchema, option: rasterProgressBarOptionSchema },
   "sw-embed-audio": { data: swEmbedAudioDataSchema, option: swEmbedAudioOptionSchema },
   swiframe: { data: ftiframeDataSchema, option: ftiframeOptionSchema },
-  swimg: { data: ftimgDataSchema, option: ftimgOptionSchema },
+  swimg: { data: swimgDataSchema, option: swimgOptionSchema },
   "sw-open-video": { data: swOpenVideoDataSchema, option: swOpenVideoOptionSchema },
   swSwiperCard: { data: swSwiperCardDataSchema, option: swSwiperCardOptionSchema },
   swswiper: { data: ftswiperDataSchema, option: ftswiperOptionSchema },

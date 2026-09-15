@@ -7508,14 +7508,14 @@ declare const ftiframeOptionSchema: z.ZodObject<{
 type FtiframeOption = z.infer<typeof ftiframeOptionSchema>;
 
 import { z } from 'zod';
-declare const ftimgDataSchema: z.ZodArray<z.ZodObject<{
+declare const swimgDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodString;
 }, z.core.$strip>>;
-type FtimgData = z.infer<typeof ftimgDataSchema>;
+type SwimgData = z.infer<typeof swimgDataSchema>;
 /**
  * 图片配置选项 Schema
  */
-declare const ftimgOptionSchema: z.ZodObject<{
+declare const swimgOptionSchema: z.ZodObject<{
     cover: z.ZodString;
     url: z.ZodString;
     duration: z.ZodString;
@@ -7576,7 +7576,7 @@ declare const ftimgOptionSchema: z.ZodObject<{
     backdropFilterBlur: z.ZodNumber;
     backdropFilterSaturate: z.ZodNumber;
 }, z.core.$strip>;
-type FtimgOption = z.infer<typeof ftimgOptionSchema>;
+type SwimgOption = z.infer<typeof swimgOptionSchema>;
 
 import { z } from 'zod';
 /**
@@ -19322,7 +19322,7 @@ declare enum MediaEnum {
     /** iframe */
     FtIframe = "swiframe",
     /** 图片 */
-    FtImg = "swimg",
+    SwImg = "swimg",
     /** 视频播放器 */
     FtOpenVideo = "sw-open-video",
     /** 图片边框 */
@@ -19401,13 +19401,13 @@ declare enum TextEnum {
     /** 自定义折叠面板 */
     CustomCollapse = "customCollapse",
     /** 富文本 */
-    FtRichtext = "swRichtext",
+    SwRichtext = "swRichtext",
     /** 集合组件 */
     FtCollection = "swcollection",
     /** 自定义表格列表 */
     CustomTableList = "customTableList",
     /** 文本词云 */
-    FtTextWordCloud = "swTextWordCloud",
+    SwTextWordCloud = "swTextWordCloud",
     /** 多行文本 */
     FtMultiLine = "swmultiLine",
     /** 基础文本 */

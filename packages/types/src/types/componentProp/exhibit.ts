@@ -15,9 +15,9 @@ export enum ExhibitEnum {
   /** 3D图片列表 */
   ImagesList3d = "imagesList3d",
   /** 空间粒子 */
-  FtParticles = "sw-particles",
+  SwParticles = "sw-particles",
   /** 滤镜组件 */
-  FtFilter = "sw-filter",
+  SwFilter = "sw-filter",
 }
 
 /** @deprecated 使用 ExhibitEnum 代替 */

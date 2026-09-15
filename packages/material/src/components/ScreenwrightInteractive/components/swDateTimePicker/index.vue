@@ -441,7 +441,7 @@ onMounted(async () => {
     };
 
     addEvent({
-      [`${interactiveEnum.FtDateTimePicker}-${props.element.id}`]: { handleClick }
+      [`${interactiveEnum.SwDateTimePicker}-${props.element.id}`]: { handleClick }
     });
   }
 });

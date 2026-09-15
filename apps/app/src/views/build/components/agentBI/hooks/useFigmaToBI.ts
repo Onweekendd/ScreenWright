@@ -75,7 +75,7 @@ export const useFigmaToBI = createGlobalState(() => {
   const uploadImageComponentToMinio = async (component: ComponentType): Promise<string | null> => {
     const imageUrl: string | undefined = component?.option?.url;
     if (
-      !([MediaEnum.FtImg] as string[]).includes(component.component.prop) ||
+      !([MediaEnum.SwImg] as string[]).includes(component.component.prop) ||
       !imageUrl ||
       !/^https?:\/\/.+:\d+/.test(imageUrl)
     ) {

@@ -87,7 +87,7 @@ function checkComponentConstraints({
   const ueProps = [
     extendsEnumType.UePixelStreaming,
     extendsEnumType.UePeerStreaming,
-    extendsEnumType.FtUnrealEngine
+    extendsEnumType.SwUnrealEngine
   ] as string[];
 
   if (sceneProps.includes(prop)) {
@@ -114,8 +114,8 @@ function checkComponentConstraints({
     }
   }
 
-  if (prop === (extendsEnumType.FtDigitalHuman as string)) {
-    const count = componentList.filter((v) => v.component.prop === (extendsEnumType.FtDigitalHuman as string)).length;
+  if (prop === (extendsEnumType.SwDigitalHuman as string)) {
+    const count = componentList.filter((v) => v.component.prop === (extendsEnumType.SwDigitalHuman as string)).length;
     if (count >= 1) {
       return "数字人已达上限（最多 1 个）";
     }

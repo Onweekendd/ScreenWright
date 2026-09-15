@@ -8,7 +8,7 @@ import { computed, ref } from "vue";
 
 import type { FlopDataItem } from "../types";
 
-export function useFtFlop(props: { element: ComponentType }) {
+export function useSwFlop(props: { element: ComponentType }) {
   const { dataChart, styleSizeName, option, width, height, clickFormatter } =
     useBaseData(props.element);
 

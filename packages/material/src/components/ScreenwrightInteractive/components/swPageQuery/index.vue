@@ -11,24 +11,24 @@
     <span class="my-page-total" v-if="showTotal">共{{ total }}条</span>
     <ul class="page-list">
       <!-- 上一页 -->
-      <FtPageItem
+      <SwPageItem
         content="ArrowLeft"
         :style="bottonStyle"
         :isDisabled="currentPage <= 1"
         @click="handleBeforOrAfterClick('before')"
       >
         <Icon type="ArrowLeft" />
-      </FtPageItem>
+      </SwPageItem>
 
       <!-- 中间页码数据 -->
       <template v-for="(pageItem, index) in pageList" :key="index">
         <!-- 向前5页或向后5页 -->
-        <FtPageItem v-if="pageItem == 'prev' || pageItem == 'next'" :content="pageItem" :style="bottonStyle" isSpecial>
+        <SwPageItem v-if="pageItem == 'prev' || pageItem == 'next'" :content="pageItem" :style="bottonStyle" isSpecial>
           <Icon type="MoreFilled" />
-        </FtPageItem>
+        </SwPageItem>
 
         <!-- 正常页码 -->
-        <FtPageItem
+        <SwPageItem
           v-else
           :content="pageItem"
           :isActive="currentPage == pageItem"
@@ -43,18 +43,18 @@
       </template>
 
       <!-- 下一页 -->
-      <FtPageItem
+      <SwPageItem
         content="ArrowRight"
         :style="bottonStyle"
         :isDisabled="currentPage >= totalPage && totalPage > 0"
         @click="handleBeforOrAfterClick('after')"
       >
         <Icon type="ArrowRight" />
-      </FtPageItem>
+      </SwPageItem>
     </ul>
 
     <!-- 跳到目标页 -->
-    <FtPageJumper
+    <SwPageJumper
       v-if="showJumper"
       :currentPage="currentPage"
       :totalPage="totalPage"
@@ -69,8 +69,8 @@
 import Icon from "@editor/base/Icon/index.vue";
 import type { ComponentType } from "@screenwright/types";
 
-import FtPageItem from "./components/FtPageItem.vue";
-import FtPageJumper from "./components/FtPageJumper.vue";
+import SwPageItem from "./components/SwPageItem.vue";
+import SwPageJumper from "./components/SwPageJumper.vue";
 import { usePagination } from "./hooks/usePagination";
 
 defineOptions({

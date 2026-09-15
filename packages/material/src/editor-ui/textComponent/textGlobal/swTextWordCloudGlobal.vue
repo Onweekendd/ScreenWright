@@ -5,6 +5,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import word from "../textConfig/components/TextFtTextWordCloud/word.vue";
-import wordCloud from "../textConfig/components/TextFtTextWordCloud/wordCloud.vue";
+import word from "../textConfig/components/TextSwTextWordCloud/word.vue";
+import wordCloud from "../textConfig/components/TextSwTextWordCloud/wordCloud.vue";
 </script>

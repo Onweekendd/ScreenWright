@@ -328,7 +328,7 @@ export function usePagination(props: { element: ComponentType }) {
   onMounted(() => {
     // 注册组件事件到全局事件系统
     addEvent({
-      [`${interactiveEnum.FtPageQuery}-${props.element.id}`]: {
+      [`${interactiveEnum.SwPageQuery}-${props.element.id}`]: {
         handleClick,
         handleBeforOrAfterClick,
       },

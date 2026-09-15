@@ -262,7 +262,7 @@ onMounted(() => {
   };
 
   addEvent({
-    [`${interactiveEnum.FtPageTurning}-${props.element.id}`]: { handleClick: handleClickEvent }
+    [`${interactiveEnum.SwPageTurning}-${props.element.id}`]: { handleClick: handleClickEvent }
   });
 });
 

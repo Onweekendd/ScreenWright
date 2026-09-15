@@ -79,7 +79,7 @@ interface RollSubtabsEvents {
 }
 
 interface FtMutualEvents {
-  [key: `${interactiveEnum.FtMutual}-${string}`]: {
+  [key: `${interactiveEnum.SwMutual}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -88,7 +88,7 @@ interface FtMutualEvents {
 }
 
 interface FtLegendEvents {
-  [key: `${interactiveEnum.FtLegend}-${string}`]: {
+  [key: `${interactiveEnum.SwLegend}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -97,7 +97,7 @@ interface FtLegendEvents {
 }
 
 interface FtSearchEvents {
-  [key: `${interactiveEnum.FtSearch}-${string}`]: {
+  [key: `${interactiveEnum.SwSearch}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -106,7 +106,7 @@ interface FtSearchEvents {
 }
 
 interface FtCustomSelectEvents {
-  [key: `${interactiveEnum.FtCustomSelect}-${string}`]: {
+  [key: `${interactiveEnum.SwCustomSelect}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -115,7 +115,7 @@ interface FtCustomSelectEvents {
 }
 
 interface FtVoiveControlEvents {
-  [key: `${interactiveEnum.FtVoiceControl}-${string}`]: {
+  [key: `${interactiveEnum.SwVoiceControl}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -124,7 +124,7 @@ interface FtVoiveControlEvents {
 }
 
 interface FtPageQueryEvents {
-  [key: `${interactiveEnum.FtPageQuery}-${string}`]: {
+  [key: `${interactiveEnum.SwPageQuery}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -134,7 +134,7 @@ interface FtPageQueryEvents {
 }
 
 interface FtCascaderEvents {
-  [key: `${interactiveEnum.FtCascader}-${string}`]: {
+  [key: `${interactiveEnum.SwCascader}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -143,7 +143,7 @@ interface FtCascaderEvents {
 }
 
 interface FtSingleSelectedLegendEvents {
-  [key: `${interactiveEnum.FtSingleSelectedLegend}-${string}`]: {
+  [key: `${interactiveEnum.SwSingleSelectedLegend}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -161,7 +161,7 @@ interface FormNavMenuEvents {
 }
 
 interface FtTimerShaftEvents {
-  [key: `${interactiveEnum.FtTimerShaft}-${string}`]: {
+  [key: `${interactiveEnum.SwTimerShaft}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -180,7 +180,7 @@ interface PointTimelineEvents {
 }
 
 interface FtPageTurningEvents {
-  [key: `${interactiveEnum.FtPageTurning}-${string}`]: {
+  [key: `${interactiveEnum.SwPageTurning}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -189,7 +189,7 @@ interface FtPageTurningEvents {
 }
 
 interface FtDateTimePickerEvents {
-  [key: `${interactiveEnum.FtDateTimePicker}-${string}`]: {
+  [key: `${interactiveEnum.SwDateTimePicker}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -198,7 +198,7 @@ interface FtDateTimePickerEvents {
 }
 
 interface FtProgressEvents {
-  [key: `${textEnum.FtProgress}-${string}`]: {
+  [key: `${textEnum.SwProgress}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -207,7 +207,7 @@ interface FtProgressEvents {
 }
 
 interface FtTextWordCloudEvents {
-  [key: `${textEnum.FtTextWordCloud}-${string}`]: {
+  [key: `${textEnum.SwTextWordCloud}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -227,7 +227,7 @@ interface CtVideoPanelEvents {
 }
 
 interface FtScrollEvents {
-  [key: `${textEnum.FtScroll}-${string}`]: {
+  [key: `${textEnum.SwScroll}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -236,7 +236,7 @@ interface FtScrollEvents {
 }
 
 interface FtSwiperCardEvents {
-  [key: `${mediaEnum.FtSwiperCard}-${string}`]: {
+  [key: `${mediaEnum.SwSwiperCard}-${string}`]: {
     /**
      * @description 点击事件
      */
@@ -308,7 +308,7 @@ interface ftParticlesEvents {
   /**
    * 空间粒子init方法
    */
-  [key: `${ExhibitEnumType.FtParticles}-${number}`]: {
+  [key: `${ExhibitEnumType.SwParticles}-${number}`]: {
     particlesReStart: () => void;
   };
 }
@@ -442,7 +442,7 @@ interface EchartscalePieEvents {
 }
 
 interface FtUnrealEngineEvents {
-  [key: `${extendsEnumType.FtUnrealEngine}-${string}`]: {
+  [key: `${extendsEnumType.SwUnrealEngine}-${string}`]: {
     setupBlueprintData: (throwValue: any) => void;
     sendMessageToUe: (funName: string, data: any) => void;
     switchBlueprintTab: (key: string, info: any) => void;
@@ -450,7 +450,7 @@ interface FtUnrealEngineEvents {
 }
 
 interface FtVideoEvents {
-  [key: `${mediaEnum.FtVideo}-${string}`]: {
+  [key: `${mediaEnum.SwVideo}-${string}`]: {
     handleClick: (throwValue: any) => void;
     /**
      * 视频播放
@@ -504,7 +504,7 @@ interface FtVideoEvents {
 }
 // 数字人自定义事件
 interface ftDigitalHumanEvents {
-  [key: `${extendsEnumType.FtDigitalHuman}-${number}`]: {
+  [key: `${extendsEnumType.SwDigitalHuman}-${number}`]: {
     sendMsgToHuman: (message: string, type: "chat" | "echo") => void;
     startWebRTC: (toStart: boolean) => void;
   };
@@ -517,12 +517,6 @@ interface ftVuePartEvents {
 
   [key: `${ThirdPartEnumType.VuePart}-${number}`]: {
     handleClick: (info: any) => void;
-  };
-}
-
-interface FtSimpleBarrageEvents {
-  [key: `${ExtendsEnum.SimpleBarrage}-${number}`]: {
-    handleClick: () => void;
   };
 }
 
@@ -602,7 +596,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   FtVideoEvents &
   ftDigitalHumanEvents &
   ftVuePartEvents &
-  FtSimpleBarrageEvents &
   PageReloadEvents &
   FtUnrealEngineEvents &
   videoProgressEvents;
@@ -656,7 +649,6 @@ export type toAddEvent =
   | FtVideoEvents
   | ftDigitalHumanEvents
   | ftVuePartEvents
-  | FtSimpleBarrageEvents
   | PageReloadEvents
   | scrollPickerEvents
   | ImagesList3dEvents

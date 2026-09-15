@@ -59,10 +59,10 @@ const { eventList } = useActionEvent();
 const { selectTargetData, update } = useUpdateInstance();
 
 const onParticlesReStart = () => {
-  eventList.value[`${ExhibitEnum.FtParticles}-${selectTargetData.value[0].id}`].particlesReStart();
+  eventList.value[`${ExhibitEnum.SwParticles}-${selectTargetData.value[0].id}`].particlesReStart();
   console.log(
-    `${ExhibitEnum.FtParticles}-${selectTargetData.value[0].id}`,
-    eventList.value[`${ExhibitEnum.FtParticles}-${selectTargetData.value[0].id}`]
+    `${ExhibitEnum.SwParticles}-${selectTargetData.value[0].id}`,
+    eventList.value[`${ExhibitEnum.SwParticles}-${selectTargetData.value[0].id}`]
   );
 };
 </script>

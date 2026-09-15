@@ -285,7 +285,7 @@ onMounted(() => {
   setHoverStyle();
 
   addEvent({
-    [`${interactiveEnum.FtMutual}-${props.element.id}`]: {
+    [`${interactiveEnum.SwMutual}-${props.element.id}`]: {
       handleClick: (info: any) => {
         handleClick(info, EventTypeEnum.Click);
       }

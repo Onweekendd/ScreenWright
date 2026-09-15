@@ -882,7 +882,7 @@ export class VideoToPlayStrategy extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToPlay?.();
     });
   }
@@ -896,7 +896,7 @@ export class videoToFullscreenStrategy extends ActionStrategy<ActionExecutionPar
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToFullscreen?.();
     });
   }
@@ -915,7 +915,7 @@ export class VideoToPlayRangeStrategy extends ActionStrategy<ActionExecutionPara
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       console.log(event, "event");
       console.log(videoStartTime, "info", videoEndTime);
       event?.videoToPlayRange(videoStartTime as number, videoEndTime as number);
@@ -933,7 +933,7 @@ export class VideoToPauseStrategy extends ActionStrategy<ActionExecutionParams> 
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToPause?.();
     });
   }
@@ -949,7 +949,7 @@ export class VideoToStopStrategy extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToStop?.();
     });
   }
@@ -965,7 +965,7 @@ export class VideoToRestartStrategy extends ActionStrategy<ActionExecutionParams
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToRestart?.();
     });
   }
@@ -981,7 +981,7 @@ export class VideoToMutedStrategy extends ActionStrategy<ActionExecutionParams> 
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToMuted?.(true);
     });
   }
@@ -997,7 +997,7 @@ export class VideoToUnmutedStrategy extends ActionStrategy<ActionExecutionParams
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToMuted?.(false);
     });
   }
@@ -1013,7 +1013,7 @@ export class VideoToAudioUpStrategy extends ActionStrategy<ActionExecutionParams
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToAudioUp?.();
     });
   }
@@ -1029,7 +1029,7 @@ export class VideoToAudioDownStrategy extends ActionStrategy<ActionExecutionPara
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToAudioDown?.();
     });
   }
@@ -1045,7 +1045,7 @@ export class VideoToFastinStrategy extends ActionStrategy<ActionExecutionParams>
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToFastin?.(timeFastIn as number, info as { value: number } | undefined);
     });
   }
@@ -1061,7 +1061,7 @@ export class VideoToRewindStrategy extends ActionStrategy<ActionExecutionParams>
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToRewind?.(timeRewind as number);
     });
   }
@@ -1077,7 +1077,7 @@ export class SwitchVideoStrategy extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       if (event.videoToFastin && info) {
         event.videoToFastin(0, {
           value: info.time,
@@ -1123,7 +1123,7 @@ export class sendUE4MessageStrategy extends ActionStrategy<ActionExecutionParams
         [extendsEnumType.UePixelStreaming]: "PixelStreaming",
         [extendsEnumType.UePeerStreaming]: "PeerStreaming",
         [extendsEnumType.UeVessel]: "ue-vessel",
-        [extendsEnumType.FtUnrealEngine]: "sw-unreal-engine"
+        [extendsEnumType.SwUnrealEngine]: "sw-unreal-engine"
       };
 
       if (!propMap[targetComponent.component.prop]) {
@@ -1195,7 +1195,7 @@ export class sendUE4MessageStrategy extends ActionStrategy<ActionExecutionParams
           return;
         case "sw-unreal-engine":
           componentIds.forEach((componentId) => {
-            const event = eventList[`${extendsEnumType.FtUnrealEngine}-${componentId}`];
+            const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
             event.sendMessageToUe(messageName, data);
           });
           break;
@@ -1216,7 +1216,7 @@ export class SwitchBlueprintTab extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${extendsEnumType.FtUnrealEngine}-${componentId}`];
+      const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
       event.switchBlueprintTab(blueprintKey, info);
     });
   }

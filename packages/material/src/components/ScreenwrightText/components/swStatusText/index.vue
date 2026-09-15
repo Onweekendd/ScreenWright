@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import type { ComponentType } from "@screenwright/types";
 
-import { useFtText2 } from "./ftStatusText";
+import { useSwText2 } from "./swStatusText";
 
 // 组件配置
 const props = defineProps<{
@@ -65,7 +65,7 @@ const {
   textAnimation,
   getAssignStyle,
   onEditText
-} = useFtText2(props);
+} = useSwText2(props);
 
 // 命名空间
 </script>

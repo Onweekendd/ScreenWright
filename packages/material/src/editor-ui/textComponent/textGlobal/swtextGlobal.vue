@@ -123,7 +123,7 @@
     <Link v-if="selectTargetData[0].option.type && selectTargetData[0].option.type === 'link'" />
 
     <StatusSelector label="透明度" :label-width="firstWidth" :properties="['opacity']">
-      <FtSlide v-model="selectTargetData[0].option.opacity" :min="0" :max="1" :step="0.1" @change="update" />
+      <SwSlide v-model="selectTargetData[0].option.opacity" :min="0" :max="1" :step="0.1" @change="update" />
     </StatusSelector>
 
     <!-- 阴影 -->
@@ -134,7 +134,7 @@
     <sw-collapse-item title="旋转" show-icon v-model="selectTargetData[0].option.rotateShow" @change="update">
       <template #content>
         <StatusSelector label="绕X轴" :label-width="secondLabelWidth" :properties="['rotateX']">
-          <FtSlide
+          <SwSlide
             @change="update"
             v-model="selectTargetData[0].option.rotateX"
             :max="180"
@@ -145,7 +145,7 @@
         </StatusSelector>
 
         <StatusSelector label="绕Y轴" :labelWidth="secondLabelWidth" :properties="['rotateY']">
-          <FtSlide
+          <SwSlide
             @change="update"
             v-model="selectTargetData[0].option.rotateY"
             :max="180"
@@ -156,7 +156,7 @@
         </StatusSelector>
 
         <StatusSelector label="绕Z轴" :labelWidth="secondLabelWidth" :properties="['rotateZ']">
-          <FtSlide
+          <SwSlide
             @change="update"
             v-model="selectTargetData[0].option.rotateZ"
             :max="180"
@@ -177,7 +177,7 @@ import { SwInputNumber } from "@screenwright/ui/input-number";
 import SwMultiGradient from "@editor/base/SwMultiGradient/index.vue";
 import { SwRadio } from "@screenwright/ui/radio";
 import { SwSingleColorPicker } from "@screenwright/ui/single-color-picker";
-import { SwSlider as FtSlide } from "@screenwright/ui/slider";
+import { SwSlider as SwSlide } from "@screenwright/ui/slider";
 import Icon from "@editor/base/Icon/index.vue";
 import configTextStyle from "@editor/components/configTextStyle/index.vue";
 import { useFontStyleAttrs } from "@editor/components/configTextStyle/useTextStyleAttrs";
@@ -192,9 +192,9 @@ import { typeAttrs } from "../textConfig/ItemComponent/ItemSelectAlign/ItemSelec
 import StatusSelector from "../../attrsRender/components/statusAnimation/components/StatusSelector.vue";
 import { firstLabelWidth, secondLabelWidth } from "../../constants";
 import { useUpdateInstance } from "../../useUpdateInstance";
-import Link from "./../textConfig/components/TextFtText/link.vue";
-import scroll from "./../textConfig/components/TextFtText/scroll.vue";
-import shadow from "./../textConfig/components/TextFtText/shadow.vue";
+import Link from "./../textConfig/components/TextSwText/link.vue";
+import scroll from "./../textConfig/components/TextSwText/scroll.vue";
+import shadow from "./../textConfig/components/TextSwText/shadow.vue";
 // import SwLabelType from "@material/components/SwLabelType/index.vue"
 import ItemSelectAlign from "./../textConfig/ItemComponent/ItemSelectAlign/index.vue";
 const { selectTargetData, update } = useUpdateInstance();

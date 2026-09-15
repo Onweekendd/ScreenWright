@@ -24,7 +24,7 @@ import { onMounted } from "vue";
 
 import type { ComponentType } from "@screenwright/types";
 
-import { useFtCascader } from "./useFtCascader";
+import { useSwCascader } from "./useSwCascader";
 
 defineOptions({
   name: "ftCascader"
@@ -43,7 +43,7 @@ const {
   cascaderClasses,
   changeValue,
   initDataAndStyle
-} = useFtCascader(props.element);
+} = useSwCascader(props.element);
 
 // 组件挂载完成
 onMounted(() => {

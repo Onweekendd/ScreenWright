@@ -40,6 +40,7 @@ export default defineConfig({
         "@screenwright/core",
         "@screenwright/types",
         "@screenwright/composables",
+        "recorder-core/src/recorder-core.js.esm.js",
         "echarts-liquidfill",
         "echarts-wordcloud",
         "echarts-gl",

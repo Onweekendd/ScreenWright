@@ -1,13 +1,13 @@
 <template>
   <div class="ft-scroll-row-config">
-    <ftScrollTitle />
-    <ftScrollRow />
-    <ftHighLight />
+    <swScrollTitle />
+    <swScrollRow />
+    <swHighLight />
   </div>
 </template>
 
 <script setup lang="ts">
-import ftHighLight from "../textConfig/components/TextFtScrollRowConfig/highLight.vue";
-import ftScrollRow from "../textConfig/components/TextFtScrollRowConfig/row.vue";
-import ftScrollTitle from "../textConfig/components/TextFtScrollRowConfig/title.vue";
+import swHighLight from "../textConfig/components/TextSwScrollRowConfig/highLight.vue";
+import swScrollRow from "../textConfig/components/TextSwScrollRowConfig/row.vue";
+import swScrollTitle from "../textConfig/components/TextSwScrollRowConfig/title.vue";
 </script>

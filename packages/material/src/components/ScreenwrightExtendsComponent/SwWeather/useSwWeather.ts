@@ -28,7 +28,7 @@ interface WeatherData {
   };
 }
 
-export const useFtWeather = (options: ComponentType | any) => {
+export const useSwWeather = (options: ComponentType | any) => {
   const weatherType = ref<WeatherTypeItem[]>([
     { label: "实时", value: "base" },
     { label: "全天", value: "all" },

@@ -146,7 +146,7 @@ const {
         params: { cid: item.id }
       });
     }
-    if (item.component.prop === textEnum.FtText && isBuild()) {
+    if (item.component.prop === textEnum.SwText && isBuild()) {
       console.log("双击文本框");
       setTextEdit(item);
     }

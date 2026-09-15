@@ -339,7 +339,7 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtCustomSelect,
+    interactiveEnum.SwCustomSelect,
     interactiveEnum.ScrollPicker
   ],
 
@@ -379,7 +379,7 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     projectEchartEnum.echartzebraBarAndLine,
     projectEchartEnum.echarteffectScatter,
     projectEchartEnum.echartgrowthRateBar,
-    interactiveEnum.FtTimerShaft,
+    interactiveEnum.SwTimerShaft,
     interactiveEnum.PointTimeline
   ],
 
@@ -471,76 +471,76 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     projectEchartEnum.echarteffectScatter,
     projectEchartEnum.echartgrowthRateBar,
     PanelEnum.dynamicPanel,
-    mediaEnum.FtIframe
+    mediaEnum.SwIframe
   ],
 
   [ActionTypeEnum.MouseEnter]: [
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwCustomSelect
   ],
 
   [ActionTypeEnum.MouseLeave]: [
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwCustomSelect
   ],
 
   [ActionTypeEnum.SendUe4Msg]: [
     extendsEnum.UeVessel,
     extendsEnum.UePeerStreaming,
     extendsEnum.UePixelStreaming,
-    extendsEnum.FtUnrealEngine
+    extendsEnum.SwUnrealEngine
   ],
   [ActionTypeEnum.SendUe4MsgStatic]: [
     extendsEnum.UeVessel,
     extendsEnum.UePeerStreaming,
     extendsEnum.UePixelStreaming,
-    extendsEnum.FtUnrealEngine
+    extendsEnum.SwUnrealEngine
   ],
-  [ActionTypeEnum.SwitchBlueprintTab]: [extendsEnum.FtUnrealEngine],
+  [ActionTypeEnum.SwitchBlueprintTab]: [extendsEnum.SwUnrealEngine],
   [ActionTypeEnum.VideoToPlay]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
   [ActionTypeEnum.VideoToPause]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
   [ActionTypeEnum.VideoToStop]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
   [ActionTypeEnum.VideoToRestart]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
-  [ActionTypeEnum.VideoToFullscreen]: [mediaEnum.FtVideo],
+  [ActionTypeEnum.VideoToFullscreen]: [mediaEnum.SwVideo],
   [ActionTypeEnum.VideoToSwitch]: [
     // "sw-digital-human" // TODO: 待添加组件
   ],
-  [ActionTypeEnum.SendAIManMsgStatic]: [extendsEnum.FtDigitalHuman],
+  [ActionTypeEnum.SendAIManMsgStatic]: [extendsEnum.SwDigitalHuman],
   [ActionTypeEnum.SwiperCardChangeIndex]: [
-    mediaEnum.FtSwiperCard,
+    mediaEnum.SwSwiperCard,
     ExhibitEnum.ImagesList3d // TODO: 待添加组件
   ],
   [ActionTypeEnum.ProjectSpecificFun]: [
     // "map-project" // TODO: 待添加组件
   ],
-  [ActionTypeEnum.VideoToUnmuted]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToMuted]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToAudioUp]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToAudioDown]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToFastin]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToRewind]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToPlayRange]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.SwitchVideoProgress]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VoiceControlStart]: [interactiveEnum.FtVoiceControl],
-  [ActionTypeEnum.VoiceControlStop]: [interactiveEnum.FtVoiceControl],
+  [ActionTypeEnum.VideoToUnmuted]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToMuted]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToAudioUp]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToAudioDown]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToFastin]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToRewind]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToPlayRange]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.SwitchVideoProgress]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VoiceControlStart]: [interactiveEnum.SwVoiceControl],
+  [ActionTypeEnum.VoiceControlStop]: [interactiveEnum.SwVoiceControl],
   [ActionTypeEnum.prevPage]: [MediaEnum.CtVideoPanel],
   [ActionTypeEnum.nextPage]: [MediaEnum.CtVideoPanel],
   [ActionTypeEnum.TurnOnPatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
@@ -549,7 +549,7 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
   [ActionTypeEnum.PauseScroll]: [PanelEnum.dynamicPanel],
   [ActionTypeEnum.StartScroll]: [PanelEnum.dynamicPanel],
   [ActionTypeEnum.toPrevStatus]: [PanelEnum.dynamicPanel],
-  [ActionTypeEnum.toNextStatus]: [PanelEnum.dynamicPanel],
+  [ActionTypeEnum.toNextStatus]: [PanelEnum.dynamicPanel]
 };
 
 export const ActionList: { label: string; value: ActionTypeEnum }[] = [

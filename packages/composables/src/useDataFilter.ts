@@ -7,7 +7,6 @@ import { computed, ref, toRaw } from "vue";
 import { useScreenEditor } from "./core-adapter/useScreenEditor";
 import { FilterResultCollector, type ResultCollectItem } from "./FilterResultCollector";
 import { getDataFilterPersistence, UpdateHistoryTypeEnum } from "./ports/persistencePort";
-import { useChildrenDrawer } from "./useChildrenDrawer";
 import { useEditStore } from "./useEditStore";
 import { useGlobalComponentData } from "./useGlobalComponentData";
 import { useLargeScreenInfo } from "./useLargeScreenInfo";
@@ -38,7 +37,6 @@ export type FilterValidationResult =
 export const useDataFilter = createGlobalState(() => {
   const editor = useScreenEditor();
   const { isPanel } = useEditStore();
-  const { visibleRef: isChildComponentEditing, currentParentItem, currentChildrenItem } = useChildrenDrawer();
   const { selectTargetData, update } = useUpdateInstance({
     history: false,
     isDynamicPanel: isPanel()
@@ -81,17 +79,6 @@ export const useDataFilter = createGlobalState(() => {
    */
   const filterAllResultForCurrentComponent = computed(() => {
     void filterResultCollector.getVersionRef().value;
-    if (isChildComponentEditing.value) {
-      return [
-        ...toRaw(
-          filterResultCollector.getResults(
-            currentParentItem.value?.presetChild?.find((v) => v.id === currentChildrenItem.value?.id) as
-              | ComponentType
-              | ChildComponent
-          ) || []
-        )
-      ];
-    }
     return [...toRaw(filterResultCollector.getResults(selectTargetData.value[0]) || [])];
   });
 
@@ -263,7 +250,7 @@ export const useDataFilter = createGlobalState(() => {
 
     listenArgs.usageStatus = value;
 
-    const updateComponent = isChildComponentEditing.value ? currentParentItem.value : component;
+    const updateComponent = component;
     if (!updateComponent) {
       console.warn("更新组件不存在");
       return;

@@ -41,7 +41,7 @@ import { isNil } from "lodash-es";
 import { useFrostedStyle } from "@screenwright/composables";
 import type { ComponentType } from "@screenwright/types";
 
-import { useFtVideo } from "./useFtVideo";
+import { useSwVideo } from "./useSwVideo";
 
 const props = defineProps<{ element: ComponentType }>();
 const { getFrostedStyle } = useFrostedStyle(props.element);
@@ -65,7 +65,7 @@ const {
   handleEnded,
   // option
   option
-} = useFtVideo(props.element);
+} = useSwVideo(props.element);
 
 const opacity = computed(() => {
   return isNil(option.value.opacity) ? 1 : option.value.opacity;

@@ -2,7 +2,11 @@
 <template>
   <div :class="classNames" :style="styleSizeName">
     <svg :width="component.width" :height="component.height">
-      <a class="flex flex-justify-center" v-for="(tag, index) in tags" :key="`tag-${index}`">
+      <a
+        class="flex flex-justify-center"
+        v-for="(tag, index) in tags"
+        :key="`tag-${index}`"
+      >
         <text
           :id="tag.id"
           :x="tag.x"
@@ -25,19 +29,32 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-import { EventTypeEnum, textEnum, type ComponentType } from "@screenwright/types";
+import {
+  EventTypeEnum,
+  textEnum,
+  type ComponentType,
+} from "@screenwright/types";
 
 import { useActionEvent, useBaseData } from "@screenwright/composables";
 
 defineOptions({
-  name: "ftTextWordCloud"
+  name: "ftTextWordCloud",
 });
 const props = defineProps<{ element: ComponentType }>();
 
 const emit = defineEmits(["click"]);
 
-const { option, dataChart, component, height, width, events, encodes, isBuild, handleEventAndCallbackEvent } =
-  useBaseData(props.element);
+const {
+  option,
+  dataChart,
+  component,
+  height,
+  width,
+  events,
+  encodes,
+  isBuild,
+  handleEventAndCallbackEvent,
+} = useBaseData(props.element);
 const { addEvent } = useActionEvent();
 // 响应式状态
 const tags = ref<any[]>([]);
@@ -53,16 +70,16 @@ const classNames = computed(() => ({
   "world-cloud-3d": true,
   "component-bind-events": true,
   "has-bind": events.value.length && isBuild.value,
-  "has-encode": encodes.value.length && isBuild.value
+  "has-encode": encodes.value.length && isBuild.value,
 }));
 const styleSizeName = computed(() => ({
   width: `${width.value}px`,
-  height: `${height.value}px`
+  height: `${height.value}px`,
 }));
 
 const textStyle = computed(() => ({
   fontFamily: option.value.fontFamily,
-  cursor: "pointer"
+  cursor: "pointer",
 }));
 
 // 方法
@@ -76,7 +93,9 @@ const initData = () => {
   const tagsNum = data.length;
 
   for (let i = 0; i < data.length; i++) {
-    const randomIndex = Math.floor(Math.random() * option.value.seriesColor.length);
+    const randomIndex = Math.floor(
+      Math.random() * option.value.seriesColor.length,
+    );
     const k = -1 + (2 * (i + 1) - 1) / tagsNum;
     const a = Math.acos(k);
     const b = a * Math.sqrt(tagsNum * Math.PI);
@@ -87,12 +106,11 @@ const initData = () => {
       y: CY.value + RADIUS.value * Math.sin(a) * Math.sin(b),
       z: RADIUS.value * Math.cos(a),
       fill: option.value.seriesColor[randomIndex],
-      id: i
+      id: i,
     };
     tagArr.push(tag);
   }
   tags.value = tagArr;
-  console.log(tags.value);
 };
 
 const rotateX = (angleX: number) => {
@@ -139,7 +157,7 @@ const handleClick = (info: any) => {
     triggerType: EventTypeEnum.Click,
     events: props.element.events,
 
-    throwValue: info
+    throwValue: info,
   });
 };
 
@@ -149,9 +167,9 @@ watch(
     () => dataChart.value, // 保持深度监听
     () => ({
       maxNumber: option.value.maxNumber,
-      seriesColor: option.value.seriesColor
+      seriesColor: option.value.seriesColor,
     }),
-    () => [width.value, height.value]
+    () => [width.value, height.value],
   ],
   () => {
     initData();
@@ -160,18 +178,18 @@ watch(
       triggerType: EventTypeEnum.DataChange,
       events: props.element.events,
 
-      throwValue: dataChart.value
+      throwValue: dataChart.value,
     });
   },
   {
-    deep: true // 仅对dataChart.value生效
-  }
+    deep: true, // 仅对dataChart.value生效
+  },
 );
 watch(
   () => option.value.speed,
   () => {
     runTags();
-  }
+  },
 );
 
 // 生命周期钩子
@@ -183,14 +201,14 @@ onMounted(() => {
     triggerType: EventTypeEnum.DataChange,
     events: props.element.events,
 
-    throwValue: dataChart.value
+    throwValue: dataChart.value,
   });
 
   // 注册组件事件到全局事件系统
   addEvent({
-    [`${textEnum.FtTextWordCloud}-${props.element.id}`]: {
-      handleClick
-    }
+    [`${textEnum.SwTextWordCloud}-${props.element.id}`]: {
+      handleClick,
+    },
   });
 });
 

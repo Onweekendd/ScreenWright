@@ -104,7 +104,7 @@ import { has, isArray } from "lodash-es";
 
 import type { ComponentType } from "@screenwright/types";
 
-import { useFtFlop } from "./useFtFlop";
+import { useSwFlop } from "./useSwFlop";
 
 interface Props {
   element: ComponentType;
@@ -137,7 +137,7 @@ const {
   getformatterData,
   getValByProp,
   setDelayLoading
-} = useFtFlop(props);
+} = useSwFlop(props);
 
 watch(
   () => dataChart.value,

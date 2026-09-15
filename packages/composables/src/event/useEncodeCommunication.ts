@@ -248,13 +248,13 @@ const useEncodeCommunication = createGlobalState(() => {
         return;
       }
 
-      if (encodeKey && componentProp === interactiveEnum.FtPageTurning) {
+      if (encodeKey && componentProp === interactiveEnum.SwPageTurning) {
         // 翻页
         // interRef.handleClick?.(encodeKey)
-      } else if (encodeKey && componentProp === interactiveEnum.FtPageQuery) {
+      } else if (encodeKey && componentProp === interactiveEnum.SwPageQuery) {
         // 分页
         //   interRef.handleBeforOrAfterClick?.(encodeKey, null)
-      } else if (componentProp === interactiveEnum.FtVoiceControl && (component as any).upodateVoiceState) {
+      } else if (componentProp === interactiveEnum.SwVoiceControl && (component as any).upodateVoiceState) {
         // 语音控制
         // interRef.upodateVoiceState(encodeKey || "")
       } else {
@@ -313,15 +313,15 @@ const useEncodeCommunication = createGlobalState(() => {
     const componentProp = component.component.prop;
 
     // 处理特殊组件类型
-    if (componentProp === interactiveEnum.FtPageTurning) {
+    if (componentProp === interactiveEnum.SwPageTurning) {
       // 翻页组件
       // TODO: 实现翻页逻辑
       // interRef.handleClick?.(targetEncode.value)
-    } else if (componentProp === interactiveEnum.FtPageQuery) {
+    } else if (componentProp === interactiveEnum.SwPageQuery) {
       // 分页组件
       // TODO: 实现分页逻辑
       // interRef.handleBeforOrAfterClick?.(targetEncode.value, null)
-    } else if (componentProp === interactiveEnum.FtVoiceControl) {
+    } else if (componentProp === interactiveEnum.SwVoiceControl) {
       // 语音控制组件
       // TODO: 实现语音控制逻辑
       // component.upodateVoiceState?.(targetEncode.value)

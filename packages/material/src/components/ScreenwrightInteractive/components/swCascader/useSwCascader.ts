@@ -14,7 +14,7 @@ interface CascaderItem {
   children?: CascaderItem[];
 }
 type SelectValue = string | number | any[];
-export const useFtCascader = (element: ComponentType) => {
+export const useSwCascader = (element: ComponentType) => {
   const {
     dataChart,
     option,
@@ -322,7 +322,7 @@ export const useFtCascader = (element: ComponentType) => {
   onMounted(() => {
     // 注册组件事件到全局事件系统
     addEvent({
-      [`${interactiveEnum.FtCascader}-${element.id}`]: {
+      [`${interactiveEnum.SwCascader}-${element.id}`]: {
         handleClick,
       },
     });

@@ -106,7 +106,7 @@ import SwUpload from "@editor/base/SwUpload/index.vue";
 import { firstLabelWidth, secondLabelWidth } from "../../../constants";
 import { useUpdateInstance } from "../../../useUpdateInstance";
 import type { dictBoolean, dictString } from "../type";
-import FtCardSettings from "./ftCardSettings.vue";
+import SwCardSettings from "./swCardSettings.vue";
 interface CardSettings {
   directionTranslate: number;
   directionScale: number;

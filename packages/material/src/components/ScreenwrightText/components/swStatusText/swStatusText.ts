@@ -6,7 +6,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import { setPx, validData } from "../utils";
 
-export function useFtText2(props: { element: ComponentType }) {
+export function useSwText2(props: { element: ComponentType }) {
   const {
     option,
     isEdit,

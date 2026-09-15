@@ -41,7 +41,7 @@ watch(
 onMounted(async () => {
   // 设置事件监听
   addEvent({
-    [`${ExhibitEnum.FtParticles}-${props.element.id}`]: {
+    [`${ExhibitEnum.SwParticles}-${props.element.id}`]: {
       particlesReStart: () => {
         if (particlesInstance.value) {
           initParticles();

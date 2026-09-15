@@ -9,23 +9,23 @@
  */
 export enum MediaEnum {
   /** 轮播卡片 */
-  FtSwiperCard = "swSwiperCard",
+  SwSwiperCard = "swSwiperCard",
   /** 嵌入音频 */
-  FtEmbedAudio = "sw-embed-audio",
+  SwEmbedAudio = "sw-embed-audio",
   /** iframe */
-  FtIframe = "swiframe",
+  SwIframe = "swiframe",
   /** 图片 */
-  FtImg = "swimg",
+  SwImg = "swimg",
   /** 视频播放器 */
-  FtOpenVideo = "sw-open-video",
+  SwOpenVideo = "sw-open-video",
   /** 图片边框 */
-  FtImgBorder = "swimgBorder",
+  SwImgBorder = "swimgBorder",
   /** 轮播图 */
-  FtSwiper = "swswiper",
+  SwSwiper = "swswiper",
   /** 轮播图V3 */
-  FtSwiperV3 = "swSwiperV3",
+  SwSwiperV3 = "swSwiperV3",
   /** 视频 */
-  FtVideo = "swvideo",
+  SwVideo = "swvideo",
   /** 视频面板 */
   CtVideoPanel = "ctVideoPanel"
 }

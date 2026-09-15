@@ -66,7 +66,7 @@
 </template>
 <script setup lang="ts">
 import { SwInput } from "@screenwright/ui/input";
-import { SwInputNumber as ftInputNumber } from "@screenwright/ui/input-number";
+import { SwInputNumber as swInputNumber } from "@screenwright/ui/input-number";
 import { SwLabelType } from "@screenwright/ui/label-type";
 import { SwRadio } from "@screenwright/ui/radio";
 import { SwSingleColorPicker } from "@screenwright/ui/single-color-picker";

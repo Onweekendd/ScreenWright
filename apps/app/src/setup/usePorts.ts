@@ -1,15 +1,14 @@
 import type { Router } from "vue-router";
 
 import { initUsePorts } from "@screenwright/composables";
-import { initRegisterFte } from "@screenwright/material";
 
 import { executeSql, getCsvData, queryAPIData } from "@/api/dataSource";
 import { updateLargeScreen } from "@/api/library";
-import { ActionStrategyFactory, sendUE4MessageStrategy } from "@/hooks/eventHandling/actionStrategies";
+import { ActionStrategyFactory } from "@/hooks/eventHandling/actionStrategies";
 import { useBluePrint } from "@/hooks/useBluePrint";
 import { requestWithCache } from "@/utils/cacheService";
-import { serverRequest } from "@/utils/serverService";
 import { toAssetsPayload } from "@/utils/materialUpload";
+import { serverRequest } from "@/utils/serverService";
 import { request } from "@/utils/service";
 import { registerFte as registerFteImpl } from "@/utils/utils";
 import { useStatusAnimation } from "@/views/build/components/buildConfig/attrsRender/components/statusAnimation/useStatusAnimation";
@@ -38,12 +37,8 @@ export const setupUsePorts = (router: Router) => {
     actionStrategyExecutor: (actionType, params) => {
       ActionStrategyFactory.getStrategy(actionType)?.execute(params);
     },
-    sendUE4Message: (params) => new sendUE4MessageStrategy().execute(params),
     statusAnimationTrigger: (panelStatusAnimationId, panelStatusId) =>
       useStatusAnimation().triggerStatusAnimationByAction(panelStatusAnimationId, panelStatusId),
     assetsPicker: { component: SelectAssets, toPayload: (validated) => toAssetsPayload(validated) }
   });
-
-  // 物料包专属端口（3D 引擎加载，依赖 app 运行环境的 CDN 判断），不经 use 包
-  initRegisterFte(registerFteImpl);
 };

@@ -43,7 +43,6 @@ import type { FilterValidationResult } from "@/views/build/useDataFilter";
 import { useDataFilter } from "@/views/build/useDataFilter";
 
 import { useUpdateInstance } from "../../../useUpdateInstance";
-import { useChildrenDrawer } from "../../childrenManager/useChildrenDrawer";
 import codeEditor from "../fullCodeDialog/codeEditor.vue";
 import filterBox from "./filterBox.vue";
 import filterResponse from "./filterResponse.vue";
@@ -72,11 +71,7 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(["update:modelValue"]);
 const visible = useVModel(props, "modelValue", emit);
-const { visibleRef: isChildComponentEditing, currentChildrenItem } = useChildrenDrawer();
-
-const targetComponent = computed(() => {
-  return isChildComponentEditing.value ? (currentChildrenItem.value ?? undefined) : selectTargetData.value[0];
-});
+const targetComponent = computed(() => selectTargetData.value[0]);
 
 const openCodeDialog = (item: Filter) => {
   dialog({

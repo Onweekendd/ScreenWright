@@ -20,9 +20,9 @@ import type { FTIframeOptions } from "./type";
  * iframe组件的核心逻辑Hook
  * @param props 组件属性
  */
-export const useIframe = (props: { element: ComponentType<mediaEnum.FtIframe, FTIframeOptions> }) => {
+export const useIframe = (props: { element: ComponentType<mediaEnum.SwIframe, FTIframeOptions> }) => {
   // 使用 useBaseData 组合式函数获取通用媒体属性和方法
-  const { option, isBuild, dataChart, componentClasses } = useBaseData<mediaEnum.FtIframe, FTIframeOptions>(
+  const { option, isBuild, dataChart, componentClasses } = useBaseData<mediaEnum.SwIframe, FTIframeOptions>(
     props.element
   );
   const { initIframeWs, closeIframeWs } = useIframeWebSocket();

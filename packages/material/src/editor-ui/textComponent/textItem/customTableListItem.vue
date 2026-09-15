@@ -77,10 +77,10 @@ import { SwInput } from "@screenwright/ui/input";
 import Icon from "@editor/base/Icon/index.vue";
 
 import { useUpdateInstance } from "../../useUpdateInstance";
-import ButtonItem from "../textConfig/components/TextFtCustomTableListConfig/Item/ButtonItem.vue";
-import ImageItem from "../textConfig/components/TextFtCustomTableListConfig/Item/ImageItem.vue";
-import SwitchItem from "../textConfig/components/TextFtCustomTableListConfig/Item/SwitchItem.vue";
-import WordItem from "../textConfig/components/TextFtCustomTableListConfig/Item/WordItem.vue";
+import ButtonItem from "../textConfig/components/TextSwCustomTableListConfig/Item/ButtonItem.vue";
+import ImageItem from "../textConfig/components/TextSwCustomTableListConfig/Item/ImageItem.vue";
+import SwitchItem from "../textConfig/components/TextSwCustomTableListConfig/Item/SwitchItem.vue";
+import WordItem from "../textConfig/components/TextSwCustomTableListConfig/Item/WordItem.vue";
 import { contentType } from "../textConfig/constants";
 import { secondLabelWidth } from "../textConfig/textConfig";
 

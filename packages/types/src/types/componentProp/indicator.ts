@@ -15,9 +15,9 @@ export enum IndicatorEnum {
   /** 排序比例条 */
   SortRatioBar = "sortRatioBar",
   /** 动态占比 */
-  FtDynamicRatio = "swdynamicratio",
+  SwDynamicRatio = "swdynamicratio",
   /** 翻牌器 */
-  FtFlopPerformance = "swFlopPerformance",
+  SwFlopPerformance = "swFlopPerformance",
   /** 环形图 */
   EchartRing = "echartring",
   /** 排名进度条 */

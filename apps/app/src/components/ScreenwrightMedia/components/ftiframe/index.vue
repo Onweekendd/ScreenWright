@@ -103,7 +103,7 @@ import { customPositionStyle, eventIconClass, pointerEventStyle } from "@/views/
 import type { FTIframeOptions } from "./type";
 import { useIframe } from "./useIframe";
 
-const props = defineProps<{ element: ComponentType<mediaEnum.FtIframe, FTIframeOptions> }>();
+const props = defineProps<{ element: ComponentType<mediaEnum.SwIframe, FTIframeOptions> }>();
 
 defineOptions({
   name: "ftIframe"

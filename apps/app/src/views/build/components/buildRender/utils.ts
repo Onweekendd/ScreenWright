@@ -456,14 +456,14 @@ export const pointerEventStyle = (item: ComponentType, isBuild: boolean) => {
   }
 
   const pointerEventsComponent = [
-    textEnum.FtText,
-    mediaEnum.FtVideo,
-    mediaEnum.FtImg,
-    mediaEnum.FtOpenVideo,
-    textEnum.FtText2,
-    extendsEnumType.FtMaskLayer
+    textEnum.SwText,
+    mediaEnum.SwVideo,
+    mediaEnum.SwImg,
+    mediaEnum.SwOpenVideo,
+    textEnum.SwText2,
+    extendsEnumType.SwMaskLayer
   ];
-  if (item.component.prop === extendsEnumType.FtMaskLayer) {
+  if (item.component.prop === extendsEnumType.SwMaskLayer) {
     return { pointerEvents: item.option.pointerEvents ? "none" : "auto" };
   }
   if (pointerEventsComponent.includes(item.component.prop as textEnum)) {
@@ -579,7 +579,7 @@ const ueLimit = ({
     return isMore();
   }
 
-  if (newComponent.component.prop === extendsEnumType.FtUnrealEngine) {
+  if (newComponent.component.prop === extendsEnumType.SwUnrealEngine) {
     if (isDynamicPanel || isEncodePanel) {
       ElMessage.warning("提示：UE组件不能复制到动态面板或终端交互中");
       return false;
@@ -634,14 +634,14 @@ const digitalHumanLimit = ({
   newComponent: ComponentType;
 }) => {
   const isMore = () => {
-    const cityComponent = componentList.filter((v) => v.component.prop === extendsEnumType.FtDigitalHuman);
+    const cityComponent = componentList.filter((v) => v.component.prop === extendsEnumType.SwDigitalHuman);
     if (cityComponent.length >= 1) {
       ElMessage.warning(`提示：数字人已达上限!`);
       return false;
     }
     return true;
   };
-  if (newComponent.component.prop === extendsEnumType.FtDigitalHuman) {
+  if (newComponent.component.prop === extendsEnumType.SwDigitalHuman) {
     return isMore();
   }
   return true;

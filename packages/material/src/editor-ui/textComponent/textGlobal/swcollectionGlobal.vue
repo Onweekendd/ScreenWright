@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 import { useUpdateInstance } from "../../useUpdateInstance";
-import TextBgColor from "../textConfig/components/TextFtCollectionConfig/TextBgColor.vue";
-import TextVideoControl from "../textConfig/components/TextFtCollectionConfig/TextVideoControl.vue";
+import TextBgColor from "../textConfig/components/TextSwCollectionConfig/TextBgColor.vue";
+import TextVideoControl from "../textConfig/components/TextSwCollectionConfig/TextVideoControl.vue";
 import TextScrollDirection from "../textConfig/ItemComponent/ItemScrollDirection/index.vue";
 import TextScrollSpeed from "../textConfig/ItemComponent/ItemScrollSpeed/index.vue";
 import TextAutoScroll from "../textConfig/ItemComponent/TextAutoScroll/index.vue";

@@ -17,7 +17,6 @@ export * from "./useBaseData";
 export * from "./useComponentSlot";
 export * from "./useBaseFilter";
 export * from "./useCallbackArguments";
-export * from "./useChildrenDrawer";
 export * from "./useDataFilter";
 export * from "./useEditStore";
 export * from "./useEventCallbacks";

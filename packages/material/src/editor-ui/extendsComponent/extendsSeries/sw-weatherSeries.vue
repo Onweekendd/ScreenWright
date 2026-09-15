@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import SeriesOption from "../ItemComponents/FtWeather/seriesOption.vue";
+import SeriesOption from "../ItemComponents/SwWeather/seriesOption.vue";
 </script>

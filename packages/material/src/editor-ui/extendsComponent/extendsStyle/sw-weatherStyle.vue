@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import StyleOption from "../ItemComponents/FtWeather/styleOption.vue";
+import StyleOption from "../ItemComponents/SwWeather/styleOption.vue";
 </script>

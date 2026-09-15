@@ -34,8 +34,8 @@ import Icon from "@editor/base/Icon/index.vue";
 
 import { firstLabelWidth } from "../../constants";
 import { useUpdateInstance } from "../../useUpdateInstance";
-import TextCustomCollapseContent from "./../textConfig/components/TextFtCustomCollapseConfig/TextCustomCollapseContent.vue";
-import TextCustomCollapseTitle from "./../textConfig/components/TextFtCustomCollapseConfig/TextCustomCollapseTitle.vue";
+import TextCustomCollapseContent from "./../textConfig/components/TextSwCustomCollapseConfig/TextCustomCollapseContent.vue";
+import TextCustomCollapseTitle from "./../textConfig/components/TextSwCustomCollapseConfig/TextCustomCollapseTitle.vue";
 import ItemBackgroudImage from "./../textConfig/ItemComponent/ItemBackgroudImage/index.vue";
 import ItemBackgroudSize from "./../textConfig/ItemComponent/ItemBackgroudSize/index.vue";
 import ItemPadding from "./../textConfig/ItemComponent/ItemPadding/index.vue";

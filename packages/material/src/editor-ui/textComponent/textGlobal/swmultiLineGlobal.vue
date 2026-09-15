@@ -79,10 +79,10 @@ import configTextStyle from "@editor/components/configTextStyle/index.vue";
 
 import { firstLabelWidth, secondLabelWidth } from "../../constants";
 import { useUpdateInstance } from "../../useUpdateInstance";
-import PaddingAttr from "../textConfig/components/TextFtMultiLine/paddingAttr.vue";
-import PrefixIcon from "../textConfig/components/TextFtMultiLine/prefixIcon.vue";
-import selectedTextType from "../textConfig/components/TextFtMultiLine/selectedTextType.vue";
-import Shadow from "../textConfig/components/TextFtMultiLine/shadow.vue";
+import PaddingAttr from "../textConfig/components/TextSwMultiLine/paddingAttr.vue";
+import PrefixIcon from "../textConfig/components/TextSwMultiLine/prefixIcon.vue";
+import selectedTextType from "../textConfig/components/TextSwMultiLine/selectedTextType.vue";
+import Shadow from "../textConfig/components/TextSwMultiLine/shadow.vue";
 import ItemSelectAlign from "../textConfig/ItemComponent/ItemSelectAlign/index.vue";
 import { typeAttrs } from "../textConfig/ItemComponent/ItemSelectAlign/ItemSelectAlign";
 

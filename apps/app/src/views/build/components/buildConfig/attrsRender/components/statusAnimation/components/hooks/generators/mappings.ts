@@ -150,10 +150,10 @@ const ftVideoMappings: PropertyMapping[] = [
  * @description 定义每种组件类型对应的额外映射配置
  */
 export const COMPONENT_TYPE_MAPPINGS: Record<string, PropertyMapping[]> = {
-  [mediaEnum.FtImg]: [...advanceMappings, ...ftImgMappings],
-  [mediaEnum.FtVideo]: [...advanceMappings, ...ftVideoMappings],
-  [interactiveEnum.FtMutual]: [...advanceMappings, ...ftMutualMappings],
-  [textEnum.FtText]: [...advanceMappings, ...ftTextMappings]
+  [mediaEnum.SwImg]: [...advanceMappings, ...ftImgMappings],
+  [mediaEnum.SwVideo]: [...advanceMappings, ...ftVideoMappings],
+  [interactiveEnum.SwMutual]: [...advanceMappings, ...ftMutualMappings],
+  [textEnum.SwText]: [...advanceMappings, ...ftTextMappings]
 };
 
 /**

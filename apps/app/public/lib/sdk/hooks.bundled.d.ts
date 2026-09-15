@@ -112,48 +112,48 @@ declare const ComponentFlatSchema: z.ZodObject<{
             echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
             echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
         }>, z.ZodEnum<{
-            swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-            "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-            swiframe: import("..").MediaEnum.FtIframe;
-            swimg: import("..").MediaEnum.FtImg;
-            "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-            swimgBorder: import("..").MediaEnum.FtImgBorder;
-            swswiper: import("..").MediaEnum.FtSwiper;
-            swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-            swvideo: import("..").MediaEnum.FtVideo;
+            swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+            "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+            swiframe: import("..").MediaEnum.SwIframe;
+            swimg: import("..").MediaEnum.SwImg;
+            "sw-open-video": import("..").MediaEnum.SwOpenVideo;
+            swimgBorder: import("..").MediaEnum.SwImgBorder;
+            swswiper: import("..").MediaEnum.SwSwiper;
+            swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+            swvideo: import("..").MediaEnum.SwVideo;
             ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
         }>, z.ZodEnum<{
             ringIndicator3d: import("..").ExhibitEnum.RingIndicator3d;
             ringIndicator3dNew: import("..").ExhibitEnum.ringIndicator3dNew;
             imagesList3d: import("..").ExhibitEnum.ImagesList3d;
-            "sw-particles": import("..").ExhibitEnum.FtParticles;
-            "sw-filter": import("..").ExhibitEnum.FtFilter;
+            "sw-particles": import("..").ExhibitEnum.SwParticles;
+            "sw-filter": import("..").ExhibitEnum.SwFilter;
         }>, z.ZodEnum<{
             "sw-folder": import("..").FolderEnum.group;
         }>, z.ZodEnum<{
             "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
             "ue-vessel": import("..").ExtendsEnum.UeVessel;
-            "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+            "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
             "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-            "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+            "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
             simpleStar: import("..").ExtendsEnum.SimpleStar;
             fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
             pageReload: import("..").ExtendsEnum.PageReload;
             "simple-particle": import("..").ExtendsEnum.SimpleParticle;
             "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-            "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-            "sw-weather": import("..").ExtendsEnum.FtWeather;
-            "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+            "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+            "sw-weather": import("..").ExtendsEnum.SwWeather;
+            "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
         }>, z.ZodEnum<{
             rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
             iconRatio: import("..").IndicatorEnum.IconRatio;
             sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-            swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-            swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+            swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+            swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
             echartring: import("..").IndicatorEnum.EchartRing;
             "rank-progress": import("..").IndicatorEnum.RankProgress;
         }>, z.ZodEnum<{
-            "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+            "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
             formCheckbox: import("..").InteractiveEnum.FormCheckbox;
             formNavMenu: import("..").InteractiveEnum.FormNavMenu;
             scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -162,30 +162,30 @@ declare const ComponentFlatSchema: z.ZodObject<{
             formSlider: import("..").InteractiveEnum.FormSlider;
             "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
             "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-            swCascader: import("..").InteractiveEnum.FtCascader;
-            swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-            swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-            swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-            swLegend: import("..").InteractiveEnum.FtLegend;
-            swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-            swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+            swCascader: import("..").InteractiveEnum.SwCascader;
+            swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+            swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+            swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+            swLegend: import("..").InteractiveEnum.SwLegend;
+            swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+            swPageTurning: import("..").InteractiveEnum.SwPageTurning;
             subtabs: import("..").InteractiveEnum.Subtabs;
-            "sw-mutual": import("..").InteractiveEnum.FtMutual;
-            "sw-search": import("..").InteractiveEnum.FtSearch;
-            swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+            "sw-mutual": import("..").InteractiveEnum.SwMutual;
+            "sw-search": import("..").InteractiveEnum.SwSearch;
+            swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
             videoProgress: import("..").InteractiveEnum.videoProgress;
         }>, z.ZodEnum<{
             customCollapse: import("..").TextEnum.CustomCollapse;
-            swRichtext: import("..").TextEnum.FtRichtext;
-            swcollection: import("..").TextEnum.FtCollection;
+            swRichtext: import("..").TextEnum.SwRichtext;
+            swcollection: import("..").TextEnum.SwCollection;
             customTableList: import("..").TextEnum.CustomTableList;
-            swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
-            swmultiLine: import("..").TextEnum.FtMultiLine;
-            swtext: import("..").TextEnum.FtText;
-            swProgress: import("..").TextEnum.FtProgress;
-            swdatetime: import("..").TextEnum.FtDatetime;
-            swText2: import("..").TextEnum.FtText2;
-            swScroll: import("..").TextEnum.FtScroll;
+            swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
+            swmultiLine: import("..").TextEnum.SwMultiLine;
+            swtext: import("..").TextEnum.SwText;
+            swProgress: import("..").TextEnum.SwProgress;
+            swdatetime: import("..").TextEnum.SwDatetime;
+            swText2: import("..").TextEnum.SwText2;
+            swScroll: import("..").TextEnum.SwScroll;
         }>, z.ZodEnum<{
             "vue-part": import("..").ThirdPartEnum.VuePart;
             datav: import("..").ThirdPartEnum.DataV;
@@ -16583,15 +16583,15 @@ declare const indicatorEchartEnumSchema: z.ZodEnum<{
 }>;
 /** 媒体类型枚举 Schema */
 declare const mediaEnumSchema: z.ZodEnum<{
-    swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-    "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-    swiframe: import("..").MediaEnum.FtIframe;
-    swimg: import("..").MediaEnum.FtImg;
-    "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-    swimgBorder: import("..").MediaEnum.FtImgBorder;
-    swswiper: import("..").MediaEnum.FtSwiper;
-    swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-    swvideo: import("..").MediaEnum.FtVideo;
+    swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+    "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+    swiframe: import("..").MediaEnum.SwIframe;
+    swimg: import("..").MediaEnum.SwImg;
+    "sw-open-video": import("..").MediaEnum.SwOpenVideo;
+    swimgBorder: import("..").MediaEnum.SwImgBorder;
+    swswiper: import("..").MediaEnum.SwSwiper;
+    swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+    swvideo: import("..").MediaEnum.SwVideo;
     ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
 }>;
 /** 展品类型枚举 Schema */
@@ -16599,8 +16599,8 @@ declare const ExhibitEnumTypeSchema: z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "sw-particles": ExhibitEnum.FtParticles;
-    "sw-filter": ExhibitEnum.FtFilter;
+    "sw-particles": ExhibitEnum.SwParticles;
+    "sw-filter": ExhibitEnum.SwFilter;
 }>;
 /** 文件夹类型枚举 Schema */
 declare const FolderTypeSchema: z.ZodEnum<{
@@ -16611,14 +16611,14 @@ declare const indicatorEnumSchema: z.ZodEnum<{
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-    swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+    swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+    swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
 }>;
 /** 交互类型枚举 Schema */
 declare const interactiveEnumSchema: z.ZodEnum<{
-    "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+    "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
     formCheckbox: import("..").InteractiveEnum.FormCheckbox;
     formNavMenu: import("..").InteractiveEnum.FormNavMenu;
     scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -16627,32 +16627,32 @@ declare const interactiveEnumSchema: z.ZodEnum<{
     formSlider: import("..").InteractiveEnum.FormSlider;
     "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
     "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-    swCascader: import("..").InteractiveEnum.FtCascader;
-    swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-    swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-    swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-    swLegend: import("..").InteractiveEnum.FtLegend;
-    swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-    swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+    swCascader: import("..").InteractiveEnum.SwCascader;
+    swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+    swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+    swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+    swLegend: import("..").InteractiveEnum.SwLegend;
+    swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+    swPageTurning: import("..").InteractiveEnum.SwPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
-    "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-search": import("..").InteractiveEnum.FtSearch;
-    swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+    "sw-mutual": import("..").InteractiveEnum.SwMutual;
+    "sw-search": import("..").InteractiveEnum.SwSearch;
+    swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
 }>;
 /** 文本类型枚举 Schema */
 declare const textEnumSchema: z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
-    swRichtext: import("..").TextEnum.FtRichtext;
-    swcollection: import("..").TextEnum.FtCollection;
+    swRichtext: import("..").TextEnum.SwRichtext;
+    swcollection: import("..").TextEnum.SwCollection;
     customTableList: import("..").TextEnum.CustomTableList;
-    swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
-    swmultiLine: import("..").TextEnum.FtMultiLine;
-    swtext: import("..").TextEnum.FtText;
-    swProgress: import("..").TextEnum.FtProgress;
-    swdatetime: import("..").TextEnum.FtDatetime;
-    swText2: import("..").TextEnum.FtText2;
-    swScroll: import("..").TextEnum.FtScroll;
+    swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
+    swmultiLine: import("..").TextEnum.SwMultiLine;
+    swtext: import("..").TextEnum.SwText;
+    swProgress: import("..").TextEnum.SwProgress;
+    swdatetime: import("..").TextEnum.SwDatetime;
+    swText2: import("..").TextEnum.SwText2;
+    swScroll: import("..").TextEnum.SwScroll;
 }>;
 /** 第三方类型枚举 Schema */
 declare const thirdPartyEnumSchema: z.ZodEnum<{
@@ -16676,17 +16676,17 @@ declare const threeComponentEnumSchema: z.ZodEnum<{
 declare const extendsEnumTypeSchema: z.ZodEnum<{
     "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
     "ue-vessel": import("..").ExtendsEnum.UeVessel;
-    "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+    "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
     "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-    "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+    "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
     simpleStar: import("..").ExtendsEnum.SimpleStar;
     fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
     pageReload: import("..").ExtendsEnum.PageReload;
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
     "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-    "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-    "sw-weather": import("..").ExtendsEnum.FtWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+    "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+    "sw-weather": import("..").ExtendsEnum.SwWeather;
+    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>;
 /** 面板类型枚举 Schema */
 declare const PanelEnumSchema: z.ZodEnum<{
@@ -16743,48 +16743,48 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
     echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
 }>, z.ZodEnum<{
-    swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-    "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-    swiframe: import("..").MediaEnum.FtIframe;
-    swimg: import("..").MediaEnum.FtImg;
-    "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-    swimgBorder: import("..").MediaEnum.FtImgBorder;
-    swswiper: import("..").MediaEnum.FtSwiper;
-    swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-    swvideo: import("..").MediaEnum.FtVideo;
+    swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+    "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+    swiframe: import("..").MediaEnum.SwIframe;
+    swimg: import("..").MediaEnum.SwImg;
+    "sw-open-video": import("..").MediaEnum.SwOpenVideo;
+    swimgBorder: import("..").MediaEnum.SwImgBorder;
+    swswiper: import("..").MediaEnum.SwSwiper;
+    swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+    swvideo: import("..").MediaEnum.SwVideo;
     ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
 }>, z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "sw-particles": ExhibitEnum.FtParticles;
-    "sw-filter": ExhibitEnum.FtFilter;
+    "sw-particles": ExhibitEnum.SwParticles;
+    "sw-filter": ExhibitEnum.SwFilter;
 }>, z.ZodEnum<{
     "sw-folder": FolderEnum.group;
 }>, z.ZodEnum<{
     "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
     "ue-vessel": import("..").ExtendsEnum.UeVessel;
-    "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+    "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
     "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-    "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+    "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
     simpleStar: import("..").ExtendsEnum.SimpleStar;
     fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
     pageReload: import("..").ExtendsEnum.PageReload;
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
     "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-    "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-    "sw-weather": import("..").ExtendsEnum.FtWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+    "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+    "sw-weather": import("..").ExtendsEnum.SwWeather;
+    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>, z.ZodEnum<{
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-    swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+    swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+    swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
 }>, z.ZodEnum<{
-    "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+    "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
     formCheckbox: import("..").InteractiveEnum.FormCheckbox;
     formNavMenu: import("..").InteractiveEnum.FormNavMenu;
     scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -16793,30 +16793,30 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     formSlider: import("..").InteractiveEnum.FormSlider;
     "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
     "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-    swCascader: import("..").InteractiveEnum.FtCascader;
-    swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-    swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-    swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-    swLegend: import("..").InteractiveEnum.FtLegend;
-    swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-    swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+    swCascader: import("..").InteractiveEnum.SwCascader;
+    swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+    swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+    swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+    swLegend: import("..").InteractiveEnum.SwLegend;
+    swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+    swPageTurning: import("..").InteractiveEnum.SwPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
-    "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-search": import("..").InteractiveEnum.FtSearch;
-    swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+    "sw-mutual": import("..").InteractiveEnum.SwMutual;
+    "sw-search": import("..").InteractiveEnum.SwSearch;
+    swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
 }>, z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
-    swRichtext: import("..").TextEnum.FtRichtext;
-    swcollection: import("..").TextEnum.FtCollection;
+    swRichtext: import("..").TextEnum.SwRichtext;
+    swcollection: import("..").TextEnum.SwCollection;
     customTableList: import("..").TextEnum.CustomTableList;
-    swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
-    swmultiLine: import("..").TextEnum.FtMultiLine;
-    swtext: import("..").TextEnum.FtText;
-    swProgress: import("..").TextEnum.FtProgress;
-    swdatetime: import("..").TextEnum.FtDatetime;
-    swText2: import("..").TextEnum.FtText2;
-    swScroll: import("..").TextEnum.FtScroll;
+    swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
+    swmultiLine: import("..").TextEnum.SwMultiLine;
+    swtext: import("..").TextEnum.SwText;
+    swProgress: import("..").TextEnum.SwProgress;
+    swdatetime: import("..").TextEnum.SwDatetime;
+    swText2: import("..").TextEnum.SwText2;
+    swScroll: import("..").TextEnum.SwScroll;
 }>, z.ZodEnum<{
     "vue-part": ThirdPartEnum.VuePart;
     datav: ThirdPartEnum.DataV;
@@ -18316,7 +18316,7 @@ interface RollSubtabsEvents {
     };
 }
 interface FtMutualEvents {
-    [key: `${InteractiveEnum.FtMutual}-${string}`]: {
+    [key: `${InteractiveEnum.SwMutual}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18324,7 +18324,7 @@ interface FtMutualEvents {
     };
 }
 interface FtLegendEvents {
-    [key: `${InteractiveEnum.FtLegend}-${string}`]: {
+    [key: `${InteractiveEnum.SwLegend}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18332,7 +18332,7 @@ interface FtLegendEvents {
     };
 }
 interface FtSearchEvents {
-    [key: `${InteractiveEnum.FtSearch}-${string}`]: {
+    [key: `${InteractiveEnum.SwSearch}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18340,7 +18340,7 @@ interface FtSearchEvents {
     };
 }
 interface FtCustomSelectEvents {
-    [key: `${InteractiveEnum.FtCustomSelect}-${string}`]: {
+    [key: `${InteractiveEnum.SwCustomSelect}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18348,7 +18348,7 @@ interface FtCustomSelectEvents {
     };
 }
 interface FtVoiveControlEvents {
-    [key: `${InteractiveEnum.FtVoiceControl}-${string}`]: {
+    [key: `${InteractiveEnum.SwVoiceControl}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18356,7 +18356,7 @@ interface FtVoiveControlEvents {
     };
 }
 interface FtPageQueryEvents {
-    [key: `${InteractiveEnum.FtPageQuery}-${string}`]: {
+    [key: `${InteractiveEnum.SwPageQuery}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18365,7 +18365,7 @@ interface FtPageQueryEvents {
     };
 }
 interface FtCascaderEvents {
-    [key: `${InteractiveEnum.FtCascader}-${string}`]: {
+    [key: `${InteractiveEnum.SwCascader}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18373,7 +18373,7 @@ interface FtCascaderEvents {
     };
 }
 interface FtSingleSelectedLegendEvents {
-    [key: `${InteractiveEnum.FtSingleSelectedLegend}-${string}`]: {
+    [key: `${InteractiveEnum.SwSingleSelectedLegend}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18389,7 +18389,7 @@ interface FormNavMenuEvents {
     };
 }
 interface FtTimerShaftEvents {
-    [key: `${InteractiveEnum.FtTimerShaft}-${string}`]: {
+    [key: `${InteractiveEnum.SwTimerShaft}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18415,7 +18415,7 @@ interface PointTimelineEvents {
     };
 }
 interface FtPageTurningEvents {
-    [key: `${InteractiveEnum.FtPageTurning}-${string}`]: {
+    [key: `${InteractiveEnum.SwPageTurning}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18423,7 +18423,7 @@ interface FtPageTurningEvents {
     };
 }
 interface FtDateTimePickerEvents {
-    [key: `${InteractiveEnum.FtDateTimePicker}-${string}`]: {
+    [key: `${InteractiveEnum.SwDateTimePicker}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18431,7 +18431,7 @@ interface FtDateTimePickerEvents {
     };
 }
 interface FtProgressEvents {
-    [key: `${TextEnum.FtProgress}-${string}`]: {
+    [key: `${TextEnum.SwProgress}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18439,7 +18439,7 @@ interface FtProgressEvents {
     };
 }
 interface FtTextWordCloudEvents {
-    [key: `${TextEnum.FtTextWordCloud}-${string}`]: {
+    [key: `${TextEnum.SwTextWordCloud}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18457,7 +18457,7 @@ interface CtVideoPanelEvents {
     };
 }
 interface FtScrollEvents {
-    [key: `${TextEnum.FtScroll}-${string}`]: {
+    [key: `${TextEnum.SwScroll}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18465,7 +18465,7 @@ interface FtScrollEvents {
     };
 }
 interface FtSwiperCardEvents {
-    [key: `${MediaEnum.FtSwiperCard}-${string}`]: {
+    [key: `${MediaEnum.SwSwiperCard}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18535,7 +18535,7 @@ interface ftParticlesEvents {
     /**
      * 空间粒子init方法
      */
-    [key: `${ExhibitEnum.FtParticles}-${number}`]: {
+    [key: `${ExhibitEnum.SwParticles}-${number}`]: {
         particlesReStart: () => void;
     };
 }
@@ -18650,14 +18650,14 @@ interface EchartscalePieEvents {
     };
 }
 interface FtUnrealEngineEvents {
-    [key: `${ExtendsEnum.FtUnrealEngine}-${string}`]: {
+    [key: `${ExtendsEnum.SwUnrealEngine}-${string}`]: {
         setupBlueprintData: (throwValue: any) => void;
         sendMessageToUe: (funName: string, data: any) => void;
         switchBlueprintTab: (key: string, info: any) => void;
     };
 }
 interface FtVideoEvents {
-    [key: `${MediaEnum.FtVideo}-${string}`]: {
+    [key: `${MediaEnum.SwVideo}-${string}`]: {
         handleClick: (throwValue: any) => void;
         /**
          * 视频播放
@@ -18712,7 +18712,7 @@ interface FtVideoEvents {
     };
 }
 interface ftDigitalHumanEvents {
-    [key: `${ExtendsEnum.FtDigitalHuman}-${number}`]: {
+    [key: `${ExtendsEnum.SwDigitalHuman}-${number}`]: {
         sendMsgToHuman: (message: string, type: "chat" | "echo") => void;
         startWebRTC: (toStart: boolean) => void;
     };

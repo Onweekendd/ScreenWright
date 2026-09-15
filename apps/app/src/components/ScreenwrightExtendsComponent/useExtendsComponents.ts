@@ -18,11 +18,10 @@ export const useExtendsComponents = () => {
     { name: ExtendsEnum.SimpleStar, title: "闪点组件", component: materialMap[ExtendsEnum.SimpleStar]! },
     { name: ExtendsEnum.FullScreenSwitch, title: "全屏切换", component: materialMap[ExtendsEnum.FullScreenSwitch]! },
     { name: ExtendsEnum.PageReload, title: "页面刷新", component: materialMap[ExtendsEnum.PageReload]! },
-    { name: ExtendsEnum.FtMaskLayer, title: "放射性/线性渐变遮罩层", component: materialMap[ExtendsEnum.FtMaskLayer]! },
+    { name: ExtendsEnum.SwMaskLayer, title: "放射性/线性渐变遮罩层", component: materialMap[ExtendsEnum.SwMaskLayer]! },
     { name: ExtendsEnum.SimpleParticle, title: "上升粒子", component: materialMap[ExtendsEnum.SimpleParticle]! },
-    { name: ExtendsEnum.SimpleBarrage, title: "弹幕组件", component: materialMap[ExtendsEnum.SimpleBarrage]! },
-    { name: ExtendsEnum.FtDataContainer, title: "数据容器", component: materialMap[ExtendsEnum.FtDataContainer]! },
-    { name: ExtendsEnum.FtWeather, title: "天气", component: materialMap[ExtendsEnum.FtWeather]! }
+    { name: ExtendsEnum.SwDataContainer, title: "数据容器", component: materialMap[ExtendsEnum.SwDataContainer]! },
+    { name: ExtendsEnum.SwWeather, title: "天气", component: materialMap[ExtendsEnum.SwWeather]! }
   ]);
 
   return {

@@ -34,10 +34,7 @@ import { sleep } from "@screenwright/core";
 import { EventTypeEnum } from "@screenwright/types";
 import type { ComponentType } from "@screenwright/types";
 
-//@ts-ignore
-import * as RecorderInsModule from "./recorder-core.js";
-
-const RecorderIns = RecorderInsModule.default || (window as any).RecorderIns;
+import RecorderIns from "@material/recorderCore";
 
 defineOptions({
   name: "ftVoiceControl"
@@ -68,7 +65,7 @@ onMounted(() => {
     wsConnectMethod();
     initRecorder();
     addEvent({
-      [`${interactiveEnum.FtVoiceControl}-${props.element.id}`]: {
+      [`${interactiveEnum.SwVoiceControl}-${props.element.id}`]: {
         upodateVoiceState
       }
     });

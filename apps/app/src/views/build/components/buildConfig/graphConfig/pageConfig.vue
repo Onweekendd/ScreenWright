@@ -297,7 +297,13 @@ const update = () => {
     margin-top: 10px;
     width: 70px;
     height: 25px;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(var(--sw-theme-color)), to(var(--sw-theme-color)));
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(var(--sw-theme-color)),
+      to(var(--sw-theme-color))
+    );
     background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
     border-color: transparent;
     border-radius: 4px;

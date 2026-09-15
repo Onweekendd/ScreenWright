@@ -70,7 +70,7 @@ import TextArrayLink from "./components/TextArrayLink.vue";
 import TextLink from "./components/TextLink.vue";
 import TextMultiGradient from "./components/TextMultiGradient.vue";
 import TextNormal from "./components/TextNormal.vue";
-import { useText } from "./useText.js";
+import { useText } from "./useText";
 
 defineOptions({
   name: "ftText",

@@ -34,12 +34,12 @@
 import { setMinioUrl } from "@screenwright/composables";
 import type { ComponentType } from "@screenwright/types";
 
-import { useFtWeather } from "./useFtWeather";
+import { useSwWeather } from "./useSwWeather";
 
 const props = defineProps<{
   element: ComponentType;
 }>();
-const { dataChartItemList, styleDefaultFont, styleIcon, weatherType, getWeather } = useFtWeather(props.element);
+const { dataChartItemList, styleDefaultFont, styleIcon, weatherType, getWeather } = useSwWeather(props.element);
 </script>
 <style lang="scss" scoped>
 .ft-weather {

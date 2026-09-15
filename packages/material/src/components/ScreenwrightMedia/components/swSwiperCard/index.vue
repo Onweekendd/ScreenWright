@@ -152,7 +152,7 @@ onMounted(() => {
 
   // 注册组件事件到全局事件系统
   addEvent({
-    [`${mediaEnum.FtSwiperCard}-${props.element.id}`]: {
+    [`${mediaEnum.SwSwiperCard}-${props.element.id}`]: {
       handleClick,
       handleEvensChangeActiveSpinnerIndex: async (direction: string) => {
         if (direction === "left") {

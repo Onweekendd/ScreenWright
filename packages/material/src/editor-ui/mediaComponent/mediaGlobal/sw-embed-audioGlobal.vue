@@ -2,5 +2,5 @@
   <global-option />
 </template>
 <script setup lang="ts">
-import GlobalOption from "../ItemComponent/ftEmbed/globalOption.vue";
+import GlobalOption from "../ItemComponent/swEmbed/globalOption.vue";
 </script>

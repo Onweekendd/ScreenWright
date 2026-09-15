@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import GlobalOption from "../ItemComponents/FtDataContainer/globalOption.vue";
+import GlobalOption from "../ItemComponents/SwDataContainer/globalOption.vue";
 </script>

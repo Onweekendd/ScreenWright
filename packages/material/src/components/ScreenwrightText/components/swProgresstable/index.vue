@@ -102,7 +102,7 @@ onMounted(() => {
 
   // 注册组件事件到全局事件系统
   addEvent({
-    [`${textEnum.FtProgress}-${props.element.id}`]: {
+    [`${textEnum.SwProgress}-${props.element.id}`]: {
       handleClick
     }
   });

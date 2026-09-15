@@ -1,5 +1,4 @@
 export { ScreenwrightEchartsMap } from "./components/ScreenwrightEcharts";
-export { ScreenwrightTextComponent } from "./components/ScreenwrightText";
 export { ScreenwrightExhibitComponentMap } from "./components/ScreenwrightExhibitComponent";
 export { ScreenwrightIndicatorMap } from "./components/ScreenwrightIndicator";
 export { ScreenwrightInteractiveMap } from "./components/ScreenwrightInteractive";
@@ -17,6 +16,7 @@ export {
   isSupportedFlv,
   isSupportedHls,
 } from "./components/ScreenwrightMedia/utils";
+export { ScreenwrightTextComponent } from "./components/ScreenwrightText";
 export {
   optionType as chartOptionType,
   ScreenwrightEchartsConfigComponent,
@@ -39,10 +39,9 @@ export {
 } from "./editor-ui/mediaComponent/index";
 export {
   type ConfigTab,
-  ScreenwrightTextConfigComponent,
   optionType,
+  ScreenwrightTextConfigComponent,
 } from "./editor-ui/textComponent/index";
 export { materialPlugin } from "./materialPlugin";
 export { setMinioUrl } from "./minioUrl";
 export { recorderCore } from "./recorderCore";
-export { initRegisterFte, type RegisterFteFn } from "./registerFte";

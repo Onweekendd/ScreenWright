@@ -134,7 +134,7 @@ import { SwCollapseItem } from "@screenwright/ui/collapse-item";
 import { SwInputNumber } from "@screenwright/ui/input-number";
 import { SwSingleColorPicker } from "@screenwright/ui/single-color-picker";
 import { SwSlider } from "@screenwright/ui/slider";
-import type { FtUploadChangePayload } from "@editor/base/SwUpload/SwUpload";
+import type { SwUploadChangePayload } from "@editor/base/SwUpload/SwUpload";
 import SwUpload from "@editor/base/SwUpload/index.vue";
 import Icon from "@editor/base/Icon/index.vue";
 import StatusSelector from "../../../attrsRender/components/statusAnimation/components/StatusSelector.vue";
@@ -175,7 +175,7 @@ const imgValue = computed({
  * 文件上传完成 处理是资源从资产库获取的情况
  * @param value 文件信息
  */
-const onFileChange = (value: FtUploadChangePayload | MenuItemForRender) => {
+const onFileChange = (value: SwUploadChangePayload | MenuItemForRender) => {
   console.log(value, "value");
   selectTargetData.value[0].minioArr = [
     ...(selectTargetData.value[0].minioArr || []),

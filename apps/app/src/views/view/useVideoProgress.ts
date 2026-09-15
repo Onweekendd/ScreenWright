@@ -60,7 +60,7 @@ const useVideoProgress = () => {
         }
 
         // 判断是否为视频组件
-        const isVideo = videoComponent.component.prop === MediaEnum.FtVideo;
+        const isVideo = videoComponent.component.prop === MediaEnum.SwVideo;
         if (!isVideo) {
           continue;
         }

@@ -43,13 +43,13 @@ import { useActionEvent, useBaseData } from "@screenwright/composables";
 import { EventTypeEnum } from "@screenwright/types";
 import type { ComponentType } from "@screenwright/types";
 
-import TimerShaftControl from "./components/TimerShaftControl.vue";
+import TimerShaftControl from "./components/TimerShaswControl.vue";
 // 引入子组件
-import TimerShaftItem from "./components/TimerShaftItem.vue";
-import { useTimerShaftEvents } from "./hooks/useTimerShaftEvents";
+import TimerShaftItem from "./components/TimerShaswItem.vue";
+import { useTimerShaftEvents } from "./hooks/useTimerShaswEvents";
 // 引入hooks
-import { useTimerShaftState } from "./hooks/useTimerShaftState";
-import { useTimerShaftStyle } from "./hooks/useTimerShaftStyle";
+import { useTimerShaftState } from "./hooks/useTimerShaswState";
+import { useTimerShaftStyle } from "./hooks/useTimerShaswStyle";
 
 defineOptions({
   name: "ftTimerShaft"
@@ -166,7 +166,7 @@ onMounted(() => {
     };
 
     addEvent({
-      [`${interactiveEnum.FtTimerShaft}-${props.element.id}`]: { handleClick }
+      [`${interactiveEnum.SwTimerShaft}-${props.element.id}`]: { handleClick }
     });
   });
 });

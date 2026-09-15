@@ -31,7 +31,7 @@ interface VideoInfo {
   result: string;
 }
 
-export const useFtVideo = (element: ComponentType) => {
+export const useSwVideo = (element: ComponentType) => {
   const { option, dataChart, isBuild, encodes, events, handleEventAndCallbackEvent, handleEncode } =
     useBaseData(element);
   const { addEvent } = useActionEvent();
@@ -604,7 +604,7 @@ export const useFtVideo = (element: ComponentType) => {
     });
 
     addEvent({
-      [`${mediaEnum.FtVideo}-${element.id}`]: {
+      [`${mediaEnum.SwVideo}-${element.id}`]: {
         handleClick,
         videoToPlay,
         videoToPause,

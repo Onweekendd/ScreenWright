@@ -179,7 +179,7 @@ watch(
 onMounted(() => {
   // 注册组件事件到全局事件系统
   addEvent({
-    [`${interactiveEnum.FtSingleSelectedLegend}-${props.element.id}`]: {
+    [`${interactiveEnum.SwSingleSelectedLegend}-${props.element.id}`]: {
       handleClick
     }
   });

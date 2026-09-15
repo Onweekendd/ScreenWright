@@ -2,5 +2,5 @@
   <ft-img-border-global-option />
 </template>
 <script setup lang="ts">
-import ftImgBorderGlobalOption from "../ItemComponent/ftImgBorder/globalOption.vue";
+import swImgBorderGlobalOption from "../ItemComponent/swImgBorder/globalOption.vue";
 </script>

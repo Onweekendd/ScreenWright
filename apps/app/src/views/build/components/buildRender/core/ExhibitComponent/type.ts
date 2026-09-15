@@ -7,6 +7,6 @@ export const exhibitComponentType: ExhibitEnum[] = [
   ExhibitEnum.ringIndicator3dNew,
   ExhibitEnum.RingIndicator3d,
   ExhibitEnum.ImagesList3d,
-  ExhibitEnum.FtParticles,
-  ExhibitEnum.FtFilter,
+  ExhibitEnum.SwParticles,
+  ExhibitEnum.SwFilter,
 ];

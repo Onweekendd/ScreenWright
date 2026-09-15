@@ -36,8 +36,8 @@ import { SwInputNumber } from "@screenwright/ui/input-number";
 import Icon from "@editor/base/Icon/index.vue";
 
 import { useUpdateInstance } from "../../useUpdateInstance";
-import Animate from "../textConfig/components/TextFtScrollGlobalConfig/animate.vue";
-import ScrollBar from "../textConfig/components/TextFtScrollGlobalConfig/scrollBar.vue";
+import Animate from "../textConfig/components/TextSwScrollGlobalConfig/animate.vue";
+import ScrollBar from "../textConfig/components/TextSwScrollGlobalConfig/scrollBar.vue";
 
 const { update, selectTargetData } = useUpdateInstance();
 </script>

@@ -4,5 +4,5 @@
   </div>
 </template>
 <script setup lang="ts">
-import ftText2LoadingEffect from "./ftText2LoadingEffect.vue";
+import swText2LoadingEffect from "./swText2LoadingEffect.vue";
 </script>

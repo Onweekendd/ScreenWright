@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "id": 1,
     "user_id": null,
@@ -1411,23 +1411,6 @@
     "status": 1
   },
   {
-    "id": 94,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"title\":\"弹幕组件\",\"name\":\"弹幕组件\",\"display\":true,\"icon\":\"icon-tabs\",\"img\":\"/img/barrage.02171652.gif\",\"callbackArgs\":[],\"events\":[],\"dataSource\":{},\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"component\":{\"width\":450,\"height\":500,\"name\":\"simple-barrage\",\"prop\":\"simple-barrage\"},\"cbArgs\":[],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"dataType\":0,\"data\":[{\"text\":\"Screenwright\"},{\"text\":\"让数据价值看得见\"},{\"text\":\"让数据内容用得着\"},{\"text\":\"看见数字化的无限可能\"},{\"text\":\"凡拓数字孪生可视化 映射万千物理世界\"},{\"text\":\"数字孪生，对物理世界的感知与管理\"},{\"text\":\"可视化的原则是准确清晰️又美观\"},{\"text\":\"Screenwright 数字孪生可视化搭建平台\"},{\"text\":\"体现数据之美\"}],\"dataRemark\":[{\"key\":\"text\",\"map\":\"text\",\"decription\":\"文本\"}],\"unitPavenType\":\"\",\"option\":{\"imageWidth\":400,\"imageHeight\":400,\"imageMinHeight\":20,\"imageMaxHeight\":20,\"imageObjectFit\":\"none\",\"scale\":1.3,\"importType\":\"systemInterface\",\"importConfig\":{\"apiUrl\":\"\",\"method\":\"POST\",\"body\":[],\"headers\":[]},\"loop\":true,\"lineNum\":5,\"isHover\":false,\"speed\":0.2,\"stylesList\":[{\"name\":\"样式1\",\"fontSize\":16,\"fontWeight\":false,\"fontStyle\":false,\"letterSpacing\":0,\"fontFamily\":\"sans-serif\",\"fontColor\":\"rgba(3,169,244,1)\",\"isTextShadow\":false,\"textShadow\":{\"x\":0,\"y\":0,\"blur\":0,\"color\":\"rgba(255, 255, 255, 1)\",\"extend\":0}},{\"name\":\"样式2\",\"fontSize\":16,\"fontWeight\":false,\"fontStyle\":false,\"letterSpacing\":0,\"fontFamily\":\"sans-serif\",\"fontColor\":\"rgba(103, 58, 183, 1)\",\"isTextShadow\":false,\"textShadow\":{\"x\":0,\"y\":0,\"blur\":0,\"color\":\"rgba(255, 255, 255, 1)\",\"extend\":0}},{\"name\":\"样式3\",\"fontSize\":16,\"fontWeight\":false,\"fontStyle\":false,\"letterSpacing\":0,\"fontFamily\":\"sans-serif\",\"fontColor\":\"rgba(255, 152, 0, 1)\",\"isTextShadow\":false,\"textShadow\":{\"x\":0,\"y\":0,\"blur\":0,\"color\":\"rgba(255, 255, 255, 1)\",\"extend\":0}}]}}",
-    "level": 0,
-    "second_level_menu": "",
-    "first_level_menu": "扩展",
-    "name": "弹幕组件",
-    "thumbnail": "/img/barrage.02171652.gif",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:27.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:51.000Z",
-    "template": "[{\"text\":\"Screenwright\"},{\"text\":\"让数据价值看得见\"},{\"text\":\"让数据内容用得着\"},{\"text\":\"看见数字化的无限可能\"},{\"text\":\"凡拓数字孪生可视化 映射万千物理世界\"},{\"text\":\"数字孪生，对物理世界的感知与管理\"},{\"text\":\"可视化的原则是准确清晰️又美观\"},{\"text\":\"Screenwright 数字孪生可视化搭建平台\"},{\"text\":\"体现数据之美\"}]",
-    "status": 1
-  },
-  {
     "id": 95,
     "user_id": null,
     "type": 0,
@@ -1720,7 +1703,7 @@
     "id": 113,
     "user_id": null,
     "type": 0,
-    "java_script": "{\"title\":\"富文本\",\"name\":\"富文本\",\"display\":true,\"icon\":\"icon-banner\",\"img\":\"/img/ftRichtext.dbc58503.png\",\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"top\":0,\"left\":0,\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"sql\":\"SELECT * FROM\",\"time\":30,\"url\":\"\",\"cbArgs\":[],\"encodes\":[],\"events\":[],\"data\":[{\"value\":\"\"}],\"dataRemark\":[{\"key\":\"value\",\"map\":\"value\",\"decription\":\"文本\"}],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":316,\"height\":268,\"name\":\"swRichtext\",\"prop\":\"swRichtext\"},\"option\":{\"content\":\"<p><span style=\\\"font-size: 20px;\\\"><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\\\">凡拓<span style=\\\"color: #b96ad9; font-family: DY追光体;\\\">Screenwright</span></span><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\\\">大屏应用编辑器是</span><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\\\">数字孪生<span style=\\\"color: #f1c40f;\\\"><strong>零代码</strong></span>平</span><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\\\">台</span><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\\\">的关键组成，助力用户轻松构建魅力大屏。用户可便捷地将</span><em><strong><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify; color: #843fa1;\\\">三维场景与图表、柱状图</span></strong></em><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\\\">等联动，创造信息丰富、引人入胜的大屏应用。通过简单的拖拉拽操作，用户能快速布置元素，实现</span><span style=\\\"font-family: 旁门正道标题体; letter-spacing: 2px; text-align: justify;\\\"><strong><span style=\\\"color: #3598db; font-family: 造字工房悦黑;\\\">动态、互动</span></strong>和多媒体内容的精彩展示，满足<strong><span style=\\\"color: #e67e23; font-family: 造字工房悦黑;\\\">个性化需求</span></strong>。</span></span></p>\",\"textAnimationTiming\":50,\"textAnimationDelay\":0,\"textAnimationType\":\"\",\"startScroll\":false,\"scrollLoop\":false,\"scrollInterval\":10}}",
+    "java_script": "{\"title\":\"富文本\",\"name\":\"富文本\",\"display\":true,\"icon\":\"icon-banner\",\"img\":\"/img/ftRichtext.dbc58503.png\",\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"top\":0,\"left\":0,\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"sql\":\"SELECT * FROM\",\"time\":30,\"url\":\"\",\"cbArgs\":[],\"encodes\":[],\"events\":[],\"data\":[{\"value\":\"\"}],\"dataRemark\":[{\"key\":\"value\",\"map\":\"value\",\"decription\":\"文本\"}],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":316,\"height\":268,\"name\":\"swRichtext\",\"prop\":\"swRichtext\"},\"option\":{\"content\":\"<p><span style='font-size: 26px; color: rgb(185, 106, 217); font-family: DIN-MediumItalic;'><strong>ScreenWright</strong></span><span style='font-size: 26px; font-family: DIN-MediumItalic;'> 是 </span><span style='font-size: 26px; color: rgb(241, 196, 15); font-family: DIN-MediumItalic;'><strong>AI 原生</strong></span><span style='font-size: 26px; font-family: DIN-MediumItalic;'> 的数据大屏与 BI 编辑器。描述需求或提交 </span><span style='font-size: 26px; color: rgb(132, 63, 161); font-family: DIN-MediumItalic;'><strong>Figma</strong></span><span style='font-size: 26px; font-family: DIN-MediumItalic;'> 链接，Agent 自动生成可继续编辑的大屏。拖拽 </span><span style='font-size: 26px; color: rgb(53, 152, 219); font-family: DIN-MediumItalic;'><strong>76+ 组件</strong></span><span style='font-size: 26px; font-family: DIN-MediumItalic;'>，连接数据源并配置筛选、事件和动画联动。支持 </span><span style='font-size: 26px; color: rgb(230, 126, 35); font-family: DIN-MediumItalic;'><strong>模板复用与静态包导出</strong></span><span style='font-size: 26px; font-family: DIN-MediumItalic;'>，让创意快速上线。</span></p>\",\"textAnimationTiming\":50,\"textAnimationDelay\":0,\"textAnimationType\":\"\",\"startScroll\":false,\"scrollLoop\":false,\"scrollInterval\":10}}",
     "level": 1,
     "second_level_menu": "",
     "first_level_menu": "文字",

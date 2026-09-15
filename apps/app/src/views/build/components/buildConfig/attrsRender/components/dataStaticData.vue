@@ -33,34 +33,21 @@ import MonacoEditor from "@/components/MonacoEditor/index.vue";
 import { useCallbackArguments } from "@/hooks/callbackArguments/useCallbackArguments";
 import { useDialog } from "@/hooks/useDialog";
 
-import type { ChildComponent } from "../../../buildRender/type";
 import { useUpdateInstance } from "../../useUpdateInstance";
-import { useChildrenDrawer } from "../childrenManager/useChildrenDrawer";
 import dataFilter from "./dataFilter.vue";
 import dataInterfaceDialog from "./dataInterfaceDialog.vue";
 import dataResponse from "./dataResponse.vue";
 import fullCodeDialog from "./fullCodeDialog/index.vue";
 
-const { visibleRef: isChildComponentEditing, currentChildrenItem } = useChildrenDrawer();
 const { selectTargetData, update } = useUpdateInstance({
   history: false
 });
 const { emitFilterTrigger } = useCallbackArguments();
 const monacoEditorRef = ref<InstanceType<typeof MonacoEditor> | null>(null);
 const sheetExcelData = computed({
-  get: () => {
-    if (isChildComponentEditing.value) {
-      return currentChildrenItem.value.data;
-    } else {
-      return selectTargetData.value[0].data;
-    }
-  },
+  get: () => selectTargetData.value[0].data,
   set: (val) => {
-    if (isChildComponentEditing.value) {
-      currentChildrenItem.value.data = val;
-    } else {
-      selectTargetData.value[0].data = val;
-    }
+    selectTargetData.value[0].data = val;
   }
 });
 const { dialog } = useDialog();
@@ -71,11 +58,7 @@ const formData = ref({
 // 防抖处理更新和过滤器触发
 const debouncedUpdate = debounce(() => {
   update();
-  if (isChildComponentEditing.value) {
-    emitFilterTrigger(`${currentChildrenItem.value.id}`, currentChildrenItem.value as ChildComponent);
-  } else {
-    emitFilterTrigger(`${selectTargetData.value[0].id}`);
-  }
+  emitFilterTrigger(`${selectTargetData.value[0].id}`);
 }, 200);
 
 const codeStr = computed({
@@ -86,11 +69,6 @@ const codeStr = computed({
     try {
       const parsedData = JSON.parse(val);
       sheetExcelData.value = parsedData;
-      if (isChildComponentEditing.value) {
-        currentChildrenItem.value.data = parsedData;
-      } else {
-        selectTargetData.value[0].data = parsedData;
-      }
       // 使用防抖触发更新和过滤器
       debouncedUpdate();
     } catch (e) {

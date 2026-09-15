@@ -711,22 +711,22 @@ export const handleSwiperCardIndexProp = (prop: AllComponentType) => {
 export const hasCustomEvents = (prop: AllComponentType) => {
   return [
     interactiveEnum.Subtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtSearch,
-    interactiveEnum.FtTimerShaft,
-    interactiveEnum.FtCustomSelect,
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwSearch,
+    interactiveEnum.SwTimerShaft,
+    interactiveEnum.SwCustomSelect,
     "echartcommonMap",
     "threescene",
-    interactiveEnum.FtLegend,
-    textEnum.FtTextWordCloud,
-    interactiveEnum.FtPageQuery,
-    interactiveEnum.FtPageTurning,
-    interactiveEnum.FtDateTimePicker,
-    mediaEnum.FtVideo,
+    interactiveEnum.SwLegend,
+    textEnum.SwTextWordCloud,
+    interactiveEnum.SwPageQuery,
+    interactiveEnum.SwPageTurning,
+    interactiveEnum.SwDateTimePicker,
+    mediaEnum.SwVideo,
     mediaEnum.CtVideoPanel,
-    textEnum.FtScroll,
-    textEnum.FtProgress,
-    interactiveEnum.FtSingleSelectedLegend
+    textEnum.SwScroll,
+    textEnum.SwProgress,
+    interactiveEnum.SwSingleSelectedLegend
   ].includes(prop);
 };
 

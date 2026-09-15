@@ -94,7 +94,7 @@ import { SwInputNumber } from "@screenwright/ui/input-number";
 import { SwSingleColorPicker } from "@screenwright/ui/single-color-picker";
 import { SwSlider } from "@screenwright/ui/slider";
 import SwUpload from "@editor/base/SwUpload/index.vue";
-import shadow from "@editor/textComponent/textConfig/components/TextFtText/shadow.vue";
+import shadow from "@editor/textComponent/textConfig/components/TextSwText/shadow.vue";
 import ItemSelectAlign from "@editor/textComponent/textConfig/ItemComponent/ItemSelectAlign/index.vue";
 import { typeAttrs } from "@editor/textComponent/textConfig/ItemComponent/ItemSelectAlign/ItemSelectAlign";
 

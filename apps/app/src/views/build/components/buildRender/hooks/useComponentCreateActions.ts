@@ -5,7 +5,7 @@ import { ElMessage } from "element-plus";
 import { assign, cloneDeep } from "lodash-es";
 
 import { uuid } from "@/utils/utils";
-import { defaultGlData } from "@/views/build/components/buildConfig/attrsRender/childrenManager/defaultData";
+import { defaultGlData } from "../defaultGlData";
 
 import { FileTypeEnum } from "../../buildTabs/assetsEditFrom/type";
 import type { MenuItemForRender } from "../../buildTabs/selectAssets/assetsMenuType";

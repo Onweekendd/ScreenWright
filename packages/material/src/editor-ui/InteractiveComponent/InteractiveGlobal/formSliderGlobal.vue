@@ -241,7 +241,7 @@
 import { ref } from "vue";
 
 import { SwCollapseItem as SwCollapseItem } from "@screenwright/ui/collapse-item";
-import { SwColorPicker as ftColorPicker } from "@screenwright/ui/color-picker";
+import { SwColorPicker as swColorPicker } from "@screenwright/ui/color-picker";
 import { SwInputNumber as SwInputNumber } from "@screenwright/ui/input-number";
 import { SwSingleColorPicker as SwSingleColorPicker } from "@screenwright/ui/single-color-picker";
 import SwUpload from "@editor/base/SwUpload/index.vue";

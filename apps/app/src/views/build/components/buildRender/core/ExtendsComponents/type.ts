@@ -17,16 +17,15 @@ export const extendsComponentType: ExtendsEnum[] = [
   ExtendsEnum.UePeerStreaming,
   ExtendsEnum.UeVessel,
   ExtendsEnum.UePixelStreaming,
-  ExtendsEnum.FtUnrealEngine,
-  ExtendsEnum.FtDigitalHuman,
+  ExtendsEnum.SwUnrealEngine,
+  ExtendsEnum.SwDigitalHuman,
   ExtendsEnum.SimpleStar,
   ExtendsEnum.FullScreenSwitch,
   ExtendsEnum.PageReload,
   ExtendsEnum.SimpleParticle,
-  ExtendsEnum.SimpleBarrage,
-  ExtendsEnum.FtDataContainer,
-  ExtendsEnum.FtWeather,
-  ExtendsEnum.FtMaskLayer
+  ExtendsEnum.SwDataContainer,
+  ExtendsEnum.SwWeather,
+  ExtendsEnum.SwMaskLayer
 ];
 
 export const childComponentType: ExtendsChildComponentEnum[] = [ExtendsChildComponentEnum.UeVessel_UeMessageReceiver];

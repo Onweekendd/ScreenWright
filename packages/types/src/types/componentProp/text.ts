@@ -11,25 +11,25 @@ export enum TextEnum {
   /** 自定义折叠面板 */
   CustomCollapse = "customCollapse",
   /** 富文本 */
-  FtRichtext = "swRichtext",
+  SwRichtext = "swRichtext",
   /** 集合组件 */
-  FtCollection = "swcollection",
+  SwCollection = "swcollection",
   /** 自定义表格列表 */
   CustomTableList = "customTableList",
   /** 文本词云 */
-  FtTextWordCloud = "swTextWordCloud",
+  SwTextWordCloud = "swTextWordCloud",
   /** 多行文本 */
-  FtMultiLine = "swmultiLine",
+  SwMultiLine = "swmultiLine",
   /** 基础文本 */
-  FtText = "swtext",
+  SwText = "swtext",
   /** 进度条 */
-  FtProgress = "swProgress",
+  SwProgress = "swProgress",
   /** 日期时间 */
-  FtDatetime = "swdatetime",
+  SwDatetime = "swdatetime",
   /** 文本2 */
-  FtText2 = "swText2",
+  SwText2 = "swText2",
   /** 滚动文本 */
-  FtScroll = "swScroll"
+  SwScroll = "swScroll"
 }
 
 /** @deprecated 使用 TextEnum 代替 */

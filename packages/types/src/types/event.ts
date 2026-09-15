@@ -125,11 +125,6 @@ export enum EventTypeEnum {
   Controls = "controls",
 
   /**
-   * @description 签名提交
-   */
-  SignatureSubmit = "signatureSubmit",
-
-  /**
    * @description 视频控制
    */
   VideoControls = "videocontrols",
@@ -139,29 +134,9 @@ export enum EventTypeEnum {
    */
   None = "",
   /**
-   * @description 卡片下落结束
-   */
-  CardDropEnd = "cardDropEnd",
-  /**
-   * @description 卡片开始展开前
-   */
-  CardBeforeExpand = "cardBeforeExpand",
-  /**
-   * @description 卡片开始展开结束
-   */
-  CardEndExpand = "cardEndExpand",
-  /**
-   * @description 卡片开始收缩
-   */
-  CardStartCollapse = "cardStartCollapse",
-  /**
-   * @description 卡片收缩结束
-   */
-  CardEndCollapse = "cardEndCollapse",
-  /**
    * @description 滚动结束
    */
-  ScrollEnd = "scrollEnd",
+  ScrollEnd = "scrollEnd"
 }
 
 export enum EncodeEventTypeEnum {
@@ -178,12 +153,7 @@ export enum EncodeEventTypeEnum {
   /**
    * @description 视频控制
    */
-  VideoControls = "videocontrols",
-
-  /**
-   * @description 签名提交
-   */
-  SignatureSubmit = "signatureSubmit"
+  VideoControls = "videocontrols"
 }
 
 /**
@@ -210,7 +180,7 @@ const getDataChangeFilterComponentType = () => {
 export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
   [EventTypeEnum.None]: [],
   [EventTypeEnum.DataChange]: getDataChangeFilterComponentType(),
-  [EventTypeEnum.Change]: [interactiveEnum.FtSearch],
+  [EventTypeEnum.Change]: [interactiveEnum.SwSearch],
   [EventTypeEnum.Click]: [
     BarEchartEnum.echartbar,
     BarEchartEnum.echartstripBar,
@@ -234,54 +204,54 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtLegend,
-    interactiveEnum.FtSearch,
-    interactiveEnum.FtCustomSelect,
-    interactiveEnum.FtPageQuery,
-    interactiveEnum.FtCascader,
-    interactiveEnum.FtSingleSelectedLegend,
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwLegend,
+    interactiveEnum.SwSearch,
+    interactiveEnum.SwCustomSelect,
+    interactiveEnum.SwPageQuery,
+    interactiveEnum.SwCascader,
+    interactiveEnum.SwSingleSelectedLegend,
     interactiveEnum.FormNavMenu,
-    interactiveEnum.FtTimerShaft,
+    interactiveEnum.SwTimerShaft,
     interactiveEnum.PointTimeline,
-    interactiveEnum.FtPageTurning,
-    interactiveEnum.FtDateTimePicker,
+    interactiveEnum.SwPageTurning,
+    interactiveEnum.SwDateTimePicker,
     interactiveEnum.ScrollPicker,
-    textEnum.FtProgress,
-    textEnum.FtTextWordCloud,
+    textEnum.SwProgress,
+    textEnum.SwTextWordCloud,
     mediaEnum.CtVideoPanel,
-    textEnum.FtScroll,
-    mediaEnum.FtSwiperCard,
+    textEnum.SwScroll,
+    mediaEnum.SwSwiperCard,
     textEnum.CustomTableList,
     ExhibitEnum.ImagesList3d,
     sceneEnum.EchartcommonMap,
     sceneEnum.EchartGlmap,
-    textEnum.FtCollection,
+    textEnum.SwCollection,
     ThirdPartEnum.VuePart,
     ExhibitEnum.RingIndicator3d,
     ExhibitEnum.ringIndicator3dNew,
     interactiveEnum.videoProgress
   ],
-  [EventTypeEnum.ContextmenuClick]: [interactiveEnum.FtMutual],
-  [EventTypeEnum.Ended]: [mediaEnum.FtVideo, mediaEnum.FtOpenVideo],
-  [EventTypeEnum.Controls]: [mediaEnum.FtVideo],
+  [EventTypeEnum.ContextmenuClick]: [interactiveEnum.SwMutual],
+  [EventTypeEnum.Ended]: [mediaEnum.SwVideo, mediaEnum.SwOpenVideo],
+  [EventTypeEnum.Controls]: [mediaEnum.SwVideo],
   [EventTypeEnum.MouseEnter]: [
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwCustomSelect
   ],
   [EventTypeEnum.MouseLeave]: [
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwCustomSelect
   ],
   [EventTypeEnum.UeToFunEvent]: [
     extendsChildComponentEnum.UeVessel_UeMessageReceiver,
-    extendsChildComponentEnum.FtUnrealEngine_UeMessageReceiver,
+    extendsChildComponentEnum.SwUnrealEngine_UeMessageReceiver,
     extendsChildComponentEnum.UePeerStreaming_UeMessageReceiver,
     extendsChildComponentEnum.UePixelStreaming_UeMessageReceiver
     // "ue-pixel-streaming-child", // TODO: 待添加组件
@@ -336,13 +306,7 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     sceneEnum.IndustryScene
     // "threescene" // TODO: 待添加组件
   ],
-  [EventTypeEnum.SignatureSubmit]: [ExhibitEnum.FtSignaturePad],
-  [EventTypeEnum.VideoControls]: [mediaEnum.FtVideo],
-  [EventTypeEnum.CardDropEnd]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardBeforeExpand]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardEndExpand]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardStartCollapse]: [ExhibitEnum.verticalCard],
-  [EventTypeEnum.CardEndCollapse]: [ExhibitEnum.verticalCard],
+  [EventTypeEnum.VideoControls]: [mediaEnum.SwVideo],
   [EventTypeEnum.ScrollEnd]: [PanelEnum.dynamicPanel]
 };
 
@@ -379,12 +343,6 @@ export const EventList: { label: string; value: EventTypeEnum }[] = [
   { label: "场景初始化结束", value: EventTypeEnum.AfterSceneInit },
   { label: "场景切换状态结束", value: EventTypeEnum.AfterUpdateState },
   { label: "鼠标点击模型子节点", value: EventTypeEnum.ModelNodeClick },
-  { label: "签名提交", value: EventTypeEnum.SignatureSubmit },
-  { label: "卡片滑落结束", value: EventTypeEnum.CardDropEnd },
-  { label: "卡片开始展开前", value: EventTypeEnum.CardBeforeExpand },
-  { label: "卡片展开结束", value: EventTypeEnum.CardEndExpand },
-  { label: "卡片开始收缩", value: EventTypeEnum.CardStartCollapse },
-  { label: "卡片收缩结束", value: EventTypeEnum.CardEndCollapse },
   { label: "滚动结束", value: EventTypeEnum.ScrollEnd }
 ];
 
@@ -393,8 +351,7 @@ export const EventList: { label: string; value: EventTypeEnum }[] = [
  */
 export const EncodeEventList: { label: string; value: EncodeEventTypeEnum | EventTypeEnum }[] = [
   { label: "鼠标点击", value: EncodeEventTypeEnum.Click },
-  { label: "视频控制", value: EncodeEventTypeEnum.VideoControls },
-  { label: "签名提交", value: EncodeEventTypeEnum.SignatureSubmit }
+  { label: "视频控制", value: EncodeEventTypeEnum.VideoControls }
 ];
 
 /**
@@ -425,25 +382,25 @@ export const EncodeEvent2ComponentType: Record<EncodeEventTypeEnum, AllComponent
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtLegend,
-    interactiveEnum.FtSearch,
-    interactiveEnum.FtCustomSelect,
-    interactiveEnum.FtPageQuery,
-    interactiveEnum.FtCascader,
-    interactiveEnum.FtSingleSelectedLegend,
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwLegend,
+    interactiveEnum.SwSearch,
+    interactiveEnum.SwCustomSelect,
+    interactiveEnum.SwPageQuery,
+    interactiveEnum.SwCascader,
+    interactiveEnum.SwSingleSelectedLegend,
     interactiveEnum.FormNavMenu,
-    interactiveEnum.FtTimerShaft,
+    interactiveEnum.SwTimerShaft,
     interactiveEnum.PointTimeline,
-    interactiveEnum.FtPageTurning,
-    interactiveEnum.FtDateTimePicker,
+    interactiveEnum.SwPageTurning,
+    interactiveEnum.SwDateTimePicker,
     interactiveEnum.ScrollPicker,
     interactiveEnum.FormCheckbox,
-    textEnum.FtProgress,
-    textEnum.FtTextWordCloud,
+    textEnum.SwProgress,
+    textEnum.SwTextWordCloud,
     mediaEnum.CtVideoPanel,
-    textEnum.FtScroll,
-    mediaEnum.FtSwiperCard,
+    textEnum.SwScroll,
+    mediaEnum.SwSwiperCard,
     textEnum.CustomTableList,
     ExhibitEnum.ImagesList3d,
     sceneEnum.EchartcommonMap,
@@ -451,8 +408,7 @@ export const EncodeEvent2ComponentType: Record<EncodeEventTypeEnum, AllComponent
     interactiveEnum.FormSwitch,
     ThirdPartEnum.VuePart
   ],
-  [EncodeEventTypeEnum.VideoControls]: [mediaEnum.FtVideo, interactiveEnum.videoProgress],
-  [EncodeEventTypeEnum.SignatureSubmit]: [ExhibitEnum.FtSignaturePad]
+  [EncodeEventTypeEnum.VideoControls]: [mediaEnum.SwVideo, interactiveEnum.videoProgress]
 };
 
 /**
@@ -482,32 +438,32 @@ export const allowEventComponentList = [
   "vue-part",
   interactiveEnum.MultiSubtabs,
   interactiveEnum.RollSubtabs,
-  interactiveEnum.FtMutual,
-  interactiveEnum.FtSearch,
-  interactiveEnum.FtTimerShaft,
-  interactiveEnum.FtCustomSelect,
+  interactiveEnum.SwMutual,
+  interactiveEnum.SwSearch,
+  interactiveEnum.SwTimerShaft,
+  interactiveEnum.SwCustomSelect,
   sceneEnum.EchartcommonMap,
   sceneEnum.EchartGlmap,
   "threescene",
   "industryscene",
   "maptalks",
-  interactiveEnum.FtLegend,
-  textEnum.FtTextWordCloud,
-  interactiveEnum.FtPageQuery,
-  interactiveEnum.FtPageTurning,
-  interactiveEnum.FtDateTimePicker,
-  mediaEnum.FtVideo,
+  interactiveEnum.SwLegend,
+  textEnum.SwTextWordCloud,
+  interactiveEnum.SwPageQuery,
+  interactiveEnum.SwPageTurning,
+  interactiveEnum.SwDateTimePicker,
+  mediaEnum.SwVideo,
   "sw-audio",
-  mediaEnum.FtOpenVideo,
+  mediaEnum.SwOpenVideo,
   mediaEnum.CtVideoPanel,
-  textEnum.FtScroll,
-  textEnum.FtProgress,
+  textEnum.SwScroll,
+  textEnum.SwProgress,
   "sw-dataContainer",
-  interactiveEnum.FtCascader,
+  interactiveEnum.SwCascader,
   "ue-vessel",
   "ue-pixel-streaming",
   "ue-peer-streaming",
-  interactiveEnum.FtSingleSelectedLegend,
+  interactiveEnum.SwSingleSelectedLegend,
   textEnum.CustomTableList,
   "imagesList3d",
   "ringIndicator3d",
@@ -524,16 +480,13 @@ export const allowEventComponentList = [
   interactiveEnum.FormSwitch,
   interactiveEnum.FormNavMenu,
   interactiveEnum.FormCheckbox,
-  "simple-barrage",
   "map-project",
-  mediaEnum.FtSwiperCard,
-  interactiveEnum.FtVoiceControl,
-  textEnum.FtCollection,
-  ExhibitEnum.FtSignaturePad,
+  mediaEnum.SwSwiperCard,
+  interactiveEnum.SwVoiceControl,
+  textEnum.SwCollection,
   extendsEnum.UePeerStreaming,
   extendsEnum.UePixelStreaming,
   extendsEnum.UeVessel,
-  ExhibitEnum.verticalCard,
   PanelEnum.dynamicPanel,
   interactiveEnum.videoProgress
 ];

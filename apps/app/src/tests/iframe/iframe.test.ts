@@ -4,7 +4,6 @@ import {
   initActionStrategyExecutor,
   initFilterDataApi,
   initRouter,
-  initSendUE4Message,
   initStatusAnimationTrigger
 } from "@screenwright/composables";
 import {
@@ -87,7 +86,6 @@ initFilterDataApi({ executeSql: vi.fn(), queryAPIData, getCsvData: vi.fn() });
 // 与 main.ts 的实现不同：那里注入的是 ActionStrategyFactory/useStatusAnimation 等真实实现，
 // 但那些模块会间接触发 window.webconfig 依赖，放在这个纯数据流测试里没必要引入。
 initActionStrategyExecutor(() => {});
-initSendUE4Message(() => {});
 initStatusAnimationTrigger(async () => {});
 // resolveEditMode（@screenwright/composables）现在由注入的 router + useEditStore 派生，不再通过闭包注入；
 // 这里注入最小 router 桩，使其派生结果与本测试原先固定注入的全 false 一致。
@@ -279,7 +277,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("iframe 引用 终端组件 回调关系建立成功", async () => {
     const { groupData } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
 
     const { initIframe } = useIframe({ element: iframeComponent });
 
@@ -334,7 +332,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("数据容器触发回调 → 文本框接收 cbName 并执行过滤器", async () => {
     const { groupData, iframeComponentMap } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
 
     const { initIframe } = useIframe({ element: iframeComponent });
     await initIframe();
@@ -391,7 +389,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("source 组件不存在时回调不触发", async () => {
     const { groupData, iframeComponentMap } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
     const { initIframe } = useIframe({ element: iframeComponent });
     await initIframe();
 
@@ -419,7 +417,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("交互组件点击 → 数据容器接收 cbValue 并发起 API 请求", async () => {
     const { groupData, iframeComponentMap } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
     const { initIframe } = useIframe({ element: iframeComponent });
     await initIframe();
 
@@ -479,7 +477,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("initIframe，动态面板状态离开后再次进入同一 iframe，过滤器前缀只添加一次", async () => {
     const { groupData, iframeComponentMap } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
     const { initIframe } = useIframe({ element: iframeComponent });
 
     await initIframe();
@@ -493,7 +491,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("initIframe，动态面板状态离开后再次进入同一 iframe，回调过滤器仍正常执行", async () => {
     const { groupData, iframeComponentMap } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
     const { initIframe } = useIframe({ element: iframeComponent });
     await initIframe();
     await initIframe();
@@ -523,7 +521,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("addCallbackArgumentsFromComponentList，同一 iframe 重复初始化，回调关系保持唯一", async () => {
     const { groupData } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
     const { initIframe } = useIframe({ element: iframeComponent });
     await initIframe();
     await initIframe();
@@ -536,7 +534,7 @@ describe("useDataFilter - 面板外组件向面板内组件传递回调参数", 
 
   it("unRegisterFilter，iframe 内组件卸载，移除该组件的全部过滤器事件监听", async () => {
     const { groupData, iframeComponentMap } = useGlobalComponentData();
-    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.FtIframe>;
+    const iframeComponent = groupData.value[0] as ComponentType<mediaEnum.SwIframe>;
     const { initIframe } = useIframe({ element: iframeComponent });
     await initIframe();
 

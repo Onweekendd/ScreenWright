@@ -1,7 +1,6 @@
 import type { Component } from "vue";
 
 import { ActionTypeEnum } from "../../../../constants/action";
-import ActionJumpPage from "./actions/ActionJumpPage.vue";
 import ActionMoving from "./actions/ActionMoving.vue";
 import ActionNextPage from "./actions/ActionNextPage.vue";
 import ActionPrevPage from "./actions/ActionPrevPage.vue";
@@ -81,17 +80,10 @@ export const actionComponentMap: Record<string, Component> = {
   [ActionTypeEnum.ScalingHide]: ActionScaling,
   [ActionTypeEnum.SetIndex]: SetIndex,
   [ActionTypeEnum.UpdateConfig]: UpdateConfig,
-  [ActionTypeEnum.JumpPage]: ActionJumpPage,
   [ActionTypeEnum.prevPage]: ActionPrevPage,
   [ActionTypeEnum.nextPage]: ActionNextPage,
   [ActionTypeEnum.SwiperCardChangeIndex]: SwiperCardChangeIndexPage,
 
-  [ActionTypeEnum.OnExport]: SetDelay,
-  [ActionTypeEnum.OnClear]: SetDelay,
-  [ActionTypeEnum.OnRedo]: SetDelay,
-  [ActionTypeEnum.OnUndo]: SetDelay,
-  // [ActionTypeEnum.OnTranslateImage]: SetDelay,
-  [ActionTypeEnum.Signature]: SetDelay,
   [ActionTypeEnum.TurnOnPatrol]: SetDelay,
   [ActionTypeEnum.PausePatrol]: SetDelay,
 

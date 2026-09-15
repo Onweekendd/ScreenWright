@@ -1,6 +1,6 @@
-// recorder-core 是第三方 UMD 录音库（https://github.com/xiangyuecn/Recorder），无类型声明。
-// ftVoiceControl 组件与主包 AIChartBox 均需使用，统一从 @screenwright/material 导出，避免反向依赖主包内部路径。
-// 以 namespace 形式导出，与 ftVoiceControl / AIChartBox 既有的 `import * as X` + `X.default` 用法一致；
-// 运行时取值方式：`recorderCore.default || window.RecorderIns`。
-// @ts-ignore - UMD 模块无类型声明
-export * as recorderCore from "./components/ScreenwrightInteractive/components/ftVoiceControl/recorder-core.js";
+// recorder-core 的官方 ESM 入口；使用它可避免引入项目内的 UMD 副本。
+// 虽然该库仍会向 window 挂载 Recorder 以兼容传统调用，但业务代码只使用此模块导出。
+import Recorder from "recorder-core/src/recorder-core.js.esm.js";
+
+export const recorderCore = Recorder;
+export default Recorder;

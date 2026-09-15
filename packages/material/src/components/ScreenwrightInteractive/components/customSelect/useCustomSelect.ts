@@ -477,7 +477,7 @@ export const useCustomSelect = (props: { element: ComponentType }) => {
 
     // 注册组件事件到全局事件系统
     addEvent({
-      [`${interactiveEnum.FtCustomSelect}-${props.element.id}`]: {
+      [`${interactiveEnum.SwCustomSelect}-${props.element.id}`]: {
         handleClick,
       },
     });

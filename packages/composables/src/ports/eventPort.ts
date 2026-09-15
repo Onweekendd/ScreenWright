@@ -42,9 +42,6 @@ export type ActionStrategyExecutorFn = (
 
 export type SendUE4MessageParams = ActionExecutionParams & { ue4Config: Ue4Config };
 
-/** 替代 useEncodeCommunication.handleUE4Message 里 `new sendUE4MessageStrategy().execute(...)` */
-export type SendUE4MessageFn = (params: SendUE4MessageParams) => void | Promise<void>;
-
 /** 替代 useStatusAnimation().triggerStatusAnimationByAction（状态动画留在 app，编辑器状态） */
 export type StatusAnimationTriggerFn = (panelStatusAnimationId: string, panelStatusId: string) => Promise<void>;
 
@@ -83,8 +80,9 @@ const actionStrategyExecutorPort = createPort<ActionStrategyExecutorFn>("actionS
 export const initActionStrategyExecutor = actionStrategyExecutorPort.init;
 export const getActionStrategyExecutor = actionStrategyExecutorPort.get;
 
-const sendUE4MessagePort = createPort<SendUE4MessageFn>("sendUE4Message");
-export const initSendUE4Message = sendUE4MessagePort.init;
+const sendUE4MessagePort = createPort<(params: SendUE4MessageParams) => void | Promise<void>>(
+  "sendUE4Message"
+);
 export const getSendUE4Message = sendUE4MessagePort.get;
 
 const statusAnimationTriggerPort = createPort<StatusAnimationTriggerFn>("statusAnimationTrigger");

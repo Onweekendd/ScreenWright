@@ -1,7 +1,7 @@
 import type { ComponentType } from "@screenwright/types";
 
 /**
- * useUpdateInstance/useChildrenDrawer/useDataFilter(views/build) 共同依赖的唯一真正 IO 边界：
+ * useUpdateInstance/useDataFilter(views/build) 共同依赖的唯一真正 IO 边界：
  * 保存图层(saveLayersByType，内部耦合状态动画同步/HTTP/DOM reload，整体作为一个端口注入，不拆解)
  * 和保存大屏全局配置(updateLargeScreen，原生 HTTP)。
  *

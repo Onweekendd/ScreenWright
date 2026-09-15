@@ -2,7 +2,7 @@ import { markRaw, nextTick, ref } from "vue";
 
 import { useBaseData } from "@/hooks/useBaseData";
 import { setMinioUrl } from "@/utils/config";
-import { defaultGlData } from "@/views/build/components/buildConfig/attrsRender/childrenManager/defaultData";
+import { defaultGlData } from "@/views/build/components/buildRender/defaultGlData";
 import { EventTypeEnum } from "@/views/build/components/buildConfig/constants";
 import {
   getCurrentMapRegionSelection,

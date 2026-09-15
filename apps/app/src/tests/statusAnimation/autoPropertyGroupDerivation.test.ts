@@ -20,7 +20,7 @@ describe("自动属性组推导功能", () => {
     testUtils.cleanupTestEnvironment();
   });
   it("应该为 FtImg 组件推导出正确的属性组", () => {
-    const groups = getComponentPropertyGroups(mediaEnum.FtImg);
+    const groups = getComponentPropertyGroups(mediaEnum.SwImg);
 
     // 验证包含所有预期的属性组
     expect(groups).toContain("position");
@@ -33,7 +33,7 @@ describe("自动属性组推导功能", () => {
   });
 
   it("应该为 FtText 组件推导出正确的属性组", () => {
-    const groups = getComponentPropertyGroups(textEnum.FtText);
+    const groups = getComponentPropertyGroups(textEnum.SwText);
 
     // 验证包含所有预期的属性组
     expect(groups).toContain("position");
@@ -46,7 +46,7 @@ describe("自动属性组推导功能", () => {
   });
 
   it("应该为 FtMutual 组件推导出正确的属性组", () => {
-    const groups = getComponentPropertyGroups(interactiveEnum.FtMutual);
+    const groups = getComponentPropertyGroups(interactiveEnum.SwMutual);
 
     // 验证包含所有预期的属性组
     expect(groups).toContain("position");
@@ -59,7 +59,7 @@ describe("自动属性组推导功能", () => {
   });
 
   it("应该返回完整的属性组配置（包含属性列表）", () => {
-    const groupsWithProps = getComponentPropertyGroupsWithProperties(mediaEnum.FtImg);
+    const groupsWithProps = getComponentPropertyGroupsWithProperties(mediaEnum.SwImg);
 
     // 验证返回的是完整的属性组配置
     expect(Array.isArray(groupsWithProps)).toBe(true);
@@ -95,7 +95,7 @@ describe("自动属性组推导功能", () => {
   });
 
   it("应该正确去重属性列表", () => {
-    const groupsWithProps = getComponentPropertyGroupsWithProperties(mediaEnum.FtImg);
+    const groupsWithProps = getComponentPropertyGroupsWithProperties(mediaEnum.SwImg);
 
     // 验证每个属性组中的属性都是唯一的
     groupsWithProps.forEach((group) => {

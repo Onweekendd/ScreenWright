@@ -5,48 +5,48 @@ import { TextEnum } from "@screenwright/types";
 // ── Global ──
 import customCollapseGlobal from "./textGlobal/customCollapseGlobal.vue";
 import customTableListGlobal from "./textGlobal/customTableListGlobal.vue";
-import ftProgressGlobal from "./textGlobal/ftProgressGlobal.vue";
-import ftRichtextGlobal from "./textGlobal/ftRichtextGlobal.vue";
-import ftScrollGlobal from "./textGlobal/ftScrollGlobal.vue";
-import ftText2Global from "./textGlobal/ftText2Global.vue";
-import ftTextWordCloudGlobal from "./textGlobal/ftTextWordCloudGlobal.vue";
-import ftcollectionGlobal from "./textGlobal/ftcollectionGlobal.vue";
-import ftdatetimeGlobal from "./textGlobal/ftdatetimeGlobal.vue";
-import ftmultiLineGlobal from "./textGlobal/ftmultiLineGlobal.vue";
-import fttextGlobal from "./textGlobal/fttextGlobal.vue";
+import swProgressGlobal from "./textGlobal/swProgressGlobal.vue";
+import swRichtextGlobal from "./textGlobal/swRichtextGlobal.vue";
+import swScrollGlobal from "./textGlobal/swScrollGlobal.vue";
+import swText2Global from "./textGlobal/swText2Global.vue";
+import swTextWordCloudGlobal from "./textGlobal/swTextWordCloudGlobal.vue";
+import swcollectionGlobal from "./textGlobal/swcollectionGlobal.vue";
+import swdatetimeGlobal from "./textGlobal/swdatetimeGlobal.vue";
+import swmultiLineGlobal from "./textGlobal/swmultiLineGlobal.vue";
+import swtextGlobal from "./textGlobal/swtextGlobal.vue";
 
 // ── LoadingEffect ──
-import ftRichtextLoadingEffect from "./textLoadingEffect/ftRichtextLoadingEffect.vue";
-import ftText2LoadingEffect from "./textLoadingEffect/ftText2LoadingEffect.vue";
-import fttextLoadingEffect from "./textLoadingEffect/fttextLoadingEffect.vue";
+import swRichtextLoadingEffect from "./textLoadingEffect/swRichtextLoadingEffect.vue";
+import swText2LoadingEffect from "./textLoadingEffect/swText2LoadingEffect.vue";
+import swtextLoadingEffect from "./textLoadingEffect/swtextLoadingEffect.vue";
 
 // ── DataList ──
 import customCollapseDataList from "./textDataList/customCollapseDataList.vue";
 
 // ── RowConfig ──
 import customTableListRowConfig from "./textRowConfig/customTableListRowConfig.vue";
-import ftProgressRowConfig from "./textRowConfig/ftProgressRowConfig.vue";
-import ftScrollRowConfig from "./textRowConfig/ftScrollRowConfig.vue";
+import swProgressRowConfig from "./textRowConfig/swProgressRowConfig.vue";
+import swScrollRowConfig from "./textRowConfig/swScrollRowConfig.vue";
 
 // ── ColumnConfig ──
-import ftProgressColumnConfig from "./textColumnConfig/ftProgressColumnConfig.vue";
-import ftScrollColumnConfig from "./textColumnConfig/ftScrollColumnConfig.vue";
+import swProgressColumnConfig from "./textColumnConfig/swProgressColumnConfig.vue";
+import swScrollColumnConfig from "./textColumnConfig/swScrollColumnConfig.vue";
 
 // ── Item ──
 import customTableListItem from "./textItem/customTableListItem.vue";
 
 // ── CardSetting ──
-import ftcollectionCardSetting from "./textCardSetting/ftcollectionCardSetting.vue";
+import swcollectionCardSetting from "./textCardSetting/swcollectionCardSetting.vue";
 
 // ── Title ──
-import ftcollectionTitle from "./textTitle/ftcollectionTitle.vue";
+import swcollectionTitle from "./textTitle/swcollectionTitle.vue";
 
 // ── Series ──
-import ftTextWordCloudSeries from "./textSeries/ftTextWordCloudSeries.vue";
-import ftcollectionSeries from "./textSeries/ftcollectionSeries.vue";
+import swTextWordCloudSeries from "./textSeries/swTextWordCloudSeries.vue";
+import swcollectionSeries from "./textSeries/swcollectionSeries.vue";
 
 // ── SpecifiedStyle ──
-import ftText2SpecifiedStyle from "./textSpecifiedStyle/ftText2SpecifiedStyle.vue";
+import swText2SpecifiedStyle from "./textSpecifiedStyle/swText2SpecifiedStyle.vue";
 
 export enum optionType {
   global = "Global",
@@ -72,48 +72,48 @@ export const ScreenwrightTextConfigComponent: Record<TextEnum, ConfigTab[]> = {
     { label: "全局", value: optionType.global, component: customCollapseGlobal },
     { label: "数据列表", value: optionType.dataList, component: customCollapseDataList }
   ],
-  [TextEnum.FtRichtext]: [
-    { label: "全局", value: optionType.global, component: ftRichtextGlobal },
-    { label: "入场效果", value: optionType.loadingEffect, component: ftRichtextLoadingEffect }
+  [TextEnum.SwRichtext]: [
+    { label: "全局", value: optionType.global, component: swRichtextGlobal },
+    { label: "入场效果", value: optionType.loadingEffect, component: swRichtextLoadingEffect }
   ],
-  [TextEnum.FtCollection]: [
-    { label: "全局", value: optionType.global, component: ftcollectionGlobal },
-    { label: "卡片设置", value: optionType.cardSetting, component: ftcollectionCardSetting },
-    { label: "标题", value: optionType.title, component: ftcollectionTitle },
-    { label: "系列", value: optionType.series, component: ftcollectionSeries }
+  [TextEnum.SwCollection]: [
+    { label: "全局", value: optionType.global, component: swcollectionGlobal },
+    { label: "卡片设置", value: optionType.cardSetting, component: swcollectionCardSetting },
+    { label: "标题", value: optionType.title, component: swcollectionTitle },
+    { label: "系列", value: optionType.series, component: swcollectionSeries }
   ],
   [TextEnum.CustomTableList]: [
     { label: "全局", value: optionType.global, component: customTableListGlobal },
     { label: "行配置", value: optionType.rowConfig, component: customTableListRowConfig },
     { label: "子项", value: optionType.item, component: customTableListItem }
   ],
-  [TextEnum.FtTextWordCloud]: [
-    { label: "全局", value: optionType.global, component: ftTextWordCloudGlobal },
-    { label: "系列", value: optionType.series, component: ftTextWordCloudSeries }
+  [TextEnum.SwTextWordCloud]: [
+    { label: "全局", value: optionType.global, component: swTextWordCloudGlobal },
+    { label: "系列", value: optionType.series, component: swTextWordCloudSeries }
   ],
-  [TextEnum.FtMultiLine]: [
-    { label: "全局", value: optionType.global, component: ftmultiLineGlobal }
+  [TextEnum.SwMultiLine]: [
+    { label: "全局", value: optionType.global, component: swmultiLineGlobal }
   ],
-  [TextEnum.FtText]: [
-    { label: "全局", value: optionType.global, component: fttextGlobal },
-    { label: "载入效果", value: optionType.loadingEffect, component: fttextLoadingEffect }
+  [TextEnum.SwText]: [
+    { label: "全局", value: optionType.global, component: swtextGlobal },
+    { label: "载入效果", value: optionType.loadingEffect, component: swtextLoadingEffect }
   ],
-  [TextEnum.FtProgress]: [
-    { label: "全局", value: optionType.global, component: ftProgressGlobal },
-    { label: "行配置", value: optionType.rowConfig, component: ftProgressRowConfig },
-    { label: "列配置", value: optionType.columnConfig, component: ftProgressColumnConfig }
+  [TextEnum.SwProgress]: [
+    { label: "全局", value: optionType.global, component: swProgressGlobal },
+    { label: "行配置", value: optionType.rowConfig, component: swProgressRowConfig },
+    { label: "列配置", value: optionType.columnConfig, component: swProgressColumnConfig }
   ],
-  [TextEnum.FtDatetime]: [
-    { label: "全局", value: optionType.global, component: ftdatetimeGlobal }
+  [TextEnum.SwDatetime]: [
+    { label: "全局", value: optionType.global, component: swdatetimeGlobal }
   ],
-  [TextEnum.FtText2]: [
-    { label: "全局", value: optionType.global, component: ftText2Global },
-    { label: "载入效果", value: optionType.loadingEffect, component: ftText2LoadingEffect },
-    { label: "指定样式", value: optionType.specifiedStyle, component: ftText2SpecifiedStyle }
+  [TextEnum.SwText2]: [
+    { label: "全局", value: optionType.global, component: swText2Global },
+    { label: "载入效果", value: optionType.loadingEffect, component: swText2LoadingEffect },
+    { label: "指定样式", value: optionType.specifiedStyle, component: swText2SpecifiedStyle }
   ],
-  [TextEnum.FtScroll]: [
-    { label: "全局", value: optionType.global, component: ftScrollGlobal },
-    { label: "行配置", value: optionType.rowConfig, component: ftScrollRowConfig },
-    { label: "列配置", value: optionType.columnConfig, component: ftScrollColumnConfig }
+  [TextEnum.SwScroll]: [
+    { label: "全局", value: optionType.global, component: swScrollGlobal },
+    { label: "行配置", value: optionType.rowConfig, component: swScrollRowConfig },
+    { label: "列配置", value: optionType.columnConfig, component: swScrollColumnConfig }
   ]
 };

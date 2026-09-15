@@ -281,39 +281,6 @@ export enum ActionTypeEnum {
   nextPage = "nextPage",
 
   /**
-   * @description 导出
-   */
-  OnExport = "onExport",
-
-  /**
-   * @description 清除
-   */
-  OnClear = "onClear",
-
-  /**
-   * @description 重做
-   */
-  OnRedo = "onRedo",
-
-  /**
-   * @description 撤销
-   */
-  OnUndo = "onUndo",
-
-  /**
-   * @description 转换图像
-   */
-  OnTranslateImage = "onTranslateImage",
-
-  /**
-   * @description 签名
-   */
-  Signature = "signature",
-  /**
-   * @description 跳转页码
-   */
-  JumpPage = "jumpPage",
-  /**
    * @description 轮巡开启
    */
   TurnOnPatrol = "turnOnPatrol",
@@ -372,7 +339,7 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtCustomSelect,
+    interactiveEnum.SwCustomSelect,
     interactiveEnum.ScrollPicker
   ],
 
@@ -412,7 +379,7 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     projectEchartEnum.echartzebraBarAndLine,
     projectEchartEnum.echarteffectScatter,
     projectEchartEnum.echartgrowthRateBar,
-    interactiveEnum.FtTimerShaft,
+    interactiveEnum.SwTimerShaft,
     interactiveEnum.PointTimeline
   ],
 
@@ -504,94 +471,85 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     projectEchartEnum.echarteffectScatter,
     projectEchartEnum.echartgrowthRateBar,
     PanelEnum.dynamicPanel,
-    mediaEnum.FtIframe
+    mediaEnum.SwIframe
   ],
 
   [ActionTypeEnum.MouseEnter]: [
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwCustomSelect
   ],
 
   [ActionTypeEnum.MouseLeave]: [
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
-    interactiveEnum.FtMutual,
-    interactiveEnum.FtCustomSelect
+    interactiveEnum.SwMutual,
+    interactiveEnum.SwCustomSelect
   ],
 
   [ActionTypeEnum.SendUe4Msg]: [
     extendsEnum.UeVessel,
     extendsEnum.UePeerStreaming,
     extendsEnum.UePixelStreaming,
-    extendsEnum.FtUnrealEngine
+    extendsEnum.SwUnrealEngine
   ],
   [ActionTypeEnum.SendUe4MsgStatic]: [
     extendsEnum.UeVessel,
     extendsEnum.UePeerStreaming,
     extendsEnum.UePixelStreaming,
-    extendsEnum.FtUnrealEngine
+    extendsEnum.SwUnrealEngine
   ],
-  [ActionTypeEnum.SwitchBlueprintTab]: [extendsEnum.FtUnrealEngine],
+  [ActionTypeEnum.SwitchBlueprintTab]: [extendsEnum.SwUnrealEngine],
   [ActionTypeEnum.VideoToPlay]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
   [ActionTypeEnum.VideoToPause]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
   [ActionTypeEnum.VideoToStop]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
   [ActionTypeEnum.VideoToRestart]: [
-    mediaEnum.FtVideo
+    mediaEnum.SwVideo
     // "sw-digital-human" // TODO: 待添加组件
   ],
-  [ActionTypeEnum.VideoToFullscreen]: [mediaEnum.FtVideo],
+  [ActionTypeEnum.VideoToFullscreen]: [mediaEnum.SwVideo],
   [ActionTypeEnum.VideoToSwitch]: [
     // "sw-digital-human" // TODO: 待添加组件
   ],
-  [ActionTypeEnum.SendAIManMsgStatic]: [extendsEnum.FtDigitalHuman],
+  [ActionTypeEnum.SendAIManMsgStatic]: [extendsEnum.SwDigitalHuman],
   [ActionTypeEnum.SwiperCardChangeIndex]: [
-    mediaEnum.FtSwiperCard,
-    ExhibitEnum.ImagesList3d, // TODO: 待添加组件
-    ExhibitEnum.verticalCard
+    mediaEnum.SwSwiperCard,
+    ExhibitEnum.ImagesList3d // TODO: 待添加组件
   ],
   [ActionTypeEnum.ProjectSpecificFun]: [
     // "map-project" // TODO: 待添加组件
   ],
-  [ActionTypeEnum.VideoToUnmuted]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToMuted]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToAudioUp]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToAudioDown]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToFastin]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToRewind]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VideoToPlayRange]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.SwitchVideoProgress]: [mediaEnum.FtVideo],
-  [ActionTypeEnum.VoiceControlStart]: [interactiveEnum.FtVoiceControl],
-  [ActionTypeEnum.VoiceControlStop]: [interactiveEnum.FtVoiceControl],
-  [ActionTypeEnum.JumpPage]: [ExhibitEnum.PdfjsViewer],
-  [ActionTypeEnum.prevPage]: [ExhibitEnum.PdfjsViewer, MediaEnum.CtVideoPanel],
-  [ActionTypeEnum.nextPage]: [ExhibitEnum.PdfjsViewer, MediaEnum.CtVideoPanel],
-  [ActionTypeEnum.OnExport]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnClear]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnRedo]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnUndo]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.Signature]: [ExhibitEnum.FtSignaturePad],
-  [ActionTypeEnum.OnTranslateImage]: [],
-
+  [ActionTypeEnum.VideoToUnmuted]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToMuted]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToAudioUp]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToAudioDown]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToFastin]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToRewind]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VideoToPlayRange]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.SwitchVideoProgress]: [mediaEnum.SwVideo],
+  [ActionTypeEnum.VoiceControlStart]: [interactiveEnum.SwVoiceControl],
+  [ActionTypeEnum.VoiceControlStop]: [interactiveEnum.SwVoiceControl],
+  [ActionTypeEnum.prevPage]: [MediaEnum.CtVideoPanel],
+  [ActionTypeEnum.nextPage]: [MediaEnum.CtVideoPanel],
   [ActionTypeEnum.TurnOnPatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
   [ActionTypeEnum.PausePatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
   [ActionTypeEnum.RestartPatrol]: [interactiveEnum.PointTimeline, PanelEnum.dynamicPanel],
   [ActionTypeEnum.PauseScroll]: [PanelEnum.dynamicPanel],
   [ActionTypeEnum.StartScroll]: [PanelEnum.dynamicPanel],
   [ActionTypeEnum.toPrevStatus]: [PanelEnum.dynamicPanel],
-  [ActionTypeEnum.toNextStatus]: [PanelEnum.dynamicPanel],
+  [ActionTypeEnum.toNextStatus]: [PanelEnum.dynamicPanel]
 };
 
 export const ActionList: { label: string; value: ActionTypeEnum }[] = [
@@ -646,12 +604,6 @@ export const ActionList: { label: string; value: ActionTypeEnum }[] = [
   { label: "麦克风结束", value: ActionTypeEnum.VoiceControlStop },
   { label: "上一页", value: ActionTypeEnum.prevPage },
   { label: "下一页", value: ActionTypeEnum.nextPage },
-  { label: "导出", value: ActionTypeEnum.OnExport },
-  { label: "清除", value: ActionTypeEnum.OnClear },
-  { label: "重做", value: ActionTypeEnum.OnRedo },
-  { label: "撤销", value: ActionTypeEnum.OnUndo },
-  { label: "传递图片", value: ActionTypeEnum.OnTranslateImage },
-  { label: "跳转页码", value: ActionTypeEnum.JumpPage },
   { label: "轮巡开启", value: ActionTypeEnum.TurnOnPatrol },
   { label: "轮巡暂停", value: ActionTypeEnum.PausePatrol },
   { label: "轮巡重启", value: ActionTypeEnum.RestartPatrol },
@@ -1218,9 +1170,6 @@ export interface Action {
 
   /** @description 事件选择模型集合 */
   option?: Record<string, any>;
-
-  /** @description 当前页码 */
-  currentpage?: number;
 
   /** @description 译文转换 */
   translation?: string;

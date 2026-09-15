@@ -18,12 +18,12 @@ export const EXCLUDED_COMPONENT_PROPS = new Set<string | number>([
 
 /** 挂接特殊翻译 */
 export const SPECIAL_TRANSLATION_BY_PROP = new Map<string | number, SpecialTranslateHandler>([
-  [MediaEnum.FtSwiperCard, handleSwiperCard],
-  [MediaEnum.FtSwiper, handleSwiper],
-  [MediaEnum.FtSwiperV3, handleSwiper],
+  [MediaEnum.SwSwiperCard, handleSwiperCard],
+  [MediaEnum.SwSwiper, handleSwiper],
+  [MediaEnum.SwSwiperV3, handleSwiper],
   [TextEnum.CustomCollapse, handleCustomCollapse],
-  [TextEnum.FtRichtext, handleRichtextStrategy],
-  [IndicatorEnum.FtFlopPerformance, handleFtFlopStrategy]
+  [TextEnum.SwRichtext, handleRichtextStrategy],
+  [IndicatorEnum.SwFlopPerformance, handleFtFlopStrategy]
 ]);
 
 export const initTranslationData = (data: TranslationItem[], option: any) => {

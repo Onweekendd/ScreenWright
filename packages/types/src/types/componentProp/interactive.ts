@@ -9,7 +9,7 @@
  */
 export enum InteractiveEnum {
   /** 语音控制 */
-  FtVoiceControl = "sw-voice-control",
+  SwVoiceControl = "sw-voice-control",
   /** 复选框 */
   FormCheckbox = "formCheckbox",
   /** 导航菜单 */
@@ -27,27 +27,27 @@ export enum InteractiveEnum {
   /** 滚动子标签 */
   RollSubtabs = "roll-subtabs",
   /** 级联选择器 */
-  FtCascader = "swCascader",
+  SwCascader = "swCascader",
   /** 单选图例 */
-  FtSingleSelectedLegend = "swSingleSelectedLegend",
+  SwSingleSelectedLegend = "swSingleSelectedLegend",
   /** 日期时间选择器 */
-  FtDateTimePicker = "swDateTimePicker",
+  SwDateTimePicker = "swDateTimePicker",
   /** 自定义选择器 */
-  FtCustomSelect = "swCustomSelect",
+  SwCustomSelect = "swCustomSelect",
   /** 图例 */
-  FtLegend = "swLegend",
+  SwLegend = "swLegend",
   /** 分页查询 */
-  FtPageQuery = "swPageQuery",
+  SwPageQuery = "swPageQuery",
   /** 翻页 */
-  FtPageTurning = "swPageTurning",
+  SwPageTurning = "swPageTurning",
   /** 子标签页 */
   Subtabs = "subtabs",
   /** 互斥组件 */
-  FtMutual = "sw-mutual",
+  SwMutual = "sw-mutual",
   /** 搜索 */
-  FtSearch = "sw-search",
+  SwSearch = "sw-search",
   /** 时间轴 */
-  FtTimerShaft = "swTimerShaft",
+  SwTimerShaft = "swTimerShaft",
   /** 视频进度条 */
   videoProgress = "videoProgress"
 }

@@ -6,16 +6,16 @@ import formCheckbox from "./components/formCheckbox/index.vue";
 import formNavMenu from "./components/formNavMenu/index.vue";
 import formSlider from "./components/formSlider/index.vue";
 import formSwitch from "./components/formSwitch/index.vue";
-import ftCascader from "./components/ftCascader/index.vue";
-import ftDateTimePicker from "./components/ftDateTimePicker/index.vue";
-import ftLegend from "./components/ftLegend/index.vue";
-import ftMutual from "./components/ftmutual/index.vue";
-import ftPageQuery from "./components/ftPageQuery/index.vue";
-import ftPageTurning from "./components/ftPageTurning/index.vue";
-import ftSearch from "./components/ftSearch/index.vue";
-import ftSingleSelectedLegend from "./components/ftSingleSelectedLegend/index.vue";
-import ftTimerShaft from "./components/ftTimerShaft/index.vue";
-import ftVoiceControl from "./components/ftVoiceControl/index.vue";
+import swCascader from "./components/swCascader/index.vue";
+import swDateTimePicker from "./components/swDateTimePicker/index.vue";
+import swLegend from "./components/swLegend/index.vue";
+import swMutual from "./components/swmutual/index.vue";
+import swPageQuery from "./components/swPageQuery/index.vue";
+import swPageTurning from "./components/swPageTurning/index.vue";
+import swSearch from "./components/swSearch/index.vue";
+import swSingleSelectedLegend from "./components/swSingleSelectedLegend/index.vue";
+import swTimerShaft from "./components/swTimerShasw/index.vue";
+import swVoiceControl from "./components/swVoiceControl/index.vue";
 import multiSubtabs from "./components/multiSubtabs/index.vue";
 import pointTimeline from "./components/pointTimeline/index.vue";
 import rollSubtabs from "./components/rollSubtabs/index.vue";
@@ -24,7 +24,7 @@ import subtabs from "./components/subtabs/index.vue";
 import videoProgress from "./components/videoProgress/index.vue";
 
 export const ScreenwrightInteractiveMap: Record<InteractiveEnum, Component> = {
-  [InteractiveEnum.FtVoiceControl]: ftVoiceControl,
+  [InteractiveEnum.SwVoiceControl]: swVoiceControl,
   [InteractiveEnum.FormCheckbox]: formCheckbox,
   [InteractiveEnum.FormNavMenu]: formNavMenu,
   [InteractiveEnum.ScrollPicker]: scrollPicker,
@@ -33,16 +33,16 @@ export const ScreenwrightInteractiveMap: Record<InteractiveEnum, Component> = {
   [InteractiveEnum.FormSlider]: formSlider,
   [InteractiveEnum.MultiSubtabs]: multiSubtabs,
   [InteractiveEnum.RollSubtabs]: rollSubtabs,
-  [InteractiveEnum.FtCascader]: ftCascader,
-  [InteractiveEnum.FtSingleSelectedLegend]: ftSingleSelectedLegend,
-  [InteractiveEnum.FtDateTimePicker]: ftDateTimePicker,
-  [InteractiveEnum.FtCustomSelect]: customSelect,
-  [InteractiveEnum.FtLegend]: ftLegend,
-  [InteractiveEnum.FtPageQuery]: ftPageQuery,
-  [InteractiveEnum.FtPageTurning]: ftPageTurning,
+  [InteractiveEnum.SwCascader]: swCascader,
+  [InteractiveEnum.SwSingleSelectedLegend]: swSingleSelectedLegend,
+  [InteractiveEnum.SwDateTimePicker]: swDateTimePicker,
+  [InteractiveEnum.SwCustomSelect]: customSelect,
+  [InteractiveEnum.SwLegend]: swLegend,
+  [InteractiveEnum.SwPageQuery]: swPageQuery,
+  [InteractiveEnum.SwPageTurning]: swPageTurning,
   [InteractiveEnum.Subtabs]: subtabs,
-  [InteractiveEnum.FtMutual]: ftMutual,
-  [InteractiveEnum.FtSearch]: ftSearch,
-  [InteractiveEnum.FtTimerShaft]: ftTimerShaft,
+  [InteractiveEnum.SwMutual]: swMutual,
+  [InteractiveEnum.SwSearch]: swSearch,
+  [InteractiveEnum.SwTimerShaft]: swTimerShaft,
   [InteractiveEnum.videoProgress]: videoProgress,
 };

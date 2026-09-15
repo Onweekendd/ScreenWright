@@ -107,39 +107,9 @@
     "note": "仅适用于 ft-video"
   },
   {
-    "value": "signatureSubmit",
-    "label": "签名提交",
-    "note": "仅适用于 ft-signature-pad"
-  },
-  {
     "value": "videocontrols",
     "label": "视频控制",
     "note": "仅适用于 ft-video"
-  },
-  {
-    "value": "cardDropEnd",
-    "label": "卡片滑落结束",
-    "note": "仅适用于 verticalCard"
-  },
-  {
-    "value": "cardBeforeExpand",
-    "label": "卡片开始展开前",
-    "note": "仅适用于 verticalCard"
-  },
-  {
-    "value": "cardEndExpand",
-    "label": "卡片展开结束",
-    "note": "仅适用于 verticalCard"
-  },
-  {
-    "value": "cardStartCollapse",
-    "label": "卡片开始收缩",
-    "note": "仅适用于 verticalCard"
-  },
-  {
-    "value": "cardEndCollapse",
-    "label": "卡片收缩结束",
-    "note": "仅适用于 verticalCard"
   },
   {
     "value": "scrollEnd",

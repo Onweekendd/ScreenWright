@@ -3,19 +3,12 @@
     <div style="height: 100%" v-show="targetFlag === TargetFlag.ComponentOption && 'id' in targetData[0]">
       <configTab :tabs="curTabs" v-model="active" :size="20" />
       <configDescription />
-      <!-- 子组件管理 -->
       <div
         class="flex flex-column"
         v-if="active === echartsTabEnum.STYLE"
-        :style="{ height: isHasChildrenManager ? 'calc(100% - 144px)' : 'calc(100% - 67px - 56px)' }"
+        :style="{ height: 'calc(100% - 67px - 56px)' }"
       >
-        <childrenManager v-if="isHasChildrenManager && active === echartsTabEnum.STYLE" />
-        <el-form
-          v-if="active === echartsTabEnum.STYLE"
-          class="echarts-config-form"
-          label-width="90px"
-          label-position="left"
-        >
+        <el-form class="echarts-config-form" label-width="90px" label-position="left">
           <configBaseAttrs />
           <configAttrsTab v-model="activeTab" :options="options" v-if="options && options.length > 0" />
           <div class="echarts-config-wrapper">
@@ -36,7 +29,6 @@ import { computed, ref, watch } from "vue";
 import { InteractiveEnum } from "@screenwright/types";
 
 import { interactiveEnum, mediaEnum, textEnum } from "@/components/componentEntry/type";
-import childrenManager from "@/views/build/components/buildConfig/attrsRender/childrenManager/index.vue";
 import ComponentStyle from "@/views/build/components/buildConfig/attrsRender/components/interactiveConfig/componentStyle.vue";
 import dataConfig from "@/views/build/components/buildConfig/attrsRender/dataConfig.vue";
 import { useAttrsRender } from "@/views/build/components/buildConfig/attrsRender/useAttrsRender";
@@ -45,7 +37,6 @@ import configBaseAttrs from "@/views/build/components/buildConfig/components/con
 import configDescription from "@/views/build/components/buildConfig/components/configDescription/index.vue";
 import configTab from "@/views/build/components/buildConfig/components/configTab/index.vue";
 import { echartsTabEnum } from "@/views/build/components/buildConfig/type";
-import { ExhibitEnumType } from "@/views/build/components/buildRender/core/ExhibitComponent/type";
 import { extendsEnumType } from "@/views/build/components/buildRender/core/ExtendsComponents/type";
 import { sceneEnumType } from "@/views/build/components/buildRender/core/SceneComponent/type";
 import { useEditStore } from "@/views/build/components/buildRender/hooks/useEditStore";
@@ -57,29 +48,24 @@ const { selectTargetData } = useEditStore();
 const { targetFlag, selectTargetData: targetData } = useTargetData();
 const { options, activeTab, renderComponent } = useAttrsRender();
 const excludeDataConfig = [
-  textEnum.FtDatetime,
-  interactiveEnum.FtVoiceControl,
-  textEnum.FtRichtext,
+  textEnum.SwDatetime,
+  interactiveEnum.SwVoiceControl,
+  textEnum.SwRichtext,
   sceneEnumType.MapProjection,
   sceneEnumType.Maptalks,
   sceneEnumType.Mapmars,
   sceneEnumType.ThreeScene,
   sceneEnumType.IndustryScene,
   extendsEnumType.PageReload,
-  extendsEnumType.FtMaskLayer,
-  extendsEnumType.SimpleBarrage,
+  extendsEnumType.SwMaskLayer,
   extendsEnumType.SimpleParticle,
   extendsEnumType.SimpleStar,
   extendsEnumType.FullScreenSwitch,
-  mediaEnum.FtImgBorder,
-  ExhibitEnumType.PdfjsViewer,
+  mediaEnum.SwImgBorder,
   InteractiveEnum.videoProgress
 ];
 
 const active = ref(echartsTabEnum.STYLE);
-const isHasChildrenManager = computed(() => {
-  return selectTargetData.value[0] && selectTargetData.value[0].presetChild;
-});
 const tabs = ref([
   {
     title: "样式",

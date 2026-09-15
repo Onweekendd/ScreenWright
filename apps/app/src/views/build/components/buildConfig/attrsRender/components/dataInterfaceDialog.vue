@@ -10,13 +10,10 @@ import { dialogInjectionKey } from "@/components/Dialog/constant";
 import SwSheetExcel from "@/components/SwSheetExcel/index.vue";
 import { useCallbackArguments } from "@/hooks/callbackArguments/useCallbackArguments";
 
-import type { ChildComponent } from "../../../buildRender/type";
 import { useUpdateInstance } from "../../useUpdateInstance";
-import { useChildrenDrawer } from "../childrenManager/useChildrenDrawer";
 
 const { cancel } = inject(dialogInjectionKey)!;
 
-const { visibleRef: isChildComponentEditing, currentChildrenItem } = useChildrenDrawer();
 const { emitFilterTrigger } = useCallbackArguments();
 const { selectTargetData, update } = useUpdateInstance({
   history: false
@@ -46,14 +43,8 @@ function completeObjectKeys<T extends Record<string, any>>(data: T[]): T[] {
   return map(data, (obj) => defaults({ ...obj }, defaultObj));
 }
 const onConfirm = (data: any) => {
-  if (isChildComponentEditing.value) {
-    currentChildrenItem.value.data = completeObjectKeys(data);
-
-    emitFilterTrigger(`${currentChildrenItem.value.id}`, currentChildrenItem.value as ChildComponent);
-  } else {
-    selectTargetData.value[0].data = completeObjectKeys(data);
-    emitFilterTrigger(`${selectTargetData.value[0].id}`, currentChildrenItem.value);
-  }
+  selectTargetData.value[0].data = completeObjectKeys(data);
+  emitFilterTrigger(`${selectTargetData.value[0].id}`);
   update();
   cancel();
 };

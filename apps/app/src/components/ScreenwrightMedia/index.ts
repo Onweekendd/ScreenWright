@@ -12,5 +12,5 @@ import ftIframe from "./components/ftiframe/index.vue";
  */
 export const ScreenwrightMediaMap: Partial<Record<MediaEnum, Component>> = {
   ...MaterialScreenwrightMediaMap,
-  [MediaEnum.FtIframe]: ftIframe
+  [MediaEnum.SwIframe]: ftIframe
 };

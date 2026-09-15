@@ -3,7 +3,7 @@ import type { MenuItemForRender } from "@screenwright/types";
 
 export { FileType } from "@screenwright/composables";
 
-export type FtUploadProps = {
+export type SwUploadProps = {
   modelValue: string | undefined;
   fileType?: FileType;
   selectAssets?: boolean;
@@ -16,17 +16,17 @@ export type FtUploadProps = {
   multiple?: boolean;
 };
 
-export type FtUploadChangePayload = {
+export type SwUploadChangePayload = {
   url: string;
   [key: string]: any;
 };
 
-export const FtUploadEmits = {
+export const SwUploadEmits = {
   "update:modelValue": (value: string) => true,
-  change: (value: FtUploadChangePayload | MenuItemForRender) => true,
+  change: (value: SwUploadChangePayload | MenuItemForRender) => true,
   delete: (value: string) => true,
 };
-export type FtUploadEmits = typeof FtUploadEmits;
+export type SwUploadEmits = typeof SwUploadEmits;
 
 /** 素材资源信息（上传/选择器返回的资源结构） */
 export interface FileResourceInfo {

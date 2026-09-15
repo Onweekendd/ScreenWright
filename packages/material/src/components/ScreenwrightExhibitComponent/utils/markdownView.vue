@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import { marked } from "marked";
 import { ref, watch } from "vue";
 
 interface Props {
@@ -62,7 +63,7 @@ watch(
 watch(
   () => displayedText.value,
   (nv) => {
-    markdownContent.value = (window as any).marked.parse(nv);
+    markdownContent.value = marked.parse(nv, { async: false });
   },
   { immediate: true }
 );

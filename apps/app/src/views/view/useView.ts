@@ -178,7 +178,7 @@ export function useView() {
   }> => {
     // loadingScene.value = false
 
-    const openVideo = groupData.value.find((component) => component.component.prop === mediaEnum.FtOpenVideo);
+    const openVideo = groupData.value.find((component) => component.component.prop === mediaEnum.SwOpenVideo);
 
     if (openVideo && !isBuild()) {
       const { delayLoadingTime, openDelayLoading, delayPlayTime, autoPlay } = openVideo.option as {

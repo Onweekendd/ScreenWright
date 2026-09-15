@@ -3,19 +3,12 @@
     <div style="height: 100%" v-show="targetFlag === TargetFlag.ComponentOption && 'id' in targetData[0]">
       <configTab :tabs="curTabs" v-model="active" :size="20" />
       <configDescription />
-      <!-- 子组件管理 -->
       <div
         class="flex flex-column"
         v-if="active === echartsTabEnum.STYLE"
-        :style="{ height: isHasChildrenManager ? 'calc(100% - 144px)' : 'calc(100% - 67px - 56px)' }"
+        :style="{ height: 'calc(100% - 67px - 56px)' }"
       >
-        <childrenManager v-if="isHasChildrenManager && active === echartsTabEnum.STYLE" />
-        <el-form
-          v-if="active === echartsTabEnum.STYLE"
-          class="echarts-config-form"
-          label-width="90px"
-          label-position="left"
-        >
+        <el-form class="echarts-config-form" label-width="90px" label-position="left">
           <configBaseAttrs />
           <configAttrsTab v-model="activeTab" :options="options" v-if="options && options.length > 0" />
           <div class="echarts-config-wrapper">
@@ -45,7 +38,6 @@ import configDescription from "../components/configDescription/index.vue";
 import configTab from "../components/configTab/index.vue";
 import { excludeDataConfig } from "../constants";
 import { echartsTabEnum } from "../type";
-import childrenManager from "./childrenManager/index.vue";
 import ComponentStyle from "./components/interactiveConfig/componentStyle.vue";
 import dataConfig from "./dataConfig.vue";
 import interactiveConfig from "./interactiveConfig.vue";
@@ -56,9 +48,6 @@ const { targetFlag, selectTargetData: targetData } = useTargetData();
 const { options, activeTab, renderComponent } = useAttrsRender();
 const active = ref(echartsTabEnum.STYLE);
 const refreshKey = ref(0);
-const isHasChildrenManager = computed(() => {
-  return selectTargetData.value[0] && selectTargetData.value[0].presetChild;
-});
 const tabs = ref([
   {
     title: "样式",

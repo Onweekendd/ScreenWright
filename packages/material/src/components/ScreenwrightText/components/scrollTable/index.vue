@@ -85,7 +85,7 @@ const handleClick = (info: any) => {
   });
 };
 const transformFtScroll = (item: ComponentType): ComponentType => {
-  if (item.component.prop === textEnum.FtScroll) {
+  if (item.component.prop === textEnum.SwScroll) {
     if (item.option && !item.option.progressYConfig) {
       const column = item.option.column || [];
       item.option.progressYConfig = column.map(() => ({
@@ -125,7 +125,7 @@ onMounted(() => {
 
   // 注册组件事件到全局事件系统
   addEvent({
-    [`${textEnum.FtScroll}-${props.element.id}`]: {
+    [`${textEnum.SwScroll}-${props.element.id}`]: {
       handleClick
     }
   });

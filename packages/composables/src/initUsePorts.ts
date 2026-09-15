@@ -4,13 +4,8 @@ import type { FilterDataApiImpls } from "./filter/ports";
 import { initFilterDataApi } from "./filter/ports";
 import type { GetExtraEventsFn } from "./ports/baseDataPort";
 import { initBaseDataExtraEvents } from "./ports/baseDataPort";
-import type { ActionStrategyExecutorFn, SendUE4MessageFn, StatusAnimationTriggerFn } from "./ports/eventPort";
-import {
-  initActionStrategyExecutor,
-  initRouter,
-  initSendUE4Message,
-  initStatusAnimationTrigger
-} from "./ports/eventPort";
+import type { ActionStrategyExecutorFn, StatusAnimationTriggerFn } from "./ports/eventPort";
+import { initActionStrategyExecutor, initRouter, initStatusAnimationTrigger } from "./ports/eventPort";
 import type { HttpPortImpls } from "./ports/httpPort";
 import { initHttpPort } from "./ports/httpPort";
 import type { DataFilterPersistenceImpls } from "./ports/persistencePort";
@@ -25,7 +20,6 @@ export interface UsePortsConfig {
   dataFilterPersistence: DataFilterPersistenceImpls;
   baseDataExtraEvents: GetExtraEventsFn;
   actionStrategyExecutor: ActionStrategyExecutorFn;
-  sendUE4Message: SendUE4MessageFn;
   statusAnimationTrigger: StatusAnimationTriggerFn;
   assetsPicker: AssetsPickerImpl;
 }
@@ -44,7 +38,6 @@ export function initUsePorts(config: UsePortsConfig): void {
   initDataFilterPersistence(config.dataFilterPersistence);
   initBaseDataExtraEvents(config.baseDataExtraEvents);
   initActionStrategyExecutor(config.actionStrategyExecutor);
-  initSendUE4Message(config.sendUE4Message);
   initStatusAnimationTrigger(config.statusAnimationTrigger);
   initAssetsPicker(config.assetsPicker);
 }

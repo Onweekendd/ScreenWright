@@ -34,7 +34,7 @@ export const useBuildRender = (props: {
         await onEnterDynamicPanel(item);
       }
 
-      if (item.component.prop === textEnum.FtText && isBuild.value) {
+      if (item.component.prop === textEnum.SwText && isBuild.value) {
         setTextEdit(item);
       }
     }

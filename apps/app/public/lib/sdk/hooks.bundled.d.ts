@@ -112,51 +112,48 @@ declare const ComponentFlatSchema: z.ZodObject<{
             echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
             echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
         }>, z.ZodEnum<{
-            swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-            "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-            swiframe: import("..").MediaEnum.FtIframe;
-            swimg: import("..").MediaEnum.FtImg;
-            "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-            swimgBorder: import("..").MediaEnum.FtImgBorder;
-            swswiper: import("..").MediaEnum.FtSwiper;
-            swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-            swvideo: import("..").MediaEnum.FtVideo;
+            swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+            "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+            swiframe: import("..").MediaEnum.SwIframe;
+            swimg: import("..").MediaEnum.SwImg;
+            "sw-open-video": import("..").MediaEnum.SwOpenVideo;
+            swimgBorder: import("..").MediaEnum.SwImgBorder;
+            swswiper: import("..").MediaEnum.SwSwiper;
+            swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+            swvideo: import("..").MediaEnum.SwVideo;
             ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
         }>, z.ZodEnum<{
             ringIndicator3d: import("..").ExhibitEnum.RingIndicator3d;
             ringIndicator3dNew: import("..").ExhibitEnum.ringIndicator3dNew;
             imagesList3d: import("..").ExhibitEnum.ImagesList3d;
-            "pdfjs-viewer": import("..").ExhibitEnum.PdfjsViewer;
-            "sw-particles": import("..").ExhibitEnum.FtParticles;
-            "sw-signaturePad": import("..").ExhibitEnum.FtSignaturePad;
-            "sw-filter": import("..").ExhibitEnum.FtFilter;
-            verticalCard: import("..").ExhibitEnum.verticalCard;
+            "sw-particles": import("..").ExhibitEnum.SwParticles;
+            "sw-filter": import("..").ExhibitEnum.SwFilter;
         }>, z.ZodEnum<{
             "sw-folder": import("..").FolderEnum.group;
         }>, z.ZodEnum<{
             "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
             "ue-vessel": import("..").ExtendsEnum.UeVessel;
-            "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+            "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
             "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-            "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+            "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
             simpleStar: import("..").ExtendsEnum.SimpleStar;
             fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
             pageReload: import("..").ExtendsEnum.PageReload;
             "simple-particle": import("..").ExtendsEnum.SimpleParticle;
             "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-            "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-            "sw-weather": import("..").ExtendsEnum.FtWeather;
-            "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+            "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+            "sw-weather": import("..").ExtendsEnum.SwWeather;
+            "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
         }>, z.ZodEnum<{
             rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
             iconRatio: import("..").IndicatorEnum.IconRatio;
             sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-            swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-            swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+            swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+            swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
             echartring: import("..").IndicatorEnum.EchartRing;
             "rank-progress": import("..").IndicatorEnum.RankProgress;
         }>, z.ZodEnum<{
-            "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+            "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
             formCheckbox: import("..").InteractiveEnum.FormCheckbox;
             formNavMenu: import("..").InteractiveEnum.FormNavMenu;
             scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -165,30 +162,30 @@ declare const ComponentFlatSchema: z.ZodObject<{
             formSlider: import("..").InteractiveEnum.FormSlider;
             "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
             "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-            swCascader: import("..").InteractiveEnum.FtCascader;
-            swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-            swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-            swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-            swLegend: import("..").InteractiveEnum.FtLegend;
-            swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-            swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+            swCascader: import("..").InteractiveEnum.SwCascader;
+            swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+            swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+            swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+            swLegend: import("..").InteractiveEnum.SwLegend;
+            swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+            swPageTurning: import("..").InteractiveEnum.SwPageTurning;
             subtabs: import("..").InteractiveEnum.Subtabs;
-            "sw-mutual": import("..").InteractiveEnum.FtMutual;
-            "sw-search": import("..").InteractiveEnum.FtSearch;
-            swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+            "sw-mutual": import("..").InteractiveEnum.SwMutual;
+            "sw-search": import("..").InteractiveEnum.SwSearch;
+            swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
             videoProgress: import("..").InteractiveEnum.videoProgress;
         }>, z.ZodEnum<{
             customCollapse: import("..").TextEnum.CustomCollapse;
-            swRichtext: import("..").TextEnum.FtRichtext;
-            swcollection: import("..").TextEnum.FtCollection;
+            swRichtext: import("..").TextEnum.SwRichtext;
+            swcollection: import("..").TextEnum.SwCollection;
             customTableList: import("..").TextEnum.CustomTableList;
-            swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
-            swmultiLine: import("..").TextEnum.FtMultiLine;
-            swtext: import("..").TextEnum.FtText;
-            swProgress: import("..").TextEnum.FtProgress;
-            swdatetime: import("..").TextEnum.FtDatetime;
-            swText2: import("..").TextEnum.FtText2;
-            swScroll: import("..").TextEnum.FtScroll;
+            swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
+            swmultiLine: import("..").TextEnum.SwMultiLine;
+            swtext: import("..").TextEnum.SwText;
+            swProgress: import("..").TextEnum.SwProgress;
+            swdatetime: import("..").TextEnum.SwDatetime;
+            swText2: import("..").TextEnum.SwText2;
+            swScroll: import("..").TextEnum.SwScroll;
         }>, z.ZodEnum<{
             "vue-part": import("..").ThirdPartEnum.VuePart;
             datav: import("..").ThirdPartEnum.DataV;
@@ -8194,7 +8191,7 @@ declare const componentPropSchemaMap: {
             columns: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftcollection: {
+    readonly swcollection: {
         readonly data: z.ZodArray<z.ZodObject<{
             src: z.ZodString;
             title: z.ZodString;
@@ -8236,7 +8233,7 @@ declare const componentPropSchemaMap: {
             titleBackgroundImage: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftdatetime: {
+    readonly swdatetime: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             format: z.ZodString;
@@ -8251,7 +8248,7 @@ declare const componentPropSchemaMap: {
             backgroundColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftmultiLine: {
+    readonly swmultiLine: {
         readonly data: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             src: z.ZodString;
@@ -8292,7 +8289,7 @@ declare const componentPropSchemaMap: {
             iconMargin: z.ZodArray<z.ZodNumber>;
         }, z.core.$strip>;
     };
-    readonly ftProgress: {
+    readonly swProgress: {
         readonly data: z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>;
         readonly option: z.ZodObject<{
             refresh: z.ZodBoolean;
@@ -8439,7 +8436,7 @@ declare const componentPropSchemaMap: {
             styleAssignBgLeft: z.ZodOptional<z.ZodArray<z.ZodArray<z.ZodNumber>>>;
         }, z.core.$strip>;
     };
-    readonly ftRichtext: {
+    readonly swRichtext: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8453,7 +8450,7 @@ declare const componentPropSchemaMap: {
             scrollInterval: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftScroll: {
+    readonly swScroll: {
         readonly data: z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean]>>>;
         readonly option: z.ZodObject<{
             refresh: z.ZodBoolean;
@@ -8629,7 +8626,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>>;
         }, z.core.$strip>;
     };
-    readonly ftText2: {
+    readonly swText2: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8671,7 +8668,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>>;
         }, z.core.$strip>;
     };
-    readonly fttext: {
+    readonly swtext: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8730,7 +8727,7 @@ declare const componentPropSchemaMap: {
             rotateZ: z.ZodOptional<z.ZodNumber>;
         }, z.core.$strict>;
     };
-    readonly ftTextWordCloud: {
+    readonly swTextWordCloud: {
         readonly data: z.ZodArray<z.ZodObject<{
             text: z.ZodString;
             value: z.ZodNumber;
@@ -12880,7 +12877,7 @@ declare const componentPropSchemaMap: {
             autoHidden: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftiframe: {
+    readonly swiframe: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -12915,7 +12912,7 @@ declare const componentPropSchemaMap: {
             isQuoteReload: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftimg: {
+    readonly swimg: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -12981,7 +12978,7 @@ declare const componentPropSchemaMap: {
             backdropFilterSaturate: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftOpenVideo: {
+    readonly "sw-open-video": {
         readonly data: z.ZodArray<z.ZodObject<{
             cover: z.ZodString;
             value: z.ZodString;
@@ -13056,7 +13053,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>;
         }, z.core.$strip>;
     };
-    readonly ftSwiperCard: {
+    readonly swSwiperCard: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             globalConfig: z.ZodObject<{
@@ -13149,7 +13146,7 @@ declare const componentPropSchemaMap: {
             refresh: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftswiper: {
+    readonly swswiper: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             type: z.ZodString;
@@ -13221,7 +13218,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>;
         }, z.core.$strip>;
     };
-    readonly ftvideo: {
+    readonly swvideo: {
         readonly data: z.ZodArray<z.ZodObject<{
             cover: z.ZodString;
             value: z.ZodString;
@@ -13658,7 +13655,7 @@ declare const componentPropSchemaMap: {
             xAxisSplitLineColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftFlopPerformance: {
+    readonly swFlopPerformance: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodNumber;
         }, z.core.$strip>>;
@@ -13715,7 +13712,7 @@ declare const componentPropSchemaMap: {
             randomRange: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftdynamicratio: {
+    readonly swdynamicratio: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodNumber;
         }, z.core.$strip>>;
@@ -14072,7 +14069,7 @@ declare const componentPropSchemaMap: {
             fontPaddingLeft: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftCascader: {
+    readonly swCascader: {
         readonly data: z.ZodArray<z.ZodType<import('.').CascaderItem, unknown, z.core.$ZodTypeInternals<import('.').CascaderItem, unknown>>>;
         readonly option: z.ZodObject<{
             defaultIndex: z.ZodNumber;
@@ -14124,7 +14121,7 @@ declare const componentPropSchemaMap: {
             menuHoverBackgroundImage: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftCustomSelect: {
+    readonly swCustomSelect: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14197,7 +14194,7 @@ declare const componentPropSchemaMap: {
             hoverHeight: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftDateTimePicker: {
+    readonly swDateTimePicker: {
         readonly data: z.ZodArray<z.ZodObject<{
             startTime: z.ZodString;
             endTime: z.ZodString;
@@ -14243,7 +14240,7 @@ declare const componentPropSchemaMap: {
             buttonFontWeight: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftLegend: {
+    readonly swLegend: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14335,7 +14332,7 @@ declare const componentPropSchemaMap: {
             opacity: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftPageQuery: {
+    readonly swPageQuery: {
         readonly data: z.ZodArray<z.ZodObject<{
             pageIndex: z.ZodNumber;
             pageTotal: z.ZodNumber;
@@ -14393,7 +14390,7 @@ declare const componentPropSchemaMap: {
             checkedBorderColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftPageTurning: {
+    readonly swPageTurning: {
         readonly data: z.ZodArray<z.ZodObject<{
             pageIndex: z.ZodNumber;
             pageTotal: z.ZodNumber;
@@ -14474,7 +14471,7 @@ declare const componentPropSchemaMap: {
             buttonIconHeight: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftSingleSelectedLegend: {
+    readonly swSingleSelectedLegend: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14513,7 +14510,7 @@ declare const componentPropSchemaMap: {
             backgroundBorderRadius: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftTimerShaft: {
+    readonly swTimerShaft: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -16586,15 +16583,15 @@ declare const indicatorEchartEnumSchema: z.ZodEnum<{
 }>;
 /** 媒体类型枚举 Schema */
 declare const mediaEnumSchema: z.ZodEnum<{
-    swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-    "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-    swiframe: import("..").MediaEnum.FtIframe;
-    swimg: import("..").MediaEnum.FtImg;
-    "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-    swimgBorder: import("..").MediaEnum.FtImgBorder;
-    swswiper: import("..").MediaEnum.FtSwiper;
-    swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-    swvideo: import("..").MediaEnum.FtVideo;
+    swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+    "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+    swiframe: import("..").MediaEnum.SwIframe;
+    swimg: import("..").MediaEnum.SwImg;
+    "sw-open-video": import("..").MediaEnum.SwOpenVideo;
+    swimgBorder: import("..").MediaEnum.SwImgBorder;
+    swswiper: import("..").MediaEnum.SwSwiper;
+    swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+    swvideo: import("..").MediaEnum.SwVideo;
     ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
 }>;
 /** 展品类型枚举 Schema */
@@ -16602,11 +16599,8 @@ declare const ExhibitEnumTypeSchema: z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
-    "sw-particles": ExhibitEnum.FtParticles;
-    "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    "sw-filter": ExhibitEnum.FtFilter;
-    verticalCard: ExhibitEnum.verticalCard;
+    "sw-particles": ExhibitEnum.SwParticles;
+    "sw-filter": ExhibitEnum.SwFilter;
 }>;
 /** 文件夹类型枚举 Schema */
 declare const FolderTypeSchema: z.ZodEnum<{
@@ -16617,14 +16611,14 @@ declare const indicatorEnumSchema: z.ZodEnum<{
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-    swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+    swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+    swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
 }>;
 /** 交互类型枚举 Schema */
 declare const interactiveEnumSchema: z.ZodEnum<{
-    "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+    "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
     formCheckbox: import("..").InteractiveEnum.FormCheckbox;
     formNavMenu: import("..").InteractiveEnum.FormNavMenu;
     scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -16633,32 +16627,32 @@ declare const interactiveEnumSchema: z.ZodEnum<{
     formSlider: import("..").InteractiveEnum.FormSlider;
     "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
     "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-    swCascader: import("..").InteractiveEnum.FtCascader;
-    swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-    swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-    swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-    swLegend: import("..").InteractiveEnum.FtLegend;
-    swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-    swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+    swCascader: import("..").InteractiveEnum.SwCascader;
+    swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+    swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+    swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+    swLegend: import("..").InteractiveEnum.SwLegend;
+    swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+    swPageTurning: import("..").InteractiveEnum.SwPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
-    "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-search": import("..").InteractiveEnum.FtSearch;
-    swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+    "sw-mutual": import("..").InteractiveEnum.SwMutual;
+    "sw-search": import("..").InteractiveEnum.SwSearch;
+    swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
 }>;
 /** 文本类型枚举 Schema */
 declare const textEnumSchema: z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
-    swRichtext: import("..").TextEnum.FtRichtext;
-    swcollection: import("..").TextEnum.FtCollection;
+    swRichtext: import("..").TextEnum.SwRichtext;
+    swcollection: import("..").TextEnum.SwCollection;
     customTableList: import("..").TextEnum.CustomTableList;
-    swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
-    swmultiLine: import("..").TextEnum.FtMultiLine;
-    swtext: import("..").TextEnum.FtText;
-    swProgress: import("..").TextEnum.FtProgress;
-    swdatetime: import("..").TextEnum.FtDatetime;
-    swText2: import("..").TextEnum.FtText2;
-    swScroll: import("..").TextEnum.FtScroll;
+    swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
+    swmultiLine: import("..").TextEnum.SwMultiLine;
+    swtext: import("..").TextEnum.SwText;
+    swProgress: import("..").TextEnum.SwProgress;
+    swdatetime: import("..").TextEnum.SwDatetime;
+    swText2: import("..").TextEnum.SwText2;
+    swScroll: import("..").TextEnum.SwScroll;
 }>;
 /** 第三方类型枚举 Schema */
 declare const thirdPartyEnumSchema: z.ZodEnum<{
@@ -16682,17 +16676,17 @@ declare const threeComponentEnumSchema: z.ZodEnum<{
 declare const extendsEnumTypeSchema: z.ZodEnum<{
     "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
     "ue-vessel": import("..").ExtendsEnum.UeVessel;
-    "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+    "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
     "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-    "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+    "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
     simpleStar: import("..").ExtendsEnum.SimpleStar;
     fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
     pageReload: import("..").ExtendsEnum.PageReload;
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
     "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-    "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-    "sw-weather": import("..").ExtendsEnum.FtWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+    "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+    "sw-weather": import("..").ExtendsEnum.SwWeather;
+    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>;
 /** 面板类型枚举 Schema */
 declare const PanelEnumSchema: z.ZodEnum<{
@@ -16749,51 +16743,48 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
     echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
 }>, z.ZodEnum<{
-    swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-    "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-    swiframe: import("..").MediaEnum.FtIframe;
-    swimg: import("..").MediaEnum.FtImg;
-    "sw-open-video": import("..").MediaEnum.FtOpenVideo;
-    swimgBorder: import("..").MediaEnum.FtImgBorder;
-    swswiper: import("..").MediaEnum.FtSwiper;
-    swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-    swvideo: import("..").MediaEnum.FtVideo;
+    swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+    "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+    swiframe: import("..").MediaEnum.SwIframe;
+    swimg: import("..").MediaEnum.SwImg;
+    "sw-open-video": import("..").MediaEnum.SwOpenVideo;
+    swimgBorder: import("..").MediaEnum.SwImgBorder;
+    swswiper: import("..").MediaEnum.SwSwiper;
+    swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+    swvideo: import("..").MediaEnum.SwVideo;
     ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
 }>, z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
-    "sw-particles": ExhibitEnum.FtParticles;
-    "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    "sw-filter": ExhibitEnum.FtFilter;
-    verticalCard: ExhibitEnum.verticalCard;
+    "sw-particles": ExhibitEnum.SwParticles;
+    "sw-filter": ExhibitEnum.SwFilter;
 }>, z.ZodEnum<{
     "sw-folder": FolderEnum.group;
 }>, z.ZodEnum<{
     "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
     "ue-vessel": import("..").ExtendsEnum.UeVessel;
-    "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+    "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
     "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-    "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+    "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
     simpleStar: import("..").ExtendsEnum.SimpleStar;
     fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
     pageReload: import("..").ExtendsEnum.PageReload;
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
     "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-    "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-    "sw-weather": import("..").ExtendsEnum.FtWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+    "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+    "sw-weather": import("..").ExtendsEnum.SwWeather;
+    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>, z.ZodEnum<{
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-    swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+    swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+    swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
 }>, z.ZodEnum<{
-    "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+    "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
     formCheckbox: import("..").InteractiveEnum.FormCheckbox;
     formNavMenu: import("..").InteractiveEnum.FormNavMenu;
     scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -16802,30 +16793,30 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     formSlider: import("..").InteractiveEnum.FormSlider;
     "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
     "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-    swCascader: import("..").InteractiveEnum.FtCascader;
-    swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-    swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-    swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-    swLegend: import("..").InteractiveEnum.FtLegend;
-    swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-    swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+    swCascader: import("..").InteractiveEnum.SwCascader;
+    swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+    swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+    swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+    swLegend: import("..").InteractiveEnum.SwLegend;
+    swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+    swPageTurning: import("..").InteractiveEnum.SwPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
-    "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-search": import("..").InteractiveEnum.FtSearch;
-    swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+    "sw-mutual": import("..").InteractiveEnum.SwMutual;
+    "sw-search": import("..").InteractiveEnum.SwSearch;
+    swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
 }>, z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
-    swRichtext: import("..").TextEnum.FtRichtext;
-    swcollection: import("..").TextEnum.FtCollection;
+    swRichtext: import("..").TextEnum.SwRichtext;
+    swcollection: import("..").TextEnum.SwCollection;
     customTableList: import("..").TextEnum.CustomTableList;
-    swTextWordCloud: import("..").TextEnum.FtTextWordCloud;
-    swmultiLine: import("..").TextEnum.FtMultiLine;
-    swtext: import("..").TextEnum.FtText;
-    swProgress: import("..").TextEnum.FtProgress;
-    swdatetime: import("..").TextEnum.FtDatetime;
-    swText2: import("..").TextEnum.FtText2;
-    swScroll: import("..").TextEnum.FtScroll;
+    swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
+    swmultiLine: import("..").TextEnum.SwMultiLine;
+    swtext: import("..").TextEnum.SwText;
+    swProgress: import("..").TextEnum.SwProgress;
+    swdatetime: import("..").TextEnum.SwDatetime;
+    swText2: import("..").TextEnum.SwText2;
+    swScroll: import("..").TextEnum.SwScroll;
 }>, z.ZodEnum<{
     "vue-part": ThirdPartEnum.VuePart;
     datav: ThirdPartEnum.DataV;
@@ -17245,34 +17236,6 @@ declare enum ActionTypeEnum {
      * @description 下一页
      */
     nextPage = "nextPage",
-    /**
-     * @description 导出
-     */
-    OnExport = "onExport",
-    /**
-     * @description 清除
-     */
-    OnClear = "onClear",
-    /**
-     * @description 重做
-     */
-    OnRedo = "onRedo",
-    /**
-     * @description 撤销
-     */
-    OnUndo = "onUndo",
-    /**
-     * @description 转换图像
-     */
-    OnTranslateImage = "onTranslateImage",
-    /**
-     * @description 签名
-     */
-    Signature = "signature",
-    /**
-     * @description 跳转页码
-     */
-    JumpPage = "jumpPage",
     /**
      * @description 轮巡开启
      */
@@ -17786,8 +17749,6 @@ interface Action {
     videoEndTime?: number;
     /** @description 事件选择模型集合 */
     option?: Record<string, any>;
-    /** @description 当前页码 */
-    currentpage?: number;
     /** @description 译文转换 */
     translation?: string;
 }
@@ -18197,7 +18158,9 @@ declare enum FileTypeEnum {
     /** 个人场景资产 */
     personalSceneAssets = 3,
     /** 城市编辑器资产 */
-    cityEditorAssets = 4
+    cityEditorAssets = 4,
+    /** 系统内置素材（全局只读） */
+    systemMaterial = 5
 }
 /** UI 渲染单项类型（素材选择器菜单项） */
 interface MenuItemForRender {
@@ -18353,7 +18316,7 @@ interface RollSubtabsEvents {
     };
 }
 interface FtMutualEvents {
-    [key: `${InteractiveEnum.FtMutual}-${string}`]: {
+    [key: `${InteractiveEnum.SwMutual}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18361,7 +18324,7 @@ interface FtMutualEvents {
     };
 }
 interface FtLegendEvents {
-    [key: `${InteractiveEnum.FtLegend}-${string}`]: {
+    [key: `${InteractiveEnum.SwLegend}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18369,7 +18332,7 @@ interface FtLegendEvents {
     };
 }
 interface FtSearchEvents {
-    [key: `${InteractiveEnum.FtSearch}-${string}`]: {
+    [key: `${InteractiveEnum.SwSearch}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18377,7 +18340,7 @@ interface FtSearchEvents {
     };
 }
 interface FtCustomSelectEvents {
-    [key: `${InteractiveEnum.FtCustomSelect}-${string}`]: {
+    [key: `${InteractiveEnum.SwCustomSelect}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18385,7 +18348,7 @@ interface FtCustomSelectEvents {
     };
 }
 interface FtVoiveControlEvents {
-    [key: `${InteractiveEnum.FtVoiceControl}-${string}`]: {
+    [key: `${InteractiveEnum.SwVoiceControl}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18393,7 +18356,7 @@ interface FtVoiveControlEvents {
     };
 }
 interface FtPageQueryEvents {
-    [key: `${InteractiveEnum.FtPageQuery}-${string}`]: {
+    [key: `${InteractiveEnum.SwPageQuery}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18402,7 +18365,7 @@ interface FtPageQueryEvents {
     };
 }
 interface FtCascaderEvents {
-    [key: `${InteractiveEnum.FtCascader}-${string}`]: {
+    [key: `${InteractiveEnum.SwCascader}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18410,7 +18373,7 @@ interface FtCascaderEvents {
     };
 }
 interface FtSingleSelectedLegendEvents {
-    [key: `${InteractiveEnum.FtSingleSelectedLegend}-${string}`]: {
+    [key: `${InteractiveEnum.SwSingleSelectedLegend}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18426,7 +18389,7 @@ interface FormNavMenuEvents {
     };
 }
 interface FtTimerShaftEvents {
-    [key: `${InteractiveEnum.FtTimerShaft}-${string}`]: {
+    [key: `${InteractiveEnum.SwTimerShaft}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18452,7 +18415,7 @@ interface PointTimelineEvents {
     };
 }
 interface FtPageTurningEvents {
-    [key: `${InteractiveEnum.FtPageTurning}-${string}`]: {
+    [key: `${InteractiveEnum.SwPageTurning}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18460,7 +18423,7 @@ interface FtPageTurningEvents {
     };
 }
 interface FtDateTimePickerEvents {
-    [key: `${InteractiveEnum.FtDateTimePicker}-${string}`]: {
+    [key: `${InteractiveEnum.SwDateTimePicker}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18468,7 +18431,7 @@ interface FtDateTimePickerEvents {
     };
 }
 interface FtProgressEvents {
-    [key: `${TextEnum.FtProgress}-${string}`]: {
+    [key: `${TextEnum.SwProgress}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18476,7 +18439,7 @@ interface FtProgressEvents {
     };
 }
 interface FtTextWordCloudEvents {
-    [key: `${TextEnum.FtTextWordCloud}-${string}`]: {
+    [key: `${TextEnum.SwTextWordCloud}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18494,7 +18457,7 @@ interface CtVideoPanelEvents {
     };
 }
 interface FtScrollEvents {
-    [key: `${TextEnum.FtScroll}-${string}`]: {
+    [key: `${TextEnum.SwScroll}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18502,7 +18465,7 @@ interface FtScrollEvents {
     };
 }
 interface FtSwiperCardEvents {
-    [key: `${MediaEnum.FtSwiperCard}-${string}`]: {
+    [key: `${MediaEnum.SwSwiperCard}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18572,7 +18535,7 @@ interface ftParticlesEvents {
     /**
      * 空间粒子init方法
      */
-    [key: `${ExhibitEnum.FtParticles}-${number}`]: {
+    [key: `${ExhibitEnum.SwParticles}-${number}`]: {
         particlesReStart: () => void;
     };
 }
@@ -18687,14 +18650,14 @@ interface EchartscalePieEvents {
     };
 }
 interface FtUnrealEngineEvents {
-    [key: `${ExtendsEnum.FtUnrealEngine}-${string}`]: {
+    [key: `${ExtendsEnum.SwUnrealEngine}-${string}`]: {
         setupBlueprintData: (throwValue: any) => void;
         sendMessageToUe: (funName: string, data: any) => void;
         switchBlueprintTab: (key: string, info: any) => void;
     };
 }
 interface FtVideoEvents {
-    [key: `${MediaEnum.FtVideo}-${string}`]: {
+    [key: `${MediaEnum.SwVideo}-${string}`]: {
         handleClick: (throwValue: any) => void;
         /**
          * 视频播放
@@ -18749,7 +18712,7 @@ interface FtVideoEvents {
     };
 }
 interface ftDigitalHumanEvents {
-    [key: `${ExtendsEnum.FtDigitalHuman}-${number}`]: {
+    [key: `${ExtendsEnum.SwDigitalHuman}-${number}`]: {
         sendMsgToHuman: (message: string, type: "chat" | "echo") => void;
         startWebRTC: (toStart: boolean) => void;
     };
@@ -18761,22 +18724,12 @@ interface ftVuePartEvents {
 }
 interface FtSimpleBarrageEvents {
     [key: `${ExtendsEnum.SimpleBarrage}-${number}`]: {
-        onSignaturePadSave: ({ imageUrl }: {
-            imageUrl: string;
-        }) => void;
         handleClick: () => void;
     };
 }
 interface PageReloadEvents {
     [key: `${ExtendsEnum.PageReload}-${number}`]: {
         handleClick: () => void;
-    };
-}
-interface pdfEvents {
-    [key: `${ExhibitEnum.PdfjsViewer}-${number}`]: {
-        handlePrevClick: (type: string) => void;
-        handleNextClick: (type: string) => void;
-        handlePageChange: (currentPage: number) => void;
     };
 }
 interface scrollPickerEvents {
@@ -18793,17 +18746,8 @@ interface ImagesList3dEvents {
         handleEvensChangeActiveSpinnerIndex: (actionSelect: string) => void;
     };
 }
-interface FtSignaturePad {
-    [key: `${ExhibitEnum.FtSignaturePad}-${number}`]: {
-        onExport: () => void;
-        onClear: () => void;
-        onRedo: () => void;
-        onUndo: () => void;
-        onTranslateImage: () => void;
-    };
-}
 type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & FtUnrealEngineEvents & videoProgressEvents;
-type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | pdfEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtUnrealEngineEvents | videoProgressEvents;
+type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | scrollPickerEvents | ImagesList3dEvents | FtUnrealEngineEvents | videoProgressEvents;
 
 import { Animation } from './component-animation';
 import { AllComponentType, ExtendsChildComponentEnum, FolderEnum } from './componentProp';
@@ -19171,16 +19115,10 @@ declare enum ExhibitEnum {
     ringIndicator3dNew = "ringIndicator3dNew",
     /** 3D图片列表 */
     ImagesList3d = "imagesList3d",
-    /** PDF查看器 */
-    PdfjsViewer = "pdfjs-viewer",
     /** 空间粒子 */
     FtParticles = "sw-particles",
-    /** 签名板 */
-    FtSignaturePad = "sw-signaturePad",
     /** 滤镜组件 */
-    FtFilter = "sw-filter",
-    /** 垂直卡片 */
-    verticalCard = "verticalCard"
+    FtFilter = "sw-filter"
 }
 /** @deprecated 使用 ExhibitEnum 代替 */
 type ExhibitEnumType = ExhibitEnum;
@@ -19769,10 +19707,6 @@ declare enum EventTypeEnum {
      */
     Controls = "controls",
     /**
-     * @description 签名提交
-     */
-    SignatureSubmit = "signatureSubmit",
-    /**
      * @description 视频控制
      */
     VideoControls = "videocontrols",
@@ -19780,26 +19714,6 @@ declare enum EventTypeEnum {
      * @description 无事件
      */
     None = "",
-    /**
-     * @description 卡片下落结束
-     */
-    CardDropEnd = "cardDropEnd",
-    /**
-     * @description 卡片开始展开前
-     */
-    CardBeforeExpand = "cardBeforeExpand",
-    /**
-     * @description 卡片开始展开结束
-     */
-    CardEndExpand = "cardEndExpand",
-    /**
-     * @description 卡片开始收缩
-     */
-    CardStartCollapse = "cardStartCollapse",
-    /**
-     * @description 卡片收缩结束
-     */
-    CardEndCollapse = "cardEndCollapse",
     /**
      * @description 滚动结束
      */
@@ -19817,11 +19731,7 @@ declare enum EncodeEventTypeEnum {
     /**
      * @description 视频控制
      */
-    VideoControls = "videocontrols",
-    /**
-     * @description 签名提交
-     */
-    SignatureSubmit = "signatureSubmit"
+    VideoControls = "videocontrols"
 }
 /**
  * @description 事件类型对应组件的映射表
@@ -20621,7 +20531,9 @@ declare enum FileTypeEnum {
     /** 个人场景资产 */
     personalSceneAssets = 3,
     /** 城市编辑器资产 */
-    cityEditorAssets = 4
+    cityEditorAssets = 4,
+    /** 系统内置素材（全局只读） */
+    systemMaterial = 5
 }
 
 /** UI渲染单项类型 */
@@ -20633,6 +20545,8 @@ interface MenuItemForRender {
     isVideo?: boolean | undefined | null;
     moduleId?: number;
     url?: string;
+    /** 卡片缩略图；实际添加到画布仍使用 url/img */
+    cover?: string;
     fileType?: string;
     type?: string;
     assetType?: FileTypeEnum;
@@ -21172,7 +21086,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -21562,7 +21475,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -21942,7 +21854,6 @@ declare const sdk: {
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -22350,7 +22261,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -22719,7 +22629,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -23228,7 +23137,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -23618,7 +23526,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -23998,7 +23905,6 @@ declare const sdk: {
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -24406,7 +24312,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -24775,7 +24680,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -25906,7 +25810,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -26296,7 +26199,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -26676,7 +26578,6 @@ declare const screenwright: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -27084,7 +26985,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -27453,7 +27353,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -27962,7 +27861,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -28352,7 +28250,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -28732,7 +28629,6 @@ declare const screenwright: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -29140,7 +29036,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -29509,7 +29404,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];

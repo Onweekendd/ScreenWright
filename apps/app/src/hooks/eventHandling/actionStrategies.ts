@@ -882,7 +882,7 @@ export class VideoToPlayStrategy extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToPlay?.();
     });
   }
@@ -896,7 +896,7 @@ export class videoToFullscreenStrategy extends ActionStrategy<ActionExecutionPar
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToFullscreen?.();
     });
   }
@@ -915,7 +915,7 @@ export class VideoToPlayRangeStrategy extends ActionStrategy<ActionExecutionPara
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       console.log(event, "event");
       console.log(videoStartTime, "info", videoEndTime);
       event?.videoToPlayRange(videoStartTime as number, videoEndTime as number);
@@ -933,7 +933,7 @@ export class VideoToPauseStrategy extends ActionStrategy<ActionExecutionParams> 
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToPause?.();
     });
   }
@@ -949,7 +949,7 @@ export class VideoToStopStrategy extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToStop?.();
     });
   }
@@ -965,7 +965,7 @@ export class VideoToRestartStrategy extends ActionStrategy<ActionExecutionParams
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToRestart?.();
     });
   }
@@ -981,7 +981,7 @@ export class VideoToMutedStrategy extends ActionStrategy<ActionExecutionParams> 
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToMuted?.(true);
     });
   }
@@ -997,7 +997,7 @@ export class VideoToUnmutedStrategy extends ActionStrategy<ActionExecutionParams
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToMuted?.(false);
     });
   }
@@ -1013,7 +1013,7 @@ export class VideoToAudioUpStrategy extends ActionStrategy<ActionExecutionParams
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToAudioUp?.();
     });
   }
@@ -1029,7 +1029,7 @@ export class VideoToAudioDownStrategy extends ActionStrategy<ActionExecutionPara
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToAudioDown?.();
     });
   }
@@ -1045,7 +1045,7 @@ export class VideoToFastinStrategy extends ActionStrategy<ActionExecutionParams>
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToFastin?.(timeFastIn as number, info as { value: number } | undefined);
     });
   }
@@ -1061,7 +1061,7 @@ export class VideoToRewindStrategy extends ActionStrategy<ActionExecutionParams>
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       event?.videoToRewind?.(timeRewind as number);
     });
   }
@@ -1077,7 +1077,7 @@ export class SwitchVideoStrategy extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${mediaEnum.FtVideo}-${componentId}`];
+      const event = eventList[`${mediaEnum.SwVideo}-${componentId}`];
       if (event.videoToFastin && info) {
         event.videoToFastin(0, {
           value: info.time,
@@ -1123,7 +1123,7 @@ export class sendUE4MessageStrategy extends ActionStrategy<ActionExecutionParams
         [extendsEnumType.UePixelStreaming]: "PixelStreaming",
         [extendsEnumType.UePeerStreaming]: "PeerStreaming",
         [extendsEnumType.UeVessel]: "ue-vessel",
-        [extendsEnumType.FtUnrealEngine]: "sw-unreal-engine"
+        [extendsEnumType.SwUnrealEngine]: "sw-unreal-engine"
       };
 
       if (!propMap[targetComponent.component.prop]) {
@@ -1195,7 +1195,7 @@ export class sendUE4MessageStrategy extends ActionStrategy<ActionExecutionParams
           return;
         case "sw-unreal-engine":
           componentIds.forEach((componentId) => {
-            const event = eventList[`${extendsEnumType.FtUnrealEngine}-${componentId}`];
+            const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
             event.sendMessageToUe(messageName, data);
           });
           break;
@@ -1216,7 +1216,7 @@ export class SwitchBlueprintTab extends ActionStrategy<ActionExecutionParams> {
     }
 
     componentIds.forEach((componentId) => {
-      const event = eventList[`${extendsEnumType.FtUnrealEngine}-${componentId}`];
+      const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
       event.switchBlueprintTab(blueprintKey, info);
     });
   }
@@ -1316,34 +1316,6 @@ export class SetIndexStrategy extends ActionStrategy<ActionExecutionParams> {
   }
 }
 
-export class JumpPageStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    eventList,
-    animation,
-    currentpage
-  }: ActionExecutionParams): Promise<void> {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.handlePageChange) {
-        return;
-      }
-      event.handlePageChange(currentpage);
-    });
-  }
-}
-
 export class prevPageStrategy extends ActionStrategy<ActionExecutionParams> {
   async execute({
     componentIds,
@@ -1426,148 +1398,6 @@ export class swiperCardChangeIndexStrategy extends ActionStrategy<ActionExecutio
         return;
       }
       event.handleEvensChangeActiveSpinnerIndex(swiperCardTabsName);
-    });
-  }
-}
-
-export class onExportStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    animation,
-    eventList
-  }: ActionExecutionParams): Promise<void> {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.onExport) {
-        return;
-      }
-      event.onExport();
-    });
-  }
-}
-
-export class onClearStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    animation,
-    eventList
-  }: ActionExecutionParams): Promise<void> {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-      console.log(component, "component");
-      console.log(eventList, "eventList");
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.onClear) {
-        return;
-      }
-      event.onClear();
-    });
-  }
-}
-
-export class onRedoStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    animation,
-    eventList
-  }: ActionExecutionParams): Promise<void> {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.onRedo) {
-        return;
-      }
-      event.onRedo();
-    });
-  }
-}
-
-export class onUndoStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    animation,
-    eventList
-  }: ActionExecutionParams): Promise<void> {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.onUndo) {
-        return;
-      }
-      event.onUndo();
-    });
-  }
-}
-
-export class onTranslateImageStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    animation,
-    eventList
-  }: ActionExecutionParams): Promise<void> {
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.onTranslateImage) {
-        return;
-      }
-      event.onTranslateImage();
     });
   }
 }
@@ -1806,15 +1636,9 @@ export class ActionStrategyFactory {
     [ActionTypeEnum.SendUe4MsgStatic]: new sendUE4MessageStrategy(),
     [ActionTypeEnum.SendAIManMsgStatic]: new sendAIManMsgStaticStrategy(),
     [ActionTypeEnum.SwitchBlueprintTab]: new SwitchBlueprintTab(),
-    [ActionTypeEnum.JumpPage]: new JumpPageStrategy(),
     [ActionTypeEnum.nextPage]: new nextPageStrategy(),
     [ActionTypeEnum.prevPage]: new prevPageStrategy(),
     [ActionTypeEnum.SwiperCardChangeIndex]: new swiperCardChangeIndexStrategy(),
-    [ActionTypeEnum.OnExport]: new onExportStrategy(),
-    [ActionTypeEnum.OnClear]: new onClearStrategy(),
-    [ActionTypeEnum.OnRedo]: new onRedoStrategy(),
-    [ActionTypeEnum.OnUndo]: new onUndoStrategy(),
-    [ActionTypeEnum.OnTranslateImage]: new onTranslateImageStrategy(),
     [ActionTypeEnum.TurnOnPatrol]: new turnOnPatrolStrategy(),
     [ActionTypeEnum.PausePatrol]: new pausePatrolStrategy(),
     [ActionTypeEnum.RestartPatrol]: new restartPatrolStrategy(),

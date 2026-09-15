@@ -1,26 +1,26 @@
 import { MediaEnum } from "@screenwright/types";
 import type { Component } from "vue";
 
-import ftimgAnimation from "./mediaAnimation/ftimgAnimation.vue";
-import ftOpenVideoBtnOption from "./mediaBtnOption/ft-open-videoBtnOption.vue";
-import ftSwiperCardCard from "./mediaCard/ftSwiperCardCard.vue";
+import swimgAnimation from "./mediaAnimation/swimgAnimation.vue";
+import swOpenVideoBtnOption from "./mediaBtnOption/sw-open-videoBtnOption.vue";
+import swSwiperCardCard from "./mediaCard/swSwiperCardCard.vue";
 import ctVideoPanelFilter from "./mediaFilter/ctVideoPanelFilter.vue";
-import ftOpenVideoFilter from "./mediaFilter/ft-open-videoFilter.vue";
-import ftimgFilter from "./mediaFilter/ftimgFilter.vue";
-import ftvideoFilter from "./mediaFilter/ftvideoFilter.vue";
-import ftimgFrostedGlass from "./mediaFrostedGlass/ftimgFrostedGlass.vue";
-import ftvideoFrostedGlass from "./mediaFrostedGlass/ftvideoFrostedGlass.vue";
+import swOpenVideoFilter from "./mediaFilter/sw-open-videoFilter.vue";
+import swimgFilter from "./mediaFilter/swimgFilter.vue";
+import swvideoFilter from "./mediaFilter/swvideoFilter.vue";
+import swimgFrostedGlass from "./mediaFrostedGlass/swimgFrostedGlass.vue";
+import swvideoFrostedGlass from "./mediaFrostedGlass/swvideoFrostedGlass.vue";
 import ctVideoPanelGlobal from "./mediaGlobal/ctVideoPanelGlobal.vue";
-import ftEmbedAudioGlobal from "./mediaGlobal/ft-embed-audioGlobal.vue";
-import ftOpenVideoGlobal from "./mediaGlobal/ft-open-videoGlobal.vue";
-import ftImgBorderGlobal from "./mediaGlobal/ftimgBorderGlobal.vue";
-import ftImgGlobal from "./mediaGlobal/ftimgGlobal.vue";
-import ftSwiperCardGlobal from "./mediaGlobal/ftSwiperCardGlobal.vue";
-import ftswiperGlobal from "./mediaGlobal/ftswiperGlobal.vue";
-import ftSwiperV3Global from "./mediaGlobal/ftSwiperV3Global.vue";
-import ftVideoGlobal from "./mediaGlobal/ftvideoGlobal.vue";
-import ftswiperPicture from "./mediaPicture/ftswiperPicture.vue";
-import ftSwiperV3Picture from "./mediaPicture/ftSwiperV3Picture.vue";
+import swEmbedAudioGlobal from "./mediaGlobal/sw-embed-audioGlobal.vue";
+import swOpenVideoGlobal from "./mediaGlobal/sw-open-videoGlobal.vue";
+import swImgBorderGlobal from "./mediaGlobal/swimgBorderGlobal.vue";
+import swImgGlobal from "./mediaGlobal/swimgGlobal.vue";
+import swSwiperCardGlobal from "./mediaGlobal/swSwiperCardGlobal.vue";
+import swswiperGlobal from "./mediaGlobal/swswiperGlobal.vue";
+import swSwiperV3Global from "./mediaGlobal/swSwiperV3Global.vue";
+import swVideoGlobal from "./mediaGlobal/swvideoGlobal.vue";
+import swswiperPicture from "./mediaPicture/swswiperPicture.vue";
+import swSwiperV3Picture from "./mediaPicture/swSwiperV3Picture.vue";
 import ctVideoPanelSeries from "./mediaSeries/ctVideoPanelSeries.vue";
 import ctVideoPanelTitle from "./mediaTitle/ctVideoPanelTitle.vue";
 
@@ -45,50 +45,50 @@ export type ConfigTab = {
 
 // FtIframe 的配置面板留在 app 本地（依赖大屏编辑器 useUpdateInstance 等能力），未在此注册
 export const MediaConfigComponent: Partial<Record<MediaEnum, ConfigTab[]>> = {
-  [MediaEnum.FtEmbedAudio]: [
-    { label: "全局", value: optionType.global, component: ftEmbedAudioGlobal },
+  [MediaEnum.SwEmbedAudio]: [
+    { label: "全局", value: optionType.global, component: swEmbedAudioGlobal },
   ],
-  [MediaEnum.FtImgBorder]: [
-    { label: "全局", value: optionType.global, component: ftImgBorderGlobal },
+  [MediaEnum.SwImgBorder]: [
+    { label: "全局", value: optionType.global, component: swImgBorderGlobal },
   ],
-  [MediaEnum.FtSwiperCard]: [
-    { label: "全局", value: optionType.global, component: ftSwiperCardGlobal },
-    { label: "卡片", value: optionType.card, component: ftSwiperCardCard },
+  [MediaEnum.SwSwiperCard]: [
+    { label: "全局", value: optionType.global, component: swSwiperCardGlobal },
+    { label: "卡片", value: optionType.card, component: swSwiperCardCard },
   ],
-  [MediaEnum.FtOpenVideo]: [
-    { label: "全局", value: optionType.global, component: ftOpenVideoGlobal },
+  [MediaEnum.SwOpenVideo]: [
+    { label: "全局", value: optionType.global, component: swOpenVideoGlobal },
     {
       label: "按钮配置",
       value: optionType.btnOption,
-      component: ftOpenVideoBtnOption,
+      component: swOpenVideoBtnOption,
     },
-    { label: "滤镜", value: optionType.filter, component: ftOpenVideoFilter },
+    { label: "滤镜", value: optionType.filter, component: swOpenVideoFilter },
   ],
-  [MediaEnum.FtImg]: [
-    { label: "全局", value: optionType.global, component: ftImgGlobal },
-    { label: "动画", value: optionType.animation, component: ftimgAnimation },
-    { label: "滤镜", value: optionType.filter, component: ftimgFilter },
+  [MediaEnum.SwImg]: [
+    { label: "全局", value: optionType.global, component: swImgGlobal },
+    { label: "动画", value: optionType.animation, component: swimgAnimation },
+    { label: "滤镜", value: optionType.filter, component: swimgFilter },
     {
       label: "毛玻璃",
       value: optionType.frostedGlass,
-      component: ftimgFrostedGlass,
+      component: swimgFrostedGlass,
     },
   ],
-  [MediaEnum.FtSwiper]: [
-    { label: "全局", value: optionType.global, component: ftswiperGlobal },
-    { label: "图片", value: optionType.picture, component: ftswiperPicture },
+  [MediaEnum.SwSwiper]: [
+    { label: "全局", value: optionType.global, component: swswiperGlobal },
+    { label: "图片", value: optionType.picture, component: swswiperPicture },
   ],
-  [MediaEnum.FtSwiperV3]: [
-    { label: "全局", value: optionType.global, component: ftSwiperV3Global },
-    { label: "图片", value: optionType.picture, component: ftSwiperV3Picture },
+  [MediaEnum.SwSwiperV3]: [
+    { label: "全局", value: optionType.global, component: swSwiperV3Global },
+    { label: "图片", value: optionType.picture, component: swSwiperV3Picture },
   ],
-  [MediaEnum.FtVideo]: [
-    { label: "全局", value: optionType.global, component: ftVideoGlobal },
-    { label: "滤镜", value: optionType.filter, component: ftvideoFilter },
+  [MediaEnum.SwVideo]: [
+    { label: "全局", value: optionType.global, component: swVideoGlobal },
+    { label: "滤镜", value: optionType.filter, component: swvideoFilter },
     {
       label: "毛玻璃",
       value: optionType.frostedGlass,
-      component: ftvideoFrostedGlass,
+      component: swvideoFrostedGlass,
     },
   ],
   [MediaEnum.CtVideoPanel]: [

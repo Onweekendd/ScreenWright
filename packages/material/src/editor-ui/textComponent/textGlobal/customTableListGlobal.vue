@@ -39,10 +39,10 @@ import { SwInputNumber } from "@screenwright/ui/input-number";
 
 import { firstLabelWidth } from "../../constants";
 import { useUpdateInstance } from "../../useUpdateInstance";
-import Animate from "../textConfig/components/TextFtCustomTableListConfig/animate.vue";
-import GlobalBg from "../textConfig/components/TextFtCustomTableListConfig/globalBg.vue";
-import GlobalTranslate from "../textConfig/components/TextFtCustomTableListConfig/globalTranslate.vue";
-import ScrollYBar from "../textConfig/components/TextFtCustomTableListConfig/scrollYBar.vue";
+import Animate from "../textConfig/components/TextSwCustomTableListConfig/animate.vue";
+import GlobalBg from "../textConfig/components/TextSwCustomTableListConfig/globalBg.vue";
+import GlobalTranslate from "../textConfig/components/TextSwCustomTableListConfig/globalTranslate.vue";
+import ScrollYBar from "../textConfig/components/TextSwCustomTableListConfig/scrollYBar.vue";
 
 const { update, selectTargetData } = useUpdateInstance();
 </script>

@@ -152,100 +152,50 @@ const startBIAgentStream = (options: SwAgentStreamOptions) => {
 };
 
 /**
- * 守卫式 controller：流被消费方 cancel 后，Web Streams 规范让 controller 进入 closed 态，
- * 此后 enqueue/close/error 一律抛 ERR_INVALID_STATE。这里把这条约束收在一处，调用侧不必到处 try。
+ * 收集前台子 agent 快照，并过滤后台子 agent 的原生帧，避免与后台任务专用帧重复渲染。
  */
-interface GuardedController {
-  /** 已断连或已收尾；主循环据此提前退出迭代 */
-  readonly isClosed: boolean;
-  enqueue(chunk: unknown): void;
-  close(): void;
-  error(err: unknown): void;
-  /** 消费方 cancel（客户端断连）时翻牌，此后一切输出静默 */
-  markCancelled(): void;
-}
+const prepareSubAgentChunk = (
+  rawChunk: unknown,
+  chunk: ChunkType,
+  subAgentSnapshotCollector: SubAgentSnapshotCollector,
+  bgSubRunIds: Set<string>
+): unknown | null => {
+  // 直接按 inner toolCallId 写入扁平 Map：data-tool-agent.chunk.id 是 sub-agent runId
+  // （不是父工具 toolCallId），在 injection 时没法用来反查；inner toolCallId 全局唯一。
+  const id = (chunk as { id?: string }).id;
+  if (!id || bgSubRunIds.has(id)) {
+    return null;
+  }
+  subAgentSnapshotCollector.collect((chunk as Record<string, unknown>).data);
+  return rawChunk;
+};
 
-const guardController = (controller: ReadableStreamDefaultController): GuardedController => {
-  let closed = false;
-
-  return {
-    get isClosed() {
-      return closed;
-    },
-    enqueue(chunk) {
-      if (closed) {
-        return;
-      }
-      try {
-        controller.enqueue(chunk);
-      } catch {
-        closed = true; // enqueue 时才发现已关闭（与 cancel 竞态），置位并静默
-      }
-    },
-    close() {
-      if (closed) {
-        return;
-      }
-      closed = true;
-      try {
-        controller.close();
-      } catch {
-        // 与消费方 cancel 竞态，controller 已关闭，忽略
-      }
-    },
-    error(err) {
-      if (closed) {
-        return;
-      }
-      closed = true;
-      try {
-        controller.error(err);
-      } catch {
-        // controller 已关闭，无法再上报错误，忽略
-      }
-    },
-    markCancelled() {
-      closed = true;
-    }
-  };
+/** 将建屏类 workflow 的进度帧替换为精简的进度帧，其余帧原样透传。 */
+const prepareWorkflowChunk = (rawChunk: unknown, chunk: ChunkType): unknown => {
+  const workflowChunkName = ((chunk as Record<string, unknown>).data as { name?: string })?.name;
+  return chunk.type === "data-tool-workflow" && isDeliveryWorkflow(workflowChunkName)
+    ? buildWorkflowProgressChunk(rawChunk)
+    : rawChunk;
 };
 
 /**
- * 单帧路由：返回要下发给前端的 chunk，返回 null 表示丢弃该帧。
- *
- * - data-tool-agent：顺手收子 agent 快照；后台子 agent 的原生帧丢弃（同内容已由
- *   data-background-task-output 透传，不丢会重复渲染）。
- * - 建屏类 workflow（figma / codia / requirementToBI）的进度帧：换成剔除 input/output
- *   并带统计的精简帧。那份 statistics 同时是前端的收尾信号，见 ./workflow-progress。
- * - 其余：原样透传。
+ * 将 AI SDK 原始帧整理为可下发给客户端的帧；返回 null 表示应丢弃该帧。
  */
-const routeChunk = (rawChunk: unknown, snapshots: SubAgentSnapshotCollector, bgSubRunIds: Set<string>): unknown => {
+const prepareChunkForClient = (
+  rawChunk: unknown,
+  subAgentSnapshotCollector: SubAgentSnapshotCollector,
+  bgSubRunIds: Set<string>
+): unknown => {
   const chunk = rawChunk as ChunkType;
-  const type = chunk?.type;
-  const chunkData = (chunk as Record<string, unknown>)?.data;
-
-  // 直接按 inner toolCallId 写入扁平 Map：data-tool-agent.chunk.id 是 sub-agent runId
-  // （不是父工具 toolCallId），在 injection 时没法用来反查；inner toolCallId 全局唯一。
-  if (type === "data-tool-agent") {
-    const id = chunk.id;
-    if (!id || bgSubRunIds.has(id)) {
-      return null;
-    }
-    snapshots.collect(chunkData);
-    return rawChunk;
+  if (chunk.type === "data-tool-agent") {
+    return prepareSubAgentChunk(rawChunk, chunk, subAgentSnapshotCollector, bgSubRunIds);
   }
-
-  const workflowChunkName = (chunkData as { name?: string })?.name;
-  if (type === "data-tool-workflow" && isDeliveryWorkflow(workflowChunkName)) {
-    return buildWorkflowProgressChunk(rawChunk);
-  }
-
-  return rawChunk;
+  return prepareWorkflowChunk(rawChunk, chunk);
 };
 
 interface ProcessedStreamOptions {
   aiSdkStream: ReadableStream<unknown>;
-  snapshots: SubAgentSnapshotCollector;
+  subAgentSnapshotCollector: SubAgentSnapshotCollector;
   threadId: string;
   internalAbort: AbortController;
   usageRef: UsageRef;
@@ -256,20 +206,14 @@ interface ProcessedStreamOptions {
  * 消费 aiSdkStream：逐帧路由下发，收尾注入 usage 并持久化子 agent 快照。
  */
 const createProcessedStream = (options: ProcessedStreamOptions): ReadableStream => {
-  const { aiSdkStream, snapshots, threadId, internalAbort, usageRef, bgSubRunIds } = options;
-
-  // controller 只在 start() 里拿得到，但 cancel() 也要翻同一张牌，故提到外层持有
-  let output: GuardedController | undefined;
+  const { aiSdkStream, subAgentSnapshotCollector: snapshots, threadId, internalAbort, usageRef, bgSubRunIds } = options;
 
   return new ReadableStream({
-    async start(controller) {
-      const out = guardController(controller);
-      output = out;
-
+    async start(responseStreamController) {
       // 正常收尾与异常收尾只差最后一步：都要先补 usage、再落快照
       const finish = async (settle: () => void) => {
         if (usageRef.current) {
-          out.enqueue({ type: "data-usage", data: usageRef.current });
+          responseStreamController.enqueue({ type: "data-usage", data: usageRef.current });
         }
         await snapshots.persist(threadId);
         settle();
@@ -277,23 +221,19 @@ const createProcessedStream = (options: ProcessedStreamOptions): ReadableStream 
 
       try {
         for await (const rawChunk of aiSdkStream as unknown as AsyncIterable<unknown>) {
-          if (out.isClosed) {
-            break; // 消费方已取消，无需再迭代（internalAbort 也会让上游尽快结束）
-          }
-          const outgoing = routeChunk(rawChunk, snapshots, bgSubRunIds);
+          const outgoing = prepareChunkForClient(rawChunk, snapshots, bgSubRunIds);
           if (outgoing !== null) {
-            out.enqueue(outgoing);
+            responseStreamController.enqueue(outgoing);
           }
         }
-        await finish(() => out.close());
+        await finish(() => responseStreamController.close());
       } catch (error) {
         console.error("[bi-chat] stream consume error:", error);
-        await finish(() => out.error(error));
+        await finish(() => responseStreamController.error(error));
       }
     },
     cancel() {
-      // 客户端断开连接时触发：标记已关闭并中止流迭代
-      output?.markCancelled();
+      // 客户端断开连接时触发：中止上游流迭代。
       internalAbort.abort();
     }
   });
@@ -352,7 +292,7 @@ export async function createBIChatTurnStream(
 
     return createProcessedStream({
       aiSdkStream: aiSdkStream as unknown as ReadableStream<unknown>,
-      snapshots,
+      subAgentSnapshotCollector: snapshots,
       threadId,
       internalAbort: abortController,
       usageRef,

@@ -1,9 +1,8 @@
 import { computed } from "vue";
 
 import { getDataFilterPersistence, UpdateHistoryTypeEnum } from "./ports/persistencePort";
-import { useChildrenDrawer } from "./useChildrenDrawer";
 import { useEditStore } from "./useEditStore";
-import { TargetFlag, useTargetData } from "./useTargetData";
+import { useTargetData } from "./useTargetData";
 
 interface Props {
   /** 历史遗留字段，当前实现未消费（保留仅为调用方类型兼容） */
@@ -39,8 +38,7 @@ export const useUpdateInstance = (
   /**
    * @description 組件v-model綁定的值
    */
-  const { selectTargetData: targetData, targetFlag } = useTargetData();
-  const { update: updateChildrenDrawer } = useChildrenDrawer();
+  const { selectTargetData: targetData } = useTargetData();
 
   /**
    * 250+ 处调用点里，绝大多数把 update 直接当 @change/@input 等事件处理器绑定（如
@@ -55,10 +53,6 @@ export const useUpdateInstance = (
     if (isLock.value) {
       return;
     }
-    if (targetFlag.value === TargetFlag.ChildItemOption) {
-      updateChildrenDrawer();
-    }
-
     getDataFilterPersistence().saveLayersByType(target, isPanel(), {
       updateHistoryType: isUpdateHistoryType(updateHistoryType) ? updateHistoryType : UpdateHistoryTypeEnum.UPDATE
     });

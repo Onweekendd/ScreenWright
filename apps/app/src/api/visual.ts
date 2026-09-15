@@ -9,7 +9,6 @@ import type {
   getPublishedSceneRes,
   getSceneObjListRes,
   quoteScreenReq,
-  responseReq,
   ScenePublishReq,
   ScenePublishRes,
   ScreenItem,
@@ -46,12 +45,6 @@ export const cityScenesList = (data: cityScenesReq) => {
   });
 };
 
-export const signaturePadSave = (data: any) =>
-  request<BaseEntity<any>>({
-    url: `${systemBase}/sign/save`,
-    method: "post",
-    data
-  });
 // 大屏复制
 export const copyScreenObj = (params: { id: string | number; versionCode: string }, baseUrl = "largeScreenAgg") =>
   request<BaseEntity<ScreenItem>>({
@@ -169,62 +162,6 @@ export const getPublishedScene = (
     method: "get",
     timeout: 0,
     showLoading
-  });
-
-// 创建三维场景
-export const createSceneData = (params: any) => {
-  return request<responseReq>({
-    url: `${onlineBase}/sceneAgg/save`,
-    method: "POST",
-    data: { ...params },
-    showLoading: true
-  });
-};
-// 创建城市模板
-export const createCityData = (params: any) => {
-  return request<responseReq>({
-    url: `${onlineBase}/tCityScenesAgg/add`,
-    method: "POST",
-    data: { ...params },
-    showLoading: true
-  });
-};
-// 创建城市模板-初始化
-export const cityLayersInit = (moduleId: number, params: any) => {
-  return request<responseReq>({
-    url: `${systemBase}/cityLayers/init?moduleId=${moduleId}&stateId=0`,
-    method: "POST",
-    data: { ...params },
-    showLoading: true
-  });
-};
-
-// 大屏复制返回的数据项类型（原由 SimpleBarrage/type 提供，该组件已物料化迁出，
-// 此处保留 copyModelLargeScreen 所需的最小本地定义，避免 app 反向依赖物料内部类型）。
-interface DataFilterItem {
-  createdBy: string;
-  createdTime: string;
-  updatedBy: string;
-  updatedTime: string;
-  id: number;
-  userId: number;
-  name: string;
-  layerScrollId: number;
-  layerSignId: number;
-  sort: number | null;
-  signUrl: string;
-  status: number | null;
-  remark: string | null;
-}
-
-export const copyModelLargeScreen = (id: string | number) =>
-  request<BaseEntity<DataFilterItem>>({
-    url: `${BaseName.Online}/largeScreenAgg/copyModel/${id}`,
-    method: "get",
-    params: {
-      id,
-      applicationCode: BaseName.AppCode
-    }
   });
 
 export const setLayerLock = (id: string | number) => {

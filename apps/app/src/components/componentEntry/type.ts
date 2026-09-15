@@ -4,16 +4,16 @@ import { IndicatorEnum, InteractiveEnum, MediaEnum, TextEnum, ThreeComponentEnum
 export { TextEnum as textEnum };
 export const renderTextComponentType: TextEnum[] = [
   TextEnum.CustomCollapse,
-  TextEnum.FtRichtext,
-  TextEnum.FtCollection,
+  TextEnum.SwRichtext,
+  TextEnum.SwCollection,
   TextEnum.CustomTableList,
-  TextEnum.FtTextWordCloud,
-  TextEnum.FtMultiLine,
-  TextEnum.FtText,
-  TextEnum.FtProgress,
-  TextEnum.FtDatetime,
-  TextEnum.FtText2,
-  TextEnum.FtScroll
+  TextEnum.SwTextWordCloud,
+  TextEnum.SwMultiLine,
+  TextEnum.SwText,
+  TextEnum.SwProgress,
+  TextEnum.SwDatetime,
+  TextEnum.SwText2,
+  TextEnum.SwScroll
 ];
 
 // 指标组件
@@ -22,8 +22,8 @@ export const renderIndicatorComponentType: IndicatorEnum[] = [
   IndicatorEnum.RasterProgressBar,
   IndicatorEnum.IconRatio,
   IndicatorEnum.SortRatioBar,
-  IndicatorEnum.FtDynamicRatio,
-  IndicatorEnum.FtFlopPerformance,
+  IndicatorEnum.SwDynamicRatio,
+  IndicatorEnum.SwFlopPerformance,
   IndicatorEnum.EchartRing,
   IndicatorEnum.RankProgress
 ];
@@ -31,22 +31,22 @@ export const renderIndicatorComponentType: IndicatorEnum[] = [
 // 媒体组件
 export { MediaEnum as mediaEnum };
 export const renderMediaComponentType: MediaEnum[] = [
-  MediaEnum.FtSwiperCard,
-  MediaEnum.FtEmbedAudio,
-  MediaEnum.FtIframe,
-  MediaEnum.FtImg,
-  MediaEnum.FtOpenVideo,
-  MediaEnum.FtImgBorder,
-  MediaEnum.FtSwiper,
-  MediaEnum.FtSwiperV3,
-  MediaEnum.FtVideo,
+  MediaEnum.SwSwiperCard,
+  MediaEnum.SwEmbedAudio,
+  MediaEnum.SwIframe,
+  MediaEnum.SwImg,
+  MediaEnum.SwOpenVideo,
+  MediaEnum.SwImgBorder,
+  MediaEnum.SwSwiper,
+  MediaEnum.SwSwiperV3,
+  MediaEnum.SwVideo,
   MediaEnum.CtVideoPanel
 ];
 
 // 交互组件
 export { InteractiveEnum as interactiveEnum };
 export const renderInteractiveComponentType: InteractiveEnum[] = [
-  InteractiveEnum.FtVoiceControl,
+  InteractiveEnum.SwVoiceControl,
   InteractiveEnum.FormCheckbox,
   InteractiveEnum.FormNavMenu,
   InteractiveEnum.ScrollPicker,
@@ -55,17 +55,17 @@ export const renderInteractiveComponentType: InteractiveEnum[] = [
   InteractiveEnum.FormSlider,
   InteractiveEnum.MultiSubtabs,
   InteractiveEnum.RollSubtabs,
-  InteractiveEnum.FtCascader,
-  InteractiveEnum.FtSingleSelectedLegend,
-  InteractiveEnum.FtDateTimePicker,
-  InteractiveEnum.FtCustomSelect,
-  InteractiveEnum.FtLegend,
-  InteractiveEnum.FtPageQuery,
-  InteractiveEnum.FtPageTurning,
+  InteractiveEnum.SwCascader,
+  InteractiveEnum.SwSingleSelectedLegend,
+  InteractiveEnum.SwDateTimePicker,
+  InteractiveEnum.SwCustomSelect,
+  InteractiveEnum.SwLegend,
+  InteractiveEnum.SwPageQuery,
+  InteractiveEnum.SwPageTurning,
   InteractiveEnum.Subtabs,
-  InteractiveEnum.FtMutual,
-  InteractiveEnum.FtSearch,
-  InteractiveEnum.FtTimerShaft,
+  InteractiveEnum.SwMutual,
+  InteractiveEnum.SwSearch,
+  InteractiveEnum.SwTimerShaft,
   InteractiveEnum.videoProgress
 ];
 

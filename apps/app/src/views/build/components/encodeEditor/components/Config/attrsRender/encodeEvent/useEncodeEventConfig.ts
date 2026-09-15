@@ -29,7 +29,7 @@ import { buildComponentMap, useGlobalComponentData } from "@/views/build/useGlob
 /**
  *  不需要事件就能添加到远程控制目标的组件类型
  */
-const autoRemoteControlComponents = [extendsEnumType.PageReload, mediaEnum.FtVideo];
+const autoRemoteControlComponents = [extendsEnumType.PageReload, mediaEnum.SwVideo];
 
 export const useEncodeEventConfig = createGlobalState(() => {
   const { componentList } = useEditStore();
@@ -97,11 +97,7 @@ export const useEncodeEventConfig = createGlobalState(() => {
       .filter((component) => componentIsAutoRemoteControl(component) || componentHasEvent(component))
       .filter((component) => {
         if (currentEncodeEvent.value.trigger === EncodeEventTypeEnum.VideoControls) {
-          return component.component.prop === mediaEnum.FtVideo;
-        }
-
-        if (currentEncodeEvent.value.trigger === EncodeEventTypeEnum.SignatureSubmit) {
-          return component.component.prop === extendsEnumType.SimpleBarrage;
+          return component.component.prop === mediaEnum.SwVideo;
         }
 
         return true;
@@ -121,18 +117,18 @@ export const useEncodeEventConfig = createGlobalState(() => {
     componentType: ComponentType["component"]["prop"]
   ): { label: string; value: string; hotword?: string }[] | null => {
     const ComponentOfSpecialData: Record<
-      interactiveEnum.FtPageTurning | interactiveEnum.FtPageQuery | interactiveEnum.FtVoiceControl,
+      interactiveEnum.SwPageTurning | interactiveEnum.SwPageQuery | interactiveEnum.SwVoiceControl,
       { label: string; value: string; hotword?: string }[]
     > = {
-      [interactiveEnum.FtPageTurning]: [
+      [interactiveEnum.SwPageTurning]: [
         { label: "上一页", value: "prev" },
         { label: "下一页", value: "next" }
       ],
-      [interactiveEnum.FtPageQuery]: [
+      [interactiveEnum.SwPageQuery]: [
         { label: "上一页", value: "prev" },
         { label: "下一页", value: "next" }
       ],
-      [interactiveEnum.FtVoiceControl]: [
+      [interactiveEnum.SwVoiceControl]: [
         { label: "开始", value: "start", hotword: "" },
         { label: "结束", value: "stop", hotword: "" }
       ]
@@ -140,7 +136,7 @@ export const useEncodeEventConfig = createGlobalState(() => {
 
     if (componentType in ComponentOfSpecialData) {
       return ComponentOfSpecialData[
-        componentType as interactiveEnum.FtPageTurning | interactiveEnum.FtPageQuery | interactiveEnum.FtVoiceControl
+        componentType as interactiveEnum.SwPageTurning | interactiveEnum.SwPageQuery | interactiveEnum.SwVoiceControl
       ];
     }
 
@@ -467,7 +463,7 @@ export const useEncodeEventConfig = createGlobalState(() => {
     if (!component) {
       return false;
     }
-    const noControlItemComponent = [interactiveEnum.FtMutual, mediaEnum.FtVideo, extendsEnumType.PageReload];
+    const noControlItemComponent = [interactiveEnum.SwMutual, mediaEnum.SwVideo, extendsEnumType.PageReload];
     return noControlItemComponent.includes(component.component.prop as interactiveEnum | mediaEnum | extendsEnumType);
   };
 

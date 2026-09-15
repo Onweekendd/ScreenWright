@@ -6,7 +6,7 @@ import ftiframeGlobal from "@/views/build/components/buildConfig/mediaComponent/
 
 // ftiframe 并非严格意义的物料组件，深度耦合大屏编辑器能力，配置面板留在 app 本地
 export const iframeComponentOptions = {
-  [MediaEnum.FtIframe]: [
+  [MediaEnum.SwIframe]: [
     { label: "全局", value: optionType.global, component: ftiframeGlobal },
     { label: "扩展", value: optionType.extend, component: ftiframeExtend }
   ]

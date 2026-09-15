@@ -25,17 +25,17 @@ import { setMinioUrl } from "@screenwright/composables";
 
 import Icon from "@editor/base/Icon/index.vue";
 
-import type { FtUploadProps } from "./SwUpload";
-import { FtUploadEmits, FileType } from "./SwUpload";
+import type { SwUploadProps } from "./SwUpload";
+import { SwUploadEmits, FileType } from "./SwUpload";
 import { useUpload } from "./useUpload";
 
-const props = withDefaults(defineProps<FtUploadProps>(), {
+const props = withDefaults(defineProps<SwUploadProps>(), {
   fileType: FileType.img,
   selectAssets: true,
   showDel: true
 });
 
-const emit = defineEmits(FtUploadEmits);
+const emit = defineEmits(SwUploadEmits);
 const { upload, openAssets, hasAssets } = useUpload();
 const route = useRoute();
 

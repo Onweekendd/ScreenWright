@@ -195,7 +195,7 @@ public handleCallback({ sourceComponent, throwValue }) {
 | `dataChange` 实际抛了 | 组件（路径相对 `packages/material/src/components/`） |
 |---|---|
 | 组件对象 `props.element` | scrollTable、ctVideoPanel、ftSwiperCard、openVideo、ftvideo `useFtVideo.ts:680` |
-| 整个数组 | customTableList、ftProgresstable、ftTextWordCloud、ftcollection、ringIndicator3d(New)、verticalCard、ftvideo `useFtVideo.ts:332,603`、formNavMenu `useNavMenu.ts:254,291` |
+| 整个数组 | customTableList、ftProgresstable、ftTextWordCloud、ftcollection、ringIndicator3d(New)、ftvideo `useFtVideo.ts:332,603`、formNavMenu `useNavMenu.ts:254,291` |
 | 非数据值 | ftTimerShaft 抛 `option.value`；ftVoiceControl 抛字符串；formNavMenu `:389` 抛 `defaultActive` 字符串 |
 
 其余组件（全部 echart、ft-dataContainer、各类选项卡 / 表单 / 图例等）都符合契约，按 data schema 取 key 即可。

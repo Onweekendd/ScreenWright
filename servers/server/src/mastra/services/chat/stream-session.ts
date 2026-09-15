@@ -29,6 +29,14 @@ interface TurnChunk {
   data?: { taskId?: string; toolCallId?: string };
 }
 
+/** 同一后台任务的会话级状态；以 taskId 为 key 存在 backgroundTaskStates 中。 */
+interface BackgroundTaskState {
+  /** 该任务尚未进入终态，session 应保持打开以等待其恢复或完成。 */
+  awaitingTerminal: boolean;
+  /** 任务结果推送给前端后，是否应终止整个 session。 */
+  terminateAfterFinish: boolean;
+}
+
 /**
  * 主 agent 自身被挂起(如 clientTool 人审)：当前轮在此处暂停结束，需留着 outer 等下一轮
  * 带 runId 的 resume(handleBiChatResume → resumeStream 续接)。
@@ -37,7 +45,7 @@ const MAIN_SUSPEND_TYPE = "data-tool-call-suspended";
 
 /**
  * 后台任务被挂起：和主 agent 挂起不同，它的 resume 走旁路(resume-task → bgManager.resume +
- * attachTaskStream)，且续接不一定回到当前轮。用 suspendedBgTasks Set 记「还没回来的后台任务」，
+ * attachTaskStream)，且续接不一定回到当前轮。用 backgroundTaskStates 记「还没回来的后台任务」，
  * attachTaskStream 收到终态再清除，以此决定轮结束时该 close() 还是留着 idle。
  */
 const BG_SUSPEND_TYPE = "data-background-task-suspended";
@@ -92,12 +100,10 @@ class BIChatStreamSession {
    */
   private baselineCommitted = false;
   /**
-   * 还没回来的后台任务 taskId：循环见 BG_SUSPEND_TYPE 时 add，attachTaskStream 终态时 delete。
-   * 跨轮存活(不随单轮重置)——轮结束时只要它非空，就留着 idle 等任务回来，不能 close。
+   * 仍等待终态的后台任务，以及它结束后是否应终止 session 的标记。两种状态都以 taskId 为键，
+   * 因而合并存放；挂起帧置 awaitingTerminal，attachTaskStream 到终态时删除。
    */
-  private readonly suspendedBgTasks = new Set<string>();
-  /** 用户已拒绝的后台挂起任务：等任务结果落入流并进入终态后终止整个会话。 */
-  private readonly terminateAfterBgTasks = new Set<string>();
+  private readonly backgroundTaskStates = new Map<string, BackgroundTaskState>();
   private idleTimer?: ReturnType<typeof setTimeout>;
   /**
    * resume 后接进 outer 的后台任务遥测订阅；dispose/close 时一并退订，防订阅泄漏
@@ -190,14 +196,15 @@ class BIChatStreamSession {
     this.clearIdle();
     this.sawMainSuspend = false;
     this.turnActive = true;
+
     if (!this.turnMessageText) {
       this.turnMessageText = extractUserMessageText(args.messages);
     }
+
     if (!this.turnMessageId) {
       this.turnMessageId = extractUserMessageId(args.messages);
     }
-    // AI 动手前先落用户改动基线：必须 await 完成后再起 turnStream，否则 AI 已写的文件会和
-    // 用户改动一起被 git add -A 打进基线节点。只在首个真实提问轮做一次（resume/后台续接轮跳过）。
+
     if (!this.baselineCommitted && (args.messages?.length ?? 0) > 0) {
       this.baselineCommitted = true;
       await commitScreenSnapshot(this.resourceId, "用户手动改动").catch((e) =>
@@ -210,33 +217,10 @@ class BIChatStreamSession {
         if (this.closed) {
           break;
         }
-        if (chunk.type?.startsWith(BG_EVENT_PREFIX) && chunk.data?.toolCallId) {
-          this.bgToolCallIds.add(chunk.data.toolCallId); // started 最早，挂起前必已记上
+        if (!this.prepareChunkForForwarding(chunk)) {
+          continue;
         }
-        if (chunk.type === MAIN_SUSPEND_TYPE) {
-          if (chunk.data?.toolCallId && this.bgToolCallIds.has(chunk.data.toolCallId)) {
-            continue; // 后台那次挂起的重复通报：丢帧，理由见方法注释
-          }
-          // 挂起等审批走的是 runId resume，不是「悄悄断在半路」，不算 pending。
-          if (chunk.data?.toolCallId) {
-            this.pendingToolCallIds.delete(chunk.data.toolCallId);
-          }
-          this.sawMainSuspend = true;
-        } else if (chunk.type === BG_SUSPEND_TYPE && chunk.data?.taskId) {
-          this.suspendedBgTasks.add(chunk.data.taskId); // 记下，等 attachTaskStream 收到终态再清
-        }
-        // 前台工具调用的起止：中途 dispose()/fail() 时，留在这里的就是被掐断的那些。
-        // 委派到后台的调用(bgToolCallIds)另有 suspend/resume 路线，交给 markPendingToolCallsInterrupted 排除。
-        if (chunk.type === "tool-input-available" && chunk.toolCallId) {
-          this.pendingToolCallIds.add(chunk.toolCallId);
-        } else if (
-          chunk.toolCallId &&
-          (chunk.type === "tool-output-available" ||
-            chunk.type === "tool-output-error" ||
-            chunk.type === "tool-output-denied")
-        ) {
-          this.pendingToolCallIds.delete(chunk.toolCallId);
-        }
+        this.trackForegroundToolCall(chunk);
         await this.push(chunk as ChunkType);
         if (chunk.type === "tool-output-available" && chunk.toolCallId === args.terminateAfterToolCallId) {
           this.terminate();
@@ -248,7 +232,7 @@ class BIChatStreamSession {
       }
       // 留着等 resume 的两种理由：主 agent 自身挂起(等 runId resume)、或还有后台任务没回来
       // (等 resume-task 旁路续接)。两者都没有 = 真答完了，close() 发 DONE。
-      if (this.sawMainSuspend || this.suspendedBgTasks.size > 0) {
+      if (this.sawMainSuspend || this.hasBackgroundTaskAwaitingTerminal()) {
         this.scheduleIdleClose();
       } else {
         this.close();
@@ -258,6 +242,89 @@ class BIChatStreamSession {
     } finally {
       this.turnActive = false;
     }
+  }
+
+  /**
+   * 更新挂起相关状态，并决定该帧是否应继续推给前端。
+   *
+   * @param chunk 当前从 turn stream 读到的帧。
+   * @returns `false` 仅表示后台任务附带的重复主 agent 挂起帧；调用方应像原先
+   * `continue` 一样跳过后续的工具台账更新和前端推送。其余帧返回 `true`。
+   */
+  private prepareChunkForForwarding(chunk: TurnChunk): boolean {
+    const suspendToolCallId = chunk.data?.toolCallId;
+
+    // started 最早，挂起前必已记上。
+    if (chunk.type?.startsWith(BG_EVENT_PREFIX) && suspendToolCallId) {
+      this.bgToolCallIds.add(suspendToolCallId);
+    }
+
+    // 非主 agent 挂起帧只需记录后台任务的挂起状态。
+    if (chunk.type !== MAIN_SUSPEND_TYPE) {
+      if (chunk.type === BG_SUSPEND_TYPE && chunk.data?.taskId) {
+        this.markBackgroundTaskSuspended(chunk.data.taskId);
+      }
+      return true;
+    }
+
+    // 后台那次挂起的重复通报：丢帧，理由见 runTurnBody 的方法注释。
+    if (suspendToolCallId && this.bgToolCallIds.has(suspendToolCallId)) {
+      return false;
+    }
+
+    // 挂起等审批走的是 runId resume，不是「悄悄断在半路」，不算 pending。
+    if (suspendToolCallId) {
+      this.pendingToolCallIds.delete(suspendToolCallId);
+    }
+    this.sawMainSuspend = true;
+    return true;
+  }
+
+  /**
+   * 维护前台工具调用台账；dispose()/fail() 时尚未移除的项即为被掐断的调用。
+   * 委派到后台的调用由 bgToolCallIds / markPendingToolCallsInterrupted 另行处理。
+   *
+   * @param chunk 已确认要推送给前端的 turn stream 帧。
+   */
+  private trackForegroundToolCall(chunk: TurnChunk): void {
+    if (chunk.type === "tool-input-available" && chunk.toolCallId) {
+      this.pendingToolCallIds.add(chunk.toolCallId);
+      return;
+    }
+
+    const isTerminalToolEvent =
+      chunk.type === "tool-output-available" ||
+      chunk.type === "tool-output-error" ||
+      chunk.type === "tool-output-denied";
+    if (chunk.toolCallId && isTerminalToolEvent) {
+      this.pendingToolCallIds.delete(chunk.toolCallId);
+    }
+  }
+
+  /** 标记后台任务尚未结束；重复挂起帧不能覆盖既有的终止标记。 */
+  private markBackgroundTaskSuspended(taskId: string): void {
+    const state = this.backgroundTaskStates.get(taskId);
+    if (state) {
+      state.awaitingTerminal = true;
+      return;
+    }
+    this.backgroundTaskStates.set(taskId, { awaitingTerminal: true, terminateAfterFinish: false });
+  }
+
+  /** 当前是否有后台任务需要阻止 outer stream 正常 close。 */
+  private hasBackgroundTaskAwaitingTerminal(): boolean {
+    return [...this.backgroundTaskStates.values()].some((state) => state.awaitingTerminal);
+  }
+
+  /** 给后台任务登记“结果推送后终止会话”的一次性意图。 */
+  private terminateAfterBackgroundTaskFinishes(taskId: string): void {
+    const state = this.backgroundTaskStates.get(taskId);
+    if (state) {
+      state.terminateAfterFinish = true;
+      return;
+    }
+    // 容忍挂起事件尚未到达的时序：稍后收到挂起帧时会保留这个终止标记。
+    this.backgroundTaskStates.set(taskId, { awaitingTerminal: false, terminateAfterFinish: true });
   }
 
   /**
@@ -283,7 +350,7 @@ class BIChatStreamSession {
 
     if (terminateOnFinish) {
       // 记在这里而不是当场终止：任务结果还没落进流，立刻掐掉前端就看不到"这一步被拒了"的回执。
-      this.terminateAfterBgTasks.add(taskId);
+      this.terminateAfterBackgroundTaskFinishes(taskId);
     }
 
     this.clearIdle();
@@ -344,10 +411,11 @@ class BIChatStreamSession {
     if (this.attachedTasks.get(taskId) === taskAbortController) {
       this.attachedTasks.delete(taskId);
     }
+    const taskState = reachedTerminalState ? this.backgroundTaskStates.get(taskId) : undefined;
     if (reachedTerminalState) {
-      this.suspendedBgTasks.delete(taskId); // 任务回来了，不再是「挂着没回来」
+      this.backgroundTaskStates.delete(taskId); // 任务回来了，不再是「挂着没回来」
     }
-    if (reachedTerminalState && this.terminateAfterBgTasks.delete(taskId)) {
+    if (taskState?.terminateAfterFinish) {
       // 用户拒绝了这个后台任务里的命令：结果已顺流推给前端，到此为止，不触发续接轮。
       this.terminate();
       return;
@@ -361,7 +429,13 @@ class BIChatStreamSession {
   detachTaskStream(taskId: string): void {
     // 一并清掉终止标记：resume 本身失败（任务没跑起来）不算"用户拒绝的那次执行完了"。
     // 留着的话，用户改口批准后重试，这个陈旧标记会在终态时把会话误杀。
-    this.terminateAfterBgTasks.delete(taskId);
+    const taskState = this.backgroundTaskStates.get(taskId);
+    if (taskState) {
+      taskState.terminateAfterFinish = false;
+      if (!taskState.awaitingTerminal) {
+        this.backgroundTaskStates.delete(taskId);
+      }
+    }
     const taskAbortController = this.attachedTasks.get(taskId);
     if (!taskAbortController) {
       return;

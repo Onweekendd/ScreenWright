@@ -32,16 +32,15 @@ import { echarttreemapDataSchema, echarttreemapOptionSchema } from "./echart/ech
 import { echartzebraDataSchema, echartzebraOptionSchema } from "./echart/echartzebra";
 import { echartzebra2DataSchema, echartzebra2OptionSchema } from "./echart/echartzebra2";
 import { echartzebraBarAndLineDataSchema, echartzebraBarAndLineOptionSchema } from "./echart/echartzebraBarAndLine";
+import { fullScreenSwitchDataSchema, fullScreenSwitchOptionSchema } from "./extends/fullScreenSwitch";
+import { pageReloadDataSchema, pageReloadOptionSchema } from "./extends/pageReload";
+import { simpleParticleDataSchema, simpleParticleOptionSchema } from "./extends/simple-particle";
+import { simpleStarDataSchema, simpleStarOptionSchema } from "./extends/simpleStar";
 import { swDataContainerDataSchema, swDataContainerOptionSchema } from "./extends/sw-dataContainer";
 import { swDigitalHumanDataSchema, swDigitalHumanOptionSchema } from "./extends/sw-digital-human";
 import { swMaskLayerDataSchema, swMaskLayerOptionSchema } from "./extends/sw-mask-layer";
 import { swUnrealEngineDataSchema, swUnrealEngineOptionSchema } from "./extends/sw-unreal-engine";
 import { swWeatherDataSchema, swWeatherOptionSchema } from "./extends/sw-weather";
-import { fullScreenSwitchDataSchema, fullScreenSwitchOptionSchema } from "./extends/fullScreenSwitch";
-import { pageReloadDataSchema, pageReloadOptionSchema } from "./extends/pageReload";
-import { simpleBarrageDataSchema, simpleBarrageOptionSchema } from "./extends/simple-barrage";
-import { simpleParticleDataSchema, simpleParticleOptionSchema } from "./extends/simple-particle";
-import { simpleStarDataSchema, simpleStarOptionSchema } from "./extends/simpleStar";
 import { uePeerStreamingDataSchema, uePeerStreamingOptionSchema } from "./extends/ue-peer-streaming";
 import { uePixelStreamingDataSchema, uePixelStreamingOptionSchema } from "./extends/ue-pixel-streaming";
 import { ueVesselDataSchema, ueVesselOptionSchema } from "./extends/ue-vessel";
@@ -50,16 +49,21 @@ import { echartLiquidFillDataSchema, echartLiquidFillOptionSchema } from "./indi
 import { echartprogressDataSchema, echartprogressOptionSchema } from "./indicator/echartprogress";
 import { echartRingDataSchema, echartRingOptionSchema } from "./indicator/echartring";
 import { echartWordcloudDataSchema, echartWordcloudOptionSchema } from "./indicator/echartwordcloud";
-import { ftdynamicratioDataSchema, ftdynamicratioOptionSchema } from "./indicator/swdynamicratio";
-import { swFlopPerformanceDataSchema, swFlopPerformanceOptionSchema } from "./indicator/swFlopPerformance";
 import { iconRatioDataSchema, iconRatioOptionSchema } from "./indicator/iconRatio";
 import { rankProgressDataSchema, rankProgressOptionSchema } from "./indicator/rank-progress";
 import { rasterProgressBarDataSchema, rasterProgressBarOptionSchema } from "./indicator/rasterProgressBar";
 import { sortRatioBarDataSchema, sortRatioBarOptionSchema } from "./indicator/sortRatioBar";
+import { ftdynamicratioDataSchema, ftdynamicratioOptionSchema } from "./indicator/swdynamicratio";
+import { swFlopPerformanceDataSchema, swFlopPerformanceOptionSchema } from "./indicator/swFlopPerformance";
 import { formCheckboxDataSchema, formCheckboxOptionSchema } from "./interactive/formCheckbox";
 import { formNavMenuDataSchema, formNavMenuOptionSchema } from "./interactive/formNavMenu";
 import { formSliderDataSchema, formSliderOptionSchema } from "./interactive/formSlider";
 import { formSwitchDataSchema, formSwitchOptionSchema } from "./interactive/formSwitch";
+import { multiSubtabsDataSchema, multiSubtabsOptionSchema } from "./interactive/multi-subtabs";
+import { pointTimelineDataSchema, pointTimelineOptionSchema } from "./interactive/pointTimeline";
+import { rollSubtabsDataSchema, rollSubtabsOptionSchema } from "./interactive/roll-subtabs";
+import { scrollPickerDataSchema, scrollPickerOptionSchema } from "./interactive/scrollPicker";
+import { subtabsDataSchema, subtabsOptionSchema } from "./interactive/subtabs";
 import { swMutualDataSchema, swMutualOptionSchema } from "./interactive/sw-mutual";
 import { swSearchDataSchema, swSearchOptionSchema } from "./interactive/sw-search";
 import { swVoiceControlDataSchema, swVoiceControlOptionSchema } from "./interactive/sw-voice-control";
@@ -74,11 +78,6 @@ import {
   swSingleSelectedLegendOptionSchema
 } from "./interactive/swSingleSelectedLegend";
 import { swTimerShaftDataSchema, swTimerShaftOptionSchema } from "./interactive/swTimerShaft";
-import { multiSubtabsDataSchema, multiSubtabsOptionSchema } from "./interactive/multi-subtabs";
-import { pointTimelineDataSchema, pointTimelineOptionSchema } from "./interactive/pointTimeline";
-import { rollSubtabsDataSchema, rollSubtabsOptionSchema } from "./interactive/roll-subtabs";
-import { scrollPickerDataSchema, scrollPickerOptionSchema } from "./interactive/scrollPicker";
-import { subtabsDataSchema, subtabsOptionSchema } from "./interactive/subtabs";
 import { ctVideoPanelDataSchema, ctVideoPanelOptionSchema } from "./media/ctVideoPanel";
 import { swEmbedAudioDataSchema, swEmbedAudioOptionSchema } from "./media/sw-embed-audio";
 import { swOpenVideoDataSchema, swOpenVideoOptionSchema } from "./media/sw-open-video";
@@ -204,7 +203,6 @@ export const componentPropSchemaMap = {
   "sw-weather": { data: swWeatherDataSchema, option: swWeatherOptionSchema },
   fullScreenSwitch: { data: fullScreenSwitchDataSchema, option: fullScreenSwitchOptionSchema },
   pageReload: { data: pageReloadDataSchema, option: pageReloadOptionSchema },
-  "simple-barrage": { data: simpleBarrageDataSchema, option: simpleBarrageOptionSchema },
   "simple-particle": { data: simpleParticleDataSchema, option: simpleParticleOptionSchema },
   simpleStar: { data: simpleStarDataSchema, option: simpleStarOptionSchema },
   "ue-peer-streaming": { data: uePeerStreamingDataSchema, option: uePeerStreamingOptionSchema },

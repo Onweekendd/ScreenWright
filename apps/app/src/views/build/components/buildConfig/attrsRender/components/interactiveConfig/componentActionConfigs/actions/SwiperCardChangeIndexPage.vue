@@ -40,19 +40,6 @@ const currentSwiperCardList = computed(() => {
     }
     return optionsList;
   }
-  if (targetComponent.title === "垂直卡片") {
-    let optionsList = targetComponent.option.cardList.map((item: any, i: number) => {
-      return {
-        label: `系列-${item.tabsName}-${i + 1}`,
-        value: item.tabsName
-      };
-    });
-    if (optionsList && optionsList.length > 0) {
-      optionsList = [{ label: "左翻", value: "left" }, { label: "右翻", value: "right" }, ...optionsList];
-    }
-    return optionsList;
-  }
-
   if (targetComponent.title === "3D图片列表") {
     return targetComponent.option.seriesTabsList?.map((item: any) => {
       return {

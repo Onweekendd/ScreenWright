@@ -27,9 +27,7 @@
 | `updateConfig` | [action/update-config.md](action/update-config.md) | 更新组件配置 |
 | `sendUe4Msg` / `sendUe4MsgStatic` | [action/ue4.md](action/ue4.md) | 向 UE4 发送消息 |
 | `sendAIManMsgStatic` | [action/ai-man.md](action/ai-man.md) | 向数字人发送消息 |
-| `jumpPage` | [action/jump-page.md](action/jump-page.md) | 跳转页码 |
 | `prevPage` / `nextPage` | [action/prev-next-page.md](action/prev-next-page.md) | 上一页 / 下一页 |
-| `onExport` / `onClear` / `onRedo` / `onUndo` / `signature` | [action/signature-pad.md](action/signature-pad.md) | 签名板操作 |
 | `turnOnPatrol` / `pausePatrol` / `restartPatrol` | [action/patrol.md](action/patrol.md) | 轮巡控制 |
 | `convertTranslation` | [action/translation.md](action/translation.md) | 译文转换 |
 

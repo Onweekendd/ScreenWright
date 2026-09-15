@@ -14,16 +14,10 @@ export enum ExhibitEnum {
   ringIndicator3dNew = "ringIndicator3dNew",
   /** 3D图片列表 */
   ImagesList3d = "imagesList3d",
-  /** PDF查看器 */
-  PdfjsViewer = "pdfjs-viewer",
   /** 空间粒子 */
-  FtParticles = "sw-particles",
-  /** 签名板 */
-  FtSignaturePad = "sw-signaturePad",
+  SwParticles = "sw-particles",
   /** 滤镜组件 */
-  FtFilter = "sw-filter",
-  /** 垂直卡片 */
-  verticalCard = "verticalCard"
+  SwFilter = "sw-filter",
 }
 
 /** @deprecated 使用 ExhibitEnum 代替 */

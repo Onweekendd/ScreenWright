@@ -18,7 +18,9 @@ declare enum FileTypeEnum {
     /** 个人场景资产 */
     personalSceneAssets = 3,
     /** 城市编辑器资产 */
-    cityEditorAssets = 4
+    cityEditorAssets = 4,
+    /** 系统内置素材（全局只读） */
+    systemMaterial = 5
 }
 
 /** UI渲染单项类型 */
@@ -30,6 +32,8 @@ interface MenuItemForRender {
     isVideo?: boolean | undefined | null;
     moduleId?: number;
     url?: string;
+    /** 卡片缩略图；实际添加到画布仍使用 url/img */
+    cover?: string;
     fileType?: string;
     type?: string;
     assetType?: FileTypeEnum;
@@ -569,7 +573,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -959,7 +962,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -1339,7 +1341,6 @@ declare const sdk: {
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -1747,7 +1748,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -2116,7 +2116,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -2625,7 +2624,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -3015,7 +3013,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -3395,7 +3392,6 @@ declare const sdk: {
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -3803,7 +3799,6 @@ declare const sdk: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -4172,7 +4167,6 @@ declare const sdk: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -5303,7 +5297,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -5693,7 +5686,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -6073,7 +6065,6 @@ declare const screenwright: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -6481,7 +6472,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -6850,7 +6840,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -7359,7 +7348,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -7749,7 +7737,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -8129,7 +8116,6 @@ declare const screenwright: {
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -8537,7 +8523,6 @@ declare const screenwright: {
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -8906,7 +8891,6 @@ declare const screenwright: {
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];

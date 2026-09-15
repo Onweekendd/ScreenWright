@@ -66,6 +66,7 @@
     "js-md5": "^0.7.3",
     "jszip": "^3.10.1",
     "lodash-es": "4.17.21",
+    "marked": "^17.0.3",
     "mitt": "^3.0.1",
     "monaco-editor": "0.52.2",
     "page-flip": "^2.0.7",

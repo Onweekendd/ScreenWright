@@ -58,6 +58,7 @@
     "@screenwright/composables": "workspace:*",
     "@screenwright/core": "workspace:*",
     "@screenwright/types": "workspace:*",
+    "@tiptap/core": "3.31.3",
     "@tiptap/extension-color": "3.31.3",
     "@tiptap/extension-font-family": "3.31.3",
     "@tiptap/extension-text-align": "3.31.3",

@@ -241,7 +241,6 @@ export const commitTurn = async (screenRoot: string, subject: string, messageId?
     // execFile 失败时 "nothing to commit" 落在 e.stdout（不在 e.message），需一并检查
     const detail = `${(e as { stdout?: string }).stdout ?? ""}${(e as { stderr?: string }).stderr ?? ""}${String(e)}`;
     if (detail.includes("nothing to commit")) {
-      console.log("没有需要提交的文件");
       return;
     }
     throw e;

@@ -361,6 +361,7 @@ export function useAgentBIStream() {
       mergeIntoId,
       state
     });
+
     const renderSession = new MessageRenderSession({
       mergeIntoId,
       batchEnabled: batchRender,

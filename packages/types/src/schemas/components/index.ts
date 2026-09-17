@@ -32,6 +32,8 @@ export * from "./echart/echartradar";
 export * from "./echart/echartrank";
 export * from "./echart/echartrankBar";
 export * from "./echart/echartsankey";
+export * from "./echart/seriesAlignment";
+export * from "./superRefineRegistry";
 export * from "./echart/echartscalePie";
 export * from "./echart/echartscatter";
 export * from "./echart/echartstripBar";

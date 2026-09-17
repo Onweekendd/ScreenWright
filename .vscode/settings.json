@@ -55,5 +55,8 @@
   "rust-analyzer.linkedProjects": [
     "apps/desktop/src-tauri/Cargo.toml",
     "packages/alignment-wasm/Cargo.toml"
-  ]
+  ],
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  }
 }

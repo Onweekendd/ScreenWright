@@ -3,16 +3,15 @@
     :always="true"
     class="table-body"
     ref="bodyRef"
-    :style="{ height: `${height - option.headerlineHeight}px`, pointerEvents: isAnimateScroll ? 'none' : 'visible' }"
+    :style="{ height: `${bodyHeight}px` }"
   >
-    <ul
-      ref="ulBox"
-      :style="ulStyle"
-      @mouseenter="isHoverScroll = true"
-      @mouseleave="isHoverScroll = false"
-      :class="{ slideAni: isAnimating }"
-    >
-      <slot v-for="(item, index) in currentList" :key="item.id" :item="item" :index="index" />
+    <ul :style="ulStyle" :class="{ slideAni: shouldAnimate }">
+      <slot
+        v-for="(item, index) in repeatedList"
+        :key="`${item.id ?? item._rowNumber}-${item._copy}`"
+        :item="item"
+        :index="index"
+      />
     </ul>
   </el-scrollbar>
 </template>
@@ -20,108 +19,77 @@
 <script setup lang="ts">
 import type { ScrollbarInstance } from "element-plus";
 import type { CSSProperties } from "vue";
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-
-interface ScrollYBarStyle {
-  trackWidth: string;
-  trackBackground: string;
-  trackBorderRadius: string;
-  thumbWidth: string;
-  thumbBackground: string;
-  thumbBorderRadius: string;
-}
+import { computed, ref } from "vue";
 
 interface Props {
   option: any;
   height: number;
   isAnimateScroll: boolean;
-  currentList: Array<{ id: string | number; [key: string]: any }>;
-  listData: Array<{ id: string | number; [key: string]: any }>;
-  scrollYBarStyle: ScrollYBarStyle;
+  listData: Array<{ id?: string | number; [key: string]: any }>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  option: () => ({
-    count: 0,
-    headerlineHeight: 0,
-    scrollTimeType: false,
-    scrollSingleTime: 0,
-    scrollTime: 0,
-    isBuild: false
-  }),
   height: 0,
   isAnimateScroll: false,
-  currentList: () => [],
-  listData: () => [],
-  scrollYBarStyle: () => ({
-    trackWidth: "6px",
-    trackBackground: "#000",
-    trackBorderRadius: "3px",
-    thumbWidth: "6px",
-    thumbBackground: "#409eff",
-    thumbBorderRadius: "3px"
-  })
+  listData: () => []
 });
 
 const bodyRef = ref<ScrollbarInstance>();
-const ulBox = ref<HTMLElement>();
-const isHoverScroll = ref(false);
-const scrollTimer = ref<NodeJS.Timer | null>();
-const isAnimating = ref(false);
-const heightValue = ref("0");
 
-// 使用计算属性计算需要绑定到样式的变量
-const thumbHeight = computed(() => `${(props.option.count / props.currentList.length) * 100}%`);
+const rawBodyHeight = computed(
+  () => props.height - (props.option.header?.show === false ? 0 : (props.option.header?.height ?? 40))
+);
+const rowHeight = computed(() => props.option.rowStyle?.height ?? 40);
+const originalLength = computed(() => props.listData.length);
 
-const animationDuration = computed(() => {
-  return `${
-    props.option.scrollTimeType ? props.option.scrollSingleTime * props.listData.length : props.option.scrollTime
-  }s`;
+// 可视行数必须小于实际数据行数，滚动才有意义；两者相等或可视行数更多时不触发滚动
+const shouldAnimate = computed(() => {
+  const visibleRows = props.option.scroll?.visibleRows ?? 0;
+  return props.isAnimateScroll && visibleRows > 0 && originalLength.value > visibleRows;
 });
+
+// 静态（不滚动）时，可视区高度向下取整到整数行，避免拖拽出的组件高度不是行高整数倍时，
+// 边缘露出一条固定不动、被从中间切开的半行；滚动时内容持续移动，边缘露出半行是正常现象，
+// 这时应该用满全部可用高度，不然会在底部留出一条空白
+const bodyHeight = computed(() => {
+  if (shouldAnimate.value || !rowHeight.value) return rawBodyHeight.value;
+  return Math.max(rowHeight.value, Math.floor(rawBodyHeight.value / rowHeight.value) * rowHeight.value);
+});
+
+// 复制份数按"可视区像素高度"反算，保证复制后的总高度至少覆盖 2 倍可视区——
+// 组件被拖得很高、可视行数很多时，只复制一份会导致数据在滚到一半就露出空白（内容被看到头了）
+const repeatCount = computed(() => {
+  if (!shouldAnimate.value) return 1;
+  const originalHeight = originalLength.value * rowHeight.value;
+  if (!originalHeight) return 2;
+  return Math.max(2, Math.ceil((2 * bodyHeight.value) / originalHeight));
+});
+
+const repeatedList = computed(() => {
+  const result: Array<Record<string, any>> = [];
+  for (let copy = 0; copy < repeatCount.value; copy++) {
+    props.listData.forEach((it, i) => {
+      result.push({ ...it, _rowNumber: i, _copy: copy });
+    });
+  }
+  return result;
+});
+
+// 一轮完整滚动 = 平移一份原始数据的高度（不是复制后的总高度），配合每行耗时算出总时长
+const animationDuration = computed(() => `${(props.option.scroll?.speed ?? 1) * (originalLength.value || 1)}s`);
+
+// 平移距离固定等于"一份原始数据的像素高度"，直接由行高 × 行数算出，
+// 不依赖运行时测量 DOM（避免异步渲染/字体加载时机不稳导致的接缝抖动）
+const heightValue = computed(() => `-${originalLength.value * rowHeight.value}px`);
 
 const ulStyle = computed<CSSProperties>(() => ({
-  animationDuration: animationDuration.value,
-  pointerEvents: props.option.isBuild ? "none" : "visible"
+  animationDuration: animationDuration.value
 }));
-watch(
-  () => props.isAnimateScroll,
-  () => {
-    setInit();
-  }
-);
-
-const setInit = async () => {
-  await nextTick();
-  bodyRef.value?.scrollTo(0, 0);
-  if (!ulBox.value) return;
-  isAnimating.value = props.isAnimateScroll;
-  const currentHeight = ulBox.value.offsetHeight;
-  if (currentHeight) {
-    heightValue.value = `-${currentHeight / 2}px`;
-  }
-};
-
-onMounted(() => {
-  setInit();
-});
-
-onBeforeUnmount(() => {
-  if (scrollTimer.value) {
-    clearInterval(scrollTimer.value);
-  }
-});
-
-defineExpose({
-  setInit,
-  $refs: {
-    ulBox
-  }
-});
 </script>
 
 <style lang="scss" scoped>
 .table-body {
-  width: fit-content !important;
+  width: 100%;
   box-sizing: border-box;
 
   * {
@@ -138,26 +106,11 @@ defineExpose({
     height: 0;
   }
 
+  // 只挡住滚动条滑块本身的拖动交互，不影响内容区域的点击（否则会连行点击事件一起挡掉）
   :deep(.el-scrollbar__bar) {
-    width: v-bind("scrollYBarStyle.trackWidth");
-    background: v-bind("scrollYBarStyle.trackBackground");
-    border-radius: v-bind("scrollYBarStyle.trackBorderRadius");
-    right: 0;
-    top: 0;
-
-    &.is-horizontal {
-      display: none;
-    }
-
-    &.is-vertical {
-      .el-scrollbar__thumb {
-        width: v-bind("scrollYBarStyle.thumbWidth");
-        height: v-bind("thumbHeight") !important;
-        background-color: v-bind("scrollYBarStyle.thumbBackground");
-        border-radius: v-bind("scrollYBarStyle.thumbBorderRadius");
-      }
-    }
+    pointer-events: none;
   }
+
   &:hover {
     .slideAni {
       animation-play-state: paused;

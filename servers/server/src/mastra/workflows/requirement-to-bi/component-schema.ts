@@ -319,15 +319,17 @@ export const checkOptionTypes = (prop: string, option?: Record<string, unknown>)
 };
 
 /**
- * 列宽字段名——目前只有轮播表格 / 进度条表格这两个列驱动组件是这个形状：
+ * 列宽字段名——目前只有进度条表格这个列驱动组件是这个形状：
  * 一个序号列宽 + 一个按列平铺的宽度数组，两者相加就是内容总宽度。
  *
  * 实测过一次真实案例：`seriesYWidth` 四列加起来 660px、`rowWidth` 再加 60px，
  * 组件实际只有 432px 宽——列配置本身就比容器宽，渲染必然挤压。`checkOptionTypes` 只查
  * 「数组 vs 标量」这一维，查不出这种"形状对、总量超"的问题，得单独补一条。
+ *
+ * swScroll（轮播表格）重写后不再是这个形状：列宽通过 `columns[].width` 单独指定、缺省即
+ * 按比例自动分配，结构上已经不会出现"总宽超出容器"这类问题，故不再需要在此登记。
  */
 const COLUMN_WIDTH_FIELDS: Partial<Record<ComponentProp, { row?: string; columns: string }>> = {
-  swScroll: { row: "rowWidth", columns: "seriesYWidth" },
   swProgress: { row: "rowWidth", columns: "seriesYWidth" }
 };
 

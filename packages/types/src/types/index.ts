@@ -125,11 +125,9 @@ export type {
   Scale,
   SceneChildComponent,
   SceneObject,
-  TcpudpConfig,
   TempPool,
   timingFunctionType,
-  Translate,
-  Ue4Config
+  Translate
 } from "./action";
 export {
   Action2ComponentType,
@@ -140,11 +138,8 @@ export {
   ConditionCompareEnum,
   ConditionLogicTypeEnum,
   ConditionTypeEnum,
-  MessageTypeEnum,
   ParameterTypeEnum,
   SceneObjectExplosionType,
-  tcpudpDataTypeEnum,
-  UDPSendtypeEnum,
   VisibleTypeEnum
 } from "./action";
 

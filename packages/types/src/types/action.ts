@@ -1,4 +1,4 @@
-import type { AllComponentType, ComponentType, DataSourceType } from "./component";
+import type { AllComponentType, ComponentType } from "./component";
 import {
   allComponentType,
   BarEchartEnum,
@@ -75,11 +75,6 @@ export enum ActionTypeEnum {
    * @description 切换状态
    */
   SwitchState = "switchState",
-
-  /**
-   * @description 切换终端控制状态
-   */
-  SwitchTCState = "switchTCState",
 
   /**
    * @description 切换场景状态
@@ -171,16 +166,6 @@ export enum ActionTypeEnum {
   MouseLeave = "mouseLeave",
 
   /**
-   * @description 发送UE4消息
-   */
-  SendUe4Msg = "sendUe4Msg",
-
-  /**
-   * @description 发送UE4静态消息
-   */
-  SendUe4MsgStatic = "sendUe4MsgStatic",
-
-  /**
    * @description 视频全屏
    */
   VideoToFullscreen = "videoToFullscreen",
@@ -189,11 +174,6 @@ export enum ActionTypeEnum {
    * @description 视频切换
    */
   VideoToSwitch = "videoToSwitch",
-
-  /**
-   * @description 发送AI消息
-   */
-  SendAIManMsgStatic = "sendAIManMsgStatic",
 
   /**
    * @description 轮播卡切换索引
@@ -393,10 +373,6 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     // "sw-quote" // TODO: 待添加组件
   ],
 
-  [ActionTypeEnum.SwitchTCState]: [
-    // "terminal-control" // TODO: 待添加组件
-  ],
-
   [ActionTypeEnum.SwitchSceneStatus]: [
     threeComponentEnum.Threescene,
     threeComponentEnum.IndustryScene
@@ -490,18 +466,6 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
     interactiveEnum.SwCustomSelect
   ],
 
-  [ActionTypeEnum.SendUe4Msg]: [
-    extendsEnum.UeVessel,
-    extendsEnum.UePeerStreaming,
-    extendsEnum.UePixelStreaming,
-    extendsEnum.SwUnrealEngine
-  ],
-  [ActionTypeEnum.SendUe4MsgStatic]: [
-    extendsEnum.UeVessel,
-    extendsEnum.UePeerStreaming,
-    extendsEnum.UePixelStreaming,
-    extendsEnum.SwUnrealEngine
-  ],
   [ActionTypeEnum.SwitchBlueprintTab]: [extendsEnum.SwUnrealEngine],
   [ActionTypeEnum.VideoToPlay]: [
     mediaEnum.SwVideo
@@ -523,7 +487,6 @@ export const Action2ComponentType: Record<ActionTypeEnum, Array<AllComponentType
   [ActionTypeEnum.VideoToSwitch]: [
     // "sw-digital-human" // TODO: 待添加组件
   ],
-  [ActionTypeEnum.SendAIManMsgStatic]: [extendsEnum.SwDigitalHuman],
   [ActionTypeEnum.SwiperCardChangeIndex]: [
     mediaEnum.SwSwiperCard,
     ExhibitEnum.ImagesList3d // TODO: 待添加组件
@@ -563,7 +526,6 @@ export const ActionList: { label: string; value: ActionTypeEnum }[] = [
   { label: "更新组件配置", value: ActionTypeEnum.UpdateConfig },
   { label: "更新组件数据", value: ActionTypeEnum.UpdateParams },
   { label: "切换组件状态", value: ActionTypeEnum.SwitchState },
-  { label: "切换终端状态", value: ActionTypeEnum.SwitchTCState },
   { label: "切换场景状态", value: ActionTypeEnum.SwitchSceneStatus },
   { label: "切换场景视角", value: ActionTypeEnum.SwitchSceneRoam },
   { label: "切换场景关卡", value: ActionTypeEnum.SwitchSceneLevel },
@@ -581,8 +543,6 @@ export const ActionList: { label: string; value: ActionTypeEnum }[] = [
   { label: "设置选中项", value: ActionTypeEnum.SetIndex },
   { label: "跟随图标", value: ActionTypeEnum.FollowIcon },
   { label: "聚焦倾斜部件", value: ActionTypeEnum.FocusLayer },
-  { label: "向ue发送消息(动态)", value: ActionTypeEnum.SendUe4Msg },
-  { label: "向ue发送消息(静态)", value: ActionTypeEnum.SendUe4MsgStatic },
   { label: "切换蓝图", value: ActionTypeEnum.SwitchBlueprintTab },
   { label: "视频播放", value: ActionTypeEnum.VideoToPlay },
   { label: "视频暂停", value: ActionTypeEnum.VideoToPause },
@@ -590,7 +550,6 @@ export const ActionList: { label: string; value: ActionTypeEnum }[] = [
   { label: "视频重播", value: ActionTypeEnum.VideoToRestart },
   { label: "切换视频", value: ActionTypeEnum.VideoToSwitch },
   { label: "视频全屏", value: ActionTypeEnum.VideoToFullscreen },
-  { label: "向数字人发送消息", value: ActionTypeEnum.SendAIManMsgStatic },
   { label: "项目特有Api指令", value: ActionTypeEnum.ProjectSpecificFun },
   { label: "设置轮播选中页", value: ActionTypeEnum.SwiperCardChangeIndex },
   { label: "视频声音开", value: ActionTypeEnum.VideoToUnmuted },
@@ -668,38 +627,11 @@ export enum ActionAnimationTypeEnum {
 }
 
 /**
- * TCP/UDP数据类型枚举
- * @description 定义TCP/UDP通信的数据类型
- */
-export enum tcpudpDataTypeEnum {
-  None = "",
-  TCP = "1",
-  UDP = "2",
-  WebSocket = "3"
-}
-
-/**
  * 可见性类型枚举
  */
 export enum VisibleTypeEnum {
   Show = "show",
   Hide = "hide"
-}
-
-/**
- * UE4消息类型枚举
- */
-export enum MessageTypeEnum {
-  String = "string",
-  Json = "json"
-}
-
-/**
- * UDP发送类型枚举
- */
-export enum UDPSendtypeEnum {
-  Unicast = "unicast",
-  Broadcasting = "broadcasting"
 }
 
 /**
@@ -979,40 +911,6 @@ export interface GlMapIconActive {
 }
 
 /**
- * UE4引擎配置
- * @description 定义与UE4引擎的通信配置
- */
-export interface Ue4Config {
-  /** 消息名称 */
-  messageName: string;
-  /** 消息JSON */
-  messageJson: string;
-  /** 消息内容 */
-  messageContent: string;
-  /** 消息类型 */
-  messageType: string;
-}
-
-/**
- * TCP/UDP协议配置
- * @description 定义TCP/UDP数据传输配置
- */
-export interface TcpudpConfig {
-  /** 数据类型 */
-  dataType: tcpudpDataTypeEnum;
-  /** 数据源ID */
-  dataSourceId: string;
-  /** 数据源对象 */
-  dataSourceObj: DataSourceType | null;
-  /** 发送数据 */
-  sendData: string;
-  /** 发送类型 */
-  sendType: string;
-  /** 数据延迟（毫秒） */
-  dataDelay: number;
-}
-
-/**
  * 动作接口
  * @description 定义事件的具体执行动作，包含所有可能的动作配置
  */
@@ -1120,23 +1018,17 @@ export interface Action {
   /** @description 加密密钥（可为空） */
   encodeKey?: string | null;
 
-  /** @description UE4引擎配置 */
-  ue4Config?: Ue4Config;
-
   /** @description UE4 蓝图 key，用于切换蓝图 */
   blueprintKey?: string;
 
   /** @description 自定义动作类型标识 */
-  customActionType?: "component" | "message" | "statusAnimation";
+  customActionType?: "component" | "statusAnimation";
 
   /** @description 面板状态动画ID */
   panelStatusAnimationId?: string;
 
   /** @description 面板状态ID */
   panelStatusId?: string;
-
-  /** @description TCP/UDP协议配置 */
-  tcpudpConfig?: TcpudpConfig;
 
   /** @description 项目函数名称 */
   projectFunName?: string;
@@ -1155,9 +1047,6 @@ export interface Action {
 
   /** @description 轮播卡片标签名称 */
   swiperCardTabsName?: string;
-
-  /** @description 数字人消息内容 */
-  aiManMsgContent?: string;
 
   /** @description 广播ID（可为空） */
   setBroadcastId?: string | null;

@@ -430,27 +430,6 @@ export const visibleTypeOptions: { label: string; value: VisibleType }[] = [
   { label: "隐藏", value: VisibleTypeEnum.Hide }
 ];
 
-export enum MessageTypeEnum {
-  String = "string",
-  Json = "json"
-}
-export type MessageType = MessageTypeEnum.String | MessageTypeEnum.Json;
-
-// 消息相关
-export const messageTypeOptions: { label: string; value: MessageType }[] = [
-  { label: "字符串", value: MessageTypeEnum.String },
-  { label: "JSON", value: MessageTypeEnum.Json }
-];
-
-export enum UeMessageTypeEnum {
-  Default = "default"
-}
-export type UeMessageType = UeMessageTypeEnum.Default;
-
-export const ueMessageTypeOptions: { label: string; value: UeMessageType }[] = [
-  { label: "不作处理", value: UeMessageTypeEnum.Default }
-];
-
 export enum CustomTableListEnum {
   Click = "click"
 }
@@ -459,36 +438,6 @@ export type CustomTableList = CustomTableListEnum.Click;
 // 表格相关
 export const customTableListOptions: { label: string; value: CustomTableList }[] = [
   { label: "鼠标点击", value: CustomTableListEnum.Click }
-];
-
-// TCP/UDP相关
-export enum tcpudpDataTypeEnum {
-  None = "",
-  TCP = "1",
-  UDP = "2",
-  WebSocket = "3"
-}
-export type tcpudpDataType =
-  | tcpudpDataTypeEnum.None
-  | tcpudpDataTypeEnum.TCP
-  | tcpudpDataTypeEnum.UDP
-  | tcpudpDataTypeEnum.WebSocket;
-
-export const tcpudpDataTypeOptions: { label: string; value: tcpudpDataType }[] = [
-  { label: "TCP", value: tcpudpDataTypeEnum.TCP },
-  { label: "UDP", value: tcpudpDataTypeEnum.UDP },
-  { label: "WebSocket", value: tcpudpDataTypeEnum.WebSocket }
-];
-
-export enum UDPSendtypeEnum {
-  Unicast = "unicast",
-  Broadcasting = "broadcasting"
-}
-export type UDPSendtype = UDPSendtypeEnum.Unicast | UDPSendtypeEnum.Broadcasting;
-
-export const UDPSendtypeListOptions: { label: string; value: UDPSendtype }[] = [
-  { label: "单播", value: UDPSendtypeEnum.Unicast },
-  { label: "广播", value: UDPSendtypeEnum.Broadcasting }
 ];
 
 export enum ParameterTypeEnum {
@@ -515,17 +464,12 @@ export const componentScopeOptions: { label: string; value: ComponentScope }[] =
 ];
 export enum CustomActionTypeEnum {
   Component = "component",
-  Message = "message",
   StatusAnimation = "statusAnimation"
 }
-export type CustomActionType =
-  | CustomActionTypeEnum.Component
-  | CustomActionTypeEnum.Message
-  | CustomActionTypeEnum.StatusAnimation;
+export type CustomActionType = CustomActionTypeEnum.Component | CustomActionTypeEnum.StatusAnimation;
 
 export const customActionTypeOptions: { label: string; value: CustomActionType }[] = [
   { label: "组件", value: CustomActionTypeEnum.Component },
-  { label: "通信", value: CustomActionTypeEnum.Message },
   { label: "状态动画", value: CustomActionTypeEnum.StatusAnimation }
 ];
 

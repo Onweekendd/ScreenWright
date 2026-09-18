@@ -8,6 +8,7 @@
     "dotenvx": "dotenvx",
     "sync-skill-overviews": "tsx scripts/sync-skill-overviews.ts",
     "inspect:llm": "tsx scripts/inspect-llm-record.ts",
+    "smoke:effect-image": "dotenvx run -- tsx scripts/smoke-screen-from-effect-image.ts",
     "server:dev": "dotenvx run -- tsx watch --conditions=development src/server.ts",
     "mastra:dev": "mastra dev",
     "mastra:build": "mastra build",

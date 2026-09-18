@@ -225,7 +225,14 @@ export const assembleScreenStep = createStep({
     let zoneCount = 0;
     let componentCount = 0;
 
+    // 叠放次序必须显式给：Module 模板经 getComponentDefaultConfigByModuleId 出来 zIndex 一律是 0，
+    // 前端 upsert 又不重算 z（它信后端给的值），于是 20 多个组件谁盖谁全看运气——
+    // 2026-09-17 实测生图链路建出来的屏卡片标题全被卡片框盖住、底图反倒压在最上面。
+    // 按发帧顺序单调递增：先发的在下面（底图 → 卡片框 → 图表 → 文字），与 zones 的顺序语义一致。
+    let nextZ = 0;
     const emit = async (chunk: NodeConversionChunk): Promise<void> => {
+      nextZ += 1;
+      chunk.component.zIndex = nextZ;
       await writer.custom({
         type: "data-node-conversion",
         // 与 figma 那条一致地 structuredClone：帧发出后组件对象还会被后续逻辑读，

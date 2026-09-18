@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   AiModel: 'AiModel',
+  GeneratedImage: 'GeneratedImage',
   FigmaKey: 'FigmaKey',
   Module: 'Module',
   FigmaNodeAsset: 'FigmaNodeAsset',
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "aiModel" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
+    modelProps: "aiModel" | "generatedImage" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -493,6 +494,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AiModelCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AiModelCountAggregateOutputType> | number
+        }
+      }
+    }
+    GeneratedImage: {
+      payload: Prisma.$GeneratedImagePayload<ExtArgs>
+      fields: Prisma.GeneratedImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GeneratedImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GeneratedImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        findFirst: {
+          args: Prisma.GeneratedImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GeneratedImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        findMany: {
+          args: Prisma.GeneratedImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>[]
+        }
+        create: {
+          args: Prisma.GeneratedImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        createMany: {
+          args: Prisma.GeneratedImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GeneratedImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>[]
+        }
+        delete: {
+          args: Prisma.GeneratedImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        update: {
+          args: Prisma.GeneratedImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.GeneratedImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GeneratedImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GeneratedImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.GeneratedImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        aggregate: {
+          args: Prisma.GeneratedImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGeneratedImage>
+        }
+        groupBy: {
+          args: Prisma.GeneratedImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeneratedImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GeneratedImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeneratedImageCountAggregateOutputType> | number
         }
       }
     }
@@ -1877,6 +1952,21 @@ export const AiModelScalarFieldEnum = {
 export type AiModelScalarFieldEnum = (typeof AiModelScalarFieldEnum)[keyof typeof AiModelScalarFieldEnum]
 
 
+export const GeneratedImageScalarFieldEnum = {
+  id: 'id',
+  promptHash: 'promptHash',
+  prompt: 'prompt',
+  model: 'model',
+  seed: 'seed',
+  width: 'width',
+  height: 'height',
+  url: 'url',
+  createdTime: 'createdTime'
+} as const
+
+export type GeneratedImageScalarFieldEnum = (typeof GeneratedImageScalarFieldEnum)[keyof typeof GeneratedImageScalarFieldEnum]
+
+
 export const FigmaKeyScalarFieldEnum = {
   id: 'id',
   keyValue: 'keyValue',
@@ -2456,6 +2546,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   aiModel?: Prisma.AiModelOmit
+  generatedImage?: Prisma.GeneratedImageOmit
   figmaKey?: Prisma.FigmaKeyOmit
   module?: Prisma.ModuleOmit
   figmaNodeAsset?: Prisma.FigmaNodeAssetOmit

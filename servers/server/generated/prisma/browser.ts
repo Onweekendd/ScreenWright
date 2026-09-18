@@ -19,10 +19,19 @@ export * as $Enums from './enums'
 export * from './enums';
 /**
  * Model AiModel
- * AI 模型配置：只 3 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
+ * AI 模型配置：只 4 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
  * 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
  */
 export type AiModel = Prisma.AiModelModel
+/**
+ * Model GeneratedImage
+ * 生图产物。`promptHash` 是幂等键：同一份结构化 prompt + seed + model 命中直接返回，
+ * 不重新计费重新生成——生图慢且贵，用户改一个字重新提交时不该重新烧一遍配额。
+ * 
+ * 只存 url（本地磁盘或对象存储路径），不存像素——像素交给现有的 `src/lib/storage/`
+ * 那套 fs/minio 抽象，这张表只管「有没有生成过、生成的是哪张」。
+ */
+export type GeneratedImage = Prisma.GeneratedImageModel
 /**
  * Model FigmaKey
  * 

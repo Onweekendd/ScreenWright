@@ -33,13 +33,13 @@ const row = (role: string, over: Record<string, unknown> = {}) => ({
 beforeEach(() => {
   vi.clearAllMocks();
   prismaMocks.findUnique.mockImplementation(({ where }: { where: { role: string } }) => Promise.resolve(row(where.role)));
-  prismaMocks.findMany.mockResolvedValue([row("reasoning"), row("vision"), row("embedding")]);
+  prismaMocks.findMany.mockResolvedValue([row("reasoning"), row("vision"), row("embedding"), row("image")]);
 });
 
 describe("ai-model.server", () => {
   it("listAiModels：不回传 key 明文/片段，只给 hasApiKey", async () => {
     const list = await listAiModels();
-    expect(list).toHaveLength(3);
+    expect(list).toHaveLength(4);
     expect(list[0].hasApiKey).toBe(true);
     const leaked = list[0] as unknown as Record<string, unknown>;
     expect(leaked.apiKey).toBeUndefined();

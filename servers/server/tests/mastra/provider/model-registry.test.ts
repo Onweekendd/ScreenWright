@@ -37,7 +37,7 @@ beforeEach(() => {
 });
 
 describe("model-registry", () => {
-  it("warmModelConfigs：3 行都存在时直接读，不 create", async () => {
+  it("warmModelConfigs：所有角色都存在时直接读，不 create", async () => {
     prismaMocks.findUnique.mockImplementation(({ where }: { where: { role: string } }) =>
       Promise.resolve(row(where.role))
     );
@@ -58,7 +58,7 @@ describe("model-registry", () => {
 
     await warmModelConfigs();
 
-    expect(prismaMocks.create).toHaveBeenCalledTimes(3);
+    expect(prismaMocks.create).toHaveBeenCalledTimes(MODEL_ROLES.length);
     const reasoningCreate = prismaMocks.create.mock.calls.find((c) => c[0].data.role === "reasoning")?.[0].data;
     expect(reasoningCreate).toMatchObject({ apiKey: "ds-key", baseUrl: "https://api.deepseek.com", modelId: "deepseek-v4-flash" });
     vi.unstubAllEnvs();

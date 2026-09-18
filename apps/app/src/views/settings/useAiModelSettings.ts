@@ -36,6 +36,12 @@ export const ROLE_META: RoleMeta[] = [
     title: "嵌入模型",
     desc: "组件检索（RAG）向量化。改动后需「重建索引」才生效。",
     modelPlaceholder: "BAAI/bge-large-zh-v1.5"
+  },
+  {
+    role: "image",
+    title: "生图模型",
+    desc: "效果图、装饰素材生成。需支持 images.generations 接口的 OpenAI 兼容端点。",
+    modelPlaceholder: "留空需先联系模型服务商确认可用的生图模型 id"
   }
 ];
 
@@ -63,7 +69,8 @@ export function useAiModelSettings() {
   const states = reactive<Record<ModelRole, RoleState | null>>({
     reasoning: null,
     vision: null,
-    embedding: null
+    embedding: null,
+    image: null
   });
 
   const toForm = (vo: AiModelVo): RoleForm => ({

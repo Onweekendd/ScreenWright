@@ -19,6 +19,7 @@
       :class="{
         lock,
         'is-multi-selected': multiSelectOutline,
+        'is-editing': isEditing,
         isDragging,
         [`status-animation-transition-${id}`]: true
       }"
@@ -29,6 +30,8 @@
       <!-- 选中 -->
       <!-- !disabled || !lock -->
       <div class="shape-modal" :class="{ ...eventsIconClass }" v-if="shapeModalShow" :id="`shape-modal-${id}`" />
+      <!-- agent 正在改这个组件：扫光提示，纯展示，不拦截交互 -->
+      <div class="editing-scan" v-if="isEditing" />
     </div>
   </Transition>
   <div
@@ -39,6 +42,7 @@
     :class="{
       lock,
       'is-multi-selected': multiSelectOutline,
+      'is-editing': isEditing,
       isDragging,
       [`status-animation-transition-${id}`]: true
     }"
@@ -49,6 +53,7 @@
     <!-- 选中 -->
     <!-- !disabled || !lock -->
     <div class="shape-modal" :class="{ ...eventsIconClass }" v-if="shapeModalShow" :id="`shape-modal-${id}`" />
+    <div class="editing-scan" v-if="isEditing" />
   </div>
 </template>
 
@@ -120,6 +125,11 @@ const props = defineProps({
     default: true
   },
   isSelect: {
+    type: Boolean,
+    default: false
+  },
+  /** agent 正在通过 edit_files 改这个组件——叠一层扫光提示，改完自动消失 */
+  isEditing: {
     type: Boolean,
     default: false
   },
@@ -352,7 +362,13 @@ const shapeModalShow = computed(() => {
     width: 32px;
     height: 16px;
     line-height: 16px;
-    background: linear-gradient(to right, #e8aa2e 0%, #e8aa2e 50%, var(--sw-theme-color) 50%, var(--sw-theme-color) 100%);
+    background: linear-gradient(
+      to right,
+      #e8aa2e 0%,
+      #e8aa2e 50%,
+      var(--sw-theme-color) 50%,
+      var(--sw-theme-color) 100%
+    );
     position: absolute;
     right: 0 !important;
     top: 0 !important;
@@ -372,6 +388,47 @@ const shapeModalShow = computed(() => {
     .shape-modal:hover {
       box-shadow: 0 0 0 2px var(--sw-theme-color) inset;
     }
+  }
+
+  &.is-editing {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--sw-theme-color) 70%, transparent) inset;
+  }
+
+  .editing-scan {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none; // 纯展示，不拦截下面的点击/拖拽
+    z-index: 2;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -30%;
+      height: 30%;
+      // 拖尾渐隐 + 底部收成一条亮线，模拟自上而下的扫描
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 55%,
+        rgba(255, 255, 255, 0.12) 80%,
+        rgba(255, 255, 255, 0.45) 97%,
+        rgba(255, 255, 255, 0.6) 100%
+      );
+      filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.3));
+      animation: editing-scan-sweep 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+  }
+}
+
+@keyframes editing-scan-sweep {
+  0% {
+    top: -30%;
+  }
+  100% {
+    top: 100%;
   }
 }
 </style>

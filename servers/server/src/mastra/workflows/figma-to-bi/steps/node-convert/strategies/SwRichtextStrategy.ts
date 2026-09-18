@@ -3,10 +3,10 @@ import { type TextEnum } from "@screenwright/types";
 import type { ComponentFlatSchemaType } from "@/mastra/tools/utils";
 import {
   extractLayout,
-  SW_RICHTEXT_MODULE_ID,
   getComponentDefaultConfigByModuleId,
   rgbaToCss,
-  setComponentBaseProps
+  setComponentBaseProps,
+  SW_RICHTEXT_MODULE_ID
 } from "@/mastra/tools/utils";
 import type { NormalizedNode } from "@/mastra/types/normalized-node-types";
 import { isTextNode } from "@/mastra/workflows/figma-to-bi/utils/node-type-guards";

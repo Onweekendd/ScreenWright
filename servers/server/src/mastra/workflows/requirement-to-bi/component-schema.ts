@@ -101,10 +101,7 @@ const renderFields = (shape: Record<string, z.ZodType>, keys: readonly string[],
     .join("\n");
 
 /** skill 里的组件字段文档根目录。107/116 份文档的数据格式小节标题完全一致，抽取很可靠。 */
-const SKILL_DOC_ROOT = path.join(
-  getAgentWorkspacePath(),
-  "skills/executor/sw-component-schema/references/components"
-);
+const SKILL_DOC_ROOT = path.join(getAgentWorkspacePath(), "skills/executor/sw-component-schema/references/components");
 
 /**
  * `## dataChart 数据格式` 到下一个二级标题 / 分隔线之间的内容。

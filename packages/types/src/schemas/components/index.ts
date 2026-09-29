@@ -93,6 +93,7 @@ export * from "./media/ctVideoPanel";
 export * from "./media/sw-embed-audio";
 export * from "./media/sw-open-video";
 export * from "./media/swiframe";
+export * from "./media/swBox";
 export * from "./media/swimg";
 export * from "./media/swswiper";
 export * from "./media/swSwiperCard";

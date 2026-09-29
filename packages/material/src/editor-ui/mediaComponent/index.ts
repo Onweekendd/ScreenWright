@@ -8,8 +8,8 @@ import ctVideoPanelFilter from "./mediaFilter/ctVideoPanelFilter.vue";
 import swOpenVideoFilter from "./mediaFilter/sw-open-videoFilter.vue";
 import swimgFilter from "./mediaFilter/swimgFilter.vue";
 import swvideoFilter from "./mediaFilter/swvideoFilter.vue";
-import swimgFrostedGlass from "./mediaFrostedGlass/swimgFrostedGlass.vue";
 import swvideoFrostedGlass from "./mediaFrostedGlass/swvideoFrostedGlass.vue";
+import swBoxGlobal from "./mediaGlobal/swBoxGlobal.vue";
 import ctVideoPanelGlobal from "./mediaGlobal/ctVideoPanelGlobal.vue";
 import swEmbedAudioGlobal from "./mediaGlobal/sw-embed-audioGlobal.vue";
 import swOpenVideoGlobal from "./mediaGlobal/sw-open-videoGlobal.vue";
@@ -51,6 +51,9 @@ export const MediaConfigComponent: Partial<Record<MediaEnum, ConfigTab[]>> = {
   [MediaEnum.SwImgBorder]: [
     { label: "全局", value: optionType.global, component: swImgBorderGlobal },
   ],
+  [MediaEnum.SwBox]: [
+    { label: "全局", value: optionType.global, component: swBoxGlobal },
+  ],
   [MediaEnum.SwSwiperCard]: [
     { label: "全局", value: optionType.global, component: swSwiperCardGlobal },
     { label: "卡片", value: optionType.card, component: swSwiperCardCard },
@@ -68,11 +71,6 @@ export const MediaConfigComponent: Partial<Record<MediaEnum, ConfigTab[]>> = {
     { label: "全局", value: optionType.global, component: swImgGlobal },
     { label: "动画", value: optionType.animation, component: swimgAnimation },
     { label: "滤镜", value: optionType.filter, component: swimgFilter },
-    {
-      label: "毛玻璃",
-      value: optionType.frostedGlass,
-      component: swimgFrostedGlass,
-    },
   ],
   [MediaEnum.SwSwiper]: [
     { label: "全局", value: optionType.global, component: swswiperGlobal },

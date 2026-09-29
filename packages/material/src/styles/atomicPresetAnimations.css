@@ -1,0 +1,69 @@
+/**
+ * 原子组件（swtext/swimg/swBox）animation 简写引用的内置关键帧预设。
+ * 全局样式，随组件模块一起打包；名字见 docs/原子组件迁移方案.md §5.3。
+ */
+@keyframes sw-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sw-rotate-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes sw-breath {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes sw-zoom {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes sw-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes sw-swing {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

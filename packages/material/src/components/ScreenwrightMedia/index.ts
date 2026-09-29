@@ -3,6 +3,7 @@ import type { Component } from "vue";
 
 import audio from "./components/audio/index.vue";
 import ctVideoPanel from "./components/ctVideoPanel/index.vue";
+import swBox from "./components/swBox/index.vue";
 import swImg from "./components/swImg/index.vue";
 import swImgBorder from "./components/swimgBorder/index.vue";
 import swSwiper from "./components/swswiper/index.vue";
@@ -16,6 +17,7 @@ export const ScreenwrightMediaMap: Partial<Record<MediaEnum, Component>> = {
   [MediaEnum.SwSwiperCard]: swSwiperCard,
   [MediaEnum.SwEmbedAudio]: audio,
   [MediaEnum.SwImg]: swImg,
+  [MediaEnum.SwBox]: swBox,
   [MediaEnum.SwOpenVideo]: openVideo,
   [MediaEnum.SwImgBorder]: swImgBorder,
   [MediaEnum.SwSwiper]: swSwiper,

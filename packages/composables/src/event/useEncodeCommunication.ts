@@ -6,9 +6,7 @@ import { isNil } from "lodash-es";
 import { computed, ref } from "vue";
 
 import { FilterResultCollector } from "../FilterResultCollector";
-import { getSendUE4Message } from "../ports/eventPort";
 import { useActionEvent } from "../useActionEvent";
-import { useGlobalAnimation } from "../useGlobalAnimation";
 import { useGlobalComponentData } from "../useGlobalComponentData";
 import { useLargeScreenInfo } from "../useLargeScreenInfo";
 import { Websocketconfig as WebSocketConfig } from "../utils/websocket";
@@ -38,7 +36,6 @@ const useEncodeCommunication = createGlobalState(() => {
   const screenCommunicationWs = ref<WebSocketConfig | null>(null);
   const filterResultCollector = FilterResultCollector.getInstance();
   const { eventList } = useActionEvent();
-  const { triggerRegistry } = useGlobalAnimation();
   const { handleActions: handleEventActions } = useEventHandling();
 
   const controlWebsocketUrl = computed(() => {
@@ -168,38 +165,6 @@ const useEncodeCommunication = createGlobalState(() => {
     screenCommunicationWs.value = null;
 
     console.log("[cleanup] 所有资源已清理");
-  };
-
-  /**
-   * @description 处理UE4消息
-   * @param code 消息名称
-   * @param data 消息数据
-   */
-  const handleUE4Message = (code?: string, data?: string | object | any[]) => {
-    const allComponentList = Array.from(globalComponentMap.value.values());
-    const ueComponent = allComponentList.find((item) => item.title.includes("UE"));
-    if (!ueComponent) {
-      return;
-    }
-
-    const ue4Config = {
-      messageName: code || "websocketCallUE",
-      messageContent: data as string,
-      messageType: "string",
-      messageJson: "{}"
-    };
-
-    getSendUE4Message()({
-      componentIds: [ueComponent.id],
-      isConditionSatisfied: true,
-      eventList: eventList.value,
-      globalComponentMap: globalComponentMap.value,
-      componentRootDoms: document.querySelectorAll(`.${ueComponent.id}`),
-      ue4Config,
-      info: null,
-      sourceComponentId: ueComponent.id,
-      globalAnimationTriggers: triggerRegistry
-    });
   };
 
   /**
@@ -342,24 +307,14 @@ const useEncodeCommunication = createGlobalState(() => {
   /**
    * @description 控制编码-消息接收-处理
    * @param info 编码控制信息
-   * @param info.type 类型，bi或ue（默认bi）
    * @param info.code 编码，对应图层的控制编码
-   * @param info.data 数据，消息数据
    * @param info.actions 终端交互特有
    */
   const receiveEncodedControl = async (info: {
-    type?: "bi" | "ue";
     code?: string;
-    data?: string | object | any[];
     actions?: MessageToSend[];
   }): Promise<void> => {
-    const { type, actions, code, data } = info;
-
-    // 处理UE4消息
-    if (type === "ue") {
-      handleUE4Message(code, data);
-      return;
-    }
+    const { actions, code } = info;
 
     // 处理动作列表
     if (actions && actions.length) {

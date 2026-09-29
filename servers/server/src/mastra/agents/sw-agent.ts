@@ -32,6 +32,7 @@ import { createActionTemplate } from "../tools/create-action-template";
 import { createConditionTemplate } from "../tools/create-condition-template";
 import { createEchartOptionTool } from "../tools/create-echart-option";
 import { createEventTemplate } from "../tools/create-event-template";
+import { createImageTool } from "../tools/create-image";
 import { executeInBrowserTool } from "../tools/execute-in-browser";
 import { createComponentTool, createDataFilterTool, deleteFileTool, editFilesTool, readFileTool } from "../tools/file";
 import { groupComponentTool } from "../tools/group-component";
@@ -49,6 +50,7 @@ import { AgentMode, type CommonRunTimeType } from "../types/bi-chat";
 import { codiaToBIWorkflow } from "../workflows/figma-to-bi/codia-to-bi-workflow";
 import { figmaToBIV2Workflow } from "../workflows/figma-to-bi/figma-to-bi-v2-workflow";
 import { requirementToBIWorkflow } from "../workflows/requirement-to-bi/requirement-to-bi-workflow";
+import { screenFromEffectImageWorkflow } from "../workflows/screen-from-effect-image/screen-from-effect-image-workflow";
 import { fullWorkspace } from "../workspace";
 import { dataFlowVerificationAgent } from "./data-flow-verification-agent";
 import { swExecutorAgent } from "./sw-executor-agent";
@@ -301,7 +303,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       // 自检：配完事件/数据流后干跑一遍。曾是命令行脚本，agent 调一次要 7 步（摸 shell、读源码、
       // 跟 cmd.exe 的引号转义搏斗）；常驻成工具后一次调用
       simulateEvent,
-
+      createImageTool,
       // 任务管理：委派通信的核心通道，必须每轮规划都可用，不走动态搜索
       createTask,
       updateTask,
@@ -345,6 +347,9 @@ export function createSwAgent(options: CreateSwAgentOptions) {
           // 模板存取：模板提取收尾 / 模板检索命中后应用，都是明确的收尾动作
           saveAiTemplateTool,
           applyAiTemplateTool
+          // 生图：低频（一次会话顶多用到几次装饰素材/效果图），且本身开了 background，
+          // 常驻只会白占每轮的 schema token。工具内部已经幂等（promptHash），检索没命中
+          // 漏用一次的代价也就是让 agent 退回文字描述，不影响正确性
           // ToolSearchProcessor 的 tools 签名是 `Record<string, Tool<any, any>>`——只给了两个
           // 类型参数，第 3/4 个（suspendSchema / resumeSchema）默认成 unknown，于是所有带 suspend
           // 的工具都不兼容。这是签名太窄而非运行时限制（挂起发生在 execute 内部，与工具怎么进入
@@ -415,7 +420,10 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       codiaToBIWorkflow,
       // 从零构建：没有设计稿、纯文字需求时走它。入参是**已与用户确认过的内容清单**，
       // 需求收敛与确认留在对话层做（见该工作流的头注释）。
-      requirementToBIWorkflow
+      requirementToBIWorkflow,
+      // 生图 → 大屏：入参是 createImageTool 生成、用户已挑中的那张效果图的 id。
+      // 生图与「⏸挑一张」留在对话层，工作流只做选定之后的确定性重活（见该工作流头注释）。
+      screenFromEffectImageWorkflow
     },
 
     // 后台任务 opt-in：最小可用版本只把大屏并发施工子 agent 放后台。

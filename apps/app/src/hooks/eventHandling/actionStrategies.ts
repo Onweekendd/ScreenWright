@@ -1088,127 +1088,6 @@ export class SwitchVideoStrategy extends ActionStrategy<ActionExecutionParams> {
   }
 }
 
-export class sendUE4MessageStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    ue4Config,
-    info,
-    animation,
-    action,
-    eventList
-  }: ActionExecutionParams & {
-    info: Record<string, any> | null;
-  }): Promise<void> {
-    if (!isConditionSatisfied || action === undefined) {
-      return;
-    }
-
-    const ue4Info = action === ActionTypeEnum.SendUe4Msg ? info : null;
-
-    const targetComponentId = componentIds[0];
-
-    /**
-     * @description 获取组件类型
-     * @returns "PixelStreaming" | "PeerStreaming" | "" | null
-     */
-    const getComponentType = () => {
-      const targetComponent = globalComponentMap.get(String(targetComponentId));
-      if (!targetComponent) {
-        return null;
-      }
-
-      const propMap: Record<string, "PixelStreaming" | "PeerStreaming" | "ue-vessel" | "sw-unreal-engine"> = {
-        [extendsEnumType.UePixelStreaming]: "PixelStreaming",
-        [extendsEnumType.UePeerStreaming]: "PeerStreaming",
-        [extendsEnumType.UeVessel]: "ue-vessel",
-        [extendsEnumType.SwUnrealEngine]: "sw-unreal-engine"
-      };
-
-      if (!propMap[targetComponent.component.prop]) {
-        return "";
-      }
-
-      return propMap[targetComponent.component.prop];
-    };
-
-    /**
-     * @description 处理消息数据
-     */
-    const processMessageData = (messageContent: any, messageType: string, info?: any) => {
-      if (info) {
-        return messageType === "string" ? JSON.stringify(info) : { ...info };
-      }
-
-      switch (messageType) {
-        case "string":
-          return messageContent;
-        case "json":
-          return typeof messageContent === "string" ? JSON.parse(messageContent) : { data: messageContent };
-        default:
-          return messageContent;
-      }
-    };
-
-    /**
-     * @description 发送UE消息
-     */
-    const sendUEMessage = () => {
-      console.log("sendUEMessage", window, (window as any).pixelStreaming, window.ue4);
-      if (!window.ue4 || !ue4Config) {
-        return;
-      }
-
-      const { messageName, messageContent, messageType } = ue4Config;
-
-      if (!messageName) {
-        return;
-      }
-
-      const componentType = getComponentType();
-      console.log("sendUEMessage22", componentType);
-      if (!componentType) {
-        return;
-      }
-
-      const data = processMessageData(messageContent, messageType, ue4Info);
-
-      // 根据组件类型发送消息
-      switch (componentType) {
-        case "PeerStreaming":
-          if (window.funPS) {
-            window.funPS.emitMessage({ name: messageName, data });
-          }
-          return;
-
-        case "PixelStreaming":
-          console.log("PixelStreaming", { name: messageName, data }, (window as any).pixelStreaming);
-          if (window.playerStream) {
-            (window as any).playerStream.emitUIInteraction({ name: messageName, data });
-          }
-          return;
-
-        case "ue-vessel":
-          console.log("window.ue4.v2", messageName, data);
-          window.ue4?.v2?.(messageName, data);
-          return;
-        case "sw-unreal-engine":
-          componentIds.forEach((componentId) => {
-            const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
-            event.sendMessageToUe(messageName, data);
-          });
-          break;
-        default:
-          return;
-      }
-    };
-
-    await delay(animation?.delay || 0);
-    sendUEMessage();
-  }
-}
-
 export class SwitchBlueprintTab extends ActionStrategy<ActionExecutionParams> {
   execute({ componentIds, blueprintKey, eventList, info }: ActionExecutionParams): void {
     if (!blueprintKey) {
@@ -1218,37 +1097,6 @@ export class SwitchBlueprintTab extends ActionStrategy<ActionExecutionParams> {
     componentIds.forEach((componentId) => {
       const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
       event.switchBlueprintTab(blueprintKey, info);
-    });
-  }
-}
-
-export class sendAIManMsgStaticStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    eventList,
-    animation,
-    info
-  }: ActionExecutionParams & {
-    info: Record<string, any> | null;
-  }): Promise<void> {
-    console.log("receiveWSMessage 触发数字人方法", info, isConditionSatisfied);
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.sendMsgToHuman) {
-        return;
-      }
-      event.sendMsgToHuman(info);
     });
   }
 }
@@ -1632,9 +1480,6 @@ export class ActionStrategyFactory {
     [ActionTypeEnum.VideoToFastin]: new VideoToFastinStrategy(),
     [ActionTypeEnum.VideoToRewind]: new VideoToRewindStrategy(),
     [ActionTypeEnum.SwitchVideoProgress]: new SwitchVideoStrategy(),
-    [ActionTypeEnum.SendUe4Msg]: new sendUE4MessageStrategy(),
-    [ActionTypeEnum.SendUe4MsgStatic]: new sendUE4MessageStrategy(),
-    [ActionTypeEnum.SendAIManMsgStatic]: new sendAIManMsgStaticStrategy(),
     [ActionTypeEnum.SwitchBlueprintTab]: new SwitchBlueprintTab(),
     [ActionTypeEnum.nextPage]: new nextPageStrategy(),
     [ActionTypeEnum.prevPage]: new prevPageStrategy(),

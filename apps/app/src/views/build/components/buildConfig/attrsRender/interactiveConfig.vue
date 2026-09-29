@@ -1,7 +1,6 @@
 <template>
   <div class="interactive-config">
     <el-form label-position="left">
-      <controlEncodes v-if="editConfig.isEncodedControl || hasUEChild" />
       <loadAnimation v-if="!isThreeSceneChild && !hasUEChild && !isThreeMapChild" />
       <callbackOptions v-if="isInteraction || hasUEChild || hanUnrealEngine" />
       <customEvent v-if="(isInteraction && isCustomEvents) || hasUEChild || hanUnrealEngine" />
@@ -11,15 +10,12 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
-import { useEditStore } from "../../buildRender/hooks/useEditStore";
 import { eventList } from "../constants/index";
 import { useUpdateInstance } from "../useUpdateInstance";
 import callbackOptions from "./components/callbackArgument/callbackOptions.vue";
-import controlEncodes from "./components/controlEncodes/index.vue";
 import customEvent from "./components/interactiveConfig/customEvent.vue";
 import loadAnimation from "./components/loadAnimation.vue";
 
-const { editConfig } = useEditStore();
 const { selectTargetData } = useUpdateInstance();
 const isThreeMapChild = computed(() => {
   return (

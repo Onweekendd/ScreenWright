@@ -10,51 +10,43 @@
     @click="handleClick"
   >
     <div ref="boxRef" class="ft-text-box flex" :style="styleBox">
-      <template v-if="element.option.selectedTextType === 'multiGradient'">
-        <TextMultiGradient
+      <template v-if="!dataIsArray">
+        <TextLink
+          v-if="isLink"
           :element="element"
           :getTextStyle="getTextStyle"
+          :formatValue="formatValue"
+          :inputData="dataChart"
+          :isBuild="isBuild.value"
+          :linkHref="linkHref"
+          :linkTarget="linkTarget"
+        />
+        <TextNormal
+          v-else
+          :element="element"
+          :getTextStyle="getTextStyle"
+          :formatValue="formatValue"
           :inputData="dataChart"
         />
       </template>
       <template v-else>
-        <template v-if="!dataIsArray">
-          <TextLink
-            v-if="option.type === 'link'"
-            :element="element"
-            :getTextStyle="getTextStyle"
-            :inputData="dataChart"
-            :isBuild="isBuild.value"
-            :linkHref="linkHref"
-            :linkTarget="linkTarget"
-          />
-          <TextNormal
-            v-else
-            :element="element"
-            :getTextStyle="getTextStyle"
-            :inputData="dataChart"
-          />
-        </template>
-        <template v-else>
-          <TextArrayLink
-            v-if="option.type === 'link'"
-            :element="element"
-            :getTextStyle="getTextStyle"
-            :inputData="dataChart"
-            :isBuild="isBuild.value"
-            :linkHref="linkHref"
-            :linkTarget="linkTarget"
-          />
-          <TextArray
-            v-else
-            :element="element"
-            :getTextStyle="getTextStyle"
-            :is-typing-effect="isTypingEffect"
-            :clone-data-chart="cloneDataChart"
-            :text-animation="textAnimation"
-            :inputData="dataChart"
-          />
-        </template>
+        <TextArrayLink
+          v-if="isLink"
+          :element="element"
+          :getTextStyle="getTextStyle"
+          :formatValue="formatValue"
+          :inputData="dataChart"
+          :isBuild="isBuild.value"
+          :linkHref="linkHref"
+          :linkTarget="linkTarget"
+        />
+        <TextArray
+          v-else
+          :element="element"
+          :getTextStyle="getTextStyle"
+          :formatValue="formatValue"
+          :inputData="dataChart"
+        />
       </template>
     </div>
   </div>
@@ -68,7 +60,6 @@ import type { ComponentType } from "@screenwright/types";
 import TextArray from "./components/TextArray.vue";
 import TextArrayLink from "./components/TextArrayLink.vue";
 import TextLink from "./components/TextLink.vue";
-import TextMultiGradient from "./components/TextMultiGradient.vue";
 import TextNormal from "./components/TextNormal.vue";
 import { useText } from "./useText";
 
@@ -82,18 +73,16 @@ const props = defineProps<{
 
 // 使用提取的hook
 const {
-  option,
   textRef,
   boxRef,
-  cloneDataChart,
   styleSizeName,
   setTransFormStyle,
   dataIsArray,
   styleBox,
-  isTypingEffect,
-  textAnimation,
   getTextStyle,
+  formatValue,
   handleClick,
+  isLink,
   linkHref,
   linkTarget,
   dataChart,

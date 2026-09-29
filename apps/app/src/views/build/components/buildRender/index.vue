@@ -43,6 +43,7 @@
         :unitPavenType="component.unitPavenType"
         :enterActiveAnimation="component.loadAnimation"
         :isSelect="targetChart.selectId.includes(`${component.id}`)"
+        :isEditing="editingComponentIds.has(`${component.id}`)"
         :renderWidth="Number(editConfig.width)"
         :renderHeight="Number(editConfig.height)"
         @click.stop="!disabled && mouseClickHandle($event, component)"
@@ -74,6 +75,8 @@
 </template>
 <script setup lang="ts">
 import type { LargeScreenDetailInfo } from "@screenwright/types";
+
+import { editingComponentIds } from "@/hooks/useEditingComponents";
 
 import { renderComponent } from "./core/utils";
 import EditShapeBox from "./EditShapeBox.vue";

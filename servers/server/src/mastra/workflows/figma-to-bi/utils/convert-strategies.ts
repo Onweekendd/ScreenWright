@@ -4,11 +4,11 @@ import type { ConvertedComponent } from "@/mastra/state/componentConversionState
 import type { BfsTraversalStepNode } from "@/mastra/types/bfs-traversal-types";
 
 import type { NodeClassificationOutput } from "../steps/classification/rule-based-classification-step";
-import { SwImgStrategy } from "../steps/node-convert/strategies/SwImgStrategy";
 import { FtPanelStrategy } from "../steps/node-convert/strategies/FtPanelStrategy";
-import { SwRichtextStrategy } from "../steps/node-convert/strategies/SwRichtextStrategy";
 import { FtSubtabStrategy } from "../steps/node-convert/strategies/FtSubtabStrategy";
 import { GroupStrategy } from "../steps/node-convert/strategies/GroupStrategy";
+import { SwImgStrategy } from "../steps/node-convert/strategies/SwImgStrategy";
+import { SwRichtextStrategy } from "../steps/node-convert/strategies/SwRichtextStrategy";
 import { isSimpleImageNode, isTextNode } from "./node-type-guards";
 
 export interface ConvertNodeParams {

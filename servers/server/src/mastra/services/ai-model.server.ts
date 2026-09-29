@@ -1,4 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
+import { generateImage } from "ai";
 
 import { prismaClient } from "@/mastra/storage/prisma";
 
@@ -120,7 +121,19 @@ export async function testAiModel(
     if (role === "embedding") {
       const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
       const model = provider.textEmbeddingModel(cfg.modelId);
-      await (model as unknown as { doEmbed: (o: { values: string[] }) => Promise<unknown> }).doEmbed({ values: ["ping"] });
+      await (model as unknown as { doEmbed: (o: { values: string[] }) => Promise<unknown> }).doEmbed({
+        values: ["ping"]
+      });
+    } else if (role === "image") {
+      // 与 reasoning/embedding 分支同一个尺度：真打一次最小请求验证连通性，不是 mock。
+      // 这里确实会烧一张图的配额——和上面 embedding 分支烧一次 embedding 调用是同一笔账。
+      //
+      // 尺寸用 1024x1024 而不是更小的 256x256：不同生图服务对最小图像面积的要求不一样
+      // （实测豆包 seedream 系列要求至少 921600 像素，256x256 直接被拒），1024x1024
+      // 覆盖了目前接过的服务商的下限，是个安全的通用测试尺寸。
+      const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
+      const model = provider.imageModel(cfg.modelId);
+      await generateImage({ model, prompt: "a single red dot on white background", n: 1, size: "1024x1024" });
     } else {
       const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
       const model = provider.chat(cfg.modelId);

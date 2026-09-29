@@ -14,8 +14,6 @@ import GlMapRegionLift from "./actions/GlMapRegionLift.vue";
 import GlMapSceneRoam from "./actions/GlMapSceneRoam.vue";
 import HandleSceneObjExplosion from "./actions/HandleSceneObjExplosion.vue";
 import ProjectFunction from "./actions/ProjectFunction.vue";
-import SendAIManMsg from "./actions/SendAIManMsg.vue";
-import SendUE4Msg from "./actions/SendUE4Msg.vue";
 import SetDelay from "./actions/SetDelay.vue";
 import SetIndex from "./actions/SetIndex.vue";
 import SetStateAnimation from "./actions/SetStateAnimation.vue";
@@ -40,9 +38,6 @@ export const actionComponentMap: Record<string, Component> = {
   [ActionTypeEnum.Show]: ShowHide,
   [ActionTypeEnum.Hide]: ShowHide,
   [ActionTypeEnum.ShowHide]: ShowHide,
-  [ActionTypeEnum.SendUe4Msg]: SendUE4Msg,
-  [ActionTypeEnum.SendUe4MsgStatic]: SendUE4Msg,
-  [ActionTypeEnum.SendAIManMsgStatic]: SendAIManMsg,
   [ActionTypeEnum.SwitchSceneStatus]: SwitchSceneStatus,
   [ActionTypeEnum.SwitchSceneRoam]: SwitchSceneRoam,
   [ActionTypeEnum.SwitchSceneLevel]: SwitchSceneLevel,

@@ -224,13 +224,6 @@ export interface Translate {
   toY: number;
 }
 
-export interface Ue4Config {
-  messageName: string;
-  messageJson: string;
-  messageContent: string;
-  messageType: string;
-}
-
 export interface SceneObjectExplosion {
   index: string;
   lidName: string;

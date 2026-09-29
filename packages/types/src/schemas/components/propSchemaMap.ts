@@ -82,6 +82,7 @@ import { ctVideoPanelDataSchema, ctVideoPanelOptionSchema } from "./media/ctVide
 import { swEmbedAudioDataSchema, swEmbedAudioOptionSchema } from "./media/sw-embed-audio";
 import { swOpenVideoDataSchema, swOpenVideoOptionSchema } from "./media/sw-open-video";
 import { ftiframeDataSchema, ftiframeOptionSchema } from "./media/swiframe";
+import { swBoxDataSchema, swBoxOptionSchema } from "./media/swBox";
 import { swimgDataSchema, swimgOptionSchema } from "./media/swimg";
 import { ftswiperDataSchema, ftswiperOptionSchema } from "./media/swswiper";
 import { swSwiperCardDataSchema, swSwiperCardOptionSchema } from "./media/swSwiperCard";
@@ -157,6 +158,7 @@ export const componentPropSchemaMap = {
   "sw-embed-audio": { data: swEmbedAudioDataSchema, option: swEmbedAudioOptionSchema },
   swiframe: { data: ftiframeDataSchema, option: ftiframeOptionSchema },
   swimg: { data: swimgDataSchema, option: swimgOptionSchema },
+  swBox: { data: swBoxDataSchema, option: swBoxOptionSchema },
   "sw-open-video": { data: swOpenVideoDataSchema, option: swOpenVideoOptionSchema },
   swSwiperCard: { data: swSwiperCardDataSchema, option: swSwiperCardOptionSchema },
   swswiper: { data: ftswiperDataSchema, option: ftswiperOptionSchema },

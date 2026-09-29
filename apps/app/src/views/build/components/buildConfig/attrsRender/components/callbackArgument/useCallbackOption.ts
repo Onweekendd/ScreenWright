@@ -7,8 +7,6 @@ import { templateCallback } from "@/views/build/components/buildConfig/attrsRend
 import { useUpdateInstance } from "@/views/build/components/buildConfig/useUpdateInstance";
 import type { Callback } from "@/views/build/components/buildRender/type";
 
-import { ueMessageTypeOptions } from "../../../constants";
-
 /**
  * 回调参数配置Hook
  * @returns {Object} 回调参数配置相关的状态和方法
@@ -358,7 +356,6 @@ export const useCallbackOption = () => {
     activeTab,
     originQueryData,
     callbackOptions,
-    ueMessageTypeOptions,
 
     // 方法
     addCallback,

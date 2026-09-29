@@ -14,10 +14,10 @@ datasource db {
   provider = "sqlite"
 }
 
-/// AI 模型配置：只 3 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
+/// AI 模型配置：只 4 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
 /// 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
 model AiModel {
-  role          String   @id // "reasoning" | "vision" | "embedding"
+  role          String   @id // "reasoning" | "vision" | "embedding" | "image"
   baseUrl       String   @default("") @map("base_url")
   apiKey        String   @default("") @map("api_key")
   modelId       String   @default("") @map("model_id")
@@ -26,6 +26,27 @@ model AiModel {
   updatedTime   DateTime @updatedAt @map("updated_time")
 
   @@map("ai_model")
+}
+
+/// 生图产物。`promptHash` 是幂等键：同一份结构化 prompt + seed + model 命中直接返回，
+/// 不重新计费重新生成——生图慢且贵，用户改一个字重新提交时不该重新烧一遍配额。
+///
+/// 只存 url（本地磁盘或对象存储路径），不存像素——像素交给现有的 `src/lib/storage/`
+/// 那套 fs/minio 抽象，这张表只管「有没有生成过、生成的是哪张」。
+model GeneratedImage {
+  id           String   @id @default(cuid())
+  /// sha256(结构化 prompt + seed + model)，同一份输入不用重新生成
+  promptHash   String   @unique @map("prompt_hash")
+  /// 结构化 prompt 原文，便于事后排查「为什么生出这张」
+  prompt       String
+  model        String
+  seed         Int?
+  width        Int
+  height       Int
+  url          String
+  createdTime  DateTime @default(now()) @map("created_time")
+
+  @@map("generated_image")
 }
 
 // Figma API Key Pool Management

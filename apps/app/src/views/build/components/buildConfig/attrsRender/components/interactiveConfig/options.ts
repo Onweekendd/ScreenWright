@@ -28,18 +28,11 @@ import {
   customTableListOptions,
   EncodeEventTypeEnum,
   EventTypeEnum,
-  MessageTypeEnum,
-  messageTypeOptions,
   ParameterTypeEnum,
   parameterTypeOptions,
   SceneObjectExplosionType,
   sceneObjectExplosionTypeOptions,
-  tcpudpDataTypeEnum,
-  tcpudpDataTypeOptions,
   timingFunction,
-  UDPSendtypeEnum,
-  UDPSendtypeListOptions,
-  ueMessageTypeOptions,
   VisibleTypeEnum,
   visibleTypeOptions
 } from "../../../constants/index";
@@ -174,30 +167,15 @@ export const templateActions = (): Action => {
       toY: 0
     },
     encodeKey: null,
-    ue4Config: {
-      messageName: "",
-      messageJson: "",
-      messageContent: "",
-      messageType: MessageTypeEnum.String
-    },
     customActionType: "component", // 动作-类型
     panelStatusAnimationId: "", // 面板状态动画ID
     panelStatusId: "", // 面板状态ID
-    tcpudpConfig: {
-      dataType: tcpudpDataTypeEnum.None,
-      dataSourceId: "",
-      dataSourceObj: null,
-      sendData: "",
-      sendType: UDPSendtypeEnum.Unicast,
-      dataDelay: 0
-    },
     projectFunName: "",
     projectParamList: [],
     projectParamType: ParameterTypeEnum.Default,
     projectParamValue: {},
     projectParamCode: "",
     swiperCardTabsName: "",
-    aiManMsgContent: "",
     setBroadcastId: null,
     videoStartTime: 0,
     videoEndTime: 0,
@@ -400,22 +378,6 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
     case ActionTypeEnum.VideoToPlayRange:
       return { ...base, videoStartTime: 0, videoEndTime: 0 };
 
-    // UE4 / AI 类
-    case ActionTypeEnum.SendUe4Msg:
-    case ActionTypeEnum.SendUe4MsgStatic:
-      return {
-        ...base,
-        ue4Config: {
-          messageName: "",
-          messageJson: "",
-          messageContent: "",
-          messageType: MessageTypeEnum.String
-        }
-      };
-
-    case ActionTypeEnum.SendAIManMsgStatic:
-      return { ...base, aiManMsgContent: "" };
-
     // 项目特有
     case ActionTypeEnum.ProjectSpecificFun:
       return {
@@ -425,20 +387,6 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
         projectParamType: ParameterTypeEnum.Default,
         projectParamValue: {},
         projectParamCode: ""
-      };
-
-    // TCP/UDP (SwitchTCState)
-    case ActionTypeEnum.SwitchTCState:
-      return {
-        ...base,
-        tcpudpConfig: {
-          dataType: tcpudpDataTypeEnum.None,
-          dataSourceId: "",
-          dataSourceObj: null,
-          sendData: "",
-          sendType: UDPSendtypeEnum.Unicast,
-          dataDelay: 0
-        }
       };
 
     // 仅需 animation.delay 的动作（视频控制、分页、轮巡等）
@@ -578,16 +526,8 @@ export enum ConfigFieldEnum {
   ConditionCompare = "conditionCompare",
   /** 可见性类型 */
   VisibleType = "visibleType",
-  /** 消息类型 */
-  MessageType = "messageType",
-  /** UE消息类型 */
-  UeMessageType = "ueMessageType",
   /** 自定义表格列表 */
   CustomTableList = "customTableList",
-  /** TCP/UDP数据类型 */
-  TcpudpDataType = "tcpudpDataType",
-  /** UDP发送类型列表 */
-  UDPSendtypeList = "UDPSendtypeList",
   /** 参数类型 */
   ParameterType = "parameterType",
   /** 动画退出类型 */
@@ -620,11 +560,7 @@ export const configOptions = (field: ConfigField): any[] => {
     [ConfigFieldEnum.ConditionType]: conditionTypeOptions,
     [ConfigFieldEnum.ConditionCompare]: conditionCompareOptions,
     [ConfigFieldEnum.VisibleType]: visibleTypeOptions,
-    [ConfigFieldEnum.MessageType]: messageTypeOptions,
-    [ConfigFieldEnum.UeMessageType]: ueMessageTypeOptions,
     [ConfigFieldEnum.CustomTableList]: customTableListOptions,
-    [ConfigFieldEnum.TcpudpDataType]: tcpudpDataTypeOptions,
-    [ConfigFieldEnum.UDPSendtypeList]: UDPSendtypeListOptions,
     [ConfigFieldEnum.ParameterType]: parameterTypeOptions,
     [ConfigFieldEnum.AnimationOutType]: animationOutList,
     [ConfigFieldEnum.SceneObjectExplosionType]: sceneObjectExplosionTypeOptions
@@ -642,7 +578,7 @@ export const moreActionSExcludes = () => {
 export const switchStateProp = (prop: AllComponentType) => {
   const getComponent2ActionMap = createComponent2ActionMapGetter();
   const propActions = getComponent2ActionMap().get(prop) || "";
-  return propActions.includes(ActionTypeEnum.SwitchState) || propActions.includes(ActionTypeEnum.SwitchTCState);
+  return propActions.includes(ActionTypeEnum.SwitchState);
 };
 
 export const switchSceneStatusProp = (prop: AllComponentType) => {

@@ -1,5 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import type { EmbeddingModel } from "ai";
+import type { EmbeddingModel, ImageModel } from "ai";
 import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 
 import { prismaClient } from "@/mastra/storage/prisma";
@@ -7,20 +7,22 @@ import { prismaClient } from "@/mastra/storage/prisma";
 import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from "./utils";
 
 /**
- * 模型配置化：只 3 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
+ * 模型配置化：只 4 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
  *
  * - **reasoning**：主 agent + 所有子 agent + 标题 + 摘要压缩 + 编排 + 截图 + subtab + artifact-app Pi
  * - **vision**：识图（vision-agent / semantic-layout-agent）
  * - **embedding**：组件 RAG 向量
+ * - **image**：生图（效果图、装饰素材重画）。走 `images.generations` 接口，不是 chat 补全，
+ *   所以 `resolveImageModel` 返回 `ImageModel` 而不是 `WrapLMModel`，见下方单独的 warm/resolve。
  *
  * provider 一律按 OpenAI 兼容端点处理，reasoning 往返走 `provider/utils.ts` 的通用逻辑。
  * 配置热更新：写库后调 `warmModelConfigs()` 重建缓存，agent 的 `model: () => resolveXxx()`
  * 每次 run 重新解析，无需重启。
  */
 
-export type ModelRole = "reasoning" | "vision" | "embedding";
+export type ModelRole = "reasoning" | "vision" | "embedding" | "image";
 
-export const MODEL_ROLES: readonly ModelRole[] = ["reasoning", "vision", "embedding"] as const;
+export const MODEL_ROLES: readonly ModelRole[] = ["reasoning", "vision", "embedding", "image"] as const;
 
 export interface AiModelConfig {
   role: ModelRole;
@@ -58,6 +60,17 @@ function envDefault(role: ModelRole): Omit<AiModelConfig, "role"> {
         modelId: e.EMBEDDING_MODEL_ID ?? (e.EMBEDDING_MODEL_API_KEY ? "BAAI/bge-large-zh-v1.5" : ""),
         contextLength: null,
         dimensions: Number(e.EMBEDDING_MODEL_DIMENSIONS) || 1024
+      };
+    case "image":
+      // 2026-09-17 实测跑通：豆包 seedream，走火山方舟的 OpenAI 兼容端点。
+      // 注意 baseUrl 只到 /api/v3，不带 /images/generations——SDK 会自己拼这段路径，
+      // 填全路径会导致拼出重复的 /images/generations/images/generations（真实踩过）。
+      return {
+        baseUrl: e.IMAGE_MODEL_BASE_URL ?? "",
+        apiKey: e.IMAGE_MODEL_API_KEY ?? "",
+        modelId: e.IMAGE_MODEL_ID ?? (e.IMAGE_MODEL_API_KEY ? "doubao-seedream-5-0-pro-260628" : ""),
+        contextLength: null,
+        dimensions: null
       };
   }
 }
@@ -154,4 +167,15 @@ export function resolveEmbeddingModel(): EmbeddingModel {
   const cfg = getModelConfigSync("embedding");
   const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
   return provider.embeddingModel(cfg.modelId) as unknown as EmbeddingModel;
+}
+
+/**
+ * 生图模型：走 `images.generations` 接口，不是 chat 补全，所以类型是 `ImageModel`
+ * 不是 `WrapLMModel`——用 `ai` 包的 `generateImage({ model, prompt, ... })` 调用，
+ * 不能塞进 `resolveReasoningModel` 那一套 wrapLanguageModel 管线。
+ */
+export function resolveImageModel(): ImageModel {
+  const cfg = getModelConfigSync("image");
+  const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
+  return provider.imageModel(cfg.modelId);
 }

@@ -16,7 +16,6 @@ import { useActionEvent } from "../useActionEvent";
 import { useCallbackArguments } from "../useCallbackArguments";
 import { useEventCallbacks } from "../useEventCallbacks";
 import { type AnimationTrigger, useGlobalAnimation } from "../useGlobalAnimation";
-import { useActionMessage } from "./useActionMessage";
 
 /**
  * 前端往 ActionContext 上补的字段。
@@ -93,7 +92,6 @@ export function useEventHandling() {
   const editor = useScreenEditor();
   const { eventList } = useActionEvent();
   const { handleCallback } = useCallbackArguments();
-  const { setTcpudpToWebsocket, retry } = useActionMessage();
   const { triggerRegistry } = useGlobalAnimation();
   const {
     executeCallbacks,
@@ -127,14 +125,6 @@ export function useEventHandling() {
       }
       const selector = getTargetComponentSelector(context.componentIds);
       return { ...extras, componentRootDoms: await getComponentDomElements(selector) };
-    });
-
-    //  TODO: TCP/UDP走的逻辑
-    registerCustomAction("message", (action) => {
-      retry(() => setTcpudpToWebsocket(action.tcpudpConfig), {
-        maxRetries: 3,
-        retryInterval: 500
-      });
     });
 
     registerCustomAction("statusAnimation", async (action, context) => {

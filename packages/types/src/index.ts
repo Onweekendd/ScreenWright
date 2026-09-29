@@ -9,3 +9,6 @@ export * from "./templates";
 
 // 导出工具函数
 export * from "./utils";
+
+// 导出旧数据升级函数（swtext/swimg 兼容层）
+export * from "./migrations";

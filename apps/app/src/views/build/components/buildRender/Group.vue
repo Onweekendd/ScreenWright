@@ -15,6 +15,7 @@
     :isLock="groupData.isLock"
     :display="show && groupData.display"
     :isSelect="targetChart.selectId.includes(`${groupData.id}`)"
+    :isEditing="editingComponentIds.has(`${groupData.id}`)"
     @click.stop="mouseClickHandle($event, groupData)"
     @mousedown="!disabled && mousedownHandle($event, groupData)"
     @mouseenter="mouseenterHandle($event, groupData)"
@@ -46,6 +47,7 @@
       :display="item.display"
       :disabled="disabled"
       :isSelect="targetChart.selectId.includes(`${item.id}`)"
+      :isEditing="editingComponentIds.has(`${item.id}`)"
       @click.stop="mouseClickHandle($event, item)"
       @mousedown="!disabled && mousedownHandle($event, item)"
       @mouseenter="mouseenterHandle($event, item)"
@@ -70,6 +72,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+import { editingComponentIds } from "@/hooks/useEditingComponents";
 import { useFrostedStyle } from "@/views/build/components/buildConfig/components/frostedGlassConfig/useFrostedStyle";
 
 import { renderComponent } from "./core/utils";

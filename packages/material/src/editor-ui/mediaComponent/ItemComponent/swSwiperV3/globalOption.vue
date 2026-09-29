@@ -51,17 +51,17 @@
     </el-form-item>
     <sw-collapse-item title="中间卡片" :disabled="false">
       <template #content>
-        <ft-card-settings v-model="card1Settings" @change="update" />
+        <SwCardSettings v-model="card1Settings" @change="update" />
       </template>
     </sw-collapse-item>
     <sw-collapse-item title="两侧卡片" :disabled="false">
       <template #content>
-        <ft-card-settings v-model="card2Settings" @change="update" />
+        <SwCardSettings v-model="card2Settings" @change="update" />
       </template>
     </sw-collapse-item>
     <sw-collapse-item title="其他卡片" :disabled="false" v-if="selectTargetData[0].option.showSwiper">
       <template #content>
-        <ft-card-settings v-model="card3Settings" @change="update" />
+        <SwCardSettings v-model="card3Settings" @change="update" />
       </template>
     </sw-collapse-item>
     <SwCollapseItem title="切换箭头">

@@ -1,10 +1,9 @@
 // 处理组件移入移出操作
-import { unref, type MaybeRef } from "vue";
+import { type MaybeRef, unref } from "vue";
 import { useRoute } from "vue-router";
 
-import { throttle } from "lodash-es";
-
 import type { LargeScreenDetailInfo } from "@screenwright/types";
+import { throttle } from "lodash-es";
 
 import { useScreenEditor } from "@/core-adapter/useScreenEditor";
 import { sleep } from "@/utils/utils";

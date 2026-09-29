@@ -1,7 +1,13 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
 
-import { ComponentFlatSchema, type ComponentProp, componentPropSchemaMap } from "@screenwright/types/schemas";
+import {
+  ComponentFlatSchema,
+  type ComponentProp,
+  componentPropSchemaMap,
+  componentSuperRefineMap,
+  seriesAlignmentSuperRefine
+} from "@screenwright/types/schemas";
 import type { z } from "zod";
 
 // ── 组件文件名（id_name）──────────────────────────────────────────────────────
@@ -289,14 +295,22 @@ export function validateComponentContent(
     // ── 属性层：只诊断，不拦 ─────────────────────────────────────────────
     const prop = (parsed?.component as Record<string, unknown> | undefined)?.prop as ComponentProp | undefined;
     const propEntry = prop ? componentPropSchemaMap[prop] : undefined;
-    if (!propEntry) {
+    if (!prop || !propEntry) {
       return unknownKeyWarnings.length
         ? { ok: true, data: structural.data, warnings: unknownKeyWarnings }
         : { ok: true, data: structural.data };
     }
 
+    // 图表类的 data/option 系列匹配检查（跨字段，任何一个 per-prop schema 单独看都看不到）
+    // 和该组件专属的开关联动规则（componentSuperRefineMap，见其注释）都不揉进 schema 本体，
+    // 只在这条运行时校验路径上追加，避免真实历史数据被当成类型错误、拖累 schema 一致性测试。
+    const componentSuperRefine = componentSuperRefineMap[prop];
     const typed = ComponentFlatSchema.omit({ data: true, option: true })
       .extend({ data: propEntry.data, option: propEntry.option })
+      .superRefine((val, ctx) => {
+        seriesAlignmentSuperRefine(val, ctx);
+        componentSuperRefine?.(val, ctx);
+      })
       .safeParse(candidate);
     if (typed.success) {
       // 属性层也过了：用它的结果，zod 会按 prop schema 补上默认值

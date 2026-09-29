@@ -24,6 +24,7 @@ defineOptions({
 const props = defineProps<{
   element: ComponentType;
   getTextStyle: CSSProperties;
+  formatValue: (raw: unknown) => string;
   inputData: any;
 }>();
 
@@ -33,9 +34,7 @@ defineEmits<{
 
 const textRef = ref<HTMLElement | null>(null);
 const inputValue = computed(() => {
-  if (isObject(props.inputData)) {
-    return (props.inputData as any).value || "";
-  }
-  return props.inputData || "";
+  const raw = isObject(props.inputData) ? (props.inputData as any).value : props.inputData;
+  return props.formatValue(raw);
 });
 </script>

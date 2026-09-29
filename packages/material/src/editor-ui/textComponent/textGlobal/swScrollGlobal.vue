@@ -1,45 +1,87 @@
 <template>
-  <div class="ft-scroll-global">
-    <el-form-item label="行数">
-      <sw-input-number v-model="selectTargetData[0].option.count" @change="update" :min="1" />
+  <div class="sw-scroll-global">
+    <el-form-item label="数据刷新">
+      <el-checkbox v-model="selectTargetData[0].option.refresh" @change="update" />
     </el-form-item>
-    <el-form-item label="行间距">
-      <sw-input-number
-        v-model="selectTargetData[0].option.lineMarginBottom"
-        unit="px"
-        :controls="false"
-        @change="update"
-      />
-    </el-form-item>
-    <el-form-item>
-      <template #label>
-        <span>
-          默认高亮
-          <el-tooltip class="item" effect="dark" placement="right">
-            <Icon type="QuestionFilled" size="14" style="position: relative; top: 3px" />
-            <template #content> 填写数值，英文逗号隔开，如第1个默认高亮是1，第1、2个都高亮是1,2；以此类推 </template>
-          </el-tooltip>
-        </span>
+
+    <sw-collapse-item title="表头" showIcon @change="update" v-model="selectTargetData[0].option.header.show">
+      <template #content>
+        <el-form-item label="高度">
+          <sw-input-number v-model="selectTargetData[0].option.header.height" unit="px" :controls="false" @change="update" />
+        </el-form-item>
+        <el-form-item label="字号">
+          <sw-input-number v-model="selectTargetData[0].option.header.fontSize" unit="px" :controls="false" @change="update" />
+        </el-form-item>
+        <el-form-item label="文字颜色">
+          <sw-single-color-picker v-model="selectTargetData[0].option.header.color" @change="update" />
+        </el-form-item>
+        <el-form-item label="背景色">
+          <sw-single-color-picker v-model="selectTargetData[0].option.header.background" @change="update" />
+        </el-form-item>
       </template>
-      <sw-input v-model="selectTargetData[0].option.activeKeys" @change="update" />
-    </el-form-item>
-    <el-form-item label="光标显隐">
-      <el-checkbox v-model="selectTargetData[0].option.cursorShow" @change="update" />
-    </el-form-item>
-    <Animate />
-    <ScrollBar />
+    </sw-collapse-item>
+
+    <sw-collapse-item title="序号列" showIcon @change="update" v-model="rowIndexShow">
+      <template #content>
+        <el-form-item label="标题">
+          <sw-input v-model="selectTargetData[0].option.rowIndex.title" @change="update" />
+        </el-form-item>
+        <el-form-item label="列宽">
+          <sw-input-number v-model="selectTargetData[0].option.rowIndex.width" unit="px" :controls="false" @change="update" />
+        </el-form-item>
+        <el-form-item label="起始值">
+          <sw-input-number v-model="selectTargetData[0].option.rowIndex.startFrom" :controls="false" @change="update" />
+        </el-form-item>
+      </template>
+    </sw-collapse-item>
   </div>
 </template>
+
 <script setup lang="ts">
+import { computed } from "vue";
+
+import { SwCollapseItem } from "@screenwright/ui/collapse-item";
 import { SwInput } from "@screenwright/ui/input";
 import { SwInputNumber } from "@screenwright/ui/input-number";
-import Icon from "@editor/base/Icon/index.vue";
+import { SwSingleColorPicker } from "@screenwright/ui/single-color-picker";
 
 import { useUpdateInstance } from "../../useUpdateInstance";
-import Animate from "../textConfig/components/TextSwScrollGlobalConfig/animate.vue";
-import ScrollBar from "../textConfig/components/TextSwScrollGlobalConfig/scrollBar.vue";
 
 const { update, selectTargetData } = useUpdateInstance();
+
+// header 是必填字段，理论上创建组件时后端种子数据就带齐；rowIndex 是可选字段，
+// 两者都做一次兜底，避免种子数据缺字段时面板直接崩溃
+if (!selectTargetData.value[0].option.header) {
+  selectTargetData.value[0].option.header = {
+    show: true,
+    height: 40,
+    background: "rgba(0,138,255,0.3)",
+    color: "#ffffff",
+    fontSize: 14
+  };
+}
+if (!selectTargetData.value[0].option.rowIndex) {
+  selectTargetData.value[0].option.rowIndex = { show: false, title: "序号", width: 50, startFrom: 1 };
+}
+
+const rowIndexShow = computed({
+  get: () => selectTargetData.value[0].option.rowIndex.show,
+  set: (val: boolean) => {
+    selectTargetData.value[0].option.rowIndex.show = val;
+  }
+});
 </script>
+
 <style lang="scss" scoped>
+@import "@material/style/mixins/element.scss";
+@include common-element-style(".el-select__wrapper");
+
+:deep(.el-form-item__label) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0;
+  display: inline-block;
+  margin-right: 12px;
+}
 </style>

@@ -655,6 +655,16 @@ impl<T: HasBBox> RBush<T> {
         let mut nodes_to_search: Vec<&RBushNode<T>> = vec![root.as_ref()];
 
         while let Some(node) = nodes_to_search.pop() {
+            // 如果是叶子节点，检查所有 items
+            if node.leaf {
+                for item in &node.items {
+                    if intersects(bbox, &item.bbox()) {
+                        result.push(item.clone());
+                    }
+                }
+                continue; // 叶子节点不需要继续深入
+            }
+
             for child in &node.children {
                 let child_node = child.as_ref();
                 let child_bbox = &child_node.bbox;
@@ -669,15 +679,6 @@ impl<T: HasBBox> RBush<T> {
                     } else {
                         // 部分相交，需要继续深入
                         nodes_to_search.push(child_node);
-                    }
-                }
-            }
-
-            // 如果是叶子节点，检查所有 items
-            if node.leaf {
-                for item in &node.items {
-                    if intersects(bbox, &item.bbox()) {
-                        result.push(item.clone());
                     }
                 }
             }

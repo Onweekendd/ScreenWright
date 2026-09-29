@@ -62,6 +62,7 @@ const excludeDataConfig = [
   extendsEnumType.SimpleStar,
   extendsEnumType.FullScreenSwitch,
   mediaEnum.SwImgBorder,
+  mediaEnum.SwBox,
   InteractiveEnum.videoProgress
 ];
 

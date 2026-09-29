@@ -651,6 +651,7 @@ export const excludeDataConfig = [
   extendsEnumType.SimpleStar,
   extendsEnumType.FullScreenSwitch,
   mediaEnum.SwImgBorder,
+  mediaEnum.SwBox,
   PanelType.quotePanel,
   ExhibitEnumType.SwFilter,
   mediaEnum.SwSwiperCard,

@@ -8,7 +8,8 @@ vi.mock("@/mastra/services/image-generation.server", () => ({ generateAndStoreIm
 import {
   ensureCardTitleBars,
   groupRegionsIntoCards,
-  normalizeEffectImageRegions
+  normalizeEffectImageRegions,
+  titleBarMasksFor
 } from "@/mastra/workflows/screen-from-effect-image/steps/analyze-effect-image-step";
 import type { EffectImageRegion } from "@/mastra/workflows/screen-from-effect-image/types";
 
@@ -90,24 +91,38 @@ describe("groupRegionsIntoCards", () => {
 });
 
 describe("ensureCardTitleBars", () => {
-  it("卡片有标题没页签条时按标题框合成一条，贴到卡片框左内沿、向右向下各扩一点", () => {
+  it("卡片有标题没页签条时合成一条：与卡片框等宽、贴框顶，底边在标题文字下方一点", () => {
     const out = ensureCardTitleBars([
       region({ id: "frame", kind: "asset", role: "card-frame", bounds: [100, 100, 500, 500] }),
       region({ id: "title", kind: "text", role: "card-title", bounds: [120, 110, 250, 130], text: "t" })
     ]);
     const bar = out.find((r) => r.role === "card-title-bar")!;
     expect(bar.id).toBe("frame-title-bar");
-    expect(bar.bounds).toEqual([104, 104, 280, 136]);
+    expect(bar.bounds).toEqual([100, 100, 500, 136]);
     expect(bar.hasBakedText).toBe(true);
   });
 
-  it("vision 已经给了页签条的卡片不重复合成；没有标题的卡片也不合成", () => {
+  it("vision 给的页签条拉成与卡片框等宽、贴框顶（它只框左上角一小块），不重复合成；没有标题的卡片也不合成", () => {
     const out = ensureCardTitleBars([
       region({ id: "f1", kind: "asset", role: "card-frame", bounds: [0, 0, 500, 500] }),
       region({ id: "bar1", kind: "asset", role: "card-title-bar", bounds: [10, 10, 200, 40] }),
       region({ id: "t1", kind: "text", role: "card-title", bounds: [20, 12, 150, 38] }),
       region({ id: "f2", kind: "asset", role: "card-frame", bounds: [600, 0, 1000, 500] })
     ]);
-    expect(out.filter((r) => r.role === "card-title-bar").map((r) => r.id)).toEqual(["bar1"]);
+    const bars = out.filter((r) => r.role === "card-title-bar");
+    expect(bars.map((r) => r.id)).toEqual(["bar1"]);
+    expect(bars[0].bounds).toEqual([0, 0, 500, 40]);
+    // 其它区域原样保留
+    expect(out.find((r) => r.id === "t1")!.bounds).toEqual([20, 12, 150, 38]);
+  });
+
+  it("titleBarMasksFor：只取落在这张卡片框里的页签条", () => {
+    const f1 = region({ id: "f1", kind: "asset", role: "card-frame", bounds: [0, 0, 500, 500] });
+    const masks = titleBarMasksFor(f1, [
+      f1,
+      region({ id: "bar1", kind: "asset", role: "card-title-bar", bounds: [0, 0, 500, 40] }),
+      region({ id: "bar2", kind: "asset", role: "card-title-bar", bounds: [600, 0, 1000, 40] })
+    ]);
+    expect(masks).toEqual([[0, 0, 500, 40]]);
   });
 });

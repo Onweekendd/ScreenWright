@@ -6,7 +6,7 @@ import { assetStore } from "@/lib/storage";
 import { generateAndStoreImage } from "@/mastra/services/image-generation.server";
 
 import { type AssetRole, assetRoleSchema, type EffectImageRegion } from "../types";
-import { knockOutBackground } from "./knock-out";
+import { estimateBackgroundColor, knockOutBackground } from "./knock-out";
 
 /**
  * kind=asset 区域的「分组去重 → 代表生图 → 其余复用」。
@@ -149,14 +149,16 @@ const promptFor = (role: AssetRole): string => {
     case "card-frame":
       return (
         "数据大屏的卡片面板底图。主体是一块完整均匀的半透明深色纯色面板，只有一圈参考图同款的" +
-        "外轮廓线与四角装饰，面板内部是均匀的纯色，不能出现第二圈线框、页签、标题条或任何内容。" +
+        "外轮廓线与四角装饰，面板内部是均匀的纯色。顶部也是同样的纯色与外轮廓线，" +
+        "没有页签、没有标题条、没有第二圈线框，面板里没有任何内容。" +
         keyable +
         common
       );
     case "card-title-bar":
       return (
-        "数据大屏卡片左上角的标题页签装饰条。主体是一条横向的、完整均匀的窄面板，带参考图同款的" +
-        "斜切角、渐变或光线装饰，面板内部是均匀的纯色留给标题文字，不写任何文字。" +
+        "数据大屏卡片顶部、横向贯穿整个画面宽度的标题装饰带。左侧是一块带参考图同款斜切角、渐变或光线装饰的" +
+        "页签面板，内部是均匀的纯色留给标题文字；从页签向右延伸一条参考图同款的细装饰线直到画面最右端。" +
+        "整条带子从最左画到最右，不留空白段，不写任何文字。" +
         keyable +
         common
       );
@@ -209,15 +211,47 @@ const clampReferenceBox = (box: PixelBox, imageWidth: number, imageHeight: numbe
 const referenceImage = async (
   role: AssetRole,
   imageBuffer: Buffer,
-  region: { left: number; top: number; width: number; height: number }
+  region: { left: number; top: number; width: number; height: number },
+  masks: PixelBox[] = []
 ): Promise<Buffer> => {
   const cropped = sharp(imageBuffer).extract(region);
   if (role !== "background") {
-    return shrinkForUpload(cropped);
+    return shrinkForUpload(masks.length > 0 ? await paintOut(cropped, region, masks) : cropped);
   }
   const small = Math.max(64, Math.round(region.width / 4));
   return shrinkForUpload(
     cropped.resize({ width: small }).blur(12).resize({ width: region.width, height: region.height, fit: "fill" })
+  );
+};
+
+/**
+ * 把参考图里的若干矩形涂成整图底色（与抠底用同一个"整图中位色"估计）。
+ * img2img 会忠实复刻参考图里的结构——卡片框参考图里留着页签，生出来的框就带页签；涂掉才干净。
+ */
+const paintOut = async (
+  image: sharp.Sharp,
+  region: { left: number; top: number; width: number; height: number },
+  masks: PixelBox[]
+): Promise<sharp.Sharp> => {
+  const { data, info } = await image.clone().removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const [r, g, b] = estimateBackgroundColor(data, info.width, info.height, info.channels);
+  const patches = masks
+    .map(([x1, y1, x2, y2]) => ({
+      left: Math.max(0, x1 - region.left),
+      top: Math.max(0, y1 - region.top),
+      width: Math.min(region.width, x2 - region.left) - Math.max(0, x1 - region.left),
+      height: Math.min(region.height, y2 - region.top) - Math.max(0, y1 - region.top)
+    }))
+    .filter((p) => p.width > 0 && p.height > 0);
+  if (patches.length === 0) {
+    return image;
+  }
+  return sharp(await image.png().toBuffer()).composite(
+    patches.map((p) => ({
+      input: { create: { width: p.width, height: p.height, channels: 3, background: { r, g, b } } },
+      left: p.left,
+      top: p.top
+    }))
   );
 };
 
@@ -247,6 +281,8 @@ export interface ProduceAssetInput {
   imageHeight: number;
   group: AssetGroup;
   groupIndex: number;
+  /** 参考图里要涂成底色的区域（0~1000 归一化，源图坐标）：卡片框传它框里的页签条，生出来的框才不带页签 */
+  masks?: EffectImageRegion["bounds"][];
 }
 
 /**
@@ -280,12 +316,12 @@ export const produceRepresentativeAsset = async (input: ProduceAssetInput): Prom
     imageHeight
   );
 
-  const cropBuffer = await referenceImage(group.role, imageBuffer, {
-    left,
-    top,
-    width: right - left,
-    height: bottom - top
-  });
+  const cropBuffer = await referenceImage(
+    group.role,
+    imageBuffer,
+    { left, top, width: right - left, height: bottom - top },
+    (input.masks ?? []).map((m) => boundsToPixelBox(m, imageWidth, imageHeight))
+  );
   // 文件名带内容 hash：生图的幂等键算的是参考图 **url** 不是字节，url 不变就会命中旧结果——
   // 参考图处理方式一改（比如底图改成先糊掉）而 url 不变，拿回来的就是按旧参考图生的那张
   const cropDigest = createHash("sha256").update(cropBuffer).digest("hex").slice(0, 12);

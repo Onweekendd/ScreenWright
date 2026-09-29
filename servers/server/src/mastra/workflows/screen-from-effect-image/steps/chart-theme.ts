@@ -93,8 +93,25 @@ const seriesNamePatch = (prop: string, data: DataRow[], spec: ChartSpec | undefi
   };
 };
 
+/** 环形占比图的内/外半径（%）；实心饼只给外半径。模板默认外半径 50 太小，卡片里一小坨 */
+const RING_RADIUS = { inner: 55, outer: 78 };
+const PIE_RADIUS_OUTER = 72;
+
 const shapePatch = (prop: string, data: DataRow[], spec: ChartSpec | undefined): OptionPatch => {
-  if (!spec || !LINE_LIKE.has(prop)) {
+  if (!spec) {
+    return {};
+  }
+  if (prop === "echartpie") {
+    // 模板的 seriesRight=120 是给右侧图例留的位，图例不显示时饼被挤到左边、右侧标签还被截断
+    const legendHidden = spec.showLegend !== true;
+    return {
+      pieRadiusInner: spec.variant === "ring" ? RING_RADIUS.inner : 0,
+      pieRadiusOuter: spec.variant === "ring" ? RING_RADIUS.outer : PIE_RADIUS_OUTER,
+      ...(legendHidden ? { seriesLeft: 0, seriesRight: 0 } : {}),
+      ...(spec.showLabel !== undefined ? { seriesLabelShow: spec.showLabel } : {})
+    };
+  }
+  if (!LINE_LIKE.has(prop)) {
     return {};
   }
   const n = Math.max(distinctSeriesNames(data).length, 1);
@@ -163,9 +180,13 @@ export const chartThemePatch = (
   data: DataRow[],
   palette: string[] | undefined,
   spec?: ChartSpec
-): OptionPatch => ({
-  ...seriesNamePatch(prop, data, spec),
-  ...shapePatch(prop, data, spec),
-  ...(palette && palette.length > 0 ? colorPatch(prop, data, palette) : {}),
-  ...(prop === "swFlopPerformance" ? { prefixText: "" } : {})
-});
+): OptionPatch => {
+  // 这张图自己的系列色优先于整屏 palette：palette 只说"这屏有哪些色"，谁用哪个色得看这张图
+  const colors = spec?.colors?.length ? spec.colors : palette;
+  return {
+    ...seriesNamePatch(prop, data, spec),
+    ...shapePatch(prop, data, spec),
+    ...(colors && colors.length > 0 ? colorPatch(prop, data, colors) : {}),
+    ...(prop === "swFlopPerformance" ? { prefixText: "" } : {})
+  };
+};

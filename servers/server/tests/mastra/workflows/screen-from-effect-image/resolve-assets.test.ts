@@ -127,6 +127,37 @@ describe("produceRepresentativeAsset", () => {
     expect(storeMocks.put.mock.calls[0][0]).toMatch(/card-frame-2-[0-9a-f]{12}\.jpg$/);
   });
 
+  it("masks 指定的区域在参考图里被涂成底色：卡片框参考图不带页签，生出来的框才不带页签", async () => {
+    genMocks.generateAndStoreImage.mockResolvedValue({ url: "u" });
+    // 深蓝底 + 左上角一块亮青色"页签"
+    const withTab = await sharp({ create: { width: 400, height: 200, channels: 3, background: "#0a1428" } })
+      .composite([
+        { input: { create: { width: 120, height: 30, channels: 3, background: "#30e0ff" } }, left: 0, top: 0 }
+      ])
+      .png()
+      .toBuffer();
+    await produceRepresentativeAsset({
+      imageId: "img1",
+      imageBuffer: withTab,
+      imageWidth: 400,
+      imageHeight: 200,
+      group: { role: "card-frame", representative: asset("f", "card-frame", [0, 0, 1000, 1000]), members: [] },
+      groupIndex: 0,
+      // 页签条：整宽、贴顶、高 15%（0~1000 归一化）
+      masks: [[0, 0, 1000, 150]]
+    });
+    const { data, info } = await sharp(storeMocks.put.mock.calls[0][1] as Buffer)
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const px = (x: number, y: number) => [0, 1, 2].map((c) => data[(y * info.width + x) * info.channels + c]);
+    // 原来页签的位置现在是底色（JPEG 有一点误差）
+    const [r, g, b] = px(30, 10);
+    expect(r).toBeLessThan(40);
+    expect(g).toBeLessThan(60);
+    expect(b).toBeGreaterThan(20);
+    expect(b).toBeLessThan(80);
+  });
+
   it("参考图宽高比超过 16:1 时把裁切框向外扩到 16:1，而不是原样送去被拒", async () => {
     genMocks.generateAndStoreImage.mockResolvedValue({ url: "u" });
     const wide = await sharp({ create: { width: 2000, height: 1000, channels: 3, background: "#000" } })

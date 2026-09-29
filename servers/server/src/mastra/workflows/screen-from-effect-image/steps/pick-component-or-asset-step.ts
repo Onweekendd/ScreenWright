@@ -120,6 +120,10 @@ const describeChartSpec = (spec: ChartSpec | undefined): string => {
       `- 效果图里画了 ${spec.seriesCount} 个系列，data 里也要有 ${spec.seriesCount} 个 seriesName，起真实的业务名`
     );
   }
+  if (spec.values?.length && spec.series?.length) {
+    const pairs = spec.series.map((name, i) => `${name}=${spec.values![i] ?? "?"}`).join("、");
+    lines.push(`- 图上标出的数值/占比：${pairs}——value 按这个比例造（百分比就按占比分配）`);
+  }
   if (spec.xLabels?.length) {
     lines.push(
       `- x 轴刻度（原文、按序）：${spec.xLabels.join("、")}——data 的 name **必须恰好是这 ${spec.xLabels.length} 个**，一个不多一个不少`

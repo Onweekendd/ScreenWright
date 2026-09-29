@@ -90,29 +90,34 @@ const intersection = (a: EffectImageRegion["bounds"], b: EffectImageRegion["boun
 
 const areaOf = (b: EffectImageRegion["bounds"]): number => (b[2] - b[0]) * (b[3] - b[1]);
 
-/** 页签条合成时相对标题文字框向外扩的量（0~1000 归一化单位）：上下各 6、右侧 30，左侧贴到卡片框内沿 */
+/** 页签条底边相对标题文字框向下扩的量（0~1000 归一化单位） */
 const TITLE_BAR_PAD_Y = 6;
-const TITLE_BAR_PAD_RIGHT = 30;
-const TITLE_BAR_INSET_LEFT = 4;
 
 const containedRatio = (inner: EffectImageRegion["bounds"], outer: EffectImageRegion["bounds"]): number =>
   intersection(inner, outer) / areaOf(inner);
 
 /**
- * 卡片有标题文字却没有页签条时，按标题文字的框合成一条 `card-title-bar`。
+ * 页签条（card-title-bar）统一成**与卡片框等宽、贴框顶**的一整条标题带；卡片有标题却没页签条时按标题文字合成一条。
  *
- * vision 模型（gemini flash-lite）在指令和用户提示里都点名要页签条，实测两轮一条都不给——
+ * 为什么强制等宽：vision 只框页签块本身（左上角一小块），生出来就是孤零零一小片，和卡片框接不上；
+ * 效果图里标题带其实是"左侧页签块 + 向右延伸到卡片右边的细线"，是一整条。等宽之后卡片框那张图就
+ * 可以完全不带页签（参考图会把这块涂掉，见 resolve-assets 的 masks），两层各管各的，叠起来才对。
+ *
+ * 为什么要合成：vision 模型（gemini flash-lite）在指令和用户提示里都点名要页签条，实测经常不给——
  * 它把页签条当成卡片框的一部分了。页签条是"卡片背景 / 页签背景 / 标题文字 / 内容"四层里
- * 用户明确要求的一层，不能指望模型，程序兜底：标题文字底下那块就是页签条所在，
- * 向外扩一圈当它的框，去重后照样只生一张。
+ * 用户明确要求的一层，不能指望模型，程序兜底。
  */
 export const ensureCardTitleBars = (regions: EffectImageRegion[]): EffectImageRegion[] => {
   const frames = regions.filter((r) => r.role === "card-frame");
-  const titleBars = regions.filter((r) => r.role === "card-title-bar");
+  const aligned = new Map<string, EffectImageRegion>();
   const synthesized: EffectImageRegion[] = [];
   for (const frame of frames) {
-    const hasBar = titleBars.some((b) => containedRatio(b.bounds, frame.bounds) >= MIN_CONTAINMENT_IN_CARD);
-    if (hasBar) {
+    const [fx1, fy1, fx2] = frame.bounds;
+    const bar = regions.find(
+      (r) => r.role === "card-title-bar" && containedRatio(r.bounds, frame.bounds) >= MIN_CONTAINMENT_IN_CARD
+    );
+    if (bar) {
+      aligned.set(bar.id, { ...bar, bounds: [fx1, fy1, fx2, Math.max(bar.bounds[3], fy1 + 1)] });
       continue;
     }
     const title = regions.find(
@@ -124,24 +129,26 @@ export const ensureCardTitleBars = (regions: EffectImageRegion[]): EffectImageRe
     if (!title) {
       continue;
     }
-    const [fx1, , fx2] = frame.bounds;
-    const [, ty1, tx2, ty2] = title.bounds;
     synthesized.push({
       id: `${frame.id}-title-bar`,
       kind: "asset",
       role: "card-title-bar",
-      bounds: [
-        Math.min(fx2, fx1 + TITLE_BAR_INSET_LEFT),
-        Math.max(0, ty1 - TITLE_BAR_PAD_Y),
-        Math.min(fx2, tx2 + TITLE_BAR_PAD_RIGHT),
-        Math.min(1000, ty2 + TITLE_BAR_PAD_Y)
-      ],
+      bounds: [fx1, fy1, fx2, Math.min(1000, title.bounds[3] + TITLE_BAR_PAD_Y)],
       confidence: title.confidence,
       hasBakedText: true
     });
   }
-  return [...regions, ...synthesized];
+  return [...regions.map((r) => aligned.get(r.id) ?? r), ...synthesized];
 };
+
+/** 卡片框参考图里要涂掉的区域：框里的页签条。留着它，img2img 就会把页签一起画进卡片框那张图 */
+export const titleBarMasksFor = (
+  frame: EffectImageRegion,
+  regions: EffectImageRegion[]
+): EffectImageRegion["bounds"][] =>
+  regions
+    .filter((r) => r.role === "card-title-bar" && containedRatio(r.bounds, frame.bounds) >= MIN_CONTAINMENT_IN_CARD)
+    .map((r) => r.bounds);
 
 /** 按"卡片框 -> 框里的东西"归组；不属于任何卡片的各自一组。返回每组的成员，已按叠放顺序排好。 */
 export const groupRegionsIntoCards = (regions: EffectImageRegion[]): EffectImageRegion[][] => {
@@ -311,7 +318,8 @@ export const analyzeEffectImageStep = createStep({
           imageWidth,
           imageHeight,
           group,
-          groupIndex
+          groupIndex,
+          masks: group.role === "card-frame" ? titleBarMasksFor(group.representative, regions) : []
         })
       )
     );

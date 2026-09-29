@@ -96,4 +96,23 @@ describe("chartThemePatch", () => {
     const funnel = chartThemePatch("echartfunnel", rows("a", "b", "c"), ["#111111", "#222222"]);
     expect(funnel.seriesColor).toEqual(["#111111", "#222222", "#111111"]);
   });
+
+  it("饼图规格：ring 给内外半径、实心饼只给外半径；图例不显示时清掉右侧留白；这张图自己的 colors 优先于 palette", () => {
+    const ring = chartThemePatch("echartpie", rows("a", "b"), ["#111111"], {
+      variant: "ring",
+      showLegend: false,
+      colors: ["#ff0000", "#00ff00"]
+    });
+    expect(ring.pieRadiusInner).toBe(55);
+    expect(ring.pieRadiusOuter).toBe(78);
+    expect(ring.seriesLeft).toBe(0);
+    expect(ring.seriesRight).toBe(0);
+    expect(ring.seriesColor).toEqual(["#ff0000", "#00ff00"]);
+
+    const pie = chartThemePatch("echartpie", rows("a"), ["#111111"], { variant: "pie", showLegend: true });
+    expect(pie.pieRadiusInner).toBe(0);
+    expect(pie.pieRadiusOuter).toBe(72);
+    expect(pie).not.toHaveProperty("seriesRight");
+    expect(pie.seriesColor).toEqual(["#111111"]);
+  });
 });

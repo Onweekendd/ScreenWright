@@ -8,8 +8,8 @@
       class="ft-text-text"
       :style="getTextStyle"
       @blur="$emit('blur', index)"
-      v-html="item.value"
-      :data-translate="item.value"
+      v-html="formatValue(item.value)"
+      :data-translate="formatValue(item.value)"
     />
     <a
       v-else
@@ -19,8 +19,8 @@
       :style="getTextStyle"
       :target="props.linkTarget"
       @blur="$emit('blur', index)"
-      v-html="item.value"
-      :data-translate="item.value"
+      v-html="formatValue(item.value)"
+      :data-translate="formatValue(item.value)"
     />
   </template>
 </template>
@@ -38,6 +38,7 @@ defineOptions({
 const props = defineProps<{
   element: ComponentType;
   getTextStyle: CSSProperties;
+  formatValue: (raw: unknown) => string;
   inputData: any;
   isBuild: boolean;
   linkHref: string;
@@ -61,17 +62,11 @@ watch(
         dataArray.value = Array.isArray(nVal) ? nVal : [];
       }
     } else {
-      console.log(nVal, "nValnValnVal");
       dataArray.value = Array.isArray(nVal) ? nVal : [];
     }
   },
   { immediate: true }
 );
-
-// 获取数据数组
-// const dataArray = computed(() => {
-//   return Array.isArray(props.inputData) ? props.inputData : [];
-// });
 </script>
 <style lang="scss" scoped>
 .ft-text-text {

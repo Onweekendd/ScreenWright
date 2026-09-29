@@ -1,16 +1,13 @@
 <template>
   <span
-    v-for="(item, index) in isTypingEffect ? cloneDataChart : dataArray"
+    v-for="(item, index) in dataArray"
     :key="index"
     ref="textRef"
     class="ft-text-text"
-    :style="{
-      ...getTextStyle,
-      ...textAnimation
-    }"
+    :style="getTextStyle"
     @blur="$emit('blur', index as number)"
-    v-html="item.value"
-    :data-translate="item.value"
+    v-html="formatValue(item.value)"
+    :data-translate="formatValue(item.value)"
     contenteditable
     :data-editid="element.id"
   />
@@ -27,10 +24,8 @@ defineOptions({
 });
 const props = defineProps<{
   element: ComponentType;
-  isTypingEffect: boolean;
-  cloneDataChart: any;
-  textAnimation: CSSProperties;
   getTextStyle: CSSProperties;
+  formatValue: (raw: unknown) => string;
   inputData: any;
 }>();
 defineEmits<{

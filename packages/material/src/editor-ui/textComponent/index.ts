@@ -18,7 +18,6 @@ import swtextGlobal from "./textGlobal/swtextGlobal.vue";
 // ── LoadingEffect ──
 import swRichtextLoadingEffect from "./textLoadingEffect/swRichtextLoadingEffect.vue";
 import swText2LoadingEffect from "./textLoadingEffect/swText2LoadingEffect.vue";
-import swtextLoadingEffect from "./textLoadingEffect/swtextLoadingEffect.vue";
 
 // ── DataList ──
 import customCollapseDataList from "./textDataList/customCollapseDataList.vue";
@@ -94,10 +93,7 @@ export const ScreenwrightTextConfigComponent: Record<TextEnum, ConfigTab[]> = {
   [TextEnum.SwMultiLine]: [
     { label: "全局", value: optionType.global, component: swmultiLineGlobal }
   ],
-  [TextEnum.SwText]: [
-    { label: "全局", value: optionType.global, component: swtextGlobal },
-    { label: "载入效果", value: optionType.loadingEffect, component: swtextLoadingEffect }
-  ],
+  [TextEnum.SwText]: [{ label: "全局", value: optionType.global, component: swtextGlobal }],
   [TextEnum.SwProgress]: [
     { label: "全局", value: optionType.global, component: swProgressGlobal },
     { label: "行配置", value: optionType.rowConfig, component: swProgressRowConfig },

@@ -1,5 +1,7 @@
 import { HTTPException } from "hono/http-exception";
 
+import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import { signToken } from "@/lib/auth/token";
 import { ok } from "@/lib/http/envelope";
 import { prismaClient } from "@/mastra/storage/prisma";
 
@@ -97,10 +99,34 @@ export function getMenuTree() {
   return ok(tree);
 }
 
+/** 用户不存在时也校验一次哈希，让「用户名不存在」与「口令错误」的响应耗时一致，避免被用来枚举账号 */
+let dummyHash: Promise<string> | undefined;
+const getDummyHash = () => (dummyHash ??= hashPassword("funbi-dummy-password"));
+
 /**
- * 当前用户信息（getCurrentUser）。开源单机版没有付费套餐/容量限额概念，
- * 只返回真实用户资料，供前端展示用户名/角色，以及 createdBy 等字段取值。
+ * 登录：校验用户名口令与账号状态，签发 JWT。
+ * 返回形状对齐前端 LoginResult：{ token, userInfo }。
  */
+export async function login(userName: string, password: string) {
+  const user = await prismaClient.biUser.findUnique({ where: { userName } });
+  const passed = await verifyPassword(password, user?.passwordHash ?? (await getDummyHash()));
+  if (!user || !passed) {
+    throw new HTTPException(401, { message: "用户名或密码错误" });
+  }
+  if (user.forbidden) {
+    throw new HTTPException(403, { message: "账号已被禁用" });
+  }
+  if (user.status === 3) {
+    throw new HTTPException(403, { message: "账号尚未审核" });
+  }
+  if (user.status === 2 || (user.expirationTime && user.expirationTime.getTime() < Date.now())) {
+    throw new HTTPException(403, { message: "账号已到期" });
+  }
+  const token = await signToken({ userId: user.id, userName: user.userName, role: user.role });
+  return ok({ token, userInfo: toUser(user) }, "登录成功");
+}
+
+/** 当前用户信息（getCurrentUser）：返回真实用户资料，供前端展示用户名/角色，以及 createdBy 等字段取值。 */
 export async function getCurrentUser(userId: number) {
   const user = await prismaClient.biUser.findUnique({ where: { id: userId } });
   if (!user) {

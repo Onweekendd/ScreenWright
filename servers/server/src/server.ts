@@ -24,6 +24,7 @@ import { onlineRouter } from "./mastra/routes/online.route";
 import { userRouter } from "./mastra/routes/user.route";
 import { versionRouter } from "./mastra/routes/version.route";
 import { artifactAppPreviewManager } from "./mastra/runtime";
+import { authMiddleware } from "./middleware/auth";
 import { isLlmRecordingEnabled } from "./recording/exchange-record";
 import { swaggerSpec } from "./swagger-spec";
 
@@ -80,6 +81,11 @@ app.use(
     credentials: true
   })
 );
+
+// AI 接口与 Mastra 内置路由（/api/*）必须登录，否则任何人都能直接消耗模型额度。
+// 须在 server.init() 注册 Mastra 路由之前挂上，中间件才会排在它们前面。
+app.use("/customApi/*", authMiddleware);
+app.use("/api/*", authMiddleware);
 
 const server = new MastraServer({ app, mastra });
 

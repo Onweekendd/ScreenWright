@@ -26,7 +26,7 @@ pnpm --dir servers/server exec dotenvx run -- prisma migrate deploy
 ```bash
 pnpm --dir servers/server exec dotenvx run -- prisma migrate deploy   # 建表
 pnpm --dir servers/server run seed-modules                            # 组件库
-pnpm --dir servers/server run seed-bi-user                            # 初始超管（见下方登录说明）
+pnpm --dir servers/server run seed-bi-user                            # 初始超管（口令见 SEED_ADMIN_PASSWORD）
 pnpm --dir servers/server run seed-embeddings -- --reset              # 组件 RAG 向量（需 EMBEDDING_MODEL_*）
 ```
 

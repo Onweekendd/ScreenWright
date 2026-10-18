@@ -114,11 +114,10 @@ defineExpose({ drawerWidth, visible });
   font-size: 13px;
   color: $color-text-primary;
   font-family: $font-family-panel;
-  /* append-to-body 后铺满视口，桌面端要避开顶部自定义标题栏（Web 端该变量为 0）。
-     多套一层 .rtl 是为了压过 element-plus 同权重的 .el-drawer.rtl { top: 0; height: 100% } */
+  /* append-to-body 后铺满视口。多套一层 .rtl 是为了压过 element-plus 同权重的 .el-drawer.rtl { top: 0; height: 100% } */
   &.rtl {
-    top: var(--sw-titlebar-height, 0px);
-    height: calc(100% - var(--sw-titlebar-height, 0px));
+    top: 0;
+    height: 100%;
   }
 
   &.is-resizing {

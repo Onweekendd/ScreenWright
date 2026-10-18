@@ -1,4 +1,3 @@
-import { isTauri } from "@tauri-apps/api/core";
 import { ElMessage, ElNotification } from "element-plus";
 import JSZip from "jszip";
 
@@ -242,12 +241,9 @@ export class ExportTask {
       const failedAssets = await downloadInto(ctx.zip, ctx.assetEntries);
 
       const blob = await ctx.zip.generateAsync({ type: "blob" });
-      const saved = await downFile(blob, `${ctx.outputName}-${ctx.id}.zip`);
-      if (!saved) {
-        return; // 桌面端：用户在保存对话框里取消了
-      }
+      await downFile(blob, `${ctx.outputName}-${ctx.id}.zip`);
 
-      const savedHint = isTauri() ? "文件已保存" : "如果浏览器提示下载请允许";
+      const savedHint = "如果浏览器提示下载请允许";
       if (failedAssets.length) {
         ElMessage.warning(`导出完成，但有 ${failedAssets.length} 个素材下载失败，已跳过`);
         console.warn("[export] 素材下载失败：", failedAssets);

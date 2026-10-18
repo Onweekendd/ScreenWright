@@ -39,13 +39,18 @@ app.onError((error, c) => {
   return c.json(fail(null, message, 500), 500);
 });
 
-const corsAllowList = [process.env.CORS_ORIGIN ?? "http://localhost:5173", "http://localhost:3000"];
+// CORS_ORIGIN 支持逗号分隔多个源（B/S 部署时填前端公网域名，如 https://bi.example.com）；
+// 同域（ingress 反代）部署时浏览器不发跨域请求，可不填。
+const corsAllowList = [
+  ...(process.env.CORS_ORIGIN ?? "http://localhost:5173")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean),
+  "http://localhost:3000"
+];
 
 const isDevPrivateOrigin = (origin: string) =>
   /^https?:\/\/(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+)(:\d+)?$/.test(origin);
-
-// Tauri 桌面外壳的 webview 源：Windows 为 http(s)://tauri.localhost，macOS/Linux 为 tauri://localhost
-const isTauriOrigin = (origin: string) => /^(tauri:\/\/localhost|https?:\/\/tauri\.localhost)$/.test(origin);
 
 app.use(
   "/*",
@@ -54,7 +59,7 @@ app.use(
       if (!origin) {
         return null;
       }
-      if (corsAllowList.includes(origin) || isDevPrivateOrigin(origin) || isTauriOrigin(origin)) {
+      if (corsAllowList.includes(origin) || isDevPrivateOrigin(origin)) {
         return origin;
       }
       return null;

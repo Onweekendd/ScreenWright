@@ -123,16 +123,6 @@
       ],
       "cache": false
     },
-    "@screenwright/app#dev:desktop": {
-      "persistent": true,
-      "dependsOn": [
-        "@screenwright/server#build:client",
-        "@screenwright/server#build:server",
-        "@screenwright/types#build",
-        "@screenwright/ui#build"
-      ],
-      "cache": false
-    },
     "@screenwright/server#build:server": {
       "dependsOn": [
         "@screenwright/types#build",
@@ -141,15 +131,6 @@
         "create-screenwright-app#build"
       ],
       "outputs": ["dist/server.mjs"],
-      "cache": false
-    },
-    "build:desktop": {
-      "dependsOn": [
-        "^build",
-        "@screenwright/server#build:client",
-        "@screenwright/server#build:server"
-      ],
-      "outputs": ["dist/**"],
       "cache": false
     },
     "dev": {

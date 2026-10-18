@@ -1,6 +1,5 @@
 <template>
-  <div class="app-shell" :class="{ 'app-shell--desktop': isDesktopShell }">
-    <DesktopTitleBar v-if="isDesktopShell" />
+  <div class="app-shell">
     <div class="app-shell__body">
       <router-view v-slot="{ Component }">
         <transition name="fade">
@@ -20,11 +19,9 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import { useGlobalLoading } from "@/hooks/useGlobalLoading";
-import { isDesktop } from "@/utils/platform";
 import { parseUrl } from "@/utils/utils";
 import AgentBI from "@/views/build/components/agentBI/index.vue";
 
-import DesktopTitleBar from "./layout/DesktopTitleBar/index.vue";
 import { useMountGlobalHooks } from "./views/build/useMountGlobalHooks";
 
 const LoadingComponent = defineAsyncComponent(
@@ -37,14 +34,6 @@ const agentBIRef = ref<InstanceType<typeof AgentBI> | null>(null);
 
 const route = useRoute();
 const isBuildRoute = computed(() => route.path.startsWith("/build"));
-
-// 桌面端（Tauri）外壳：隐藏系统标题栏，改用自定义标题栏。
-// /view 预览是独立裸渲染窗口（保留系统标题栏），不套外壳。
-const isDesktopShell = computed(() => isDesktop() && !route.path.startsWith("/view"));
-
-watchEffect(() => {
-  document.documentElement.classList.toggle("is-desktop", isDesktopShell.value);
-});
 
 const contentStyle = computed(() => {
   const base: Record<string, string> = { height: "100%" };

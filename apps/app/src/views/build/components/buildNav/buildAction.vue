@@ -15,14 +15,10 @@ import { useRoute, useRouter } from "vue-router";
 
 withDefaults(defineProps<{ compact?: boolean }>(), { compact: false });
 
-import { ElMessage } from "element-plus";
-
-import { isDesktop } from "@/utils/platform";
 import { removeSurroundingQuotes } from "@/utils/utils";
 import { getVersionCode, setVersionCode } from "@/utils/version";
 
 import { useRestore } from "../../hooks/useRestore";
-import { useLargeScreenInfo } from "../../useLargeScreenInfo";
 import { useNavAction } from "../../useNavAction";
 import actionItem from "../actionItem/index.vue";
 import { useAgentBISessions } from "../agentBI/useAgentBISessions";
@@ -31,7 +27,6 @@ import buildClose from "./buildClose.vue";
 
 const router = useRouter();
 const route = useRoute();
-const { navInfo } = useLargeScreenInfo();
 const { restore } = useRestore();
 const {
   sideShow,
@@ -47,29 +42,6 @@ const {
 } = useNavAction();
 const { visible } = useAgentBISessions();
 
-// 桌面端（Tauri）：弹出子窗口预览，避免 window.open 走系统浏览器 / 丢失应用上下文
-const openPreviewInDesktopWindow = async (href: string) => {
-  try {
-    const { WebviewWindow } = await import("@tauri-apps/api/webviewWindow");
-    const label = `preview-${route.params.id}-${Date.now()}`;
-    const previewWindow = new WebviewWindow(label, {
-      url: href,
-      title: `预览${navInfo.value.name ? ` - ${navInfo.value.name}` : ""}`,
-      width: 1440,
-      height: 900,
-      // 关闭 Tauri 原生拖放拦截，否则 HTML5 拖拽（vuedraggable/SortableJS）在 webview 里失效
-      dragDropEnabled: false
-    });
-    previewWindow.once("tauri://error", (error) => {
-      console.error("创建预览子窗口失败：", error);
-      ElMessage.error("预览窗口创建失败");
-    });
-  } catch (error) {
-    console.error("加载 Tauri 预览窗口能力失败：", error);
-    ElMessage.error("预览窗口创建失败");
-  }
-};
-
 const handlePreview = () => {
   const versionCode = getVersionCode();
   if (!versionCode) {
@@ -84,12 +56,7 @@ const handlePreview = () => {
     }
   });
 
-  if (isDesktop()) {
-    openPreviewInDesktopWindow(href);
-  } else {
-    // Web 端：新开浏览器标签页
-    window.open(href, "_blank");
-  }
+  window.open(href, "_blank");
 };
 
 const close = () => {

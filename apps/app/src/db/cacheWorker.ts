@@ -2,7 +2,7 @@
  * 缓存处理Worker
  * 负责处理缓存数据的构建和数据库写入操作，避免主线程阻塞
  */
-import { apiClient } from "@screenwright/server/rpc";
+import { apiClient, setApiAuthTokenProvider } from "@screenwright/server/rpc";
 import type { LargeScreeInfo, LargeScreenDetailInfo, ParsedLargeScreenInfo } from "@screenwright/types";
 import dayjs from "dayjs";
 
@@ -44,6 +44,8 @@ export interface WorkerMessage {
   type: "CACHE_DATA" | "GET_CACHE_DATA" | "INIT_DB";
   payload: any;
   requestId?: string;
+  /** 主线程当前登录令牌；Worker 里没有 localStorage，同步工作区请求要靠它带身份 */
+  authToken?: string | null;
 }
 
 export interface WorkerResponse {
@@ -192,9 +194,16 @@ async function getCacheData(id: number, versionCode: string): Promise<CacheData 
 // 创建防抖的缓存+同步函数
 const debouncedCacheAndSync = debounce(cacheAndSync, 200);
 
+// Worker 内取不到 localStorage，令牌随每条主线程消息下发，请求时现取最近一次
+let latestAuthToken: string | null = null;
+setApiAuthTokenProvider(() => latestAuthToken);
+
 // 监听主线程消息
 self.addEventListener("message", async (event: MessageEvent<WorkerMessage>) => {
-  const { type, payload, requestId } = event.data;
+  const { type, payload, requestId, authToken } = event.data;
+  if (authToken !== undefined) {
+    latestAuthToken = authToken;
+  }
 
   try {
     switch (type) {

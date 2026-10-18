@@ -4,57 +4,55 @@ import { useTitle } from "@/hooks/useTitle";
 import router from "@/router";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import { useUserStoreHook } from "@/store/modules/user";
+import { getToken } from "@/utils/auth";
+import { safeRedirectTarget } from "@/utils/session";
 
-import { isWhiteList, whiteUserFetchList } from "./white-list";
+import { isPublicRoute, isWhiteList, whiteUserFetchList } from "./white-list";
 
 const { setTitle } = useTitle();
 const userStore = useUserStoreHook();
 const permissionStore = usePermissionStoreHook();
 let skipNextDisplayMenuRefresh = false;
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * 桌面外壳首启时后端可能还在预热（加载 mastra.db / 建索引），
- * 用户 / 菜单接口会短暂拒绝连接。重试几次，避免守卫抛错把路由永久卡死。
- */
-async function withRetry<T>(fn: () => Promise<T>, attempts = 6, delay = 1500): Promise<T> {
-  let lastErr: unknown;
-  for (let i = 0; i < attempts; i++) {
-    try {
-      return await fn();
-    } catch (err) {
-      lastErr = err;
-      if (i < attempts - 1) {
-        await sleep(delay);
-      }
-    }
-  }
-  throw lastErr;
-}
-
-// 开源单机版：无登录。仍保留菜单初始化 + 当前用户信息拉取（供 createdBy 等字段取值）+ 独立页（大屏预览/分享/终端）跳过 app 外壳。
 router.beforeEach(async (to, from, next) => {
   const shouldRefreshMenu = to.path === "/display";
+  const token = getToken();
 
   // 独立渲染页：不走菜单 / 动态路由那套
   if (isWhiteList(to)) {
     next();
     return;
   }
-  // 旧的登录页地址一律回主页
-  if (to.path === "/login") {
-    next({ path: "/display" });
+
+  // 登录页：已登录直接回到来源页 / 主页，未登录放行
+  if (to.name === "login") {
+    if (token) {
+      next({ path: safeRedirectTarget(to.query.redirect), replace: true });
+    } else {
+      next();
+    }
+    return;
+  }
+
+  // 分享预览页：匿名可看；已登录则照常走下面的初始化，拿到完整的用户 / 菜单上下文
+  if (isPublicRoute(to) && !token) {
+    next();
+    return;
+  }
+
+  // 其余页面必须登录，带上目标地址以便登录后回跳
+  if (!token) {
+    next({ name: "login", query: { redirect: to.fullPath }, replace: true });
     return;
   }
 
   try {
     if (!whiteUserFetchList.includes(to.name as string)) {
-      await withRetry(() => userStore.fetchCurrentUser());
+      await userStore.fetchCurrentUser();
     }
 
     if (!userStore.isRequestMenu) {
-      await withRetry(() => userStore.getRouteList(shouldRefreshMenu));
+      await userStore.getRouteList(shouldRefreshMenu);
       permissionStore.setRoutes();
       permissionStore.dynamicRoutes.forEach((route) => {
         router.addRoute(route);
@@ -82,9 +80,13 @@ router.beforeEach(async (to, from, next) => {
     }
     next();
   } catch (err: unknown) {
+    // 401 已由请求层统一处理（清登录态 + 跳登录页），这里只提示其余错误；
     // 无论如何都要放行，避免 router.isReady() 永不 resolve、首屏一直卡在加载页
-    const message = err instanceof Error ? err.message : "路由初始化失败";
-    ElMessage.error(message);
+    const status = (err as { response?: { status?: number } })?.response?.status;
+    if (status !== 401) {
+      const message = err instanceof Error ? err.message : "路由初始化失败";
+      ElMessage.error(message);
+    }
     next();
   }
 });

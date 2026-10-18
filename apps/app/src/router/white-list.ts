@@ -21,4 +21,8 @@ const isWhiteList = (to: RouteLocationNormalized) => {
 /** 跳过「拉取当前用户信息」的路由（匹配路由 name） */
 const whiteUserFetchList = ["view"];
 
-export { isWhiteList, whiteList, whiteUserFetchList };
+/** 无需登录即可访问的页面（匹配路由 name）：登录页、已发布大屏的分享预览 */
+const publicRouteNames = ["login", "view", "panelView"];
+const isPublicRoute = (to: RouteLocationNormalized) => publicRouteNames.includes(to.name as string);
+
+export { isPublicRoute, isWhiteList, whiteList, whiteUserFetchList };

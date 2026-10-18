@@ -10,10 +10,11 @@ import Exception from "@/views/exception/index.vue";
  */
 export const constantRoutes: RouteRecordRaw[] = [
   {
-    // 开源单机版无登录：旧地址重定向到主页
     path: "/login",
-    redirect: "/display",
+    name: "login",
+    component: () => import("@/views/login/index.vue"),
     meta: {
+      title: "登录",
       hidden: true
     }
   },

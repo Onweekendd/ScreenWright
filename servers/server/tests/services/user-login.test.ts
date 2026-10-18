@@ -99,7 +99,9 @@ describe("login", () => {
 
 describe("POST /login 路由", () => {
   const app = new Hono();
-  app.onError((e, c) => (e instanceof HTTPException ? c.json(fail(null, e.message, e.status), e.status) : c.text("err", 500)));
+  app.onError((e, c) =>
+    e instanceof HTTPException ? c.json(fail(null, e.message, e.status), e.status) : c.text("err", 500)
+  );
   app.route("/user", userRouter);
 
   const post = (body: unknown) =>

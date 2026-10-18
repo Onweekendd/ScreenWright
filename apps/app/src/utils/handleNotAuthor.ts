@@ -1,5 +1,6 @@
 import { useGlobalLoading } from "@/hooks/useGlobalLoading";
 
+import { handleUnauthorized } from "./session";
 import { handleMessageBox } from "./utils";
 export const handleNotAuthor = (() => {
   const { hideLoading, loadingScene } = useGlobalLoading();
@@ -25,6 +26,11 @@ export const handleNotAuthor = (() => {
   };
 
   return (status: number) => {
+    // 401：令牌缺失 / 过期 → 清登录态跳登录页；403：已登录但无权限 → 弹窗提示
+    if (status === 401) {
+      handleUnauthorized();
+      return;
+    }
     if (status !== 403) {
       return;
     }

@@ -34,7 +34,7 @@ export interface User {
   updatedBy: string;
   updatedTime: string;
 }
-interface LoginResult {
+export interface LoginResult {
   token: string;
   userInfo: User;
 }

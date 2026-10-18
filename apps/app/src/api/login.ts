@@ -1,8 +1,17 @@
-import type { TreeRes, UserRes } from "@/model/Login";
+import type { LoginReq, LoginRes, TreeRes, UserRes } from "@/model/Login";
 import { BaseName } from "@/utils/config";
 import { serverRequest } from "@/utils/serverService";
 
-// 开源单机版无登录：仅保留 菜单 / 当前用户 查询（baseURL = VITE_FUNAI_API_URL）
+// 登录 / 当前用户 / 菜单（baseURL = VITE_FUNAI_API_URL）
+
+/** 用户名密码登录；成功返回 { token, userInfo } */
+export const login = (data: Pick<LoginReq, "username" | "password">) => {
+  return serverRequest<LoginRes>({
+    url: `${BaseName.User}/login`,
+    method: "post",
+    data
+  });
+};
 
 export const getCurrentUser = () => {
   return serverRequest<UserRes>({

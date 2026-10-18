@@ -27,7 +27,7 @@ function toModuleInfo(row: ModuleRow) {
 export async function listModules(req: { current?: number; size?: number; name?: string }) {
   const current = req.current ?? 1;
   const size = req.size ?? 200;
-  const where = req.name ? { name: { contains: req.name } } : {};
+  const where = req.name ? { name: { contains: req.name, mode: "insensitive" as const } } : {};
   const [total, rows] = await Promise.all([
     prismaClient.module.count({ where }),
     prismaClient.module.findMany({

@@ -160,7 +160,7 @@ export async function listSources(
   const size = req.size ?? 10;
   const where: Prisma.DataSourceWhereInput = { userId, type };
   if (req.name) {
-    where.name = { contains: req.name };
+    where.name = { contains: req.name, mode: "insensitive" };
   }
   if (req.groupId && req.groupId > 0) {
     where.dataGroupId = req.groupId;
@@ -372,7 +372,7 @@ export async function listLocals(
   const size = req.size ?? 10;
   const where: Prisma.DataLocalWhereInput = { userId };
   if (req.name) {
-    where.name = { contains: req.name };
+    where.name = { contains: req.name, mode: "insensitive" };
   }
   if (req.groupId && req.groupId > 0) {
     where.dataGroupId = req.groupId;

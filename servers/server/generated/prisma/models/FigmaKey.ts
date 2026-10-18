@@ -1337,6 +1337,7 @@ export type FigmaKeyCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many FigmaKeys.
    */
   data: Prisma.FigmaKeyCreateManyInput | Prisma.FigmaKeyCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1355,6 +1356,7 @@ export type FigmaKeyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many FigmaKeys.
    */
   data: Prisma.FigmaKeyCreateManyInput | Prisma.FigmaKeyCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

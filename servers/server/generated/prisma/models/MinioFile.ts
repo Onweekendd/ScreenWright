@@ -1474,6 +1474,7 @@ export type MinioFileCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many MinioFiles.
    */
   data: Prisma.MinioFileCreateManyInput | Prisma.MinioFileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1492,6 +1493,7 @@ export type MinioFileCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many MinioFiles.
    */
   data: Prisma.MinioFileCreateManyInput | Prisma.MinioFileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

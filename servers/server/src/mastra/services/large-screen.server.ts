@@ -243,7 +243,7 @@ export async function listScreens(userId: number, role: number, req: ScreenListR
     where.userId = userId;
   } // 超管可看全部
   if (name) {
-    where.name = { contains: name };
+    where.name = { contains: name, mode: "insensitive" };
   }
   if (typeof groupId === "number" && groupId > 0) {
     where.groupId = groupId;

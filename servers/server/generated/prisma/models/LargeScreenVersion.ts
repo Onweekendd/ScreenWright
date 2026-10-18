@@ -1442,6 +1442,7 @@ export type LargeScreenVersionCreateManyArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many LargeScreenVersions.
    */
   data: Prisma.LargeScreenVersionCreateManyInput | Prisma.LargeScreenVersionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1460,6 +1461,7 @@ export type LargeScreenVersionCreateManyAndReturnArgs<ExtArgs extends runtime.Ty
    * The data used to create many LargeScreenVersions.
    */
   data: Prisma.LargeScreenVersionCreateManyInput | Prisma.LargeScreenVersionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

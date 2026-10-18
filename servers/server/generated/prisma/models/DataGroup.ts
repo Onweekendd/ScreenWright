@@ -1086,6 +1086,7 @@ export type DataGroupCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many DataGroups.
    */
   data: Prisma.DataGroupCreateManyInput | Prisma.DataGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1104,6 +1105,7 @@ export type DataGroupCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many DataGroups.
    */
   data: Prisma.DataGroupCreateManyInput | Prisma.DataGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

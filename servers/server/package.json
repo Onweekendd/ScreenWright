@@ -40,7 +40,7 @@
   "engines": {
     "node": ">=22.13.0"
   },
-  "//files": "仅影响 pnpm deploy / pack（桌面端 sidecar 打包）；workspace 消费方仍走符号链接全目录",
+  "//files": "仅影响 pnpm deploy / pack；workspace 消费方仍走符号链接全目录",
   "files": [
     "dist",
     "generated",
@@ -70,12 +70,12 @@
     "@mastra/core": "1.66.0",
     "@mastra/evals": "1.10.1",
     "@mastra/hono": "1.7.8",
-    "@mastra/libsql": "1.22.5",
     "@mastra/loggers": "1.3.1",
     "@mastra/mcp": "1.17.3",
     "@mastra/memory": "1.29.0",
     "@mastra/observability": "1.17.7",
-    "@prisma/adapter-better-sqlite3": "7.2.0",
+    "@mastra/pg": "1.25.0",
+    "@prisma/adapter-pg": "7.2.0",
     "@prisma/client": "7.2.0",
     "@types/proper-lockfile": "^4.1.4",
     "ai": "^6.0.282",
@@ -100,7 +100,7 @@
     "yoga-layout": "^3.2.1",
     "zod": "^4.1.13"
   },
-  "//optionalDependencies": "minio 仅在 STORAGE_DRIVER=minio 或 RECORD_SINK=both 时懒加载（见 src/lib/storage/minio-object-store.ts）；纯 fs 部署（开源 / 桌面 sidecar）可用 pnpm install --no-optional 剔除",
+  "//optionalDependencies": "minio 仅在 STORAGE_DRIVER=minio 或 RECORD_SINK=both 时懒加载（见 src/lib/storage/minio-object-store.ts）；纯 fs 部署可用 pnpm install --no-optional 剔除",
   "optionalDependencies": {
     "minio": "^8.0.7"
   },

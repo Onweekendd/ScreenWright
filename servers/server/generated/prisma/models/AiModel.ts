@@ -1106,6 +1106,7 @@ export type AiModelCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many AiModels.
    */
   data: Prisma.AiModelCreateManyInput | Prisma.AiModelCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1124,6 +1125,7 @@ export type AiModelCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many AiModels.
    */
   data: Prisma.AiModelCreateManyInput | Prisma.AiModelCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

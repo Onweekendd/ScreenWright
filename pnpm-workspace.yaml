@@ -6,7 +6,6 @@ packages:
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@prisma/engines'
-  - better-sqlite3
   - canvas
   - esbuild
   - prisma

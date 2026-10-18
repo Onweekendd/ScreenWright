@@ -1,11 +1,10 @@
-import { LibSQLStore } from "@mastra/libsql";
 import { Memory } from "@mastra/memory";
+import { PostgresStore } from "@mastra/pg";
 import { z } from "zod";
-
-import { sqliteUrl } from "@/lib/db/sqlite-url";
 
 import { vector } from "../vector";
 import { embeddingModel } from "../vector/embeddingModel";
+import { mastraDatabaseSchema } from "./database-schema";
 
 const workingMemoryItem = z.string().trim().min(1).max(500);
 
@@ -44,11 +43,11 @@ export const biThreadWorkingMemorySchema = z
     "当前 BI 对话线程的工作状态。不要保存组件完整配置、编辑器快照、工具原始结果、密钥，或可从 Workspace、数据库和运行时重新读取的事实。"
   );
 
-// 单机版：Mastra 记忆/线程/追踪落 SQLite（libsql）。
-// URL 由 MASTRA_DATABASE_URL 提供（如 file:./.data/mastra.db），相对路径以 servers/server 为基准。
-export const storage = new LibSQLStore({
-  id: "libsql-storage",
-  url: sqliteUrl("MASTRA_DATABASE_URL", "file:./.data/mastra.db")
+// Mastra 记忆/线程/追踪落 PostgreSQL（独立 schema）。连接串由 MASTRA_DATABASE_URL 提供。
+export const storage = new PostgresStore({
+  id: "pg-storage",
+  connectionString: process.env.MASTRA_DATABASE_URL!,
+  schemaName: mastraDatabaseSchema
 });
 
 export const memory = new Memory({

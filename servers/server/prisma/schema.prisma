@@ -11,7 +11,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 /// AI 模型配置：只 4 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
@@ -185,7 +185,7 @@ model LlmExchangeRecord {
   model              String?
   status             Int?
   ok                 Boolean?
-  toolNames          Json      @default("[]") @map("tool_names") // 本步调用的工具名列表（SQLite 无原生数组，存 JSON string[]）
+  toolNames          String[]  @default([]) @map("tool_names") // 本步调用的工具名列表
   toolCallCount      Int       @default(0) @map("tool_call_count")
   toolFailures       Int?      @map("tool_failures") // 到本步为止,请求历史里可见的失败工具结果数(累计,按分支取最大值即该分支总数)
   at                 DateTime? // LLM 往返时间戳

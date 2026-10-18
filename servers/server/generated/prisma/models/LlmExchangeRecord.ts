@@ -345,7 +345,7 @@ export type LlmExchangeRecordGroupByOutputType = {
   model: string | null
   status: number | null
   ok: boolean | null
-  toolNames: runtime.JsonValue
+  toolNames: string[]
   toolCallCount: number
   toolFailures: number | null
   at: Date | null
@@ -396,7 +396,7 @@ export type LlmExchangeRecordWhereInput = {
   model?: Prisma.StringNullableFilter<"LlmExchangeRecord"> | string | null
   status?: Prisma.IntNullableFilter<"LlmExchangeRecord"> | number | null
   ok?: Prisma.BoolNullableFilter<"LlmExchangeRecord"> | boolean | null
-  toolNames?: Prisma.JsonFilter<"LlmExchangeRecord">
+  toolNames?: Prisma.StringNullableListFilter<"LlmExchangeRecord">
   toolCallCount?: Prisma.IntFilter<"LlmExchangeRecord"> | number
   toolFailures?: Prisma.IntNullableFilter<"LlmExchangeRecord"> | number | null
   at?: Prisma.DateTimeNullableFilter<"LlmExchangeRecord"> | Date | string | null
@@ -456,7 +456,7 @@ export type LlmExchangeRecordWhereUniqueInput = Prisma.AtLeast<{
   model?: Prisma.StringNullableFilter<"LlmExchangeRecord"> | string | null
   status?: Prisma.IntNullableFilter<"LlmExchangeRecord"> | number | null
   ok?: Prisma.BoolNullableFilter<"LlmExchangeRecord"> | boolean | null
-  toolNames?: Prisma.JsonFilter<"LlmExchangeRecord">
+  toolNames?: Prisma.StringNullableListFilter<"LlmExchangeRecord">
   toolCallCount?: Prisma.IntFilter<"LlmExchangeRecord"> | number
   toolFailures?: Prisma.IntNullableFilter<"LlmExchangeRecord"> | number | null
   at?: Prisma.DateTimeNullableFilter<"LlmExchangeRecord"> | Date | string | null
@@ -520,7 +520,7 @@ export type LlmExchangeRecordScalarWhereWithAggregatesInput = {
   model?: Prisma.StringNullableWithAggregatesFilter<"LlmExchangeRecord"> | string | null
   status?: Prisma.IntNullableWithAggregatesFilter<"LlmExchangeRecord"> | number | null
   ok?: Prisma.BoolNullableWithAggregatesFilter<"LlmExchangeRecord"> | boolean | null
-  toolNames?: Prisma.JsonWithAggregatesFilter<"LlmExchangeRecord">
+  toolNames?: Prisma.StringNullableListFilter<"LlmExchangeRecord">
   toolCallCount?: Prisma.IntWithAggregatesFilter<"LlmExchangeRecord"> | number
   toolFailures?: Prisma.IntNullableWithAggregatesFilter<"LlmExchangeRecord"> | number | null
   at?: Prisma.DateTimeNullableWithAggregatesFilter<"LlmExchangeRecord"> | Date | string | null
@@ -548,7 +548,7 @@ export type LlmExchangeRecordCreateInput = {
   model?: string | null
   status?: number | null
   ok?: boolean | null
-  toolNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toolNames?: Prisma.LlmExchangeRecordCreatetoolNamesInput | string[]
   toolCallCount?: number
   toolFailures?: number | null
   at?: Date | string | null
@@ -576,7 +576,7 @@ export type LlmExchangeRecordUncheckedCreateInput = {
   model?: string | null
   status?: number | null
   ok?: boolean | null
-  toolNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toolNames?: Prisma.LlmExchangeRecordCreatetoolNamesInput | string[]
   toolCallCount?: number
   toolFailures?: number | null
   at?: Date | string | null
@@ -604,7 +604,7 @@ export type LlmExchangeRecordUpdateInput = {
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ok?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toolNames?: Prisma.LlmExchangeRecordUpdatetoolNamesInput | string[]
   toolCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   toolFailures?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -632,7 +632,7 @@ export type LlmExchangeRecordUncheckedUpdateInput = {
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ok?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toolNames?: Prisma.LlmExchangeRecordUpdatetoolNamesInput | string[]
   toolCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   toolFailures?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -660,7 +660,7 @@ export type LlmExchangeRecordCreateManyInput = {
   model?: string | null
   status?: number | null
   ok?: boolean | null
-  toolNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toolNames?: Prisma.LlmExchangeRecordCreatetoolNamesInput | string[]
   toolCallCount?: number
   toolFailures?: number | null
   at?: Date | string | null
@@ -688,7 +688,7 @@ export type LlmExchangeRecordUpdateManyMutationInput = {
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ok?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toolNames?: Prisma.LlmExchangeRecordUpdatetoolNamesInput | string[]
   toolCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   toolFailures?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -716,7 +716,7 @@ export type LlmExchangeRecordUncheckedUpdateManyInput = {
   model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   ok?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  toolNames?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toolNames?: Prisma.LlmExchangeRecordUpdatetoolNamesInput | string[]
   toolCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   toolFailures?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -732,6 +732,14 @@ export type LlmExchangeRecordUncheckedUpdateManyInput = {
   objectKey?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type LlmExchangeRecordThreadIdTurnIndexStepCompoundUniqueInput = {
@@ -850,8 +858,17 @@ export type LlmExchangeRecordSumOrderByAggregateInput = {
   reasoningTokens?: Prisma.SortOrder
 }
 
+export type LlmExchangeRecordCreatetoolNamesInput = {
+  set: string[]
+}
+
 export type NullableBoolFieldUpdateOperationsInput = {
   set?: boolean | null
+}
+
+export type LlmExchangeRecordUpdatetoolNamesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 
@@ -983,7 +1000,7 @@ export type $LlmExchangeRecordPayload<ExtArgs extends runtime.Types.Extensions.I
     model: string | null
     status: number | null
     ok: boolean | null
-    toolNames: runtime.JsonValue
+    toolNames: string[]
     toolCallCount: number
     toolFailures: number | null
     at: Date | null
@@ -1431,7 +1448,7 @@ export interface LlmExchangeRecordFieldRefs {
   readonly model: Prisma.FieldRef<"LlmExchangeRecord", 'String'>
   readonly status: Prisma.FieldRef<"LlmExchangeRecord", 'Int'>
   readonly ok: Prisma.FieldRef<"LlmExchangeRecord", 'Boolean'>
-  readonly toolNames: Prisma.FieldRef<"LlmExchangeRecord", 'Json'>
+  readonly toolNames: Prisma.FieldRef<"LlmExchangeRecord", 'String[]'>
   readonly toolCallCount: Prisma.FieldRef<"LlmExchangeRecord", 'Int'>
   readonly toolFailures: Prisma.FieldRef<"LlmExchangeRecord", 'Int'>
   readonly at: Prisma.FieldRef<"LlmExchangeRecord", 'DateTime'>
@@ -1652,6 +1669,7 @@ export type LlmExchangeRecordCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many LlmExchangeRecords.
    */
   data: Prisma.LlmExchangeRecordCreateManyInput | Prisma.LlmExchangeRecordCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1670,6 +1688,7 @@ export type LlmExchangeRecordCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many LlmExchangeRecords.
    */
   data: Prisma.LlmExchangeRecordCreateManyInput | Prisma.LlmExchangeRecordCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

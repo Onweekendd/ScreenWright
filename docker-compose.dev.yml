@@ -1,0 +1,21 @@
+# 本地开发依赖：PostgreSQL + pgvector。完整部署编排见后续阶段（P2）。
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: funbi-dev-pg
+    environment:
+      POSTGRES_USER: funbi
+      POSTGRES_PASSWORD: funbi_dev
+      POSTGRES_DB: funbi
+    ports:
+      - "5432:5432"
+    volumes:
+      - funbi_dev_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U funbi -d funbi"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  funbi_dev_pgdata:

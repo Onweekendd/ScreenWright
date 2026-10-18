@@ -23,7 +23,7 @@ function serializeRecord(record: {
   model: string | null;
   status: number | null;
   ok: boolean | null;
-  toolNames: unknown; // SQLite 下为 Json（string[]）
+  toolNames: string[];
   toolCallCount: number;
   at: Date | null;
   generationTimeMs: number | null;
@@ -49,7 +49,7 @@ function serializeRecord(record: {
     model: record.model,
     status: record.status,
     ok: record.ok,
-    toolNames: Array.isArray(record.toolNames) ? record.toolNames : [],
+    toolNames: record.toolNames,
     toolCallCount: record.toolCallCount,
     at: record.at?.toISOString() ?? null,
     generationTimeMs: record.generationTimeMs,

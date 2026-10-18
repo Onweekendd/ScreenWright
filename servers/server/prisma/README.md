@@ -1,11 +1,11 @@
-# SQLite schema 与迁移
+# PostgreSQL schema 与迁移
 
-开源单机版：Screenwright 与 Mastra 都落 SQLite，互不共用文件。
+Screenwright 业务表与 Mastra 存储共用一个 PostgreSQL 实例（需要 pgvector 扩展），按 schema 隔离：
 
-- `PRISMA_DATABASE_URL`（如 `file:./.data/screenwright.db`）：Prisma 管理的业务表、eval 表、figma 表 + `_prisma_migrations`
-- `MASTRA_DATABASE_URL`（如 `file:./.data/mastra.db`）：Mastra storage / memory / 追踪 + 组件 RAG 向量（libsql）。Mastra 首次启动自建，不进 `schema.prisma`
+- `PRISMA_DATABASE_URL`：Prisma 管理的业务表、eval 表、figma 表（`public` schema）+ `_prisma_migrations`
+- `MASTRA_DATABASE_URL` + `MASTRA_DATABASE_SCHEMA`（默认 `mastra`）：Mastra storage / memory / 追踪 + 组件 RAG 向量（pgvector）。Mastra 首次启动自建，不进 `schema.prisma`
 
-相对路径以 `servers/server` 为基准；`.data/` 已在 `.gitignore`。
+本地起库：仓库根目录 `docker compose -f docker-compose.dev.yml up -d`。
 
 ## 日常迁移
 
@@ -26,8 +26,8 @@ pnpm --dir servers/server exec dotenvx run -- prisma migrate deploy
 ```bash
 pnpm --dir servers/server exec dotenvx run -- prisma migrate deploy   # 建表
 pnpm --dir servers/server run seed-modules                            # 组件库
-pnpm --dir servers/server run seed-bi-user                            # 默认超管 admin/admin123
+pnpm --dir servers/server run seed-bi-user                            # 初始超管（见下方登录说明）
 pnpm --dir servers/server run seed-embeddings -- --reset              # 组件 RAG 向量（需 EMBEDDING_MODEL_*）
 ```
 
-> 迁移前的 PostgreSQL + pgvector 方案已废弃；历史 PG migration 见 git 记录。
+> 历史上曾短暂切到 SQLite（桌面版），现已回到 PostgreSQL；`0_init` 为重新基线后的 PG 迁移。

@@ -57,7 +57,7 @@ export async function pageFiles(
   const size = Number(req.size ?? 20);
   const where: Prisma.MinioFileWhereInput = { userId };
   if (req.name) {
-    where.name = { contains: String(req.name) };
+    where.name = { contains: String(req.name), mode: "insensitive" };
   }
   const gid = Number(req.groupId);
   if (Number.isFinite(gid) && gid > 0) {
@@ -85,7 +85,7 @@ export async function pageSystemMaterials(req: {
   const size = Math.max(1, Number(req.size ?? 20));
   const where: Prisma.MinioFileWhereInput = { userId: null, fileType: SYSTEM_MATERIAL_TYPE };
   if (req.name) {
-    where.name = { contains: String(req.name) };
+    where.name = { contains: String(req.name), mode: "insensitive" };
   }
   const gid = Number(req.groupId);
   if (Number.isFinite(gid) && gid > 0) {

@@ -1169,6 +1169,7 @@ export type GeneratedImageCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many GeneratedImages.
    */
   data: Prisma.GeneratedImageCreateManyInput | Prisma.GeneratedImageCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1187,6 +1188,7 @@ export type GeneratedImageCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many GeneratedImages.
    */
   data: Prisma.GeneratedImageCreateManyInput | Prisma.GeneratedImageCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

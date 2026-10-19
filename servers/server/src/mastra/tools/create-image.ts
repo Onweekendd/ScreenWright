@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
-import { generateAndStoreImage } from "@/mastra/services/image-generation.server";
+import { generateImage } from "@/queue/image-client";
 
 /**
  * 从 prompt 派生一个稳定的数字 seed，而不是随机生成。
@@ -42,7 +42,7 @@ export const createImageTool = createTool({
   // 生图慢（实测豆包一次 40+ 秒），不开 background 会卡住整个 agentic loop 干等。
   background: { enabled: true, timeoutMs: 120_000, maxRetries: 1 },
   execute: async ({ prompt, width, height, seedImage }) => {
-    const result = await generateAndStoreImage({
+    const result = await generateImage({
       prompt,
       seed: deriveSeed(prompt),
       width,

@@ -17,5 +17,21 @@ services:
       timeout: 3s
       retries: 10
 
+  redis:
+    image: redis:7-alpine
+    container_name: funbi-dev-redis
+    # 宿主机 6380：6379 常被本机其他项目占用
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - funbi_dev_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
 volumes:
   funbi_dev_pgdata:
+  funbi_dev_redisdata:

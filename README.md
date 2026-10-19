@@ -93,6 +93,19 @@ pnpm dev          # 编辑器   → http://localhost:5173
 
 打开编辑器并登录，进入任意大屏，右侧 **AgentBI** 面板即可开始对话。
 
+### 进程角色与任务队列
+
+后端同一份代码、同一个镜像，用环境变量 `ROLE` 决定进程职责：
+
+| ROLE | 职责 | 备注 |
+|---|---|---|
+| `all`（默认） | 以下全部跑在一个进程里 | 本地开发用，`pnpm server:dev` |
+| `api` | 登录鉴权、大屏 / 图层 / 数据源等业务接口、素材 blob、终端控制 WebSocket | 不加载 Mastra |
+| `ai` | 对话（bi-chat SSE）、Mastra agent / workflow、artifact 沙箱预览 | 单副本，按 threadId 粘性路由 |
+| `worker` | 消费 BullMQ 队列里的长任务（目前是生图），不监听 HTTP | 必须配 `REDIS_URL` |
+
+配了 `REDIS_URL`（本地：`docker compose -f docker-compose.dev.yml up -d redis`，端口 6380）后，生图等长任务走队列、由 worker 进程执行；没配则在当前进程内直接执行。分开部署时，由网关 / ingress 把 `/customApi/*`、`/api/*`、`/artifact-apps/*` 转给 ai，其余转给 api；api、ai、worker 共用同一个 PostgreSQL、同一个 `JWT_SECRET`，多进程使用 fs 存储时还需共享 `BLOB_STORAGE_DIR`（或改用 MinIO）。
+
 ---
 
 ## 技术栈

@@ -5,9 +5,9 @@ vi.mock("@/lib/storage", () => ({
   assetStore: () => storeMocks
 }));
 
-const genMocks = vi.hoisted(() => ({ generateAndStoreImage: vi.fn() }));
-vi.mock("@/mastra/services/image-generation.server", () => ({
-  generateAndStoreImage: genMocks.generateAndStoreImage
+const genMocks = vi.hoisted(() => ({ generateImage: vi.fn() }));
+vi.mock("@/queue/image-client", () => ({
+  generateImage: genMocks.generateImage
 }));
 
 import sharp from "sharp";
@@ -93,7 +93,7 @@ describe("produceRepresentativeAsset", () => {
   };
 
   it("先把代表裁进 assetStore 当参考图，再 img2img 生成，返回生成结果", async () => {
-    genMocks.generateAndStoreImage.mockResolvedValue({ url: "http://x/blobs/generated-images/abc.png" });
+    genMocks.generateImage.mockResolvedValue({ url: "http://x/blobs/generated-images/abc.png" });
     const result = await produceRepresentativeAsset({
       imageId: "img1",
       imageBuffer: image,
@@ -107,14 +107,14 @@ describe("produceRepresentativeAsset", () => {
       expect.any(Buffer),
       { contentType: "image/jpeg" }
     );
-    const call = genMocks.generateAndStoreImage.mock.calls[0][0];
+    const call = genMocks.generateImage.mock.calls[0][0];
     expect(call.seedImageUrl).toBe(`http://x/blobs/${storeMocks.put.mock.calls[0][0]}`);
     expect(call.width * call.height).toBeGreaterThanOrEqual(921_600);
     expect(result).toEqual({ url: "http://x/blobs/generated-images/abc.png", generated: true });
   });
 
   it("生图失败时降级为参考图本身，链路不断", async () => {
-    genMocks.generateAndStoreImage.mockRejectedValue(new Error("没配生图模型"));
+    genMocks.generateImage.mockRejectedValue(new Error("没配生图模型"));
     const result = await produceRepresentativeAsset({
       imageId: "img1",
       imageBuffer: image,
@@ -128,7 +128,7 @@ describe("produceRepresentativeAsset", () => {
   });
 
   it("masks 指定的区域在参考图里被涂成底色：卡片框参考图不带页签，生出来的框才不带页签", async () => {
-    genMocks.generateAndStoreImage.mockResolvedValue({ url: "u" });
+    genMocks.generateImage.mockResolvedValue({ url: "u" });
     // 深蓝底 + 左上角一块亮青色"页签"
     const withTab = await sharp({ create: { width: 400, height: 200, channels: 3, background: "#0a1428" } })
       .composite([
@@ -159,7 +159,7 @@ describe("produceRepresentativeAsset", () => {
   });
 
   it("参考图宽高比超过 16:1 时把裁切框向外扩到 16:1，而不是原样送去被拒", async () => {
-    genMocks.generateAndStoreImage.mockResolvedValue({ url: "u" });
+    genMocks.generateImage.mockResolvedValue({ url: "u" });
     const wide = await sharp({ create: { width: 2000, height: 1000, channels: 3, background: "#000" } })
       .png()
       .toBuffer();
@@ -178,7 +178,7 @@ describe("produceRepresentativeAsset", () => {
   });
 
   it("background 的参考图先糊掉（卡片、文字消失），其它 role 保留原图细节", async () => {
-    genMocks.generateAndStoreImage.mockResolvedValue({ url: "u" });
+    genMocks.generateImage.mockResolvedValue({ url: "u" });
     // 左半黑右半白的图：糊过之后中缝不再是硬边
     const halves = await sharp({
       create: { width: 400, height: 200, channels: 3, background: "#000" }
@@ -227,7 +227,7 @@ describe("produceRepresentativeAsset", () => {
   });
 
   it("seed 落在 int32 正数范围内（方舟与 Prisma Int 的上限）", async () => {
-    genMocks.generateAndStoreImage.mockResolvedValue({ url: "u" });
+    genMocks.generateImage.mockResolvedValue({ url: "u" });
     await produceRepresentativeAsset({
       imageId: "img1",
       imageBuffer: image,
@@ -236,17 +236,17 @@ describe("produceRepresentativeAsset", () => {
       group,
       groupIndex: 0
     });
-    const seed = genMocks.generateAndStoreImage.mock.calls[0][0].seed;
+    const seed = genMocks.generateImage.mock.calls[0][0].seed;
     expect(seed).toBeGreaterThanOrEqual(0);
     expect(seed).toBeLessThanOrEqual(2147483647);
   });
 
   it("同一张图同一组的 seed 稳定，重跑命中幂等", async () => {
-    genMocks.generateAndStoreImage.mockResolvedValue({ url: "u" });
+    genMocks.generateImage.mockResolvedValue({ url: "u" });
     const input = { imageId: "img1", imageBuffer: image, imageWidth: 200, imageHeight: 100, group, groupIndex: 0 };
     await produceRepresentativeAsset(input);
     await produceRepresentativeAsset(input);
-    const [a, b] = genMocks.generateAndStoreImage.mock.calls.map((c) => c[0].seed);
+    const [a, b] = genMocks.generateImage.mock.calls.map((c) => c[0].seed);
     expect(a).toBe(b);
   });
 });

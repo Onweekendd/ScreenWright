@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import sharp from "sharp";
 
 import { assetStore } from "@/lib/storage";
-import { generateAndStoreImage } from "@/mastra/services/image-generation.server";
+import { generateImage } from "@/queue/image-client";
 
 import { type AssetRole, assetRoleSchema, type EffectImageRegion } from "../types";
 import { estimateBackgroundColor, knockOutBackground } from "./knock-out";
@@ -332,7 +332,7 @@ export const produceRepresentativeAsset = async (input: ProduceAssetInput): Prom
   const size = fitGenerationSize(aspect);
 
   try {
-    const generated = await generateAndStoreImage({
+    const generated = await generateImage({
       prompt: promptFor(group.role),
       seed: seedFor(imageId, group.role, groupIndex),
       width: size.width,

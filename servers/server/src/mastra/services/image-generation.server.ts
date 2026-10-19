@@ -154,8 +154,19 @@ const requestGeneration = async (input: GenerateImageInput, reference?: Buffer):
   });
 };
 
+export interface GenerateImageOptions {
+  /** 阶段进度（0~100），供队列任务上报；同步调用方不用传 */
+  onProgress?: (percent: number) => void | Promise<void>;
+}
+
 /** 生成一张图，命中已有 promptHash 时直接返回旧记录、不重新调用模型。 */
-export async function generateAndStoreImage(input: GenerateImageInput): Promise<GeneratedImageRecord> {
+export async function generateAndStoreImage(
+  input: GenerateImageInput,
+  options: GenerateImageOptions = {}
+): Promise<GeneratedImageRecord> {
+  const report = async (percent: number) => {
+    await options.onProgress?.(percent);
+  };
   const { modelId } = getModelConfigSync("image");
   const promptHash = computePromptHash(input.prompt, input.seed, modelId, input.seedImageUrl);
 
@@ -175,13 +186,16 @@ export async function generateAndStoreImage(input: GenerateImageInput): Promise<
     referenceImage = await assetStore().get(key);
   }
 
+  await report(10);
   const image = await requestGeneration(input, referenceImage);
+  await report(75);
 
   // 服务商回的是直链，落库前转成我们自己 assetStore 里的 url——
   // 直链几分钟到几小时就过期，不能存它。
   const key = `generated-images/${promptHash}.png`;
   const { url } = await assetStore().put(key, image.bytes, { contentType: image.mediaType });
 
+  await report(90);
   const row = await prismaClient.generatedImage.create({
     data: {
       promptHash,

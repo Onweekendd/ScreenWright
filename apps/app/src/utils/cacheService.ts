@@ -5,6 +5,7 @@ import { get, merge } from "lodash-es";
 import type { UpdateHistoryTypeEnum } from "@/views/build/components/buildRender/hooks/useAction";
 import { useCacheData } from "@/views/build/useCacheData";
 
+import { getApiBaseUrl } from "./apiBase";
 import { getToken } from "./auth";
 import { handleNotAuthor } from "./handleNotAuthor";
 import { removeSurroundingQuotes } from "./utils";
@@ -160,7 +161,4 @@ export const requestWithCache = createRequestWithCache(serviceWithCache, () => i
  * 供 saveLayersAgg / updateLayersAgg / delLayersAgg / copyLayers / updateLargeScreen /
  * getScreenObj 等原先走 requestWithCache 的回落接口使用。
  */
-export const serverRequestWithCache = createRequestWithCache(
-  createServiceWithCache(),
-  () => import.meta.env.VITE_FUNAI_API_URL ?? "http://localhost:4111"
-);
+export const serverRequestWithCache = createRequestWithCache(createServiceWithCache(), getApiBaseUrl);

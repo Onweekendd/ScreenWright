@@ -1,5 +1,6 @@
 import { MastraClient } from "@mastra/client-js";
 
+import { getApiBaseUrl } from "@/utils/apiBase";
 import { getToken } from "@/utils/auth";
 import { handleUnauthorized } from "@/utils/session";
 
@@ -18,6 +19,6 @@ const authedFetch: typeof fetch = async (input, init) => {
 };
 
 export const mastraClient = new MastraClient({
-  baseUrl: process.env.VITE_FUNAI_API_URL ?? "http://localhost:4111",
+  baseUrl: getApiBaseUrl(),
   fetch: authedFetch
 });

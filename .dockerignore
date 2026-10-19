@@ -1,0 +1,38 @@
+# 版本库与依赖
+.git
+**/node_modules
+.pnpm-store
+
+# 构建产物与缓存
+**/dist
+**/.turbo
+**/.mastra
+**/.next
+**/.eslintcache
+**/*.log
+
+# 本地运行数据（含密钥 / 体积大）
+.env
+servers/server/.env
+**/.env.local
+servers/server/.data
+servers/server/blob-storage
+servers/server/evals/runs
+servers/server/agent-workspace/screen_*
+servers/server/agent-workspace/tasks
+servers/server/agent-workspace/plan
+servers/server/agent-workspace/echart-options
+servers/server/agent-workspace/api-registry
+servers/server/agent-workspace/artifact-app
+
+# 编辑器 / 工具
+.vscode
+.idea
+.claude
+.playwright-mcp
+
+# 与镜像无关的大文件
+images
+docs
+artifact.png
+artifact.excalidraw

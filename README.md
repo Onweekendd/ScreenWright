@@ -106,6 +106,27 @@ pnpm dev          # 编辑器   → http://localhost:5173
 
 配了 `REDIS_URL`（本地：`docker compose -f docker-compose.dev.yml up -d redis`，端口 6380）后，生图等长任务走队列、由 worker 进程执行；没配则在当前进程内直接执行。分开部署时，由网关 / ingress 把 `/customApi/*`、`/api/*`、`/artifact-apps/*` 转给 ai，其余转给 api；api、ai、worker 共用同一个 PostgreSQL、同一个 `JWT_SECRET`，多进程使用 fs 存储时还需共享 `BLOB_STORAGE_DIR`（或改用 MinIO）。
 
+### 3. 容器部署（docker compose）
+
+```bash
+cp .env.compose.example .env      # 至少填 POSTGRES_PASSWORD、JWT_SECRET、MINIO_ROOT_PASSWORD
+docker compose up -d --build      # 首次构建需要几分钟
+docker compose logs migrate       # 没设 SEED_ADMIN_PASSWORD 时，随机生成的管理员口令在这里
+```
+
+打开 `http://localhost:8080`（`HTTP_PORT` 可改），用 `admin` 和上面的口令登录。国内网络构建慢的话，在 `.env` 里设 `NPM_REGISTRY=https://registry.npmmirror.com`。
+
+编排里有 7 个服务：
+
+| 服务 | 说明 |
+|---|---|
+| `web` | nginx：托管编辑器静态文件，并按路径分流——`/customApi`、`/api`、`/artifact-apps` → ai；`/user`、`/bi-system`、`/online`、`/blobs` → api；`/screenwright/` → MinIO |
+| `api` / `ai` / `worker` | 同一个后端镜像，按 `ROLE` 起三种进程（见上一节）。ai 单副本 |
+| `migrate` | 一次性任务：建表、导入组件库、创建超管；跑完 api / ai / worker 才启动，可重复执行 |
+| `postgres` / `redis` / `minio` | 数据库（pgvector）、任务队列、素材库；`minio-init` 负责建桶并设为公开读 |
+
+数据都在命名卷里（`pg_data`、`redis_data`、`minio_data`、`ai_workspace`），`docker compose down` 不会删，`down -v` 才会。对外用域名 / HTTPS 时把 `PUBLIC_ORIGIN` 改成对应地址（素材直链用它拼接），TLS 在 web 前面再加一层反向代理终结即可。
+
 ---
 
 ## 技术栈

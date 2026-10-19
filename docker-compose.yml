@@ -1,0 +1,203 @@
+# 完整部署编排：web(nginx 网关 + 前端) / api / ai / worker / migrate / PostgreSQL / Redis / MinIO。
+#
+#   cp .env.compose.example .env      # 填 JWT_SECRET 等必填项
+#   docker compose up -d --build
+#   open http://localhost:8080
+#
+# 只起本地开发依赖（PG / Redis）见 docker-compose.dev.yml。
+
+# 固定项目名：命名卷会变成 screenwright_pg_data 等，不依赖目录名，也不会和同机上其他项目的卷重名
+name: screenwright
+
+# 后端三种角色共用同一个镜像和同一份环境变量，只有 ROLE / PORT 不同
+x-server-env: &server-env
+  NODE_ENV: production
+  PRISMA_DATABASE_URL: postgresql://funbi:${POSTGRES_PASSWORD:?请在 .env 里设置 POSTGRES_PASSWORD}@postgres:5432/funbi
+  MASTRA_DATABASE_URL: postgresql://funbi:${POSTGRES_PASSWORD}@postgres:5432/funbi
+  REDIS_URL: redis://redis:6379
+  JWT_SECRET: ${JWT_SECRET:?请在 .env 里设置 JWT_SECRET}
+  SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-admin}
+  SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+  # 素材放 MinIO；对外 URL 经 web 网关同域转发（/<bucket>/<key>），所以公开端点就是站点自己的地址
+  STORAGE_DRIVER: minio
+  MINIO_ENDPOINT: minio
+  MINIO_PORT: "9000"
+  MINIO_USE_SSL: "false"
+  MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-funbi}
+  MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?请在 .env 里设置 MINIO_ROOT_PASSWORD}
+  MINIO_BUCKET: screenwright
+  MINIO_PUBLIC_ENDPOINT: ${PUBLIC_ORIGIN:-http://localhost:8080}
+  RECORD_LLM: ${RECORD_LLM:-false}
+  # 模型配置只是首启兜底（ai_model 表缺行时用来建行），之后以「设置」页为准
+  REASONING_MODEL_BASE_URL: ${REASONING_MODEL_BASE_URL:-}
+  REASONING_MODEL_API_KEY: ${REASONING_MODEL_API_KEY:-}
+  REASONING_MODEL_ID: ${REASONING_MODEL_ID:-}
+  VISION_MODEL_BASE_URL: ${VISION_MODEL_BASE_URL:-}
+  VISION_MODEL_API_KEY: ${VISION_MODEL_API_KEY:-}
+  VISION_MODEL_ID: ${VISION_MODEL_ID:-}
+  EMBEDDING_MODEL_BASE_URL: ${EMBEDDING_MODEL_BASE_URL:-}
+  EMBEDDING_MODEL_API_KEY: ${EMBEDDING_MODEL_API_KEY:-}
+  EMBEDDING_MODEL_ID: ${EMBEDDING_MODEL_ID:-}
+  EMBEDDING_MODEL_DIMENSIONS: ${EMBEDDING_MODEL_DIMENSIONS:-1024}
+  IMAGE_MODEL_BASE_URL: ${IMAGE_MODEL_BASE_URL:-}
+  IMAGE_MODEL_API_KEY: ${IMAGE_MODEL_API_KEY:-}
+  IMAGE_MODEL_ID: ${IMAGE_MODEL_ID:-}
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: funbi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: funbi
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U funbi -d funbi"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-funbi}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  # 一次性：建桶并设为匿名只读（素材 URL 是不带签名的直链）
+  minio-init:
+    image: minio/mc:RELEASE.2024-11-17T19-35-25Z
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-funbi}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD &&
+      mc mb --ignore-existing local/screenwright &&
+      mc anonymous set download local/screenwright"
+    restart: "no"
+
+  # 一次性：建表 → 导入组件库 → 创建超管。api / ai / worker 等它成功退出后才启动。
+  # 后端镜像在这里构建，下面三个角色复用同一个镜像。
+  migrate:
+    build:
+      context: .
+      target: server
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org}
+    image: funbi-server:${TAG:-local}
+    environment:
+      <<: *server-env
+      ROLE: migrate
+    command: ["/docker/migrate.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    image: funbi-server:${TAG:-local}
+    init: true
+    environment:
+      <<: *server-env
+      ROLE: api
+      PORT: "4111"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4111/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+
+  # 对话状态在进程内存里，只能单副本（见 docker/nginx.conf 里的 upstream 说明）
+  ai:
+    image: funbi-server:${TAG:-local}
+    init: true
+    environment:
+      <<: *server-env
+      ROLE: ai
+      PORT: "4112"
+    volumes:
+      - ai_workspace:/data/agent-workspace
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4112/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    restart: unless-stopped
+
+  worker:
+    image: funbi-server:${TAG:-local}
+    init: true
+    environment:
+      <<: *server-env
+      ROLE: worker
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      target: web
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org}
+    image: funbi-web:${TAG:-local}
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+      ai:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  redis_data:
+  minio_data:
+  ai_workspace:

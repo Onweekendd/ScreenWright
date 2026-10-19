@@ -1,6 +1,7 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import { ElLoading } from "element-plus";
 
+import { getApiBaseUrl } from "./apiBase";
 import { getToken } from "./auth";
 import { handleUnauthorized } from "./session";
 import { getVersionCode } from "./version";
@@ -82,7 +83,7 @@ export function serverRequest<T>(
     }
   }
   return funaiAxios({
-    baseURL: process.env.VITE_FUNAI_API_URL ?? "http://localhost:4111",
+    baseURL: getApiBaseUrl(),
     timeout: config.timeout === 0 ? 0 : config.timeOut || 1000 * 60,
     data: {},
     ...config,

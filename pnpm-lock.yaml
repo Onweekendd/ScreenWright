@@ -46,7 +46,7 @@ importers:
         version: 1.23.0(react@19.2.7)
       next:
         specifier: 16.2.10
-        version: 16.2.10(@babel/core@8.0.1)(@opentelemetry/api@1.9.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.93.2)
+        version: 16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.93.2)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -1153,6 +1153,9 @@ importers:
       pg:
         specifier: ^8.16.3
         version: 8.23.0
+      prisma:
+        specifier: ^7.0.0
+        version: 7.2.0(@types/react@19.2.7)(better-sqlite3@12.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       proper-lockfile:
         specifier: ^4.1.2
         version: 4.1.2
@@ -1235,9 +1238,6 @@ importers:
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
-      prisma:
-        specifier: ^7.0.0
-        version: 7.2.0(@types/react@19.2.7)(better-sqlite3@12.11.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@5.9.3)
       rollup:
         specifier: ^4.52.5
         version: 4.62.4
@@ -21190,7 +21190,7 @@ snapshots:
 
   nested-error-stacks@2.1.1: {}
 
-  next@16.2.10(@babel/core@8.0.1)(@opentelemetry/api@1.9.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.93.2):
+  next@16.2.10(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(sass@1.93.2):
     dependencies:
       '@next/env': 16.2.10
       '@swc/helpers': 0.5.15
@@ -21199,7 +21199,7 @@ snapshots:
       postcss: 8.4.31
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      styled-jsx: 5.1.6(@babel/core@8.0.1)(react@19.2.7)
+      styled-jsx: 5.1.6(@babel/core@7.29.7)(react@19.2.7)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.2.10
       '@next/swc-darwin-x64': 16.2.10
@@ -21218,7 +21218,7 @@ snapshots:
 
   node-abi@3.85.0:
     dependencies:
-      semver: 7.8.0
+      semver: 7.8.5
     optional: true
 
   node-abort-controller@3.1.1: {}
@@ -23212,12 +23212,12 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.7
 
-  styled-jsx@5.1.6(@babel/core@8.0.1)(react@19.2.7):
+  styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.7):
     dependencies:
       client-only: 0.0.1
       react: 19.2.7
     optionalDependencies:
-      '@babel/core': 8.0.1
+      '@babel/core': 7.29.7
 
   stylelint-config-html@1.1.0(postcss-html@1.8.0)(stylelint@15.11.0(typescript@5.9.2)):
     dependencies:

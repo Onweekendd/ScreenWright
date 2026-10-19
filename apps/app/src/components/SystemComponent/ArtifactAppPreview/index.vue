@@ -4,10 +4,11 @@ import { computed, shallowRef, watch } from "vue";
 import type { ArtifactAppPreviewOption, ComponentType, PanelEnum } from "@screenwright/types";
 
 import { useBaseData } from "@/hooks/useBaseData";
+import { getApiBaseUrl } from "@/utils/apiBase";
 
 import { resolveArtifactPreviewUrl } from "./preview-url";
 
-const FUNAI_BASE_URL = import.meta.env.VITE_FUNAI_API_URL || "http://localhost:4111";
+const FUNAI_BASE_URL = getApiBaseUrl();
 
 const props = defineProps<{
   element: ComponentType<PanelEnum.artifactAppPreview, ArtifactAppPreviewOption>;
@@ -103,11 +104,8 @@ function handleLoaded(): void {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: radial-gradient(
-      circle at 50% 20%,
-      color-mix(in srgb, var(--sw-theme-color) 18%, transparent),
-      transparent 45%
-    ),
+  background:
+    radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--sw-theme-color) 18%, transparent), transparent 45%),
     #0f1117;
 }
 

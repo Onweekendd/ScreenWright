@@ -3,9 +3,18 @@ import { hc } from "hono/client";
 
 import type { AppType } from "../routes/index";
 
+/**
+ * 后端基址。与 apps/app 的 resolveApiBase 同一套语义：
+ * 未配置 → 本机开发默认地址；配成空串 → 同源（生产环境由网关分流）。
+ * hono 客户端要求绝对地址，所以同源时取当前页面（或 Worker）的 origin。
+ */
+const configuredBaseUrl: string | undefined =
+  typeof import.meta !== "undefined" ? (import.meta as Record<string, any>).env?.VITE_FUNAI_API_URL : undefined;
+
 const BASE_URL =
-  (typeof import.meta !== "undefined" && (import.meta as Record<string, any>).env?.VITE_FUNAI_API_URL) ||
-  "http://localhost:4111";
+  configuredBaseUrl === undefined
+    ? "http://localhost:4111"
+    : (configuredBaseUrl || globalThis.location?.origin || "http://localhost:4111").replace(/\/+$/, "");
 
 const TOKEN_KEY = "bi_token";
 

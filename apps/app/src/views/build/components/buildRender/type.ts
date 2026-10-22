@@ -149,10 +149,6 @@ export interface TargetChartType {
 export enum EditCanvasTypeEnum {
   EDIT_LAYOUT_DOM = "editLayoutDom",
   EDIT_CONTENT_DOM = "editContentDom",
-  OFFSET = "offset",
-  SCALE = "scale",
-  USER_SCALE = "userScale",
-  LOCK_SCALE = "lockScale",
   IS_CREATE = "isCreate",
   IS_DRAG = "isDrag",
   IS_SELECT = "isSelect",
@@ -167,9 +163,6 @@ export enum MouseEventButton {
 export interface EditCanvasType {
   editLayoutDom: HTMLElement | null;
   editContentDom: HTMLElement | null;
-  offset: number;
-  userScale: number;
-  lockScale: boolean;
   isCreate: boolean;
   isDrag: boolean;
   isSelect: boolean;

@@ -78,6 +78,18 @@ export {
   setActionExecutor
 } from "./events/eventPorts";
 
+// 无限画布相机（纯视图状态：平移 / 锚点缩放 / 坐标换算 / 可视区）
+export {
+  type CameraListener,
+  type CameraState,
+  type FitOptions,
+  type Point,
+  type Rect,
+  type Size,
+  Viewport,
+  type ViewportOptions
+} from "./viewport/Viewport";
+
 // 选择器（组件树纯函数）
 export {
   childLists,

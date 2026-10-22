@@ -1,5 +1,5 @@
 <template>
-  <buildEditRule ref="buildEditRuleRef">
+  <buildInfiniteCanvas>
     <div
       id="go-chart-edit-content"
       :style="cEditContent"
@@ -16,16 +16,14 @@
       <!-- 选择框 -->
       <EditSelect />
     </div>
-  </buildEditRule>
+  </buildInfiniteCanvas>
 </template>
 <script setup lang="ts">
-import type { ComponentPublicInstance } from "vue";
-import { computed, nextTick, ref } from "vue";
-import { onMounted } from "vue";
+import { computed } from "vue";
 
 import { type ComponentType, EditCanvasTypeEnum } from "@/views/build/components/buildRender/type";
 
-import buildEditRule from "../buildEditRule/index.vue";
+import buildInfiniteCanvas from "../buildInfiniteCanvas/index.vue";
 import AlignmentLines from "./components/AlignmentLines.vue";
 import EditSelect from "./EditSelect.vue";
 import GridRect from "./GridRect.vue";
@@ -41,8 +39,6 @@ const { componentList, editConfig, isBuild, editCanvas, targetChart } = useEditS
 const { initDirection } = useDirection();
 const { syncComponentData } = useAlignmentWasm();
 
-const buildEditRuleRef = ref<ComponentPublicInstance<InstanceType<typeof buildEditRule>> | null>(null);
-
 const isDrag = computed(() => editCanvas.value[EditCanvasTypeEnum.IS_DRAG]);
 
 const isShowGridRect = computed(() => targetChart.value.selectId.length > 0 && isDrag.value);
@@ -51,10 +47,7 @@ const cEditContent = computed(() => {
   return {
     width: `${Number(editConfig.value.width)}px`,
     height: `${Number(editConfig.value.height)}px`,
-    overflow: "visible",
-    boxShadow: "0 8px 10px rgb(30 30 30 / 12%)",
-    transform: `scale(${editConfig.value.scale})`,
-    flexShrink: 0
+    overflow: "visible"
   };
 });
 
@@ -68,13 +61,6 @@ const initRender = (newVal: ComponentType[]) => {
     });
   }
 };
-
-onMounted(async () => {
-  await nextTick();
-  if (buildEditRuleRef.value) {
-    buildEditRuleRef.value.resizeCanvasAndRuler(Number(editConfig.value.width), Number(editConfig.value.height));
-  }
-});
 
 defineExpose({
   initRender,

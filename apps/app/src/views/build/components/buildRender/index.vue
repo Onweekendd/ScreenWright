@@ -123,7 +123,6 @@ const {
   position: relative;
   width: 100%;
   height: 100%;
-  box-shadow: var(--el-box-shadow);
   background-size: 100% 100%;
 }
 .es-component {

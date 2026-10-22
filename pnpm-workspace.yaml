@@ -12,4 +12,3 @@ onlyBuiltDependencies:
   - sharp
   - simple-git-hooks
   - vue-demi
-  - vue3-sketch-ruler

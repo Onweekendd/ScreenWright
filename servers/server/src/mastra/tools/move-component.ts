@@ -244,17 +244,21 @@ export const moveComponentTool = createTool({
       return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
     }
 
+    // 交给前端的是从文件名解析出的纯数字 id，不是入参原样：入参是 "5_1/114" 这种带大屏前缀的形态，
+    // 前端 Number() 一下就成了 NaN（「找不到组件 NaN」）
+    const bareIds = resolved.componentIds.map(String);
+
     // ── ASK_BEFORE_EDIT：先弹审批框，用户接受后再交前端移动 ──────────────
     if (mode === AgentMode.ASK_BEFORE_EDIT) {
       return suspend({
         type: SuspendType.AskApprovalMoveComponent,
         purpose: "移动选中的组件",
-        componentIds,
+        componentIds: bareIds,
         target: resolved.target
       }) as never;
     }
 
     // 自动模式：直接 suspend 交给前端移动
-    return suspend({ type: SuspendType.MoveComponent, componentIds, target: resolved.target }) as never;
+    return suspend({ type: SuspendType.MoveComponent, componentIds: bareIds, target: resolved.target }) as never;
   }
 });

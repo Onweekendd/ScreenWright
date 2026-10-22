@@ -35,6 +35,22 @@ export const pushComponentUpdate = (
   );
 
 /**
+ * title 是组件类型标识（「条形图」「图片」），前端靠它在组件菜单里找类型，不能改；组件名是 name。
+ * 原文解析不了时不拦，交给后面的校验。
+ */
+const titleChangeError = (original: string, title: unknown): string | undefined => {
+  let before: unknown;
+  try {
+    before = (JSON.parse(original) as { title?: unknown }).title;
+  } catch {
+    return undefined;
+  }
+  return before !== undefined && title !== before
+    ? `title 是组件类型标识（"${String(before)}"），不能改；要改组件名请改 name`
+    : undefined;
+};
+
+/**
  * 组件 json：component/ 下的 {id}_{name}.json。
  *
  * 推给前端的是 **core 树上那一份**，不是 agent 写进文本的那一份：core 会重算由树结构唯一决定的
@@ -48,6 +64,11 @@ export const componentHandler: SyncHandler = {
     const validation = validateComponentContent(ctx.result.content);
     if (!validation.ok) {
       return { ok: false, message: validation.message, validationErrors: validation.validationErrors };
+    }
+
+    const titleError = titleChangeError(ctx.readRecord.content, (validation.data as ComponentType).title);
+    if (titleError) {
+      return { ok: false, message: titleError };
     }
 
     const editedId = (validation.data as ComponentType).id;

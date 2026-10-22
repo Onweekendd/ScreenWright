@@ -498,7 +498,7 @@ export type ComponentPlacement =
 /**
  * 从组件文件的绝对路径倒序推导最近父节点。
  *
- * workspace 路径规则（workspace-structure.md）：
+ * workspace 路径规则（workspace-guide.md）：
  *   component/{id}_{name}.json                                        → 根目录，无父级
  *   component/.../{groupId}_{groupName}/{id}_{name}.json              → 分组（最近目录可提取出数字 id）
  *   component/.../{panelId}_{panelName}/{stateId}_{stateName}/{id}_{name}.json → 动态面板（最近目录提取不出数字 id，上一级可提取出数字 id）

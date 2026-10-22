@@ -101,6 +101,17 @@ function collectUnknownPaths(
     const currentPath = prefix ? `${prefix}.${key}` : key;
 
     if (!(key in template)) {
+      if (
+        !prefix &&
+        (key === "width" || key === "height") &&
+        isPlainObject(template.component) &&
+        key in template.component
+      ) {
+        errors.push(
+          `${currentPath} —— 尺寸请写到 overrides.component.${key}，例如 overrides: { component: { ${key}: ${JSON.stringify(value)} } }`
+        );
+        continue;
+      }
       const candidates = Object.keys(template);
       const similar = candidates.filter((candidate) => isSimilar(candidate, key)).slice(0, 5);
       const hint = similar.length
@@ -184,8 +195,10 @@ const placementField = z
 
 const overridesField = z
   .record(z.string(), z.unknown())
-  .optional()
-  .describe("需要覆盖的字段，深合并进模板。键名必须在模板中已存在，否则拒绝执行");
+  .nullish()
+  .describe(
+    "需要覆盖的字段，深合并进模板。位置用 left/top，尺寸用 component: { width, height }，不能在顶层写 width/height。键名必须在模板中已存在，否则拒绝执行"
+  );
 
 const componentNameField = z
   .string()
@@ -194,7 +207,7 @@ const componentNameField = z
 interface CreateItem {
   componentName: string;
   placement?: PlacementInput | null;
-  overrides?: Record<string, unknown>;
+  overrides?: Record<string, unknown> | null;
 }
 
 type ChangeEntry = z.infer<typeof ChangeSchema>;
@@ -287,6 +300,10 @@ function prepareOne(
         `overrides 中以下字段在 "${componentName}" 模板中不存在，请修正后重试${schemaDoc ? `。组件文档：${schemaDoc}` : ""}`,
         { schemaDoc, validationErrors: unknownPaths }
       );
+    }
+    // title 是组件类型标识，前端靠它在组件菜单里找类型，改了就建不出来；给组件起名用 name
+    if ("title" in overrides && overrides.title !== template.title) {
+      return fail(`title 是组件类型标识（"${String(template.title)}"），不能改；给组件起名请用 overrides.name`);
     }
     deepMerge(template, overrides);
   }
@@ -421,13 +438,15 @@ export const createComponentTool = createTool({
 - 同一批里的组件**不能互相嵌套**：分组 / 动态面板要先建出来拿到真实 id，才能作为下一次调用的 placement.parentId
 
 关于 overrides：
-- 仅传用户明确要求的字段，如 { title: "销售额", left: 100, option: { ... } }
+- 仅传用户明确要求的字段，如 { name: "销售额", left: 100, option: { ... } }
+- 位置用 overrides.left / top；尺寸用 overrides.component.width / height，例如 { left: 0, top: 0, component: { width: 1920, height: 1080 } }，不要把 width / height 放到 overrides 顶层
+- 组件名用 name；**title 是组件类型标识，不能改**
 - **键名必须与模板一致**，写错会被拒绝并返回可用字段列表
 - 不确定 option / data 结构时，先不传 overrides 创建默认组件，用返回的 schemaDoc 查阅文档后再用 edit_files 调整`,
 
   inputSchema: z.object({
     screenId: z.string().describe('大屏目录标识，格式为 "{screenId}_{versionCode}"，如 "29445_1"'),
-    componentName: componentNameField.optional().describe("创建单个组件时传；创建多个请改用 components"),
+    componentName: componentNameField.nullish().describe("创建单个组件时传；创建多个请改用 components"),
     placement: placementField,
     overrides: overridesField,
     components: z
@@ -440,7 +459,7 @@ export const createComponentTool = createTool({
       )
       .min(1)
       .max(MAX_BATCH_SIZE)
-      .optional()
+      .nullish()
       .describe("批量创建：每项含 componentName，可选 placement、overrides；传了它就不要再传顶层的同名字段")
   }),
 
@@ -481,8 +500,10 @@ export const createComponentTool = createTool({
     const { suspend, resumeData } = context?.agent ?? {};
     const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
 
-    const isBatch = components !== undefined;
-    if (isBatch && (componentName !== undefined || placement != null || overrides !== undefined)) {
+    // 首次执行的 schema 校验可能剥掉 null，但 Mastra resume 会跳过校验、回放原始入参。
+    // 可选字段在两阶段都把 null 当作未传，避免前端已创建后又被误判为参数冲突。
+    const isBatch = components != null;
+    if (isBatch && (componentName != null || placement != null || overrides != null)) {
       return { success: false, message: "传了 components 就不要再传顶层的 componentName / placement / overrides" };
     }
     const items: CreateItem[] | undefined =

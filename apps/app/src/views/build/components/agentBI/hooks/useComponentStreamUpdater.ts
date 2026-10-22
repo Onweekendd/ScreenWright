@@ -13,6 +13,7 @@ import { UpdateHistoryTypeEnum, useAction } from "../../buildRender/hooks/useAct
 import { createLocalPanelStatus } from "../../buildRender/hooks/useCommonPanelAction";
 import { useEditStore } from "../../buildRender/hooks/useEditStore";
 import { captureCanvasForAgent } from "./captureCanvasForAgent";
+import { componentMenuTitle } from "./componentMenuTitle";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
 import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import { useConfirm } from "./useConfirm";
@@ -133,7 +134,7 @@ export function useComponentStreamUpdater(
       for (const { index, component, placement } of items) {
         try {
           const result = await createComponent({
-            componentTitle: (component.name ?? component.title) as string,
+            componentTitle: componentMenuTitle(component),
             componentConfig: component as Partial<ComponentType>,
             placement: placement as ComponentPlacement | undefined
           });

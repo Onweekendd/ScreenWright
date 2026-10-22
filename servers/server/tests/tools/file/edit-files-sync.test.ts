@@ -303,6 +303,21 @@ describe("edit_files 前端同步路径", () => {
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": 0');
   });
 
+  it("改组件的 title（类型标识）被拒绝：不挂起、不落盘，提示改 name", async () => {
+    const filePath = await componentTree();
+    const payloads: Array<Record<string, unknown>> = [];
+
+    const result = (await executeEditFiles(
+      [{ path: filePath, edits: [{ old_string: '"title": "条形图"', new_string: '"title": "销售额"' }] }],
+      { toolCallId: "component-title", onSuspend: (payload) => payloads.push(payload) }
+    )) as { success: boolean; results: Array<{ message: string }> };
+
+    expect(payloads).toHaveLength(0);
+    expect(result.success).toBe(false);
+    expect(result.results[0].message).toContain("title 是组件类型标识");
+    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"title": "条形图"');
+  });
+
   it("agent 内部产物在 ASK 模式下不询问用户，直接落盘", async () => {
     const workspace = await createTempWorkspace({ "screen_1/_analysis.json": '{"note":"old"}' });
     const filePath = path.join(workspace, "screen_1/_analysis.json");

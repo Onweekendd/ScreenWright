@@ -94,6 +94,26 @@ describe("树操作工具的 resume", () => {
       expect(existsSync(componentFile("4152_条形图.json"))).toBe(false);
     });
 
+    it("入参带大屏前缀（75_1/4152）时，交给前端的是纯数字 id，不是原样的字符串", async () => {
+      const payloads: Array<Record<string, unknown>> = [];
+      const execute = moveComponentTool.execute as unknown as (
+        i: Record<string, unknown>,
+        c: Record<string, unknown>
+      ) => Promise<unknown>;
+
+      await execute(
+        { componentIds: [`${SCREEN_ID}/4152`], target: { parentId: `${SCREEN_ID}/${GROUP_ID}` } },
+        {
+          requestContext: { get: () => undefined },
+          agent: { suspend: async (payload: Record<string, unknown>) => void payloads.push(payload) }
+        }
+      );
+
+      expect(payloads).toEqual([
+        { type: "move_component", componentIds: ["4152"], target: { parentId: GROUP_ID, parentType: "group" } }
+      ]);
+    });
+
     it("parentType 由磁盘反推：目标是动态面板却没给 stateId 时当场报错", async () => {
       const result = await run(moveComponentTool, { componentIds: ["4152"], target: { parentId: `${PANEL_ID}` } });
 

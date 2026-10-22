@@ -22,13 +22,13 @@ import { fullWorkspace } from "../workspace";
 
 const instructions = [
   loadPrompt("mastra/sw-executor-core.md"),
-  loadPrompt("mastra/workspace-structure.md"),
-  loadPrompt("mastra/file-tools.md"),
+  loadPrompt("mastra/workspace-guide.md"),
   loadPrompt("mastra/component-operator.md"),
+  loadPrompt("mastra/component-schema-core.md"),
   // 领域基本功常驻。取代了原来的 event-interaction.md / data-binding.md——那两份的全部内容
   // 就是「去调 skill 读工作流」，等于把每条任务的开场都换成几次检索往返。
   loadPrompt("mastra/sw-domain-core.md"),
-  loadPrompt("mastra/task-prompts.md")
+  loadPrompt("mastra/task-management-core.md")
 ].join("\n\n");
 
 export const swExecutorAgent = new Agent({

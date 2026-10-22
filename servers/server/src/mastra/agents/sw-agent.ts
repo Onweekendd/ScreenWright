@@ -54,27 +54,29 @@ const baselineInstructions = [
   // BI 领域基本功。主 agent 此前一份领域提示词都没有，全靠开场几次 skill 检索现学——
   // 实测一条数据联动任务读进 39KB skill 内容（比整个系统提示词还大）、花掉 9 个纯检索
   // step / 95s，而其中绝大部分是每条任务都一样的固定流程。固定的进提示词，
-  // 查询性的（组件 schema、排错细则）留在 skill 里按需读。
+  // 通用组件结构常驻；各类型专属 option/data schema、排错细则留在 skill 里按需读。
   loadPrompt("mastra/sw-domain-core.md"),
+  loadPrompt("mastra/component-schema-core.md"),
   loadPrompt("mastra/tool-registry.md"),
   loadPrompt("mastra/editor-context.md"),
-  loadPrompt("mastra/file-tools.md"),
-  loadPrompt("mastra/workspace-structure.md"),
-  loadPrompt("mastra/task-prompts.md"),
+  loadPrompt("mastra/workspace-guide.md"),
+  loadPrompt("mastra/task-management-core.md"),
   loadPrompt("mastra/artifact-app-workflow.md"),
-  loadPrompt("mastra/todo-prompts.md"),
   loadPrompt("mastra/screen-build-workflow.md"),
   loadPrompt("mastra/image-to-component-workflow.md"),
   loadPrompt("mastra/effect-image-workflow.md"),
-  loadPrompt("mastra/data-states.md"),
-  loadPrompt("mastra/browser-sdk.md")
+  loadPrompt("mastra/runtime-query.md")
 ].join("\n\n");
 
 // 压缩实验只替换主提示词，工具、模型和模式约束保持一致，便于与基线对照。
 // 默认保留基线；BI_PROMPT_VARIANT=compact 时合并重复规则并统一换行。
 const baseInstructions =
   process.env.BI_PROMPT_VARIANT === "compact"
-    ? [loadPrompt("mastra/sw-agent-compact.md"), loadPrompt("mastra/sw-domain-core.md")]
+    ? [
+        loadPrompt("mastra/sw-agent-compact.md"),
+        loadPrompt("mastra/sw-domain-core.md"),
+        loadPrompt("mastra/component-schema-core.md")
+      ]
         .join("\n\n")
         .replace(/\r\n/g, "\n")
     : baselineInstructions;

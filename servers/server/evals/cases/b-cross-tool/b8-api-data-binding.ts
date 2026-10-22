@@ -20,7 +20,7 @@
  * `api-registry/` 是所有大屏共享的目录，`fixture` 表达不了，所以用 `setup` 种
  * （见 `harness/api-registry.ts`：离线快照 + 生产同一段写盘代码）。
  *
- * agent 得自己发现数据源 id——注册表的目录形状写在 `workspace-structure.md` 里，
+ * agent 得自己发现数据源 id——注册表的目录形状写在 `workspace-guide.md` 里，
  * 可通过工作区列目录工具发现数据源；prompt 不直接报 id 或接口路径。
  *
  * ## 这条验不到什么

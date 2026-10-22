@@ -1,3 +1,5 @@
+# 工作区结构与读写规范
+
 ## 自检用工具，不用脚本
 
 事件干跑用 `simulateEvent` 工具（真跑一遍「条件求值 → 动作规划 → 抛回调 → 消费方重算过滤器」，
@@ -59,3 +61,24 @@ workspace/
 **⚠️ 操作规则：`_layout.json` 每次数据同步时自动重新生成，禁止手动写入或修改。需要理解分组或动态面板内部结构时，必须先读该容器子目录下的 `_layout.json`**，它提供：子组件的空间布局（ascii_map）、层叠顺序（zIndex）、子树规模摘要（childrenSummary）。读完后再按需精读具体子组件文件。跳过此步直接猜测内部结构会导致错误。
 
 **⚠️ 路径拼接规则（必读）**：读到 `_layout.json` 后，其 `container.dir` 字段即为该容器目录相对于 `component/` 的路径（如 `"3303567_card-右侧栏_动态面板/42tW3Gpd-zHho-41hN-bNPq-tbccR78oVwH5_设备检测右"`）。`components[]` 中每个子组件的文件路径为：`screen_{id}/component/{container.dir}/{idName}.json`，**不要**直接将子组件 id 拼到顶层 `component/` 下。
+
+## 文件读写与前端同步
+
+操作 Workspace 文件使用 `read_file` 和 `edit_files`。禁止使用 `execute_command`、Mastra 原生文件工具或脚本修改组件、过滤器、屏幕配置，避免绕过校验和前端同步。
+
+1. 结构化修改前先 `read_file` 获取准确内容；纯全局文本替换可以先用 workspace grep 得到真实文件路径和命中内容。
+2. `edit_files` 接受 `files: [{ path, edits }]`，单文件也要放在 files 数组里。path 使用工具返回的真实路径。
+3. 每项 edits 是一次精确字符串替换；old_string 命中多次时增加上下文使其唯一，或设 replace_all: true。
+4. **文件内原子、文件间隔离**：同一文件的 edits 按顺序应用，任意一项失败则该文件不写入；一个文件失败不阻断或回滚其他文件。
+5. 组件、过滤器、屏幕配置逐文件校验和同步前端，可能经过独立的 suspend/resume。校验失败的文件返回字段错误且不写入；通过后写入并推送前端。等待工具最终汇总，按 results 逐项报告成败。
+
+```js
+edit_files({
+  files: [
+    {
+      path: "screen_29445_1/component/123_销售额.json", // 使用实际读取到的路径
+      edits: [{ old_string: "…", new_string: "…", replace_all: true }]
+    }
+  ]
+});
+```

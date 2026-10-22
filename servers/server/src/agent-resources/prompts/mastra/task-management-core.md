@@ -1,4 +1,4 @@
-# Task 与 Todo 选择规则
+# Task 与 Todo 管理规范
 
 详细契约用 `skill(name="sw-task-management")` 加载。
 
@@ -17,3 +17,10 @@
 3. 测试失败、实现不完整、存在错误或必要验证尚未通过时，不得标记 `completed`。
 4. Todo 同时最多一个 `in_progress`；Task 可由不同 agent 并行处于 `in_progress`。
 5. 子 agent 处理 Task 时，每次 task 工具调用都必须携带委派得到的 `taskListId`。
+
+## 主 Agent 的 TodoWrite 调用
+
+- **全量替换**：每次传入仍需保留的完整 todos 数组。
+- **双形式描述**：每项提供 content（目标）和 activeForm（进行时展示）。
+- **包含验证**：修改代码、配置或数据流时，将必要验证列为步骤。
+- **自动清空**：非空列表全部完成后，工具自动清空活动清单。

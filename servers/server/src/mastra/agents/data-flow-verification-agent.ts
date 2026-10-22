@@ -48,8 +48,7 @@ const instructions = [
 script 可以是表达式，也可以是含 \`const\`/\`let\` 的语句块（语句块末尾必须有显式 \`return\`）。
 返回值会被 JSON 序列化，Vue 响应式对象需要 \`.value\` 展开后才能序列化。
 `,
-  loadPrompt("mastra/workspace-structure.md"),
-  loadPrompt("mastra/file-tools.md")
+  loadPrompt("mastra/workspace-guide.md")
 ].join("\n\n");
 
 export const dataFlowVerificationAgent = new Agent({

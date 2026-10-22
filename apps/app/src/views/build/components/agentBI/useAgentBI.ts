@@ -282,7 +282,8 @@ export function createAgentBISession() {
   const sendMessage = async (userMessageOrText?: string | UIMessage): Promise<void> => {
     const text = extractUserText(userMessageOrText, inputText.value);
 
-    if (!text || !shouldContinueProcessing(isStreaming.value, false)) {
+    const hasPendingAttachments = attachments.value.some((item) => item.status === "pending");
+    if ((!text && !hasPendingAttachments) || !shouldContinueProcessing(isStreaming.value, false)) {
       return;
     }
 
@@ -296,6 +297,9 @@ export function createAgentBISession() {
 
     // 先上传附件，拿到 FileUIPart 列表
     const fileParts = await uploadAllAndGetParts(activeThreadId.value ?? undefined);
+    if (!text && fileParts.length === 0) {
+      return;
+    }
 
     // 构造当前用户消息（含编辑器上下文）
     const systemContext = buildSystemContext(mentionedComponents.value);

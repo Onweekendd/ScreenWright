@@ -34,7 +34,7 @@
         ref="editorRef"
         class="editor"
         contenteditable="true"
-        data-placeholder="请输入您的问题，输入 @ 引用组件..."
+        data-placeholder="请输入您的问题，可粘贴图片，输入 @ 引用组件..."
         @input="handleInput"
         @keydown="handleKeydown"
         @keyup="handleKeyup"

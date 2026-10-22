@@ -30,7 +30,7 @@
       <div :key="activeSession.sessionId" class="process-area">
         <ChatArea v-show="!showBgTasks" />
         <BackgroundTasksView v-show="showBgTasks" class="bg-tasks-view" />
-        <!-- 审批/提问/计划弹层：覆盖对话页与后台任务页 -->
+        <!-- 审批/提问/计划弹层：排在对话页与后台任务页下方，顶替输入框 -->
         <ApprovalDialog />
       </div>
 
@@ -177,7 +177,6 @@ defineExpose({ drawerWidth, visible });
   overflow: hidden;
   min-width: 0;
   border-top-right-radius: 10px;
-  /* 作为审批弹层(.ask-popup-mask: absolute inset:0)的定位锚点，使其覆盖对话页+后台任务页 */
   position: relative;
 }
 
@@ -185,5 +184,6 @@ defineExpose({ drawerWidth, visible });
 .bg-tasks-view {
   flex: 1;
   height: 100%;
+  min-height: 0;
 }
 </style>

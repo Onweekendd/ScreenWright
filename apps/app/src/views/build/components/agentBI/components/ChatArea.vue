@@ -21,17 +21,20 @@
         :is-loading="true"
       />
     </div>
-    <ChatInput v-model="inputText" @send="sendMessage()" />
+    <!-- 有审批/提问弹窗时弹窗顶替输入框（v-show 保留草稿），弹窗由 index.vue 排在本区域下方 -->
+    <ChatInput v-show="!hasPendingDialog" v-model="inputText" @send="sendMessage()" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 
 import type { UIMessage } from "ai";
 import { ElMessage, ElMessageBox } from "element-plus";
 
+import { useActiveAgentBISession } from "../agentBISessionContext";
 import { useAgentBIVersionHistory } from "../hooks/useAgentBIVersionHistory";
+import { useConfirm } from "../hooks/useConfirm";
 import { useRollbackExecutor } from "../hooks/useRollbackExecutor";
 import { useWelcomeScreen } from "../hooks/useWelcomeScreen";
 import { useAgentBISessions } from "../useAgentBISessions";
@@ -121,6 +124,20 @@ const placeholderMessage = {
   content: "",
   parts: [] as UIMessage["parts"]
 };
+
+// 弹窗出现时消息区被挤短，滚到底让引出这次提问/审批的那条消息露出来
+const { dialogs } = useConfirm();
+const { sessionId } = useActiveAgentBISession();
+const hasPendingDialog = computed(() => dialogs.value.has(sessionId));
+watch(hasPendingDialog, async (pending) => {
+  if (!pending) {
+    return;
+  }
+  await nextTick();
+  if (msgLayout.value) {
+    msgLayout.value.scrollTop = msgLayout.value.scrollHeight;
+  }
+});
 
 const handleScroll = async () => {
   if (!msgLayout.value || !hasMoreMessages.value || isLoadingMoreMessages.value) {

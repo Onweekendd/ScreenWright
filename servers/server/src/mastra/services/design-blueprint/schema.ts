@@ -60,7 +60,10 @@ export const AssetSpecSchema = z.object({
     .string()
     .optional()
     .describe("source=generate 时的生图提示词，只写这一个素材本身，统一风格写在蓝图的 style 里"),
-  cropRegion: RegionSchema.optional().describe("source=crop 时在画布坐标里裁哪块；不填就裁第一个使用它的节点的 region"),
+  cropRegion: RegionSchema.optional().describe(
+    "source=crop 时在**效果图上**裁哪块，效果图像素坐标（以 sourceImage 的宽高为准，不是画布坐标）。" +
+      "效果图与画布同比例（同一版面）时可以不填，按使用它的节点位置等比换算；版面重排了必须填"
+  ),
   url: z.string().optional().describe("source=reuse 时的图片 url（须是本系统里的图片）"),
   blend: z
     .enum(["normal", "screen"])

@@ -153,8 +153,10 @@ describe("checkBlueprint 素材清单", () => {
     expect(icon.usedBy).toEqual(["card-load-icon", "card-2-icon"]);
     expect(icon.target).toEqual({ width: 48, height: 48 });
     const frame = blueprint!.assets.find((a) => a.key === "card-frame")!;
-    expect(frame.cropRegion).toEqual({ x: 80, y: 120, width: 460, height: 260 });
-    expect(frame.target).toEqual({ width: 460, height: 260 });
+    // 同一版面（3840×2160 的效果图对 1920×1080 的画布）：节点位置等比换算到效果图像素
+    expect(frame.cropRegion).toEqual({ x: 160, y: 240, width: 920, height: 520 });
+    // 目标尺寸是要铺满的节点里最大的那个，和来源无关
+    expect(frame.target).toEqual({ width: 500, height: 300 });
     expect(frame.status).toBe("pending");
   });
 
@@ -206,13 +208,38 @@ describe("checkBlueprint 素材清单", () => {
     expect(warnings).toContainEqual(expect.stringContaining("素材 title-bar 的宽高比 24.0:1 太极端"));
   });
 
-  it("效果图与画布宽高比不一致时提醒裁切会变形", () => {
+  it("版面重排（效果图与画布比例不同）时，裁切素材必须写效果图坐标的 cropRegion", () => {
+    // 实测：660×1181 的竖版海报重排成 1920×1080 横版，节点位置和素材在原图上的位置毫无关系
     const input = baseInput();
-    input.sourceImage = { url: "http://x/e.png", width: 2000, height: 2000 };
+    input.sourceImage = { url: "http://x/poster.png", width: 660, height: 1181 };
+
+    const { errors } = checkBlueprint(input);
+
+    expect(errors).toContainEqual(expect.stringContaining("素材 card-frame 没写 cropRegion"));
+  });
+
+  it("写了 cropRegion 就按效果图像素原样使用，越出效果图报错", () => {
+    const input = baseInput();
+    input.sourceImage = { url: "http://x/poster.png", width: 660, height: 1181 };
+    input.assets[1].cropRegion = { x: 20, y: 300, width: 300, height: 170 };
+
+    const ok = checkBlueprint(input);
+    expect(ok.errors).toEqual([]);
+    expect(ok.blueprint!.assets[1].cropRegion).toEqual({ x: 20, y: 300, width: 300, height: 170 });
+
+    input.assets[1].cropRegion = { x: 700, y: 0, width: 100, height: 100 };
+    expect(checkBlueprint(input).errors).toContainEqual(expect.stringContaining("完全在效果图 660×1181 之外"));
+  });
+
+  it("裁切区域与节点宽高比差得多时提醒铺满会变形", () => {
+    const input = baseInput();
+    input.assets[1].cropRegion = { x: 0, y: 0, width: 200, height: 400 }; // 竖条，节点是 460×260 的横卡
 
     const { warnings } = checkBlueprint(input);
 
-    expect(warnings).toContainEqual(expect.stringContaining("宽高比不同，裁切出的素材会变形"));
+    expect(warnings).toContainEqual(
+      expect.stringContaining("素材 card-frame 的裁切区域 200×400 与节点 460×260 宽高比差得多")
+    );
   });
 
   it("重新保存时规格没变的素材沿用上次结果，改了提示词的回到 pending", () => {

@@ -2,12 +2,16 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
 import {
+  annotateBlueprint,
   type Blueprint,
   BlueprintInputSchema,
   checkBlueprint,
   loadBlueprint,
   saveBlueprint
 } from "@/mastra/services/design-blueprint";
+import { formatErrorChain } from "@/mastra/workflows/figma-to-bi/utils/async";
+
+import { TOOL_IMAGES_FIELD } from "../../provider/image-middleware";
 
 const assetRowSchema = z.object({
   key: z.string(),
@@ -40,6 +44,7 @@ export const saveBlueprintTool = createTool({
     "组件画不出来的才是素材（kind=asset 的节点引用素材 key）。几处长得一样的（六张卡片同一种底板）只列一项素材，多个节点引用它。" +
     "位置用画布坐标；从效果图上读坐标误差很大，效果图作为底图铺在画布上时，用 capture_canvas 的 snap 量出准确位置再填。" +
     "保存时会校验结构并推导目标尺寸、叠放顺序；有 errors 就按提示改完重新保存。" +
+    "保存成功后会附上标注图：节点框、裁切框画在效果图上（版面重排时另附一张画布线框图），框上标着 key，用来核对坐标有没有偏。" +
     "规格没变的素材会沿用上次准备好的结果，改了提示词/裁切区域/尺寸的会回到 pending。",
   inputSchema: BlueprintInputSchema,
   outputSchema: z.object({
@@ -48,7 +53,8 @@ export const saveBlueprintTool = createTool({
     warnings: z.array(z.string()),
     nodeCount: z.number().optional(),
     assets: z.array(assetRowSchema).optional(),
-    next: z.string().optional()
+    next: z.string().optional(),
+    [TOOL_IMAGES_FIELD]: z.array(z.object({ url: z.string(), label: z.string() })).optional()
   }),
   execute: async (input, context) => {
     const previous = await loadBlueprint(input.screenKey);
@@ -66,6 +72,19 @@ export const saveBlueprintTool = createTool({
         : toGenerate > 0
           ? `有 ${toGenerate} 张素材要生图（要花钱、要等）：先把素材清单整理给用户确认，确认后再调 prepare_assets`
           : "待准备的素材都是裁切/复用，不花钱，可以直接调 prepare_assets";
-    return { ok: true, errors, warnings, nodeCount: blueprint.nodes.length, assets: assetRows(blueprint), next };
+    // 标注图只是给模型核对用的，画不出来不影响保存
+    const images = await annotateBlueprint(blueprint).catch((error) => {
+      console.warn(`[design-blueprint] 画标注图失败：${formatErrorChain(error)}`);
+      return [];
+    });
+    return {
+      ok: true,
+      errors,
+      warnings,
+      nodeCount: blueprint.nodes.length,
+      assets: assetRows(blueprint),
+      next,
+      ...(images.length > 0 ? { [TOOL_IMAGES_FIELD]: images } : {})
+    };
   }
 });

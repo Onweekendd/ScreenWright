@@ -9,8 +9,10 @@ const EDGE_TOLERANCE = 4;
  * 被 objectFit 拉伸到目标比例会严重变形——这类素材该改成裁切或用组件画。
  */
 export const MAX_GENERATE_ASPECT = 4;
-/** 效果图与画布宽高比相差超过这个比例时提醒：裁切按两个方向分别缩放，比例不同会把素材压扁 */
+/** 效果图与画布宽高比相差在这个比例以内，才算「同一版面」，可以从节点位置换算出裁切区域 */
 const ASPECT_MISMATCH = 0.02;
+/** 裁切区域与使用它的节点宽高比相差超过这个比例时提醒：铺满节点会把素材明显拉变形 */
+const CROP_STRETCH = 0.2;
 
 export interface CheckResult {
   errors: string[];
@@ -36,6 +38,15 @@ const intersects = (a: Region, b: Region): boolean =>
   a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
 
 const describe = (r: Region) => `(${r.x}, ${r.y}, ${r.width}×${r.height})`;
+
+interface Size {
+  width: number;
+  height: number;
+}
+
+/** 同一版面：效果图就是这块屏的样子（比例一致），节点在画布上的位置等比换算就是它在效果图上的位置 */
+export const isSameLayout = (source: Size, canvas: Size): boolean =>
+  Math.abs(source.width / source.height / (canvas.width / canvas.height) - 1) <= ASPECT_MISMATCH;
 
 /** 实际发给生图服务的提示词：统一风格在前、素材本身在后 */
 export const effectivePrompt = (style: string | undefined, prompt: string): string =>
@@ -132,14 +143,11 @@ export function checkBlueprint(input: BlueprintInput, previous?: Blueprint): Che
   const ordered = orderNodes(nodes, errors);
 
   const limit = promptLimit();
-  const sourceAspectOff =
-    input.sourceImage &&
-    Math.abs(input.sourceImage.width / input.sourceImage.height / (canvas.width / canvas.height) - 1) > ASPECT_MISMATCH;
-  if (sourceAspectOff) {
-    warnings.push(
-      `效果图 ${input.sourceImage!.width}×${input.sourceImage!.height} 与画布 ${canvas.width}×${canvas.height} 的宽高比不同，裁切出的素材会变形`
-    );
-  }
+  const source = input.sourceImage;
+  const sourceBounds: Region | undefined = source
+    ? { x: 0, y: 0, width: source.width, height: source.height }
+    : undefined;
+  const sameLayout = !!source && isSameLayout(source, canvas);
 
   const assets: BlueprintAsset[] = [];
   for (const spec of input.assets) {
@@ -150,10 +158,8 @@ export function checkBlueprint(input: BlueprintInput, previous?: Blueprint): Che
       continue;
     }
     const largest = users.reduce((a, b) => (area(b.region) > area(a.region) ? b : a));
-    const cropRegion = spec.source === "crop" ? roundRegion(spec.cropRegion ?? users[0].region) : undefined;
-    const target = cropRegion
-      ? { width: cropRegion.width, height: cropRegion.height }
-      : { width: largest.region.width, height: largest.region.height };
+    const target = { width: largest.region.width, height: largest.region.height };
+    const cropRegion = spec.source === "crop" ? resolveCropRegion(spec.cropRegion, users[0].region) : undefined;
 
     if (spec.source === "generate") {
       if (!spec.prompt?.trim()) {
@@ -171,11 +177,24 @@ export function checkBlueprint(input: BlueprintInput, previous?: Blueprint): Che
       }
     }
     if (spec.source === "crop") {
-      if (!input.sourceImage) {
+      if (!sourceBounds) {
         errors.push(`${label} 要从效果图裁切，但蓝图没填 sourceImage`);
-      }
-      if (cropRegion && !intersects(cropRegion, canvas)) {
-        errors.push(`${label} 的裁切区域 ${describe(cropRegion)} 完全在画布之外`);
+      } else if (!cropRegion) {
+        errors.push(
+          `${label} 没写 cropRegion：效果图 ${sourceBounds.width}×${sourceBounds.height} 与画布 ${canvas.width}×${canvas.height} ` +
+            "比例不同（版面重排了），节点位置换算不出它在效果图上的位置，要按效果图像素坐标写 cropRegion"
+        );
+      } else if (!intersects(cropRegion, sourceBounds)) {
+        errors.push(
+          `${label} 的裁切区域 ${describe(cropRegion)} 完全在效果图 ${sourceBounds.width}×${sourceBounds.height} 之外（cropRegion 是效果图像素坐标）`
+        );
+      } else {
+        const stretch = cropRegion.width / cropRegion.height / (target.width / target.height);
+        if (Math.abs(stretch - 1) > CROP_STRETCH) {
+          warnings.push(
+            `${label} 的裁切区域 ${cropRegion.width}×${cropRegion.height} 与节点 ${target.width}×${target.height} 宽高比差得多，铺满节点会明显变形`
+          );
+        }
       }
     }
     if (spec.source === "reuse" && !spec.url) {
@@ -206,6 +225,27 @@ export function checkBlueprint(input: BlueprintInput, previous?: Blueprint): Che
     return { errors, warnings };
   }
   return { errors, warnings, blueprint: { ...input, nodes: ordered, assets } };
+
+  /**
+   * 裁切区域一律是**效果图像素坐标**。没写时只有同一版面才能从节点位置等比换算出来；
+   * 版面重排时（竖版海报重排成横版大屏）节点位置和素材在原图上的位置毫无关系，返回 undefined 让上面报错。
+   */
+  function resolveCropRegion(explicit: Region | undefined, nodeRegion: Region): Region | undefined {
+    if (explicit) {
+      return roundRegion(explicit);
+    }
+    if (!source || !sameLayout) {
+      return undefined;
+    }
+    const sx = source.width / canvas.width;
+    const sy = source.height / canvas.height;
+    return roundRegion({
+      x: nodeRegion.x * sx,
+      y: nodeRegion.y * sy,
+      width: nodeRegion.width * sx,
+      height: nodeRegion.height * sy
+    });
+  }
 }
 
 /**

@@ -134,7 +134,23 @@ describe("prepareAssets", () => {
     expect(results.every((r) => r.status === "ready")).toBe(true);
   });
 
-  it("裁切按效果图与画布的比例换算坐标，取的正是那块区域", async () => {
+  it("cropRegion 按声明的效果图尺寸读，声明尺寸与真实像素不同时等比换到真实像素", async () => {
+    // 模型以为效果图是 1920×1080（看到的是缩过的图），实际文件 3840×2160：红块在声明坐标里是 (80,120,460,260)
+    const value = input();
+    value.sourceImage = { url: SOURCE_URL, width: 1920, height: 1080 };
+    value.assets[1].cropRegion = { x: 80, y: 120, width: 460, height: 260 };
+
+    const { blueprint } = await prepareAssets(blueprintOf(value));
+
+    const frame = blueprint.assets.find((a) => a.key === "card-frame")!;
+    expect(frame.resultSize).toEqual({ width: 920, height: 520 });
+    const { data, info } = await sharp(stored.get(frame.resultUrl!)!).raw().toBuffer({ resolveWithObject: true });
+    expect([...data.subarray(0, 3)]).toEqual([255, 0, 0]);
+    const last = (info.width * info.height - 1) * info.channels;
+    expect([...data.subarray(last, last + 3)]).toEqual([255, 0, 0]);
+  });
+
+  it("同一版面不写 cropRegion 时按节点位置等比换算，取的正是那块区域", async () => {
     const { blueprint } = await prepareAssets(blueprintOf());
 
     const frame = blueprint.assets.find((a) => a.key === "card-frame")!;

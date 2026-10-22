@@ -119,9 +119,11 @@ async function loadSource(blueprint: Blueprint): Promise<SourcePixels> {
 
 async function crop(blueprint: Blueprint, asset: BlueprintAsset, source: SourcePixels): Promise<Outcome> {
   const region = asset.cropRegion!;
-  // 画布坐标 → 效果图像素：两个方向分别缩放（效果图通常是画布的整数倍或 2848×1600 这类非整数倍）
-  const sx = source.width / blueprint.canvas.width;
-  const sy = source.height / blueprint.canvas.height;
+  // cropRegion 是模型按 sourceImage 声明的宽高读出来的效果图坐标；声明和真实像素不一致时
+  // （模型看到的是缩过的图、或宽高写错了）按比例换到真实像素，一致时就是原样
+  const declared = blueprint.sourceImage ?? source;
+  const sx = source.width / declared.width;
+  const sy = source.height / declared.height;
   const left = Math.max(0, Math.floor(region.x * sx));
   const top = Math.max(0, Math.floor(region.y * sy));
   const right = Math.min(source.width, Math.ceil((region.x + region.width) * sx));

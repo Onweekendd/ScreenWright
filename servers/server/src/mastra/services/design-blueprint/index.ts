@@ -1,4 +1,5 @@
-export { checkBlueprint, type CheckResult, effectivePrompt, MAX_GENERATE_ASPECT } from "./check";
+export { annotateBlueprint, renderBlueprintAnnotations } from "./annotate";
+export { checkBlueprint, type CheckResult, effectivePrompt, isSameLayout, MAX_GENERATE_ASPECT } from "./check";
 export { buildContactSheet } from "./contact-sheet";
 export {
   generationSize,

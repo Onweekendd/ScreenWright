@@ -1,16 +1,11 @@
 # swtext (文本框/跑马灯/超链接) 配置说明
 
+字段名与取值和 CSS 一致，所有字段可选，缺省走渲染层默认值。option 是 strict 的：写了下表以外的字段会校验失败。
+
 ## dataChart 数据格式
 
-```typescript
-interface FtTextDataItem {
-  value: string;  // 文本内容
-}
+文本内容只来自 `data[0].value`，**不要写进 option**。
 
-type dataChart = FtTextDataItem[];
-```
-
-**示例**：
 ```json
 [
   { "value": "大屏标题文字" }
@@ -19,108 +14,124 @@ type dataChart = FtTextDataItem[];
 
 ---
 
+## 三种形态由字段是否存在区分
+
+没有 `type` 字段。
+
+- 文本框：不写 `marquee`、`href`
+- 跑马灯：写 `marquee`
+- 超链接：写 `href`
+
+---
+
 ## option 完整字段参考
 
-基于配置文件：swtextGlobal.vue
-
-本组件通过 `type` 字段区分三种模式：
-- `"text"` — 文本框（静态文本展示）
-- `"marquee"` — 跑马灯（文字滚动）
-- `"link"` — 超链接（可点击跳转）
-
-### 类型配置
+### 字体
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `type` | string | "text" | 组件类型("text"文本框/"marquee"跑马灯/"link"超链接) |
+| `fontFamily` | string | "Source Han Sans CN" | CSS font-family |
+| `fontSize` | number | 14 | 字号(px) |
+| `fontWeight` | number \| string | 400 | 如 400 / "bold" |
+| `fontStyle` | "normal" \| "italic" | normal | 字体样式 |
+| `letterSpacing` | number | 0 | 字间距(px) |
+| `lineHeight` | number | 1.2 | 行高，**无单位倍数**，如 1.5（不是 px） |
 
-### 超链接配置（type="link"时生效）
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `link` | boolean | false | 是否为超链接 |
-| `linkHref` | string | "" | 链接地址 |
-| `linkTarget` | string | "_self" | 链接打开方式(_self/_blank) |
-| `pointerEvents` | boolean | true | 是否响应鼠标事件 |
-
-### 排版配置
+### 颜色与效果
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `writingMode` | string | "horizontal-tb" | 书写模式(horizontal-tb/vertical-rl/vertical-lr) |
-| `textOrientation` | string | "mixed" | 文本方向 |
+| `color` | string | "#ffffff" | 纯色 `#fff` / `rgba(...)`，或渐变 `linear-gradient(90deg,#fff,#496adc)` |
+| `textShadow` | string | - | CSS text-shadow，发光如 `0 0 24px rgba(69,131,255,1)`，可多层 |
+| `background` | string | - | 文字底色。**`color` 是渐变时此字段不生效** |
+| `opacity` | number | - | 0-1 |
 
-### 字体配置
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `fontFamily` | string | "siayuan-normal" | 字体 |
-| `fontSize` | number | 32 | 字号 |
-| `color` | string | "rgba(255,255,255,1)" | 字体颜色 |
-| `fontWeight` | string | "normal" | 字重 |
-| `fontStyle` | string | "normal" | 字体样式 |
-| `lineHeight` | number | 40 | 行高(px) |
-
-### 选中文字配置
+### 排版
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `selectedTextType` | string | "normal" | 选中文字类型(normal/gradient) |
-| `selectedTextColor` | string | linear-gradient(...) | 选中文字颜色(支持渐变) |
-| `selectedTextOpacity` | number | 100 | 选中文字透明度(0-100) |
+| `textAlign` | "left" \| "center" \| "right" | left | 水平对齐 |
+| `verticalAlign` | "top" \| "middle" \| "bottom" | middle | 在组件框内的垂直位置 |
+| `whiteSpace` | "nowrap" \| "normal" \| "pre-line" | nowrap | 单行 / 自动换行 / 保留换行符 |
+| `textOverflow` | "clip" \| "ellipsis" | ellipsis | 溢出处理 |
+| `writingMode` | "horizontal-tb" \| "vertical-rl" \| "vertical-lr" | - | 书写模式 |
+| `textOrientation` | "mixed" \| "upright" | - | 竖排时文字方向 |
 
-### 布局配置
+### 变换与动画
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `transform` | string | CSS transform，如 `rotateZ(15deg)` |
+| `animation` | string | CSS animation 简写，关键帧名取内置预设，如 `sw-breath 2s ease-in-out infinite` |
+
+### 数值格式化
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `template` | string | 显示模板，`{value}` 替换为内容，如 `{value} kWh` |
+| `decimals` | integer ≥ 0 | 内容为数字时保留的小数位 |
+| `thousands` | boolean | 内容为数字时显示千分位 |
+
+### 跑马灯
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `marquee.speed` | number（必填） | 滚动速度(px/s) |
+| `marquee.direction` | "left" \| "right" | 滚动方向，默认 left |
+
+### 超链接
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `href` | string | 链接地址，有此字段即为超链接 |
+| `target` | "_self" \| "_blank" | 打开方式，默认 _self |
+
+### 交互
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `textAlign` | string | "center" | 水平对齐(left/center/right) |
-| `textAlignVertical` | string | "center" | 垂直对齐(top/center/bottom) |
-| `split` | number | 0 | 字间距 |
-| `backgroundColor` | string | "rgba(255,255,255,0)" | 背景颜色 |
-
-### 文字阴影配置
-
-| 字段 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `shadowShow` | boolean | false | 文字阴影开关 |
-| `shadowColor` | string | "rgba(255,255,255,1)" | 阴影颜色 |
-| `shadowX` | number | 0 | 阴影X偏移 |
-| `shadowY` | number | 0 | 阴影Y偏移 |
-| `shadowFuzzy` | number | 8 | 阴影模糊度 |
-| `shadowExtension` | number | 0 | 阴影扩展 |
+| `pointerEvents` | boolean | false | 是否响应鼠标 |
 
 ---
 
 ## 常用配置示例
 
-### 大屏标题文字
+### 大屏标题文字（渐变 + 发光）
 ```json
 {
-  "type": "text",
-  "fontSize": 36,
+  "fontSize": 46,
   "fontWeight": "bold",
-  "color": "rgba(0,168,255,1)",
+  "color": "linear-gradient(180deg,#ffffff,#4fa3ff)",
+  "textShadow": "0 0 24px rgba(69,131,255,1)",
   "textAlign": "center"
+}
+```
+
+### 指标数值
+```json
+{
+  "fontSize": 36,
+  "color": "#00a8ff",
+  "template": "{value} kWh",
+  "decimals": 1,
+  "thousands": true
 }
 ```
 
 ### 跑马灯滚动文字
 ```json
 {
-  "type": "marquee",
-  "scroll": true,
-  "speed": 15,
-  "fontSize": 28
+  "fontSize": 28,
+  "marquee": { "speed": 80, "direction": "left" }
 }
 ```
 
 ### 超链接跳转
 ```json
 {
-  "type": "link",
-  "link": true,
-  "linkHref": "https://www.example.com",
-  "linkTarget": "_blank",
-  "color": "rgba(0,168,255,1)"
+  "color": "rgba(0,168,255,1)",
+  "href": "https://www.example.com",
+  "target": "_blank",
+  "pointerEvents": true
 }
 ```

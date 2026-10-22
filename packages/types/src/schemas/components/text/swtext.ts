@@ -51,7 +51,7 @@ export const swTextOptionSchema = z
       .describe("纯色 '#fff' / 'rgba(...)'，或 CSS 渐变 'linear-gradient(90deg,#fff,#496adc)'；多层渐变用逗号分隔")
       .optional(),
     textShadow: z.string().describe("CSS text-shadow，发光如 '0 0 24px rgba(69,131,255,1)'；可多层").optional(),
-    background: z.string().describe("文字底色，CSS background").optional(),
+    background: z.string().describe("文字底色，CSS background；color 为渐变时不生效").optional(),
     opacity: z.number().min(0).max(1).optional(),
 
     // ============ 排版 ============

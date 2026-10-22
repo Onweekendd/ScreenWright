@@ -183,7 +183,8 @@ export function useText(element: ComponentType) {
     return {
       ...colorStyle.value,
       ...shadowStyle.value,
-      background: mergedOption.value.background,
+      // 渐变文字靠 background-image + background-clip: text 渲染，background 简写会把它们重置掉，所以渐变时不能再写
+      ...(isGradientText.value ? {} : { background: mergedOption.value.background }),
       opacity: mergedOption.value.opacity,
       height: "auto",
       width: isMarquee.value ? "fit-content" : "100%",

@@ -102,12 +102,6 @@ export enum StepEnum {
   /** 获取 Figma 设计文件的节点数据 */
   FETCH_FIGMA = "fetch-figma",
 
-  /** 从 MinIO 取图并调用 Codia image_to_design，产出 Codia data */
-  CODIA_IMAGE_TO_DESIGN = "codia-image-to-design",
-
-  /** 把 Codia data 引用的 CDN 图片转存到 MinIO，并就地替换 URL */
-  CODIA_UPLOAD_IMAGES = "codia-upload-images",
-
   /** 数据预处理：处理多状态节点、面板合并、跨 frame 去重 */
   DATA_PROCESSOR = "data-processor",
 
@@ -127,24 +121,6 @@ export enum StepEnum {
 
   /** 解析 Figma 节点的布局引用，并将相对位置转换为绝对位置 */
   NORMALIZE_LAYOUT = "normalize-layout",
-
-  /** 将 Codia VisualElement Schema 适配为 NormalizedNode（用 yoga 解算相对布局） */
-  CODIA_TO_NORMALIZED = "codia-to-normalized",
-
-  /** 将 Codia 布局容器展开为语义重建使用的原子 NormalizedNode */
-  CODIA_TO_ATOMIC_NORMALIZED = "codia-to-atomic-normalized",
-
-  /** 使用视觉模型识别大屏一级区域 */
-  ANALYZE_SCREEN_REGIONS = "analyze-screen-regions",
-
-  /** 将 Codia 原子节点分配到一级区域，并为细粒度识别准备任务 */
-  ASSIGN_NODES_TO_REGIONS = "assign-nodes-to-regions",
-
-  /** 使用视觉模型识别单个区域内部的一层功能分组 */
-  ANALYZE_REGION_GROUPS = "analyze-region-groups",
-
-  /** 校验语义分析结果并重建 DynamicPanel / Group 节点树 */
-  REBUILD_SEMANTIC_CONTAINERS = "rebuild-semantic-containers",
 
   /** 对归一化节点树进行 BFS 广度优先遍历 */
   BFS_TRAVERSAL = "bfs-traversal",

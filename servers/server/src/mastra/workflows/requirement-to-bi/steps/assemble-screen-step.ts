@@ -15,7 +15,7 @@ import { zoneComponentsSchema } from "./pick-components-step";
  * ⑤ 组装交付。**全程不调模型。**
  *
  * 逐个组件推 `data-node-conversion` 帧给前端，由前端建进画布、再由前端回写 agent 工作区
- * ——与 figmaToBI / codiaToBI 完全同一条路（`node-convert-to-bi-step.ts` 也是这么发的），
+ * ——与 figmaToBI 完全同一条路（`node-convert-to-bi-step.ts` 也是这么发的），
  * 前端侧的接收逻辑（`useFigmaToBI.addProcessedComponent`）本来就是通用的：按 `parentNodeId`
  * 分发到 根级 / 动态面板 / 分组，不含任何 figma 专有假设。
  *

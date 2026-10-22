@@ -208,7 +208,7 @@ export const useFigmaToBI = createGlobalState(() => {
    * 把转换出来的组件加进分组，按分组所在位置分两条路：
    *
    * - **动态面板里的分组**：先导航到该面板、切到对应状态，再 addComponentToPanel，
-   *   然后把新组件从顶层列表摘出来挂进分组（figma / codia 走这条）。
+   *   然后把新组件从顶层列表摘出来挂进分组（figma 走这条）。
    * - **大屏根级的分组**：没有面板上下文，直接用 core 的 placement 落位
    *   （requirementToBIWorkflow 走这条）。
    *
@@ -244,7 +244,7 @@ export const useFigmaToBI = createGlobalState(() => {
 
     // 根级分组：编辑器停在大屏根画布，没有面板上下文，走 core 的 placement 落位。
     //
-    // 以前这里直接 `return null`，因为 figma / codia 的分组永远嵌在动态面板里，从没走到过根级。
+    // 以前这里直接 `return null`，因为 figma 的分组永远嵌在动态面板里，从没走到过根级。
     // requirementToBIWorkflow 把 ft-folder 建在根级后这条限制才暴露：7 个叶子组件全被静默丢弃，
     // 画布上只剩 6 个空分组，且因为分组尺寸由成员包围盒推导，全都是 0×0——
     // 现象看着像「组件没生成」，实际是生成了、被这一行扔了，没有任何报错。

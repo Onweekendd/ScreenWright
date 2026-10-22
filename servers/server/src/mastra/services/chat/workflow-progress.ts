@@ -15,12 +15,11 @@ import { StepEnum } from "../../types";
 /**
  * 工作流 → 「交付完成」的那个 step id。
  *
- * 判据统一是「该 step 有 output」，但各工作流的交付步不同名：figma/codia 共用
+ * 判据统一是「该 step 有 output」，但各工作流的交付步不同名：figma 的是
  * nodeConvertToBIStep，requirementToBI 的是 assembleScreenStep。
  */
 const DELIVERY_STEP: Record<string, string> = {
   figmaToBIV2Workflow: StepEnum.NODE_CONVERT_TO_BI,
-  codiaToBIWorkflow: StepEnum.NODE_CONVERT_TO_BI,
   requirementToBIWorkflow: "assemble-screen"
 };
 
@@ -35,7 +34,7 @@ interface Statistics {
   details: string[];
 }
 
-/** figma / codia：交付步的 output 是逐节点结果数组 */
+/** figma：交付步的 output 是逐节点结果数组 */
 const fromNodeConvertOutput = (output: unknown): Statistics => {
   const results = Array.isArray(output) ? (output as Array<{ success?: boolean; skipped?: boolean }>) : [];
   const success = results.filter((r) => r.success).length;

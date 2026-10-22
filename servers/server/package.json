@@ -103,7 +103,6 @@
     "tsx": "^4.19.4",
     "undici": "^7.28.0",
     "ws": "^8.18.3",
-    "yoga-layout": "^3.2.1",
     "zod": "^4.1.13"
   },
   "//optionalDependencies": "minio 仅在 STORAGE_DRIVER=minio 或 RECORD_SINK=both 时懒加载（见 src/lib/storage/minio-object-store.ts）；纯 fs 部署可用 pnpm install --no-optional 剔除",

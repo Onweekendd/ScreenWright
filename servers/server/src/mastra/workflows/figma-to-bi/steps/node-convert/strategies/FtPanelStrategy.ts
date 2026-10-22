@@ -107,8 +107,7 @@ export class FtPanelStrategy implements ConvertStrategy {
     const { node: normalizedNode, zIndex, depth } = node;
 
     const panelStates = createPanelState();
-    // 容器背景图：节点带 imgLocalPath（Codia 的 backgroundConfig.type==="IMAGE" 落在容器节点上，
-    // 或 figma 路 resolveImages 匹配到的资源），灌进面板状态的背景图。
+    // 容器背景图：节点带 imgLocalPath（figma 路 resolveImages 匹配到的资源），灌进面板状态的背景图。
     // localPathToResourcePath 对 http(s) URL 原样返回、对本地路径转 ./assets/*。
     if (normalizedNode.imgLocalPath) {
       panelStates.backgroundImage = localPathToResourcePath(normalizedNode.imgLocalPath);

@@ -27,7 +27,6 @@ interface ResolvedSuspend {
 const SCREEN_BUILD_WORKFLOW_NAMES = new Set([
   "figmaToBIV2Workflow",
   "figmaToBIMockWorkflow",
-  "codiaToBIWorkflow",
   "requirementToBIWorkflow"
 ]);
 

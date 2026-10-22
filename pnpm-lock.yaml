@@ -297,9 +297,6 @@ importers:
       vue-router:
         specifier: 4.2.2
         version: 4.2.2(vue@3.5.21(typescript@5.9.2))
-      vue3-sketch-ruler:
-        specifier: ^1.3.3
-        version: 1.3.16(vue@3.5.21(typescript@5.9.2))
       vuedraggable:
         specifier: ^4.1.0
         version: 4.1.0(vue@3.5.21(typescript@5.9.2))
@@ -1171,9 +1168,6 @@ importers:
       ws:
         specifier: ^8.18.3
         version: 8.21.3
-      yoga-layout:
-        specifier: ^3.2.1
-        version: 3.2.1
       zod:
         specifier: ^4.1.13
         version: 4.4.3
@@ -11989,19 +11983,6 @@ packages:
     peerDependencies:
       typescript: '>=5.0.0'
 
-  vue3-sketch-ruler@1.3.16:
-    resolution: {integrity: sha512-k/TBOwbueU9eWOF7k/emsZMwtEqFk/FxG+h//TlaZ2B8RWbxhIe6hPFgggO4Jng10ARsuH4cMGAR+ZOuN4ozgg==}
-    deprecated: This version is deprecated. Please upgrade to version 2X for better features and performance.See https://github.com/kakajun/vue3-sketch-ruler
-    hasBin: true
-    peerDependencies:
-      '@vue/composition-api': ^1.1.0
-      vue: ^2.6.0 || ^3.2.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      vue:
-        optional: true
-
   vue@2.7.16:
     resolution: {integrity: sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==}
     deprecated: Vue 2 has reached EOL and is no longer actively maintained. See https://v2.vuejs.org/eol/ for more details.
@@ -12295,9 +12276,6 @@ packages:
   yoctocolors@2.1.2:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
-
-  yoga-layout@3.2.1:
-    resolution: {integrity: sha512-0LPOt3AxKqMdFBZA3HBAt/t/8vIKq7VaQYbuA8WxCgung+p9TVyKRYdpvCb80HcdTN2NkbIKbhNwKUfm3tQywQ==}
 
   z-schema@5.0.5:
     resolution: {integrity: sha512-D7eujBWkLa3p2sIpJA0d1pr7es+a7m0vFAnZLlCEKq/Ij2k0MLi9Br2UPxoxdYystm5K1yeBGzub0FlYUEWj2Q==}
@@ -24437,10 +24415,6 @@ snapshots:
       '@vue/language-core': 3.3.3
       typescript: 5.9.3
 
-  vue3-sketch-ruler@1.3.16(vue@3.5.21(typescript@5.9.2)):
-    optionalDependencies:
-      vue: 3.5.21(typescript@5.9.2)
-
   vue@2.7.16:
     dependencies:
       '@vue/compiler-sfc': 2.7.16
@@ -24784,8 +24758,6 @@ snapshots:
       yoctocolors: 2.1.2
 
   yoctocolors@2.1.2: {}
-
-  yoga-layout@3.2.1: {}
 
   z-schema@5.0.5:
     dependencies:

@@ -10,10 +10,10 @@ import { allocateComponentId } from "./fake-frontend";
  * `data-node-conversion` 帧的接收端——假前端的另一半。
  *
  * `fake-frontend.ts` 应答的是 suspend（工具主动问前端），这里接的是工作流**单向推**的组件帧：
- * figmaToBI / codiaToBI / requirementToBI 三条工作流都走这条路，前端侧对应
+ * figmaToBI / requirementToBI 两条工作流都走这条路，前端侧对应
  * `useFigmaToBI.addProcessedComponent` + 随后的工作区回写（`syncWorkspace` 默认为 true）。
  *
- * **不接这一层的话，断言看到的是一块空屏。**这三条工作流不写工作区、也不 suspend，
+ * **不接这一层的话，断言看到的是一块空屏。**这两条工作流不写工作区、也不 suspend，
  * 组件全在流里；驱动只处理 suspend 帧就等于把交付路径整段跳过了。
  *
  * 两处刻意与真前端保持一致，因为它们各自对应一类真实缺陷：

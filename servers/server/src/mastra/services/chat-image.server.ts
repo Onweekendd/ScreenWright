@@ -76,16 +76,3 @@ export async function readStoredImage(imageUrl: string): Promise<{ buffer: Buffe
   }
   return { buffer: await getChatImageBuffer(objectKey), mime: inferMime(objectKey) };
 }
-
-/**
- * 把图取回内存二进制,连同文件名与 MIME 一并返回,
- * 供需要以 multipart/form-data 上传原图的场景(如 Codia image_to_design)使用。
- */
-export async function fetchChatImageBuffer(
-  imageUrl: string
-): Promise<{ buffer: Buffer; filename: string; mime: string }> {
-  const objectKey = parseObjectKey(imageUrl);
-  const buffer = await getChatImageBuffer(objectKey);
-  const filename = objectKey.split("/").pop() || "image.png";
-  return { buffer, filename, mime: inferMime(objectKey) };
-}

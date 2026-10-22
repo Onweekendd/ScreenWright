@@ -1,4 +1,4 @@
-import { FlaskConical, LayoutDashboard, type LucideIcon, MessageSquare, Wrench } from "lucide-react";
+import { FlaskConical, type LucideIcon, MessageSquare, Wrench } from "lucide-react";
 
 export interface NavItem {
   title: string;
@@ -9,13 +9,8 @@ export interface NavItem {
 
 export const mainNavItems: NavItem[] = [
   {
-    title: "首页",
-    href: "/",
-    icon: LayoutDashboard
-  },
-  {
     title: "会话记录",
-    href: "/sessions",
+    href: "/",
     icon: MessageSquare
   },
   {
@@ -26,8 +21,7 @@ export const mainNavItems: NavItem[] = [
 ];
 
 export const breadcrumbMap: Record<string, string> = {
-  "/": "首页",
-  "/sessions": "会话记录",
+  "/": "会话记录",
   "/evals": "评估结果"
 };
 

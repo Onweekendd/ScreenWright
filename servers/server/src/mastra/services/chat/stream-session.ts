@@ -451,6 +451,7 @@ class BIChatStreamSession {
         messages: args.messages ?? [],
         clientTools: args.clientTools ?? {},
         runId: args.runId,
+        toolCallId: args.toolCallId,
         suspendType: args.suspendType,
         resumeData: args.resumeData,
         threadId: this.threadId,

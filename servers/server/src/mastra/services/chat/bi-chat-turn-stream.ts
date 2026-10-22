@@ -99,6 +99,11 @@ const createUsagePersister = (
 
 interface SwAgentStreamOptions {
   runId?: string;
+  /**
+   * resume 要交回执的那个挂起调用。不传时 Mastra 只能自己猜：同一个 run 里同时挂着两个调用
+   * （比如前一个挂起没收尾就被后台任务的续接带过去了）时，回执会交错调用，表现成每次都拿到上一次的结果
+   */
+  toolCallId?: string;
   resumeData?: Record<string, unknown>;
   messages: BIChatRequest["messages"];
   clientTools: ReturnType<typeof normalizeClientTools>;
@@ -116,8 +121,17 @@ interface SwAgentStreamOptions {
  * 返回对象与 stream() 同形，fullStream 横跨初始轮 + 续接轮，后续链路无需改动。
  */
 const startBIAgentStream = (options: SwAgentStreamOptions) => {
-  const { runId, resumeData, messages, clientTools, memoryOptions, requestContext, abortSignal, onStepFinish } =
-    options;
+  const {
+    runId,
+    toolCallId,
+    resumeData,
+    messages,
+    clientTools,
+    memoryOptions,
+    requestContext,
+    abortSignal,
+    onStepFinish
+  } = options;
 
   if (runId) {
     return swAgent.resumeStream(resumeData ?? {}, {
@@ -125,6 +139,7 @@ const startBIAgentStream = (options: SwAgentStreamOptions) => {
       untilIdle: true,
       memory: memoryOptions,
       runId,
+      toolCallId,
       abortSignal,
       requestContext,
       modelSettings: {
@@ -254,6 +269,7 @@ export async function createBIChatTurnStream(
       threadId,
       resourceId,
       runId,
+      toolCallId,
       suspendType,
       resumeData
     } = createTurnStreamArgs;
@@ -276,6 +292,7 @@ export async function createBIChatTurnStream(
 
     const mastraStream = await startBIAgentStream({
       runId,
+      toolCallId,
       resumeData,
       messages,
       clientTools: normalizeClientTools(rawClientTools),

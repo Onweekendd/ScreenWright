@@ -78,6 +78,7 @@ export function handleBiChatResume(
   if (session) {
     void session.runTurn({
       runId,
+      toolCallId,
       suspendType,
       resumeData,
       terminateAfterToolCallId: isRejectedResume(suspendType, resumeData) ? toolCallId : undefined

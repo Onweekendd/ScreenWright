@@ -33,6 +33,13 @@ export type AiModel = Prisma.AiModelModel
  */
 export type GeneratedImage = Prisma.GeneratedImageModel
 /**
+ * Model DesignBlueprint
+ * 设计蓝图（结构树 + 素材清单），效果图 → 大屏时由主模型写出，一个大屏一份、重写即覆盖。
+ * 素材准备结果、组装后的组件 id 都回写在 data 里：组装阶段和上下文压缩之后都从这里读回来，
+ * 不靠模型记在对话里。结构见 src/mastra/services/design-blueprint/schema.ts
+ */
+export type DesignBlueprint = Prisma.DesignBlueprintModel
+/**
  * Model FigmaKey
  * 
  */

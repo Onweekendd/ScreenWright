@@ -66,6 +66,18 @@ export async function fetchChatImageAsDataUrl(imageUrl: string): Promise<string>
 }
 
 /**
+ * 按 URL 读本系统 assetStore 里的图;不是本系统资源(外部公网图等)返回 null,由调用方原样放行。
+ * 按 objectKey 直读而不是 fetch URL:MinIO presigned URL 24h 过期,老会话里的图照样能读。
+ */
+export async function readStoredImage(imageUrl: string): Promise<{ buffer: Buffer; mime: string } | null> {
+  const objectKey = assetStore().keyFromUrl(imageUrl);
+  if (!objectKey) {
+    return null;
+  }
+  return { buffer: await getChatImageBuffer(objectKey), mime: inferMime(objectKey) };
+}
+
+/**
  * 把图取回内存二进制,连同文件名与 MIME 一并返回,
  * 供需要以 multipart/form-data 上传原图的场景(如 Codia image_to_design)使用。
  */

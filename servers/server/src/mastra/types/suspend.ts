@@ -43,6 +43,8 @@ export enum SuspendType {
   ExecuteInBrowser = "execute_in_browser",
   /** ASK 模式：审批通过后在浏览器执行脚本 */
   AskApprovalExecuteInBrowser = "ask_approval_execute_in_browser",
+  /** 截取当前编辑器画布，上传后回传图片 URL（只读，任何模式都不审批） */
+  CaptureCanvas = "capture_canvas",
   /** AUTO 模式：直接更新大屏配置并持久化 */
   UpdateScreenInfo = "update_screen_info",
   /** ASK 模式：审批通过后更新大屏配置 */
@@ -91,6 +93,30 @@ const componentCreatedFromFrontend = z
   .record(z.string(), z.unknown())
   .optional()
   .describe("前端建好的组件（含业务接口分配的真实 id）；后端据此过 core 放进树并整屏回写");
+
+/**
+ * create_component 一次挂起可以带多个组件（批量创建，省掉逐个往返）。
+ *
+ * `index` 是该组件在**工具入参 components 里的下标**，前端原样回传，后端靠它把回执对回入参。
+ * 不用数组位置对齐：入参里校验没过的项不会发给前端，两边的数组长度并不一致。
+ */
+const createItemSchema = z.object({
+  index: z.number().int().describe("该组件在入参 components 中的下标，回执时原样带回"),
+  component: z.record(z.string(), z.unknown()),
+  placement: placementSchema
+});
+
+const createResultSchema = z.object({
+  index: z.number().int(),
+  component: componentCreatedFromFrontend,
+  error: z.string().optional().describe("该组件创建失败时的错误信息；不影响同批其它组件")
+});
+
+const createResumeSchema = z.object({
+  approved: z.boolean().optional().describe("用户是否批准操作；false 表示整批取消"),
+  error: z.string().optional().describe("整批都没能开始创建时的错误信息"),
+  results: z.array(createResultSchema).optional().describe("逐个组件的创建回执，顺序不限")
+});
 
 /**
  * 不产生新 id 的那类操作（移动 / 解组 / 删除）的回执：**只回一个「干完了」**。
@@ -219,29 +245,17 @@ export const SuspendDefs = {
   [SuspendType.CreateComponent]: {
     suspend: z.object({
       type: z.literal(SuspendType.CreateComponent),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
+      items: z.array(createItemSchema).describe("待创建的组件；前端按数组顺序依次创建")
     }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
+    resume: createResumeSchema
   },
   [SuspendType.AskApprovalCreateComponent]: {
     suspend: z.object({
       type: z.literal(SuspendType.AskApprovalCreateComponent),
       purpose: z.string(),
-      /** 组件创建后才由前端分配真实路径，创建请求本身无路径可带；保留为可选仅为兼容既有 payload */
-      filePath: z.string().optional(),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
+      items: z.array(createItemSchema).describe("待创建的组件；前端按数组顺序依次创建")
     }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
+    resume: createResumeSchema
   },
 
   [SuspendType.DeleteComponent]: {
@@ -367,6 +381,40 @@ export const SuspendDefs = {
       z.object({ ok: z.boolean(), result: z.string().optional(), error: z.string().optional() }),
       z.object({ approved: z.literal(false) })
     ])
+  },
+
+  [SuspendType.CaptureCanvas]: {
+    suspend: z.object({
+      type: z.literal(SuspendType.CaptureCanvas),
+      componentIds: z.array(z.number()).optional().describe("只截这些组件的并集外框；不传截整个画布"),
+      region: z
+        .object({ x: z.number(), y: z.number(), width: z.number().positive(), height: z.number().positive() })
+        .optional()
+        .describe(
+          "只截画布上的这块矩形（设计稿像素，原点在画布左上角）；与 componentIds 二选一，超出画布的部分会被裁掉"
+        ),
+      grid: z.boolean().optional().describe("在截图上叠一层标了画布坐标的网格"),
+      gridStep: z.number().positive().optional().describe("网格间距（设计稿像素），不传自动"),
+      snap: z.boolean().optional().describe("只对 region 生效：四条边吸附到附近的边框线上")
+    }),
+    resume: z.object({
+      ok: z.boolean(),
+      url: z.string().optional().describe("截图上传后的访问 URL"),
+      width: z.number().optional(),
+      height: z.number().optional(),
+      region: z
+        .object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() })
+        .optional()
+        .describe("截图在画布上实际覆盖的区域（设计稿像素，已按画布边界裁过）；整屏截图就是整块画布"),
+      scale: z.number().optional().describe("每 1 设计稿像素对应的图片像素数"),
+      gridStep: z.number().optional().describe("叠了网格时实际用的间距（设计稿像素），可能比请求的大"),
+      snapped: z
+        .object({ left: z.boolean(), top: z.boolean(), right: z.boolean(), bottom: z.boolean() })
+        .optional()
+        .describe("开了 snap 时每条边是否吸附到了边框线"),
+      missingIds: z.array(z.number()).optional().describe("画布上找不到或当前不可见的组件 id"),
+      error: z.string().optional()
+    })
   },
 
   [SuspendType.UpdateScreenInfo]: {

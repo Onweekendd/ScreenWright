@@ -30,7 +30,7 @@ bi助手
 
 | 工具名 | 用途 |
 |---|---|
-| `create_component` | 创建组件 |
+| `create_component` | 创建组件（多个用 `components` 数组一次建完） |
 | `copy_component` | 复制组件 |
 | `edit_files` | 独立编辑一个或多个文件，并逐项同步前端 |
 | `delete_file` | 删除文件 |

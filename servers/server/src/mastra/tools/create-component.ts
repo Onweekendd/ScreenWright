@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { createTool } from "@mastra/core/tools";
 import type { ComponentPlacement } from "@screenwright/core";
-import type { ComponentType } from "@screenwright/types";
+import { type ComponentType, upgradeSwTextOption } from "@screenwright/types";
 import { z } from "zod";
 
 import { getAgentWorkspacePath } from "@/agent-resources/workspace-path";
@@ -32,25 +32,27 @@ function findComponentDoc(dir: string, prop: string): string | null {
   return null;
 }
 
-function fixFttext(template: Record<string, unknown>, componentName: string): void {
+/**
+ * 物料库里 swtext 的模板可能还是旧格式 option：先升级为当前 schema，
+ * 再按入口名补上形态字段（跑马灯写 marquee、超链接写 href），不再写已废弃的 type。
+ */
+function fixSwtext(template: Record<string, unknown>, componentName: string): void {
   const component = template.component as Record<string, unknown> | undefined;
   if (component?.prop !== "swtext") {
     return;
   }
 
-  let option = template.option as Record<string, unknown> | undefined;
-  if (!option) {
-    option = {};
-    template.option = option;
+  const option = upgradeSwTextOption(template.option as Record<string, unknown> | undefined);
+
+  if (componentName === "跑马灯" && !option.marquee) {
+    option.marquee = { speed: 100 };
+  }
+  // href 为空串会被渲染层当成"不是超链接"，所以占位用 "#"
+  if (componentName === "超链接" && !option.href) {
+    option.href = "#";
   }
 
-  const typeMapping: Record<string, "text" | "marquee" | "link"> = {
-    文本框: "text",
-    跑马灯: "marquee",
-    超链接: "link"
-  };
-
-  option.type = typeMapping[componentName] || "text";
+  template.option = option;
 }
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
@@ -168,14 +170,255 @@ function deepMerge(target: Record<string, unknown>, overrides: Record<string, un
   }
 }
 
+/** 单次最多创建的组件数：批量是为了省前端往返，不是让模型一把梭整屏 */
+const MAX_BATCH_SIZE = 30;
+
+const placementField = z
+  .object({
+    parentId: z.number().nullish().describe("父组件 ID（分组或动态面板）；根级新建时不传或传 null"),
+    parentType: z.enum(["group", "dynamicPanel"]).nullish().describe("父组件类型；给了 parentId 就必须给它"),
+    stateId: z.string().nullish().describe("动态面板状态 ID（parentType 为 dynamicPanel 时必填）")
+  })
+  .nullish()
+  .describe("嵌套位置；根级新建时省略整个对象（各键填 null 也按根级处理）");
+
+const overridesField = z
+  .record(z.string(), z.unknown())
+  .optional()
+  .describe("需要覆盖的字段，深合并进模板。键名必须在模板中已存在，否则拒绝执行");
+
+const componentNameField = z
+  .string()
+  .describe('组件的中文名称（即 Module.name / 组件 title 字段），如 "柱状图"、"折线图"');
+
+interface CreateItem {
+  componentName: string;
+  placement?: PlacementInput | null;
+  overrides?: Record<string, unknown>;
+}
+
+type ChangeEntry = z.infer<typeof ChangeSchema>;
+
+/** 单个组件的创建结果；index 是它在入参 components 中的下标（单个创建时恒为 0） */
+interface ItemResult {
+  index: number;
+  componentName: string;
+  success: boolean;
+  message: string;
+  filePath?: string;
+  schemaDoc?: string;
+  validationErrors?: string[];
+  change?: ChangeEntry;
+}
+
+type FailureExtra = Pick<ItemResult, "schemaDoc" | "validationErrors">;
+
+const failed = (index: number, componentName: string, message: string, extra: FailureExtra = {}): ItemResult => ({
+  index,
+  componentName,
+  success: false,
+  message,
+  ...extra
+});
+
+type PreparedItem =
+  | { ok: true; index: number; componentName: string; component: ComponentType; placement?: ComponentPlacement }
+  | { ok: false; index: number; componentName: string; result: ItemResult };
+
+/** 读模板 → 初始化 → 合并 overrides → 校验。纯后端可判定的错误都在这里拦掉，不去打扰前端。 */
+function prepareOne(
+  index: number,
+  { componentName, overrides }: CreateItem,
+  placement: ComponentPlacement | undefined,
+  javaScript: string | null | undefined
+): PreparedItem {
+  const fail = (message: string, extra?: FailureExtra): PreparedItem => ({
+    ok: false,
+    index,
+    componentName,
+    result: failed(index, componentName, message, extra)
+  });
+
+  if (javaScript === undefined) {
+    return fail(`未找到组件类型 "${componentName}"，请检查 componentName 是否正确`);
+  }
+  if (!javaScript) {
+    return fail(`组件 "${componentName}" 没有完整模板（Module.javaScript 为空）`);
+  }
+
+  let template: Record<string, unknown>;
+  try {
+    const cleanData = javaScript
+      .replace(/\\[rnt]/g, " ") // literal \r \n \t escape sequences stored in DB
+      .replace(/[\r\n\t]/g, " ") // actual control characters
+      .trim();
+
+    template = JSON.parse(cleanData);
+  } catch (e) {
+    return fail(`组件 "${componentName}" 的模板不是合法 JSON: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  // ── 新建组件的初始状态 ────────────────────────────────────────────────────
+  // id 仅为占位，真实 ID 由前端业务接口分配；组件不落盘，故无需 _draftId 标记与映射表。
+  // 加 index 是因为批量时同一毫秒会产出多个组件，占位 id 不能撞。
+  template.id = Date.now() + index;
+  template.left = 0;
+  template.top = 0;
+  template.zIndex = 0;
+  template.events = [];
+  template.data = template.data ?? [];
+  template.dataSource = {};
+  template.dataType = 0;
+  template.cbArgs = [];
+
+  fixSwtext(template, componentName);
+
+  const prop = (template.component as Record<string, unknown> | undefined)?.prop as string | undefined;
+  const schemaDoc = prop
+    ? (findComponentDoc(path.join(WORKSPACE_BASE, "skills/executor/sw-component-schema/references/components"), prop) ??
+      undefined)
+    : undefined;
+
+  // ── 合并 overrides ────────────────────────────────────────────────────────
+  if (overrides && Object.keys(overrides).length > 0) {
+    const unknownPaths = collectUnknownPaths(template, overrides);
+    if (unknownPaths.length > 0) {
+      return fail(
+        `overrides 中以下字段在 "${componentName}" 模板中不存在，请修正后重试${schemaDoc ? `。组件文档：${schemaDoc}` : ""}`,
+        { schemaDoc, validationErrors: unknownPaths }
+      );
+    }
+    deepMerge(template, overrides);
+  }
+
+  // ── 校验 ──────────────────────────────────────────────────────────────────
+  const validation = validateComponentContent(JSON.stringify(template));
+  if (!validation.ok) {
+    return fail(validation.message, { schemaDoc, validationErrors: validation.validationErrors });
+  }
+
+  return { ok: true, index, componentName, component: validation.data as ComponentType, placement };
+}
+
+/**
+ * 批量准备：placement 先收口（纯逻辑，错了不必碰库），模板一次 findMany 全读回来。
+ * 逐项独立判定——一项有误不拖累同批其它项。
+ */
+async function prepareItems(entries: Array<{ index: number; item: CreateItem }>): Promise<PreparedItem[]> {
+  const staged = entries.map(({ index, item }) => ({ index, item, placement: normalizePlacement(item.placement) }));
+
+  const names = [...new Set(staged.filter((s) => s.placement.ok).map((s) => s.item.componentName))];
+  const modules = names.length
+    ? await prismaClient.module.findMany({ where: { name: { in: names } }, select: { name: true, javaScript: true } })
+    : [];
+  const templates = new Map(modules.map((m) => [m.name, m.javaScript]));
+
+  return staged.map(({ index, item, placement }): PreparedItem => {
+    if (!placement.ok) {
+      return {
+        ok: false,
+        index,
+        componentName: item.componentName,
+        result: failed(index, item.componentName, placement.message)
+      };
+    }
+    return prepareOne(index, item, placement.placement, templates.get(item.componentName));
+  });
+}
+
+/**
+ * 前端建好了，这时才由后端过 core 落盘。
+ *
+ * 工作区只有一个写入者（前端那侧传 syncWorkspace: false）。落盘发生在这里而不是前端，
+ * 好处是返回给 agent 的 filePath 一定已经存在：前端的工作区回写是 debounce + 不 await 的，
+ * 由它写就可能 resume 都回来了文件还没落地，agent 紧接着 read_file 会扑空。
+ */
+async function persistCreated(
+  screenId: string,
+  index: number,
+  componentName: string,
+  created: Record<string, unknown>,
+  placement: ComponentPlacement | undefined
+): Promise<ItemResult> {
+  // 回来的这一份跟首次执行时校验过的 template 不是同一个东西（前端套了组件菜单默认值、
+  // 跑了位置尺寸分配），得重新过一遍 schema。组件 json 在**读**的时候 ScreenReader 会因为
+  // 校验不过整屏抛错，写的时候不挡就是往工作区里埋一颗读不回来的雷。
+  const validation = validateComponentContent(JSON.stringify(created));
+  if (!validation.ok) {
+    return failed(index, componentName, `组件已在前端创建，但它的结构过不了校验，未写入工作区：${validation.message}`, {
+      validationErrors: validation.validationErrors
+    });
+  }
+
+  try {
+    // 用原始对象而不是 validation.data：zod 会补默认值并重排 key，那些值会一路写进工作区
+    const applied = await applyComponentCreate(screenId, created as ComponentType, placement);
+    if (!applied) {
+      return failed(index, componentName, "组件已在前端创建，但落盘后未能在工作区中定位到它");
+    }
+    const createdFile = await readCreatedChange(WORKSPACE_BASE, applied.filePath);
+    return {
+      index,
+      componentName,
+      success: true,
+      filePath: applied.filePath,
+      // 属性层不匹配只警告不拦（见 validateComponentContent），但要让 agent 知道，
+      // 否则它建出一个 option 跟 prop schema 对不上的组件而毫不知情
+      message: `组件已创建，路径: ${applied.filePath}` + formatValidationWarnings(validation.warnings),
+      ...(createdFile ? { change: createdFile } : {})
+    };
+  } catch (error) {
+    return failed(
+      index,
+      componentName,
+      `组件已在前端创建，但写入工作区失败: ${error instanceof Error ? error.message : String(error)}`
+    );
+  }
+}
+
+/** 单个创建沿用原来的扁平输出；批量给汇总 + 逐项 results，change 合并成一个数组 */
+function summarize(results: ItemResult[], isBatch: boolean) {
+  if (!isBatch) {
+    const { index: _index, componentName: _name, change, ...rest } = results[0];
+    return { ...rest, ...(change ? { change: [change] } : {}) };
+  }
+
+  const okCount = results.filter((r) => r.success).length;
+  const failCount = results.length - okCount;
+  const lines = results.map((r) => `[${r.index}] 「${r.componentName}」${r.success ? "✓" : "✗"} ${r.message}`);
+  const change = results.flatMap((r) => (r.change ? [r.change] : []));
+  return {
+    success: failCount === 0,
+    message: `共 ${results.length} 个组件，成功 ${okCount} 个${failCount ? `，失败 ${failCount} 个（只需重试失败项）` : ""}\n${lines.join("\n")}`,
+    results: results.map(({ change: _change, ...rest }) => rest),
+    ...(change.length ? { change } : {})
+  };
+}
+
+const purposeOf = (names: string[]): string => {
+  if (names.length === 1) {
+    return `创建组件「${names[0]}」`;
+  }
+  return `创建 ${names.length} 个组件：${names.slice(0, 8).join("、")}${names.length > 8 ? " 等" : ""}`;
+};
+
 export const createComponentTool = createTool({
   id: "create_component",
-  description: `在大屏中创建一个新组件，并直接推送到前端完成创建，返回真实组件路径。
+  description: `在大屏中创建一个或多个新组件，并直接推送到前端完成创建，返回真实组件路径。
 
 - 从数据库读取该组件类型的完整模板（Module.javaScript），模板已包含全部默认值
 - 通过 overrides 只传需要定制的字段，其余字段沿用模板默认值
 - 校验后暂停执行交前端创建，前端分配真实 ID 并回传组件，后端写入工作区后返回可用于 read_file / edit_files 的 filePath
 - 放在大屏根级（绝大多数情况）时**不要传 placement**；只有放进分组或动态面板才传，且 parentId 与 parentType 必须成对给出
+
+两种调用方式：
+- 创建一个：直接传 componentName（以及可选的 placement、overrides）
+- **创建多个：传 components 数组，一次调用完成**（最多 ${MAX_BATCH_SIZE} 个）。需要建两个及以上组件时务必用它——只往返前端一次，比逐个调用快得多。此时顶层不要再传 componentName / placement / overrides
+
+批量说明：
+- 每项各有自己的 componentName / placement / overrides，互相独立：某一项出错不影响其它项，结果里按 index（即它在 components 中的下标，从 0 起）逐项列出，只需重试失败的那几项
+- 按数组顺序依次创建
+- 同一批里的组件**不能互相嵌套**：分组 / 动态面板要先建出来拿到真实 id，才能作为下一次调用的 placement.parentId
 
 关于 overrides：
 - 仅传用户明确要求的字段，如 { title: "销售额", left: 100, option: { ... } }
@@ -184,19 +427,21 @@ export const createComponentTool = createTool({
 
   inputSchema: z.object({
     screenId: z.string().describe('大屏目录标识，格式为 "{screenId}_{versionCode}"，如 "29445_1"'),
-    componentName: z.string().describe('组件的中文名称（即 Module.name / 组件 title 字段），如 "柱状图"、"折线图"'),
-    placement: z
-      .object({
-        parentId: z.number().nullish().describe("父组件 ID（分组或动态面板）；根级新建时不传或传 null"),
-        parentType: z.enum(["group", "dynamicPanel"]).nullish().describe("父组件类型；给了 parentId 就必须给它"),
-        stateId: z.string().nullish().describe("动态面板状态 ID（parentType 为 dynamicPanel 时必填）")
-      })
-      .nullish()
-      .describe("嵌套位置；根级新建时省略整个对象（各键填 null 也按根级处理）"),
-    overrides: z
-      .record(z.string(), z.unknown())
+    componentName: componentNameField.optional().describe("创建单个组件时传；创建多个请改用 components"),
+    placement: placementField,
+    overrides: overridesField,
+    components: z
+      .array(
+        z.object({
+          componentName: componentNameField,
+          placement: placementField,
+          overrides: overridesField
+        })
+      )
+      .min(1)
+      .max(MAX_BATCH_SIZE)
       .optional()
-      .describe("需要覆盖的字段，深合并进模板。键名必须在模板中已存在，否则拒绝执行")
+      .describe("批量创建：每项含 componentName，可选 placement、overrides；传了它就不要再传顶层的同名字段")
   }),
 
   suspendSchema: z.discriminatedUnion("type", [
@@ -211,172 +456,123 @@ export const createComponentTool = createTool({
     filePath: z
       .string()
       .optional()
-      .describe("组件在 workspace 中的完整嵌套路径，创建成功后可直接用于 read_file / edit_files"),
+      .describe("创建单个组件时：组件在 workspace 中的完整嵌套路径，可直接用于 read_file / edit_files"),
     schemaDoc: z.string().optional().describe("组件 schema 文档路径（相对 workspace），后续调整字段前应先读取"),
     message: z.string(),
     validationErrors: z.array(z.string()).optional(),
+    results: z
+      .array(
+        z.object({
+          index: z.number().describe("该组件在入参 components 中的下标"),
+          componentName: z.string(),
+          success: z.boolean(),
+          filePath: z.string().optional(),
+          message: z.string(),
+          schemaDoc: z.string().optional(),
+          validationErrors: z.array(z.string()).optional()
+        })
+      )
+      .optional()
+      .describe("批量创建时逐项的结果"),
     change: z.array(ChangeSchema).optional()
   }),
 
-  execute: async ({ screenId, componentName, placement: placementInput, overrides }, context) => {
+  execute: async ({ screenId, componentName, placement, overrides, components }, context) => {
     const { suspend, resumeData } = context?.agent ?? {};
     const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
 
-    // 挂起前后都要用它（suspend 载荷、resume 落盘），且 resume 时 mastra 回放的是同一份原始入参，
-    // 所以收口放在最前面一次，后面各处拿到的都是同一个已规整的值
-    const normalized = normalizePlacement(placementInput);
-    if (!normalized.ok) {
-      return { success: false, message: normalized.message };
+    const isBatch = components !== undefined;
+    if (isBatch && (componentName !== undefined || placement != null || overrides !== undefined)) {
+      return { success: false, message: "传了 components 就不要再传顶层的 componentName / placement / overrides" };
     }
-    const placement = normalized.placement;
+    const items: CreateItem[] | undefined =
+      components ?? (componentName ? [{ componentName, placement, overrides }] : undefined);
+    if (!items) {
+      return { success: false, message: "请传 componentName（创建单个），或传 components（批量创建）" };
+    }
 
     // ── 恢复阶段：用户拒绝 ─────────────────────────────────────────────────────
     if (resumeData?.approved === false) {
       return { success: false, message: "用户取消了组件创建操作" };
     }
 
-    // ── 恢复阶段：前端创建失败 ────────────────────────────────────────────────
+    // ── 恢复阶段：整批都没能开始创建 ──────────────────────────────────────────
     if (resumeData?.error) {
       return { success: false, message: resumeData.error as string };
     }
 
-    // ── 恢复阶段：前端建好了，这时才由后端过 core 落盘 ────────────────────────
-    // 工作区只有一个写入者（前端那侧传 syncWorkspace: false）。落盘发生在这里而不是前端，
-    // 好处是返回给 agent 的 filePath 一定已经存在：前端的工作区回写是 debounce + 不 await 的，
-    // 由它写就可能 resume 都回来了文件还没落地，agent 紧接着 read_file 会扑空。
-    if (resumeData?.component) {
-      // 回来的这一份跟首次执行时校验过的 template 不是同一个东西（前端套了组件菜单默认值、
-      // 跑了位置尺寸分配），得重新过一遍 schema。组件 json 在**读**的时候 ScreenReader 会因为
-      // 校验不过整屏抛错，写的时候不挡就是往工作区里埋一颗读不回来的雷。
-      const validation = validateComponentContent(JSON.stringify(resumeData.component));
-      if (!validation.ok) {
-        return {
-          success: false,
-          message: `组件已在前端创建，但它的结构过不了校验，未写入工作区：${validation.message}`,
-          validationErrors: validation.validationErrors
-        };
-      }
+    // ── 恢复阶段：前端回执 ────────────────────────────────────────────────────
+    // mastra 回放的是同一份原始入参，所以 items 与首次执行时一致。
+    // 首次执行里校验没过的项没有发给前端，回执里自然没有它们：这里重新判定一次，把原因还给 agent。
+    if (resumeData?.results) {
+      const receipts = new Map(resumeData.results.map((r) => [r.index, r]));
+      const unanswered = items.flatMap((item, index) => (receipts.has(index) ? [] : [{ index, item }]));
+      const unansweredResults = new Map(
+        (unanswered.length ? await prepareItems(unanswered) : []).map((p) => [
+          p.index,
+          p.ok ? failed(p.index, p.componentName, "前端没有返回该组件的创建结果") : p.result
+        ])
+      );
 
-      try {
-        // 用原始对象而不是 validation.data：zod 会补默认值并重排 key，那些值会一路写进工作区
-        const created = await applyComponentCreate(screenId, resumeData.component as ComponentType, placement);
-        if (!created) {
-          return { success: false, message: "组件已在前端创建，但落盘后未能在工作区中定位到它" };
+      const results: ItemResult[] = [];
+      for (const [index, item] of items.entries()) {
+        const receipt = receipts.get(index);
+        if (!receipt) {
+          results.push(unansweredResults.get(index)!);
+          continue;
         }
-        const createdFile = await readCreatedChange(WORKSPACE_BASE, created.filePath);
-        return {
-          success: true,
-          filePath: created.filePath,
-          // 属性层不匹配只警告不拦（见 validateComponentContent），但要让 agent 知道，
-          // 否则它建出一个 option 跟 prop schema 对不上的组件而毫不知情
-          message: `组件已创建，路径: ${created.filePath}` + formatValidationWarnings(validation.warnings),
-          ...(createdFile ? { change: [createdFile] } : {})
-        };
-      } catch (error) {
-        return {
-          success: false,
-          message: `组件已在前端创建，但写入工作区失败: ${error instanceof Error ? error.message : String(error)}`
-        };
+        if (receipt.error) {
+          results.push(failed(index, item.componentName, receipt.error));
+          continue;
+        }
+        if (!receipt.component) {
+          results.push(failed(index, item.componentName, "前端回执里没有组件内容"));
+          continue;
+        }
+        const normalized = normalizePlacement(item.placement);
+        if (!normalized.ok) {
+          results.push(failed(index, item.componentName, normalized.message));
+          continue;
+        }
+        results.push(
+          await persistCreated(screenId, index, item.componentName, receipt.component, normalized.placement)
+        );
       }
+      return summarize(results, isBatch);
     }
 
-    // ── 首次执行：读取模板 ────────────────────────────────────────────────────
-    const module = await prismaClient.module.findUnique({
-      where: { name: componentName },
-      select: { javaScript: true }
-    });
+    // ── 首次执行：逐项准备，能建的交前端，不能建的直接带原因返回 ───────────────
+    const prepared = await prepareItems(items.map((item, index) => ({ index, item })));
+    const ready = prepared.filter((p) => p.ok);
+    const rejected = prepared.flatMap((p) => (p.ok ? [] : [p.result]));
 
-    if (!module) {
-      return { success: false, message: `未找到组件类型 "${componentName}"，请检查 componentName 是否正确` };
-    }
-
-    if (!module.javaScript) {
-      return { success: false, message: `组件 "${componentName}" 没有完整模板（Module.javaScript 为空）` };
-    }
-
-    let template: Record<string, unknown>;
-    try {
-      const cleanData = module.javaScript
-        .replace(/\\[rnt]/g, " ") // literal \r \n \t escape sequences stored in DB
-        .replace(/[\r\n\t]/g, " ") // actual control characters
-        .trim();
-
-      template = JSON.parse(cleanData);
-    } catch (e) {
-      return {
-        success: false,
-        message: `组件 "${componentName}" 的模板不是合法 JSON: ${e instanceof Error ? e.message : String(e)}`
-      };
-    }
-
-    // ── 新建组件的初始状态 ────────────────────────────────────────────────────
-    // id 仅为占位，真实 ID 由前端业务接口分配；组件不落盘，故无需 _draftId 标记与映射表。
-    template.id = Date.now();
-    template.left = 0;
-    template.top = 0;
-    template.zIndex = 0;
-    template.events = [];
-    template.data = template.data ?? [];
-    template.dataSource = {};
-    template.dataType = 0;
-    template.cbArgs = [];
-
-    fixFttext(template, componentName);
-
-    const prop = (template.component as Record<string, unknown> | undefined)?.prop as string | undefined;
-    const schemaDoc = prop
-      ? (findComponentDoc(
-          path.join(WORKSPACE_BASE, "skills/executor/sw-component-schema/references/components"),
-          prop
-        ) ?? undefined)
-      : undefined;
-
-    // ── 合并 overrides ────────────────────────────────────────────────────────
-    if (overrides && Object.keys(overrides).length > 0) {
-      const unknownPaths = collectUnknownPaths(template, overrides);
-      if (unknownPaths.length > 0) {
-        return {
-          success: false,
-          message: `overrides 中以下字段在 "${componentName}" 模板中不存在，请修正后重试${schemaDoc ? `。组件文档：${schemaDoc}` : ""}`,
-          schemaDoc,
-          validationErrors: unknownPaths
-        };
-      }
-      deepMerge(template, overrides);
-    }
-
-    // ── 校验 ──────────────────────────────────────────────────────────────────
-    const validation = validateComponentContent(JSON.stringify(template));
-    if (!validation.ok) {
-      return {
-        success: false,
-        message: validation.message,
-        schemaDoc,
-        validationErrors: validation.validationErrors
-      };
+    if (ready.length === 0) {
+      return summarize(rejected, isBatch);
     }
 
     if (!suspend) {
       return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
     }
 
-    const component = validation.data as ComponentType;
+    const payloadItems = ready.map(({ index, component, placement: itemPlacement }) => ({
+      index,
+      component,
+      placement: itemPlacement
+    }));
 
-    // ── ASK_BEFORE_EDIT：审批 + 创建合并为一次 suspend ────────────────────────
+    // ── ASK_BEFORE_EDIT：审批 + 创建合并为一次 suspend（整批一次审批）────────────
     if (mode === AgentMode.ASK_BEFORE_EDIT) {
       return suspend({
         type: SuspendType.AskApprovalCreateComponent,
-        purpose: `创建组件「${componentName}」`,
-        component,
-        placement
+        purpose: purposeOf(ready.map((p) => p.componentName)),
+        items: payloadItems
       }) as never;
     }
 
     // ── 自动模式：直接交给前端创建 ────────────────────────────────────────────
     return suspend({
       type: SuspendType.CreateComponent,
-      component,
-      placement
+      items: payloadItems
     }) as never;
   }
 });

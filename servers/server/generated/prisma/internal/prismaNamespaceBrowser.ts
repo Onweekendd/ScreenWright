@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   AiModel: 'AiModel',
   GeneratedImage: 'GeneratedImage',
+  DesignBlueprint: 'DesignBlueprint',
   FigmaKey: 'FigmaKey',
   Module: 'Module',
   FigmaNodeAsset: 'FigmaNodeAsset',
@@ -115,6 +116,17 @@ export const GeneratedImageScalarFieldEnum = {
 } as const
 
 export type GeneratedImageScalarFieldEnum = (typeof GeneratedImageScalarFieldEnum)[keyof typeof GeneratedImageScalarFieldEnum]
+
+
+export const DesignBlueprintScalarFieldEnum = {
+  screenKey: 'screenKey',
+  threadId: 'threadId',
+  data: 'data',
+  createdTime: 'createdTime',
+  updatedTime: 'updatedTime'
+} as const
+
+export type DesignBlueprintScalarFieldEnum = (typeof DesignBlueprintScalarFieldEnum)[keyof typeof DesignBlueprintScalarFieldEnum]
 
 
 export const FigmaKeyScalarFieldEnum = {

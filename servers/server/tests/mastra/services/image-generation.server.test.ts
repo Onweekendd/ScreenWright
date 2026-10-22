@@ -1,3 +1,4 @@
+import sharp from "sharp";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const prismaMocks = vi.hoisted(() => ({
@@ -31,7 +32,9 @@ vi.mock("@/lib/storage", () => ({
 import {
   computePromptHash,
   generateAndStoreImage,
-  generateEffectImages
+  generateEffectImages,
+  imagesEndpoint,
+  prepareReference
 } from "@/mastra/services/image-generation.server";
 
 let fetchMock: ReturnType<typeof spyFetch>;
@@ -67,6 +70,172 @@ beforeEach(() => {
 afterEach(() => {
   fetchMock.mockRestore();
   vi.useRealTimers();
+});
+
+/**
+ * 接入 gpt-image（中转网关）：请求格式与方舟不同，且实际出图尺寸以服务商为准。
+ */
+describe("gpt-image 网关", () => {
+  const png = (width: number, height: number) =>
+    sharp({ create: { width, height, channels: 3, background: "#123456" } })
+      .png()
+      .toBuffer();
+
+  beforeEach(() => {
+    registryMocks.getModelConfigSync.mockReturnValue({
+      modelId: "gpt-image-2",
+      baseUrl: "https://llm-api.net/v1",
+      apiKey: "k"
+    });
+    prismaMocks.findUnique.mockResolvedValue(null);
+    createReturnsInput();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("文生图：发到 /v1/images/generations，body 里没有 seed / watermark / response_format，size 换成它接受的 2048x1152", async () => {
+    await generateAndStoreImage({ prompt: "大屏背景", seed: 3, width: 1920, height: 1080 });
+
+    expect(fetchMock.mock.calls[0][0]).toBe("https://llm-api.net/v1/images/generations");
+    expect(generationBody()).toEqual({ model: "gpt-image-2", prompt: "大屏背景", n: 1, size: "2048x1152" });
+  });
+
+  it("记录的宽高是实际出图的尺寸，而不是请求值", async () => {
+    fetchMock.mockImplementation(async (url) =>
+      isGeneration(url) ? generationResponse({ b64_json: (await png(2048, 1152)).toString("base64") }) : imageResponse()
+    );
+
+    const result = await generateAndStoreImage({ prompt: "p", seed: 1, width: 1920, height: 1080 });
+
+    expect([result.width, result.height]).toEqual([2048, 1152]);
+    expect(prismaMocks.create.mock.calls[0][0].data).toMatchObject({ width: 2048, height: 1152 });
+  });
+
+  it("图片不是标准图片、读不出尺寸时，退回请求的宽高", async () => {
+    const result = await generateAndStoreImage({ prompt: "p", seed: 1, width: 1920, height: 1080 });
+
+    expect([result.width, result.height]).toEqual([1920, 1080]);
+  });
+
+  it("网关把图按对话补全格式夹在文本里返回时也能取到", async () => {
+    fetchMock.mockImplementation(async (url) =>
+      isGeneration(url)
+        ? new Response(
+            JSON.stringify({
+              choices: [{ message: { role: "assistant", content: "![img](https://cdn.example.com/o.png)" } }]
+            }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+          )
+        : imageResponse()
+    );
+
+    await generateAndStoreImage({ prompt: "p", seed: 1, width: 1024, height: 1024 });
+
+    expect(fetchMock.mock.calls[1][0]).toBe("https://cdn.example.com/o.png");
+    expect(storeMocks.put).toHaveBeenCalledTimes(1);
+  });
+
+  it("图生图：走 /images/edits，multipart 里带缩小后的参考图", async () => {
+    const screenshot = await sharp({ create: { width: 1920, height: 1080, channels: 3, background: "#0b2a44" } })
+      .jpeg()
+      .toBuffer();
+    storeMocks.keyFromUrl.mockReturnValue("chat-images/c/shot.jpg");
+    storeMocks.get.mockResolvedValue(screenshot);
+    // 图生图的端点是 /images/edits，默认的假 fetch 只认 /images/generations
+    fetchMock.mockImplementation(async (url) =>
+      String(url).endsWith("/images/edits")
+        ? generationResponse({ b64_json: Buffer.from([1, 2, 3]).toString("base64") })
+        : imageResponse()
+    );
+
+    await generateAndStoreImage({
+      prompt: "按这张截图的色调出配套素材",
+      seed: 1,
+      width: 1920,
+      height: 1080,
+      seedImageUrl: "https://blobs/chat-images/c/shot.jpg"
+    });
+
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe("https://llm-api.net/v1/images/edits");
+    const form = (init as RequestInit).body as FormData;
+    const sent = await sharp(Buffer.from(await (form.get("image") as File).arrayBuffer())).metadata();
+    expect(sent.width).toBe(1280);
+    expect((init as RequestInit).headers).not.toHaveProperty("Content-Type");
+  });
+
+  it("配了 IMAGE_PROMPT_MAX_CHARS 时，超长提示词在发请求前就拦下，并说明要精简到多少字", async () => {
+    vi.stubEnv("IMAGE_PROMPT_MAX_CHARS", "1000");
+
+    await expect(
+      generateAndStoreImage({ prompt: "景".repeat(1200), seed: 1, width: 1024, height: 1024 })
+    ).rejects.toThrow(/1200 字.*上限 1000 字/);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("没配上限时不拦长提示词", async () => {
+    await generateAndStoreImage({ prompt: "景".repeat(1200), seed: 1, width: 1024, height: 1024 });
+
+    expect(generationCalls()).toHaveLength(1);
+  });
+});
+
+describe("prepareReference", () => {
+  const solid = (width: number, height: number) =>
+    sharp({ create: { width, height, channels: 3, background: "#123456" } })
+      .png()
+      .toBuffer();
+
+  it("长边超过 1280 时等比缩小并转 JPEG", async () => {
+    const out = await prepareReference(await solid(2000, 1000));
+
+    expect(await sharp(out).metadata()).toMatchObject({ format: "jpeg", width: 1280, height: 640 });
+  });
+
+  it("本来就小的图不放大", async () => {
+    const out = await prepareReference(await solid(400, 300));
+
+    expect(await sharp(out).metadata()).toMatchObject({ width: 400, height: 300 });
+  });
+
+  it("不是图片时原样放行，让服务商给出明确的 4xx，而不是在这里换一种报错", async () => {
+    const garbage = Buffer.from([9, 9, 9]);
+
+    expect(await prepareReference(garbage)).toBe(garbage);
+  });
+});
+
+/**
+ * baseUrl 填成完整的 `.../images/generations` 时，方舟对拼重复的路径回 500 InternalServiceError，
+ * 看着像服务商故障，实际是配置问题——两种写法都得落到同一个地址上。
+ */
+describe("imagesEndpoint", () => {
+  const expected = "https://ark.example/api/v3/images/generations";
+
+  it.each([
+    ["只写到 /api/v3", "https://ark.example/api/v3"],
+    ["带结尾斜杠", "https://ark.example/api/v3/"],
+    ["误填了完整路径", "https://ark.example/api/v3/images/generations"],
+    ["完整路径 + 结尾斜杠", "https://ark.example/api/v3/images/generations/"]
+  ])("%s：落到同一个地址", (_name, baseUrl) => {
+    expect(imagesEndpoint(baseUrl)).toBe(expected);
+  });
+
+  it("请求真的发到去重后的地址，而不是 /images/generations/images/generations", async () => {
+    registryMocks.getModelConfigSync.mockReturnValue({
+      modelId: "test-image-model",
+      baseUrl: "https://ark.example/api/v3/images/generations",
+      apiKey: "k"
+    });
+    prismaMocks.findUnique.mockResolvedValue(null);
+    createReturnsInput();
+
+    await generateAndStoreImage({ prompt: "p", seed: 1, width: 1024, height: 768 });
+
+    expect(fetchMock.mock.calls[0][0]).toBe(expected);
+  });
 });
 
 describe("computePromptHash", () => {
@@ -222,6 +391,34 @@ describe("generateAndStoreImage", () => {
     expect(body).toMatchObject({ model: "test-image-model", prompt: "在这张图基础上改配色", size: "512x512", seed: 1 });
     expect(body.image).toMatch(/^data:image\/png;base64,/);
     expect(result.reused).toBe(false);
+  });
+
+  it("参考图（如 1920×1080 的画布截图）发出去前被缩到长边 ≤1280 的 JPEG，请求体里带的是缩小后的那份", async () => {
+    const screenshot = await sharp({
+      create: { width: 1920, height: 1080, channels: 3, background: "#0b2a44" }
+    })
+      .jpeg()
+      .toBuffer();
+    prismaMocks.findUnique.mockResolvedValue(null);
+    createReturnsInput();
+    storeMocks.keyFromUrl.mockReturnValue("chat-images/c1/shot.jpg");
+    storeMocks.get.mockResolvedValue(screenshot);
+    fetchMock.mockImplementation(async () =>
+      generationResponse({ b64_json: Buffer.from([1, 2, 3]).toString("base64") })
+    );
+
+    await generateAndStoreImage({
+      prompt: "按这张截图的色调出配套素材",
+      seed: 1,
+      width: 1280,
+      height: 720,
+      seedImageUrl: "https://blobs/chat-images/c1/shot.jpg"
+    });
+
+    const image = generationBody().image as string;
+    expect(image).toMatch(/^data:image\/jpeg;base64,/);
+    const sent = await sharp(Buffer.from(image.split(",")[1], "base64")).metadata();
+    expect(sent).toMatchObject({ format: "jpeg", width: 1280, height: 720 });
   });
 
   it("seedImageUrl 不是 assetStore 里的资源时直接报错，不悄悄下载外部图片", async () => {

@@ -4,13 +4,14 @@ import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 
 import { prismaClient } from "@/mastra/storage/prisma";
 
+import { inlineImagesMiddleware } from "./image-middleware";
 import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from "./utils";
 
 /**
  * 模型配置化：只 4 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
  *
  * - **reasoning**：主 agent + 所有子 agent + 标题 + 摘要压缩 + 编排 + 截图 + subtab + artifact-app Pi
- * - **vision**：识图（vision-agent / semantic-layout-agent）
+ * - **vision**：识图。主 agent 自己能看图后已没有使用方，角色先保留（「设置」页与库表都按 4 个角色建的）
  * - **embedding**：组件 RAG 向量
  * - **image**：生图（效果图、装饰素材重画）。走 `images.generations` 接口，不是 chat 补全，
  *   所以 `resolveImageModel` 返回 `ImageModel` 而不是 `WrapLMModel`，见下方单独的 warm/resolve。
@@ -135,13 +136,17 @@ export function invalidateModelConfigs(): void {
 const openaiFor = (cfg: AiModelConfig, fetch?: typeof globalThis.fetch) =>
   createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing", fetch });
 
-/** 推理模型：主 / 子 / 编排 / 标题（录制版） / 摘要 等一切文本推理。 */
+/** 推理模型：主 / 子 / 编排 / 标题（录制版） / 摘要 等一切推理；主模型自带视觉，图片经 inlineImagesMiddleware 直接喂。 */
 export function resolveReasoningModel(): WrapLMModel {
   const cfg = getModelConfigSync("reasoning");
   const provider = openaiFor(cfg, createGenericFetch({ record: true, thinking: "enabled" }));
   return wrapLanguageModel({
     model: provider.chat(cfg.modelId) as unknown as WrapLMModel,
-    middleware: [inlineReasoningMiddleware, extractReasoningMiddleware({ tagName: "think", startWithReasoning: true })]
+    middleware: [
+      inlineImagesMiddleware,
+      inlineReasoningMiddleware,
+      extractReasoningMiddleware({ tagName: "think", startWithReasoning: true })
+    ]
   });
 }
 
@@ -149,7 +154,11 @@ export function resolveReasoningModel(): WrapLMModel {
 export function resolveReasoningModelNoRecord(): WrapLMModel {
   const cfg = getModelConfigSync("reasoning");
   const provider = openaiFor(cfg, createGenericFetch({ record: false, thinking: "disabled" }));
-  return provider.chat(cfg.modelId) as unknown as WrapLMModel;
+  // 标题取自首条用户消息，可能带图：内网图 URL 外网模型访问不到，同样要换成二进制
+  return wrapLanguageModel({
+    model: provider.chat(cfg.modelId) as unknown as WrapLMModel,
+    middleware: [inlineImagesMiddleware]
+  });
 }
 
 /** 视觉模型：识图。不注入 deepseek 的 thinking 字段（视觉模型多为 gemini 类）。 */

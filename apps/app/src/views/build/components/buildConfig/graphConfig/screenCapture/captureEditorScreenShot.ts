@@ -16,16 +16,44 @@ function resolveCaptureElement(ref: CaptureElementRef): HTMLElement | null {
   return ref;
 }
 
+/**
+ * 临时去掉祖先上的 transform，返回恢复函数。
+ *
+ * 无限画布把相机（平移 + 缩放）挂在画布的父容器上，snapdom 会把祖先的缩放带进截图：
+ * 输出尺寸是设计稿尺寸，内容却按当前缩放比缩在左上角。截图期间把祖先 transform 置为 none，
+ * 截到的就是 1:1 的设计稿。
+ */
+function neutralizeAncestorTransforms(dom: HTMLElement): () => void {
+  const stash: Array<{ el: HTMLElement; transform: string }> = [];
+  for (let el = dom.parentElement; el && el !== document.body; el = el.parentElement) {
+    if (getComputedStyle(el).transform !== "none") {
+      stash.push({ el, transform: el.style.transform });
+      el.style.transform = "none";
+    }
+  }
+  return () => stash.forEach(({ el, transform }) => (el.style.transform = transform));
+}
+
 /** 简单模式：整屏 snapdom 一次截取 */
 async function captureEditorScreenShotSimple(
   dom: HTMLElement,
-  mimeType: ScreenShotOptions["mimeType"] = "image/jpeg"
+  { mimeType = "image/jpeg", scale = 1, backgroundColor, exclude, dpr, outerShadows }: ScreenShotOptions = {}
 ): Promise<ScreenShotResult> {
-  const canvas = await snapdom.toCanvas(dom, {
-    scale: 1,
-    embedFonts: true,
-    fast: true
-  });
+  const restoreTransforms = neutralizeAncestorTransforms(dom);
+  let canvas: HTMLCanvasElement;
+  try {
+    canvas = await snapdom.toCanvas(dom, {
+      scale,
+      embedFonts: true,
+      fast: true,
+      backgroundColor,
+      exclude,
+      dpr,
+      outerShadows
+    });
+  } finally {
+    restoreTransforms();
+  }
   const isJpeg = mimeType === "image/jpeg";
   const dataUrl = canvas.toDataURL(isJpeg ? "image/jpeg" : "image/png", isJpeg ? 0.92 : undefined);
   const ext = isJpeg ? "jpg" : "png";
@@ -56,7 +84,7 @@ export async function captureEditorScreenShot(options: ScreenShotOptions = {}): 
     if (!dom) {
       return null;
     }
-    return captureEditorScreenShotSimple(dom, mimeType);
+    return captureEditorScreenShotSimple(dom, options);
   }
 
   const dataUrl = await runLayerCompositeCapture({

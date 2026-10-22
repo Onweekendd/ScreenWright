@@ -62,6 +62,27 @@ const createLike: Handler = (payload, policy) => {
 };
 
 /**
+ * 新建组件：一次挂起带一批 `items`，逐项回 `{ index, component }`（index 原样带回，后端靠它对回入参）。
+ *
+ * 拒绝是整批的事（`approved: false`）；应用失败则逐项各记一条 `error`，
+ * 跟真前端「单个失败不中断同批」的行为一致。
+ */
+const createComponents: Handler = (payload, policy) => {
+  if (!policy.approve) {
+    return { approved: false };
+  }
+  const items = (payload.items ?? []) as Array<{ index: number; component: Record<string, unknown> }>;
+  return {
+    approved: true,
+    results: items.map(({ index, component }) =>
+      policy.applyFailure
+        ? { index, error: policy.applyFailure("添加组件") }
+        : { index, component: withFreshIds(component) }
+    )
+  };
+};
+
+/**
  * 递归换新 id：节点自己、`children` 里的子组件、面板各状态 `config` 里的子组件，全都要换。
  *
  * **只换顶层是不够的**。复制分组时载荷里的 children 是整棵内联子树（`copy-component.ts` 的
@@ -230,8 +251,8 @@ const browserUnavailable: Handler = () => ({ ok: false, error: "eval 环境没�
  * case 时先照着它要走的工具核一遍这张表，别指望兜底。
  */
 const handlers = new Map<string, Handler>([
-  ["create_component", createLike],
-  ["ask_approval_create_component", createLike],
+  ["create_component", createComponents],
+  ["ask_approval_create_component", createComponents],
   ["copy_component", createLike],
   ["ask_approval_copy_component", createLike],
   ["group_component", groupLike],

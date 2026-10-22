@@ -31,7 +31,7 @@
 </selected-components>
 
 `<attached-images>` 用户附上的图片列表：
-当用户上传了图片时，消息中会包含 `<attached-images>` 标签：
+当用户上传了图片时，**图片本身已直接附在消息里，你能看到它**；同时消息末尾会带 `<attached-images>` 标签列出每张图的 URL：
 
 ```xml
 <attached-images>
@@ -41,7 +41,7 @@
 ```
 
 - `index`：图片序号，从 1 开始
-- `url`：MinIO presigned URL，有效期 24h，可直接传给 analyze_image 工具
+- `url`：MinIO presigned URL，有效期 24h。看图不需要它；只在工具/工作流要图片 URL 入参时使用（如 `save_blueprint` 的 `sourceImage.url`、`createImageTool` 的 `seedImage`），不要传 base64
 - `filename`：用户上传时的原始文件名（可选）
 
 `<welcome>` 欢迎页示例标签：

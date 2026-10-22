@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   AiModel: 'AiModel',
   GeneratedImage: 'GeneratedImage',
+  DesignBlueprint: 'DesignBlueprint',
   FigmaKey: 'FigmaKey',
   Module: 'Module',
   FigmaNodeAsset: 'FigmaNodeAsset',
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "aiModel" | "generatedImage" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
+    modelProps: "aiModel" | "generatedImage" | "designBlueprint" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -568,6 +569,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.GeneratedImageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.GeneratedImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    DesignBlueprint: {
+      payload: Prisma.$DesignBlueprintPayload<ExtArgs>
+      fields: Prisma.DesignBlueprintFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DesignBlueprintFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DesignBlueprintFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>
+        }
+        findFirst: {
+          args: Prisma.DesignBlueprintFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DesignBlueprintFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>
+        }
+        findMany: {
+          args: Prisma.DesignBlueprintFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>[]
+        }
+        create: {
+          args: Prisma.DesignBlueprintCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>
+        }
+        createMany: {
+          args: Prisma.DesignBlueprintCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DesignBlueprintCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>[]
+        }
+        delete: {
+          args: Prisma.DesignBlueprintDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>
+        }
+        update: {
+          args: Prisma.DesignBlueprintUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>
+        }
+        deleteMany: {
+          args: Prisma.DesignBlueprintDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DesignBlueprintUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DesignBlueprintUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>[]
+        }
+        upsert: {
+          args: Prisma.DesignBlueprintUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignBlueprintPayload>
+        }
+        aggregate: {
+          args: Prisma.DesignBlueprintAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDesignBlueprint>
+        }
+        groupBy: {
+          args: Prisma.DesignBlueprintGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DesignBlueprintGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DesignBlueprintCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DesignBlueprintCountAggregateOutputType> | number
         }
       }
     }
@@ -1970,6 +2045,17 @@ export const GeneratedImageScalarFieldEnum = {
 export type GeneratedImageScalarFieldEnum = (typeof GeneratedImageScalarFieldEnum)[keyof typeof GeneratedImageScalarFieldEnum]
 
 
+export const DesignBlueprintScalarFieldEnum = {
+  screenKey: 'screenKey',
+  threadId: 'threadId',
+  data: 'data',
+  createdTime: 'createdTime',
+  updatedTime: 'updatedTime'
+} as const
+
+export type DesignBlueprintScalarFieldEnum = (typeof DesignBlueprintScalarFieldEnum)[keyof typeof DesignBlueprintScalarFieldEnum]
+
+
 export const FigmaKeyScalarFieldEnum = {
   id: 'id',
   keyValue: 'keyValue',
@@ -2448,13 +2534,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -2465,6 +2544,13 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -2578,6 +2664,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   aiModel?: Prisma.AiModelOmit
   generatedImage?: Prisma.GeneratedImageOmit
+  designBlueprint?: Prisma.DesignBlueprintOmit
   figmaKey?: Prisma.FigmaKeyOmit
   module?: Prisma.ModuleOmit
   figmaNodeAsset?: Prisma.FigmaNodeAssetOmit

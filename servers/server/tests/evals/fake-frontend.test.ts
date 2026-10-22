@@ -39,7 +39,7 @@ describe("批次标识回传", () => {
   it("拒绝路径也要带批次标识——否则工具同样认领不了这一帧", () => {
     const fe = createFakeFrontend({ approve: false });
 
-    const resume = fe.reply({ type: "create_component", batchId: "b", operationId: "2", component: {} }, meta);
+    const resume = fe.reply({ type: "create_component", batchId: "b", operationId: "2", items: [] }, meta);
 
     expect(resume).toMatchObject({ approved: false, batchId: "b", operationId: "2" });
   });
@@ -220,24 +220,31 @@ describe("ask_user_question 的应答策略", () => {
 });
 
 describe("前端应用失败的原因", () => {
-  const createSuspend = () => ({ type: "create_component", component: { id: 1, component: { prop: "swtext" } } });
+  const createSuspend = () => ({
+    type: "create_component",
+    items: [{ index: 0, component: { id: 1, component: { prop: "swtext" } } }]
+  });
+
+  type CreateResume = { approved?: boolean; results: Array<{ index: number; component?: unknown; error?: string }> };
 
   it("不给 applyFailure 就是应用成功 —— 缺省本身是语义，不该被补成某种默认失败", () => {
-    const resume = createFakeFrontend({}).reply(createSuspend(), meta) as { approved?: boolean; error?: string };
+    const resume = createFakeFrontend({}).reply(createSuspend(), meta) as CreateResume;
 
     expect(resume.approved).toBe(true);
-    expect(resume.error).toBeUndefined();
+    expect(resume.results[0]!.error).toBeUndefined();
+    expect(resume.results[0]!.component).toBeDefined();
   });
 
   it("channelDown 要点明重试和换工具都没用 —— 否则 agent 只能靠猜，会去委派子 agent", () => {
     const frontend = createFakeFrontend({ applyFailure: applyFailures.channelDown });
 
-    const resume = frontend.reply(createSuspend(), meta) as { approved?: boolean; error?: string };
+    const resume = frontend.reply(createSuspend(), meta) as CreateResume;
+    const error = resume.results[0]!.error;
 
     expect(resume.approved).toBe(true);
-    expect(resume.error).toContain("添加组件");
-    expect(resume.error).toContain("重试");
-    expect(resume.error).toContain("换工具");
+    expect(error).toContain("添加组件");
+    expect(error).toContain("重试");
+    expect(error).toContain("换工具");
   });
 
   it("payloadRejected 要带上具体字段 —— 这类失败是改得对的，不能说成通道不通", () => {
@@ -245,10 +252,28 @@ describe("前端应用失败的原因", () => {
       applyFailure: applyFailures.payloadRejected('width 必须为正整数，收到 "很宽"')
     });
 
-    const resume = frontend.reply(createSuspend(), meta) as { error?: string };
+    const resume = frontend.reply(createSuspend(), meta) as CreateResume;
+    const error = resume.results[0]!.error;
 
-    expect(resume.error).toContain("width 必须为正整数");
-    expect(resume.error).not.toContain("重试");
+    expect(error).toContain("width 必须为正整数");
+    expect(error).not.toContain("重试");
+  });
+
+  it("批量创建：每项各回一条，index 原样带回，且各拿到不同的真实 id", () => {
+    const resume = createFakeFrontend({}).reply(
+      {
+        type: "create_component",
+        items: [
+          { index: 0, component: { id: 1 } },
+          { index: 3, component: { id: 2 } }
+        ]
+      },
+      meta
+    ) as CreateResume;
+
+    expect(resume.results.map((r) => r.index)).toEqual([0, 3]);
+    const ids = resume.results.map((r) => (r.component as { id: number }).id);
+    expect(new Set(ids).size).toBe(2);
   });
 
   it("同一个 policy 对不同操作要报出对应的操作名", () => {

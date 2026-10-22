@@ -1,4 +1,4 @@
-import { AgentMode, type ResumeData, type SuspendPayload, SuspendType } from "@screenwright/server/rpc";
+import { AgentMode, apiClient, type ResumeData, type SuspendPayload, SuspendType } from "@screenwright/server/rpc";
 import { ComponentSchema, type ComponentType } from "@screenwright/types";
 import { cloneDeep } from "lodash-es";
 
@@ -12,6 +12,7 @@ import type { PanelState } from "../../buildRender/core/SystemComponent/type";
 import { UpdateHistoryTypeEnum, useAction } from "../../buildRender/hooks/useAction";
 import { createLocalPanelStatus } from "../../buildRender/hooks/useCommonPanelAction";
 import { useEditStore } from "../../buildRender/hooks/useEditStore";
+import { captureCanvasForAgent } from "./captureCanvasForAgent";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
 import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import { useConfirm } from "./useConfirm";
@@ -120,32 +121,47 @@ export function useComponentStreamUpdater(
   };
 
   /**
-   * 审批通过后立即创建组件（ASK 模式下的 create_component）。
+   * 按顺序创建一批组件，逐个产出回执。
+   *
+   * 整批放进同一次画布写入队列：批内的组件位置尺寸分配有先后依赖，中途不能被别的 tab 插进来；
+   * 顺序也不能并发——createComponent 会读画布当前状态做分配。
+   * 单个失败只记在该项回执上，不中断同批后面的组件（它们互相独立，agent 只需重试失败的）。
+   */
+  const createComponentItems = (items: SuspendPayload<SuspendType.CreateComponent>["items"]) =>
+    enqueueCanvasMutation(async () => {
+      const results: NonNullable<ResumeData<SuspendType.CreateComponent>["results"]> = [];
+      for (const { index, component, placement } of items) {
+        try {
+          const result = await createComponent({
+            componentTitle: (component.name ?? component.title) as string,
+            componentConfig: component as Partial<ComponentType>,
+            placement: placement as ComponentPlacement | undefined
+          });
+          results.push({
+            index,
+            ...(!result.success || !result.componentId
+              ? { error: result.message }
+              : createdComponentPayload(result.component, result.componentId))
+          });
+        } catch (e) {
+          results.push({ index, error: (e as Error).message });
+        }
+      }
+      return { results };
+    });
+
+  /**
+   * 审批通过后立即创建组件（ASK 模式下的 create_component）；整批只审批一次。
    * @field purpose - 审批目的说明
-   * @field component - 待创建的组件配置
-   * @field placement - 组件放置信息（父容器、位置等）
+   * @field items - 待创建的组件（配置 + 放置信息），index 回执时原样带回
    */
   const handleAskApprovalCreateComponent: SuspendHandlerFn<SuspendType.AskApprovalCreateComponent> = async (info) => {
-    const { purpose, component, placement } = info.suspendPayload;
+    const { purpose, items } = info.suspendPayload;
     const ok = await confirm(sessionId, `是否允许：${purpose}？`);
     if (!ok) {
       return { approved: false };
     }
-    return enqueueCanvasMutation(async () => {
-      try {
-        const result = await createComponent({
-          componentTitle: component.title as string,
-          componentConfig: component,
-          placement: placement as ComponentPlacement | undefined
-        });
-        if (!result.success || !result.componentId) {
-          return { error: result.message };
-        }
-        return createdComponentPayload(result.component, result.componentId);
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
+    return createComponentItems(items);
   };
 
   /**
@@ -178,27 +194,10 @@ export function useComponentStreamUpdater(
 
   /**
    * 直接创建组件（AUTO 模式）。
-   * @field component - 待创建的组件配置（name/title 用于标题）
-   * @field placement - 组件放置信息
+   * @field items - 待创建的组件（配置 + 放置信息），name/title 用于标题
    */
-  const handleCreateComponent: SuspendHandlerFn<SuspendType.CreateComponent> = async (info) => {
-    const { component, placement } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      try {
-        const result = await createComponent({
-          componentTitle: (component.name ?? component.title) as string,
-          componentConfig: component as Partial<ComponentType>,
-          placement: placement as ComponentPlacement | undefined
-        });
-        if (!result.success || !result.componentId) {
-          return { error: result.message };
-        }
-        return createdComponentPayload(result.component, result.componentId);
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
+  const handleCreateComponent: SuspendHandlerFn<SuspendType.CreateComponent> = async (info) =>
+    createComponentItems(info.suspendPayload.items);
 
   /**
    * 从已有配置复制创建组件。
@@ -602,6 +601,33 @@ export function useComponentStreamUpdater(
   };
 
   /**
+   * 截取当前编辑器画布（或指定组件）并上传，回传 URL 供主模型看图自检（只读，不审批）。
+   * @field componentIds - 只截这些组件；不传截整个画布
+   */
+  const handleCaptureCanvas: SuspendHandlerFn<SuspendType.CaptureCanvas> = async (info) => {
+    try {
+      const { componentIds, region: wantedRegion, grid, gridStep: wantedStep, snap } = info.suspendPayload;
+      const { file, width, height, region, scale, gridStep, snapped, missingIds } = await captureCanvasForAgent({
+        componentIds,
+        region: wantedRegion,
+        grid,
+        gridStep: wantedStep,
+        snap
+      });
+      const res = await apiClient.customApi["chat-images"].upload.$post({
+        form: { conversationId: sessionId, file }
+      });
+      const data = await res.json();
+      if (!data.success) {
+        return { ok: false, error: "截图上传失败" };
+      }
+      return { ok: true, url: data.data.url, width, height, region, scale, gridStep, snapped, missingIds };
+    } catch (e) {
+      return { ok: false, error: (e as Error).message };
+    }
+  };
+
+  /**
    * 用户提交计划后展示计划摘要，根据用户选择的操作模式切换本地 AgentMode。
    * @field summary - 计划摘要
    * @field plan - 详细计划内容
@@ -735,6 +761,7 @@ export function useComponentStreamUpdater(
     [SuspendType.DeleteComponent, handleDeleteComponent],
     [SuspendType.ExecuteInBrowser, handleExecuteInBrowser],
     [SuspendType.AskApprovalExecuteInBrowser, handleAskApprovalExecuteInBrowser],
+    [SuspendType.CaptureCanvas, handleCaptureCanvas],
     [SuspendType.UpdateScreenInfo, handleUpdateScreenInfo],
     [SuspendType.AskApprovalUpdateScreenInfo, handleAskApprovalUpdateScreenInfo],
     [SuspendType.GroupComponent, handleGroupComponent],

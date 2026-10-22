@@ -61,6 +61,15 @@ function sampleResponseText(
   return forClient;
 }
 
+const INLINE_IMAGE = /(data:image\/[\w.+-]+;base64,)[A-Za-z0-9+/=]+/g;
+
+/**
+ * 主模型看图后，每一步请求体都带着整张图的 base64（几 MB），原样落盘会让录制目录迅速膨胀。
+ * 录制只为回放 prompt 结构，图的内容不需要，留个长度占位即可。
+ */
+const omitInlineImages = (body: string): string =>
+  body.replace(INLINE_IMAGE, (match, prefix: string) => `${prefix}<omitted ${match.length - prefix.length} chars>`);
+
 /**
  * 记录一次 LLM 往返。
  *
@@ -68,7 +77,7 @@ function sampleResponseText(
  */
 export function recordExchange(input: RecordExchangeInput): ReadableStream<Uint8Array> | null {
   const { url, requestBody, res, isStream, requestStartedAt, source = "mastra" } = input;
-  const request = safeParse(requestBody);
+  const request = safeParse(typeof requestBody === "string" ? omitInlineImages(requestBody) : requestBody);
 
   const exchange = new ExchangeArchive(source).open({
     url,

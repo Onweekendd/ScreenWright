@@ -15,6 +15,11 @@ import { getModelConfigSync } from "@/mastra/provider/model-registry";
 import { prismaClient } from "@/mastra/storage/prisma";
 import { formatErrorChain, retryWithBackoff } from "@/mastra/workflows/figma-to-bi/utils/async";
 
+import { buildImageRequest, extractImage, imagesEndpoint, mediaTypeOf } from "./image-provider";
+import { imageSize, shrinkToJpeg } from "./shrink-image";
+
+export { imagesEndpoint };
+
 export interface GenerateImageInput {
   /** 结构化 prompt 原文（画布/风格/布局/区域内容/文字白名单/禁止，见 docs/生图到大屏工作流.md §5） */
   prompt: string;
@@ -42,6 +47,19 @@ export interface GeneratedImageRecord {
   /** 命中已有记录时为 true，调用方可以据此跳过"生成中"的进度展示 */
   reused: boolean;
 }
+
+/**
+ * 从 prompt 派生一个稳定的数字 seed，而不是随机生成。
+ *
+ * 原因：生图工具都开了 `background`，Mastra 失败后会用同一份 args 重跑 `execute`
+ * （见 `background.maxRetries`）。如果 seed 每次调用都随机，`generateAndStoreImage`
+ * 里靠 `sha256(prompt+seed+model)` 做的幂等就形同虚设——重试永远打不中缓存，
+ * 等于每次重试都真的重新生成一次、重新计费一次。同一份 prompt 派生同一个 seed，
+ * 才能让"重试"真正命中已有结果。
+ */
+// 夹到 int32 正数：方舟要求 seed ≤ 2147483647，GeneratedImage.seed 也是 Prisma Int
+export const deriveSeed = (prompt: string): number =>
+  createHash("sha256").update(prompt).digest().readUInt32BE(0) & 0x7fffffff;
 
 export const computePromptHash = (prompt: string, seed: number, model: string, seedImageUrl?: string): string =>
   createHash("sha256").update(JSON.stringify({ prompt, seed, model, seedImageUrl })).digest("hex");
@@ -75,9 +93,6 @@ const retry = <T>(label: string, fn: () => Promise<T>): Promise<T> =>
 /** 拿到 4xx 就别重试了——参数错、鉴权错重试多少次都一样；5xx 和网络错才值得 */
 const isClientError = (error: unknown): boolean => error instanceof Error && /^请求失败 4\d\d/.test(error.message);
 
-const mediaTypeOf = (bytes: Buffer): string =>
-  bytes.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff])) ? "image/jpeg" : "image/png";
-
 /**
  * 直连 OpenAI 兼容的 `/images/generations`，文本生图和 img2img 走同一条路。**不走 ai-sdk**：
  * - 它的 OpenAI provider 一收到参考图就改请求 `/images/edits`，火山方舟没有这个端点（404）；
@@ -88,39 +103,64 @@ const mediaTypeOf = (bytes: Buffer): string =>
  * 所以这里要 `response_format: "url"`：响应只有几百字节，图片再单独下载、单独重试。
  * 每次请求 `Connection: close`——不复用被代理搞脏的连接。
  */
+/** 参考图长边上限：方舟对大参考图（base64 进请求体）会直接断连，实测压到 1280 / 100KB 级就稳了 */
+const REFERENCE_MAX_EDGE = 1280;
+
+/**
+ * 参考图预处理：长边 ≤ 1280、统一转 JPEG。画布截图是 1920×1080 起步（单组件还会放大渲染），
+ * 带渐变和发光的深色大屏压不下去，原样 base64 进请求体经常把连接撑断。
+ * 解码失败（不是图片 / 损坏）时原样放行，让服务商给出明确的 4xx，别在这里吞成另一种报错。
+ */
+export const prepareReference = async (bytes: Buffer): Promise<Buffer> => {
+  try {
+    return await shrinkToJpeg(bytes, REFERENCE_MAX_EDGE);
+  } catch (error) {
+    console.warn(`[image-generation] 参考图预处理失败，原样发送：${formatErrorChain(error)}`);
+    return bytes;
+  }
+};
+
+/**
+ * 提示词长度上限（字符数）。有的网关对 prompt 有硬上限（gpt-image 中转文档写的是 1000），超了不是报错就是被悄悄截断，
+ * 而结构化 prompt 很容易写长。配了 IMAGE_PROMPT_MAX_CHARS 就在发请求**之前**拦下并说清楚，让 agent 去精简，
+ * 别白白打一次请求（还要重试 6 次）才拿到一个含糊的 400。不配则不限制。
+ */
+const promptLimit = (): number | undefined => Number(process.env.IMAGE_PROMPT_MAX_CHARS) || undefined;
+
 const requestGeneration = async (input: GenerateImageInput, reference?: Buffer): Promise<GeneratedBytes> => {
   const { baseUrl, apiKey, modelId } = getModelConfigSync("image");
-  const body = JSON.stringify({
-    model: modelId,
-    prompt: input.prompt,
-    ...(reference ? { image: `data:${mediaTypeOf(reference)};base64,${reference.toString("base64")}` } : {}),
-    size: `${input.width}x${input.height}`,
-    seed: input.seed,
-    response_format: "url",
-    watermark: false
-  });
+  const limit = promptLimit();
+  if (limit && input.prompt.length > limit) {
+    throw new Error(
+      `提示词 ${input.prompt.length} 字，超过生图服务的上限 ${limit} 字：请精简到 ${limit} 字以内再试` +
+        "（保留画布尺寸、风格、关键元素，去掉重复和细枝末节）"
+    );
+  }
+  const request = buildImageRequest({ baseUrl, apiKey, modelId, input, reference });
+  const endpoint = request.url;
   const kind = reference ? "img2img" : "生图";
 
   const first = await retryWithBackoff(
     async () => {
       let response: Response;
       try {
-        response = await fetch(`${baseUrl.replace(/\/+$/, "")}/images/generations`, {
+        response = await fetch(endpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}`, Connection: "close" },
-          body,
+          headers: request.headers,
+          body: request.body,
           signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
         });
       } catch (error) {
         // undici 的 `fetch failed` 本身不说原因，真正的原因在 cause 链里（other side closed / 超时 / TLS）
-        throw new Error(`${kind} 请求失败：${formatErrorChain(error)}，请求体 ${Math.round(body.length / 1024)}KB`);
+        throw new Error(`${kind} 请求失败：${formatErrorChain(error)}，请求体 ${request.sizeKB}KB`);
       }
       if (!response.ok) {
-        throw new Error(`请求失败 ${response.status}：${(await response.text()).slice(0, 300)}`);
+        // 带上实际请求的地址：地址拼错时服务商回的 500 不说原因，没有它只能去猜
+        throw new Error(`请求失败 ${response.status}（${endpoint}）：${(await response.text()).slice(0, 300)}`);
       }
-      const payload = (await response.json()) as { data?: Array<{ b64_json?: string; url?: string }> };
-      const item = payload.data?.[0];
-      if (!item?.url && !item?.b64_json) {
+      // 标准形态 data[0].url / b64_json；个别网关按对话补全格式把图夹在 choices 的文本里，两种都认
+      const item = extractImage(await response.json());
+      if (!item) {
         throw new Error("生图模型没有返回任何图片");
       }
       return item;
@@ -183,7 +223,7 @@ export async function generateAndStoreImage(
     if (!key) {
       throw new Error(`种子图片不是内部 assetStore 的资源，无法解析：${input.seedImageUrl}`);
     }
-    referenceImage = await assetStore().get(key);
+    referenceImage = await prepareReference(await assetStore().get(key));
   }
 
   await report(10);
@@ -196,14 +236,17 @@ export async function generateAndStoreImage(
   const { url } = await assetStore().put(key, image.bytes, { contentType: image.mediaType });
 
   await report(90);
+  // 记实际出图的尺寸：gpt-image 会把请求的 1920×1080 换成它接受的 2048×1152，模型也未必严格按 size 出图。
+  // 读不出来（不是标准图片）才退回请求值。
+  const actual = await imageSize(image.bytes);
   const row = await prismaClient.generatedImage.create({
     data: {
       promptHash,
       prompt: input.prompt,
       model: modelId,
       seed: input.seed,
-      width: input.width,
-      height: input.height,
+      width: actual?.width ?? input.width,
+      height: actual?.height ?? input.height,
       url
     }
   });

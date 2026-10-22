@@ -3,6 +3,7 @@ import { generateImage } from "ai";
 
 import { prismaClient } from "@/mastra/storage/prisma";
 
+import { createConfiguredEmbeddingModel } from "../provider/embedding-model";
 import {
   type AiModelConfig,
   MODEL_ROLES,
@@ -105,23 +106,23 @@ const scrubKeys = (msg: string): string => msg.replace(/\b(sk|xai|key)-[A-Za-z0-
  */
 export async function testAiModel(
   role: ModelRole,
-  partial: Partial<Pick<AiModelConfig, "baseUrl" | "apiKey" | "modelId">>
+  partial: Partial<Pick<AiModelConfig, "baseUrl" | "apiKey" | "modelId" | "dimensions">>
 ): Promise<TestAiModelResult> {
   const started = Date.now();
   const stored = await prismaClient.aiModel.findUnique({ where: { role } });
   const cfg = {
     baseUrl: partial.baseUrl?.trim() || stored?.baseUrl || "",
     apiKey: partial.apiKey?.trim() || stored?.apiKey || "",
-    modelId: partial.modelId?.trim() || stored?.modelId || ""
+    modelId: partial.modelId?.trim() || stored?.modelId || "",
+    dimensions: partial.dimensions !== undefined ? partial.dimensions : (stored?.dimensions ?? null)
   };
   try {
     if (!cfg.modelId) {
       return { ok: false, latencyMs: 0, error: "未填写模型 id" };
     }
     if (role === "embedding") {
-      const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
-      const model = provider.textEmbeddingModel(cfg.modelId);
-      await (model as unknown as { doEmbed: (o: { values: string[] }) => Promise<unknown> }).doEmbed({
+      const model = createConfiguredEmbeddingModel(cfg);
+      await model.doEmbed({
         values: ["ping"]
       });
     } else if (role === "image") {

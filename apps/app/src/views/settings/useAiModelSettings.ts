@@ -140,7 +140,8 @@ export function useAiModelSettings() {
       const r = await testAiModel(role, {
         baseUrl: st.form.baseUrl.trim(),
         apiKey: st.form.apiKey.trim() || undefined,
-        modelId: st.form.modelId.trim()
+        modelId: st.form.modelId.trim(),
+        ...(role === "embedding" ? { dimensions: st.form.dimensions ?? null } : {})
       });
       st.testResult = r.ok
         ? { ok: true, text: `连接正常（${r.latencyMs}ms）` }

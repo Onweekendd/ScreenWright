@@ -2,8 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { getModelConfigSync } from "@/mastra/provider/model-registry";
-import { embeddingModel } from "@/mastra/vector/embeddingModel";
+import { getModelConfigSync, resolveEmbeddingModel } from "@/mastra/provider/model-registry";
 import { vector } from "@/mastra/vector/index";
 
 /**
@@ -68,8 +67,8 @@ function truncate(doc: ComponentDoc): string {
   return doc.content.slice(0, MAX_CHARS);
 }
 
-async function embedAndUpsert(docs: ComponentDoc[]): Promise<void> {
-  const result = await embeddingModel.doEmbed({ values: docs.map(truncate) });
+async function embedAndUpsert(docs: ComponentDoc[], model: ReturnType<typeof resolveEmbeddingModel>): Promise<void> {
+  const result = await model.doEmbed({ values: docs.map(truncate) });
   await vector.upsert({
     indexName: INDEX_NAME,
     vectors: result.embeddings,
@@ -118,6 +117,13 @@ export async function seedComponentEmbeddings(opts: { reset?: boolean } = {}): P
     return { embedded: 0, failed: 0 };
   }
 
+  // 整次重建固定使用同一份模型配置；先确认请求可用且输出维度匹配，再删除旧索引。
+  const model = resolveEmbeddingModel();
+  const probe = await model.doEmbed({ values: ["组件检索维度检查"] });
+  const actualDimension = probe.embeddings[0]?.length;
+  if (actualDimension !== dimension) {
+    throw new Error(`嵌入模型返回 ${actualDimension ?? 0} 维，但索引配置为 ${dimension} 维；请先修正向量维度配置`);
+  }
   await ensureIndex(dimension, !!opts.reset);
 
   let embedded = 0;
@@ -127,13 +133,13 @@ export async function seedComponentEmbeddings(opts: { reset?: boolean } = {}): P
     const batch = batches[i];
     console.log(`[批次 ${i + 1}/${batches.length}] ${batch.length} 篇`);
     try {
-      await embedAndUpsert(batch);
+      await embedAndUpsert(batch, model);
       embedded += batch.length;
     } catch {
       console.warn(`  ⚠ 批次 ${i + 1} 整批失败，降级逐条`);
       for (const doc of batch) {
         try {
-          await embedAndUpsert([doc]);
+          await embedAndUpsert([doc], model);
           embedded += 1;
         } catch (e) {
           failed += 1;

@@ -1,9 +1,10 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import type { EmbeddingModel, ImageModel } from "ai";
+import type { ImageModel } from "ai";
 import { extractReasoningMiddleware, wrapLanguageModel } from "ai";
 
 import { prismaClient } from "@/mastra/storage/prisma";
 
+import { createConfiguredEmbeddingModel } from "./embedding-model";
 import { inlineImagesMiddleware } from "./image-middleware";
 import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from "./utils";
 
@@ -97,9 +98,13 @@ const toConfig = (row: {
 /**
  * 从库里读 3 个角色配置进同步缓存；缺行用 env 兜底 seed。
  * 在 `runtime.ts` 顶层 await、以及每次写 `ai_model` 后调用。
+ *
+ * 先在新表里读齐再整体替换，不能先 clear 再逐个填：生图 worker 每个任务开始前都会重读一次，
+ * worker 与 ai 同进程时（开发环境）批量生图的并发请求会读到半空的缓存，
+ * 报「角色 image 未初始化」（实测一批 4 张里随机挂一张）。
  */
 export async function warmModelConfigs(): Promise<void> {
-  cache.clear();
+  const next = new Map<ModelRole, AiModelConfig>();
   for (const role of MODEL_ROLES) {
     let row = await prismaClient.aiModel.findUnique({ where: { role } });
     if (!row) {
@@ -115,7 +120,11 @@ export async function warmModelConfigs(): Promise<void> {
         }
       });
     }
-    cache.set(role, toConfig(row));
+    next.set(role, toConfig(row));
+  }
+  cache.clear();
+  for (const [role, config] of next) {
+    cache.set(role, config);
   }
 }
 
@@ -172,10 +181,9 @@ export function resolveVisionModel(): WrapLMModel {
 }
 
 /** 嵌入模型：组件 RAG。 */
-export function resolveEmbeddingModel(): EmbeddingModel {
+export function resolveEmbeddingModel(): ReturnType<typeof createConfiguredEmbeddingModel> {
   const cfg = getModelConfigSync("embedding");
-  const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
-  return provider.embeddingModel(cfg.modelId) as unknown as EmbeddingModel;
+  return createConfiguredEmbeddingModel(cfg);
 }
 
 /**

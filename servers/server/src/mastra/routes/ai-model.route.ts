@@ -7,8 +7,8 @@ import {
   listAiModels,
   reindexEmbeddings,
   testAiModel,
-  type UpdateAiModelInput,
-  updateAiModel
+  updateAiModel,
+  type UpdateAiModelInput
 } from "../services/ai-model.server";
 
 /**
@@ -60,7 +60,8 @@ export const aiModelRouter = new Hono()
     const result = await testAiModel(role, {
       baseUrl: typeof body.baseUrl === "string" ? body.baseUrl : "",
       apiKey: typeof body.apiKey === "string" ? body.apiKey : "",
-      modelId: typeof body.modelId === "string" ? body.modelId : ""
+      modelId: typeof body.modelId === "string" ? body.modelId : "",
+      dimensions: num(body.dimensions)
     });
     return c.json(ok(result));
   })

@@ -27,9 +27,9 @@ export const captureCanvasTool = createTool({
     "目标不是组件（底图里的一张卡片、一块边框装饰）时，带 snap: true：region 只需大致框住（每条边误差 60 像素以内都行），**宁大勿小**——框小了可能吸到卡内一组嵌套的小方块上；框大了不怕，隔壁卡片和整屏外框会被认出来排除，" +
     "工具会在像素上把四条边吸附到最近的边框线外沿，裁出来四条线完整、不留背景。返回的 region 就是吸附后的精确坐标，可以直接复用" +
     "（比如同尺寸的另几张卡）；snapped 里为 false 的边没找到线、保持原位，需要你再核对。" +
-    "大致框可以先带 grid: true 截一张整屏读出来。要当 seedImage 用的截图不要加 grid。" +
+    "大致框可以先带 grid: true 截一张整屏读出来。要当参考图（seedImages）用的截图不要加 grid。" +
     "只读，不改动画布。" +
-    "返回的 url 还能作为 createImageTool 的 seedImage，把当前画布当参考图去生成配套素材或效果图。",
+    "返回的 url 还能作为 createImageTool 的 seedImages，把当前画布当参考图去生成配套素材或效果图。",
   inputSchema: z.object({
     componentIds: z
       .array(z.number())
@@ -66,7 +66,7 @@ export const captureCanvasTool = createTool({
   }),
   outputSchema: z.object({
     ok: z.boolean(),
-    url: z.string().optional().describe("截图 URL；可直接作为 createImageTool 的 seedImage 传入做图生图"),
+    url: z.string().optional().describe("截图 URL；可直接作为 createImageTool 的 seedImages 传入做图生图"),
     width: z.number().optional(),
     height: z.number().optional(),
     region: regionSchema.optional().describe("截图覆盖的画布区域（设计稿像素）"),

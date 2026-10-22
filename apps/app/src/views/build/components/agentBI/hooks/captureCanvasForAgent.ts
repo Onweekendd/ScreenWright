@@ -72,7 +72,7 @@ export interface AgentCanvasShot {
 export interface AgentCaptureRequest {
   componentIds?: number[];
   region?: CanvasRegion;
-  /** 叠一层标了画布坐标的网格，给模型读坐标用；要当 seedImage 的图别加 */
+  /** 叠一层标了画布坐标的网格，给模型读坐标用；要当生图参考图的别加 */
   grid?: boolean;
   /** 网格间距（设计稿像素），不传自动 */
   gridStep?: number;

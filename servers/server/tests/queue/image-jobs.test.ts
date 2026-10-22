@@ -20,7 +20,7 @@ describe("imageJobId", () => {
   it.each([
     ["prompt", { prompt: "另一张" }],
     ["seed", { seed: 43 }],
-    ["参考图", { seedImageUrl: "http://x/blobs/a.png" }]
+    ["参考图", { seedImageUrls: ["http://x/blobs/a.png"] }]
   ])("%s 变了 id 就变（不能把不同的图合并成一个任务）", (_label, patch) => {
     expect(imageJobId({ ...base, ...patch }, "seedream")).not.toBe(imageJobId(base, "seedream"));
   });
@@ -40,7 +40,7 @@ describe("ImageJobDataSchema", () => {
 
   it("接受合法数据（参考图可选）", () => {
     expect(ImageJobDataSchema.parse(base)).toEqual(base);
-    expect(ImageJobDataSchema.parse({ ...base, seedImageUrl: "u" }).seedImageUrl).toBe("u");
+    expect(ImageJobDataSchema.parse({ ...base, seedImageUrls: ["u"] }).seedImageUrls).toEqual(["u"]);
   });
 
   it.each([

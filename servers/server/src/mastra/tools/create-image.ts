@@ -6,6 +6,12 @@ import { generateImage } from "@/queue/image-client";
 
 import { TOOL_IMAGES_FIELD } from "../provider/image-middleware";
 
+/**
+ * 参考图张数上限。方舟、gpt-image 都收得下更多张，但参考图是整张进请求体的（方舟是 base64），
+ * 张数一多请求体就大到容易被掐断连接；组合构图 + 风格 + 一两张局部参考，4 张够用。
+ */
+export const MAX_SEED_IMAGES = 4;
+
 export const createImageTool = createTool({
   id: "createImageTool",
   description:
@@ -13,19 +19,22 @@ export const createImageTool = createTool({
     "生成大屏效果图/设计稿时，width/height 应该和目标画布一致（通常 1920x1080 起），" +
     "不要用默认的小尺寸——分辨率太低会导致卡片内的文字、数字看不清。" +
     "要基于当前画布的样子生成（如按现有大屏的色调出配套素材、把截图重绘成效果图）时，" +
-    "先 capture_canvas 截图，再把返回的 url 作为 seedImage 传进来。" +
+    "先 capture_canvas 截图，再把返回的 url 放进 seedImages 传进来。" +
+    `参考图最多 ${MAX_SEED_IMAGES} 张，可以组合着用（比如一张定构图、一张定风格），在 prompt 里说清每张参考什么（第 1 张…第 2 张…）。` +
     "生成边框 / 卡片底板 / 标题栏这类要贴合组件边缘的素材时，在 prompt 里写明「边框线紧贴画面四条边、四周不留空白」。" +
     "提示词要精炼：部分生图服务限制在 1000 字以内，超长会被拒绝，需要精简后重试。" +
     "返回图片的实际尺寸可能和你要的不完全一致（服务商会取它支持的最接近的尺寸），铺满组件时用 objectFit: fill 即可。",
   inputSchema: z.object({
     // 必须是我们自己 assetStore 里的资源 url（比如之前生成过的图、系统素材库里的图），
     // 不是任意外部图片地址——校验与报错都在 generateAndStoreImage 里做。
-    seedImage: z
-      .string()
+    seedImages: z
+      .array(z.string())
+      .min(1)
+      .max(MAX_SEED_IMAGES)
       .optional()
       .describe(
-        "可选的种子图片 url（img2img，须是本系统 assetStore 里的资源）：用户上传的图、之前生成的图，" +
-          "或 capture_canvas 返回的画布截图 url 都可以直接传。参考图的宽高比不能超过 16:1"
+        `可选的参考图 url 列表（img2img，最多 ${MAX_SEED_IMAGES} 张，按顺序发给生图模型；须是本系统 assetStore 里的资源）：` +
+          "用户上传的图、之前生成的图，或 capture_canvas 返回的画布截图 url 都可以直接传。每张参考图的宽高比不能超过 16:1"
       ),
     prompt: z.string().min(1).describe("图片生成的提示词"),
     // 默认值改成 1920x1080：512x512 是通用素材图的量级，大屏效果图/设计稿这类要看清
@@ -41,13 +50,13 @@ export const createImageTool = createTool({
   }),
   // 生图慢（实测豆包一次 40+ 秒），不开 background 会卡住整个 agentic loop 干等。
   background: { enabled: true, timeoutMs: 120_000, maxRetries: 1 },
-  execute: async ({ prompt, width, height, seedImage }) => {
+  execute: async ({ prompt, width, height, seedImages }) => {
     const result = await generateImage({
       prompt,
       seed: deriveSeed(prompt),
       width,
       height,
-      seedImageUrl: seedImage
+      seedImageUrls: seedImages
     });
     // 图本身不进工具结果（tool 消息带不了图）：写进约定字段，由 inlineImagesMiddleware 在这批 tool 消息
     // 之后补一条 user 图片消息，模型下一步就能直接看到刚生成的图，不用再截图或猜。

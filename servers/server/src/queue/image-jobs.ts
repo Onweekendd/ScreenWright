@@ -12,7 +12,7 @@ export const ImageJobDataSchema = z.object({
   seed: z.number().int(),
   width: z.number().positive(),
   height: z.number().positive(),
-  seedImageUrl: z.string().optional()
+  seedImageUrls: z.array(z.string()).optional()
 });
 export type ImageJobData = z.infer<typeof ImageJobDataSchema>;
 
@@ -21,7 +21,7 @@ export type ImageJobData = z.infer<typeof ImageJobDataSchema>;
  * （在途的合并、保留期内已完成的直接复用结果），不会重复烧生图额度。
  */
 export const imageJobId = (data: ImageJobData, modelId: string): string =>
-  computePromptHash(data.prompt, data.seed, modelId, data.seedImageUrl);
+  computePromptHash(data.prompt, data.seed, modelId, data.seedImageUrls);
 
 /** worker 返回值只保留可 JSON 序列化的声明字段（Prisma 行里的 Date 过一遍队列会变字符串） */
 export const toImageRecord = (row: GeneratedImageRecord): GeneratedImageRecord => ({

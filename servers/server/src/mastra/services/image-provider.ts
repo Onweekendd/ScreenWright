@@ -2,9 +2,10 @@
  * 生图服务商的「方言」：同一件事（给提示词，拿回一张图），不同服务商的请求格式不一样。
  *
  * - ark：火山方舟（seedream）。`/images/generations` 带 seed / watermark / response_format:"url"，
- *   图生图是同一个端点多一个 `image`（data URL）字段。
+ *   图生图是同一个端点多一个 `image` 字段：一张是 data URL，多张是 data URL 数组。
  * - openai：OpenAI 兼容的 gpt-image 系列（含各种中转网关）。**不能**带 seed / watermark / response_format
- *   （收到未知参数会直接 400），size 有自己的一套规则，图生图是另一个端点 `/images/edits`（multipart）。
+ *   （收到未知参数会直接 400），size 有自己的一套规则，图生图是另一个端点 `/images/edits`（multipart，
+ *   一张传 `image`，多张重复传 `image[]`）。
  *
  * 按模型 id 自动判断；判断不准（比如网关把模型改了名）时用环境变量 IMAGE_API_STYLE 强制指定。
  */
@@ -49,16 +50,21 @@ interface BuildArgs {
   apiKey: string;
   modelId: string;
   input: GenerateImageInput;
-  /** 已经预处理过的参考图字节 */
-  reference?: Buffer;
+  /** 已经预处理过的参考图字节，按顺序发送 */
+  references?: Buffer[];
   env?: NodeJS.ProcessEnv;
 }
 
-export const buildArkRequest = ({ baseUrl, apiKey, modelId, input, reference }: BuildArgs): ImageRequest => {
+const dataUrl = (bytes: Buffer) => `data:${mediaTypeOf(bytes)};base64,${bytes.toString("base64")}`;
+
+export const buildArkRequest = ({ baseUrl, apiKey, modelId, input, references = [] }: BuildArgs): ImageRequest => {
+  // 一张时保持单个字符串（只支持单图的老模型只认这种），多张才发数组
+  const image =
+    references.length === 0 ? undefined : references.length === 1 ? dataUrl(references[0]) : references.map(dataUrl);
   const body = JSON.stringify({
     model: modelId,
     prompt: input.prompt,
-    ...(reference ? { image: `data:${mediaTypeOf(reference)};base64,${reference.toString("base64")}` } : {}),
+    ...(image ? { image } : {}),
     size: `${input.width}x${input.height}`,
     seed: input.seed,
     response_format: "url",
@@ -161,7 +167,7 @@ export const buildOpenAiRequest = ({
   apiKey,
   modelId,
   input,
-  reference,
+  references = [],
   env = process.env
 }: BuildArgs): ImageRequest => {
   const size = resolveGptImageSize(input.width, input.height);
@@ -170,7 +176,7 @@ export const buildOpenAiRequest = ({
   const base = imagesBase(baseUrl);
 
   // 图生图是另一个端点：multipart，参考图作为文件上传（不是 JSON 里的 data URL）
-  if (reference) {
+  if (references.length > 0) {
     const form = new FormData();
     form.append("model", modelId);
     form.append("prompt", input.prompt);
@@ -179,18 +185,23 @@ export const buildOpenAiRequest = ({
     if (quality) {
       form.append("quality", quality);
     }
-    const mime = mediaTypeOf(reference);
-    form.append(
-      "image",
-      new Blob([new Uint8Array(reference)], { type: mime }),
-      mime === "image/jpeg" ? "reference.jpg" : "reference.png"
-    );
+    // 一张用 `image`，多张按 OpenAI 的写法重复 `image[]`
+    const field = references.length === 1 ? "image" : "image[]";
+    references.forEach((reference, i) => {
+      const mime = mediaTypeOf(reference);
+      const name = references.length === 1 ? "reference" : `reference-${i + 1}`;
+      form.append(
+        field,
+        new Blob([new Uint8Array(reference)], { type: mime }),
+        `${name}.${mime === "image/jpeg" ? "jpg" : "png"}`
+      );
+    });
     return {
       url: `${base}/images/edits`,
       // multipart 的 Content-Type（含 boundary）必须交给 fetch 自己生成，不能手写
       headers: { Authorization: `Bearer ${apiKey}`, Connection: "close" },
       body: form,
-      sizeKB: Math.round(reference.length / 1024)
+      sizeKB: Math.round(references.reduce((sum, reference) => sum + reference.length, 0) / 1024)
     };
   }
 

@@ -28,11 +28,12 @@ export interface GenerateImageInput {
   width: number;
   height: number;
   /**
-   * img2img 参考图。**必须是我们自己 assetStore 里的资源 url**，不是任意外部图片——
+   * img2img 参考图，可以多张（如效果图 + 一张风格参考），按顺序发给服务商。
+   * **必须是我们自己 assetStore 里的资源 url**，不是任意外部图片——
    * 用 `assetStore().keyFromUrl()` 反查 key 再读字节，查不到直接报错，不做"顺便下载
    * 一个外部 url"这种静默兜底（外部图片来源不可控，也绕开了我们自己的存储审计）。
    */
-  seedImageUrl?: string;
+  seedImageUrls?: string[];
 }
 
 export interface GeneratedImageRecord {
@@ -61,8 +62,16 @@ export interface GeneratedImageRecord {
 export const deriveSeed = (prompt: string): number =>
   createHash("sha256").update(prompt).digest().readUInt32BE(0) & 0x7fffffff;
 
-export const computePromptHash = (prompt: string, seed: number, model: string, seedImageUrl?: string): string =>
-  createHash("sha256").update(JSON.stringify({ prompt, seed, model, seedImageUrl })).digest("hex");
+/**
+ * 幂等键。参考图从单张改成多张后，0 / 1 张时仍按旧口径（`seedImageUrl` 字段）算，
+ * 已经生成过的图照样命中，不会因为改了字段名整批重新计费；多张时参考图的顺序也算在内。
+ */
+export const computePromptHash = (prompt: string, seed: number, model: string, seedImageUrls?: string[]): string => {
+  const refs = seedImageUrls ?? [];
+  const basis =
+    refs.length > 1 ? { prompt, seed, model, seedImageUrls: refs } : { prompt, seed, model, seedImageUrl: refs[0] };
+  return createHash("sha256").update(JSON.stringify(basis)).digest("hex");
+};
 
 interface GeneratedBytes {
   bytes: Buffer;
@@ -127,7 +136,7 @@ export const prepareReference = async (bytes: Buffer): Promise<Buffer> => {
  */
 const promptLimit = (): number | undefined => Number(process.env.IMAGE_PROMPT_MAX_CHARS) || undefined;
 
-const requestGeneration = async (input: GenerateImageInput, reference?: Buffer): Promise<GeneratedBytes> => {
+const requestGeneration = async (input: GenerateImageInput, references: Buffer[]): Promise<GeneratedBytes> => {
   const { baseUrl, apiKey, modelId } = getModelConfigSync("image");
   const limit = promptLimit();
   if (limit && input.prompt.length > limit) {
@@ -136,9 +145,9 @@ const requestGeneration = async (input: GenerateImageInput, reference?: Buffer):
         "（保留画布尺寸、风格、关键元素，去掉重复和细枝末节）"
     );
   }
-  const request = buildImageRequest({ baseUrl, apiKey, modelId, input, reference });
+  const request = buildImageRequest({ baseUrl, apiKey, modelId, input, references });
   const endpoint = request.url;
-  const kind = reference ? "img2img" : "生图";
+  const kind = references.length > 0 ? "img2img" : "生图";
 
   const first = await retryWithBackoff(
     async () => {
@@ -208,7 +217,7 @@ export async function generateAndStoreImage(
     await options.onProgress?.(percent);
   };
   const { modelId } = getModelConfigSync("image");
-  const promptHash = computePromptHash(input.prompt, input.seed, modelId, input.seedImageUrl);
+  const promptHash = computePromptHash(input.prompt, input.seed, modelId, input.seedImageUrls);
 
   const existing = await prismaClient.generatedImage.findUnique({ where: { promptHash } });
   if (existing) {
@@ -217,17 +226,18 @@ export async function generateAndStoreImage(
 
   // 参考图不是任意外部地址——必须能从我们自己的 assetStore 反查回 key，
   // 查不到就直接报错，别悄悄发个请求去下载一个不受控的外部 url。
-  let referenceImage: Buffer | undefined;
-  if (input.seedImageUrl) {
-    const key = assetStore().keyFromUrl(input.seedImageUrl);
-    if (!key) {
-      throw new Error(`种子图片不是内部 assetStore 的资源，无法解析：${input.seedImageUrl}`);
-    }
-    referenceImage = await prepareReference(await assetStore().get(key));
-  }
+  const references = await Promise.all(
+    (input.seedImageUrls ?? []).map(async (seedImageUrl) => {
+      const key = assetStore().keyFromUrl(seedImageUrl);
+      if (!key) {
+        throw new Error(`种子图片不是内部 assetStore 的资源，无法解析：${seedImageUrl}`);
+      }
+      return prepareReference(await assetStore().get(key));
+    })
+  );
 
   await report(10);
-  const image = await requestGeneration(input, referenceImage);
+  const image = await requestGeneration(input, references);
   await report(75);
 
   // 服务商回的是直链，落库前转成我们自己 assetStore 里的 url——

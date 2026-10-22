@@ -114,7 +114,7 @@ describe("buildOpenAiRequest（图生图）", () => {
   const reference = Buffer.from([0xff, 0xd8, 0xff, 1, 2, 3]);
 
   it("走 /images/edits，multipart 上传参考图文件", async () => {
-    const req = buildOpenAiRequest({ ...args, reference });
+    const req = buildOpenAiRequest({ ...args, references: [reference] });
 
     expect(req.url).toBe("https://llm-api.net/v1/images/edits");
     const form = req.body as FormData;
@@ -129,10 +129,24 @@ describe("buildOpenAiRequest（图生图）", () => {
   });
 
   it("不手写 Content-Type：multipart 的 boundary 要交给 fetch 生成", () => {
-    const { headers } = buildOpenAiRequest({ ...args, reference });
+    const { headers } = buildOpenAiRequest({ ...args, references: [reference] });
 
     expect(headers).not.toHaveProperty("Content-Type");
     expect(headers.Authorization).toBe("Bearer k");
+  });
+
+  it("多张参考图按顺序重复传 image[]，不再传单数的 image", async () => {
+    const second = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+    const req = buildOpenAiRequest({ ...args, references: [reference, second] });
+
+    const form = req.body as FormData;
+    expect(form.get("image")).toBeNull();
+    const files = form.getAll("image[]") as File[];
+    expect(files.map((file) => [file.name, file.type])).toEqual([
+      ["reference-1.jpg", "image/jpeg"],
+      ["reference-2.png", "image/png"]
+    ]);
+    expect(Array.from(new Uint8Array(await files[1].arrayBuffer()))).toEqual(Array.from(second));
   });
 });
 
@@ -142,13 +156,27 @@ describe("buildImageRequest 按风格分发", () => {
       ...args,
       baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
       modelId: "doubao-seedream-5-0-pro-260628",
-      reference: Buffer.from([1, 2, 3])
+      references: [Buffer.from([1, 2, 3])]
     });
 
     expect(req.url).toBe("https://ark.cn-beijing.volces.com/api/v3/images/generations");
     const body = JSON.parse(req.body as string);
     expect(body).toMatchObject({ seed: 7, watermark: false, response_format: "url", size: "1920x1080" });
     expect(body.image).toMatch(/^data:image\/png;base64,/);
+  });
+
+  it("方舟多张参考图：image 是按顺序排的 data URL 数组", () => {
+    const req = buildImageRequest({
+      ...args,
+      baseUrl: "https://ark.cn-beijing.volces.com/api/v3",
+      modelId: "doubao-seedream-5-0-pro-260628",
+      references: [Buffer.from([0xff, 0xd8, 0xff, 1]), Buffer.from([1, 2, 3])]
+    });
+
+    const { image } = JSON.parse(req.body as string);
+    expect(image).toHaveLength(2);
+    expect(image[0]).toMatch(/^data:image\/jpeg;base64,/);
+    expect(image[1]).toMatch(/^data:image\/png;base64,/);
   });
 
   it("gpt-image 走 openai 风格", () => {

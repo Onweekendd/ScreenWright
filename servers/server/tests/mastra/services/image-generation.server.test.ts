@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import sharp from "sharp";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -155,7 +157,7 @@ describe("gpt-image 网关", () => {
       seed: 1,
       width: 1920,
       height: 1080,
-      seedImageUrl: "https://blobs/chat-images/c/shot.jpg"
+      seedImageUrls: ["https://blobs/chat-images/c/shot.jpg"]
     });
 
     const [url, init] = fetchMock.mock.calls[0];
@@ -366,7 +368,7 @@ describe("generateAndStoreImage", () => {
     expect(generationCalls()).toHaveLength(1);
   });
 
-  it("seedImageUrl 能反查到 assetStore key 时，同一个 /images/generations 多带 image 字段做 img2img；服务商直接回 b64 也接", async () => {
+  it("参考图能反查到 assetStore key 时，同一个 /images/generations 多带 image 字段做 img2img；服务商直接回 b64 也接", async () => {
     prismaMocks.findUnique.mockResolvedValue(null);
     createReturnsInput();
     storeMocks.keyFromUrl.mockReturnValue("generated-images/ref.png");
@@ -380,7 +382,7 @@ describe("generateAndStoreImage", () => {
       seed: 1,
       width: 512,
       height: 512,
-      seedImageUrl: "https://blobs/ref.png"
+      seedImageUrls: ["https://blobs/ref.png"]
     });
 
     expect(storeMocks.keyFromUrl).toHaveBeenCalledWith("https://blobs/ref.png");
@@ -412,7 +414,7 @@ describe("generateAndStoreImage", () => {
       seed: 1,
       width: 1280,
       height: 720,
-      seedImageUrl: "https://blobs/chat-images/c1/shot.jpg"
+      seedImageUrls: ["https://blobs/chat-images/c1/shot.jpg"]
     });
 
     const image = generationBody().image as string;
@@ -421,7 +423,7 @@ describe("generateAndStoreImage", () => {
     expect(sent).toMatchObject({ format: "jpeg", width: 1280, height: 720 });
   });
 
-  it("seedImageUrl 不是 assetStore 里的资源时直接报错，不悄悄下载外部图片", async () => {
+  it("参考图不是 assetStore 里的资源时直接报错，不悄悄下载外部图片", async () => {
     prismaMocks.findUnique.mockResolvedValue(null);
     storeMocks.keyFromUrl.mockReturnValue(null);
 
@@ -431,17 +433,82 @@ describe("generateAndStoreImage", () => {
         seed: 1,
         width: 512,
         height: 512,
-        seedImageUrl: "https://evil.example/x.png"
+        seedImageUrls: ["https://evil.example/x.png"]
       })
     ).rejects.toThrow("种子图片不是内部 assetStore 的资源");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("同一份 prompt+seed，seedImageUrl 不同则 promptHash 不同——不会互相顶替对方的幂等结果", () => {
-    expect(computePromptHash("p", 1, "m", "https://blobs/a.png")).not.toBe(
-      computePromptHash("p", 1, "m", "https://blobs/b.png")
+  it("同一份 prompt+seed，参考图不同则 promptHash 不同——不会互相顶替对方的幂等结果", () => {
+    expect(computePromptHash("p", 1, "m", ["https://blobs/a.png"])).not.toBe(
+      computePromptHash("p", 1, "m", ["https://blobs/b.png"])
     );
-    expect(computePromptHash("p", 1, "m")).not.toBe(computePromptHash("p", 1, "m", "https://blobs/a.png"));
+    expect(computePromptHash("p", 1, "m")).not.toBe(computePromptHash("p", 1, "m", ["https://blobs/a.png"]));
+  });
+
+  it("没有参考图或只有一张时，hash 与改成多张之前的口径一致，已生成过的图照样命中", () => {
+    const legacy = (seedImageUrl?: string) =>
+      createHash("sha256")
+        .update(JSON.stringify({ prompt: "p", seed: 1, model: "m", seedImageUrl }))
+        .digest("hex");
+
+    expect(computePromptHash("p", 1, "m")).toBe(legacy());
+    expect(computePromptHash("p", 1, "m", [])).toBe(legacy());
+    expect(computePromptHash("p", 1, "m", ["https://blobs/a.png"])).toBe(legacy("https://blobs/a.png"));
+  });
+
+  it("多张参考图：顺序也算在 hash 里（第 1 张定构图、第 2 张定风格，换了顺序是另一张图）", () => {
+    const ab = computePromptHash("p", 1, "m", ["https://blobs/a.png", "https://blobs/b.png"]);
+
+    expect(ab).not.toBe(computePromptHash("p", 1, "m", ["https://blobs/b.png", "https://blobs/a.png"]));
+    expect(ab).not.toBe(computePromptHash("p", 1, "m", ["https://blobs/a.png"]));
+  });
+
+  it("多张参考图按顺序各自读出、缩小，一起发给服务商；任何一张不是内部资源都直接报错", async () => {
+    prismaMocks.findUnique.mockResolvedValue(null);
+    createReturnsInput();
+    storeMocks.keyFromUrl.mockImplementation((url: string) =>
+      url.startsWith("https://blobs/") ? url.slice("https://blobs/".length) : null
+    );
+    storeMocks.get.mockImplementation(async (key: string) =>
+      sharp({ create: { width: key === "a.png" ? 2560 : 640, height: 720, channels: 3, background: "#123456" } })
+        .png()
+        .toBuffer()
+    );
+    fetchMock.mockImplementation(async () =>
+      generationResponse({ b64_json: Buffer.from([1, 2, 3]).toString("base64") })
+    );
+
+    await generateAndStoreImage({
+      prompt: "第 1 张定构图，第 2 张定风格",
+      seed: 1,
+      width: 1280,
+      height: 720,
+      seedImageUrls: ["https://blobs/a.png", "https://blobs/b.png"]
+    });
+
+    const images = generationBody().image as string[];
+    expect(images).toHaveLength(2);
+    const sizes = await Promise.all(
+      images.map((image) => sharp(Buffer.from(image.split(",")[1], "base64")).metadata())
+    );
+    // 第 1 张 2560×720 缩到长边 1280，第 2 张本来就小、原样；顺序不变
+    expect(sizes.map(({ width, height }) => [width, height])).toEqual([
+      [1280, 360],
+      [640, 720]
+    ]);
+
+    fetchMock.mockClear();
+    await expect(
+      generateAndStoreImage({
+        prompt: "p",
+        seed: 2,
+        width: 512,
+        height: 512,
+        seedImageUrls: ["https://blobs/a.png", "https://evil.example/x.png"]
+      })
+    ).rejects.toThrow("种子图片不是内部 assetStore 的资源，无法解析：https://evil.example/x.png");
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

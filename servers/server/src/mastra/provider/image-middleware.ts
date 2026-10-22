@@ -9,7 +9,7 @@ import { shrinkToJpeg } from "../services/shrink-image";
 // 两件事都在发给模型的那一份 prompt 上做，不碰 memory：
 // 1. 用户消息里的图片 file part：本系统的图（MinIO / fs）外网模型访问不到，按 objectKey 读出来换成
 //    二进制（provider 会转成 base64 data URL）；同时附一段 `<attached-images>` 把 URL 以文本留给模型——
-//    设计蓝图的 sourceImage、createImageTool 的 seedImage 这类入参要的是 URL，不是像素。
+//    设计蓝图的 sourceImage、createImageTool 的 seedImages 这类入参要的是 URL，不是像素。
 // 2. 工具产出的图：Chat Completions 的 tool 消息不能带图（DeepSeek 只认 user 消息里的图），
 //    所以工具只在结果里写 `imagesForModel: [{url,label}]`，这里在那批 tool 消息之后补一条 user 图片消息。
 //

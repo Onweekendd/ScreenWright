@@ -56,7 +56,7 @@ export const useConfigSelectInput = (
     if (isUndefined(value)) {
       return;
     }
-    emit("update:width", value);
+    emit("update:width", String(value));
 
     emit("change", Attrs.width, value);
   };
@@ -64,14 +64,14 @@ export const useConfigSelectInput = (
     if (isUndefined(value)) {
       return;
     }
-    emit("update:height", value);
+    emit("update:height", String(value));
     emit("change", Attrs.height, value);
   };
 
   const handleSelectValueChange = (value: string) => {
     transFormValue(value);
-    emit("update:width", w.value);
-    emit("update:height", h.value);
+    emit("update:width", String(w.value));
+    emit("update:height", String(h.value));
     emit("change", Attrs.selectValue, value);
   };
 

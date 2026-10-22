@@ -22,6 +22,13 @@ import { parseSFCToParts, VUE_PART_PROP } from "./vue-part-sfc";
 
 interface ScreenReaderInput {
   id: string;
+  /**
+   * 用这份内容代替磁盘上的 info.json（调用方须已按 {@link ScreenInfoSchema} 校验过）。
+   *
+   * 给「修 info.json」那条路用：磁盘上那份已经不合 schema 时，照常读会在构造阶段就抛错，
+   * 把恰恰要修它的那次编辑也拦掉——屏就永远卡在坏数据上。编辑后的新内容已经校验过，直接拿它建树。
+   */
+  info?: Omit<ParsedLargeScreenInfo, "layers" | "dataFilterArr" | "aniFrameSet" | "statusAnimation">;
 }
 
 /**
@@ -119,11 +126,11 @@ export class ScreenReader implements EditorState<EditorCoreState> {
   componentList: ComponentType[];
   targetChart: TargetChart;
 
-  constructor({ id }: ScreenReaderInput) {
+  constructor({ id, info: infoOverride }: ScreenReaderInput) {
     this.screenDir = getScreenDirPath(id);
     this.componentDir = path.join(this.screenDir, "component");
 
-    const { layers, ...info } = this.read();
+    const { layers, ...info } = this.read(infoOverride);
 
     this.layers = layers;
     this.navInfo = info;
@@ -168,9 +175,9 @@ export class ScreenReader implements EditorState<EditorCoreState> {
    * 全量读取入口：与 ScreenSyncer.sync 逆向对称，把工作区目录还原成 ParsedLargeScreenInfo
    * 纯读操作，不建目录也不写盘；缺文件会抛错，缺目录按空处理
    */
-  read(): ParsedLargeScreenInfo {
+  read(infoOverride?: ScreenReaderInput["info"]): ParsedLargeScreenInfo {
     return {
-      ...this.readAndValidate(path.join(this.screenDir, "info.json"), ScreenInfoSchema),
+      ...(infoOverride ?? this.readAndValidate(path.join(this.screenDir, "info.json"), ScreenInfoSchema)),
       layers: this.readComponents(""),
       dataFilterArr: this.readDataFilters(),
       aniFrameSet: this.readAndValidate(path.join(this.screenDir, "aniFrameSet.json"), AniFrameSetSchema),

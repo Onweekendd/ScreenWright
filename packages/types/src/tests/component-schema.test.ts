@@ -53,7 +53,7 @@ function buildComponent(config: Record<string, unknown>): Record<string, unknown
     id: 1,
     left: 0,
     top: 0,
-    zIndex: 0,
+    zIndex: "a0",
     events: [],
     data: [],
     dataSource: {},

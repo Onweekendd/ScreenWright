@@ -11,12 +11,13 @@ import {
   type FlatComponentMap,
   transformGroupData
 } from "../selectors/componentTree";
-import { assignComponentAttrs, calculateGroupDimensions, getMaxIndex } from "../selectors/geometry";
+import { assignComponentAttrs, calculateGroupDimensions } from "../selectors/geometry";
 import type { EditorState } from "../state/EditorState";
 import type { ComponentId, ComponentPlacement } from "../types/placement";
 import type { EditorCoreState } from "../types/state";
 import { deepClone } from "../utils/deepClone";
 import { mergeComponentUpdate, replaceComponentSnapshot } from "../utils/mergeComponentUpdate";
+import { assignOrderedZIndexes, getTopIndex, migrateLegacyZIndex } from "../zindex/zIndex";
 import { BaseManager } from "./BaseManager";
 
 /** 一个分组至少要有这么多成员才成立；不足就该解散（见 dissolveIfUnderfilled）。 */
@@ -75,6 +76,8 @@ export class ComponentManager extends BaseManager<EditorCoreState> {
     } else {
       layers = detailInfo.layers as ComponentType[];
     }
+    // 老数据的 zIndex 是数字，这是读进编辑器的第一道口子：在此换成字符串键，之后的代码只面对键
+    migrateLegacyZIndex(layers);
     this.setState({ layers });
   }
 
@@ -390,8 +393,9 @@ export class ComponentManager extends BaseManager<EditorCoreState> {
    *
    * 图层树（以及任何"拖出一个新次序"的 UI）交出来的就是一个有序数组，本方法把它翻译成树里的
    * 两件事：**成员集合**与**叠放次序**。次序落在 zIndex 上而不是数组下标上——画布与图层树
-   * 都按 zIndex 降序渲染，下标不决定谁盖住谁。数组第 0 项在最上层，故
-   * `zIndex = members.length - index`（与前端 buildTreeData 的降序排列同口径）。
+   * 都按 zIndex 降序渲染，下标不决定谁盖住谁。数组第 0 项在最上层（与前端 buildTreeData 的降序
+   * 排列同口径）。已经符合次序的成员保留原 zIndex，只给错位的成员在邻居之间插新键——
+   * 拖动一个图层只会改它自己，不会把整个容器的 zIndex 重写一遍。
    *
    * 成员原本在别处（从画布拖进分组）不影响本方法：它们会出现在目标容器里；旧位置由调用方
    * 对那一侧再断言一次——图层树正是这么用的，一次拖拽会分别给出源列表与目标列表。
@@ -401,8 +405,9 @@ export class ComponentManager extends BaseManager<EditorCoreState> {
   reorder(members: ComponentType[], placement?: ComponentPlacement): void {
     const container = this.resolveContainer(placement);
 
-    members.forEach((member, index) => {
-      member.zIndex = members.length - index;
+    // 先按「从下到上」把键理顺；members 里是别处搬来的成员时，它们的旧键在新容器里不一定合适
+    assignOrderedZIndexes([...members].reverse());
+    members.forEach((member) => {
       this.applyParentField(member, placement);
     });
     // 就地换内容，不换数组引用（约定①）
@@ -556,7 +561,7 @@ export class ComponentManager extends BaseManager<EditorCoreState> {
    * 断言这些组件都挂在 target 下，且位于该容器的最上层。
    *
    * **注意它不是通用的「搬运」，而是「搬进去并顶到最上层」**：真正发生搬迁时把 zIndex 顶到
-   * `getMaxIndex(目标容器) + 1`，与前端 moveComponents 的三个分支（根级 / 分组 / 面板状态）
+   * `getTopIndex(目标容器)`（比容器里现有的都高），与前端 moveComponents 的三个分支（根级 / 分组 / 面板状态）
    * 逐一对齐——少了这一步，前端换用 core 之后组件移过去不再置顶，且不报错。
    *
    * 反过来说，「整体搬迁、内部相对层级不变」的场景（成组、转动态面板）用不了它：
@@ -565,7 +570,7 @@ export class ComponentManager extends BaseManager<EditorCoreState> {
    * 由 upsert 的先摘再放把成员旧副本带走，不经过本方法。
    *
    * 已经在目标容器里的**原样不动**：这条守卫同时也是幂等的来源。
-   * `getMaxIndex(list) + 1` 在组件已在 list 里时是自增的，没有守卫，重复应用同一份回执
+   * `getTopIndex(list)` 在组件已在 list 里时会越过它自己，没有守卫，重复应用同一份回执
    * 会让 zIndex 一路涨上去。
    *
    * @param target 省略表示移动到大屏根级
@@ -590,7 +595,7 @@ export class ComponentManager extends BaseManager<EditorCoreState> {
       entry.list.splice(entry.index, 1);
       this.applyParentField(entry.component, target);
       // 必须先摘出旧位置、且在 push 之前算：否则 max 会把它自己算进去
-      entry.component.zIndex = getMaxIndex(container) + 1;
+      entry.component.zIndex = getTopIndex(container);
       container.push(entry.component);
     }
 

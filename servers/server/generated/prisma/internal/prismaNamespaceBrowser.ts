@@ -112,6 +112,7 @@ export const GeneratedImageScalarFieldEnum = {
   width: 'width',
   height: 'height',
   url: 'url',
+  referenceUrls: 'referenceUrls',
   createdTime: 'createdTime'
 } as const
 
@@ -487,6 +488,8 @@ export const MinioFileScalarFieldEnum = {
   resourceSize: 'resourceSize',
   layerIds: 'layerIds',
   largeUseIds: 'largeUseIds',
+  generatedImageId: 'generatedImageId',
+  referenceFileIds: 'referenceFileIds',
   createdBy: 'createdBy',
   createdTime: 'createdTime',
   updatedBy: 'updatedBy',
@@ -518,19 +521,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: 'JsonNull'
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull'
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

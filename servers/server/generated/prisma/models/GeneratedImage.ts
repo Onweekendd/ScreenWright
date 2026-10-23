@@ -75,6 +75,7 @@ export type GeneratedImageCountAggregateOutputType = {
   width: number
   height: number
   url: number
+  referenceUrls: number
   createdTime: number
   _all: number
 }
@@ -125,6 +126,7 @@ export type GeneratedImageCountAggregateInputType = {
   width?: true
   height?: true
   url?: true
+  referenceUrls?: true
   createdTime?: true
   _all?: true
 }
@@ -224,6 +226,7 @@ export type GeneratedImageGroupByOutputType = {
   width: number
   height: number
   url: string
+  referenceUrls: runtime.JsonValue | null
   createdTime: Date
   _count: GeneratedImageCountAggregateOutputType | null
   _avg: GeneratedImageAvgAggregateOutputType | null
@@ -259,6 +262,7 @@ export type GeneratedImageWhereInput = {
   width?: Prisma.IntFilter<"GeneratedImage"> | number
   height?: Prisma.IntFilter<"GeneratedImage"> | number
   url?: Prisma.StringFilter<"GeneratedImage"> | string
+  referenceUrls?: Prisma.JsonNullableFilter<"GeneratedImage">
   createdTime?: Prisma.DateTimeFilter<"GeneratedImage"> | Date | string
 }
 
@@ -271,6 +275,7 @@ export type GeneratedImageOrderByWithRelationInput = {
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  referenceUrls?: Prisma.SortOrderInput | Prisma.SortOrder
   createdTime?: Prisma.SortOrder
 }
 
@@ -286,6 +291,7 @@ export type GeneratedImageWhereUniqueInput = Prisma.AtLeast<{
   width?: Prisma.IntFilter<"GeneratedImage"> | number
   height?: Prisma.IntFilter<"GeneratedImage"> | number
   url?: Prisma.StringFilter<"GeneratedImage"> | string
+  referenceUrls?: Prisma.JsonNullableFilter<"GeneratedImage">
   createdTime?: Prisma.DateTimeFilter<"GeneratedImage"> | Date | string
 }, "id" | "promptHash">
 
@@ -298,6 +304,7 @@ export type GeneratedImageOrderByWithAggregationInput = {
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  referenceUrls?: Prisma.SortOrderInput | Prisma.SortOrder
   createdTime?: Prisma.SortOrder
   _count?: Prisma.GeneratedImageCountOrderByAggregateInput
   _avg?: Prisma.GeneratedImageAvgOrderByAggregateInput
@@ -318,6 +325,7 @@ export type GeneratedImageScalarWhereWithAggregatesInput = {
   width?: Prisma.IntWithAggregatesFilter<"GeneratedImage"> | number
   height?: Prisma.IntWithAggregatesFilter<"GeneratedImage"> | number
   url?: Prisma.StringWithAggregatesFilter<"GeneratedImage"> | string
+  referenceUrls?: Prisma.JsonNullableWithAggregatesFilter<"GeneratedImage">
   createdTime?: Prisma.DateTimeWithAggregatesFilter<"GeneratedImage"> | Date | string
 }
 
@@ -330,6 +338,7 @@ export type GeneratedImageCreateInput = {
   width: number
   height: number
   url: string
+  referenceUrls?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdTime?: Date | string
 }
 
@@ -342,6 +351,7 @@ export type GeneratedImageUncheckedCreateInput = {
   width: number
   height: number
   url: string
+  referenceUrls?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdTime?: Date | string
 }
 
@@ -354,6 +364,7 @@ export type GeneratedImageUpdateInput = {
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceUrls?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -366,6 +377,7 @@ export type GeneratedImageUncheckedUpdateInput = {
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceUrls?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -378,6 +390,7 @@ export type GeneratedImageCreateManyInput = {
   width: number
   height: number
   url: string
+  referenceUrls?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdTime?: Date | string
 }
 
@@ -390,6 +403,7 @@ export type GeneratedImageUpdateManyMutationInput = {
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceUrls?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -402,6 +416,7 @@ export type GeneratedImageUncheckedUpdateManyInput = {
   width?: Prisma.IntFieldUpdateOperationsInput | number
   height?: Prisma.IntFieldUpdateOperationsInput | number
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  referenceUrls?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -414,6 +429,7 @@ export type GeneratedImageCountOrderByAggregateInput = {
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  referenceUrls?: Prisma.SortOrder
   createdTime?: Prisma.SortOrder
 }
 
@@ -472,6 +488,7 @@ export type GeneratedImageSelect<ExtArgs extends runtime.Types.Extensions.Intern
   width?: boolean
   height?: boolean
   url?: boolean
+  referenceUrls?: boolean
   createdTime?: boolean
 }, ExtArgs["result"]["generatedImage"]>
 
@@ -484,6 +501,7 @@ export type GeneratedImageSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   width?: boolean
   height?: boolean
   url?: boolean
+  referenceUrls?: boolean
   createdTime?: boolean
 }, ExtArgs["result"]["generatedImage"]>
 
@@ -496,6 +514,7 @@ export type GeneratedImageSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   width?: boolean
   height?: boolean
   url?: boolean
+  referenceUrls?: boolean
   createdTime?: boolean
 }, ExtArgs["result"]["generatedImage"]>
 
@@ -508,10 +527,11 @@ export type GeneratedImageSelectScalar = {
   width?: boolean
   height?: boolean
   url?: boolean
+  referenceUrls?: boolean
   createdTime?: boolean
 }
 
-export type GeneratedImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "promptHash" | "prompt" | "model" | "seed" | "width" | "height" | "url" | "createdTime", ExtArgs["result"]["generatedImage"]>
+export type GeneratedImageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "promptHash" | "prompt" | "model" | "seed" | "width" | "height" | "url" | "referenceUrls" | "createdTime", ExtArgs["result"]["generatedImage"]>
 
 export type $GeneratedImagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "GeneratedImage"
@@ -531,6 +551,10 @@ export type $GeneratedImagePayload<ExtArgs extends runtime.Types.Extensions.Inte
     width: number
     height: number
     url: string
+    /**
+     * 发给生图服务的参考图 url（按顺序），没有参考图为空
+     */
+    referenceUrls: runtime.JsonValue | null
     createdTime: Date
   }, ExtArgs["result"]["generatedImage"]>
   composites: {}
@@ -963,6 +987,7 @@ export interface GeneratedImageFieldRefs {
   readonly width: Prisma.FieldRef<"GeneratedImage", 'Int'>
   readonly height: Prisma.FieldRef<"GeneratedImage", 'Int'>
   readonly url: Prisma.FieldRef<"GeneratedImage", 'String'>
+  readonly referenceUrls: Prisma.FieldRef<"GeneratedImage", 'Json'>
   readonly createdTime: Prisma.FieldRef<"GeneratedImage", 'DateTime'>
 }
     

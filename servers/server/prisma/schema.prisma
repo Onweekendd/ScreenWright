@@ -44,6 +44,8 @@ model GeneratedImage {
   width        Int
   height       Int
   url          String
+  /// 发给生图服务的参考图 url（按顺序），没有参考图为空
+  referenceUrls Json?   @map("reference_urls")
   createdTime  DateTime @default(now()) @map("created_time")
 
   @@map("generated_image")
@@ -505,6 +507,10 @@ model MinioFile {
   resourceSize Int?     @map("resource_size")
   layerIds     Json?    @map("layer_ids")
   largeUseIds  Json?    @map("large_use_ids")
+  /// AI 生成的素材：对应的生图记录（提示词 / seed / 模型在那边）；裁切、上传的素材为空
+  generatedImageId String? @map("generated_image_id")
+  /// AI 生成的素材：生成时参考了哪些素材（素材 id 数组），画布上的血缘连线从这里来
+  referenceFileIds Json?   @map("reference_file_ids")
   createdBy    String?  @map("created_by")
   createdTime  DateTime @default(now()) @map("created_time")
   updatedBy    String?  @map("updated_by")
@@ -512,6 +518,7 @@ model MinioFile {
 
   @@index([userId])
   @@index([groupId])
+  @@index([userId, url])
   @@map("minio_file")
 }
 

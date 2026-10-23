@@ -489,6 +489,11 @@ describe("generateAndStoreImage", () => {
 
     const images = generationBody().image as string[];
     expect(images).toHaveLength(2);
+    // 生成记录存下参考图（按顺序），素材库的血缘从这里追
+    expect(prismaMocks.create.mock.calls[0][0].data.referenceUrls).toEqual([
+      "https://blobs/a.png",
+      "https://blobs/b.png"
+    ]);
     const sizes = await Promise.all(
       images.map((image) => sharp(Buffer.from(image.split(",")[1], "base64")).metadata())
     );

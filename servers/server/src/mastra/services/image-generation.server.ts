@@ -257,7 +257,8 @@ export async function generateAndStoreImage(
       seed: input.seed,
       width: actual?.width ?? input.width,
       height: actual?.height ?? input.height,
-      url
+      url,
+      ...(input.seedImageUrls?.length ? { referenceUrls: input.seedImageUrls } : {})
     }
   });
 

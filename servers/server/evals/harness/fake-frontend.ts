@@ -4,7 +4,7 @@
  * 形状照抄真前端 `useChunkSideEffects.ts` 的 `resolveSuspend`——按 `suspendPayload.type`
  * 查一张 `Map<SuspendType, handler>`，返回 resumeData。省掉的只有 HTTP/SSE 那层。
  *
- * 有肉的是 CreateComponent / CopyComponent 和 `canvas_ops` 里的 group_components / add_panel_state：
+ * 有肉的是 `canvas_ops` 里的 create_component / copy_component / group_components / add_panel_state：
  * 前三个要回**含真实 id 的组件**（真环境里 id 由业务接口分配，eval 里没有业务接口，假前端自己造），
  * add_panel_state 要回一个前端已经用在画布上的状态。两个坑：
  *
@@ -43,44 +43,6 @@ interface FrontendState {
 type ResolvedPolicy = Required<Omit<FrontendPolicy, "applyFailure">> & Pick<FrontendPolicy, "applyFailure">;
 
 type Handler = (payload: SuspendPayload, policy: ResolvedPolicy, state: FrontendState) => ResumeData;
-
-/**
- * 创建类：回一份带 id 的组件，后端据此过 core 放进树并整屏回写。
- *
- * 工具侧的判定顺序是 `approved === false` → `error` → `component`
- * （`create-component.ts:232/237/245`），三条路各自对应一种策略。
- */
-const createLike: Handler = (payload, policy) => {
-  if (!policy.approve) {
-    return { approved: false };
-  }
-  if (policy.applyFailure) {
-    return { approved: true, error: policy.applyFailure("添加组件") };
-  }
-  const template = payload.component as Record<string, unknown>;
-  return { approved: true, component: withFreshIds(template) };
-};
-
-/**
- * 新建组件：一次挂起带一批 `items`，逐项回 `{ index, component }`（index 原样带回，后端靠它对回入参）。
- *
- * 拒绝是整批的事（`approved: false`）；应用失败则逐项各记一条 `error`，
- * 跟真前端「单个失败不中断同批」的行为一致。
- */
-const createComponents: Handler = (payload, policy) => {
-  if (!policy.approve) {
-    return { approved: false };
-  }
-  const items = (payload.items ?? []) as Array<{ index: number; component: Record<string, unknown> }>;
-  return {
-    approved: true,
-    results: items.map(({ index, component }) =>
-      policy.applyFailure
-        ? { index, error: policy.applyFailure("添加组件") }
-        : { index, component: withFreshIds(component) }
-    )
-  };
-};
 
 /**
  * 递归换新 id：节点自己、`children` 里的子组件、面板各状态 `config` 里的子组件，全都要换。
@@ -173,12 +135,16 @@ const canvasOps: Handler = (payload, policy) => {
         return { ok: false, error: policy.applyFailure(OP_LABELS[String(op.op)] ?? "应用改动") };
       }
       switch (op.op) {
+        case "create_component":
+        case "copy_component":
+          // 载荷里的模板补个真实 id 原样回传；复制分组时整棵子树都要换新 id（见 withFreshIds）
+          return { ok: true, component: withFreshIds(op.component as Record<string, unknown>) };
         case "group_components":
           return { ok: true, component: groupContainer() };
         case "add_panel_state":
           return { ok: true, state: panelState(op.stateName) };
         default:
-          // 移动 / 解组不产生新 id：只回一个「干完了」
+          // 移动 / 解组 / 删除不产生新 id：只回一个「干完了」
           return { ok: true };
       }
     })
@@ -186,6 +152,9 @@ const canvasOps: Handler = (payload, policy) => {
 };
 
 const OP_LABELS: Record<string, string> = {
+  create_component: "添加组件",
+  copy_component: "添加组件",
+  delete_component: "删除组件",
   group_components: "组合分组",
   add_panel_state: "新增面板状态"
 };
@@ -202,22 +171,6 @@ const appliedOnly =
     }
     return policy.applyFailure ? { [field]: false, error: policy.applyFailure("应用改动") } : { [field]: true };
   };
-
-/**
- * 删除组件：回执字段是 **`componentId`**，不是「干完了」布尔。
- *
- * `delete-file.ts:135` 认的就是这个键；回错字段会让它一路走到底再 `suspend()` 一次，
- * 于是同一个删除请求无限挂起——不报错，只是 case 卡到超时。
- */
-const deleteComponent: Handler = (payload, policy) => {
-  if (!policy.approve) {
-    return { approved: false };
-  }
-  if (policy.applyFailure) {
-    return { error: policy.applyFailure("删除组件") };
-  }
-  return { componentId: Number(payload.componentId) };
-};
 
 /**
  * 结构化提问：把每个问题交给 case 的 {@link AnswerPolicy} 定夺，默认取第一个选项。
@@ -267,10 +220,6 @@ const browserUnavailable: Handler = () => ({ ok: false, error: "eval 环境没�
  * case 时先照着它要走的工具核一遍这张表，别指望兜底。
  */
 const handlers = new Map<string, Handler>([
-  ["create_component", createComponents],
-  ["ask_approval_create_component", createComponents],
-  ["copy_component", createLike],
-  ["ask_approval_copy_component", createLike],
   ["canvas_ops", canvasOps],
   ["push_component_update", appliedOnly("componentUpdated")],
   ["ask_approval_push_component_update", appliedOnly("componentUpdated")],
@@ -280,8 +229,6 @@ const handlers = new Map<string, Handler>([
   ["ask_approval_delete_filter", appliedOnly("filterDeleted")],
   ["update_screen_info", appliedOnly("screenInfoUpdated")],
   ["ask_approval_update_screen_info", appliedOnly("screenInfoUpdated")],
-  ["delete_component", deleteComponent],
-  ["ask_approval_delete_component", deleteComponent],
   ["execute_in_browser", browserUnavailable],
   ["ask_approval_execute_in_browser", browserUnavailable],
   ["ask_user_question", answerQuestions],

@@ -39,11 +39,15 @@ describe("批次标识回传", () => {
   it("拒绝路径也要带批次标识——否则工具同样认领不了这一帧", () => {
     const fe = createFakeFrontend({ approve: false });
 
-    const resume = fe.reply({ type: "create_component", batchId: "b", operationId: "2", items: [] }, meta);
+    const resume = fe.reply({ type: "canvas_ops", batchId: "b", operationId: "2", ops: [] }, meta);
 
     expect(resume).toMatchObject({ approved: false, batchId: "b", operationId: "2" });
   });
 });
+
+/** 取 canvas_ops 回执里第一个 op 回传的组件 */
+const copyOf = (resume: Record<string, unknown>): unknown =>
+  (resume.results as Array<{ component?: unknown }>)[0]!.component;
 
 describe("复制组件时整棵子树都换新 id", () => {
   // 只换顶层的话，core 的 upsert 会按「先摘再放」把原件的子组件搬到副本下面：
@@ -60,8 +64,10 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("父子都拿到新 id，且子组件的 parent 指向新父", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply({ type: "copy_component", component: group }, meta);
-    const copy = resume.component as { id: number; children: Array<{ id: number; parent: number }> };
+    const copy = copyOf(fe.reply({ type: "canvas_ops", ops: [{ op: "copy_component", component: group }] }, meta)) as {
+      id: number;
+      children: Array<{ id: number; parent: number }>;
+    };
 
     expect(copy.id).not.toBe(4177);
     expect(copy.children.map((c) => c.id)).not.toContain(4175);
@@ -72,7 +78,7 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("原载荷不被就地改动——工具后面还要用它算 placement", () => {
     const fe = createFakeFrontend();
 
-    fe.reply({ type: "copy_component", component: group }, meta);
+    fe.reply({ type: "canvas_ops", ops: [{ op: "copy_component", component: group }] }, meta);
 
     expect(group.id).toBe(4177);
     expect(group.children[0]!.id).toBe(4175);
@@ -81,14 +87,20 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("动态面板各状态 config 里的子组件同样换新 id", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply(
-      {
-        type: "copy_component",
-        component: { id: 4178, name: "动态面板", panelData: [{ id: "s1", config: [{ id: 4190, name: "文本" }] }] }
-      },
-      meta
-    );
-    const copy = resume.component as { panelData: Array<{ config: Array<{ id: number }> }> };
+    const copy = copyOf(
+      fe.reply(
+        {
+          type: "canvas_ops",
+          ops: [
+            {
+              op: "copy_component",
+              component: { id: 4178, name: "动态面板", panelData: [{ id: "s1", config: [{ id: 4190, name: "文本" }] }] }
+            }
+          ]
+        },
+        meta
+      )
+    ) as { panelData: Array<{ config: Array<{ id: number }> }> };
 
     expect(copy.panelData[0]!.config[0]!.id).not.toBe(4190);
   });
@@ -96,9 +108,14 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("磁盘形态的字符串 children 原样放过（那是文件引用，不是这条路的形态）", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply({ type: "copy_component", component: { id: 1, children: ["4175_条形图"] } }, meta);
+    const copy = copyOf(
+      fe.reply(
+        { type: "canvas_ops", ops: [{ op: "copy_component", component: { id: 1, children: ["4175_条形图"] } }] },
+        meta
+      )
+    ) as { children: unknown[] };
 
-    expect((resume.component as { children: unknown[] }).children).toEqual(["4175_条形图"]);
+    expect(copy.children).toEqual(["4175_条形图"]);
   });
 });
 
@@ -221,16 +238,21 @@ describe("ask_user_question 的应答策略", () => {
 
 describe("前端应用失败的原因", () => {
   const createSuspend = () => ({
-    type: "create_component",
-    items: [{ index: 0, component: { id: 1, component: { prop: "swtext" } } }]
+    type: "canvas_ops",
+    ops: [{ op: "create_component", component: { id: 1, component: { prop: "swtext" } } }]
   });
 
-  type CreateResume = { approved?: boolean; results: Array<{ index: number; component?: unknown; error?: string }> };
+  // type 而不是 interface：要从 Record<string, unknown> 断言过来，interface 没有索引签名过不了
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  type CreateResume = {
+    approved?: boolean;
+    results: Array<{ ok: boolean; component?: unknown; error?: string }>;
+  };
 
   it("不给 applyFailure 就是应用成功 —— 缺省本身是语义，不该被补成某种默认失败", () => {
     const resume = createFakeFrontend({}).reply(createSuspend(), meta) as CreateResume;
 
-    expect(resume.approved).toBe(true);
+    expect(resume.results[0]!.ok).toBe(true);
     expect(resume.results[0]!.error).toBeUndefined();
     expect(resume.results[0]!.component).toBeDefined();
   });
@@ -241,7 +263,7 @@ describe("前端应用失败的原因", () => {
     const resume = frontend.reply(createSuspend(), meta) as CreateResume;
     const error = resume.results[0]!.error;
 
-    expect(resume.approved).toBe(true);
+    expect(resume.results[0]!.ok).toBe(false);
     expect(error).toContain("添加组件");
     expect(error).toContain("重试");
     expect(error).toContain("换工具");
@@ -259,19 +281,19 @@ describe("前端应用失败的原因", () => {
     expect(error).not.toContain("重试");
   });
 
-  it("批量创建：每项各回一条，index 原样带回，且各拿到不同的真实 id", () => {
+  it("批量创建：每个 op 各回一条，按下标对应，且各拿到不同的真实 id", () => {
     const resume = createFakeFrontend({}).reply(
       {
-        type: "create_component",
-        items: [
-          { index: 0, component: { id: 1 } },
-          { index: 3, component: { id: 2 } }
+        type: "canvas_ops",
+        ops: [
+          { op: "create_component", component: { id: 1 } },
+          { op: "create_component", component: { id: 2 } }
         ]
       },
       meta
     ) as CreateResume;
 
-    expect(resume.results.map((r) => r.index)).toEqual([0, 3]);
+    expect(resume.results).toHaveLength(2);
     const ids = resume.results.map((r) => (r.component as { id: number }).id);
     expect(new Set(ids).size).toBe(2);
   });
@@ -279,14 +301,18 @@ describe("前端应用失败的原因", () => {
   it("同一个 policy 对不同操作要报出对应的操作名", () => {
     const frontend = createFakeFrontend({ applyFailure: applyFailures.channelDown });
 
-    const del = frontend.reply({ type: "delete_component" }, meta) as { error?: string };
+    const del = frontend.reply(
+      { type: "canvas_ops", ops: [{ op: "delete_component", componentId: 1 }] },
+      meta
+    ) as CreateResume;
 
-    expect(del.error).toContain("删除组件");
+    expect(del.results[0]!.error).toContain("删除组件");
   });
 });
 
 describe("canvas_ops 应答", () => {
   // type 而不是 interface：要从 Record<string, unknown> 断言过来，interface 没有索引签名过不了
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   type OpsResume = {
     approved?: boolean;
     results: Array<{ ok: boolean; component?: { id: number }; state?: { name: string }; error?: string }>;

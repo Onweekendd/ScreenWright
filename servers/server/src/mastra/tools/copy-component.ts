@@ -10,8 +10,8 @@ import { getAgentWorkspacePath } from "@/agent-resources/workspace-path";
 import { applyComponentCreate } from "@/mastra/services/bi-data-sync/screen-mutation";
 import { getScreenVersionKeyFromPath } from "@/mastra/services/screen-workspace";
 
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { ChangeSchema, readCreatedChange } from "./change-report";
 import { resolveFilePath } from "./file/state";
 import {
@@ -157,12 +157,9 @@ export const copyComponentTool = createTool({
       )
   }),
 
-  suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.AskApprovalCopyComponent].suspend,
-    SuspendDefs[SuspendType.CopyComponent].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: SuspendDefs[SuspendType.AskApprovalCopyComponent].resume,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   outputSchema: z.object({
     success: z.boolean(),
@@ -172,26 +169,27 @@ export const copyComponentTool = createTool({
   }),
 
   execute: async ({ from, to }, context) => {
-    const { suspend, resumeData } = context?.agent ?? {};
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
 
-    // ── 恢复阶段：用户拒绝 ────────────────────────────────────────────
-    if (resumeData?.approved === false) {
+    // ── 恢复阶段：用户拒绝 / 回执不合法 / 前端返回错误 ───────────────────
+    if (reply.status === "rejected") {
       return { success: false, message: "用户取消了组件复制操作" };
     }
-
-    // ── 恢复阶段：前端已创建组件或返回错误 ────────────────────────────
-    if (resumeData?.error) {
-      return {
-        success: false,
-        message: `前端创建组件失败: ${resumeData.error}`
-      };
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
+    }
+    if (reply.status === "done" && !reply.results[0].ok) {
+      return { success: false, message: `前端创建组件失败: ${reply.results[0].error}` };
     }
 
     // ── 恢复阶段：前端建好了副本，这时才由后端过 core 落盘 ────────────────────
     // 与 create_component 同一条路：真实 id 只有业务接口能分配，所以副本实例必须前端来建；
     // 放进树、整屏落盘、推导路径归后端，工作区因此只有一个写入者。
-    if (resumeData?.component) {
+    if (reply.status === "done") {
+      const copied = reply.results[0].ok ? reply.results[0].component : undefined;
+      if (!copied) {
+        return { success: false, message: "前端没有回传复制出的组件，未写入工作区" };
+      }
       const absTo = resolveFilePath(to);
       const screenKey = getScreenVersionKeyFromPath(absTo);
       if (!screenKey) {
@@ -200,7 +198,7 @@ export const copyComponentTool = createTool({
 
       // 回来的这一份跟发过去的源组件不是同一个东西（新 id、新位置、菜单默认值），得重新过一遍
       // schema：组件 json 在**读**的时候 ScreenReader 会因为校验不过整屏抛错，写的时候不挡就是埋雷
-      const validation = validateComponentContent(JSON.stringify(resumeData.component));
+      const validation = validateComponentContent(JSON.stringify(copied));
       if (!validation.ok) {
         return {
           success: false,
@@ -212,7 +210,7 @@ export const copyComponentTool = createTool({
         // 用原始对象而不是 validation.data：zod 会补默认值并重排 key，那些值会一路写进工作区
         const created = await applyComponentCreate(
           screenKey,
-          resumeData.component as unknown as ComponentType,
+          copied as unknown as ComponentType,
           resolveCopyPlacement(absTo)
         );
         if (!created) {
@@ -257,21 +255,10 @@ export const copyComponentTool = createTool({
     // ── 3. 解析 to 路径，推导目标 placement ──────────────────────────────────
     const placement = resolveCopyPlacement(resolveFilePath(to));
 
-    if (!suspend) {
-      return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
-    }
-
-    // ── ASK_BEFORE_EDIT：先弹审批框，用户接受后再交前端复制 ──────────────────
-    if (mode === AgentMode.ASK_BEFORE_EDIT) {
-      return suspend({
-        type: SuspendType.AskApprovalCopyComponent,
-        purpose: "复制组件到前端",
-        component,
-        placement
-      }) as never;
-    }
-
-    // 4. 自动模式：直接 suspend 交给前端创建，等待返回复制后路径
-    return suspend({ type: SuspendType.CopyComponent, component, placement }) as never;
+    // 4. 交给前端创建，等待回传副本
+    return suspendCanvasOps(context, {
+      purpose: "复制组件到前端",
+      ops: [{ op: "copy_component", component, placement }]
+    });
   }
 });

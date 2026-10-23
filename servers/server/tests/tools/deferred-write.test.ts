@@ -190,8 +190,40 @@ describe("前端确认之前不动工作区", () => {
       expect(existsSync(path.join(screenDir, "component", "4156_分组"))).toBe(true);
     });
 
+    const suspendedPayload = async (mode?: string): Promise<Record<string, unknown>> => {
+      const execute = deleteFileTool.execute as unknown as (
+        i: Record<string, unknown>,
+        c: Record<string, unknown>
+      ) => Promise<unknown>;
+      let payload: Record<string, unknown> | undefined;
+      await execute(
+        { path: componentPath },
+        {
+          requestContext: { get: (key: string) => (key === "mode" ? mode : undefined) },
+          agent: {
+            suspend: async (p: Record<string, unknown>) => {
+              payload = p;
+            }
+          }
+        }
+      );
+      return payload!;
+    };
+
+    it("挂起载荷里的组件 id 是纯数字（路径是 4156_分组.json，不是字符串 id）", async () => {
+      const payload = await suspendedPayload();
+
+      expect(payload).toEqual({ type: "canvas_ops", ops: [{ op: "delete_component", componentId: 4156 }] });
+    });
+
+    it("ASK 模式：审批文案带上组件名，让用户看清删的是谁", async () => {
+      const payload = await suspendedPayload("ask_before_edit");
+
+      expect(payload.approval).toEqual({ purpose: "删除组件「分组」" });
+    });
+
     it("前端删除成功后，组件文件与它整棵子树才消失", async () => {
-      const result = await run(deleteFileTool, { path: componentPath }, { componentId: 4156 });
+      const result = await run(deleteFileTool, { path: componentPath }, { results: [{ ok: true }] });
 
       expect(result.success).toBe(true);
       expect(existsSync(componentPath)).toBe(false);
@@ -200,7 +232,11 @@ describe("前端确认之前不动工作区", () => {
     });
 
     it("前端删除失败时组件原样保留", async () => {
-      const result = await run(deleteFileTool, { path: componentPath }, { error: "组件被锁定" });
+      const result = await run(
+        deleteFileTool,
+        { path: componentPath },
+        { results: [{ ok: false, error: "组件被锁定" }] }
+      );
 
       expect(result.success).toBe(false);
       expect(existsSync(componentPath)).toBe(true);

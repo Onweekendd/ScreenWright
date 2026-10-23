@@ -14,7 +14,6 @@ import { createLocalPanelStatus } from "../../buildRender/hooks/useCommonPanelAc
 import { useEditStore } from "../../buildRender/hooks/useEditStore";
 import { createCanvasOpsHandler, getBatchOperationFields } from "./canvasOps";
 import { captureCanvasForAgent } from "./captureCanvasForAgent";
-import { componentMenuTitle } from "./componentMenuTitle";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
 import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import { useConfirm } from "./useConfirm";
@@ -50,19 +49,6 @@ export function useComponentStreamUpdater(
   const { handleSelectGroupAction, handleGroupDelete, updateComponentLayers } = useAction();
   const { isPanel, editConfig } = useEditStore();
   const { confirm, showSubmitPlan, askQuestion, showSaveAiTemplate, showApplyAiTemplate } = useConfirm();
-
-  /**
-   * 把建好的组件交回后端，由它过 core 放进树、整屏落盘、推导真实路径。
-   * 新建 / 复制 / 成组三条路共用——它们的共同点是产生了一个**只有前端拿得到的真实 id**。
-   *
-   * 回的是整个组件而不是 id 或路径：真实 id 只有业务接口能分配，实例还要套组件菜单默认值、
-   * 跑一遍位置尺寸分配，画布上的那份跟后端发过来的 template 不是同一个东西。
-   * 路径同理不在这边拼——文件名带白名单净化与长度截断，命名规则归写文件的人（后端 buildIdNameBase）。
-   *
-   * cloneDeep 不能省：组件在画布上是 Vue 响应式代理，直接塞进 resume 会带着代理过结构化克隆。
-   */
-  const createdComponentPayload = (created: ComponentType | undefined, componentId: number, label = "组件创建成功") =>
-    created ? { component: cloneDeep(created) } : { error: `${label}（id=${componentId}）但找不到对应实例` };
 
   const { emitFilterTrigger } = useCallbackArguments();
 
@@ -119,84 +105,15 @@ export function useComponentStreamUpdater(
   };
 
   /**
-   * 按顺序创建一批组件，逐个产出回执。
-   *
-   * 整批放进同一次画布写入队列：批内的组件位置尺寸分配有先后依赖，中途不能被别的 tab 插进来；
-   * 顺序也不能并发——createComponent 会读画布当前状态做分配。
-   * 单个失败只记在该项回执上，不中断同批后面的组件（它们互相独立，agent 只需重试失败的）。
-   */
-  const createComponentItems = (items: SuspendPayload<SuspendType.CreateComponent>["items"]) =>
-    enqueueCanvasMutation(async () => {
-      const results: NonNullable<ResumeData<SuspendType.CreateComponent>["results"]> = [];
-      for (const { index, component, placement } of items) {
-        try {
-          const result = await createComponent({
-            componentTitle: componentMenuTitle(component),
-            componentConfig: component as Partial<ComponentType>,
-            placement: placement as ComponentPlacement | undefined
-          });
-          results.push({
-            index,
-            ...(!result.success || !result.componentId
-              ? { error: result.message }
-              : createdComponentPayload(result.component, result.componentId))
-          });
-        } catch (e) {
-          results.push({ index, error: (e as Error).message });
-        }
-      }
-      return { results };
-    });
-
-  /**
-   * 审批通过后立即创建组件（ASK 模式下的 create_component）；整批只审批一次。
-   * @field purpose - 审批目的说明
-   * @field items - 待创建的组件（配置 + 放置信息），index 回执时原样带回
-   */
-  const handleAskApprovalCreateComponent: SuspendHandlerFn<SuspendType.AskApprovalCreateComponent> = async (info) => {
-    const { purpose, items } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false };
-    }
-    return createComponentItems(items);
-  };
-
-  /**
-   * 审批通过后立即删除组件（ASK 模式下的 delete_component）。
-   * @field purpose - 审批目的说明
-   * @field componentId - 待删除的组件 ID
-   * @field placement - 组件放置信息
-   */
-  const handleAskApprovalDeleteComponent: SuspendHandlerFn<SuspendType.AskApprovalDeleteComponent> = async (info) => {
-    const { purpose, componentId, placement } = info.suspendPayload;
-    const component = allComponentMap.value.get(componentId);
-    const name = component?.name || component?.title;
-    const message = name ? `是否允许：${purpose}「${name}」？` : `是否允许：${purpose}？`;
-    const ok = await confirm(sessionId, message);
-    if (!ok) {
-      return { approved: false };
-    }
-    return enqueueCanvasMutation(async () => {
-      try {
-        const result = await onDeleteComponent(Number(componentId), placement as ComponentPlacement);
-        if (result && !result.success) {
-          return { error: result.message };
-        }
-        return { componentId: Number(componentId) };
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
-
-  /**
    * 画布写操作的统一执行器（group_components / ungroup / move_components / add_panel_state ……）。
    * 审批、写入排队、出错处理都在 createCanvasOpsHandler 里，这里只接上真实的画布能力。
    */
   const handleCanvasOps: SuspendHandlerFn<SuspendType.CanvasOps> = createCanvasOpsHandler({
     getComponent: (id) => allComponentMap.value.get(`${id}`),
     confirm: (message) => confirm(sessionId, message),
+    createComponent,
+    createComponentFromConfig,
+    deleteComponent: (id, placement) => onDeleteComponent(id, placement as ComponentPlacement),
     moveComponents,
     groupComponents: handleSelectGroupAction,
     ungroupComponents: handleGroupDelete,
@@ -212,84 +129,6 @@ export function useComponentStreamUpdater(
       return cloneDeep(newStatus) as unknown as Record<string, unknown>;
     }
   });
-
-  /**
-   * 直接创建组件（AUTO 模式）。
-   * @field items - 待创建的组件（配置 + 放置信息），name/title 用于标题
-   */
-  const handleCreateComponent: SuspendHandlerFn<SuspendType.CreateComponent> = async (info) =>
-    createComponentItems(info.suspendPayload.items);
-
-  /**
-   * 从已有配置复制创建组件。
-   * @field component - 源组件完整配置
-   * @field placement - 组件放置信息
-   */
-  const handleCopyComponent: SuspendHandlerFn<SuspendType.CopyComponent> = async (info) => {
-    const { component, placement } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      try {
-        const result = await createComponentFromConfig(
-          component as ComponentType,
-          placement as ComponentPlacement | undefined
-        );
-        if (!result.success || !result.componentId) {
-          return { error: result.message };
-        }
-        return createdComponentPayload(result.component, result.componentId, "组件复制成功");
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
-
-  /**
-   * 审批通过后从已有配置复制创建组件（ASK 模式下的 copy_component）。
-   * @field purpose - 审批目的说明
-   * @field component - 源组件完整配置
-   * @field placement - 组件放置信息
-   */
-  const handleAskApprovalCopyComponent: SuspendHandlerFn<SuspendType.AskApprovalCopyComponent> = async (info) => {
-    const { purpose, component, placement } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false };
-    }
-    return enqueueCanvasMutation(async () => {
-      try {
-        const result = await createComponentFromConfig(
-          component as ComponentType,
-          placement as ComponentPlacement | undefined
-        );
-        if (!result.success || !result.componentId) {
-          return { error: result.message };
-        }
-        return createdComponentPayload(result.component, result.componentId, "组件复制成功");
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
-
-  /**
-   * 直接删除组件（AUTO 模式）。
-   * @field componentId - 待删除的组件 ID
-   * @field placement - 组件放置信息
-   */
-  const handleDeleteComponent: SuspendHandlerFn<SuspendType.DeleteComponent> = async (info) => {
-    const { componentId, placement } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      try {
-        const result = await onDeleteComponent(Number(componentId), placement as ComponentPlacement);
-        if (result && !result.success) {
-          return { error: result.message };
-        }
-        return { componentId: Number(componentId) };
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
 
   /**
    * 保存过滤器到前端（AUTO 模式）。
@@ -602,12 +441,6 @@ export function useComponentStreamUpdater(
     [SuspendType.AskApprovalDeleteFilter, handleAskApprovalDeleteFilter],
     [SuspendType.PushComponentUpdate, handlePushComponentUpdate],
     [SuspendType.AskApprovalPushComponentUpdate, handleAskApprovalPushComponentUpdate],
-    [SuspendType.AskApprovalCreateComponent, handleAskApprovalCreateComponent],
-    [SuspendType.AskApprovalDeleteComponent, handleAskApprovalDeleteComponent],
-    [SuspendType.CreateComponent, handleCreateComponent],
-    [SuspendType.CopyComponent, handleCopyComponent],
-    [SuspendType.AskApprovalCopyComponent, handleAskApprovalCopyComponent],
-    [SuspendType.DeleteComponent, handleDeleteComponent],
     [SuspendType.CanvasOps, handleCanvasOps],
     [SuspendType.ExecuteInBrowser, handleExecuteInBrowser],
     [SuspendType.AskApprovalExecuteInBrowser, handleAskApprovalExecuteInBrowser],

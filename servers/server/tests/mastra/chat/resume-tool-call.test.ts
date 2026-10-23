@@ -72,7 +72,7 @@ describe("resume 带 toolCallId", () => {
       threadId: "thread-resume",
       runId: "run-1",
       toolCallId: "call-2",
-      suspendType: "ask_approval_create_component" as never,
+      suspendType: "canvas_ops" as never,
       resumeData: { approved: true }
     });
 

@@ -38,7 +38,7 @@ describe("resolveModeFromResumeData", () => {
 
   it("创建组件失败回执即使有 approved:true，也绝不能被当成 enter-plan-mode", () => {
     const frontendFailure = { approved: true, error: "前端创建组件失败（eval 模拟）" };
-    expect(resolveModeFromResumeData(AgentMode.AUTO_EDIT, SuspendType.CreateComponent, frontendFailure)).toBe(
+    expect(resolveModeFromResumeData(AgentMode.AUTO_EDIT, SuspendType.CanvasOps, frontendFailure)).toBe(
       AgentMode.AUTO_EDIT
     );
   });

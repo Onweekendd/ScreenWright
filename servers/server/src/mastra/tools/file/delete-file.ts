@@ -9,6 +9,7 @@ import { getScreenVersionKeyFromPath } from "@/mastra/services/screen-workspace"
 
 import { AgentMode } from "../../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "../canvas-ops";
 import { ChangeSchema, deletedChange } from "../change-report";
 import { resolveFilePath } from "./state";
 import { extractIdFromIdName, parsePlacementFromPath } from "./utils";
@@ -44,17 +45,12 @@ export const deleteFileTool = createTool({
   }),
 
   suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.DeleteComponent].suspend,
-    SuspendDefs[SuspendType.AskApprovalDeleteComponent].suspend,
+    SuspendDefs[SuspendType.CanvasOps].suspend,
     SuspendDefs[SuspendType.DeleteFilter].suspend,
     SuspendDefs[SuspendType.AskApprovalDeleteFilter].suspend
   ]),
 
-  resumeSchema: z.union([
-    SuspendDefs[SuspendType.AskApprovalDeleteComponent].resume,
-    SuspendDefs[SuspendType.DeleteComponent].resume,
-    SuspendDefs[SuspendType.DeleteFilter].resume
-  ]),
+  resumeSchema: z.union([SuspendDefs[SuspendType.CanvasOps].resume, SuspendDefs[SuspendType.DeleteFilter].resume]),
 
   execute: async ({ path: filePath }, context) => {
     const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
@@ -135,41 +131,40 @@ export const deleteFileTool = createTool({
 
     // ── 组件删除 ────────────────────────────────────────────────────────────
     if (isComponentFilePath(normalizedPath)) {
-      // 文件名格式为 `{id}_{name}.json`，用 extractIdFromIdName 取纯数字 id（suspend 契约为 string）
+      // 文件名格式为 `{id}_{name}.json`，用 extractIdFromIdName 取纯数字 id（canvas_ops 契约为 number）
       const componentId = extractIdFromIdName(path.basename(normalizedPath));
       if (componentId === null) {
         return { success: false, message: `无法从路径解析组件 ID: ${filePath}` };
       }
 
       // 恢复阶段：前端画布已删除，这时才由后端过 core 落盘
-      if (resumeData) {
-        if ("error" in resumeData && resumeData.error) {
-          return { success: false, message: `前端删除组件失败: ${resumeData.error}` };
-        }
-        if ("componentId" in resumeData) {
-          if (!screenKey) {
-            return { success: false, message: `组件已在前端删除，但该路径不在任何大屏目录下: ${filePath}` };
-          }
-          try {
-            // 组件 json 与它的子目录由整屏回写的 pruneOrphans 清掉；过滤器上的绑定、
-            // 回调关系图的注销都在 core 的 delete 一路里，与前端删组件跑的是同一份逻辑
-            await applyComponentDelete(screenKey, componentId);
-            return {
-              success: true,
-              message: `组件已删除，ID: ${componentId}`,
-              change: [deletedChange(filePath, "组件 json 及其子目录已由整屏回写清掉")]
-            };
-          } catch (error) {
-            return {
-              success: false,
-              message: `组件已在前端删除，但写入工作区失败: ${error instanceof Error ? error.message : String(error)}`
-            };
-          }
-        }
+      const reply = readCanvasOpResults(resumeData, 1);
+      if (reply.status === "invalid") {
+        return { success: false, message: reply.message };
       }
-
-      if (!suspend) {
-        return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
+      if (reply.status === "done") {
+        const receipt = reply.results[0];
+        if (!receipt.ok) {
+          return { success: false, message: `前端删除组件失败: ${receipt.error}` };
+        }
+        if (!screenKey) {
+          return { success: false, message: `组件已在前端删除，但该路径不在任何大屏目录下: ${filePath}` };
+        }
+        try {
+          // 组件 json 与它的子目录由整屏回写的 pruneOrphans 清掉；过滤器上的绑定、
+          // 回调关系图的注销都在 core 的 delete 一路里，与前端删组件跑的是同一份逻辑
+          await applyComponentDelete(screenKey, componentId);
+          return {
+            success: true,
+            message: `组件已删除，ID: ${componentId}`,
+            change: [deletedChange(filePath, "组件 json 及其子目录已由整屏回写清掉")]
+          };
+        } catch (error) {
+          return {
+            success: false,
+            message: `组件已在前端删除，但写入工作区失败: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
 
       // 从路径反推父节点 placement（与 push/copy 同一套 parsePlacementFromPath 规则）
@@ -180,16 +175,19 @@ export const deleteFileTool = createTool({
       }
       const placement = (parsePlacementFromPath(absPath) as Placement | null) ?? undefined;
 
-      return suspend(
-        mode === AgentMode.ASK_BEFORE_EDIT
-          ? {
-              type: SuspendType.AskApprovalDeleteComponent,
-              purpose: "删除组件",
-              componentId: String(componentId),
-              placement
-            }
-          : { type: SuspendType.DeleteComponent, componentId: String(componentId), placement }
-      ) as never;
+      // 审批框要让用户看清删的是谁：名字取自工作区里的组件 json（和画布上是同一个组件）
+      const name = await fsp
+        .readFile(absPath, "utf-8")
+        .then((c) => {
+          const parsed = JSON.parse(c) as { name?: string; title?: string };
+          return parsed.name || parsed.title;
+        })
+        .catch(() => undefined);
+
+      return suspendCanvasOps(context, {
+        purpose: name ? `删除组件「${name}」` : "删除组件",
+        ops: [{ op: "delete_component", componentId, placement }]
+      });
     }
 
     return { success: false, message: `不支持删除该类型文件: ${filePath}` };

@@ -50,7 +50,7 @@ describe("create_component 的位置和尺寸", () => {
     );
 
     expect(suspend).toHaveBeenCalledTimes(1);
-    expect(suspend.mock.calls[0][0].items[0].component).toMatchObject({
+    expect(suspend.mock.calls[0][0].ops[0].component).toMatchObject({
       left: 12,
       top: 24,
       component: { prop: JSON.parse(template).component.prop, width: 1920, height: 1080 }

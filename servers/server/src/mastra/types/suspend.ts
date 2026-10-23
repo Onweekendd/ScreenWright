@@ -19,18 +19,6 @@ export enum SuspendType {
   PushComponentUpdate = "push_component_update",
   /** ASK 模式：审批通过后再推送组件更新 */
   AskApprovalPushComponentUpdate = "ask_approval_push_component_update",
-  /** AUTO 模式：直接创建组件 */
-  CreateComponent = "create_component",
-  /** ASK 模式：审批通过后创建组件 */
-  AskApprovalCreateComponent = "ask_approval_create_component",
-  /** AUTO 模式：直接删除组件 */
-  DeleteComponent = "delete_component",
-  /** ASK 模式：审批通过后删除组件 */
-  AskApprovalDeleteComponent = "ask_approval_delete_component",
-  /** AUTO 模式：从已有配置复制创建组件 */
-  CopyComponent = "copy_component",
-  /** ASK 模式：审批通过后从已有配置复制创建组件 */
-  AskApprovalCopyComponent = "ask_approval_copy_component",
   /** AUTO 模式：直接保存过滤器 */
   SaveFilter = "save_filter",
   /** ASK 模式：审批通过后保存过滤器 */
@@ -62,57 +50,15 @@ export enum SuspendType {
 
 export const SuspendTypeSchema = z.enum(SuspendType);
 
-const placementSchema = z
-  .object({
-    parentId: z.number(),
-    parentType: z.enum(["group", "dynamicPanel"]),
-    stateId: z.string().optional()
-  })
-  .optional();
-
-/**
- * 前端建好并回传的组件（新建 / 复制 / 新分组容器共用）。
- *
- * 回的是**整个组件**而不是一个 id 或 filePath：真实 id 只有业务接口能分配，实例还要套组件菜单的
- * 默认值、跑一遍位置尺寸分配，落在画布上的那份跟后端发过去的 template 不是同一个东西。后端拿着
- * 这一份过 core 放进树、整屏落盘，路径由后端从自己的树推——工作区因此只有一个写入者，
- * 前端不必再 syncWorkspace，也不会出现「resume 回来了但文件还在 debounce 里没写」的竞态。
- */
-const componentCreatedFromFrontend = z
-  .record(z.string(), z.unknown())
-  .optional()
-  .describe("前端建好的组件（含业务接口分配的真实 id）；后端据此过 core 放进树并整屏回写");
-
-/**
- * create_component 一次挂起可以带多个组件（批量创建，省掉逐个往返）。
- *
- * `index` 是该组件在**工具入参 components 里的下标**，前端原样回传，后端靠它把回执对回入参。
- * 不用数组位置对齐：入参里校验没过的项不会发给前端，两边的数组长度并不一致。
- */
-const createItemSchema = z.object({
-  index: z.number().int().describe("该组件在入参 components 中的下标，回执时原样带回"),
-  component: z.record(z.string(), z.unknown()),
-  placement: placementSchema
-});
-
-const createResultSchema = z.object({
-  index: z.number().int(),
-  component: componentCreatedFromFrontend,
-  error: z.string().optional().describe("该组件创建失败时的错误信息；不影响同批其它组件")
-});
-
-const createResumeSchema = z.object({
-  approved: z.boolean().optional().describe("用户是否批准操作；false 表示整批取消"),
-  error: z.string().optional().describe("整批都没能开始创建时的错误信息"),
-  results: z.array(createResultSchema).optional().describe("逐个组件的创建回执，顺序不限")
-});
-
 /** 画布写操作里「挂到某个容器下」的目标：分组，或动态面板的某个状态 */
 const containerTargetSchema = z.object({
   parentId: z.number(),
   parentType: z.enum(["group", "dynamicPanel"]),
   stateId: z.string().optional()
 });
+
+/** 新建 / 复制 / 删除时组件所在的容器；不传就是大屏根级 */
+const placementSchema = containerTargetSchema.optional();
 
 /**
  * `canvas_ops` 能向前端提出的全部画布写操作。
@@ -121,6 +67,21 @@ const containerTargetSchema = z.object({
  * 纯数字 id，没解析好编译不过——此前 move_component 把入参原样交给前端、`Number()` 成了 NaN。
  */
 const CanvasOpSchema = z.discriminatedUnion("op", [
+  z.object({
+    op: z.literal("create_component"),
+    component: z.record(z.string(), z.unknown()).describe("校验过的新组件模板；真实 id 由前端的业务接口分配"),
+    placement: placementSchema
+  }),
+  z.object({
+    op: z.literal("copy_component"),
+    component: z.record(z.string(), z.unknown()).describe("源组件的完整配置（分组 / 动态面板带整棵子树）"),
+    placement: placementSchema
+  }),
+  z.object({
+    op: z.literal("delete_component"),
+    componentId: z.number().describe("待删除的组件 id"),
+    placement: placementSchema
+  }),
   z.object({
     op: z.literal("group_components"),
     componentIds: z.array(z.number()).min(2).describe("要组合成一个分组的组件 id（需当前处于同一父级下）")
@@ -267,73 +228,6 @@ export const SuspendDefs = {
         ...batchOperationFields
       })
     ])
-  },
-
-  [SuspendType.CreateComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.CreateComponent),
-      items: z.array(createItemSchema).describe("待创建的组件；前端按数组顺序依次创建")
-    }),
-    resume: createResumeSchema
-  },
-  [SuspendType.AskApprovalCreateComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalCreateComponent),
-      purpose: z.string(),
-      items: z.array(createItemSchema).describe("待创建的组件；前端按数组顺序依次创建")
-    }),
-    resume: createResumeSchema
-  },
-
-  [SuspendType.DeleteComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.DeleteComponent),
-      componentId: z.string(),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准删除操作"),
-      componentId: z.number().optional().describe("前端为新组件分配的真实 ID"),
-      error: z.string().optional().describe("前端删除组件失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalDeleteComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalDeleteComponent),
-      purpose: z.string(),
-      componentId: z.string(),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准删除操作"),
-      componentId: z.number().optional().describe("前端为新组件分配的真实 ID"),
-      error: z.string().optional().describe("前端删除组件失败时的错误信息")
-    })
-  },
-
-  [SuspendType.CopyComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.CopyComponent),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalCopyComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalCopyComponent),
-      purpose: z.string(),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准复制操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
   },
 
   [SuspendType.SaveFilter]: {

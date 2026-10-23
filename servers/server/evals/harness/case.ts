@@ -365,9 +365,6 @@ export const withinCanvas = (component: ComponentType, screen: ParsedLargeScreen
  * 所以变体名直接拼得出来，不用再维护第二张表。
  */
 export const AUTO_WRITE_SUSPENDS: readonly SuspendType[] = [
-  SuspendType.CreateComponent,
-  SuspendType.CopyComponent,
-  SuspendType.DeleteComponent,
   SuspendType.PushComponentUpdate,
   SuspendType.SaveFilter,
   SuspendType.DeleteFilter,

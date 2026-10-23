@@ -339,8 +339,20 @@ describe("树操作工具的 resume", () => {
       expect(existsSync(componentFile("4156_分组", "9400_副本.json"))).toBe(false);
     });
 
+    it("挂起载荷：copy_component op 带源组件和目标容器；ASK 模式带 approval", async () => {
+      const auto = await suspendedPayload(copyComponentTool, input);
+      const ask = await suspendedPayload(copyComponentTool, input, "ask_before_edit");
+
+      expect(auto).toMatchObject({
+        type: "canvas_ops",
+        ops: [{ op: "copy_component", component: { id: 4152 }, placement: { parentId: GROUP_ID, parentType: "group" } }]
+      });
+      expect(auto.approval).toBeUndefined();
+      expect(ask.approval).toEqual({ purpose: "复制组件到前端" });
+    });
+
     it("前端回传副本后由后端落盘，落在 to 指定的容器里", async () => {
-      const result = await run(copyComponentTool, input, { component: builtCopy() });
+      const result = await run(copyComponentTool, input, replied(done({ component: builtCopy() })));
 
       expect(result.success).toBe(true);
       expect(result.filePath).toBe(`screen_${SCREEN_ID}/component/4156_分组/9400_副本.json`);
@@ -365,7 +377,7 @@ describe("树操作工具的 resume", () => {
       const result = await run(
         copyComponentTool,
         { from: input.from, to: `screen_${SCREEN_ID}/component/` },
-        { component: copiedGroup }
+        replied(done({ component: copiedGroup }))
       );
 
       expect(result.success).toBe(true);
@@ -374,7 +386,7 @@ describe("树操作工具的 resume", () => {
     });
 
     it("回传的副本过不了校验时不落盘", async () => {
-      const result = await run(copyComponentTool, input, { component: { ...builtCopy(), zIndex: 5 } });
+      const result = await run(copyComponentTool, input, replied(done({ component: { ...builtCopy(), zIndex: 5 } })));
 
       expect(result.success).toBe(false);
       expect(existsSync(componentFile("4156_分组", "9400_副本.json"))).toBe(false);

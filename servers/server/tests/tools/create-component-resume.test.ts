@@ -25,10 +25,11 @@ const builtComponent = (id: number, name: string) => ({
   top: 20
 });
 
-/** 前端的创建回执：一批里每个组件各一条，index 对回入参 components 的下标 */
-const created = (id: number, name: string, index = 0) => ({
-  results: [{ index, component: builtComponent(id, name) }]
-});
+/** 前端对一个 create_component op 的回执：回传建好的组件 */
+const createdOk = (id: number, name: string) => ({ ok: true, component: builtComponent(id, name) });
+
+/** 前端的创建回执：canvas_ops 的 results 与发出去的 ops 按下标一一对应（校验没过的项不在 ops 里） */
+const created = (id: number, name: string) => ({ results: [createdOk(id, name)] });
 
 interface ToolResult {
   success: boolean;
@@ -49,7 +50,7 @@ const runBatchResume = (resumeData: Record<string, unknown>, components: Array<R
     { requestContext: { get: () => undefined }, agent: { resumeData, suspend: async () => undefined } }
   );
 
-const runResume = (resumeData: Record<string, unknown>, args: Record<string, unknown> = {}) =>
+const runResume = (resumeData: Record<string, unknown> | undefined, args: Record<string, unknown> = {}) =>
   execute(
     { screenId: SCREEN_ID, componentName: "条形图", ...args },
     { requestContext: { get: () => undefined }, agent: { resumeData, suspend: async () => undefined } }
@@ -93,7 +94,7 @@ describe("create_component resume", () => {
   it("回传的组件过不了 schema 时不落盘，返回 validationErrors", async () => {
     const broken = { ...builtComponent(9103, "坏组件"), zIndex: 5 };
 
-    const result = await runResume({ results: [{ index: 0, component: broken }] });
+    const result = await runResume({ results: [{ ok: true, component: broken }] });
 
     expect(result.success).toBe(false);
     expect(result.validationErrors?.join("\n")).toContain("zIndex");
@@ -125,7 +126,7 @@ describe("create_component resume", () => {
   });
 
   it("前端创建失败时透传错误，不落盘", async () => {
-    const result = await runResume({ results: [{ index: 0, error: "组件数量已达上限" }] });
+    const result = await runResume({ results: [{ ok: false, error: "组件数量已达上限" }] });
 
     expect(result.success).toBe(false);
     expect(result.message).toBe("组件数量已达上限");
@@ -149,8 +150,8 @@ describe("create_component resume", () => {
     it("只给 parentId 不给 parentType 时当场说清楚，不挂起也不落盘", async () => {
       const before = readJson(path.join(screenDir, "component", "4152_条形图.json"));
 
-      // resumeData 为空即首次执行：这条要在读模板、交前端之前就拦住
-      const result = await runResume({}, { placement: { parentId: 4156 } });
+      // 没有 resumeData 即首次执行：这条要在读模板、交前端之前就拦住
+      const result = await runResume(undefined, { placement: { parentId: 4156 } });
 
       expect(result.success).toBe(false);
       expect(result.message).toContain("parentType");
@@ -159,17 +160,15 @@ describe("create_component resume", () => {
   });
 
   /**
-   * 批量：一次挂起带多个组件，回执里每项各一条，靠 index 对回入参 components 的下标。
+   * 批量：一次挂起带多个 op，回执 results[k] 对应第 k 个发给前端的 op。
+   * 校验没过的项不发给前端，由后端自己记「第 k 个 op 对应入参第几项」。
    * 各项互相独立——一项失败不能连累同批其它项落盘。
    */
   describe("批量创建", () => {
     const two = [{ componentName: "条形图" }, { componentName: "条形图" }];
 
     it("每项回执各自落盘，results 按 index 逐项列出", async () => {
-      const result = await runBatchResume(
-        { results: [...created(9201, "甲").results, ...created(9202, "乙", 1).results] },
-        two
-      );
+      const result = await runBatchResume({ results: [createdOk(9201, "甲"), createdOk(9202, "乙")] }, two);
 
       expect(result.success).toBe(true);
       expect(result.results?.map((r) => [r.index, r.success, r.filePath])).toEqual([
@@ -180,21 +179,66 @@ describe("create_component resume", () => {
       expect(createScreenEditor(SCREEN_ID).component.find(9202)).not.toBeNull();
     });
 
-    it("回执顺序不限：靠 index 而不是数组位置对齐", async () => {
-      const result = await runBatchResume(
-        { results: [...created(9202, "乙", 1).results, ...created(9201, "甲", 0).results] },
-        two
+    it("前面的项在准备阶段就被拦下时，回执仍按发给前端的顺序对回入参下标", async () => {
+      // 第 1 项（下标 0）缺 parentType 被拦，只有下标 1 的项发给了前端，所以 results 只有一条
+      const result = await runBatchResume(created(9205, "戊"), [
+        { componentName: "条形图", placement: { parentId: 4156 } },
+        { componentName: "条形图" }
+      ]);
+
+      expect(result.results?.[0]).toMatchObject({ index: 0, success: false });
+      expect(result.results?.[1]).toMatchObject({
+        index: 1,
+        success: true,
+        filePath: `screen_${SCREEN_ID}/component/9205_戊.json`
+      });
+    });
+
+    it("回执数量和发给前端的 op 数对不上时拒绝，不落盘", async () => {
+      const result = await runBatchResume(created(9206, "己"), two);
+
+      expect(result.success).toBe(false);
+      expect(result.message).toContain("回执数量");
+      expect(createScreenEditor(SCREEN_ID).component.find(9206)).toBeNull();
+    });
+
+    it("入参 placement 带的是纯数字 id；发给前端的 ops 与入参一一对应", async () => {
+      const suspended: Array<Record<string, any>> = [];
+      await execute(
+        {
+          screenId: SCREEN_ID,
+          components: [{ componentName: "条形图", placement: { parentId: 4156, parentType: "group" } }]
+        },
+        {
+          requestContext: { get: () => undefined },
+          agent: { suspend: async (payload: Record<string, any>) => void suspended.push(payload) }
+        }
       );
 
-      expect(result.results?.map((r) => r.filePath)).toEqual([
-        `screen_${SCREEN_ID}/component/9201_甲.json`,
-        `screen_${SCREEN_ID}/component/9202_乙.json`
-      ]);
+      expect(suspended[0]).toMatchObject({
+        type: "canvas_ops",
+        ops: [{ op: "create_component", placement: { parentId: 4156, parentType: "group" } }]
+      });
+      expect(suspended[0]!.approval).toBeUndefined();
+    });
+
+    it("ASK 模式：整批只带一个 approval", async () => {
+      const suspended: Array<Record<string, any>> = [];
+      await execute(
+        { screenId: SCREEN_ID, components: two },
+        {
+          requestContext: { get: (key: string) => (key === "mode" ? "ask_before_edit" : undefined) },
+          agent: { suspend: async (payload: Record<string, any>) => void suspended.push(payload) }
+        }
+      );
+
+      expect(suspended[0]!.approval).toEqual({ purpose: expect.stringContaining("创建 2 个组件") });
+      expect(suspended[0]!.ops).toHaveLength(2);
     });
 
     it("一项前端创建失败时，另一项照常落盘，整体 success 为 false", async () => {
       const result = await runBatchResume(
-        { results: [{ index: 0, error: "组件数量已达上限" }, ...created(9203, "丙", 1).results] },
+        { results: [{ ok: false, error: "组件数量已达上限" }, createdOk(9203, "丙")] },
         two
       );
 

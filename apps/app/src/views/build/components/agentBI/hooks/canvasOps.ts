@@ -2,9 +2,15 @@ import type { CanvasOp, OpResult, ResumeData, SuspendPayload, SuspendType } from
 import type { ComponentType } from "@screenwright/types";
 import { cloneDeep } from "lodash-es";
 
+import { componentMenuTitle } from "./componentMenuTitle";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
 import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
-import type { MoveComponentTarget } from "./useCreateComponent";
+import type {
+  ComponentPlacement,
+  CreateComponentOptions,
+  CreateComponentResult,
+  MoveComponentTarget
+} from "./useCreateComponent";
 
 /**
  * 画布写操作（`canvas_ops` 挂起）的前端执行器。
@@ -40,6 +46,15 @@ export interface CanvasOpsDeps {
   getComponent: (id: number) => ComponentType | undefined;
   /** 弹审批确认框，返回用户是否同意 */
   confirm: (message: string) => Promise<boolean>;
+  /** 按组件菜单建一个新组件（业务接口分配真实 id） */
+  createComponent: (options: CreateComponentOptions) => Promise<CreateComponentResult>;
+  /** 从一份完整配置（含子树）复制出新组件 */
+  createComponentFromConfig: (config: ComponentType, placement?: ComponentPlacement) => Promise<CreateComponentResult>;
+  /** 删除组件；placement 不传表示在根级 */
+  deleteComponent: (
+    id: number,
+    placement?: ComponentPlacement
+  ) => Promise<{ success: boolean; message: string } | void>;
   moveComponents: (ids: number[], target?: MoveComponentTarget) => Promise<{ success: boolean; message: string }>;
   /** 把组件组合成一个新分组，返回分组容器 */
   groupComponents: (components: ComponentType[]) => Promise<ComponentType | null | undefined>;
@@ -57,6 +72,40 @@ const fail = (error: string): OpResult => ({ ok: false, error });
 
 const createOpHandlers = (deps: CanvasOpsDeps): OpHandlers => ({
   /**
+   * 新建组件。整批在同一次画布写入里按顺序执行：批内的位置尺寸分配有先后依赖，
+   * 中途不能被别的 tab 插进来，也不能并发——createComponent 会读画布当前状态做分配。
+   */
+  create_component: async ({ component, placement }) => {
+    const result = await deps.createComponent({
+      componentTitle: componentMenuTitle(component),
+      componentConfig: component as Partial<ComponentType>,
+      placement: placement as ComponentPlacement | undefined
+    });
+    if (!result.success || !result.componentId) {
+      return fail(result.message);
+    }
+    return createdComponentResult(result.component, `组件创建成功（id=${result.componentId}）`);
+  },
+
+  /** 从已有配置复制创建组件 */
+  copy_component: async ({ component, placement }) => {
+    const result = await deps.createComponentFromConfig(
+      component as unknown as ComponentType,
+      placement as ComponentPlacement | undefined
+    );
+    if (!result.success || !result.componentId) {
+      return fail(result.message);
+    }
+    return createdComponentResult(result.component, `组件复制成功（id=${result.componentId}）`);
+  },
+
+  /** 删除组件 */
+  delete_component: async ({ componentId, placement }) => {
+    const result = await deps.deleteComponent(componentId, placement as ComponentPlacement | undefined);
+    return result && !result.success ? fail(result.message) : OK;
+  },
+
+  /**
    * 把已有组件组合成一个新分组。组件本身不会被删除或重建，只是从原容器摘除、挂到新分组下。
    * 分组容器的真实 id 同样来自业务接口，所以跟新建/复制走同一条回传路。
    */
@@ -69,7 +118,7 @@ const createOpHandlers = (deps: CanvasOpsDeps): OpHandlers => ({
     if (!groupItem) {
       return fail("分组失败");
     }
-    return createdComponentResult(groupItem, "分组创建成功");
+    return createdComponentResult(groupItem, `分组创建成功（id=${groupItem.id}）`);
   },
 
   /**

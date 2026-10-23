@@ -42,10 +42,10 @@ describe("create_component 首次执行与恢复执行的空值语义", () => {
     await execute(input, { agent: { suspend } });
     expect(suspend).toHaveBeenCalledTimes(1);
     expect(mocks.applyComponentCreate).not.toHaveBeenCalled();
-    const component = { ...suspend.mock.calls[0][0].items[0].component, id: 9101 };
+    const component = { ...suspend.mock.calls[0][0].ops[0].component, id: 9101 };
 
     const result = await execute(input, {
-      agent: { suspend, resumeData: { results: [{ index: 0, component }] } }
+      agent: { suspend, resumeData: { results: [{ ok: true, component }] } }
     });
 
     expect(result.success).toBe(true);

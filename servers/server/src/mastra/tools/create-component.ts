@@ -10,8 +10,8 @@ import { getAgentWorkspacePath } from "@/agent-resources/workspace-path";
 import { applyComponentCreate } from "@/mastra/services/bi-data-sync/screen-mutation";
 
 import { prismaClient } from "../storage/prisma";
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { ChangeSchema, readCreatedChange } from "./change-report";
 import { formatValidationWarnings, validateComponentContent } from "./file/utils";
 
@@ -464,12 +464,9 @@ export const createComponentTool = createTool({
       .describe("批量创建：每项含 componentName，可选 placement、overrides；传了它就不要再传顶层的同名字段")
   }),
 
-  suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.AskApprovalCreateComponent].suspend,
-    SuspendDefs[SuspendType.CreateComponent].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: SuspendDefs[SuspendType.CreateComponent].resume,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   outputSchema: z.object({
     success: z.boolean(),
@@ -498,9 +495,6 @@ export const createComponentTool = createTool({
   }),
 
   execute: async ({ screenId, componentName, placement, overrides, components }, context) => {
-    const { suspend, resumeData } = context?.agent ?? {};
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
-
     // 首次执行的 schema 校验可能剥掉 null，但 Mastra resume 会跳过校验、回放原始入参。
     // 可选字段在两阶段都把 null 当作未传，避免前端已创建后又被误判为参数冲突。
     const isBatch = components != null;
@@ -513,88 +507,82 @@ export const createComponentTool = createTool({
       return { success: false, message: "请传 componentName（创建单个），或传 components（批量创建）" };
     }
 
-    // ── 恢复阶段：用户拒绝 ─────────────────────────────────────────────────────
-    if (resumeData?.approved === false) {
+    const resumeData = context?.agent?.resumeData;
+
+    // ── 恢复阶段：用户拒绝（不必读库）─────────────────────────────────────────
+    const peek = readCanvasOpResults(resumeData);
+    if (peek.status === "rejected") {
       return { success: false, message: "用户取消了组件创建操作" };
     }
 
-    // ── 恢复阶段：整批都没能开始创建 ──────────────────────────────────────────
-    if (resumeData?.error) {
-      return { success: false, message: resumeData.error as string };
+    // ── 弄清「发给前端的是入参里的哪几项」──────────────────────────────────────
+    // ops 只含准备阶段通过的那些，协议里不带下标，由后端自己记「第 k 个 op 对应 dispatched[k]」。
+    // mastra 回放的是同一份原始入参，准备阶段是确定的；恢复时若回执条数等于入参条数，说明整批都发出去了，
+    // 不用再读库重算模板（常见路径）；否则有项在准备阶段被拦下，重算一遍才知道是哪几项、原因是什么。
+    let dispatched: Array<{ index: number; componentName: string; placement?: ComponentPlacement }> = [];
+    const ops: Array<{ op: "create_component"; component: ComponentType; placement?: ComponentPlacement }> = [];
+    const rejected: ItemResult[] = [];
+
+    const wholeBatchDispatched = peek.status === "done" && peek.results.length === items.length;
+    const refs = wholeBatchDispatched
+      ? items.map((item, index) => ({
+          index,
+          componentName: item.componentName,
+          placement: normalizePlacement(item.placement)
+        }))
+      : undefined;
+    if (refs?.every((ref) => ref.placement.ok)) {
+      dispatched = refs.map(({ index, componentName: name, placement: normalized }) => ({
+        index,
+        componentName: name,
+        placement: normalized.ok ? normalized.placement : undefined
+      }));
+    } else {
+      const prepared = await prepareItems(items.map((item, index) => ({ index, item })));
+      for (const p of prepared) {
+        if (p.ok) {
+          dispatched.push({ index: p.index, componentName: p.componentName, placement: p.placement });
+          ops.push({ op: "create_component", component: p.component, placement: p.placement });
+        } else {
+          rejected.push(p.result);
+        }
+      }
+    }
+
+    const reply = readCanvasOpResults(resumeData, dispatched.length);
+
+    // ── 恢复阶段：回执不合法 ──────────────────────────────────────────────────
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
     }
 
     // ── 恢复阶段：前端回执 ────────────────────────────────────────────────────
-    // mastra 回放的是同一份原始入参，所以 items 与首次执行时一致。
-    // 首次执行里校验没过的项没有发给前端，回执里自然没有它们：这里重新判定一次，把原因还给 agent。
-    if (resumeData?.results) {
-      const receipts = new Map(resumeData.results.map((r) => [r.index, r]));
-      const unanswered = items.flatMap((item, index) => (receipts.has(index) ? [] : [{ index, item }]));
-      const unansweredResults = new Map(
-        (unanswered.length ? await prepareItems(unanswered) : []).map((p) => [
-          p.index,
-          p.ok ? failed(p.index, p.componentName, "前端没有返回该组件的创建结果") : p.result
-        ])
-      );
-
-      const results: ItemResult[] = [];
-      for (const [index, item] of items.entries()) {
-        const receipt = receipts.get(index);
-        if (!receipt) {
-          results.push(unansweredResults.get(index)!);
-          continue;
+    if (reply.status === "done") {
+      const results: ItemResult[] = [...rejected];
+      for (const [k, item] of dispatched.entries()) {
+        const receipt = reply.results[k];
+        if (!receipt.ok) {
+          results.push(failed(item.index, item.componentName, receipt.error));
+        } else if (!receipt.component) {
+          results.push(failed(item.index, item.componentName, "前端回执里没有组件内容"));
+        } else {
+          results.push(
+            await persistCreated(screenId, item.index, item.componentName, receipt.component, item.placement)
+          );
         }
-        if (receipt.error) {
-          results.push(failed(index, item.componentName, receipt.error));
-          continue;
-        }
-        if (!receipt.component) {
-          results.push(failed(index, item.componentName, "前端回执里没有组件内容"));
-          continue;
-        }
-        const normalized = normalizePlacement(item.placement);
-        if (!normalized.ok) {
-          results.push(failed(index, item.componentName, normalized.message));
-          continue;
-        }
-        results.push(
-          await persistCreated(screenId, index, item.componentName, receipt.component, normalized.placement)
-        );
       }
-      return summarize(results, isBatch);
+      return summarize(
+        results.sort((x, y) => x.index - y.index),
+        isBatch
+      );
     }
 
-    // ── 首次执行：逐项准备，能建的交前端，不能建的直接带原因返回 ───────────────
-    const prepared = await prepareItems(items.map((item, index) => ({ index, item })));
-    const ready = prepared.filter((p) => p.ok);
-    const rejected = prepared.flatMap((p) => (p.ok ? [] : [p.result]));
-
-    if (ready.length === 0) {
+    // ── 首次执行：能建的交前端，不能建的直接带原因返回 ──────────────────────────
+    if (ops.length === 0) {
       return summarize(rejected, isBatch);
     }
 
-    if (!suspend) {
-      return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
-    }
-
-    const payloadItems = ready.map(({ index, component, placement: itemPlacement }) => ({
-      index,
-      component,
-      placement: itemPlacement
-    }));
-
-    // ── ASK_BEFORE_EDIT：审批 + 创建合并为一次 suspend（整批一次审批）────────────
-    if (mode === AgentMode.ASK_BEFORE_EDIT) {
-      return suspend({
-        type: SuspendType.AskApprovalCreateComponent,
-        purpose: purposeOf(ready.map((p) => p.componentName)),
-        items: payloadItems
-      }) as never;
-    }
-
-    // ── 自动模式：直接交给前端创建 ────────────────────────────────────────────
-    return suspend({
-      type: SuspendType.CreateComponent,
-      items: payloadItems
-    }) as never;
+    // 整批一次审批；组件按数组顺序依次创建
+    return suspendCanvasOps(context, { purpose: purposeOf(dispatched.map((p) => p.componentName)), ops });
   }
 });

@@ -28,8 +28,11 @@ export const NO_SUSPEND_RESULT = {
  */
 export function suspendCanvasOps(
   context: CanvasOpsContext | undefined,
-  input: { purpose: string; ops: [CanvasOp, ...CanvasOp[]]; batch?: { batchId: string; operationId: string } }
+  input: { purpose: string; ops: CanvasOp[]; batch?: { batchId: string; operationId: string } }
 ): Promise<never> | typeof NO_SUSPEND_RESULT {
+  if (input.ops.length === 0) {
+    throw new Error("canvas_ops 至少要有一个操作");
+  }
   const suspend = context?.agent?.suspend;
   if (!suspend) {
     return NO_SUSPEND_RESULT;
@@ -53,10 +56,11 @@ export type CanvasOpsReply =
   | { status: "invalid"; message: string };
 
 /**
- * 读前端回执：按下标一一对应，`results.length` 必须等于发出去的 `ops` 数。
+ * 读前端回执：按下标一一对应，`results.length` 必须等于发出去的 `ops` 数（不传 expectedCount 则不校验长度，
+ * 用于调用方要先看一眼回执再决定怎么对账的场景）。
  * 用户拒绝是 `rejected`；单个操作失败不在这里体现，在对应下标的 `{ ok: false, error }` 里。
  */
-export function readCanvasOpResults(resumeData: unknown, expectedCount: number): CanvasOpsReply {
+export function readCanvasOpResults(resumeData: unknown, expectedCount?: number): CanvasOpsReply {
   if (!resumeData || typeof resumeData !== "object") {
     return { status: "pending" };
   }
@@ -67,7 +71,7 @@ export function readCanvasOpResults(resumeData: unknown, expectedCount: number):
   if (!Array.isArray(data.results)) {
     return { status: "pending" };
   }
-  if (data.results.length !== expectedCount) {
+  if (expectedCount !== undefined && data.results.length !== expectedCount) {
     return {
       status: "invalid",
       message: `前端回执数量不符：发出 ${expectedCount} 个操作，收到 ${data.results.length} 个`

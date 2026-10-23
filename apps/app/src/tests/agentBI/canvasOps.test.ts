@@ -17,6 +17,13 @@ const makeDeps = (overrides: Partial<CanvasOpsDeps> = {}): CanvasOpsDeps => {
   return {
     getComponent: (id) => onCanvas.get(id),
     confirm: vi.fn().mockResolvedValue(true),
+    createComponent: vi
+      .fn()
+      .mockResolvedValue({ success: true, message: "", componentId: 900, component: comp(900, { name: "新组件" }) }),
+    createComponentFromConfig: vi
+      .fn()
+      .mockResolvedValue({ success: true, message: "", componentId: 901, component: comp(901, { name: "副本" }) }),
+    deleteComponent: vi.fn().mockResolvedValue({ success: true, message: "" }),
     moveComponents: vi.fn().mockResolvedValue({ success: true, message: "" }),
     groupComponents: vi.fn().mockResolvedValue(comp(100, { name: "分组" })),
     ungroupComponents: vi.fn().mockResolvedValue(undefined),
@@ -115,6 +122,122 @@ describe("canvas_ops 执行器", () => {
       ]);
 
       expect(reply).toEqual({ results: [{ ok: false, error: "接口超时" }, { ok: true }] });
+    });
+  });
+
+  describe("create_component", () => {
+    it("按组件类型名（title）去菜单建，回传画布上建好的那份（含业务接口分配的 id）", async () => {
+      const deps = makeDeps();
+      const template = { id: 1, title: "条形图", name: "销售额", component: { prop: "echartstripBar" } };
+      const placement = { parentId: 7, parentType: "group" as const };
+
+      const reply = await run(deps, [{ op: "create_component", component: template, placement }]);
+
+      expect(deps.createComponent).toHaveBeenCalledWith({
+        componentTitle: "条形图",
+        componentConfig: template,
+        placement
+      });
+      expect(reply).toEqual({ results: [{ ok: true, component: { id: 900, name: "新组件" } }] });
+    });
+
+    it("一批里一个创建失败，只记在自己那项，后面的照常创建", async () => {
+      const deps = makeDeps({
+        createComponent: vi
+          .fn()
+          .mockResolvedValueOnce({ success: false, message: "组件数量已达上限" })
+          .mockResolvedValueOnce({ success: true, message: "", componentId: 902, component: comp(902) })
+      });
+
+      const reply = await run(deps, [
+        { op: "create_component", component: { title: "a" } },
+        { op: "create_component", component: { title: "b" } }
+      ]);
+
+      expect(reply).toEqual({
+        results: [
+          { ok: false, error: "组件数量已达上限" },
+          { ok: true, component: { id: 902 } }
+        ]
+      });
+    });
+
+    it("建成功却拿不到实例：回 error，不把空组件交给后端", async () => {
+      const deps = makeDeps({
+        createComponent: vi.fn().mockResolvedValue({ success: true, message: "", componentId: 903 })
+      });
+
+      const reply = await run(deps, [{ op: "create_component", component: { title: "a" } }]);
+
+      expect(reply).toEqual({ results: [{ ok: false, error: "组件创建成功（id=903）但找不到对应实例" }] });
+    });
+
+    it("ASK 模式整批只问一次", async () => {
+      const deps = makeDeps();
+
+      await run(
+        deps,
+        [
+          { op: "create_component", component: { title: "a" } },
+          { op: "create_component", component: { title: "b" } }
+        ],
+        { approval: { purpose: "创建 2 个组件" } }
+      );
+
+      expect(deps.confirm).toHaveBeenCalledTimes(1);
+      expect(deps.createComponent).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("copy_component", () => {
+    it("成功：回传复制出的副本", async () => {
+      const deps = makeDeps();
+      const source = { id: 5, title: "条形图" };
+
+      const reply = await run(deps, [{ op: "copy_component", component: source }]);
+
+      expect(deps.createComponentFromConfig).toHaveBeenCalledWith(source, undefined);
+      expect(reply).toEqual({ results: [{ ok: true, component: { id: 901, name: "副本" } }] });
+    });
+
+    it("失败：回 error", async () => {
+      const deps = makeDeps({
+        createComponentFromConfig: vi.fn().mockResolvedValue({ success: false, message: "找不到目标容器" })
+      });
+
+      const reply = await run(deps, [{ op: "copy_component", component: { id: 5 } }]);
+
+      expect(reply).toEqual({ results: [{ ok: false, error: "找不到目标容器" }] });
+    });
+  });
+
+  describe("delete_component", () => {
+    it("交给画布的是数字 id 和放置信息", async () => {
+      const deps = makeDeps();
+      const placement = { parentId: 7, parentType: "dynamicPanel" as const, stateId: "s1" };
+
+      const reply = await run(deps, [{ op: "delete_component", componentId: 4152, placement }]);
+
+      expect(deps.deleteComponent).toHaveBeenCalledWith(4152, placement);
+      expect(reply).toEqual({ results: [{ ok: true }] });
+    });
+
+    it("画布删除失败：回 error", async () => {
+      const deps = makeDeps({
+        deleteComponent: vi.fn().mockResolvedValue({ success: false, message: "找不到父组件 7" })
+      });
+
+      const reply = await run(deps, [{ op: "delete_component", componentId: 4152 }]);
+
+      expect(reply).toEqual({ results: [{ ok: false, error: "找不到父组件 7" }] });
+    });
+
+    it("删除函数没有返回值（旧 hook 的写法）也算成功", async () => {
+      const deps = makeDeps({ deleteComponent: vi.fn().mockResolvedValue(undefined) });
+
+      const reply = await run(deps, [{ op: "delete_component", componentId: 1 }]);
+
+      expect(reply).toEqual({ results: [{ ok: true }] });
     });
   });
 
@@ -220,5 +343,14 @@ describe("createdComponentResult", () => {
       ok: false,
       error: "分组创建成功但找不到对应实例"
     });
+  });
+
+  it("回传的是深拷贝：画布上的响应式对象之后再变，不影响已交出去的回执", () => {
+    const onCanvas = comp(1, { name: "旧名字" });
+
+    const result = createdComponentResult(onCanvas) as { component: Record<string, unknown> };
+    (onCanvas as unknown as Record<string, unknown>).name = "新名字";
+
+    expect(result.component.name).toBe("旧名字");
   });
 });

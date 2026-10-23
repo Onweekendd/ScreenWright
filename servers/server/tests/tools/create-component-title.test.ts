@@ -49,6 +49,6 @@ describe("create_component 的 title", () => {
 
     await result;
     expect(suspended).toHaveLength(1);
-    expect(suspended[0]).toMatchObject({ items: [{ component: { name: "销售额", title: "条形图" } }] });
+    expect(suspended[0]).toMatchObject({ ops: [{ component: { name: "销售额", title: "条形图" } }] });
   });
 });

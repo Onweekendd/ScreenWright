@@ -1,5 +1,5 @@
 <template>
-  <buildInfiniteCanvas>
+  <buildInfiniteCanvas :persist-key="cameraKey">
     <div
       id="go-chart-edit-content"
       :style="cEditContent"
@@ -22,6 +22,7 @@
 import { computed } from "vue";
 
 import { type ComponentType, EditCanvasTypeEnum } from "@/views/build/components/buildRender/type";
+import { useLargeScreenInfo } from "@/views/build/useLargeScreenInfo";
 
 import buildInfiniteCanvas from "../buildInfiniteCanvas/index.vue";
 import AlignmentLines from "./components/AlignmentLines.vue";
@@ -38,6 +39,13 @@ const { dragHandle, dragoverHandle } = useDrag();
 const { componentList, editConfig, isBuild, editCanvas, targetChart } = useEditStore();
 const { initDirection } = useDirection();
 const { syncComponentData } = useAlignmentWasm();
+const { navInfo } = useLargeScreenInfo();
+
+// 画布相机（平移 + 缩放）按大屏和版本记忆；大屏还没加载出来（id 无效）时不记
+const cameraKey = computed(() => {
+  const id = Number(navInfo.value.id);
+  return id > 0 ? `${id}_${navInfo.value.versionCode ?? ""}` : undefined;
+});
 
 const isDrag = computed(() => editCanvas.value[EditCanvasTypeEnum.IS_DRAG]);
 

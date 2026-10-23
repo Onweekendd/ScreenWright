@@ -1,4 +1,5 @@
 import { captureEditorScreenShot } from "../../buildConfig/graphConfig/screenCapture";
+import { withCullingSuspended } from "../../buildRender/hooks/cullingSuspend";
 import { type Edge, snapToBorders } from "./borderSnap";
 
 /**
@@ -397,7 +398,12 @@ const finish = async (
   };
 };
 
-export async function captureCanvasForAgent(request: AgentCaptureRequest = {}): Promise<AgentCanvasShot> {
+/** 截图期间暂停画布裁剪：要量 DOM 的组件不能是 display: none 的 */
+export function captureCanvasForAgent(request: AgentCaptureRequest = {}): Promise<AgentCanvasShot> {
+  return withCullingSuspended(() => captureCanvasForAgentUncovered(request));
+}
+
+async function captureCanvasForAgentUncovered(request: AgentCaptureRequest): Promise<AgentCanvasShot> {
   const { componentIds, region: wantedRegion } = request;
   const canvas = document.querySelector<HTMLElement>(CANVAS_SELECTOR);
   if (!canvas) {

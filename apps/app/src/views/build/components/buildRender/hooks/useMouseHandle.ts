@@ -2,6 +2,7 @@
 import { type MaybeRef, unref } from "vue";
 import { useRoute } from "vue-router";
 
+import { sortByZIndex } from "@screenwright/core";
 import type { LargeScreenDetailInfo } from "@screenwright/types";
 import { throttle } from "lodash-es";
 
@@ -13,6 +14,7 @@ import type { ComponentType } from "@/views/build/components/buildRender/type";
 
 import { useGlobalComponentData } from "../../../useGlobalComponentData";
 import { EditCanvasTypeEnum, FolderType, MouseEventButton } from "../type";
+import { getAlignmentReferenceBounds } from "./alignmentReferenceBounds";
 // 导入纯函数工具
 import {
   calculateComponentDisplayPosition,
@@ -152,7 +154,7 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
       }
     });
 
-    return components.sort((a, b) => b.zIndex - a.zIndex);
+    return sortByZIndex(components, "desc");
   };
 
   const selectNextComponentByPoint = (event: MouseEvent, item: ComponentType) => {
@@ -543,10 +545,7 @@ export const useMouseHandle = (props: MouseHandleOptions = {}) => {
 
     if (biAlignmentInstance.value) {
       biAlignmentInstance.value.cache_reference_shapes(
-        0,
-        0,
-        Number(editConfig.width),
-        Number(editConfig.height),
+        ...getAlignmentReferenceBounds(e, editConfig),
         selectTargetDataId.value
       );
     }

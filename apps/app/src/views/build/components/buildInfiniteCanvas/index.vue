@@ -23,20 +23,22 @@
       <button type="button" title="缩小" @click="zoomByStep(1 / ZOOM_STEP)">−</button>
       <button type="button" class="zoom-value" title="重置为 100%" @click="resetZoom">{{ zoomPercent }}%</button>
       <button type="button" title="放大" @click="zoomByStep(ZOOM_STEP)">+</button>
-      <button type="button" title="复原视角：按大屏宽高适配并居中" @click="fitToFrame()">复原</button>
+      <button type="button" title="复原视角：按大屏宽高适配并居中" @click="resetView">复原</button>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, type PropType, ref, shallowRef, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, type PropType, provide, ref, shallowRef, watch } from "vue";
 import { nextTick } from "vue";
 import { useEventListener, useResizeObserver } from "@vueuse/core";
 
-import { type CameraState, Viewport } from "@screenwright/core";
+import { type CameraState, isRectVisible, parseCamera, type Rect, serializeCamera, Viewport } from "@screenwright/core";
 
 import { useAddKeyboard } from "@/views/build/components/buildRender/hooks/useAddKeyboard";
 import { useEditStore } from "@/views/build/components/buildRender/hooks/useEditStore";
 import { useKeyBoardAction } from "@/views/build/components/buildRender/hooks/useKeyBoardAction";
+
+import { registerCanvasViewport, VISIBLE_WORLD_RECT_KEY } from "./canvasViewportContext";
 
 const { targetElementRef, initEventListener } = useKeyBoardAction();
 const { setSpaceActive, KeyboardActiveMap } = useAddKeyboard();
@@ -50,6 +52,12 @@ const props = defineProps({
   },
   editHeight: {
     type: [String, Number] as PropType<string | number | undefined>,
+    default: undefined
+  },
+  // 相机位置的存档 key（一般是大屏 id + 版本）。有值时记住用户调好的平移/缩放，下次进入同一个大屏直接用；
+  // 不传（面板 / 终端交互编辑器）就不记
+  persistKey: {
+    type: String as PropType<string | undefined>,
     default: undefined
   }
 });
@@ -72,6 +80,9 @@ const camera = shallowRef<CameraState>(viewport.getCamera());
 const isPanning = ref(false);
 // 用户手动平移/缩放过之后，窗口尺寸变化不再自动适配，避免抢走视角
 let userMovedCamera = false;
+// 相机是从存档里恢复的：大屏尺寸随后才加载完时，不要再把它适配回默认视角
+let restoredFromStorage = false;
+let applyingStoredCamera = false;
 
 const mirrorZoom = (zoom: number) => {
   if (editConfig.value.scale !== zoom) {
@@ -79,9 +90,22 @@ const mirrorZoom = (zoom: number) => {
   }
 };
 
+// 当前可视窗口（世界坐标），给组件裁剪用；视口还没量出尺寸时为 null（此时不裁剪）
+const visibleRect = shallowRef<Rect | null>(null);
+provide(VISIBLE_WORLD_RECT_KEY, visibleRect);
+
+const updateVisibleRect = () => {
+  const { width, height } = viewport.getSize();
+  visibleRect.value = width > 0 && height > 0 ? viewport.visibleWorldRect() : null;
+};
+
 const offCamera = viewport.subscribe((next) => {
   camera.value = next;
   mirrorZoom(next.zoom);
+  updateVisibleRect();
+  if (!applyingStoredCamera && userMovedCamera) {
+    scheduleSaveCamera();
+  }
 });
 mirrorZoom(camera.value.zoom);
 
@@ -109,6 +133,7 @@ const toViewportPoint = (e: { clientX: number; clientY: number }) => {
 
 const markUserMoved = () => {
   userMovedCamera = true;
+  restoredFromStorage = false;
 };
 
 /** 把画板适配进视口并居中 */
@@ -116,6 +141,109 @@ const fitToFrame = (width = effectiveWidth.value, height = effectiveHeight.value
   userMovedCamera = false;
   viewport.fitRect({ x: 0, y: 0, width, height }, { fill: FIT_FILL });
 };
+
+/** 「复原」按钮：回到自动适配，并忘掉存档（下次进来也是自动适配） */
+const resetView = () => {
+  restoredFromStorage = false;
+  clearSavedCamera();
+  fitToFrame();
+};
+
+// ---- 相机存档：记住用户调好的平移/缩放，下次进入同一个大屏时直接使用 ----
+// 只存用户亲手调过的视角（自动适配的结果跟窗口大小有关，没必要存）。存档在 localStorage，
+// 读写都包 try/catch：隐私模式、被禁用、配额满都不能影响画布使用。
+const CAMERA_STORAGE_PREFIX = "funbi:build-camera:";
+const SAVE_CAMERA_DELAY_MS = 300;
+
+let boundKey: string | undefined;
+let saveTimer: ReturnType<typeof setTimeout> | undefined;
+
+const readSavedCamera = (key: string): CameraState | null => {
+  try {
+    return parseCamera(localStorage.getItem(CAMERA_STORAGE_PREFIX + key));
+  } catch {
+    return null;
+  }
+};
+
+const writeSavedCamera = (key: string, next: CameraState) => {
+  try {
+    localStorage.setItem(CAMERA_STORAGE_PREFIX + key, serializeCamera(next));
+  } catch {
+    // 存不下就算了
+  }
+};
+
+const clearSavedCamera = () => {
+  clearTimeout(saveTimer);
+  saveTimer = undefined;
+  if (!boundKey) {
+    return;
+  }
+  try {
+    localStorage.removeItem(CAMERA_STORAGE_PREFIX + boundKey);
+  } catch {
+    // 同上
+  }
+};
+
+/** 立刻把挂着的存档写出去（切换大屏、卸载、关页面前） */
+const flushSavedCamera = () => {
+  clearTimeout(saveTimer);
+  saveTimer = undefined;
+  if (boundKey && userMovedCamera) {
+    writeSavedCamera(boundKey, viewport.getCamera());
+  }
+};
+
+const scheduleSaveCamera = () => {
+  if (!boundKey) {
+    return;
+  }
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSavedCamera, SAVE_CAMERA_DELAY_MS);
+};
+
+/** 存档的视角下，画板是否还有一部分在视口里；完全看不到画板的存档（改过窗口 / 画板尺寸后）不要用，免得一进来是空白 */
+const isFrameReachable = (saved: CameraState): boolean => {
+  const { width, height } = viewport.getSize();
+  if (width <= 0 || height <= 0) {
+    return true;
+  }
+  const visible: Rect = {
+    x: -saved.x / saved.zoom,
+    y: -saved.y / saved.zoom,
+    width: width / saved.zoom,
+    height: height / saved.zoom
+  };
+  return isRectVisible({ x: 0, y: 0, width: effectiveWidth.value, height: effectiveHeight.value }, visible);
+};
+
+watch(
+  () => props.persistKey,
+  (key, previousKey) => {
+    // 先把上一个大屏的视角存好，再换绑
+    flushSavedCamera();
+    boundKey = key || undefined;
+    restoredFromStorage = false;
+    if (!boundKey) {
+      return;
+    }
+
+    const saved = readSavedCamera(boundKey);
+    if (saved && isFrameReachable(saved)) {
+      applyingStoredCamera = true;
+      viewport.setCamera(saved);
+      applyingStoredCamera = false;
+      userMovedCamera = true;
+      restoredFromStorage = true;
+    } else if (previousKey) {
+      // 同一个画布切到另一个没有存档的大屏：回到自动适配
+      nextTick(() => fitToFrame());
+    }
+  },
+  { immediate: true }
+);
 
 const resetZoom = () => {
   const { width, height } = viewport.getSize();
@@ -226,6 +354,7 @@ const syncViewportSize = () => {
     return;
   }
   viewport.setSize($app.value.clientWidth, $app.value.clientHeight);
+  updateVisibleRect();
 };
 
 useResizeObserver($app, () => {
@@ -237,15 +366,28 @@ useResizeObserver($app, () => {
 });
 
 watch([effectiveWidth, effectiveHeight], () => {
+  // 刚从存档恢复的视角不要被「大屏尺寸加载完了」这一下冲掉
+  if (restoredFromStorage) {
+    return;
+  }
   nextTick(() => fitToFrame());
 });
 
 let initTimer: ReturnType<typeof setTimeout> | undefined;
+let unregisterViewport: (() => void) | undefined;
+
+useEventListener(window, "pagehide", flushSavedCamera);
 
 onMounted(async () => {
+  if ($app.value) {
+    unregisterViewport = registerCanvasViewport($app.value, () => visibleRect.value);
+  }
   await nextTick();
   syncViewportSize();
-  fitToFrame();
+  // 已经从存档恢复了视角就别再自动适配
+  if (!userMovedCamera) {
+    fitToFrame();
+  }
 
   initTimer = setTimeout(() => {
     initEventListener();
@@ -255,11 +397,14 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   clearTimeout(initTimer);
+  flushSavedCamera();
+  unregisterViewport?.();
   offCamera();
 });
 
 defineExpose({
-  fitToFrame
+  fitToFrame,
+  resetView
 });
 </script>
 

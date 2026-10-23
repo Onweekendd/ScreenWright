@@ -20,6 +20,7 @@
         lock,
         'is-multi-selected': multiSelectOutline,
         'is-editing': isEditing,
+        'is-culled': culled,
         isDragging,
         [`status-animation-transition-${id}`]: true
       }"
@@ -43,6 +44,7 @@
       lock,
       'is-multi-selected': multiSelectOutline,
       'is-editing': isEditing,
+      'is-culled': culled,
       isDragging,
       [`status-animation-transition-${id}`]: true
     }"
@@ -130,6 +132,11 @@ const props = defineProps({
   },
   /** agent 正在通过 edit_files 改这个组件——叠一层扫光提示，改完自动消失 */
   isEditing: {
+    type: Boolean,
+    default: false
+  },
+  /** 移出了画布可视窗口：隐藏（display: none），见 useCanvasCulling */
+  culled: {
     type: Boolean,
     default: false
   },
@@ -319,6 +326,11 @@ const shapeModalShow = computed(() => {
 
   &.lock {
     cursor: default !important;
+  }
+
+  // 用类而不是 v-show：v-show 在 Transition 里，切换会重放进入动画
+  &.is-culled {
+    display: none !important;
   }
 
   .has-bind::after {

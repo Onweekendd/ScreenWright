@@ -1,5 +1,6 @@
 import { snapdom } from "@zumer/snapdom";
 
+import { withCullingSuspended } from "../../../buildRender/hooks/cullingSuspend";
 import { runLayerCompositeCapture } from "./layerCompositeCapture";
 import { promptEditorScreenShotMode } from "./promptEditorScreenShotMode";
 import type { CaptureElementRef, ScreenShotOptions, ScreenShotResult } from "./types";
@@ -72,8 +73,14 @@ async function captureEditorScreenShotSimple(
 
 /**
  * 构建页 editor 截图（完整 / 简单模式）
+ *
+ * 截图期间暂停画布裁剪：移出可视窗口的组件平时是 display: none 的，不暂停就会从截图里消失。
  */
-export async function captureEditorScreenShot(options: ScreenShotOptions = {}): Promise<ScreenShotResult | null> {
+export function captureEditorScreenShot(options: ScreenShotOptions = {}): Promise<ScreenShotResult | null> {
+  return withCullingSuspended(() => captureEditorScreenShotUncovered(options));
+}
+
+async function captureEditorScreenShotUncovered(options: ScreenShotOptions): Promise<ScreenShotResult | null> {
   const { canvas, editor, componentList, mimeType = "image/jpeg", screenShotMode = "full" } = options;
 
   if (screenShotMode === "simple") {

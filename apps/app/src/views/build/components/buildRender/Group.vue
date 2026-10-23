@@ -16,6 +16,7 @@
     :display="show && groupData.display"
     :isSelect="targetChart.selectId.includes(`${groupData.id}`)"
     :isEditing="editingComponentIds.has(`${groupData.id}`)"
+    :culled="culled"
     @click.stop="mouseClickHandle($event, groupData)"
     @mousedown="!disabled && mousedownHandle($event, groupData)"
     @mouseenter="mouseenterHandle($event, groupData)"
@@ -72,6 +73,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+import { sortByZIndex } from "@screenwright/core";
+
 import { editingComponentIds } from "@/hooks/useEditingComponents";
 import { useFrostedStyle } from "@/views/build/components/buildConfig/components/frostedGlassConfig/useFrostedStyle";
 
@@ -93,6 +96,8 @@ interface Props {
   isBuild?: boolean;
   show?: boolean;
   changeKey?: number;
+  /** 移出了画布可视窗口，见 useCanvasCulling */
+  culled?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -102,7 +107,8 @@ const props = withDefaults(defineProps<Props>(), {
   panelId: undefined,
   statusId: undefined,
   show: true,
-  changeKey: 0
+  changeKey: 0,
+  culled: false
 });
 const { getFrostedStyle } = useFrostedStyle(props.groupData);
 const { targetChart } = useEditStore();
@@ -148,7 +154,7 @@ const getData = computed(() => {
   if (!props.groupData.children) {
     return [];
   }
-  return [...props.groupData.children].sort((a, b) => b.zIndex - a.zIndex).reverse();
+  return sortByZIndex(props.groupData.children);
 });
 </script>
 <style lang="scss" scoped>

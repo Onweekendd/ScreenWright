@@ -7,7 +7,7 @@ import { z } from "zod";
  * 均引用此枚举，避免裸字符串漂移。
  */
 export enum SuspendType {
-  /** 通用审批：弹确认框，后端按 approved 自行处理后续（edit_files、createEventTemplate） */
+  /** 通用审批：弹确认框，后端按 approved 自行处理后续（edit_files 普通文件在 ASK 模式下那一轮纯审批） */
   AskApproval = "ask_approval",
   /** 向用户提出结构化多选题，等待回答后继续执行 */
   AskUserQuestion = "ask_user_question",

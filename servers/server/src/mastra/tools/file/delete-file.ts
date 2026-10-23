@@ -119,7 +119,7 @@ export const deleteFileTool = createTool({
       }
 
       return suspendCanvasOps(context, {
-        purpose: "删除数据过滤器",
+        purpose: `删除数据过滤器「${filterName}」`,
         ops: [{ op: "delete_filter", filterName }]
       });
     }

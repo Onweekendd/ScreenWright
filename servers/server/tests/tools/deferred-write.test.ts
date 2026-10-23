@@ -154,7 +154,8 @@ describe("前端确认之前不动工作区", () => {
       const ask = await payloadOf(deleteFileTool, { path: filterPath() }, "ask_before_edit");
 
       expect(auto).toEqual({ type: "canvas_ops", ops: [{ op: "delete_filter", filterName: "销售额" }] });
-      expect(ask.approval).toEqual({ purpose: "删除数据过滤器" });
+      // 确认框里带上过滤器名，用户才知道要删的是哪个
+      expect(ask.approval).toEqual({ purpose: "删除数据过滤器「销售额」" });
     });
 
     it("前端解绑成功后两个文件才消失，组件上的 listenArgs 也被摘干净", async () => {

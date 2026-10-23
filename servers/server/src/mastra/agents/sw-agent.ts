@@ -18,7 +18,6 @@ import { addPanelStateTool } from "../tools/add-panel-state";
 import { applyAiTemplateTool } from "../tools/apply-ai-template";
 import type { createDelegateAppCodeTool } from "../tools/artifact-app";
 import { askUserQuestionTool } from "../tools/ask-user-question";
-import { prepareAssetsTool, readBlueprintTool, saveBlueprintTool } from "../tools/blueprint";
 import { captureCanvasTool } from "../tools/capture-canvas";
 import { configureCallbackArgs } from "../tools/configure-callback-args";
 import { configureComponentData } from "../tools/configure-component-data";
@@ -200,12 +199,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
           executeInBrowserTool,
           // 模板存取：模板提取收尾 / 模板检索命中后应用，都是明确的收尾动作
           saveAiTemplateTool,
-          applyAiTemplateTool,
-          // 效果图 → 大屏：设计蓝图（结构树 + 素材清单）与批量准备素材。只在用户给了整屏效果图要搭大屏时用，
-          // 一次会话用一轮，常驻白占每轮 schema token；工作流提示词里写明了用 search_tools 找它们
-          saveBlueprintTool,
-          readBlueprintTool,
-          prepareAssetsTool
+          applyAiTemplateTool
           // 生图：低频（一次会话顶多用到几次装饰素材/效果图），且本身开了 background，
           // 常驻只会白占每轮的 schema token。工具内部已经幂等（promptHash），检索没命中
           // 漏用一次的代价也就是让 agent 退回文字描述，不影响正确性

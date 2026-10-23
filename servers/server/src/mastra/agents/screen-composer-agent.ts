@@ -11,7 +11,7 @@ import { resolveReasoningModel } from "../provider/model-registry";
  * 而实测数据摆着：agent loop 每步固定前缀约 37k（其中工具 schema 占 19k），
  * 一块 20 组件的屏光协议开销就是 700k+ token 和 20 多个网络来回。
  *
- * 它读**需求**（没有设计稿时生成结构）；有效果图时由主 agent 看图写设计蓝图，不经过它。
+ * 它读**需求**（没有设计稿时生成结构）；有效果图时由主 agent 看图照着搭，不经过它。
  * 它不碰坐标——坐标一律由 `solveLayout` 算，模型只出结构与格数。
  */
 export const screenComposerAgent = new Agent({

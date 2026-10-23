@@ -2,7 +2,7 @@
  * 存储装配点：下游拿 `assetStore()` / `recordStore()`，不关心背后是哪个 `ObjectStore` 实现
  * （`FsObjectStore` / `MinioObjectStore` / `CompositeObjectStore`）。
  *
- * ── 素材类（聊天贴图、Figma 资源、蓝图素材、BI 素材库）───────────────────
+ * ── 素材类（聊天贴图、Figma 资源、AI 生成素材、BI 素材库）───────────────────
  *   单一后端，由 `STORAGE_DRIVER` 选择：
  *     fs   （默认）→ 落 `BLOB_STORAGE_DIR`，经 `GET /blobs/<key>` 对外服务
  *     minio        → 落对象存储

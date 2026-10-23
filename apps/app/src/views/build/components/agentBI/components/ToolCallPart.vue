@@ -21,20 +21,6 @@
         preview-teleported
       />
     </div>
-
-    <!-- 批量准备素材：每张准备好的素材一个小缩略图，点开可以左右翻看整批 -->
-    <div v-if="assetUrls.length" class="tool-call__assets">
-      <el-image
-        v-for="(url, index) in assetUrls"
-        :key="url"
-        :src="url"
-        :preview-src-list="assetUrls"
-        :initial-index="index"
-        fit="contain"
-        class="tool-call__asset-thumb"
-        preview-teleported
-      />
-    </div>
   </div>
 </template>
 
@@ -59,9 +45,6 @@ const EDIT_TOOLS = new Set(["editFilesTool", "edit_files"]);
 /** 结果里带图片 url、需要直接出图预览的工具 */
 const IMAGE_TOOLS = new Set(["createImageTool", "captureCanvasTool", "capture_canvas"]);
 
-/** 批量准备素材的工具：结果是一组素材，每项可能带 url */
-const ASSET_BATCH_TOOLS = new Set(["prepareAssetsTool", "prepare_assets"]);
-
 const toolName = computed(() => props.part.toolName ?? props.part.type.replace(/^tool-/, ""));
 
 const isPathTool = computed(() => PATH_TOOLS.has(toolName.value));
@@ -74,14 +57,6 @@ const imageUrl = computed(() => {
   }
   const output = props.part.output as { url?: string } | undefined;
   return typeof output?.url === "string" ? output.url : "";
-});
-
-const assetUrls = computed(() => {
-  if (!ASSET_BATCH_TOOLS.has(toolName.value) || props.part.state !== "output-available") {
-    return [];
-  }
-  const output = props.part.output as { results?: Array<{ url?: string }> } | undefined;
-  return (output?.results ?? []).flatMap((result) => (typeof result.url === "string" ? [result.url] : []));
 });
 
 const errorMessage = computed(() => {
@@ -250,23 +225,6 @@ const pathText = computed(() => {
     height: 180px;
     border-radius: 6px;
     border: 1px solid $color-primary-20;
-    cursor: zoom-in;
-  }
-
-  &__assets {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
-  }
-
-  &__asset-thumb {
-    width: 72px;
-    height: 72px;
-    border-radius: 4px;
-    border: 1px solid $color-primary-20;
-    // 素材多是深色底的透明图或发光图，中灰底上两类都看得清边界
-    background: #808080;
     cursor: zoom-in;
   }
 }

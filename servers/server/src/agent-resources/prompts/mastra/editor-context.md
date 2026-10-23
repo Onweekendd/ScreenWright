@@ -41,7 +41,7 @@
 ```
 
 - `index`：图片序号，从 1 开始
-- `url`：MinIO presigned URL，有效期 24h。看图不需要它；只在工具/工作流要图片 URL 入参时使用（如 `save_blueprint` 的 `sourceImage.url`、`createImageTool` 的 `seedImages`），不要传 base64
+- `url`：MinIO presigned URL，有效期 24h。看图不需要它；只在工具/工作流要图片 URL 入参时使用（如 `createImageTool` 的 `seedImages`），不要传 base64
 - `filename`：用户上传时的原始文件名（可选）
 
 `<welcome>` 欢迎页示例标签：

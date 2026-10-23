@@ -1,6 +1,6 @@
 import { computed, ref, watch } from "vue";
 
-import { orderBy } from "lodash-es";
+import { sortByZIndex } from "@screenwright/core";
 
 // ,
 import { notAllowToDynamicPanel, notAllowToGroup } from "@/views/build/components/buildConfig/constants/index";
@@ -134,7 +134,9 @@ export const useActionDisabled = () => {
 
   // 分组按钮可用
   const isCanGroupFun = () => {
-    if (selectTargetData.value.length < 2) return true;
+    if (selectTargetData.value.length < 2) {
+      return true;
+    }
     const isHasPanel = selectTargetData.value.some(
       (v) => v && v.component && notAllowToGroup.find((item) => item === v.component.prop)
     );
@@ -153,7 +155,9 @@ export const useActionDisabled = () => {
 
   // 组合动态面板是否可用
   const isCanTranslateDynamicPanelFun = () => {
-    if (selectTargetData.value.length < 2) return true;
+    if (selectTargetData.value.length < 2) {
+      return true;
+    }
     const isHasPanel = selectTargetData.value.some(
       (v) => v && v.component && notAllowToDynamicPanel.find((item) => item === v.component.prop)
     );
@@ -173,7 +177,9 @@ export const useActionDisabled = () => {
 
   // 解散分组是否可用
   const isCanUnGroupFun = () => {
-    if (selectTargetData.value.length === 0) return true;
+    if (selectTargetData.value.length === 0) {
+      return true;
+    }
     if (selectTargetData.value.length === 1) {
       const isHasGroup = selectTargetData.value.some((v) => v && v.children && v.children.length > 0);
       return !isHasGroup;
@@ -229,7 +235,7 @@ export const useActionDisabled = () => {
       return true;
     }
     const target = selectTargetData[0];
-    const sortComponentList = orderBy(componentList.value, ["zIndex"], ["desc"]);
+    const sortComponentList = sortByZIndex(componentList.value, "desc");
     const index = sortComponentList.findIndex((v) => `${v.id}` === `${target.id}`);
     return type === ContextMenuType.DOWN ? index === sortComponentList.length - 1 : index === 0;
   };

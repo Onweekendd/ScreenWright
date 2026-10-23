@@ -114,7 +114,8 @@ export async function buildRasterFromContainerData(ctx: ContainerRasterContext):
   }
 
   let painted = 0;
-  for (const child of ctx.children) {
+  // ctx.children 已按层级从下到上排好，名次就是下标 + 1
+  for (const [childIndex, child] of ctx.children.entries()) {
     const childId = child.id;
     if (childId == null) {
       continue;
@@ -166,7 +167,7 @@ export async function buildRasterFromContainerData(ctx: ContainerRasterContext):
           box: childBox,
           host: childHost,
           designRect: rect,
-          zIndex: Number(child.zIndex) || 0,
+          zIndex: childIndex + 1,
           primaryMode: "dom",
           strategies: ["dom"]
         },

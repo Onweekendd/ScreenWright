@@ -1,4 +1,5 @@
 /** 工具：异步 / 几何 / 组件树 / 截图引擎 */
+import { sortByZIndex } from "@screenwright/core";
 import { PanelEnum } from "@screenwright/types";
 import { snapdom } from "@zumer/snapdom";
 import html2canvas from "html2canvas";
@@ -426,17 +427,31 @@ const ComponentTreeCapture = {
     walk(items);
   },
 
+  /**
+   * 同级组件按层级排出的名次（1 起，越大越靠上）。
+   * 组件的 zIndex 是字符串排序键、不能做算术，而捕获流水线要把层级拼成数字，所以在同级里取名次。
+   */
+  rankByZIndex(items: CaptureComponentItem[] | undefined): Map<CaptureComponentItem, number> {
+    const ranks = new Map<CaptureComponentItem, number>();
+    const present = (items || []).filter((item): item is CaptureComponentItem => !!item);
+    sortByZIndex(present.map((item) => ({ item, zIndex: item.zIndex ?? 0 }))).forEach(({ item }, index) => {
+      ranks.set(item, index + 1);
+    });
+    return ranks;
+  },
+
   buildZIndexMap(items: CaptureComponentItem[] | undefined): Map<string, number> {
     const map = new Map<string, number>();
     const Z_MULT = 100000;
 
     const walk = (arr: CaptureComponentItem[] | undefined, panelBaseZ: number): void => {
+      const ranks = this.rankByZIndex(arr);
       (arr || []).forEach((item) => {
         if (!item || item.id == null) {
           return;
         }
 
-        const localZ = Number(item.zIndex) || 0;
+        const localZ = ranks.get(item) ?? 0;
         const globalZ = panelBaseZ > 0 ? panelBaseZ * Z_MULT + localZ : localZ;
         map.set(String(item.id), globalZ);
 

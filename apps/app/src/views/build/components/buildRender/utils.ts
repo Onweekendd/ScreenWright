@@ -359,14 +359,20 @@ export const getPureComponent = (component: ComponentType): ComponentType => {
   return temp;
 };
 
-// 这三个的实现都已下沉到 @screenwright/core（selectors/geometry）：它们算的是**由树结构唯一决定的**
+// 这几个的实现都已下沉到 @screenwright/core（selectors/geometry、zindex）：它们算的是**由树结构唯一决定的**
 // 派生值——最高层级、分组包围盒、以及包围盒的写入配对。后端重演同一个动作时要算出同样的数字，
 // 两边各存一份必然漂移，且漂移了不报错。此处再导出，只为保持既有导入路径不变。
 //
 // 注意分组包围盒现在由 core 的写入 API 内部收口（ComponentManager.reflowGroup），
 // 走 group / delete / move / upsert 的地方不需要、也不该再手写一遍；
 // 剩下直接调用的，都是「成员位置在 core 之外被改了」的场景（拖拽、属性面板、图层树）。
-export { assignComponentAttrs, calculateGroupDimensions, getMaxIndex } from "@screenwright/core";
+export {
+  assignComponentAttrs,
+  calculateGroupDimensions,
+  compareZIndex,
+  getTopIndex,
+  sortByZIndex
+} from "@screenwright/core";
 
 // 设置组动画
 export const setGroupAnimation = (loadAnimation: Animation) => {

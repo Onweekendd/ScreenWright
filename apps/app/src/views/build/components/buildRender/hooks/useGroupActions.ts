@@ -1,6 +1,6 @@
 import { toRaw } from "vue";
 
-import { createPanelState, type GroupBuildResult, type GroupDissolveResult } from "@screenwright/core";
+import { createPanelState, type GroupBuildResult, type GroupDissolveResult, sortByZIndex } from "@screenwright/core";
 import { ElMessage } from "element-plus";
 import { has, isArray } from "lodash-es";
 
@@ -15,7 +15,7 @@ import type { ComponentType } from "../type";
 import {
   calculateGroupDimensions,
   getMaxDynamicPanelLevel,
-  getMaxIndex,
+  getTopIndex,
   saveLayersByType,
   UpdateHistoryTypeEnum
 } from "../utils";
@@ -59,7 +59,7 @@ export const useGroupActions = (
     // 新分组的层级要盖过「成组之后剩下的」那些组件，所以先把待成组的成员排除掉再取最大值。
     // 成员的实际摘除交给下面 editor.component.group 的「先摘再放」——放在接口调用之前摘，
     // 一旦建分组接口失败（下面的 early return），成员就会凭空从画布上消失。
-    const maxIndex = getMaxIndex(componentList.value.filter((item) => !selectId.includes(`${item.id}`))) + 1;
+    const groupZIndex = getTopIndex(componentList.value.filter((item) => !selectId.includes(`${item.id}`)));
 
     const GROUP_MODULE_ID = "75";
     const res = await getModuleInfoApi(GROUP_MODULE_ID);
@@ -87,12 +87,15 @@ export const useGroupActions = (
     const groupItem: ComponentType = {
       ...option,
       // parent 记账由 editor.component.group 统一处理，这里只负责排序
-      children: groupData.map((v) => toRaw(v)).sort((a, b) => b.zIndex - a.zIndex),
+      children: sortByZIndex(
+        groupData.map((v) => toRaw(v)),
+        "desc"
+      ),
       isLock: false,
       id,
       isExpand: true,
       isOuter: true,
-      zIndex: maxIndex
+      zIndex: groupZIndex
     };
     // children 已装配好，group 直接采用；成员在画布上的旧副本由「先摘再放」一并带走。
     // 包围盒（left/top + 宽高）也由 group 内部按成员算，模板 option 上带的那份不用管。
@@ -239,7 +242,7 @@ export const useGroupActions = (
     dynamicPanel.top = top;
     dynamicPanel.component.width = width;
     dynamicPanel.component.height = height;
-    dynamicPanel.zIndex = getMaxIndex(componentList.value) + 1;
+    dynamicPanel.zIndex = getTopIndex(componentList.value);
 
     await saveLayersByType(dynamicPanel, isInPanel, {
       updateHistoryType: UpdateHistoryTypeEnum.SKIP

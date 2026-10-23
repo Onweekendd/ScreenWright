@@ -84,9 +84,9 @@ import { computed, ref, watch } from "vue";
 
 import { useImagePreviewDialog } from "@screenwright/material/exhibit";
 
-import { FileType } from "@/components/SwUpload/SwUpload";
-import SwUpload from "@/components/SwUpload/index.vue";
 import Icon from "@/components/Icon/index.vue";
+import SwUpload from "@/components/SwUpload/index.vue";
+import { FileType } from "@/components/SwUpload/SwUpload";
 import { setMinioUrl } from "@/utils/config";
 
 import type { ComponentAnimationConfig, PropertyNode } from "../type";
@@ -133,7 +133,7 @@ const openImagePreviewHandler = async () => {
 
 // 数字类型属性配置
 const numberTypeProperties: Record<
-  keyof Omit<ComponentAnimationConfig, "display" | "componentId" | "image" | "video">,
+  keyof Omit<ComponentAnimationConfig, "display" | "componentId" | "image" | "video" | "zIndex">,
   { precision: number; step: number; min?: number; max?: number }
 > = {
   // 旋转类属性，精度为2，步长为0.1，范围[-360, 360]
@@ -148,8 +148,6 @@ const numberTypeProperties: Record<
   height: { precision: 0, step: 1, min: 0 },
   // 透明度，精度为2，步长为0.01，范围[0, 1]
   opacity: { precision: 2, step: 0.01, min: 0, max: 1 },
-  // 层级，精度为0，步长为1，最小值为0
-  zIndex: { precision: 0, step: 1, min: 0 },
   // 字体大小，精度为0，步长为1，最小值为0
   fontSize: { precision: 0, step: 1, min: 0 }
 };

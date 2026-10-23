@@ -13,7 +13,7 @@
       }"
     >
       <div class="screen-quote" ref="screenQuoteRef">
-        <template v-for="(item, index) in quotePanelData.sort((a, b) => b.zIndex - a.zIndex).reverse()" :key="item.id">
+        <template v-for="(item, index) in sortByZIndex(quotePanelData)" :key="item.id">
           <edit-group
             :disabled="true"
             v-if="item.children && item.children.length > 0"
@@ -54,6 +54,8 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { sortByZIndex } from "@screenwright/core";
+
 import { renderComponent } from "@/views/build/components/buildRender/core/utils";
 import EditShapeBox from "@/views/build/components/buildRender/EditShapeBox.vue";
 import EditGroup from "@/views/build/components/buildRender/Group.vue";

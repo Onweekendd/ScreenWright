@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { legacyNumberToZIndex } from "@screenwright/core";
 import { SuspendType } from "@screenwright/server/rpc";
 
 import { updateLayersAgg } from "@/api/library";
@@ -44,7 +45,7 @@ const leaf = (id: number, left: number, top: number, zIndex: number) => ({
   component: { name: "echart-stripBar", prop: "echartstripBar", width: 100, height: 50 },
   left,
   top,
-  zIndex,
+  zIndex: legacyNumberToZIndex(zIndex),
   display: true,
   option: {},
   data: [],

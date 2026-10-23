@@ -2,6 +2,7 @@ import { computed, nextTick, ref } from "vue";
 import { useRouter } from "vue-router";
 import { onClickOutside } from "@vueuse/core";
 
+import { sortByZIndex } from "@screenwright/core";
 import type { LargeScreenDetailInfo } from "@screenwright/types";
 
 import { setMinioUrl } from "@/utils/config";
@@ -105,7 +106,7 @@ export const useBaseRender = (
   });
 
   const data = computed(() => {
-    return [...props.modelValue].sort((a, b) => b.zIndex - a.zIndex).reverse();
+    return sortByZIndex(props.modelValue);
   });
 
   // 是否显示背景图片

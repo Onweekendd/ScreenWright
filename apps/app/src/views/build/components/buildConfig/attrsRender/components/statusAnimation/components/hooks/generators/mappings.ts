@@ -1,3 +1,5 @@
+import { normalizeZIndex } from "@screenwright/core";
+
 import { interactiveEnum, mediaEnum, textEnum } from "@/components/componentEntry/type";
 
 import type { PropertyMapping } from "./types";
@@ -57,7 +59,9 @@ export const DEFAULT_PROPERTY_MAPPINGS: PropertyMapping[] = [
     source: "zIndex",
     target: "zIndex",
     type: PropertyMappingType.DIRECT,
-    validator: (value) => typeof value === "number",
+    // 层级是字符串排序键；旧的状态动画数据里存的是数字，应用到组件上时换成键
+    validator: (value) => typeof value === "string" || typeof value === "number",
+    transformer: (value) => normalizeZIndex(value),
     description: "层级",
     group: "zIndex"
   }

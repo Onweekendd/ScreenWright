@@ -280,7 +280,7 @@ class DynamicPanel extends SystemBase<DynamicPanelOptions> {
       listenArgs: [],
       openFilter: false,
       isLock: false,
-      zIndex: 0,
+      zIndex: "a0",
       display: true,
       title: "",
       dataSource: {},

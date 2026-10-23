@@ -65,7 +65,7 @@ export interface ScreenDetail {
   query: Record<string, any>;
   name: string;
   controlWebsocketUrl: string;
-  zIndexMap: Record<string, number>;
+  zIndexMap: Record<string, string | number>;
   minioIds: (number | null)[];
   heartbeatInterval?: number;
   terminalEnableArr?: Record<string, any>;

@@ -5,12 +5,12 @@ import { ElMessage } from "element-plus";
 import { assign, cloneDeep } from "lodash-es";
 
 import { uuid } from "@/utils/utils";
-import { defaultGlData } from "../defaultGlData";
 
 import { FileTypeEnum } from "../../buildTabs/assetsEditFrom/type";
 import type { MenuItemForRender } from "../../buildTabs/selectAssets/assetsMenuType";
+import { defaultGlData } from "../defaultGlData";
 import type { ComponentMinioAsset, ComponentType } from "../type";
-import { getMaxIndex, UpdateHistoryTypeEnum, validateComponentForAdd } from "../utils";
+import { getTopIndex, UpdateHistoryTypeEnum, validateComponentForAdd } from "../utils";
 import type { ActionContext } from "./useActionContext";
 import type { LayerPersistence } from "./useLayerPersistence";
 
@@ -201,8 +201,7 @@ export const useComponentCreateActions = (
     } as ComponentType;
     normalizePresetChildren(newComponent);
 
-    const zIndex = getMaxIndex(componentList.value) + 1;
-    newComponent.zIndex = zIndex;
+    newComponent.zIndex = getTopIndex(componentList.value);
 
     if (attrs && !attrs.id) {
       if (options?.assignAttrs) {

@@ -3,9 +3,7 @@
   <div class="config-description" v-if="selectTargetData && selectTargetData[0] && selectTargetData.length > 0">
     <div class="component-name text-overflow">{{ selectTargetData[0].title }}</div>
     <div class="component-description">
-      {{
-        `v${"1.0.0"} | ${selectTargetData[0].title} | ${selectTargetData[0].id} | ${selectTargetData[0].zIndex || 0}`
-      }}
+      {{ `v${"1.0.0"} | ${selectTargetData[0].title} | ${selectTargetData[0].id}` }}
     </div>
   </div>
 </template>

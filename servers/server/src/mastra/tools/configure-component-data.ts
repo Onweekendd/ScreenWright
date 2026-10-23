@@ -55,8 +55,8 @@ import { getSwaggerIndex, listRegisteredDatasourceIds, pathToFileName } from "@/
 
 import { applyComponentEdit } from "../services/bi-data-sync/component-edit";
 import { prismaClient } from "../storage/prisma";
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { type Change, ChangeSchema, diffChange } from "./change-report";
 import { findComponentFileInWorkspace, isAmbiguousMatch, validateComponentContent } from "./file/utils";
 
@@ -254,26 +254,26 @@ export const configureComponentData = createTool({
     change: z.array(ChangeSchema).optional()
   }),
 
-  suspendSchema: z.union([
-    SuspendDefs[SuspendType.PushComponentUpdate].suspend,
-    SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].suspend
-  ]),
-  resumeSchema: z.union([
-    SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].resume,
-    SuspendDefs[SuspendType.PushComponentUpdate].resume
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   execute: async (input, context) => {
     const { componentRef, datasourceId, apiPath, method, requestHeader, requestBody, dataSite, probe } =
       input as unknown as z.infer<typeof InputSchema>;
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
-    const { resumeData, suspend, toolCallId } = context?.agent ?? {};
+    const { suspend, toolCallId } = context?.agent ?? {};
 
     // 前端应用完回到这里：写入在挂起之前就做完了，这一轮只负责如实转述
-    if (resumeData && "componentUpdated" in resumeData) {
-      const r = resumeData as { componentUpdated?: boolean; error?: string };
-      if (r.componentUpdated === false) {
-        throw new Error(`配置数据源时前端应用失败: ${r.error ?? "未提供原因"}`);
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
+    if (reply.status === "rejected") {
+      throw new Error("用户拒绝了本次数据源配置。注意：改动已先写入工作区、前端画布未应用，两边暂时不一致");
+    }
+    if (reply.status === "invalid") {
+      throw new Error(reply.message);
+    }
+    if (reply.status === "done") {
+      const receipt = reply.results[0];
+      if (!receipt.ok) {
+        throw new Error(`配置数据源时前端应用失败: ${receipt.error || "未提供原因"}`);
       }
       // 字段清单是挂起前那一轮算出来的，从缓存取回——不重复探测，也不能不给
       const probe0 = toolCallId ? pendingProbes.get(toolCallId) : undefined;
@@ -434,17 +434,10 @@ export const configureComponentData = createTool({
       if (toolCallId) {
         pendingProbes.set(toolCallId, { fields, sample, probed });
       }
-      const componentForPush = applied.component as ComponentType;
-      return suspend(
-        mode === AgentMode.ASK_BEFORE_EDIT
-          ? {
-              type: SuspendType.AskApprovalPushComponentUpdate,
-              purpose: `为组件 ${componentRef} 配置 API 数据源`,
-              component: componentForPush,
-              replacements: 1
-            }
-          : { type: SuspendType.PushComponentUpdate, component: componentForPush, replacements: 1 }
-      ) as never;
+      return suspendCanvasOps(context, {
+        purpose: `为组件 ${componentRef} 配置 API 数据源`,
+        ops: [{ op: "update_component", component: applied.component as ComponentType }]
+      });
     }
 
     return {

@@ -20,17 +20,22 @@ describe("批次标识回传", () => {
     const fe = createFakeFrontend();
 
     const resume = fe.reply(
-      { type: "push_component_update", batchId: "batch-1", operationId: "0", component: {} },
+      {
+        type: "canvas_ops",
+        batchId: "batch-1",
+        operationId: "0",
+        ops: [{ op: "update_component", component: {} }]
+      },
       meta
     );
 
-    expect(resume).toMatchObject({ componentUpdated: true, batchId: "batch-1", operationId: "0" });
+    expect(resume).toMatchObject({ results: [{ ok: true }], batchId: "batch-1", operationId: "0" });
   });
 
   it("载荷里没有批次标识时不凭空造", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply({ type: "push_component_update", component: {} }, meta);
+    const resume = fe.reply({ type: "canvas_ops", ops: [{ op: "update_component", component: {} }] }, meta);
 
     expect(resume).not.toHaveProperty("batchId");
     expect(resume).not.toHaveProperty("operationId");

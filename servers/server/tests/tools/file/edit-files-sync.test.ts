@@ -148,36 +148,51 @@ afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map((dir) => fsp.rm(dir, { recursive: true, force: true })));
 });
 
+/** canvas_ops 挂起载荷里 edit_files 发的唯一一个 op（一个文件一轮，一轮一个 op） */
+const firstOp = (payload: Record<string, unknown>) => (payload.ops as Array<Record<string, unknown>>)[0];
+
+/** 前端对那一个 op 的回执：results 与 ops 按下标对应，批次字段原样带回 */
+const opReply = (
+  payload: Record<string, unknown>,
+  result: { ok: true } | { ok: false; error: string } = { ok: true }
+) => ({
+  results: [result],
+  batchId: payload.batchId,
+  operationId: payload.operationId
+});
+
 describe("edit_files 前端同步路径", () => {
   it.each([
-    [AgentMode.AUTO_EDIT, SuspendType.UpdateScreenInfo],
-    [AgentMode.ASK_BEFORE_EDIT, SuspendType.AskApprovalUpdateScreenInfo]
-  ] as const)("screen info 文件，%s 模式挂起为对应更新类型，resume 前不落盘", async (mode, expectedType) => {
-    const screenRoot = await screenFixture();
-    const filePath = path.join(screenRoot, "info.json");
-    const payloads: Array<Record<string, unknown>> = [];
+    [AgentMode.AUTO_EDIT, false],
+    [AgentMode.ASK_BEFORE_EDIT, true]
+  ] as const)(
+    "screen info 文件，%s 模式挂起为 update_screen_info（带审批=%s），resume 前不落盘",
+    async (mode, asks) => {
+      const screenRoot = await screenFixture();
+      const filePath = path.join(screenRoot, "info.json");
+      const payloads: Array<Record<string, unknown>> = [];
 
-    await executeEditFiles(
-      [{ path: filePath, edits: [{ old_string: '"width": "1920"', new_string: '"width": "2560"' }] }],
-      {
-        mode,
-        toolCallId: `screen-info-${String(mode)}`,
-        onSuspend: (payload) => payloads.push(payload)
-      }
-    );
+      await executeEditFiles(
+        [{ path: filePath, edits: [{ old_string: '"width": "1920"', new_string: '"width": "2560"' }] }],
+        {
+          mode,
+          toolCallId: `screen-info-${String(mode)}`,
+          onSuspend: (payload) => payloads.push(payload)
+        }
+      );
 
-    expect(payloads).toHaveLength(1);
-    expect(payloads[0]).toMatchObject({
-      type: expectedType,
-      screenId: 75,
-      detail: { width: "2560" },
-      minioIds: [],
-      replacements: 1
-    });
-    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"width": "1920"');
-  });
+      expect(payloads).toHaveLength(1);
+      expect(payloads[0]).toMatchObject({
+        type: SuspendType.CanvasOps,
+        ops: [{ op: "update_screen_info", screenId: 75, detail: { width: "2560" }, minioIds: [] }]
+      });
+      // 审批与否只看载荷里有没有 approval，不再是两个类型
+      expect(payloads[0].approval !== undefined).toBe(asks);
+      await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"width": "1920"');
+    }
+  );
 
-  it("数据过滤器文件挂起为 save_filter，并把同名 .js 合并进 dataFormatter", async () => {
+  it("数据过滤器文件挂起为 save_filter op，并把同名 .js 合并进 dataFormatter", async () => {
     const { filePath } = await dataFilterFixture();
     const payloads: Array<Record<string, unknown>> = [];
 
@@ -188,10 +203,13 @@ describe("edit_files 前端同步路径", () => {
 
     expect(payloads).toHaveLength(1);
     expect(payloads[0]).toMatchObject({
-      type: SuspendType.SaveFilter,
-      filterName: "我的过滤器",
-      filter: { name: "我的过滤器", callBack: ["b"], dataFormatter: "const fn = () => 1;" },
-      replacements: 1
+      type: SuspendType.CanvasOps,
+      ops: [
+        {
+          op: "save_filter",
+          filter: { name: "我的过滤器", callBack: ["b"], dataFormatter: "const fn = () => 1;" }
+        }
+      ]
     });
   });
 
@@ -204,12 +222,13 @@ describe("edit_files 前端同步路径", () => {
     await executeEditFiles(files, { toolCallId: "filter-rename", onSuspend: (payload) => payloads.push(payload) });
 
     // 前端的 handleSaveFilter 只按 name 做 upsert，没有旧名就会新旧并存
-    expect(payloads[0]).toMatchObject({ filterName: "新名", originalName: "我的过滤器" });
-
-    await executeEditFiles(files, {
-      toolCallId: "filter-rename",
-      resumeData: { filterSaved: true, batchId: payloads[0].batchId, operationId: payloads[0].operationId }
+    expect(firstOp(payloads[0])).toMatchObject({
+      op: "save_filter",
+      filter: { name: "新名" },
+      originalName: "我的过滤器"
     });
+
+    await executeEditFiles(files, { toolCallId: "filter-rename", resumeData: opReply(payloads[0]) });
 
     const remaining = (await fsp.readdir(filterDir)).sort();
     expect(remaining).toEqual(["新名.js", "新名.json"]);
@@ -257,10 +276,7 @@ describe("edit_files 前端同步路径", () => {
     const files = [{ path: filePath, edits: [{ old_string: '  "hasPassword": null,\n', new_string: "" }] }];
 
     await executeEditFiles(files, { toolCallId: "screen-info-delete", onSuspend: (payload) => payloads.push(payload) });
-    await executeEditFiles(files, {
-      toolCallId: "screen-info-delete",
-      resumeData: { screenInfoUpdated: true, batchId: payloads[0].batchId, operationId: payloads[0].operationId }
-    });
+    await executeEditFiles(files, { toolCallId: "screen-info-delete", resumeData: opReply(payloads[0]) });
 
     // info.json 是这些字段的唯一来源，整份替换才有删除语义——合并写法下旧值会被静默补回来
     const after = JSON.parse(await fsp.readFile(filePath, "utf8"));
@@ -271,7 +287,7 @@ describe("edit_files 前端同步路径", () => {
     await expect(fsp.readFile(path.join(screenRoot, "statusAnimation.json"), "utf8")).resolves.not.toBe("");
   });
 
-  it("组件文件校验通过后挂起为 push_component_update", async () => {
+  it("组件文件校验通过后挂起为 update_component op", async () => {
     const filePath = await componentTree();
     const payloads: Array<Record<string, unknown>> = [];
 
@@ -285,10 +301,10 @@ describe("edit_files 前端同步路径", () => {
 
     expect(payloads).toHaveLength(1);
     expect(payloads[0]).toMatchObject({
-      type: SuspendType.PushComponentUpdate,
-      component: { id: FIXTURE_COMPONENT_ID, zIndex: "a9" },
-      replacements: 1
+      type: SuspendType.CanvasOps,
+      ops: [{ op: "update_component", component: { id: FIXTURE_COMPONENT_ID, zIndex: "a9" } }]
     });
+    expect(payloads[0].approval).toBeUndefined();
   });
 
   it("组件校验失败时不挂起，直接返回 validationErrors 且不落盘", async () => {
@@ -368,12 +384,30 @@ describe("edit_files resume 结算", () => {
 
     const result = (await executeEditFiles(files, {
       toolCallId,
-      resumeData: { componentUpdated: true, batchId: payload.batchId, operationId: payload.operationId }
+      resumeData: opReply(payload)
     })) as { success: boolean; results: Array<{ frontendSynced?: boolean; message: string }> };
 
     expect(result.success).toBe(true);
     expect(result.results[0].frontendSynced).toBe(true);
     expect(result.results[0].message).toContain("组件已推送到前端并写入工作区");
+  });
+
+  it("回执条数不是 1 时报协议错误，不落盘", async () => {
+    const filePath = await componentTree();
+    const toolCallId = "resume-bad-count";
+    const { payload, files } = await suspendOnce(
+      filePath,
+      { old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' },
+      toolCallId
+    );
+
+    const result = (await executeEditFiles(files, {
+      toolCallId,
+      resumeData: { results: [], batchId: payload.batchId, operationId: payload.operationId }
+    }).catch((error: Error) => ({ thrown: error.message }))) as { thrown?: string };
+
+    expect(result.thrown).toContain("incompatible resumeData");
+    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": "a0"');
   });
 
   it("组件推送失败时标记未同步且工作区保持原样", async () => {
@@ -387,12 +421,7 @@ describe("edit_files resume 结算", () => {
 
     const result = (await executeEditFiles(files, {
       toolCallId,
-      resumeData: {
-        componentUpdated: false,
-        error: "前端离线",
-        batchId: payload.batchId,
-        operationId: payload.operationId
-      }
+      resumeData: opReply(payload, { ok: false, error: "前端离线" })
     })) as { success: boolean; results: Array<{ frontendSynced?: boolean; message: string }> };
 
     expect(result.success).toBe(false);
@@ -408,7 +437,7 @@ describe("edit_files resume 结算", () => {
 
     const result = (await executeEditFiles(files, {
       toolCallId,
-      resumeData: { filterSaved: true, batchId: payload.batchId, operationId: payload.operationId }
+      resumeData: opReply(payload)
     })) as { success: boolean; results: Array<{ frontendSynced?: boolean; message: string }> };
 
     expect(result.success).toBe(true);
@@ -434,12 +463,7 @@ describe("edit_files resume 结算", () => {
 
     const result = (await executeEditFiles(files, {
       toolCallId,
-      resumeData: {
-        screenInfoUpdated: false,
-        error: "保存超时",
-        batchId: payload.batchId,
-        operationId: payload.operationId
-      }
+      resumeData: opReply(payload, { ok: false, error: "保存超时" })
     })) as { success: boolean; results: Array<{ frontendSynced?: boolean; message: string }> };
 
     expect(result.success).toBe(false);
@@ -460,8 +484,9 @@ describe("edit_files resume 结算", () => {
     );
 
     // 审批框里已经能看到改完的样子（组件已过 core），但磁盘还是原样
-    expect(payload.type).toBe(SuspendType.AskApprovalPushComponentUpdate);
-    expect(payload.component).toMatchObject({ id: FIXTURE_COMPONENT_ID, zIndex: "a9" });
+    expect(payload.type).toBe(SuspendType.CanvasOps);
+    expect(payload.approval).toEqual({ purpose: "推送组件更新到前端" });
+    expect(firstOp(payload).component).toMatchObject({ id: FIXTURE_COMPONENT_ID, zIndex: "a9" });
     await expect(fsp.readFile(filePath, "utf8")).resolves.toBe(before);
   });
 
@@ -476,7 +501,8 @@ describe("edit_files resume 结算", () => {
       AgentMode.ASK_BEFORE_EDIT
     );
 
-    expect(payload.type).toBe(SuspendType.AskApprovalPushComponentUpdate);
+    expect(payload.type).toBe(SuspendType.CanvasOps);
+    expect(payload.approval).toBeDefined();
 
     const result = (await executeEditFiles(files, {
       mode: AgentMode.ASK_BEFORE_EDIT,
@@ -509,7 +535,7 @@ describe("edit_files resume 结算", () => {
       mode: AgentMode.ASK_BEFORE_EDIT,
       toolCallId,
       resumeData: approved
-        ? { screenInfoUpdated: true, batchId: payload.batchId, operationId: payload.operationId }
+        ? opReply(payload)
         : { approved: false, batchId: payload.batchId, operationId: payload.operationId }
     });
 
@@ -529,8 +555,9 @@ describe("edit_files resume 结算", () => {
     );
 
     // 还没落盘，但 payload 里已经是改完的样子——被编辑的那个文件取内存内容，配套的 .js 才读盘
-    expect(payload.type).toBe(SuspendType.AskApprovalSaveFilter);
-    expect(payload.filter).toMatchObject({ callBack: ["b"], dataFormatter: "const fn = () => 1;" });
+    expect(payload.type).toBe(SuspendType.CanvasOps);
+    expect(payload.approval).toEqual({ purpose: "保存数据过滤器" });
+    expect(firstOp(payload).filter).toMatchObject({ callBack: ["b"], dataFormatter: "const fn = () => 1;" });
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"a"');
 
     const result = (await executeEditFiles(files, {
@@ -556,7 +583,7 @@ describe("edit_files resume 结算", () => {
     const result = (await executeEditFiles(files, {
       mode: AgentMode.ASK_BEFORE_EDIT,
       toolCallId,
-      resumeData: { componentUpdated: true, batchId: payload.batchId, operationId: payload.operationId }
+      resumeData: opReply(payload)
     })) as { success: boolean; results: Array<{ frontendSynced?: boolean; message: string }> };
 
     expect(result.success).toBe(true);
@@ -578,14 +605,11 @@ describe("edit_files resume 结算", () => {
       toolCallId
     );
 
-    const pushedComponent = payload.component as { option: { js: string } };
+    const pushedComponent = firstOp(payload).component as { option: { js: string } };
     expect(pushedComponent.option.js).toContain('name: "fun-card-updated"');
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('name: "fun-card"');
 
-    await executeEditFiles(files, {
-      toolCallId,
-      resumeData: { componentUpdated: true, batchId: payload.batchId, operationId: payload.operationId }
-    });
+    await executeEditFiles(files, { toolCallId, resumeData: opReply(payload) });
 
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('name: "fun-card-updated"');
     await expect(fsp.readFile(jsonPath, "utf8")).resolves.toContain('"js": "4166_自定义组件.vue"');

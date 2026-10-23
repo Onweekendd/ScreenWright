@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { AgentMode } from "../../types/bi-chat";
 import { SuspendType } from "../../types/suspend";
+import { readCanvasOpResults } from "../canvas-ops";
 import { capChanges, type Change, ChangeSchema, diffChange } from "../change-report";
 import { applyEdits, findNoopEditIndex, type ReplaceResult } from "./apply-edits";
 import { isAgentArtifactFilePath } from "./file-kind";
@@ -277,18 +278,11 @@ async function settlePendingOperation(state: EditFilesBatchState, resumeData: Ed
     }
   };
 
-  if (pending.kind === "component" && "componentUpdated" in resumeData) {
-    await commitThenSettle(resumeData.componentUpdated, "component", resumeData.error);
-    return;
-  }
-
-  if (pending.kind === "filter" && "filterSaved" in resumeData) {
-    await commitThenSettle(resumeData.filterSaved, "filter", resumeData.error);
-    return;
-  }
-
-  if (pending.kind === "screenInfo" && "screenInfoUpdated" in resumeData) {
-    await commitThenSettle(resumeData.screenInfoUpdated, "screenInfo", resumeData.error);
+  // 三类同步都是一次一个 op：回执只有一项，成败都在这一项里
+  const reply = readCanvasOpResults(resumeData, 1);
+  if (reply.status === "done") {
+    const receipt = reply.results[0];
+    await commitThenSettle(receipt.ok, pending.kind, receipt.ok ? undefined : receipt.error);
     return;
   }
 

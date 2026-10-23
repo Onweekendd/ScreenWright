@@ -356,38 +356,32 @@ export const withinCanvas = (component: ComponentType, screen: ParsedLargeScreen
 // ── 挂起分类 ──────────────────────────────────────────────────────────────────
 
 /**
- * 会让工作区落盘的 AUTO 模式挂起类型（一种操作一个类型的旧协议；已迁到 `canvas_ops` 的不在此列）。
+ * 挂起性质的判断。
  *
- * 之所以能靠这张表回答「这一轮写没写盘」，是因为**延迟落盘**：所有写路径都要先 suspend
+ * 之所以能靠挂起流水账回答「这一轮写没写盘」，是因为**延迟落盘**：所有写路径都要先 suspend
  * 拿到前端回执，后端才过 core 落盘。所以挂起流水账就是写操作的完整清单，不必去翻录制档案。
  *
- * ASK 模式下它们各自对应一个 `ask_approval_` 前缀的变体——枚举值本身就是那串蛇形名，
- * 所以变体名直接拼得出来，不用再维护第二张表。
+ * 画布写操作统一走 `canvas_ops`：是否先问用户看载荷里有没有 `approval`，不再靠类型名前缀区分。
+ * 唯一的例外是 edit_files 普通文件在 ASK 模式下那一轮纯审批 `ask_approval`。
  */
-export const AUTO_WRITE_SUSPENDS: readonly SuspendType[] = [
-  SuspendType.PushComponentUpdate,
-  SuspendType.SaveFilter,
-  SuspendType.DeleteFilter,
-  SuspendType.UpdateScreenInfo
-];
-
-/** 判断挂起性质要看的字段：`canvas_ops` 的审批与否在载荷里，不在类型名上 */
 type SuspendKind = Pick<SuspendLogEntry, "type" | "payload">;
 
-/** `canvas_ops` 带 `approval` = 先问用户；不带 = 直接动手 */
-const isCanvasOps = (suspend: SuspendKind): boolean => suspend.type === SuspendType.CanvasOps;
+/** 挂起的可读描述：`canvas_ops` 带上它发的是哪几种操作，不然流水账里清一色 canvas_ops 看不出谁是谁 */
+export const describeSuspend = (suspend: SuspendKind): string => {
+  if (suspend.type !== SuspendType.CanvasOps) {
+    return suspend.type;
+  }
+  const ops = (suspend.payload.ops as Array<{ op?: string }> | undefined) ?? [];
+  return `${suspend.type}[${ops.map((op) => op.op).join(",")}]${suspend.payload.approval === undefined ? "" : "+approval"}`;
+};
 
-/** ASK 模式下这些挂起出现，就说明有人绕过了审批直接走 AUTO 那条路。 */
+/** ASK 模式下 `canvas_ops` 不带 `approval` 出现，就说明有人绕过了审批直接动手。 */
 export const isAutoWriteSuspend = (suspend: SuspendKind): boolean =>
-  isCanvasOps(suspend)
-    ? suspend.payload.approval === undefined
-    : (AUTO_WRITE_SUSPENDS as readonly string[]).includes(suspend.type);
+  suspend.type === SuspendType.CanvasOps && suspend.payload.approval === undefined;
 
 /** 任何形态的写类挂起，含 edit_files 用的通用审批 `ask_approval`。 */
 export const isWriteSuspend = (suspend: SuspendKind): boolean =>
-  isCanvasOps(suspend) ||
-  suspend.type === SuspendType.AskApproval ||
-  AUTO_WRITE_SUSPENDS.some((auto) => suspend.type === auto || suspend.type === `ask_approval_${auto}`);
+  suspend.type === SuspendType.CanvasOps || suspend.type === SuspendType.AskApproval;
 
 // ── 磁盘断言 ──────────────────────────────────────────────────────────────────
 

@@ -19,7 +19,14 @@
 
 import { AgentMode } from "@/mastra/types/bi-chat";
 
-import { applyFailures, type Assertion, type EvalCase, isWriteSuspend, newComponents } from "../../harness/case";
+import {
+  applyFailures,
+  type Assertion,
+  describeSuspend,
+  type EvalCase,
+  isWriteSuspend,
+  newComponents
+} from "../../harness/case";
 
 export const c2ApplyFailureNoWrite: EvalCase = {
   id: "c2-apply-failure-no-write",
@@ -58,7 +65,7 @@ export const c2ApplyFailureNoWrite: EvalCase = {
       {
         name: "确实走到了落盘那一步（至少一次写类挂起）",
         passed: writes.length > 0,
-        detail: `写类挂起 ${writes.length} 次${ctx.suspends.length > 0 ? `，全部挂起 ${ctx.suspends.map((s) => s.type).join(", ")}` : "，一次挂起都没有"}`
+        detail: `写类挂起 ${writes.length} 次${ctx.suspends.length > 0 ? `，全部挂起 ${ctx.suspends.map((s) => describeSuspend(s)).join(", ")}` : "，一次挂起都没有"}`
       },
       {
         name: "每一次写类挂起都被回了失败",
@@ -66,7 +73,7 @@ export const c2ApplyFailureNoWrite: EvalCase = {
         detail:
           withoutError.length === 0
             ? undefined
-            : `${withoutError.length} 次没带 error：${withoutError.map((s) => s.type).join(", ")}`
+            : `${withoutError.length} 次没带 error：${withoutError.map((s) => describeSuspend(s)).join(", ")}`
       }
     ];
   }

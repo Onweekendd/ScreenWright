@@ -9,8 +9,8 @@ import z from "zod";
 import { getAgentWorkspacePath } from "@/agent-resources/workspace-path";
 
 import { applyComponentEdit } from "../services/bi-data-sync/component-edit";
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { type Change, diffChange, fieldChange } from "./change-report";
 import { findComponentFileInWorkspace, isAmbiguousMatch, validateComponentContent } from "./file/utils";
 
@@ -115,25 +115,25 @@ export const configureCallbackArgs = createTool({
     "也不要为了确认字段名去 grep 组件文件。",
   inputSchema: InputSchema,
 
-  suspendSchema: z.union([
-    SuspendDefs[SuspendType.PushComponentUpdate].suspend,
-    SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].suspend
-  ]),
-  resumeSchema: z.union([
-    SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].resume,
-    SuspendDefs[SuspendType.PushComponentUpdate].resume
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   execute: async (input, context) => {
     const { componentRef, args, mode: writeMode } = input as unknown as z.infer<typeof InputSchema>;
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
-    const { resumeData, suspend } = context?.agent ?? {};
+    const { suspend } = context?.agent ?? {};
 
     // 前端应用完回到这里：写入在挂起之前就做完了，这一轮只负责如实转述结果
-    if (resumeData && "componentUpdated" in resumeData) {
-      const r = resumeData as { componentUpdated?: boolean; error?: string };
-      if (r.componentUpdated === false) {
-        throw new Error(`配置 cbArgs 时前端应用失败: ${r.error ?? "未提供原因"}`);
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
+    if (reply.status === "rejected") {
+      throw new Error("用户拒绝了本次回调参数配置。注意：改动已先写入工作区、前端画布未应用，两边暂时不一致");
+    }
+    if (reply.status === "invalid") {
+      throw new Error(reply.message);
+    }
+    if (reply.status === "done") {
+      const receipt = reply.results[0];
+      if (!receipt.ok) {
+        throw new Error(`配置 cbArgs 时前端应用失败: ${receipt.error || "未提供原因"}`);
       }
       return {
         ok: true,
@@ -211,17 +211,10 @@ export const configureCallbackArgs = createTool({
     }
 
     if (suspend) {
-      const componentForPush = applied.component as ComponentType;
-      return suspend(
-        mode === AgentMode.ASK_BEFORE_EDIT
-          ? {
-              type: SuspendType.AskApprovalPushComponentUpdate,
-              purpose: `为组件 ${componentRef} 配置回调参数`,
-              component: componentForPush,
-              replacements: 1
-            }
-          : { type: SuspendType.PushComponentUpdate, component: componentForPush, replacements: 1 }
-      ) as never;
+      return suspendCanvasOps(context, {
+        purpose: `为组件 ${componentRef} 配置回调参数`,
+        ops: [{ op: "update_component", component: applied.component as ComponentType }]
+      });
     }
 
     return {

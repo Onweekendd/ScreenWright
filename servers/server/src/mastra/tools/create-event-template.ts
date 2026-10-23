@@ -11,8 +11,8 @@ import z from "zod";
 import { getAgentWorkspacePath } from "@/agent-resources/workspace-path";
 
 import { applyComponentEdit } from "../services/bi-data-sync/component-edit";
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { diffChange } from "./change-report";
 import { ActionInputSchema } from "./create-action-template";
 import { ConditionInputSchema } from "./create-condition-template";
@@ -135,15 +135,9 @@ export const createEventTemplate = createTool({
     "生成一个默认的交互事件模板并返回，支持同时添加条件与行为。提供 insertTo 时，将事件插入指定组件的 events 列表并推送前端；否则仅返回模板，不执行任何组件写入操作",
   inputSchema: InputSchema,
 
-  suspendSchema: z.union([
-    SuspendDefs[SuspendType.PushComponentUpdate].suspend,
-    SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: z.union([
-    SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].resume,
-    SuspendDefs[SuspendType.PushComponentUpdate].resume
-  ]),
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   execute: async (input, context) => {
     const { eventName, triggerType, conditions, conditionType, actions, insertTo } = input as unknown as z.infer<
@@ -151,11 +145,21 @@ export const createEventTemplate = createTool({
     >;
     const insertToPath = normalizeInsertTo(insertTo);
 
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
-    const { resumeData, suspend } = context?.agent ?? {};
+    const { suspend } = context?.agent ?? {};
 
-    // 从 push_component_update / ask_approval_push_component_update suspend 恢复
-    if (resumeData && "componentUpdated" in resumeData) {
+    // 从 canvas_ops（update_component）suspend 恢复
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
+    if (reply.status === "rejected") {
+      throw new Error("用户拒绝了本次事件插入。注意：改动已先写入工作区、前端画布未应用，两边暂时不一致");
+    }
+    if (reply.status === "invalid") {
+      throw new Error(reply.message);
+    }
+    if (reply.status === "done") {
+      const receipt = reply.results[0];
+      if (!receipt.ok) {
+        throw new Error(`插入事件时前端应用失败: ${receipt.error || "未提供原因"}`);
+      }
       // 重新构建 eventObj 返回给 agent（事件构建无副作用，可安全重跑）
       const parsedInsertTo = insertToPath ? parseInsertToPath(insertToPath) : null;
       const sourceComponentId = parsedInsertTo?.componentId;
@@ -340,17 +344,10 @@ export const createEventTemplate = createTool({
     }
 
     if (suspend) {
-      const component = applied.component;
-      return suspend(
-        mode === AgentMode.ASK_BEFORE_EDIT
-          ? {
-              type: SuspendType.AskApprovalPushComponentUpdate,
-              purpose: "推送组件更新到前端",
-              component,
-              replacements: 1
-            }
-          : { type: SuspendType.PushComponentUpdate, component, replacements: 1 }
-      ) as never;
+      return suspendCanvasOps(context, {
+        purpose: "推送组件更新到前端",
+        ops: [{ op: "update_component", component: applied.component }]
+      });
     }
 
     return { ...eventObj, change: diffChange(relativeToWorkspace(componentFilePath), componentRaw, newContent) };

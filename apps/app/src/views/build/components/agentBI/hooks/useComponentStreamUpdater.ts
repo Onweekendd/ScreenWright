@@ -1,5 +1,5 @@
 import { AgentMode, apiClient, type ResumeData, type SuspendPayload, SuspendType } from "@screenwright/server/rpc";
-import { ComponentSchema, type ComponentType } from "@screenwright/types";
+import type { ComponentType } from "@screenwright/types";
 import { cloneDeep } from "lodash-es";
 
 import { updateLargeScreen } from "@/api/library";
@@ -15,7 +15,6 @@ import { useEditStore } from "../../buildRender/hooks/useEditStore";
 import { createCanvasOpsHandler, getBatchOperationFields } from "./canvasOps";
 import { captureCanvasForAgent } from "./captureCanvasForAgent";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
-import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import { useConfirm } from "./useConfirm";
 import type { ComponentPlacement } from "./useCreateComponent";
 import { useCreateComponent } from "./useCreateComponent";
@@ -114,6 +113,20 @@ export function useComponentStreamUpdater(
     createComponent,
     createComponentFromConfig,
     deleteComponent: (id, placement) => onDeleteComponent(id, placement as ComponentPlacement),
+    applyComponentUpdate,
+    saveFilter: handleSaveFilter,
+    deleteFilter,
+    updateScreenInfo: async ({ screenId, detail, minioIds }) => {
+      Object.assign(editConfig.value, detail);
+      const filteredMinioIds = (minioIds ?? editConfig.value.minioIds ?? []).filter(
+        (id: number | null | undefined) => id !== null && id !== undefined
+      );
+      await updateLargeScreen({
+        id: screenId,
+        detail: JSON.stringify(detail),
+        minioIds: JSON.stringify(filteredMinioIds)
+      });
+    },
     moveComponents,
     groupComponents: handleSelectGroupAction,
     ungroupComponents: handleGroupDelete,
@@ -129,127 +142,6 @@ export function useComponentStreamUpdater(
       return cloneDeep(newStatus) as unknown as Record<string, unknown>;
     }
   });
-
-  /**
-   * 保存过滤器到前端（AUTO 模式）。
-   * @field filterName - 过滤器名称
-   * @field originalName - 编辑前的过滤器名，与 filterName 不同即为改名
-   * @field filter - 过滤器完整配置
-   * @field replacements - 本次编辑的替换次数
-   */
-  const handleSaveFilterSuspend: SuspendHandlerFn<SuspendType.SaveFilter> = async (info) => {
-    const { filter, originalName, replacements } = info.suspendPayload;
-    const batchOperation = getBatchOperationFields(info.suspendPayload);
-    return enqueueCanvasMutation(async () => {
-      try {
-        await handleSaveFilter(filter, originalName);
-        return { filterSaved: true, replacements, ...batchOperation };
-      } catch (e) {
-        return { filterSaved: false, error: (e as Error).message, replacements, ...batchOperation };
-      }
-    });
-  };
-
-  /**
-   * 将后端推送的组件增量合并到前端实例（AUTO 模式）。
-   * @field component - 后端推送的已校验组件数据
-   * @field replacements - 本次编辑的替换次数
-   */
-  const handlePushComponentUpdate: SuspendHandlerFn<SuspendType.PushComponentUpdate> = async (info) => {
-    const { component, replacements } = info.suspendPayload;
-    const batchOperation = getBatchOperationFields(info.suspendPayload);
-    return enqueueCanvasMutation(async () => {
-      try {
-        const parsed = ComponentSchema.parse(component);
-        const rawComponent = allComponentMap.value.get(`${parsed.id}`);
-        if (!rawComponent) {
-          return { componentUpdated: false, error: `组件 ${parsed.id} 不存在`, replacements, ...batchOperation };
-        }
-        await applyComponentUpdate(rawComponent, parsed);
-        return { componentUpdated: true, replacements, ...batchOperation };
-      } catch (e) {
-        return { componentUpdated: false, error: (e as Error).message, replacements, ...batchOperation };
-      }
-    });
-  };
-
-  /**
-   * 审批通过后推送组件更新（ASK 模式下的 push_component_update）。
-   * @field purpose - 审批目的说明
-   * @field component - 后端推送的已校验组件数据
-   * @field replacements - 本次编辑的替换次数
-   */
-  const handleAskApprovalPushComponentUpdate: SuspendHandlerFn<SuspendType.AskApprovalPushComponentUpdate> = async (
-    info
-  ) => {
-    const { purpose } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false, ...getBatchOperationFields(info.suspendPayload) };
-    }
-    return handlePushComponentUpdate({
-      ...info,
-      suspendPayload: {
-        type: SuspendType.PushComponentUpdate,
-        component: info.suspendPayload.component,
-        replacements: info.suspendPayload.replacements,
-        ...getBatchOperationFields(info.suspendPayload)
-      }
-    });
-  };
-
-  /**
-   * 直接删除过滤器（AUTO 模式）。
-   * @field filterName - 待删除的过滤器名称
-   */
-  const handleDeleteFilter: SuspendHandlerFn<SuspendType.DeleteFilter> = async (info) => {
-    const { filterName } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      const result = await deleteFilter(filterName);
-      return result.success ? { filterDeleted: true } : { filterDeleted: false, error: result.error };
-    });
-  };
-
-  /**
-   * 审批通过后删除过滤器（ASK 模式下的 delete_filter）。
-   * @field purpose - 审批目的说明
-   * @field filterName - 待删除的过滤器名称
-   */
-  const handleAskApprovalDeleteFilter: SuspendHandlerFn<SuspendType.AskApprovalDeleteFilter> = async (info) => {
-    const { purpose, filterName } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}「${filterName}」？`);
-    if (!ok) {
-      return { approved: false };
-    }
-    return enqueueCanvasMutation(async () => {
-      const result = await deleteFilter(filterName);
-      return result.success ? { filterDeleted: true } : { filterDeleted: false, error: result.error };
-    });
-  };
-
-  /**
-   * 审批通过后保存过滤器（ASK 模式下的 save_filter）。
-   * @field purpose - 审批目的说明
-   * @field filterName - 过滤器名称
-   * @field originalName - 编辑前的过滤器名，与 filterName 不同即为改名
-   * @field filter - 过滤器完整配置
-   */
-  const handleAskApprovalSaveFilter: SuspendHandlerFn<SuspendType.AskApprovalSaveFilter> = async (info) => {
-    const { purpose, filter, originalName } = info.suspendPayload;
-    const batchOperation = getBatchOperationFields(info.suspendPayload);
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false, ...batchOperation };
-    }
-    return enqueueCanvasMutation(async () => {
-      try {
-        await handleSaveFilter(filter, originalName);
-        return { filterSaved: true, ...batchOperation };
-      } catch (e) {
-        return { filterSaved: false, error: (e as Error).message, ...batchOperation };
-      }
-    });
-  };
 
   /**
    * 在浏览器环境中执行一段 JS 脚本并返回结果。
@@ -348,57 +240,6 @@ export function useComponentStreamUpdater(
   };
 
   /**
-   * 直接更新大屏配置并持久化（AUTO 模式）。
-   * @field screenId - 大屏 ID
-   * @field detail - 大屏详细配置
-   * @field minioIds - MinIO 资源 ID 列表
-   * @field replacements - 本次编辑的替换次数
-   */
-  const handleUpdateScreenInfo: SuspendHandlerFn<SuspendType.UpdateScreenInfo> = async (info) => {
-    const { screenId, detail, minioIds, replacements } = info.suspendPayload;
-    const batchOperation = getBatchOperationFields(info.suspendPayload);
-    return enqueueCanvasMutation(async () => {
-      try {
-        Object.assign(editConfig.value, detail);
-        const filteredMinioIds = (minioIds ?? editConfig.value.minioIds ?? []).filter(
-          (id: number | null | undefined) => id !== null && id !== undefined
-        );
-        await updateLargeScreen({
-          id: screenId,
-          detail: JSON.stringify(detail),
-          minioIds: JSON.stringify(filteredMinioIds)
-        });
-        return { screenInfoUpdated: true, replacements, ...batchOperation };
-      } catch (e) {
-        return { screenInfoUpdated: false, error: (e as Error).message, replacements, ...batchOperation };
-      }
-    });
-  };
-
-  /**
-   * 审批通过后更新大屏配置（ASK 模式下的 update_screen_info）。
-   * @field purpose - 审批目的说明
-   */
-  const handleAskApprovalUpdateScreenInfo: SuspendHandlerFn<SuspendType.AskApprovalUpdateScreenInfo> = async (info) => {
-    const { purpose } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false, ...getBatchOperationFields(info.suspendPayload) };
-    }
-    return handleUpdateScreenInfo({
-      ...info,
-      suspendPayload: {
-        type: SuspendType.UpdateScreenInfo,
-        screenId: info.suspendPayload.screenId,
-        detail: info.suspendPayload.detail,
-        minioIds: info.suspendPayload.minioIds,
-        replacements: info.suspendPayload.replacements,
-        ...getBatchOperationFields(info.suspendPayload)
-      }
-    });
-  };
-
-  /**
    * 向用户提出结构化多选题，等待回答后返回结果。
    * @field type - 固定值 "ask_user_question"
    * @field questions - 问题列表（1-4 个），每项含 question/header/options/multiSelect
@@ -435,18 +276,10 @@ export function useComponentStreamUpdater(
     [SuspendType.EnterPlanMode, handleEnterPlanMode],
     [SuspendType.SubmitPlan, handleSubmitPlan],
     [SuspendType.AskApproval, handleAskApproval],
-    [SuspendType.SaveFilter, handleSaveFilterSuspend],
-    [SuspendType.AskApprovalSaveFilter, handleAskApprovalSaveFilter],
-    [SuspendType.DeleteFilter, handleDeleteFilter],
-    [SuspendType.AskApprovalDeleteFilter, handleAskApprovalDeleteFilter],
-    [SuspendType.PushComponentUpdate, handlePushComponentUpdate],
-    [SuspendType.AskApprovalPushComponentUpdate, handleAskApprovalPushComponentUpdate],
     [SuspendType.CanvasOps, handleCanvasOps],
     [SuspendType.ExecuteInBrowser, handleExecuteInBrowser],
     [SuspendType.AskApprovalExecuteInBrowser, handleAskApprovalExecuteInBrowser],
-    [SuspendType.CaptureCanvas, handleCaptureCanvas],
-    [SuspendType.UpdateScreenInfo, handleUpdateScreenInfo],
-    [SuspendType.AskApprovalUpdateScreenInfo, handleAskApprovalUpdateScreenInfo]
+    [SuspendType.CaptureCanvas, handleCaptureCanvas]
   ]);
 
   return {

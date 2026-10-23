@@ -144,7 +144,8 @@ const canvasOps: Handler = (payload, policy) => {
         case "add_panel_state":
           return { ok: true, state: panelState(op.stateName) };
         default:
-          // 移动 / 解组 / 删除不产生新 id：只回一个「干完了」
+          // 不产生新 id 的操作（移动 / 解组 / 删除 / 更新组件 / 存删过滤器 / 改屏幕配置）：只回一个「干完了」。
+          // 路径不由前端拼——它一手写就得跟落盘侧的文件名净化规则逐字对齐，对不上也不报错
           return { ok: true };
       }
     })
@@ -152,25 +153,16 @@ const canvasOps: Handler = (payload, policy) => {
 };
 
 const OP_LABELS: Record<string, string> = {
+  update_component: "更新组件",
+  save_filter: "保存过滤器",
+  delete_filter: "删除过滤器",
+  update_screen_info: "更新屏幕配置",
   create_component: "添加组件",
   copy_component: "添加组件",
   delete_component: "删除组件",
   group_components: "组合分组",
   add_panel_state: "新增面板状态"
 };
-
-/**
- * 不产生新 id 的那类（过滤器存删等）：只回一个「干完了」。
- * 路径不由前端拼——它一手写就得跟落盘侧的文件名净化规则逐字对齐，对不上也不报错。
- */
-const appliedOnly =
-  (field: string): Handler =>
-  (_payload, policy) => {
-    if (!policy.approve) {
-      return { approved: false };
-    }
-    return policy.applyFailure ? { [field]: false, error: policy.applyFailure("应用改动") } : { [field]: true };
-  };
 
 /**
  * 结构化提问：把每个问题交给 case 的 {@link AnswerPolicy} 定夺，默认取第一个选项。
@@ -213,22 +205,14 @@ const browserUnavailable: Handler = () => ({ ok: false, error: "eval 环境没�
 /**
  * 应答表。键是 `SuspendType` 的字符串值而不是枚举本身，所以这张表不随 `suspend.ts` 演进
  * 而失效——新增类型这里不改也能跑（走兜底）。代价是漏铺不会被 tsc 拦住，补齐时照
- * `SuspendDefs`（`types/suspend.ts`，30 个 type / 14 个 AskApproval 变体）过一遍。
+ * `SuspendDefs`（`types/suspend.ts`）过一遍。画布写操作都在 `canvas_ops` 里，新增一种 op
+ * 只需要在 {@link canvasOps} 里加一个 case（不产生新 id 的走 default）。
  *
- * **有肉的类型漏铺会挂死，不会报错**：兜底回的 `{ approved }` 过得了 resume schema（字段全
- * 可选），但工具认不出自己要的那个键，于是重新 `suspend()`——同一个请求无限往返。所以新写
- * case 时先照着它要走的工具核一遍这张表，别指望兜底。
+ * **有肉的类型漏铺会挂死，不会报错**：兜底回的 `{ approved }` 对不上工具要的键，
+ * 工具会重新 `suspend()`——同一个请求无限往返。所以新写 case 时先照着它要走的工具核一遍这张表，别指望兜底。
  */
 const handlers = new Map<string, Handler>([
   ["canvas_ops", canvasOps],
-  ["push_component_update", appliedOnly("componentUpdated")],
-  ["ask_approval_push_component_update", appliedOnly("componentUpdated")],
-  ["save_filter", appliedOnly("filterSaved")],
-  ["ask_approval_save_filter", appliedOnly("filterSaved")],
-  ["delete_filter", appliedOnly("filterDeleted")],
-  ["ask_approval_delete_filter", appliedOnly("filterDeleted")],
-  ["update_screen_info", appliedOnly("screenInfoUpdated")],
-  ["ask_approval_update_screen_info", appliedOnly("screenInfoUpdated")],
   ["execute_in_browser", browserUnavailable],
   ["ask_approval_execute_in_browser", browserUnavailable],
   ["ask_user_question", answerQuestions],

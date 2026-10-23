@@ -1,5 +1,5 @@
 import type { CanvasOp, OpResult, ResumeData, SuspendPayload, SuspendType } from "@screenwright/server/rpc";
-import type { ComponentType } from "@screenwright/types";
+import { ComponentSchema, type ComponentType } from "@screenwright/types";
 import { cloneDeep } from "lodash-es";
 
 import { componentMenuTitle } from "./componentMenuTitle";
@@ -55,6 +55,13 @@ export interface CanvasOpsDeps {
     id: number,
     placement?: ComponentPlacement
   ) => Promise<{ success: boolean; message: string } | void>;
+  /** 把后端推来的组件增量合并到画布上的同 id 实例（merge 策略），并触发图层更新与关联关系同步 */
+  applyComponentUpdate: (existing: ComponentType, incoming: ComponentType) => Promise<void>;
+  /** 保存过滤器；originalName 与 filter.name 不同即改名，需先删旧名 */
+  saveFilter: (filter: OpOf<"save_filter">["filter"], originalName?: string) => Promise<unknown>;
+  deleteFilter: (filterName: string) => Promise<{ success: boolean; error?: string }>;
+  /** 更新大屏配置并持久化 */
+  updateScreenInfo: (info: Pick<OpOf<"update_screen_info">, "screenId" | "detail" | "minioIds">) => Promise<void>;
   moveComponents: (ids: number[], target?: MoveComponentTarget) => Promise<{ success: boolean; message: string }>;
   /** 把组件组合成一个新分组，返回分组容器 */
   groupComponents: (components: ComponentType[]) => Promise<ComponentType | null | undefined>;
@@ -64,6 +71,8 @@ export interface CanvasOpsDeps {
   addPanelState: (panel: ComponentType, stateName: string) => Promise<Record<string, unknown>>;
 }
 
+type OpOf<K extends CanvasOp["op"]> = Extract<CanvasOp, { op: K }>;
+
 type OpHandlers = { [K in CanvasOp["op"]]: (op: Extract<CanvasOp, { op: K }>) => Promise<OpResult> };
 
 const OK: OpResult = { ok: true };
@@ -71,6 +80,36 @@ const OK: OpResult = { ok: true };
 const fail = (error: string): OpResult => ({ ok: false, error });
 
 const createOpHandlers = (deps: CanvasOpsDeps): OpHandlers => ({
+  /**
+   * 把后端过 core 之后的那一份组件合并到画布上的同 id 实例。
+   * 先过 ComponentSchema：载荷是后端校验过的，但前端合并进响应式树之前再挡一道，坏数据不进画布。
+   */
+  update_component: async ({ component }) => {
+    const parsed = ComponentSchema.parse(component);
+    const existing = deps.getComponent(parsed.id);
+    if (!existing) {
+      return fail(`组件 ${parsed.id} 不存在`);
+    }
+    await deps.applyComponentUpdate(existing, parsed);
+    return OK;
+  },
+
+  /** 保存过滤器。改名时 originalName 与 filter.name 不同，由 handleSaveFilter 先删旧名再存，避免新旧并存 */
+  save_filter: async ({ filter, originalName }) => {
+    await deps.saveFilter(filter, originalName);
+    return OK;
+  },
+
+  delete_filter: async ({ filterName }) => {
+    const result = await deps.deleteFilter(filterName);
+    return result.success ? OK : fail(result.error ?? "过滤器删除失败");
+  },
+
+  update_screen_info: async ({ screenId, detail, minioIds }) => {
+    await deps.updateScreenInfo({ screenId, detail, minioIds });
+    return OK;
+  },
+
   /**
    * 新建组件。整批在同一次画布写入里按顺序执行：批内的位置尺寸分配有先后依赖，
    * 中途不能被别的 tab 插进来，也不能并发——createComponent 会读画布当前状态做分配。

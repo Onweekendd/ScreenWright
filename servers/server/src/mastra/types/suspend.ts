@@ -15,28 +15,12 @@ export enum SuspendType {
   EnterPlanMode = "enter_plan_mode",
   /** 提交计划，等待用户选择执行策略（auto_edit / ask_before_edit / keep_plan / reject） */
   SubmitPlan = "submit_plan",
-  /** AUTO 模式：直接将后端推送的组件增量合并到前端 */
-  PushComponentUpdate = "push_component_update",
-  /** ASK 模式：审批通过后再推送组件更新 */
-  AskApprovalPushComponentUpdate = "ask_approval_push_component_update",
-  /** AUTO 模式：直接保存过滤器 */
-  SaveFilter = "save_filter",
-  /** ASK 模式：审批通过后保存过滤器 */
-  AskApprovalSaveFilter = "ask_approval_save_filter",
-  /** AUTO 模式：直接删除过滤器 */
-  DeleteFilter = "delete_filter",
-  /** ASK 模式：审批通过后删除过滤器 */
-  AskApprovalDeleteFilter = "ask_approval_delete_filter",
   /** AUTO 模式：直接在浏览器执行脚本 */
   ExecuteInBrowser = "execute_in_browser",
   /** ASK 模式：审批通过后在浏览器执行脚本 */
   AskApprovalExecuteInBrowser = "ask_approval_execute_in_browser",
   /** 截取当前编辑器画布，上传后回传图片 URL（只读，任何模式都不审批） */
   CaptureCanvas = "capture_canvas",
-  /** AUTO 模式：直接更新大屏配置并持久化 */
-  UpdateScreenInfo = "update_screen_info",
-  /** ASK 模式：审批通过后更新大屏配置 */
-  AskApprovalUpdateScreenInfo = "ask_approval_update_screen_info",
   /** 模板提取后：把解析出的模板字段交前端预填弹窗，由用户确认/修改后保存为 AI 模板 */
   SaveAiTemplate = "save_ai_template",
   /** 模板检索后：把候选模板 id 列表交前端弹窗（封面+适用场景），由用户选择并应用到当前大屏 */
@@ -81,6 +65,25 @@ const CanvasOpSchema = z.discriminatedUnion("op", [
     op: z.literal("delete_component"),
     componentId: z.number().describe("待删除的组件 id"),
     placement: placementSchema
+  }),
+  z.object({
+    op: z.literal("update_component"),
+    component: ComponentSchema.describe("后端过 core 之后那一份组件；前端按 merge 策略合并到画布上的同 id 实例")
+  }),
+  z.object({
+    op: z.literal("save_filter"),
+    filter: FilterSchema,
+    originalName: z
+      .string()
+      .optional()
+      .describe("编辑前的过滤器名；与 filter.name 不同即为改名，前端需先删旧名再保存，否则新旧并存")
+  }),
+  z.object({ op: z.literal("delete_filter"), filterName: z.string() }),
+  z.object({
+    op: z.literal("update_screen_info"),
+    screenId: z.number(),
+    detail: LargeScreenDetailInfoSchema,
+    minioIds: z.array(z.union([z.number(), z.null()])).optional()
   }),
   z.object({
     op: z.literal("group_components"),
@@ -197,97 +200,6 @@ export const SuspendDefs = {
     })
   },
 
-  [SuspendType.PushComponentUpdate]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.PushComponentUpdate),
-      component: ComponentSchema,
-      replacements: z.number(),
-      ...batchOperationFields
-    }),
-    resume: z.object({
-      componentUpdated: z.boolean(),
-      replacements: z.number().optional(),
-      error: z.string().optional(),
-      ...batchOperationFields
-    })
-  },
-  [SuspendType.AskApprovalPushComponentUpdate]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalPushComponentUpdate),
-      purpose: z.string(),
-      component: ComponentSchema,
-      replacements: z.number(),
-      ...batchOperationFields
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false), ...batchOperationFields }),
-      z.object({
-        componentUpdated: z.boolean(),
-        replacements: z.number().optional(),
-        error: z.string().optional(),
-        ...batchOperationFields
-      })
-    ])
-  },
-
-  [SuspendType.SaveFilter]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.SaveFilter),
-      filterName: z.string(),
-      originalName: z
-        .string()
-        .optional()
-        .describe("编辑前的过滤器名；与 filterName 不同即为改名，前端需先删旧名再保存，否则新旧并存"),
-      filter: FilterSchema,
-      replacements: z.number().optional(),
-      ...batchOperationFields
-    }),
-    resume: z.object({
-      filterSaved: z.boolean(),
-      replacements: z.number().optional(),
-      error: z.string().optional(),
-      ...batchOperationFields
-    })
-  },
-  [SuspendType.AskApprovalSaveFilter]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalSaveFilter),
-      purpose: z.string(),
-      filterName: z.string(),
-      originalName: z
-        .string()
-        .optional()
-        .describe("编辑前的过滤器名；与 filterName 不同即为改名，前端需先删旧名再保存，否则新旧并存"),
-      filter: FilterSchema,
-      replacements: z.number().optional(),
-      ...batchOperationFields
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false), ...batchOperationFields }),
-      z.object({
-        filterSaved: z.boolean(),
-        replacements: z.number().optional(),
-        error: z.string().optional(),
-        ...batchOperationFields
-      })
-    ])
-  },
-  [SuspendType.DeleteFilter]: {
-    suspend: z.object({ type: z.literal(SuspendType.DeleteFilter), filterName: z.string() }),
-    resume: z.object({ filterDeleted: z.boolean(), error: z.string().optional() })
-  },
-  [SuspendType.AskApprovalDeleteFilter]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalDeleteFilter),
-      purpose: z.string(),
-      filterName: z.string()
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false) }),
-      z.object({ filterDeleted: z.boolean(), error: z.string().optional() })
-    ])
-  },
-
   [SuspendType.ExecuteInBrowser]: {
     suspend: z.object({ type: z.literal(SuspendType.ExecuteInBrowser), script: z.string() }),
     resume: z.object({ ok: z.boolean(), result: z.string().optional(), error: z.string().optional() })
@@ -336,43 +248,6 @@ export const SuspendDefs = {
       missingIds: z.array(z.number()).optional().describe("画布上找不到或当前不可见的组件 id"),
       error: z.string().optional()
     })
-  },
-
-  [SuspendType.UpdateScreenInfo]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.UpdateScreenInfo),
-      screenId: z.number(),
-      detail: LargeScreenDetailInfoSchema,
-      minioIds: z.array(z.union([z.number(), z.null()])).optional(),
-      replacements: z.number(),
-      ...batchOperationFields
-    }),
-    resume: z.object({
-      screenInfoUpdated: z.boolean(),
-      replacements: z.number().optional(),
-      error: z.string().optional(),
-      ...batchOperationFields
-    })
-  },
-  [SuspendType.AskApprovalUpdateScreenInfo]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalUpdateScreenInfo),
-      purpose: z.string(),
-      screenId: z.number(),
-      detail: LargeScreenDetailInfoSchema,
-      minioIds: z.array(z.union([z.number(), z.null()])).optional(),
-      replacements: z.number(),
-      ...batchOperationFields
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false), ...batchOperationFields }),
-      z.object({
-        screenInfoUpdated: z.boolean(),
-        replacements: z.number().optional(),
-        error: z.string().optional(),
-        ...batchOperationFields
-      })
-    ])
   },
 
   [SuspendType.SaveAiTemplate]: {

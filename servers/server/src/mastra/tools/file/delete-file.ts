@@ -7,7 +7,6 @@ import { z } from "zod";
 import { applyComponentDelete, applyFilterDelete } from "@/mastra/services/bi-data-sync/screen-mutation";
 import { getScreenVersionKeyFromPath } from "@/mastra/services/screen-workspace";
 
-import { AgentMode } from "../../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../../types/suspend";
 import { readCanvasOpResults, suspendCanvasOps } from "../canvas-ops";
 import { ChangeSchema, deletedChange } from "../change-report";
@@ -44,20 +43,20 @@ export const deleteFileTool = createTool({
     change: z.array(ChangeSchema).optional()
   }),
 
-  suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.CanvasOps].suspend,
-    SuspendDefs[SuspendType.DeleteFilter].suspend,
-    SuspendDefs[SuspendType.AskApprovalDeleteFilter].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: z.union([SuspendDefs[SuspendType.CanvasOps].resume, SuspendDefs[SuspendType.DeleteFilter].resume]),
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   execute: async ({ path: filePath }, context) => {
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
-    const { resumeData, suspend } = context?.agent ?? {};
+    const resumeData = context?.agent?.resumeData;
 
-    if (resumeData && "approved" in resumeData && resumeData.approved === false) {
+    // 回执数量在两条分支里都固定是 1（一次只删一个）；拒绝与协议错误在分支前统一处理
+    const reply = readCanvasOpResults(resumeData, 1);
+    if (reply.status === "rejected") {
       return { success: false, message: "用户取消了删除操作" };
+    }
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
     }
 
     const absPath = resolveFilePath(filePath);
@@ -86,9 +85,10 @@ export const deleteFileTool = createTool({
           .catch(() => undefined)) ?? baseName;
 
       // 恢复阶段：前端已解绑，这时才由后端过 core 落盘
-      if (resumeData && "filterDeleted" in resumeData) {
-        if (!resumeData.filterDeleted) {
-          return { success: false, message: `过滤器前端删除失败: ${resumeData.error ?? "未知错误"}` };
+      if (reply.status === "done") {
+        const receipt = reply.results[0];
+        if (!receipt.ok) {
+          return { success: false, message: `过滤器前端删除失败: ${receipt.error || "未知错误"}` };
         }
         if (!screenKey) {
           return { success: false, message: `过滤器已在前端删除，但该路径不在任何大屏目录下: ${filePath}` };
@@ -118,15 +118,10 @@ export const deleteFileTool = createTool({
         }
       }
 
-      if (!suspend) {
-        return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
-      }
-
-      return suspend(
-        mode === AgentMode.ASK_BEFORE_EDIT
-          ? { type: SuspendType.AskApprovalDeleteFilter, purpose: "删除数据过滤器", filterName }
-          : { type: SuspendType.DeleteFilter, filterName }
-      ) as never;
+      return suspendCanvasOps(context, {
+        purpose: "删除数据过滤器",
+        ops: [{ op: "delete_filter", filterName }]
+      });
     }
 
     // ── 组件删除 ────────────────────────────────────────────────────────────
@@ -138,10 +133,6 @@ export const deleteFileTool = createTool({
       }
 
       // 恢复阶段：前端画布已删除，这时才由后端过 core 落盘
-      const reply = readCanvasOpResults(resumeData, 1);
-      if (reply.status === "invalid") {
-        return { success: false, message: reply.message };
-      }
       if (reply.status === "done") {
         const receipt = reply.results[0];
         if (!receipt.ok) {

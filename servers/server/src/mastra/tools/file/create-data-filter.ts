@@ -9,8 +9,8 @@ import { z } from "zod";
 import { applyFilterSave } from "@/mastra/services/bi-data-sync/screen-mutation";
 import { getScreenDirPath } from "@/mastra/services/screen-workspace";
 
-import { AgentMode } from "../../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "../canvas-ops";
 import { capChanges, type Change, ChangeSchema, createdChange, fieldChange } from "../change-report";
 import { findComponentFileInWorkspace, isAmbiguousMatch, sanitizeFsName } from "./utils";
 
@@ -139,20 +139,19 @@ export const createDataFilterTool = createTool({
     change: z.array(ChangeSchema).optional()
   }),
 
-  suspendSchema: z.union([
-    SuspendDefs[SuspendType.SaveFilter].suspend,
-    SuspendDefs[SuspendType.AskApprovalSaveFilter].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: SuspendDefs[SuspendType.AskApprovalSaveFilter].resume,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   execute: async ({ screenId, name, bindComponent, callBack = [], dataFormatter }, context) => {
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
-    const { resumeData, suspend } = context?.agent ?? {};
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
 
-    // 用户拒绝（ask_approval_save_filter declined）
-    if (resumeData && "approved" in resumeData && resumeData.approved === false) {
+    // 用户拒绝（审批框点了取消）
+    if (reply.status === "rejected") {
       return { success: false, message: "用户取消了创建操作" };
+    }
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
     }
 
     const filter = buildFilter({ name, bindComponent, callBack, dataFormatter });
@@ -160,9 +159,10 @@ export const createDataFilterTool = createTool({
     // ── 恢复阶段：前端已保存并完成绑定，这时才由后端过 core 落盘 ──────────────
     // 落盘推迟到这里，才不会出现「文件已经写了、前端却拒绝或失败」的分叉；
     // {name}.json / {name}.js 由整屏回写生成，与前端保存过滤器写出来的是同一份。
-    if (resumeData && "filterSaved" in resumeData) {
-      if (!resumeData.filterSaved) {
-        return { success: false, message: (resumeData.error as string | undefined) ?? "前端保存过滤器失败" };
+    if (reply.status === "done") {
+      const receipt = reply.results[0];
+      if (!receipt.ok) {
+        return { success: false, message: receipt.error || "前端保存过滤器失败" };
       }
       try {
         await applyFilterSave(screenId, filter);
@@ -215,16 +215,7 @@ export const createDataFilterTool = createTool({
       };
     }
 
-    // ASK 模式：一次 suspend 完成确认 + 保存
-    if (mode === AgentMode.ASK_BEFORE_EDIT) {
-      return suspend?.({
-        type: SuspendType.AskApprovalSaveFilter,
-        purpose: "创建数据过滤器",
-        filterName: name,
-        filter
-      }) as never;
-    }
-
-    return suspend?.({ type: SuspendType.SaveFilter, filterName: name, filter }) as never;
+    // ASK 模式下载荷带 approval：一次 suspend 完成确认 + 保存
+    return suspendCanvasOps(context, { purpose: "创建数据过滤器", ops: [{ op: "save_filter", filter }] });
   }
 });

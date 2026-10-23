@@ -15,7 +15,14 @@
 
 import { AgentMode } from "@/mastra/types/bi-chat";
 
-import { type Assertion, type EvalCase, isAutoWriteSuspend, isWriteSuspend, newComponents } from "../../harness/case";
+import {
+  type Assertion,
+  describeSuspend,
+  type EvalCase,
+  isAutoWriteSuspend,
+  isWriteSuspend,
+  newComponents
+} from "../../harness/case";
 
 export const c5AskMode: EvalCase = {
   id: "c5-ask-mode",
@@ -40,7 +47,7 @@ export const c5AskMode: EvalCase = {
       {
         name: "改动前问过（至少一次写类挂起）",
         passed: writes.length > 0,
-        detail: `写类挂起 ${writes.length} 次：${writes.map((s) => `${s.toolName}/${s.type}`).join(", ") || "无"}`
+        detail: `写类挂起 ${writes.length} 次：${writes.map((s) => `${s.toolName}/${describeSuspend(s)}`).join(", ") || "无"}`
       },
       // 漏读 mode 的工具会挂 AUTO 变体，等于绕过审批直接动手。
       {
@@ -49,7 +56,7 @@ export const c5AskMode: EvalCase = {
         detail:
           sneaked.length === 0
             ? undefined
-            : `${sneaked.length} 次偷跑：${sneaked.map((s) => `${s.toolName}/${s.type}`).join(", ")}`
+            : `${sneaked.length} 次偷跑：${sneaked.map((s) => `${s.toolName}/${describeSuspend(s)}`).join(", ")}`
       }
     ];
   }

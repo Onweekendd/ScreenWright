@@ -24,6 +24,10 @@ const makeDeps = (overrides: Partial<CanvasOpsDeps> = {}): CanvasOpsDeps => {
       .fn()
       .mockResolvedValue({ success: true, message: "", componentId: 901, component: comp(901, { name: "副本" }) }),
     deleteComponent: vi.fn().mockResolvedValue({ success: true, message: "" }),
+    applyComponentUpdate: vi.fn().mockResolvedValue(undefined),
+    saveFilter: vi.fn().mockResolvedValue(undefined),
+    deleteFilter: vi.fn().mockResolvedValue({ success: true }),
+    updateScreenInfo: vi.fn().mockResolvedValue(undefined),
     moveComponents: vi.fn().mockResolvedValue({ success: true, message: "" }),
     groupComponents: vi.fn().mockResolvedValue(comp(100, { name: "分组" })),
     ungroupComponents: vi.fn().mockResolvedValue(undefined),
@@ -238,6 +242,113 @@ describe("canvas_ops 执行器", () => {
       const reply = await run(deps, [{ op: "delete_component", componentId: 1 }]);
 
       expect(reply).toEqual({ results: [{ ok: true }] });
+    });
+  });
+
+  describe("update_component", () => {
+    /** 过得了 ComponentSchema 的最小组件 */
+    const incoming = (id: number) => ({
+      id,
+      name: `c${id}`,
+      title: "条形图",
+      component: { name: "echart-stripBar", prop: "echartstripBar", width: 100, height: 50 },
+      left: 0,
+      top: 0,
+      zIndex: "a0",
+      display: true,
+      option: {},
+      data: [],
+      events: [],
+      cbArgs: [],
+      listenArgs: []
+    });
+
+    it("画布上有同 id 实例：交给合并函数，回 ok", async () => {
+      const deps = makeDeps();
+
+      const reply = await run(deps, [{ op: "update_component", component: incoming(3) as never }]);
+
+      expect(deps.applyComponentUpdate).toHaveBeenCalledWith(comp(3), expect.objectContaining({ id: 3 }));
+      expect(reply).toEqual({ results: [{ ok: true }] });
+    });
+
+    it("画布上没有这个组件：回 error，不合并", async () => {
+      const deps = makeDeps();
+
+      const reply = await run(deps, [{ op: "update_component", component: incoming(999) as never }]);
+
+      expect(reply).toEqual({ results: [{ ok: false, error: "组件 999 不存在" }] });
+      expect(deps.applyComponentUpdate).not.toHaveBeenCalled();
+    });
+
+    it("载荷过不了 ComponentSchema：记成这一项的 error，不进画布", async () => {
+      const deps = makeDeps();
+
+      const reply = await run(deps, [{ op: "update_component", component: { id: 3, zIndex: 5 } as never }]);
+
+      const result = (reply as { results: Array<{ ok: boolean }> }).results[0];
+      expect(result.ok).toBe(false);
+      expect(deps.applyComponentUpdate).not.toHaveBeenCalled();
+    });
+
+    it("合并过程抛错：记成这一项的 error", async () => {
+      const deps = makeDeps({ applyComponentUpdate: vi.fn().mockRejectedValue(new Error("更新图层失败")) });
+
+      const reply = await run(deps, [{ op: "update_component", component: incoming(3) as never }]);
+
+      expect(reply).toEqual({ results: [{ ok: false, error: "更新图层失败" }] });
+    });
+  });
+
+  describe("save_filter / delete_filter", () => {
+    const filter = { name: "销售额", bindComponent: [] } as never;
+
+    it("save_filter 带上旧名交给保存函数（改名要先删旧名）", async () => {
+      const deps = makeDeps();
+
+      const reply = await run(deps, [{ op: "save_filter", filter, originalName: "旧名" }]);
+
+      expect(deps.saveFilter).toHaveBeenCalledWith(filter, "旧名");
+      expect(reply).toEqual({ results: [{ ok: true }] });
+    });
+
+    it("save_filter 保存抛错：回 error", async () => {
+      const deps = makeDeps({ saveFilter: vi.fn().mockRejectedValue(new Error("画布上没有这个组件")) });
+
+      const reply = await run(deps, [{ op: "save_filter", filter }]);
+
+      expect(reply).toEqual({ results: [{ ok: false, error: "画布上没有这个组件" }] });
+    });
+
+    it("delete_filter 成功 / 失败各回各的", async () => {
+      const ok = await run(makeDeps(), [{ op: "delete_filter", filterName: "销售额" }]);
+      const failed = await run(
+        makeDeps({ deleteFilter: vi.fn().mockResolvedValue({ success: false, error: "解绑失败" }) }),
+        [{ op: "delete_filter", filterName: "销售额" }]
+      );
+
+      expect(ok).toEqual({ results: [{ ok: true }] });
+      expect(failed).toEqual({ results: [{ ok: false, error: "解绑失败" }] });
+    });
+  });
+
+  describe("update_screen_info", () => {
+    it("把大屏 id、配置和资源 id 原样交给更新函数", async () => {
+      const deps = makeDeps();
+      const detail = { width: "2560" } as never;
+
+      const reply = await run(deps, [{ op: "update_screen_info", screenId: 75, detail, minioIds: [1, null] }]);
+
+      expect(deps.updateScreenInfo).toHaveBeenCalledWith({ screenId: 75, detail, minioIds: [1, null] });
+      expect(reply).toEqual({ results: [{ ok: true }] });
+    });
+
+    it("更新失败：回 error", async () => {
+      const deps = makeDeps({ updateScreenInfo: vi.fn().mockRejectedValue(new Error("保存超时")) });
+
+      const reply = await run(deps, [{ op: "update_screen_info", screenId: 75, detail: {} as never }]);
+
+      expect(reply).toEqual({ results: [{ ok: false, error: "保存超时" }] });
     });
   });
 

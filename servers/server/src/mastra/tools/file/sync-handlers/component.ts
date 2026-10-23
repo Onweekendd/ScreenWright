@@ -2,17 +2,16 @@ import type { ComponentType } from "@screenwright/types";
 
 import { applyComponentEdit, previewComponentEdit } from "@/mastra/services/bi-data-sync/component-edit";
 
-import { SuspendType } from "../../../types/suspend";
 import { isComponentFilePath } from "../file-kind";
 import { formatValidationWarnings, validateComponentContent } from "../utils";
 import {
-  askOrPush,
   type EditContext,
   type EditFilesSuspendPayload,
   invalidateReadState,
   notWritten,
   type PreparedEdit,
-  type SyncHandler
+  type SyncHandler,
+  syncPayload
 } from "./contract";
 
 /**
@@ -23,16 +22,7 @@ export const pushComponentUpdate = (
   ctx: EditContext,
   purpose: string,
   component: ComponentType
-): EditFilesSuspendPayload =>
-  askOrPush(
-    ctx,
-    {
-      approvalType: SuspendType.AskApprovalPushComponentUpdate,
-      autoType: SuspendType.PushComponentUpdate,
-      purpose
-    },
-    { component, replacements: ctx.result.replacements }
-  );
+): EditFilesSuspendPayload => syncPayload(ctx, purpose, { op: "update_component", component });
 
 /**
  * title 是组件类型标识（「条形图」「图片」），前端靠它在组件菜单里找类型，不能改；组件名是 name。

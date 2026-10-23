@@ -127,9 +127,9 @@ describe("handlePushComponentUpdate", () => {
 
   const push = async (component: unknown) => {
     const { suspendHandlers } = useComponentStreamUpdater("session-1", { applyLocalMode: vi.fn() });
-    const handler = suspendHandlers.get(SuspendType.PushComponentUpdate)!;
+    const handler = suspendHandlers.get(SuspendType.CanvasOps)!;
     return handler({
-      suspendPayload: { type: SuspendType.PushComponentUpdate, component, replacements: 1 }
+      suspendPayload: { type: SuspendType.CanvasOps, ops: [{ op: "update_component", component }] }
     } as never);
   };
 

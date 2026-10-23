@@ -1,5 +1,5 @@
 import { AgentMode } from "../types/bi-chat";
-import { type CanvasOp, type OpResult, SuspendType } from "../types/suspend";
+import { type CanvasOp, type OpResult, type SuspendPayload, SuspendType } from "../types/suspend";
 
 /**
  * 画布写操作的挂起/恢复收口。
@@ -22,6 +22,28 @@ export const NO_SUSPEND_RESULT = {
 };
 
 /**
+ * 组装 `canvas_ops` 的挂起载荷。`needsApproval` 为真时带上 `approval`，前端先弹一次确认（整批一次）。
+ * 不经 {@link suspendCanvasOps} 自己调 suspend 的调用方（edit_files 的同步处理器只产出载荷、
+ * 由调用方补批次字段再挂起）用它。
+ */
+export function canvasOpsPayload(input: {
+  needsApproval: boolean;
+  purpose: string;
+  ops: CanvasOp[];
+  batch?: { batchId: string; operationId: string };
+}): SuspendPayload<SuspendType.CanvasOps> {
+  if (input.ops.length === 0) {
+    throw new Error("canvas_ops 至少要有一个操作");
+  }
+  return {
+    type: SuspendType.CanvasOps,
+    ...(input.needsApproval ? { approval: { purpose: input.purpose } } : {}),
+    ops: input.ops,
+    ...input.batch
+  };
+}
+
+/**
  * 把一批画布操作挂起交给前端。ASK_BEFORE_EDIT 模式下带上 `approval`，前端先弹一次确认（整批一次）。
  *
  * 成功挂起时 mastra 会中断当前 execute，所以返回类型是 `never`；没有 suspend 能力时返回 {@link NO_SUSPEND_RESULT}。
@@ -30,20 +52,15 @@ export function suspendCanvasOps(
   context: CanvasOpsContext | undefined,
   input: { purpose: string; ops: CanvasOp[]; batch?: { batchId: string; operationId: string } }
 ): Promise<never> | typeof NO_SUSPEND_RESULT {
-  if (input.ops.length === 0) {
-    throw new Error("canvas_ops 至少要有一个操作");
-  }
+  const payload = canvasOpsPayload({
+    needsApproval: (context?.requestContext?.get("mode") as AgentMode | undefined) === AgentMode.ASK_BEFORE_EDIT,
+    ...input
+  });
   const suspend = context?.agent?.suspend;
   if (!suspend) {
     return NO_SUSPEND_RESULT;
   }
-  const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
-  return suspend({
-    type: SuspendType.CanvasOps,
-    ...(mode === AgentMode.ASK_BEFORE_EDIT ? { approval: { purpose: input.purpose } } : {}),
-    ops: input.ops,
-    ...input.batch
-  } as never) as Promise<never>;
+  return suspend(payload as never) as Promise<never>;
 }
 
 export type CanvasOpsReply =

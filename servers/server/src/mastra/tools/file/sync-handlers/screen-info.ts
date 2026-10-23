@@ -4,15 +4,14 @@ import {
   validateScreenInfoContent
 } from "@/mastra/services/bi-data-sync/screen-file-edit";
 
-import { SuspendType } from "../../../types/suspend";
 import { isScreenInfoFilePath } from "../file-kind";
 import {
-  askOrPush,
   type EditContext,
   invalidateReadState,
   notWritten,
   type PreparedEdit,
-  type SyncHandler
+  type SyncHandler,
+  syncPayload
 } from "./contract";
 
 /** 大屏配置：某块大屏根目录下的 info.json。 */
@@ -48,15 +47,12 @@ export const screenInfoHandler: SyncHandler = {
         }
         invalidateReadState(ctx.absPath);
       },
-      payload: askOrPush(
-        ctx,
-        {
-          approvalType: SuspendType.AskApprovalUpdateScreenInfo,
-          autoType: SuspendType.UpdateScreenInfo,
-          purpose: "推送屏幕配置到前端"
-        },
-        { screenId, detail, minioIds: detail.minioIds ?? [], replacements: ctx.result.replacements }
-      )
+      payload: syncPayload(ctx, "推送屏幕配置到前端", {
+        op: "update_screen_info",
+        screenId,
+        detail,
+        minioIds: detail.minioIds ?? []
+      })
     };
   }
 };

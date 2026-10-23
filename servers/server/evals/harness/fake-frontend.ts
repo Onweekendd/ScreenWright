@@ -4,9 +4,9 @@
  * 形状照抄真前端 `useChunkSideEffects.ts` 的 `resolveSuspend`——按 `suspendPayload.type`
  * 查一张 `Map<SuspendType, handler>`，返回 resumeData。省掉的只有 HTTP/SSE 那层。
  *
- * 有肉的是 CreateComponent / CopyComponent / GroupComponent / AddPanelState 四个：前三个要回
- * **含真实 id 的组件**（真环境里 id 由业务接口分配，eval 里没有业务接口，假前端自己造），
- * AddPanelState 要回一个前端已经用在画布上的状态。两个坑：
+ * 有肉的是 CreateComponent / CopyComponent 和 `canvas_ops` 里的 group_components / add_panel_state：
+ * 前三个要回**含真实 id 的组件**（真环境里 id 由业务接口分配，eval 里没有业务接口，假前端自己造），
+ * add_panel_state 要回一个前端已经用在画布上的状态。两个坑：
  *
  * 1. 造出来的组件必须过 `validateComponentContent`（工具 resume 分支里会再校验一次，
  *    见 `create-component.ts:249`），过不了就整屏落盘失败，会被误判成 agent 的问题。
@@ -118,64 +118,80 @@ const withFreshIds = (node: Record<string, unknown>): Record<string, unknown> =>
 };
 
 /**
- * 分组：跟创建类同一条回执形状（`{ approved, component, error }`），但**载荷里没有模板**——
- * `group_component` 的 suspend payload 只有 `componentIds`，容器得假前端自己造。
+ * 分组容器：**载荷里没有模板**——`group_components` 的 op 只有 `componentIds`，容器得假前端自己造。
  *
  * 造一个几何全 0 的空壳就够：成员的摘挂与包围盒重算都归 core（`ComponentManager.group`
  * 见到 children 为空会自己把成员拉进来，再由 upsert 里的 reflowGroup 算盒子）。真前端
  * 那边算好的那份也会被同一个 reflow 覆盖，所以这里传 0 不是偷懒，是**不去伪造派生值**。
  *
- * 字段按 `ComponentFlatSchema` 的必填项铺满——过不了校验的话 `group-component.ts:92`
- * 会直接拒绝落盘，症状看着像 agent 分组失败。
+ * 字段按 `ComponentFlatSchema` 的必填项铺满——过不了校验的话 `group-component.ts` 里的
+ * `validateComponentContent` 会直接拒绝落盘，症状看着像 agent 分组失败。
+ * 键集照抄真实分组容器（见 fixtures/a-group.json 的 #4177）——工具用的是**原始对象**
+ * 而不是 zod 补过默认值的那份，多写一个字段就会原样落进工作区。
  */
-const groupLike: Handler = (_payload, policy) => {
-  if (!policy.approve) {
-    return { approved: false };
-  }
-  if (policy.applyFailure) {
-    return { approved: true, error: policy.applyFailure("组合分组") };
-  }
-  // 键集照抄真实分组容器（见 fixtures/a-group.json 的 #4177）——工具用的是**原始对象**
-  // 而不是 zod 补过默认值的那份，多写一个字段就会原样落进工作区。
-  return {
-    approved: true,
-    component: {
-      id: allocateComponentId(),
-      name: "分组",
-      title: "分组",
-      component: { prop: FolderEnum.group, name: FolderEnum.group, width: 0, height: 0 },
-      left: 0,
-      top: 0,
-      zIndex: 1,
-      display: true,
-      isLock: false,
-      isExpand: true,
-      isOuter: true,
-      option: {},
-      loadAnimation: { type: "none", duration: 1000, delay: 0, timingFunction: "linear" },
-      // 空数组即「让 core 自己把成员拉进来」，不是「这个分组没有成员」
-      children: []
-    }
-  };
-};
+const groupContainer = (): Record<string, unknown> => ({
+  id: allocateComponentId(),
+  name: "分组",
+  title: "分组",
+  component: { prop: FolderEnum.group, name: FolderEnum.group, width: 0, height: 0 },
+  left: 0,
+  top: 0,
+  zIndex: "a0",
+  display: true,
+  isLock: false,
+  isExpand: true,
+  isOuter: true,
+  option: {},
+  loadAnimation: { type: "none", duration: 1000, delay: 0, timingFunction: "linear" },
+  // 空数组即「让 core 自己把成员拉进来」，不是「这个分组没有成员」
+  children: []
+});
 
 /**
  * 动态面板加状态：状态 id 是本地 uuid，前后端造状态跑的是 core 里同一个 `createPanelState`，
  * 所以这里直接调它，只把名字换成载荷里用户要的那个（core 那份按序号取名「状态N」）。
  */
-const addPanelState: Handler = (payload, policy) => {
-  if (!policy.approve) {
-    return { approved: false };
-  }
-  if (policy.applyFailure) {
-    return { approved: true, error: policy.applyFailure("新增面板状态") };
-  }
-  const name = typeof payload.stateName === "string" ? payload.stateName : "新状态";
-  return { approved: true, state: { ...createPanelState(0), title: name, name } };
+const panelState = (stateName: unknown): Record<string, unknown> => {
+  const name = typeof stateName === "string" ? stateName : "新状态";
+  return { ...createPanelState(0), title: name, name };
 };
 
 /**
- * 不产生新 id 的那类（移动 / 解组 / 过滤器存删）：只回一个「干完了」。
+ * 画布写操作的统一应答：按 `ops` 下标逐项回 `results[i]`（长度必须一致，后端按下标取）。
+ *
+ * 拒绝是整批的事（`approved: false`）；应用失败则逐项各记一条 `{ ok: false, error }`，
+ * 跟真前端「单个失败不中断同批」的行为一致。
+ */
+const canvasOps: Handler = (payload, policy) => {
+  if (!policy.approve) {
+    return { approved: false };
+  }
+  const ops = (payload.ops ?? []) as Array<Record<string, unknown>>;
+  return {
+    results: ops.map((op) => {
+      if (policy.applyFailure) {
+        return { ok: false, error: policy.applyFailure(OP_LABELS[String(op.op)] ?? "应用改动") };
+      }
+      switch (op.op) {
+        case "group_components":
+          return { ok: true, component: groupContainer() };
+        case "add_panel_state":
+          return { ok: true, state: panelState(op.stateName) };
+        default:
+          // 移动 / 解组不产生新 id：只回一个「干完了」
+          return { ok: true };
+      }
+    })
+  };
+};
+
+const OP_LABELS: Record<string, string> = {
+  group_components: "组合分组",
+  add_panel_state: "新增面板状态"
+};
+
+/**
+ * 不产生新 id 的那类（过滤器存删等）：只回一个「干完了」。
  * 路径不由前端拼——它一手写就得跟落盘侧的文件名净化规则逐字对齐，对不上也不报错。
  */
 const appliedOnly =
@@ -255,16 +271,9 @@ const handlers = new Map<string, Handler>([
   ["ask_approval_create_component", createComponents],
   ["copy_component", createLike],
   ["ask_approval_copy_component", createLike],
-  ["group_component", groupLike],
-  ["ask_approval_group_component", groupLike],
-  ["add_panel_state", addPanelState],
-  ["ask_approval_add_panel_state", addPanelState],
+  ["canvas_ops", canvasOps],
   ["push_component_update", appliedOnly("componentUpdated")],
   ["ask_approval_push_component_update", appliedOnly("componentUpdated")],
-  ["move_component", appliedOnly("moved")],
-  ["ask_approval_move_component", appliedOnly("moved")],
-  ["ungroup_component", appliedOnly("ungrouped")],
-  ["ask_approval_ungroup_component", appliedOnly("ungrouped")],
   ["save_filter", appliedOnly("filterSaved")],
   ["ask_approval_save_filter", appliedOnly("filterSaved")],
   ["delete_filter", appliedOnly("filterDeleted")],

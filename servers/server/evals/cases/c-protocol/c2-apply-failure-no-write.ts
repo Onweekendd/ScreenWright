@@ -40,7 +40,7 @@ export const c2ApplyFailureNoWrite: EvalCase = {
 
   assert: (ctx): Assertion[] => {
     const created = newComponents(ctx.before, ctx.screen);
-    const writes = ctx.suspends.filter((s) => isWriteSuspend(s.type));
+    const writes = ctx.suspends.filter((s) => isWriteSuspend(s));
     const withoutError = writes.filter((s) => s.resumeData.error === undefined);
 
     return [

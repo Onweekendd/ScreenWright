@@ -53,22 +53,11 @@ export enum SuspendType {
   SaveAiTemplate = "save_ai_template",
   /** 模板检索后：把候选模板 id 列表交前端弹窗（封面+适用场景），由用户选择并应用到当前大屏 */
   ApplyAiTemplate = "apply_ai_template",
-  /** AUTO 模式：直接把已有组件组合成一个新分组 */
-  GroupComponent = "group_component",
-  /** ASK 模式：审批通过后把已有组件组合成一个新分组 */
-  AskApprovalGroupComponent = "ask_approval_group_component",
-  /** AUTO 模式：直接解散分组，子组件提升到上一级 */
-  UngroupComponent = "ungroup_component",
-  /** ASK 模式：审批通过后解散分组 */
-  AskApprovalUngroupComponent = "ask_approval_ungroup_component",
-  /** AUTO 模式：直接把组件移动到另一个容器（分组/动态面板状态/根级） */
-  MoveComponent = "move_component",
-  /** ASK 模式：审批通过后移动组件 */
-  AskApprovalMoveComponent = "ask_approval_move_component",
-  /** AUTO 模式：直接给动态面板新增一个状态 */
-  AddPanelState = "add_panel_state",
-  /** ASK 模式：审批通过后给动态面板新增一个状态 */
-  AskApprovalAddPanelState = "ask_approval_add_panel_state"
+  /**
+   * 画布写操作的统一挂起：一批 `ops` 交前端依次执行，回执按下标一一对应。
+   * 审批只在一处判断（可选的 `approval`），不再一种操作两个类型。
+   */
+  CanvasOps = "canvas_ops"
 }
 
 export const SuspendTypeSchema = z.enum(SuspendType);
@@ -118,25 +107,63 @@ const createResumeSchema = z.object({
   results: z.array(createResultSchema).optional().describe("逐个组件的创建回执，顺序不限")
 });
 
-/**
- * 不产生新 id 的那类操作（移动 / 解组 / 删除）的回执：**只回一个「干完了」**。
- *
- * 这些操作前端没有任何后端算不出来的东西——没有新 id、没有新实例，摘挂与包围盒重算两边跑的
- * 是 core 里同一个函数。所以路径不由前端拼了：它一手写就得跟落盘侧的文件名净化规则逐字对齐，
- * 对不上也不报错，只是 agent 拿到一个不存在的路径。后端改完自己的树，扫盘推真实路径。
- */
-const frontendApplied = (label: string) => z.boolean().optional().describe(`前端已${label}；后端据此过 core 落盘`);
+/** 画布写操作里「挂到某个容器下」的目标：分组，或动态面板的某个状态 */
+const containerTargetSchema = z.object({
+  parentId: z.number(),
+  parentType: z.enum(["group", "dynamicPanel"]),
+  stateId: z.string().optional()
+});
 
 /**
- * 前端建好并回传的动态面板状态。
+ * `canvas_ops` 能向前端提出的全部画布写操作。
  *
- * 与组件不同，状态 id 是本地 uuid、不经业务接口，后端自己也造得出来——但**画布上已经用这个 id
- * 建好了**，后端再造一个就跟画布对不上。前后端造状态跑的是 core 里同一个 createPanelState。
+ * **组件 id 在协议里一律是 `number`**：后端在组装 ops 时就把 `"5_1/114"` 这类带大屏前缀的入参解析成
+ * 纯数字 id，没解析好编译不过——此前 move_component 把入参原样交给前端、`Number()` 成了 NaN。
  */
-const panelStateCreatedFromFrontend = z
-  .record(z.string(), z.unknown())
-  .optional()
-  .describe("前端建好的状态（含它在画布上用的 id）；后端据此过 core 追加进 panelData 并整屏回写");
+const CanvasOpSchema = z.discriminatedUnion("op", [
+  z.object({
+    op: z.literal("group_components"),
+    componentIds: z.array(z.number()).min(2).describe("要组合成一个分组的组件 id（需当前处于同一父级下）")
+  }),
+  z.object({
+    op: z.literal("ungroup"),
+    groupIds: z.array(z.number()).min(1).describe("要解散的分组组件 id")
+  }),
+  z.object({
+    op: z.literal("move_components"),
+    componentIds: z.array(z.number()).min(1).describe("要移动的组件 id"),
+    target: containerTargetSchema.optional().describe("不传表示移动到大屏根级")
+  }),
+  z.object({
+    op: z.literal("add_panel_state"),
+    panelId: z.number().describe("动态面板组件 id"),
+    stateName: z.string().describe("新状态的名称")
+  })
+]);
+
+export type CanvasOp = z.infer<typeof CanvasOpSchema>;
+
+/**
+ * 单个画布操作的回执。成功时带上**只有前端拿得到的产物**：
+ * - `component`：前端建好的组件（含业务接口分配的真实 id）。真实 id 只有业务接口能分配，实例还要套组件菜单的
+ *   默认值、跑一遍位置尺寸分配，落在画布上的那份跟后端发过去的不是同一个东西——后端拿着这一份过 core
+ *   放进树、整屏落盘，路径由后端从自己的树推，工作区因此只有一个写入者；
+ * - `state`：前端建好的动态面板状态。状态 id 是本地 uuid、后端自己也造得出来，但**画布上已经用这个 id 建好了**，
+ *   后端再造一个就跟画布对不上。
+ *
+ * 不产生新 id 的操作（移动 / 解组）只回 `{ ok: true }`：摘挂与包围盒重算两边跑的是 core 里同一个函数，
+ * 新路径由后端改完自己的树再扫盘推，不由前端拼。
+ */
+const OpResultSchema = z.union([
+  z.object({
+    ok: z.literal(true),
+    component: z.record(z.string(), z.unknown()).optional(),
+    state: z.record(z.string(), z.unknown()).optional()
+  }),
+  z.object({ ok: z.literal(false), error: z.string() })
+]);
+
+export type OpResult = z.infer<typeof OpResultSchema>;
 
 /** edit_files 批次中的单项标识。普通单文件工具调用不传，保持既有协议兼容。 */
 const batchOperationFields = {
@@ -490,118 +517,23 @@ export const SuspendDefs = {
     })
   },
 
-  [SuspendType.GroupComponent]: {
+  [SuspendType.CanvasOps]: {
     suspend: z.object({
-      type: z.literal(SuspendType.GroupComponent),
-      componentIds: z.array(z.string()).min(2).describe("要组合成一个分组的组件 id 数组（需当前处于同一父级下）")
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准组合操作"),
-      /** 分组容器和普通组件一样要业务接口分配真实 id，所以只能由前端建好回传 */
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端组合失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalGroupComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalGroupComponent),
-      purpose: z.string(),
-      componentIds: z.array(z.string()).min(2)
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准组合操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端组合失败时的错误信息")
-    })
-  },
-
-  [SuspendType.UngroupComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.UngroupComponent),
-      groupIds: z.array(z.string()).min(1).describe("要解散的分组组件 id 数组")
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准解散操作"),
-      ungrouped: frontendApplied("解散分组"),
-      error: z.string().optional().describe("前端解散失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalUngroupComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalUngroupComponent),
-      purpose: z.string(),
-      groupIds: z.array(z.string()).min(1)
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准解散操作"),
-      ungrouped: frontendApplied("解散分组"),
-      error: z.string().optional().describe("前端解散失败时的错误信息")
-    })
-  },
-
-  [SuspendType.MoveComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.MoveComponent),
-      componentIds: z.array(z.string()).min(1).describe("要移动的组件 id 数组"),
-      target: z
-        .object({
-          parentId: z.number(),
-          parentType: z.enum(["group", "dynamicPanel"]),
-          stateId: z.string().optional()
-        })
+      type: z.literal(SuspendType.CanvasOps),
+      approval: z
+        .object({ purpose: z.string() })
         .optional()
-        .describe("不传表示移动到大屏根级")
+        .describe("有它：前端先弹一次确认，整批一次；没有就直接执行"),
+      ops: z.array(CanvasOpSchema).min(1).describe("按顺序执行的画布操作；回执 results[i] 对应 ops[i]"),
+      ...batchOperationFields
     }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准移动操作"),
-      moved: frontendApplied("移动组件"),
-      error: z.string().optional().describe("前端移动失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalMoveComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalMoveComponent),
-      purpose: z.string(),
-      componentIds: z.array(z.string()).min(1),
-      target: z
-        .object({
-          parentId: z.number(),
-          parentType: z.enum(["group", "dynamicPanel"]),
-          stateId: z.string().optional()
-        })
-        .optional()
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准移动操作"),
-      moved: frontendApplied("移动组件"),
-      error: z.string().optional().describe("前端移动失败时的错误信息")
-    })
-  },
-
-  [SuspendType.AddPanelState]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AddPanelState),
-      panelId: z.string().describe("动态面板组件 id"),
-      stateName: z.string().describe("新状态的名称")
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准新增状态操作"),
-      state: panelStateCreatedFromFrontend,
-      error: z.string().optional().describe("前端新增状态失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalAddPanelState]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalAddPanelState),
-      purpose: z.string(),
-      panelId: z.string(),
-      stateName: z.string()
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准新增状态操作"),
-      state: panelStateCreatedFromFrontend,
-      error: z.string().optional().describe("前端新增状态失败时的错误信息")
-    })
+    resume: z.union([
+      z.object({ approved: z.literal(false), ...batchOperationFields }),
+      z.object({
+        results: z.array(OpResultSchema).describe("与 ops 等长，按下标一一对应；单项失败只记在自己那一项"),
+        ...batchOperationFields
+      })
+    ])
   }
 } as const;
 

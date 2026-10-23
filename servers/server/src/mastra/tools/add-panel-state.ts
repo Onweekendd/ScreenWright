@@ -8,10 +8,10 @@ import { z } from "zod";
 import { applyPanelStateAdd } from "@/mastra/services/bi-data-sync/screen-mutation";
 import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen-workspace";
 
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { ChangeSchema } from "./change-report";
-import { describeAmbiguity, findComponentFileInWorkspace, isAmbiguousMatch } from "./file/utils";
+import { describeAmbiguity, extractIdFromIdName, findComponentFileInWorkspace, isAmbiguousMatch } from "./file/utils";
 
 export const addPanelStateTool = createTool({
   id: "add_panel_state",
@@ -33,12 +33,9 @@ export const addPanelStateTool = createTool({
     stateName: z.string().describe("新状态的名称")
   }),
 
-  suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.AskApprovalAddPanelState].suspend,
-    SuspendDefs[SuspendType.AddPanelState].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: SuspendDefs[SuspendType.AskApprovalAddPanelState].resume,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   outputSchema: z.object({
     success: z.boolean(),
@@ -48,17 +45,17 @@ export const addPanelStateTool = createTool({
   }),
 
   execute: async ({ panelId, stateName }, context) => {
-    const { suspend, resumeData } = context?.agent ?? {};
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
 
-    // ── 恢复阶段：用户拒绝 ────────────────────────────────────────────
-    if (resumeData?.approved === false) {
+    // ── 恢复阶段：用户拒绝 / 回执不合法 / 前端返回错误 ───────────────────
+    if (reply.status === "rejected") {
       return { success: false, message: "用户取消了新增状态操作" };
     }
-
-    // ── 恢复阶段：前端已新增或返回错误 ──────────────────────────────────
-    if (resumeData?.error) {
-      return { success: false, message: `前端新增状态失败: ${resumeData.error}` };
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
+    }
+    if (reply.status === "done" && !reply.results[0].ok) {
+      return { success: false, message: `前端新增状态失败: ${reply.results[0].error}` };
     }
 
     // ── 首次执行 / 恢复阶段共用：定位面板文件，校验是动态面板组件 ──────────
@@ -71,7 +68,11 @@ export const addPanelStateTool = createTool({
       return { success: false, message: describeAmbiguity(panelId, found.ambiguous) };
     }
     // 交给 core 与前端的是裸 id：前端在当前打开的那块屏的内存树上操作，屏前缀对它没有意义
-    const bareId = found.base.split("_")[0];
+    const numericId = extractIdFromIdName(found.base);
+    if (numericId === null) {
+      return { success: false, message: `组件 id 不合法: ${panelId}` };
+    }
+    const bareId = String(numericId);
 
     let content: Record<string, unknown>;
     try {
@@ -87,12 +88,16 @@ export const addPanelStateTool = createTool({
     // ── 恢复阶段：前端建好了状态，这时才由后端过 core 落盘 ──────────────────
     // 状态 id 是本地 uuid，后端自己也造得出来——但画布上已经用那个 id 建好了，
     // 后端再造一个就跟画布对不上，所以回传的这一份原样追加进 panelData。
-    if (resumeData?.state) {
+    if (reply.status === "done") {
+      const frontendState = reply.results[0].ok ? reply.results[0].state : undefined;
+      if (!frontendState) {
+        return { success: false, message: "前端没有回传新增的状态，未写入工作区" };
+      }
       const screenKey = getScreenVersionKeyFromPath(found.file);
       if (!screenKey) {
         return { success: false, message: `状态已在前端新增，但无法确定该面板属于哪个大屏: ${panelId}` };
       }
-      const state = resumeData.state as unknown as PanelState;
+      const state = frontendState as unknown as PanelState;
       try {
         await applyPanelStateAdd(screenKey, bareId, state);
         return {
@@ -115,21 +120,9 @@ export const addPanelStateTool = createTool({
       }
     }
 
-    if (!suspend) {
-      return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
-    }
-
-    // ── ASK_BEFORE_EDIT：先弹审批框，用户接受后再交前端新增 ──────────────
-    if (mode === AgentMode.ASK_BEFORE_EDIT) {
-      return suspend({
-        type: SuspendType.AskApprovalAddPanelState,
-        purpose: "给动态面板新增一个状态",
-        panelId: bareId,
-        stateName
-      }) as never;
-    }
-
-    // 自动模式：直接 suspend 交给前端新增
-    return suspend({ type: SuspendType.AddPanelState, panelId: bareId, stateName }) as never;
+    return suspendCanvasOps(context, {
+      purpose: "给动态面板新增一个状态",
+      ops: [{ op: "add_panel_state", panelId: numericId, stateName }]
+    });
   }
 });

@@ -28,8 +28,8 @@ export const c5AskMode: EvalCase = {
 
   assert: (ctx): Assertion[] => {
     const created = newComponents(ctx.before, ctx.screen);
-    const writes = ctx.suspends.filter((s) => isWriteSuspend(s.type));
-    const sneaked = writes.filter((s) => isAutoWriteSuspend(s.type));
+    const writes = ctx.suspends.filter((s) => isWriteSuspend(s));
+    const sneaked = writes.filter((s) => isAutoWriteSuspend(s));
 
     return [
       {

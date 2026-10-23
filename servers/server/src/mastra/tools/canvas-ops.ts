@@ -1,0 +1,77 @@
+import { AgentMode } from "../types/bi-chat";
+import { type CanvasOp, type OpResult, SuspendType } from "../types/suspend";
+
+/**
+ * 画布写操作的挂起/恢复收口。
+ *
+ * 各工具（move_component、group_component……）只负责把入参翻译成 `ops`（并把组件 id 解析成纯数字），
+ * 然后交给 {@link suspendCanvasOps}；恢复时用 {@link readCanvasOpResults} 按下标取回执，再过 core 落盘。
+ * 「要不要审批」只在这里判断一次，工具不再自己看 AgentMode、不再挑挂起类型。
+ */
+
+/** 工具 execute 的 context 里这里用到的那一小块；用结构类型而不是 mastra 的完整类型，方便单测里传桩 */
+interface CanvasOpsContext {
+  agent?: { suspend?: (payload: never) => unknown };
+  requestContext?: { get: (key: string) => unknown };
+}
+
+/** 没有 suspend 能力（非 agent 流式调用）时工具原样返回的失败结果 */
+export const NO_SUSPEND_RESULT = {
+  success: false as const,
+  message: "当前上下文不支持 suspend（非 agent 流式调用）"
+};
+
+/**
+ * 把一批画布操作挂起交给前端。ASK_BEFORE_EDIT 模式下带上 `approval`，前端先弹一次确认（整批一次）。
+ *
+ * 成功挂起时 mastra 会中断当前 execute，所以返回类型是 `never`；没有 suspend 能力时返回 {@link NO_SUSPEND_RESULT}。
+ */
+export function suspendCanvasOps(
+  context: CanvasOpsContext | undefined,
+  input: { purpose: string; ops: [CanvasOp, ...CanvasOp[]]; batch?: { batchId: string; operationId: string } }
+): Promise<never> | typeof NO_SUSPEND_RESULT {
+  const suspend = context?.agent?.suspend;
+  if (!suspend) {
+    return NO_SUSPEND_RESULT;
+  }
+  const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
+  return suspend({
+    type: SuspendType.CanvasOps,
+    ...(mode === AgentMode.ASK_BEFORE_EDIT ? { approval: { purpose: input.purpose } } : {}),
+    ops: input.ops,
+    ...input.batch
+  } as never) as Promise<never>;
+}
+
+export type CanvasOpsReply =
+  /** 首次执行，还没有前端回执 */
+  | { status: "pending" }
+  /** 用户拒绝了审批 */
+  | { status: "rejected" }
+  | { status: "done"; results: OpResult[] }
+  /** 回执长度与 ops 对不上——协议被破坏，不能按下标取 */
+  | { status: "invalid"; message: string };
+
+/**
+ * 读前端回执：按下标一一对应，`results.length` 必须等于发出去的 `ops` 数。
+ * 用户拒绝是 `rejected`；单个操作失败不在这里体现，在对应下标的 `{ ok: false, error }` 里。
+ */
+export function readCanvasOpResults(resumeData: unknown, expectedCount: number): CanvasOpsReply {
+  if (!resumeData || typeof resumeData !== "object") {
+    return { status: "pending" };
+  }
+  const data = resumeData as { approved?: unknown; results?: unknown };
+  if (data.approved === false) {
+    return { status: "rejected" };
+  }
+  if (!Array.isArray(data.results)) {
+    return { status: "pending" };
+  }
+  if (data.results.length !== expectedCount) {
+    return {
+      status: "invalid",
+      message: `前端回执数量不符：发出 ${expectedCount} 个操作，收到 ${data.results.length} 个`
+    };
+  }
+  return { status: "done", results: data.results as OpResult[] };
+}

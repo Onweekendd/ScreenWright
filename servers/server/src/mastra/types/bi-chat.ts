@@ -29,6 +29,8 @@ export enum AgentMode {
 
 export {
   type AskUserQuestion,
+  type CanvasOp,
+  type OpResult,
   type QuestionOption,
   type ResumeData,
   SuspendDefs,

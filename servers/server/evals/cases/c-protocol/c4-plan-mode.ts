@@ -29,7 +29,7 @@ export const c4PlanMode: EvalCase = {
 
   assert: (ctx): Assertion[] => {
     const created = newComponents(ctx.before, ctx.screen);
-    const writes = ctx.suspends.filter((s) => isWriteSuspend(s.type));
+    const writes = ctx.suspends.filter((s) => isWriteSuspend(s));
 
     return [
       {

@@ -284,3 +284,50 @@ describe("前端应用失败的原因", () => {
     expect(del.error).toContain("删除组件");
   });
 });
+
+describe("canvas_ops 应答", () => {
+  // type 而不是 interface：要从 Record<string, unknown> 断言过来，interface 没有索引签名过不了
+  type OpsResume = {
+    approved?: boolean;
+    results: Array<{ ok: boolean; component?: { id: number }; state?: { name: string }; error?: string }>;
+  };
+  const ops = [
+    { op: "group_components", componentIds: [1, 2] },
+    { op: "add_panel_state", panelId: 3, stateName: "状态9" },
+    { op: "move_components", componentIds: [4] },
+    { op: "ungroup", groupIds: [5] }
+  ];
+
+  it("results 与 ops 等长、按下标对应：分组回容器、面板回状态、移动/解组只回 ok", () => {
+    const resume = createFakeFrontend().reply({ type: "canvas_ops", ops }, meta) as OpsResume;
+
+    expect(resume.results).toHaveLength(ops.length);
+    expect(resume.results[0]).toMatchObject({ ok: true, component: { id: expect.any(Number) } });
+    expect(resume.results[1]).toMatchObject({ ok: true, state: { name: "状态9" } });
+    expect(resume.results[2]).toEqual({ ok: true });
+    expect(resume.results[3]).toEqual({ ok: true });
+  });
+
+  it("拒绝是整批的事", () => {
+    const resume = createFakeFrontend({ approve: false }).reply({ type: "canvas_ops", ops }, meta);
+
+    expect(resume).toEqual({ approved: false });
+  });
+
+  it("应用失败时每项各记一条 error，仍然等长", () => {
+    const resume = createFakeFrontend({ applyFailure: applyFailures.channelDown }).reply(
+      { type: "canvas_ops", ops },
+      meta
+    ) as OpsResume;
+
+    expect(resume.results).toHaveLength(ops.length);
+    expect(resume.results.every((r) => !r.ok && r.error)).toBe(true);
+    expect(resume.results[0]!.error).toContain("组合分组");
+  });
+
+  it("批次标识原样带回", () => {
+    const resume = createFakeFrontend().reply({ type: "canvas_ops", ops, batchId: "b", operationId: "1" }, meta);
+
+    expect(resume).toMatchObject({ batchId: "b", operationId: "1" });
+  });
+});

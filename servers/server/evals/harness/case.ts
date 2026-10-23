@@ -356,7 +356,7 @@ export const withinCanvas = (component: ComponentType, screen: ParsedLargeScreen
 // ── 挂起分类 ──────────────────────────────────────────────────────────────────
 
 /**
- * 会让工作区落盘的 AUTO 模式挂起类型。
+ * 会让工作区落盘的 AUTO 模式挂起类型（一种操作一个类型的旧协议；已迁到 `canvas_ops` 的不在此列）。
  *
  * 之所以能靠这张表回答「这一轮写没写盘」，是因为**延迟落盘**：所有写路径都要先 suspend
  * 拿到前端回执，后端才过 core 落盘。所以挂起流水账就是写操作的完整清单，不必去翻录制档案。
@@ -367,24 +367,30 @@ export const withinCanvas = (component: ComponentType, screen: ParsedLargeScreen
 export const AUTO_WRITE_SUSPENDS: readonly SuspendType[] = [
   SuspendType.CreateComponent,
   SuspendType.CopyComponent,
-  SuspendType.GroupComponent,
-  SuspendType.UngroupComponent,
-  SuspendType.MoveComponent,
   SuspendType.DeleteComponent,
   SuspendType.PushComponentUpdate,
   SuspendType.SaveFilter,
   SuspendType.DeleteFilter,
-  SuspendType.AddPanelState,
   SuspendType.UpdateScreenInfo
 ];
 
-/** ASK 模式下这些类型出现，就说明有人绕过了审批直接走 AUTO 那条路。 */
-export const isAutoWriteSuspend = (type: string): boolean => (AUTO_WRITE_SUSPENDS as readonly string[]).includes(type);
+/** 判断挂起性质要看的字段：`canvas_ops` 的审批与否在载荷里，不在类型名上 */
+type SuspendKind = Pick<SuspendLogEntry, "type" | "payload">;
+
+/** `canvas_ops` 带 `approval` = 先问用户；不带 = 直接动手 */
+const isCanvasOps = (suspend: SuspendKind): boolean => suspend.type === SuspendType.CanvasOps;
+
+/** ASK 模式下这些挂起出现，就说明有人绕过了审批直接走 AUTO 那条路。 */
+export const isAutoWriteSuspend = (suspend: SuspendKind): boolean =>
+  isCanvasOps(suspend)
+    ? suspend.payload.approval === undefined
+    : (AUTO_WRITE_SUSPENDS as readonly string[]).includes(suspend.type);
 
 /** 任何形态的写类挂起，含 edit_files 用的通用审批 `ask_approval`。 */
-export const isWriteSuspend = (type: string): boolean =>
-  type === SuspendType.AskApproval ||
-  AUTO_WRITE_SUSPENDS.some((auto) => type === auto || type === `ask_approval_${auto}`);
+export const isWriteSuspend = (suspend: SuspendKind): boolean =>
+  isCanvasOps(suspend) ||
+  suspend.type === SuspendType.AskApproval ||
+  AUTO_WRITE_SUSPENDS.some((auto) => suspend.type === auto || suspend.type === `ask_approval_${auto}`);
 
 // ── 磁盘断言 ──────────────────────────────────────────────────────────────────
 

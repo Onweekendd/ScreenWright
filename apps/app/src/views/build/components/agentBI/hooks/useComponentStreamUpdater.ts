@@ -12,12 +12,13 @@ import type { PanelState } from "../../buildRender/core/SystemComponent/type";
 import { UpdateHistoryTypeEnum, useAction } from "../../buildRender/hooks/useAction";
 import { createLocalPanelStatus } from "../../buildRender/hooks/useCommonPanelAction";
 import { useEditStore } from "../../buildRender/hooks/useEditStore";
+import { createCanvasOpsHandler, getBatchOperationFields } from "./canvasOps";
 import { captureCanvasForAgent } from "./captureCanvasForAgent";
 import { componentMenuTitle } from "./componentMenuTitle";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
 import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import { useConfirm } from "./useConfirm";
-import type { ComponentPlacement, MoveComponentTarget } from "./useCreateComponent";
+import type { ComponentPlacement } from "./useCreateComponent";
 import { useCreateComponent } from "./useCreateComponent";
 
 /**
@@ -107,10 +108,6 @@ export function useComponentStreamUpdater(
 
   // ── Suspend handlers，按 suspendPayload.type 注册 ────────────────────────────
 
-  /** edit_files 多轮 suspend 的关联字段；单文件工具调用时返回空对象。 */
-  const getBatchOperationFields = (payload: { batchId?: string; operationId?: string }) =>
-    payload.batchId && payload.operationId ? { batchId: payload.batchId, operationId: payload.operationId } : {};
-
   /**
    * 纯审批：弹确认框，后端根据 approved 自行处理后续（edit_files、createEventTemplate）。
    * @field purpose - 审批目的说明
@@ -194,6 +191,29 @@ export function useComponentStreamUpdater(
   };
 
   /**
+   * 画布写操作的统一执行器（group_components / ungroup / move_components / add_panel_state ……）。
+   * 审批、写入排队、出错处理都在 createCanvasOpsHandler 里，这里只接上真实的画布能力。
+   */
+  const handleCanvasOps: SuspendHandlerFn<SuspendType.CanvasOps> = createCanvasOpsHandler({
+    getComponent: (id) => allComponentMap.value.get(`${id}`),
+    confirm: (message) => confirm(sessionId, message),
+    moveComponents,
+    groupComponents: handleSelectGroupAction,
+    ungroupComponents: handleGroupDelete,
+    addPanelState: async (panel, stateName) => {
+      const panelData = (panel.panelData ?? []) as PanelState[];
+      const newStatus = createLocalPanelStatus(panelData.length);
+      newStatus.name = stateName;
+      newStatus.title = stateName;
+      panelData.push(newStatus);
+      panel.panelData = panelData;
+      await updateComponentLayers(panel, { syncWorkspace: false, updateHistoryType: UpdateHistoryTypeEnum.SKIP });
+      // cloneDeep 同 createdComponentResult：画布上的对象是 Vue 响应式代理，过不了结构化克隆。
+      return cloneDeep(newStatus) as unknown as Record<string, unknown>;
+    }
+  });
+
+  /**
    * 直接创建组件（AUTO 模式）。
    * @field items - 待创建的组件（配置 + 放置信息），name/title 用于标题
    */
@@ -268,178 +288,6 @@ export function useComponentStreamUpdater(
       } catch (e) {
         return { error: (e as Error).message };
       }
-    });
-  };
-
-  /**
-   * 直接把已有组件组合成一个新分组（AUTO 模式）。
-   * 组件本身不会被删除或重建，只是从原容器摘除、挂到新分组下。
-   * @field componentIds - 要组合的组件 id 数组
-   */
-  const handleGroupComponent: SuspendHandlerFn<SuspendType.GroupComponent> = async (info) => {
-    const { componentIds } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      try {
-        const components = componentIds.map((id) => allComponentMap.value.get(id)).filter(Boolean) as ComponentType[];
-        if (components.length !== componentIds.length) {
-          return { error: "部分组件未找到" };
-        }
-        const groupItem = await handleSelectGroupAction(components);
-        if (!groupItem) {
-          return { error: "分组失败" };
-        }
-        // 分组容器的真实 id 同样来自业务接口，所以跟新建/复制走同一条回传路
-        return createdComponentPayload(groupItem, groupItem.id, "分组创建成功");
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
-
-  /**
-   * 审批通过后组合分组（ASK 模式下的 group_component）。
-   * @field purpose - 审批目的说明
-   * @field componentIds - 要组合的组件 id 数组
-   */
-  const handleAskApprovalGroupComponent: SuspendHandlerFn<SuspendType.AskApprovalGroupComponent> = async (info) => {
-    const { purpose, componentIds } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false };
-    }
-    return handleGroupComponent({
-      ...info,
-      suspendPayload: { type: SuspendType.GroupComponent, componentIds }
-    });
-  };
-
-  /**
-   * 直接解散若干分组，子组件提升到上一级（AUTO 模式）。
-   * 分组容器本身不会被删除，子组件也不会重建，只是挂载位置变化。
-   * @field groupIds - 要解散的分组组件 id 数组
-   */
-  const handleUngroupComponent: SuspendHandlerFn<SuspendType.UngroupComponent> = async (info) => {
-    const { groupIds } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      try {
-        const groups = groupIds.map((id) => allComponentMap.value.get(id)).filter(Boolean) as ComponentType[];
-        if (groups.length !== groupIds.length) {
-          return { error: "部分分组未找到" };
-        }
-        await handleGroupDelete(groups);
-        // 解散不产生新 id，后端跑同一个 core ungroup 就能算出谁被提升到哪，
-        // 子组件的新路径由它改完自己的树再扫盘推，这里只回一句「干完了」
-        return { ungrouped: true };
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
-
-  /**
-   * 审批通过后解散分组（ASK 模式下的 ungroup_component）。
-   * @field purpose - 审批目的说明
-   * @field groupIds - 要解散的分组组件 id 数组
-   */
-  const handleAskApprovalUngroupComponent: SuspendHandlerFn<SuspendType.AskApprovalUngroupComponent> = async (info) => {
-    const { purpose, groupIds } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false };
-    }
-    return handleUngroupComponent({
-      ...info,
-      suspendPayload: { type: SuspendType.UngroupComponent, groupIds }
-    });
-  };
-
-  /**
-   * 直接把组件移动到另一个容器（AUTO 模式）。
-   * 组件本身不会被删除或重建，只是从当前容器摘除、挂到目标容器下，id 与对象引用不变。
-   * @field componentIds - 要移动的组件 id 数组
-   * @field target - 目标容器；不传表示移动到大屏根级
-   */
-  const handleMoveComponent: SuspendHandlerFn<SuspendType.MoveComponent> = async (info) => {
-    const { componentIds, target } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      try {
-        const result = await moveComponents(
-          componentIds.map((id) => Number(id)),
-          target as MoveComponentTarget | undefined
-        );
-        if (!result.success) {
-          return { error: result.message };
-        }
-        // 移动不产生新 id，新路径由后端跑同一个 core move 之后扫盘推
-        return { moved: true };
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
-
-  /**
-   * 审批通过后移动组件（ASK 模式下的 move_component）。
-   * @field purpose - 审批目的说明
-   * @field componentIds - 要移动的组件 id 数组
-   * @field target - 目标容器
-   */
-  const handleAskApprovalMoveComponent: SuspendHandlerFn<SuspendType.AskApprovalMoveComponent> = async (info) => {
-    const { purpose, componentIds, target } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false };
-    }
-    return handleMoveComponent({
-      ...info,
-      suspendPayload: { type: SuspendType.MoveComponent, componentIds, target }
-    });
-  };
-
-  /**
-   * 直接给动态面板新增一个状态（AUTO 模式）。
-   * @field panelId - 动态面板组件 id
-   * @field stateName - 新状态的名称
-   */
-  const handleAddPanelState: SuspendHandlerFn<SuspendType.AddPanelState> = async (info) => {
-    const { panelId, stateName } = info.suspendPayload;
-    return enqueueCanvasMutation(async () => {
-      try {
-        const panel = allComponentMap.value.get(panelId);
-        if (!panel) {
-          return { error: `找不到动态面板 ${panelId}` };
-        }
-        const panelData = (panel.panelData ?? []) as PanelState[];
-        const newStatus = createLocalPanelStatus(panelData.length);
-        newStatus.name = stateName;
-        newStatus.title = stateName;
-        panelData.push(newStatus);
-        panel.panelData = panelData;
-        await updateComponentLayers(panel, { syncWorkspace: false, updateHistoryType: UpdateHistoryTypeEnum.SKIP });
-        // 状态 id 是本地 uuid，后端也造得出来——但画布上已经用的是这一个，回传它才对得上。
-        // cloneDeep 同 createdComponentPayload：画布上的对象是 Vue 响应式代理，过不了结构化克隆。
-        return { state: cloneDeep(newStatus) as unknown as Record<string, unknown> };
-      } catch (e) {
-        return { error: (e as Error).message };
-      }
-    });
-  };
-
-  /**
-   * 审批通过后给动态面板新增一个状态（ASK 模式下的 add_panel_state）。
-   * @field purpose - 审批目的说明
-   * @field panelId - 动态面板组件 id
-   * @field stateName - 新状态的名称
-   */
-  const handleAskApprovalAddPanelState: SuspendHandlerFn<SuspendType.AskApprovalAddPanelState> = async (info) => {
-    const { purpose, panelId, stateName } = info.suspendPayload;
-    const ok = await confirm(sessionId, `是否允许：${purpose}？`);
-    if (!ok) {
-      return { approved: false };
-    }
-    return handleAddPanelState({
-      ...info,
-      suspendPayload: { type: SuspendType.AddPanelState, panelId, stateName }
     });
   };
 
@@ -760,19 +608,12 @@ export function useComponentStreamUpdater(
     [SuspendType.CopyComponent, handleCopyComponent],
     [SuspendType.AskApprovalCopyComponent, handleAskApprovalCopyComponent],
     [SuspendType.DeleteComponent, handleDeleteComponent],
+    [SuspendType.CanvasOps, handleCanvasOps],
     [SuspendType.ExecuteInBrowser, handleExecuteInBrowser],
     [SuspendType.AskApprovalExecuteInBrowser, handleAskApprovalExecuteInBrowser],
     [SuspendType.CaptureCanvas, handleCaptureCanvas],
     [SuspendType.UpdateScreenInfo, handleUpdateScreenInfo],
-    [SuspendType.AskApprovalUpdateScreenInfo, handleAskApprovalUpdateScreenInfo],
-    [SuspendType.GroupComponent, handleGroupComponent],
-    [SuspendType.AskApprovalGroupComponent, handleAskApprovalGroupComponent],
-    [SuspendType.UngroupComponent, handleUngroupComponent],
-    [SuspendType.AskApprovalUngroupComponent, handleAskApprovalUngroupComponent],
-    [SuspendType.MoveComponent, handleMoveComponent],
-    [SuspendType.AskApprovalMoveComponent, handleAskApprovalMoveComponent],
-    [SuspendType.AddPanelState, handleAddPanelState],
-    [SuspendType.AskApprovalAddPanelState, handleAskApprovalAddPanelState]
+    [SuspendType.AskApprovalUpdateScreenInfo, handleAskApprovalUpdateScreenInfo]
   ]);
 
   return {

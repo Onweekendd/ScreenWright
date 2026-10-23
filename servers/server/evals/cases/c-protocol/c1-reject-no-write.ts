@@ -32,7 +32,7 @@ export const c1RejectNoWrite: EvalCase = {
 
   assert: (ctx): Assertion[] => {
     const created = newComponents(ctx.before, ctx.screen);
-    const writes = ctx.suspends.filter((s) => isWriteSuspend(s.type));
+    const writes = ctx.suspends.filter((s) => isWriteSuspend(s));
     const notRejected = writes.filter((s) => s.resumeData.approved !== false);
 
     return [

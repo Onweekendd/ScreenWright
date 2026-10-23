@@ -91,7 +91,7 @@ describe("create_component resume", () => {
   });
 
   it("回传的组件过不了 schema 时不落盘，返回 validationErrors", async () => {
-    const broken = { ...builtComponent(9103, "坏组件"), zIndex: "not-a-number" };
+    const broken = { ...builtComponent(9103, "坏组件"), zIndex: 5 };
 
     const result = await runResume({ results: [{ index: 0, component: broken }] });
 

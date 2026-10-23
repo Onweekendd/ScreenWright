@@ -1,4 +1,5 @@
 import type { SystemComponentProps } from "@screenwright/types";
+import { migrateLegacyZIndex } from "@screenwright/core";
 import { type ComponentType, FolderEnum, PanelEnum, type ParsedLargeScreenInfo } from "@screenwright/types";
 import { existsSync, rmSync } from "fs";
 import path from "path";
@@ -62,6 +63,8 @@ class ScreenSyncWriter {
 
   constructor({ id, cacheTime, parsedLargeScreenInfo }: SyncScreenDataInput) {
     const { layers, dataFilterArr, aniFrameSet, statusAnimation, ...screenMeta } = parsedLargeScreenInfo;
+    // 库里的老数据 zIndex 还是数字：落盘前换成字符串键，之后 agent 读到、改回来的都是同一种写法
+    migrateLegacyZIndex(layers);
     this.cacheTime = cacheTime;
     this.layers = layers;
     this.dataFilterArr = dataFilterArr;

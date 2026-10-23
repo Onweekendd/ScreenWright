@@ -381,7 +381,7 @@
   "id": 4159,
   "left": 0,
   "top": 300,
-  "zIndex": 1,
+  "zIndex": "a1",
   "verticalConst": "Top",
   "horizontalConst": "Left",
   "parent": 4161,

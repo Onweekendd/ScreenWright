@@ -115,7 +115,7 @@ const subtabsComponentSchema = z.object({
   left: z.number(),
   top: z.number(),
   isLock: z.boolean(),
-  zIndex: z.number(),
+  zIndex: z.string(),
   display: z.boolean(),
   option: subtabOptionSchema,
   data: z.array(tabDataItemSchema),

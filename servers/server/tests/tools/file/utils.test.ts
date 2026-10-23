@@ -298,7 +298,7 @@ describe("validateComponentContent 的两层校验", () => {
       component: { prop: "echartlineAndBar", name: "echart-lineAndBar", width: 600, height: 300 },
       left: 0,
       top: 0,
-      zIndex: 1,
+      zIndex: "a1",
       display: true,
       option: {},
       data: [],
@@ -338,7 +338,7 @@ describe("validateComponentContent 的两层校验", () => {
         component: { prop: "sw-folder", name: "sw-folder", width: 100, height: 100 },
         left: 0,
         top: 0,
-        zIndex: 1,
+        zIndex: "a1",
         display: true,
         option: {}
       })

@@ -1,3 +1,4 @@
+import { legacyNumberToZIndex } from "@screenwright/core";
 import type { MediaEnum } from "@screenwright/types";
 
 import {
@@ -133,7 +134,7 @@ export class SwImgStrategy implements ConvertStrategy {
       ...convertedOption,
       url: imageUrl
     };
-    component.zIndex = zIndex ?? depth;
+    component.zIndex = legacyNumberToZIndex(zIndex ?? depth);
 
     return { component, message: "成功转换为 swImg (默认)" };
   }

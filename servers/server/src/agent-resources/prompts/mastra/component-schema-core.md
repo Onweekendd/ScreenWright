@@ -14,7 +14,7 @@
 | `left` / `top`                                    | number                 | 位置，在组件顶层                                                                   |
 | `component.width` / `component.height`            | number                 | 尺寸，在 component 子对象里；顶层没有 width / height                               |
 | `component.prop` / `component.name`               | string                 | 类型元信息，沿用模板，不用来给实例起名                                             |
-| `zIndex`                                          | number                 | 叠放层级，大的在上，在组件顶层                                                     |
+| `zIndex`                                          | string                 | 叠放层级：**字符串排序键**（如 `"a0"`、`"a1V"`），按字符串比较，大的在上；不是数字，不能做加减，创建时不用写 |
 | `display` / `isLock`                              | boolean / 可选 boolean | 是否显示 / 是否锁定，在组件顶层                                                    |
 | `unitPavenType`                                   | 可选 `"percent"`       | 缺省按像素；percent 时位置和尺寸均按相对大屏或父容器的百分比解释                   |
 | `option`                                          | 类型专属配置           | 字体、颜色、样式等，具体字段查该组件文档                                           |
@@ -38,7 +38,6 @@
     "name": "效果图底图",
     "left": 0,
     "top": 0,
-    "zIndex": 0,
     "component": { "width": 1920, "height": 1080 }
   }
 }

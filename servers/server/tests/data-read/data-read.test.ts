@@ -39,13 +39,14 @@ describe("工作区复用大屏数据", () => {
       const components = readTopLevel();
 
       // 目录列出的是文件名字典序（4152/4153/4156/4157/4166），叠放次序只由 zIndex 承载：
-      // 4166 的 zIndex 为 0，应排在 4156(z=1)、4157(z=2) 之前
+      // 4166 的 zIndex 为 0，应排在 4156(z=1)、4157(z=2) 之前。
+      // mock 工作区是旧数据（磁盘上 zIndex 是数字），读取时换成字符串键：0 → "a0"、1 → "a1"、2 → "a2"
       expect(components.map((component) => [component.id, component.zIndex])).toEqual([
-        [4152, 0],
-        [4153, 0],
-        [4166, 0],
-        [4156, 1],
-        [4157, 2]
+        [4152, "a0"],
+        [4153, "a0"],
+        [4166, "a0"],
+        [4156, "a1"],
+        [4157, "a2"]
       ]);
     });
 
@@ -184,5 +185,41 @@ describe("工作区复用大屏数据", () => {
       expect(reader.readComponents("不存在的目录")).toEqual([]);
       expect(existsSync(path.join(OUTPUT_DIR, "screen_75_1", "component", "不存在的目录"))).toBe(false);
     });
+  });
+});
+
+describe("旧数据的 zIndex 迁移", () => {
+  it("磁盘上数字形态的 zIndex 读进来换成字符串键，大小关系不变", async () => {
+    const os = await import("node:os");
+    const fs = await import("node:fs");
+    const legacyRoot = fs.mkdtempSync(path.join(os.tmpdir(), "legacy-zindex-"));
+    try {
+      // 拷一份 mock 大屏，把顶层两个条形图的 zIndex 改回旧的数字写法
+      const source = path.join(OUTPUT_DIR, "screen_75_1");
+      const target = path.join(legacyRoot, "screen_75_1");
+      fs.cpSync(source, target, { recursive: true });
+      const low = path.join(target, "component", "4152_条形图.json");
+      const high = path.join(target, "component", "4153_条形图.json");
+      const lowJson = JSON.parse(fs.readFileSync(low, "utf8"));
+      const highJson = JSON.parse(fs.readFileSync(high, "utf8"));
+      lowJson.zIndex = 3;
+      highJson.zIndex = 10;
+      fs.writeFileSync(low, JSON.stringify(lowJson));
+      fs.writeFileSync(high, JSON.stringify(highJson));
+
+      const previous = process.env.MASTRA_WORKSPACE_PATH;
+      process.env.MASTRA_WORKSPACE_PATH = legacyRoot;
+      try {
+        const components = new ScreenReader({ id: "75_1" }).readComponents("");
+        const byId = (id: number) => components.find((component) => component.id === id);
+        expect(byId(4152)?.zIndex).toBe("a3");
+        expect(byId(4153)?.zIndex).toBe("aA");
+        expect(byId(4152)!.zIndex < byId(4153)!.zIndex).toBe(true);
+      } finally {
+        process.env.MASTRA_WORKSPACE_PATH = previous;
+      }
+    } finally {
+      fs.rmSync(legacyRoot, { recursive: true, force: true });
+    }
   });
 });

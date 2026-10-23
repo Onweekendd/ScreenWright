@@ -53,7 +53,7 @@ const builtGroup = (id: number, memberIds: number[]) => ({
   name: "新分组",
   title: "新分组",
   children: memberIds.map((memberId) => readJson(componentFile(`${memberId}_条形图.json`))),
-  zIndex: 99
+  zIndex: "b2f"
 });
 
 /**
@@ -175,7 +175,7 @@ describe("树操作工具的 resume", () => {
     });
 
     it("回传的分组结构过不了校验时不落盘", async () => {
-      const broken = { ...builtGroup(9301, [4152]), zIndex: "not-a-number" };
+      const broken = { ...builtGroup(9301, [4152]), zIndex: 5 };
 
       const result = await run(groupComponentTool, input, { component: broken });
 
@@ -288,7 +288,7 @@ describe("树操作工具的 resume", () => {
     });
 
     it("回传的副本过不了校验时不落盘", async () => {
-      const result = await run(copyComponentTool, input, { component: { ...builtCopy(), zIndex: "not-a-number" } });
+      const result = await run(copyComponentTool, input, { component: { ...builtCopy(), zIndex: 5 } });
 
       expect(result.success).toBe(false);
       expect(existsSync(componentFile("4156_分组", "9400_副本.json"))).toBe(false);

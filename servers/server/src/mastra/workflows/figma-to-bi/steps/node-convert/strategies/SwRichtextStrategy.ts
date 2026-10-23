@@ -1,3 +1,4 @@
+import { legacyNumberToZIndex } from "@screenwright/core";
 import { type TextEnum } from "@screenwright/types";
 
 import type { ComponentFlatSchemaType } from "@/mastra/tools/utils";
@@ -322,7 +323,7 @@ export class SwRichtextStrategy implements ConvertStrategy {
       ...component.option,
       ...convertedOption
     };
-    component.zIndex = zIndex ?? depth;
+    component.zIndex = legacyNumberToZIndex(zIndex ?? depth);
 
     return { component, message: "成功转换为 swRichtext" };
   }

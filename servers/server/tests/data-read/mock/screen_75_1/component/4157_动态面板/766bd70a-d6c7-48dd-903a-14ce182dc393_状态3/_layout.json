@@ -22,7 +22,7 @@
       "type": "面积折线图",
       "prop": "echartareaLine",
       "name": "面积折线图",
-      "zIndex": 1,
+      "zIndex": "a1",
       "rectPx": {
         "x": 0,
         "y": 0,
@@ -41,7 +41,7 @@
       "type": "动态面板",
       "prop": "sw-panel",
       "name": "动态面板",
-      "zIndex": 2,
+      "zIndex": "a2",
       "rectPx": {
         "x": 0,
         "y": 300,

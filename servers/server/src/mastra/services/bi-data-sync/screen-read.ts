@@ -1,6 +1,8 @@
 import {
+  compareZIndex,
   type EditorCoreState,
   type EditorState,
+  migrateLegacyZIndex,
   type NavInfo,
   ScreenEditor,
   type TargetChart
@@ -218,6 +220,9 @@ export class ScreenReader implements EditorState<EditorCoreState> {
       throw new Error(`Screen file is not valid JSON: ${source} (${error})`);
     }
 
+    // 老数据落盘时 zIndex 还是数字：在校验前就地换成字符串键（schema 只认字符串）
+    migrateLegacyZIndex(parsed);
+
     try {
       schema.parse(parsed);
     } catch (error) {
@@ -302,7 +307,7 @@ export class ScreenReader implements EditorState<EditorCoreState> {
         // 目录列出的是文件名字典序（"999" 排在 "4112" 之后），叠放次序只由 zIndex 承载，
         // 故按 zIndex 升序还原——与 buildLayout 同口径：小的在前（底层），大的在后（前景）。
         // zIndex 相同的保持字典序：Array.sort 是稳定排序，同层组件的相对次序至少是确定的。
-        .sort((a, b) => (a.zIndex ?? 0) - (b.zIndex ?? 0))
+        .sort((a, b) => compareZIndex(a.zIndex ?? 0, b.zIndex ?? 0))
     );
   }
 

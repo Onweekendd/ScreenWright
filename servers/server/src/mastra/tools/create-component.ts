@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 
 import { createTool } from "@mastra/core/tools";
-import type { ComponentPlacement } from "@screenwright/core";
+import { type ComponentPlacement, INDEX_ZERO } from "@screenwright/core";
 import { type ComponentType, upgradeSwTextOption } from "@screenwright/types";
 import { z } from "zod";
 
@@ -277,7 +277,8 @@ function prepareOne(
   template.id = Date.now() + index;
   template.left = 0;
   template.top = 0;
-  template.zIndex = 0;
+  // 占位：真正的层级由前端建组件时顶到容器最上层
+  template.zIndex = INDEX_ZERO;
   template.events = [];
   template.data = template.data ?? [];
   template.dataSource = {};

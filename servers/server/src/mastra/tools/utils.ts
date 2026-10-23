@@ -1,3 +1,4 @@
+import { normalizeZIndex } from "@screenwright/core";
 import type { ComponentFlatSchema } from "@screenwright/types/schemas";
 import type z from "zod";
 
@@ -209,7 +210,7 @@ export const getComponentDefaultConfigByModuleId = async (moduleId: number) => {
 
     // 设置默认值
     componentWithoutId.events = componentWithoutId.events || [];
-    componentWithoutId.zIndex = componentWithoutId.zIndex || 0;
+    componentWithoutId.zIndex = normalizeZIndex(componentWithoutId.zIndex);
     componentWithoutId.cbArgs = componentWithoutId.cbArgs || [];
     componentWithoutId.openFilter = componentWithoutId.openFilter ?? false;
     componentWithoutId.dataSource = componentWithoutId.dataSource || {};

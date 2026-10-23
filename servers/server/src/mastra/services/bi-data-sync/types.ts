@@ -61,7 +61,8 @@ export interface LayoutNode {
   type: string;
   prop: string;
   name: string;
-  zIndex: number;
+  /** 叠放层级：字符串排序键，越大越靠上，按字符串比较 */
+  zIndex: string;
   rectPx: LayoutRect;
   grid: LayoutGridArea;
   /** 仅容器组件（分组/动态面板）有；叶子组件无此字段 */

@@ -1,3 +1,4 @@
+import { legacyNumberToZIndex } from "@screenwright/core";
 import { AdaptationType, type PanelEnum, type PanelState, type SystemComponentProps } from "@screenwright/types";
 
 import {
@@ -128,7 +129,7 @@ export class FtPanelStrategy implements ConvertStrategy {
     };
     component.panelData = [panelStates];
     component.activeStatusId = panelStates ? panelStates.id : null;
-    component.zIndex = zIndex ?? depth;
+    component.zIndex = legacyNumberToZIndex(zIndex ?? depth);
 
     return { component, message: "成功转换为 FtPanel" };
   }

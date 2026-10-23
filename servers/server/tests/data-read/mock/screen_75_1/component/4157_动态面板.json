@@ -91,7 +91,7 @@
   "top": 363,
   "showSubComponent": false,
   "id": 4157,
-  "zIndex": 2,
+  "zIndex": "a2",
   "verticalConst": "Top",
   "horizontalConst": "Left",
   "parentDynamicPanelId": [],

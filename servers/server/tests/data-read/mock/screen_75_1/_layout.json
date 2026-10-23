@@ -18,7 +18,7 @@
       "type": "条形图",
       "prop": "echartstripBar",
       "name": "条形图",
-      "zIndex": 0,
+      "zIndex": "a0",
       "rectPx": {
         "x": 681,
         "y": 592,
@@ -37,7 +37,7 @@
       "type": "条形图",
       "prop": "echartstripBar",
       "name": "条形图",
-      "zIndex": 0,
+      "zIndex": "a0",
       "rectPx": {
         "x": 261,
         "y": 592,
@@ -56,7 +56,7 @@
       "type": "分组",
       "prop": "sw-folder",
       "name": "分组",
-      "zIndex": 1,
+      "zIndex": "a1",
       "rectPx": {
         "x": 0,
         "y": 13,
@@ -81,7 +81,7 @@
       "type": "动态面板",
       "prop": "sw-panel",
       "name": "动态面板",
-      "zIndex": 2,
+      "zIndex": "a2",
       "rectPx": {
         "x": 1261,
         "y": 363,

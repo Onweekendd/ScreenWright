@@ -85,7 +85,7 @@ async function executeEditFiles(
  * 顺带这份 fixture 里 4152 是个真实的顶层组件，比手搓的最小对象更贴近生产。
  */
 const SCREEN_FIXTURE = path.resolve(__dirname, "..", "..", "data-read", "mock", "screen_75_1");
-/** fixture 里被编辑的那个组件（顶层条形图），它的 zIndex 落盘值为 0 */
+/** fixture 里被编辑的那个组件（顶层条形图），它的 zIndex 落盘值为 "a0" */
 const FIXTURE_COMPONENT_ID = 4152;
 const FIXTURE_COMPONENT_REL = path.join("component", "4152_条形图.json");
 
@@ -275,15 +275,18 @@ describe("edit_files 前端同步路径", () => {
     const filePath = await componentTree();
     const payloads: Array<Record<string, unknown>> = [];
 
-    await executeEditFiles([{ path: filePath, edits: [{ old_string: '"zIndex": 0', new_string: '"zIndex": 9' }] }], {
-      toolCallId: "component",
-      onSuspend: (payload) => payloads.push(payload)
-    });
+    await executeEditFiles(
+      [{ path: filePath, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' }] }],
+      {
+        toolCallId: "component",
+        onSuspend: (payload) => payloads.push(payload)
+      }
+    );
 
     expect(payloads).toHaveLength(1);
     expect(payloads[0]).toMatchObject({
       type: SuspendType.PushComponentUpdate,
-      component: { id: FIXTURE_COMPONENT_ID, zIndex: 9 },
+      component: { id: FIXTURE_COMPONENT_ID, zIndex: "a9" },
       replacements: 1
     });
   });
@@ -293,14 +296,14 @@ describe("edit_files 前端同步路径", () => {
     const payloads: Array<Record<string, unknown>> = [];
 
     const result = (await executeEditFiles(
-      [{ path: filePath, edits: [{ old_string: '"zIndex": 0', new_string: '"zIndex": "not-a-number"' }] }],
+      [{ path: filePath, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": 5' }] }],
       { toolCallId: "component-invalid", onSuspend: (payload) => payloads.push(payload) }
     )) as { success: boolean; results: Array<{ validationErrors?: string[] }> };
 
     expect(payloads).toHaveLength(0);
     expect(result.success).toBe(false);
     expect(result.results[0].validationErrors?.length).toBeGreaterThan(0);
-    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": 0');
+    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": "a0"');
   });
 
   it("改组件的 title（类型标识）被拒绝：不挂起、不落盘，提示改 name", async () => {
@@ -359,7 +362,7 @@ describe("edit_files resume 结算", () => {
     const toolCallId = "resume-component-ok";
     const { payload, files } = await suspendOnce(
       filePath,
-      { old_string: '"zIndex": 0', new_string: '"zIndex": 9' },
+      { old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' },
       toolCallId
     );
 
@@ -378,7 +381,7 @@ describe("edit_files resume 结算", () => {
     const toolCallId = "resume-component-fail";
     const { payload, files } = await suspendOnce(
       filePath,
-      { old_string: '"zIndex": 0', new_string: '"zIndex": 9' },
+      { old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' },
       toolCallId
     );
 
@@ -395,7 +398,7 @@ describe("edit_files resume 结算", () => {
     expect(result.success).toBe(false);
     expect(result.results[0].frontendSynced).toBe(false);
     expect(result.results[0].message).toContain("前端离线");
-    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": 0');
+    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": "a0"');
   });
 
   it("过滤器保存成功时标记 frontendSynced", async () => {
@@ -451,14 +454,14 @@ describe("edit_files resume 结算", () => {
 
     const { payload } = await suspendOnce(
       filePath,
-      { old_string: '"zIndex": 0', new_string: '"zIndex": 9' },
+      { old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' },
       "ask-not-written-yet",
       AgentMode.ASK_BEFORE_EDIT
     );
 
     // 审批框里已经能看到改完的样子（组件已过 core），但磁盘还是原样
     expect(payload.type).toBe(SuspendType.AskApprovalPushComponentUpdate);
-    expect(payload.component).toMatchObject({ id: FIXTURE_COMPONENT_ID, zIndex: 9 });
+    expect(payload.component).toMatchObject({ id: FIXTURE_COMPONENT_ID, zIndex: "a9" });
     await expect(fsp.readFile(filePath, "utf8")).resolves.toBe(before);
   });
 
@@ -468,7 +471,7 @@ describe("edit_files resume 结算", () => {
     const toolCallId = "resume-rejected";
     const { payload, files } = await suspendOnce(
       filePath,
-      { old_string: '"zIndex": 0', new_string: '"zIndex": 9' },
+      { old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' },
       toolCallId,
       AgentMode.ASK_BEFORE_EDIT
     );
@@ -545,7 +548,7 @@ describe("edit_files resume 结算", () => {
     const toolCallId = "resume-approved";
     const { payload, files } = await suspendOnce(
       filePath,
-      { old_string: '"zIndex": 0', new_string: '"zIndex": 9' },
+      { old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' },
       toolCallId,
       AgentMode.ASK_BEFORE_EDIT
     );
@@ -558,7 +561,7 @@ describe("edit_files resume 结算", () => {
 
     expect(result.success).toBe(true);
     expect(result.results[0].frontendSynced).toBe(true);
-    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": 9');
+    await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": "a9"');
   });
 
   it("vue-part 推送成功时通过组件 core 回写 SFC，并保留 JSON 文件指针", async () => {

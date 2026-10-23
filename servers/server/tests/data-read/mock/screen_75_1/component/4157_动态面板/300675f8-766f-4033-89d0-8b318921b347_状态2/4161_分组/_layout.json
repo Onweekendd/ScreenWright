@@ -20,7 +20,7 @@
       "type": "条形图",
       "prop": "echartstripBar",
       "name": "条形图",
-      "zIndex": 2,
+      "zIndex": "a2",
       "rectPx": {
         "x": 0,
         "y": 0,
@@ -39,7 +39,7 @@
       "type": "排名图",
       "prop": "echartrank",
       "name": "排名图",
-      "zIndex": 1,
+      "zIndex": "a1",
       "rectPx": {
         "x": 0,
         "y": 300,

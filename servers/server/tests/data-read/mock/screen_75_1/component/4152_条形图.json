@@ -367,7 +367,7 @@
   "id": 4152,
   "left": 681,
   "top": 592,
-  "zIndex": 0,
+  "zIndex": "a0",
   "cbArgs": [],
   "_draftId": 1787306377502,
   "verticalConst": "Top",

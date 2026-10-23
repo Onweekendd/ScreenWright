@@ -1,3 +1,4 @@
+import { compareZIndex, INDEX_ZERO } from "@screenwright/core";
 import type { ComponentType, ParsedLargeScreenInfo } from "@screenwright/types";
 
 import { flattenComponents, summarizeSubtree } from "./component-tree";
@@ -37,8 +38,8 @@ const buildAsciiMap = (components: LayoutNode[], cols = GRID_COLS, rows = GRID_R
 
   const items = components.map((n, i) => ({ n, key: ASCII_KEYS[i] ?? "#" }));
 
-  // zIndex 小的先画（底层），大的后画（前景覆盖），与运行时渲染顺序一致
-  for (const { n, key } of [...items].sort((a, b) => a.n.zIndex - b.n.zIndex)) {
+  // zIndex 小的先画（底层），大的后画（前景覆盖），与运行时渲染顺序一致（zIndex 是字符串键，按字符串比较）
+  for (const { n, key } of [...items].sort((a, b) => compareZIndex(a.n.zIndex, b.n.zIndex))) {
     const c0 = Math.max(1, n.grid.colStart);
     const c1 = Math.min(cols, n.grid.colEnd);
     const r0 = Math.max(1, n.grid.rowStart);
@@ -54,7 +55,7 @@ const buildAsciiMap = (components: LayoutNode[], cols = GRID_COLS, rows = GRID_R
 
   // 检测被遮：像素矩形包含判断——某个更高 zIndex 的组件的 rectPx 完全包含当前组件时才标 [被遮]
   // 不用网格判断，避免网格粗糙导致误判（格子共用 ≠ 实际像素重叠）
-  const sortedByZ = [...items].sort((a, b) => a.n.zIndex - b.n.zIndex);
+  const sortedByZ = [...items].sort((a, b) => compareZIndex(a.n.zIndex, b.n.zIndex));
   const coveredIds = new Set<string | number>();
   for (let i = 0; i < sortedByZ.length; i++) {
     const { x, y, w, h } = sortedByZ[i].n.rectPx;
@@ -97,13 +98,13 @@ const buildAsciiMap = (components: LayoutNode[], cols = GRID_COLS, rows = GRID_R
   const legend = items
     .map(({ n, key }) => {
       const covered = coveredIds.has(n.id) ? " [被遮]" : "";
-      return `${key} = ${n.name || n.id}（${n.type || n.prop}，z${n.zIndex}${isFull(n) ? "，铺满" : ""}${childrenStr(n)}，id ${n.id}）${covered}`;
+      return `${key} = ${n.name || n.id}（${n.type || n.prop}，z=${n.zIndex}${isFull(n) ? "，铺满" : ""}${childrenStr(n)}，id ${n.id}）${covered}`;
     })
     .join("\n");
 
   const stackOrder = [...items]
-    .sort((a, b) => a.n.zIndex - b.n.zIndex)
-    .map(({ n, key }) => `${key}-${n.name || n.id}(z${n.zIndex},${posStr(n)})`)
+    .sort((a, b) => compareZIndex(a.n.zIndex, b.n.zIndex))
+    .map(({ n, key }) => `${key}-${n.name || n.id}(z=${n.zIndex},${posStr(n)})`)
     .join(" → ");
 
   return `${gridStr}\n\n图例（· = 空白）：\n${legend}\n\n层叠顺序（底→顶）：${stackOrder}`;
@@ -129,7 +130,7 @@ const buildLayoutNode = (comp: ComponentType, width: number, height: number, gri
     type: comp.title ?? "",
     prop: comp.component.prop,
     name: comp.name ?? comp.title ?? "",
-    zIndex: comp.zIndex ?? 0,
+    zIndex: comp.zIndex ?? INDEX_ZERO,
     rectPx: { x: round3(left), y: round3(top), w: compW, h: compH },
     grid: {
       colStart: Math.floor(left / grid.colPx) + 1,

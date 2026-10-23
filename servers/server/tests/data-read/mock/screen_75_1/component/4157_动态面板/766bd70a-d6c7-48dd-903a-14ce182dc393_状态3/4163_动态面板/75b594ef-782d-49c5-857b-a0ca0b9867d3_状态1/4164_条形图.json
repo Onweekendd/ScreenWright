@@ -367,7 +367,7 @@
   "id": 4164,
   "left": 0,
   "top": 0,
-  "zIndex": 1,
+  "zIndex": "a1",
   "parentDynamicPanelId": [
     4157,
     4163

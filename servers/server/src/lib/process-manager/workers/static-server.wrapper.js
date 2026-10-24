@@ -8,4 +8,4 @@
 const tsx = require("tsx");
 
 // 加载 TypeScript worker
-require("./static-server.worker.ts");
+require("./static-server.worker");

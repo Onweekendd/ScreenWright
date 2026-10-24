@@ -5,55 +5,54 @@
         <div class="welcome-glow" />
 
         <div class="welcome-header animate-item" style="--i: 0">
-          <span class="header-emoji">🎉</span>
-          <h2 class="welcome-title">欢迎使用 Screenwright AI 创作智能体！</h2>
+          <h2 class="welcome-title">你好呀，想做一块什么样的大屏？</h2>
+          <p class="welcome-subtitle">说说你的想法就行，我来帮你搭建，也能帮你画素材、让画面动起来。</p>
         </div>
 
-        <p class="welcome-desc animate-item" style="--i: 1">
-          您可以直接用自然语言描述大屏创作需求，例如说明行业场景、布局样式、视觉风格、所需组件、使用用途。
-        </p>
-
-        <div class="welcome-guide animate-item" style="--i: 2">
-          <div class="guide-title">
-            <span class="guide-emoji">📝</span>
-            <span>操作流程指引如下：</span>
-          </div>
-          <ul class="guide-steps">
-            <li v-for="(step, idx) in steps" :key="idx" class="guide-step">
-              <span class="step-bullet">▪</span>
-              <span>{{ step }}</span>
+        <section class="welcome-section animate-item" style="--i: 1">
+          <h3 class="section-label">我能帮你</h3>
+          <ul class="capability-list">
+            <li v-for="item in capabilities" :key="item.title" class="capability-card">
+              <span class="capability-icon">{{ item.icon }}</span>
+              <div class="capability-text">
+                <span class="capability-title">{{ item.title }}</span>
+                <span class="capability-desc">{{ item.desc }}</span>
+              </div>
             </li>
           </ul>
-        </div>
+        </section>
 
-        <p class="welcome-cta animate-item" style="--i: 3">
-          <span class="cta-emoji">💡</span>
-          请说出您的大屏创作需求，开始创作吧！
-        </p>
+        <section class="welcome-section animate-item" style="--i: 2">
+          <h3 class="section-label">试试这些</h3>
+          <div class="welcome-examples">
+            <button
+              v-for="(ex, idx) in examples"
+              :key="ex.label"
+              class="example-btn"
+              :style="{ '--btn-delay': `${idx * 0.06}s` }"
+              @click="$emit('select', ex.prompt)"
+            >
+              <span class="example-label">{{ ex.label }}</span>
+              <span class="example-tags">
+                <span v-for="tag in ex.tags" :key="tag" class="example-tag" :data-tag="tag">{{ tag }}</span>
+              </span>
+            </button>
+          </div>
+        </section>
 
-        <div class="welcome-examples animate-item" style="--i: 4">
-          <button
-            v-for="(ex, idx) in examples"
-            :key="idx"
-            class="example-btn"
-            :style="{ '--btn-delay': `${idx * 0.06}s` }"
-            @click="$emit('select', ex.prompt)"
-          >
-            {{ ex.label }}
-          </button>
-        </div>
+        <p class="welcome-hint animate-item" style="--i: 3">也可以直接在下面输入你的想法，或贴一张参考图。</p>
       </div>
     </div>
   </Transition>
 </template>
 
 <script setup lang="ts">
-import type { WelcomeExample } from "../hooks/useWelcomeScreen";
+import type { WelcomeCapability, WelcomeExample } from "../hooks/useWelcomeScreen";
 
 defineProps<{
   isVisible: boolean;
   examples: WelcomeExample[];
-  steps: string[];
+  capabilities: WelcomeCapability[];
 }>();
 
 defineEmits<{
@@ -77,36 +76,37 @@ defineEmits<{
   max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   position: relative;
 }
 
+// 柔和的光晕：比原来更大更淡，像背景里的一团暖光
 .welcome-glow {
   position: absolute;
-  top: -60px;
+  top: -80px;
   left: 50%;
   transform: translateX(-50%);
-  width: 280px;
-  height: 180px;
+  width: 360px;
+  height: 220px;
   background: radial-gradient(ellipse at center, $color-primary-18 0%, transparent 70%);
   pointer-events: none;
-  animation: glow-pulse 3s ease-in-out infinite alternate;
+  animation: glow-pulse 4s ease-in-out infinite alternate;
 }
 
 @keyframes glow-pulse {
   from {
-    opacity: 0.6;
-    transform: translateX(-50%) scale(0.95);
+    opacity: 0.55;
+    transform: translateX(-50%) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) scale(1.05);
+    transform: translateX(-50%) scale(1.06);
   }
 }
 
 .animate-item {
-  animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: calc(var(--i) * 0.07s);
+  animation: slide-up 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 0.08s);
 }
 
 @keyframes slide-up {
@@ -122,98 +122,87 @@ defineEmits<{
 
 .welcome-header {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
-
-  .header-emoji {
-    font-size: 20px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
 
   .welcome-title {
     margin: 0;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 600;
-    color: $color-primary-name;
     line-height: 1.4;
-    background: linear-gradient(135deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-}
-
-.welcome-desc {
-  margin: 0;
-  font-size: 12px;
-  color: $color-text-muted;
-  line-height: 1.7;
-  padding: 10px 14px;
-  background: $color-primary-5;
-  border: 1px solid $color-primary-18;
-  border-radius: 8px;
-}
-
-.welcome-guide {
-  padding: 12px 14px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid $color-lp-20;
-  border-radius: 8px;
-
-  .guide-title {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    color: $color-text-secondary;
-    margin-bottom: 8px;
-
-    .guide-emoji {
-      font-size: 14px;
-      line-height: 1;
-    }
+    color: $color-text-primary;
   }
 
-  .guide-steps {
+  .welcome-subtitle {
     margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .guide-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    font-size: 12px;
-    color: $color-text-dim;
-    line-height: 1.6;
-
-    .step-bullet {
-      color: $color-primary-60;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
+    font-size: 13px;
+    line-height: 1.7;
+    color: $color-text-muted;
   }
 }
 
-.welcome-cta {
-  margin: 0;
+.welcome-section {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-label {
+  margin: 0;
   font-size: 12px;
   font-weight: 500;
-  color: $color-text-secondary;
+  letter-spacing: 0.04em;
+  color: $color-text-dim;
+}
 
-  .cta-emoji {
-    font-size: 14px;
-    line-height: 1;
+.capability-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.capability-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+
+  .capability-icon {
     flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    background: $color-primary-18;
+    border-radius: 10px;
+  }
+
+  .capability-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .capability-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: $color-text-secondary;
+  }
+
+  .capability-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    color: $color-text-dim;
   }
 }
 
@@ -225,34 +214,66 @@ defineEmits<{
 
 .example-btn {
   width: 100%;
-  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 14px;
   text-align: left;
-  font-size: 12px;
-  color: $color-primary-name;
+  font-size: 13px;
+  color: $color-text-secondary;
   background: $color-lp-15;
-  border: 1px solid $color-lp-30;
-  border-radius: 8px;
+  border: 1px solid $color-lp-20;
+  border-radius: 14px;
   cursor: pointer;
   transition:
     background $transition-fast,
     border-color $transition-fast,
     box-shadow $transition-fast,
     transform $transition-fast;
-  animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: calc(0.28s + var(--btn-delay));
+  animation: slide-up 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: calc(0.3s + var(--btn-delay));
   line-height: 1.5;
 
   &:hover {
     background: $color-lp-25;
-    border-color: $color-lp-55;
-    box-shadow: 0 0 12px $color-primary-20;
-    transform: translateX(3px);
+    border-color: $color-lp-40;
+    box-shadow: 0 4px 16px $color-primary-20;
+    transform: translateY(-1px);
   }
 
   &:active {
-    transform: translateX(1px);
-    background: $color-lp-35;
+    transform: translateY(0);
+    background: $color-lp-30;
   }
+}
+
+.example-tags {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+// 标签用两种柔和的色调区分：生图沿用主题色，生视频用暖桃色
+.example-tag {
+  padding: 1px 8px;
+  font-size: 11px;
+  line-height: 18px;
+  border-radius: 999px;
+  color: $color-primary-name;
+  background: $color-primary-18;
+
+  &[data-tag="生视频"] {
+    color: #ffb98f;
+    background: rgba(255, 185, 143, 0.16);
+  }
+}
+
+.welcome-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: $color-text-dim;
 }
 
 // Transition

@@ -12,13 +12,11 @@
  * 复述 prompt。断言的是**任何一块能看的大屏都必须成立的性质**：
  * 组件在画布内、顶层区之间不重叠、每个组件有真实尺寸、数据不是占位词。
  *
- * 这几条恰好是 `solveLayout` 用结构保证的东西（子矩形永远落在父矩形内且互不相交），
- * 所以这条 case 同时是那个求解器的端到端回归网：它红了，要么是求解器坏了，
- * 要么是 agent 绕过工作流自己逐个 create_component 去了——两种都值得当场知道。
+ * 手动搭建同样必须满足这些布局约束，不能只完成生图而不创建可编辑组件。
  *
  * ## 会走哪条路不做限定
  *
- * agent 可以调 `requirementToBIWorkflow`，也可以老老实实逐个 `create_component`。
+ * Agent 先生成整屏概念图，再按图用 `create_component` 等工具完成可编辑大屏。
  * **终态达标就算过**，路径差异反映在 L2 指标（轮数、token）里，只看趋势不设阈值。
  * 这是刻意的：断言里写死"必须调某个工具"会让这条 case 变成工作流的实现测试，
  * 而工作流的价值本来就该由成本数据说话，不该由断言强制。
@@ -65,7 +63,17 @@ export const d1BuildFromRequirement: EvalCase = {
     const all = flattenLayers(ctx.screen.layers);
     const containers = all.filter((c) => c.component.prop === FolderEnum.group);
     const leaves = all.filter((c) => c.component.prop !== FolderEnum.group);
-    const roots = ctx.screen.layers;
+    // 正式背景与前景的正常叠放不属于内容区域重叠。
+    const roots = ctx.screen.layers.filter(
+      (c) =>
+        !(
+          ["swimg", "swvideo"].includes(c.component.prop) &&
+          c.left === 0 &&
+          c.top === 0 &&
+          c.component.width >= Number(ctx.screen.detail.width) &&
+          c.component.height >= Number(ctx.screen.detail.height)
+        )
+    );
 
     const outside = all.filter((c) => !withinCanvas(c, ctx.screen));
     const zeroSized = all.filter((c) => c.component.width <= 0 || c.component.height <= 0);
@@ -121,7 +129,7 @@ export const d1BuildFromRequirement: EvalCase = {
         detail: zeroSized.map((c) => `${c.id} ${c.component.width}×${c.component.height}`).join("；") || undefined
       },
       {
-        // 求解器的核心承诺。它红了要么求解器坏了，要么 agent 没走工作流、自己拍的坐标
+        // 检查手动组装的内容区域，背景层已在上方排除。
         name: "顶层区之间不重叠",
         passed: overlapping.length === 0,
         detail: overlapping.length === 0 ? `顶层 ${roots.length} 块` : `重叠：${overlapping.join("；")}`

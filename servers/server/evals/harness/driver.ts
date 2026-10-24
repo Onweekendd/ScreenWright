@@ -34,7 +34,7 @@ export const EVAL_RESOURCE = "eval-runner";
 
 const MAIN_SUSPEND = "data-tool-call-suspended";
 const BG_SUSPEND = "data-background-task-suspended";
-/** 工作流单向推来的组件帧（figmaToBI / requirementToBI 共用），见 node-conversion.ts */
+/** Figma 工作流单向推来的组件帧，见 node-conversion.ts */
 const NODE_CONVERSION = "data-node-conversion";
 
 /** 主 agent 工具挂起帧的 data（前端 `SuspendedToolInfo`，`useAgentBIStream.ts:15`）。 */

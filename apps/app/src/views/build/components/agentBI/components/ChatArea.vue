@@ -1,7 +1,12 @@
 <template>
   <div class="main-area">
     <div class="box-content" ref="msgLayout" @scroll.passive="handleScroll">
-      <WelcomeScreen :is-visible="showWelcome" :examples="examples" :steps="steps" @select="handleExampleSelect" />
+      <WelcomeScreen
+        :is-visible="showWelcome"
+        :examples="examples"
+        :capabilities="capabilities"
+        @select="handleExampleSelect"
+      />
       <div v-if="isLoadingMoreMessages" class="load-more-indicator">
         <span>加载更多...</span>
       </div>
@@ -62,7 +67,7 @@ const { executeRollbackPlan, describeRollbackOps } = useRollbackExecutor();
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const { isVisible: showWelcome, examples, steps } = useWelcomeScreen(messages);
+const { isVisible: showWelcome, examples, capabilities } = useWelcomeScreen(messages);
 
 // 欢迎页示例点击发出的消息包一层 <welcome> 标签，供 agent 识别为
 // “从零创建大屏”意图，UserMessage.vue 展示时会提炼出标签内的纯文本

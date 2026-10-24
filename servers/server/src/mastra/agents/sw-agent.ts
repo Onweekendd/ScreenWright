@@ -8,9 +8,9 @@ import { loadPrompt } from "@/agent-resources/prompts";
 
 import { CompactionProcessor } from "../lib/compaction/processors/compaction";
 import { ToolResultCleanupProcessor } from "../lib/compaction/processors/toolResultCleanup";
+import { InlineBackgroundTaskResults } from "../processors/inlineBackgroundTaskResults";
 import { keepBgDelegationsVisible } from "../processors/keepBgDelegationsVisible";
 import { ModeGuardProcessor } from "../processors/mode-guard.processor";
-import { InlineBackgroundTaskResults } from "../processors/inlineBackgroundTaskResults";
 import { ToolCallArgsSanitizer } from "../processors/tool-call-args-sanitizer.processor";
 import { resolveReasoningModel } from "../provider/model-registry";
 import { memory } from "../storage/storage";
@@ -46,7 +46,6 @@ import { todoWrite } from "../tools/todo";
 import { ungroupComponentTool } from "../tools/ungroup-component";
 import { AgentMode, type CommonRunTimeType } from "../types/bi-chat";
 import { figmaToBIV2Workflow } from "../workflows/figma-to-bi/figma-to-bi-v2-workflow";
-import { requirementToBIWorkflow } from "../workflows/requirement-to-bi/requirement-to-bi-workflow";
 import { fullWorkspace } from "../workspace";
 import { dataFlowVerificationAgent } from "./data-flow-verification-agent";
 import { swExecutorAgent } from "./sw-executor-agent";
@@ -279,10 +278,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
     } as unknown as DynamicArgument<Record<string, SubAgent<string, CommonRunTimeType>>, CommonRunTimeType>,
 
     workflows: {
-      figmaToBIV2Workflow,
-      // 从零构建：没有设计稿、纯文字需求时走它。入参是**已与用户确认过的内容清单**，
-      // 需求收敛与确认留在对话层做（见该工作流的头注释）。
-      requirementToBIWorkflow
+      figmaToBIV2Workflow
     },
 
     // 后台任务 opt-in：最小可用版本只把大屏并发施工子 agent 放后台。

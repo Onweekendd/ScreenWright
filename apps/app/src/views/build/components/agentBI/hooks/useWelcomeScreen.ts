@@ -1,43 +1,67 @@
-import { computed } from "vue";
+import { computed, type Ref } from "vue";
 
 import type { UIMessage } from "ai";
+
+/** 示例的能力标签：欢迎页借它告诉用户「这条会用到什么」 */
+export type WelcomeTag = "生图" | "生视频";
 
 export interface WelcomeExample {
   label: string;
   prompt: string;
+  tags: WelcomeTag[];
 }
 
-export const WELCOME_STEPS = [
-  "输入您的大屏制作需求；",
-  "自动解析需求，并为您推荐 3 套适配模板；",
-  "选择对应模板后，系统自动完成风格、布局、组件语义转化，生成初版大屏；",
-  "大屏生成后，您可继续提出修改指令，对组件样式、模拟数据等进行二次编辑。"
+export interface WelcomeCapability {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+export const WELCOME_CAPABILITIES: WelcomeCapability[] = [
+  {
+    icon: "🎨",
+    title: "画效果图和素材",
+    desc: "描述想要的风格，生成背景、卡片底板、插画和图标，自动收进素材库的「AI 生成」分组"
+  },
+  {
+    icon: "🎬",
+    title: "让画面动起来",
+    desc: "把静态背景变成流动的光影、云海和粒子，做成循环播放的动态背景"
+  },
+  {
+    icon: "🧩",
+    title: "搭出可编辑的大屏",
+    desc: "把效果图搭成真正的大屏，图表、文字、数据随时都能改"
+  }
 ];
 
 export const WELCOME_EXAMPLES: WelcomeExample[] = [
   {
-    label: "生成电力运维监控大屏",
+    label: "生成一块夏至节气主题大屏",
+    tags: ["生图"],
     prompt:
-      "电力运维监控大屏，深色科技风，左右双侧看板布局，包含电力负荷数据卡片、负荷趋势折线图、站点供电量柱状图、故障预警列表，用于日常运维监控"
+      "夏至节气主题大屏，清新柔和的中国风水墨插画风，青山、荷塘、石桥的全屏背景，书法标题，数据卡片用淡雅的卷轴云纹底板，包含气温趋势、节气民俗介绍、游客客流统计。背景和卡片底板请先生成效果图素材"
   },
   {
-    label: "生成水利防汛态势大屏",
+    label: "做一块会动的海洋生态展示屏",
+    tags: ["生图", "生视频"],
     prompt:
-      "水利防汛态势大屏，深色科技风格，左右分栏布局，包含雨情水位统计卡片、汛情趋势图表、站点流量对比图、预警处置列表，用于防汛态势感知与应急监测"
+      "海洋生态主题展示大屏，柔和的蓝绿渐变，全屏背景用生成的海面光影图，并把背景做成缓缓流动的循环动态视频，上面叠物种数量统计、保护区分布和水质指标数据卡片，整体清新治愈"
   },
   {
-    label: "生成工业制造生产监控大屏",
+    label: "生成文旅景区客流大屏",
+    tags: ["生图"],
     prompt:
-      "工业制造生产监控大屏，深色工业科技风，左右双侧看板布局，包含产能指标卡片、生产良率趋势图、设备运行负载柱状图、设备故障告警列表，用于车间生产实时管控"
+      "文旅景区客流与口碑大屏，清新治愈的插画风，暖色调，圆润的卡片，包含客流趋势折线图、景点热度排行、游客满意度环形图，用于景区日常运营展示"
   }
 ];
 
-export function useWelcomeScreen(messages: import("vue").Ref<UIMessage[]>) {
+export function useWelcomeScreen(messages: Ref<UIMessage[]>) {
   const isVisible = computed(() => messages.value.length === 0);
 
   return {
     isVisible,
     examples: WELCOME_EXAMPLES,
-    steps: WELCOME_STEPS
+    capabilities: WELCOME_CAPABILITIES
   };
 }

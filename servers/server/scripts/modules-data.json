@@ -1584,7 +1584,7 @@
     "id": 155,
     "user_id": null,
     "type": 0,
-    "java_script": "{\"title\":\"科技面板矩形\",\"name\":\"科技面板矩形\",\"display\":true,\"icon\":\"icon-rect\",\"img\":\"/img/rect-tech-panel.png\",\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"time\":30,\"dataType\":0,\"dataMethod\":\"get\",\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"data\":[],\"dataRemark\":[],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":200,\"height\":120,\"name\":\"sw-box\",\"prop\":\"swBox\"},\"unitPavenType\":\"\",\"option\":{\"background\":\"url('/img/rect-tech-panel.png') center / 100% 100% no-repeat\"}}",
+    "java_script": "{\"title\":\"科技面板矩形\",\"name\":\"科技面板矩形\",\"display\":true,\"icon\":\"icon-rect\",\"img\":\"/img/rect-tech-panel.png\",\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"time\":30,\"dataType\":0,\"dataMethod\":\"get\",\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"data\":[],\"dataRemark\":[],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":200,\"height\":120,\"name\":\"sw-box\",\"prop\":\"swBox\"},\"unitPavenType\":\"\",\"option\":{}}",
     "level": 0,
     "second_level_menu": "",
     "first_level_menu": "媒体",

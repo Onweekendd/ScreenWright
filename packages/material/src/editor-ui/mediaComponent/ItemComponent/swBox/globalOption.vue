@@ -48,11 +48,11 @@
   </el-form-item>
 
   <el-form-item label="切角" :label-width="firstLabelWidth">
-    <el-input v-model="option.clipPath" placeholder="如 polygon(12px 0,100% 0,100% 100%,0 100%,0 12px)" @change="update" />
+    <sw-input v-model="option.clipPath" placeholder="如 polygon(12px 0,100% 0,100% 100%,0 100%,0 12px)" @change="update" />
   </el-form-item>
 
   <el-form-item label="变换" :label-width="firstLabelWidth">
-    <el-input v-model="option.transform" placeholder="CSS transform" @change="update" />
+    <sw-input v-model="option.transform" placeholder="CSS transform" @change="update" />
   </el-form-item>
 
   <sw-collapse-item title="动画" v-model="animationEnabled" showIcon>
@@ -88,6 +88,7 @@
 import { computed } from "vue";
 
 import { SwCollapseItem } from "@screenwright/ui/collapse-item";
+import { SwInput } from "@screenwright/ui/input";
 import { SwInputNumber } from "@screenwright/ui/input-number";
 import { SwSingleColorPicker } from "@screenwright/ui/single-color-picker";
 import { SwSlider } from "@screenwright/ui/slider";

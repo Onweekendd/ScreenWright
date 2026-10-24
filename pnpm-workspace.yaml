@@ -12,3 +12,6 @@ onlyBuiltDependencies:
   - sharp
   - simple-git-hooks
   - vue-demi
+
+patchedDependencies:
+  '@mastra/core': patches/@mastra__core.patch

@@ -25,13 +25,13 @@ type dataChart = ThreePieDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：`echartthreePieGlobal.vue` / `echartthreePieSeries.vue`（引用 echartthreeQuartersPieSeries.vue） / `echartthreePieAttrs.vue`
+基于配置文件：`echartthreePieGlobal.vue` / `echartthreePieSeries.vue`（引用 echartPieSeriesShared.vue） / `echartthreePieAttrs.vue`
 
 3D饼图使用 `pieOptions.slice(0, 3)` 配置选项：**全局、饼图属性、系列**
 
 ### 系列配置 (5+字段)
 
-通过 echartthreeQuartersPieSeries 配置：
+通过 echartPieSeriesShared 配置：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|

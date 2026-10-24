@@ -1,5 +1,5 @@
 <template>
-  <echartzebraBarAndLineSeries
+  <echartLineAndBarSeriesShared
     :showSeriesWidth="false"
     :showIntervalColor="false"
     :useSingleColorPicker="true"
@@ -13,5 +13,5 @@
 </template>
 
 <script setup lang="ts">
-import echartzebraBarAndLineSeries from "./echartzebraBarAndLineSeries.vue";
+import echartLineAndBarSeriesShared from "./echartLineAndBarSeriesShared.vue";
 </script>

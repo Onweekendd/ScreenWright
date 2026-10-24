@@ -12,7 +12,6 @@ import {
   lineEchartEnum,
   mediaEnum,
   pieEchartEnum,
-  projectEchartEnum,
   scatterEchartEnum,
   sceneEnum,
   textEnum,
@@ -187,7 +186,6 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     BarEchartEnum.echartbothWayStripBar,
     BarEchartEnum.echartlineAndBar,
     BarEchartEnum.echartpictorialbar,
-    BarEchartEnum.echartrank,
     lineEchartEnum.echartline,
     lineEchartEnum.echartareaLine,
     pieEchartEnum.echartpie,
@@ -195,12 +193,6 @@ export const Event2ComponentType: Record<EventTypeEnum, AllComponentType[]> = {
     pieEchartEnum.echartpluralRosePie,
     pieEchartEnum.echartthreePie,
     scatterEchartEnum.echartscatter,
-    projectEchartEnum.echartzebra,
-    projectEchartEnum.echartzebra2,
-    projectEchartEnum.echartrankBar,
-    projectEchartEnum.echartthreeQuartersPie,
-    projectEchartEnum.echartthinBar,
-    projectEchartEnum.echartscalePie,
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
@@ -365,7 +357,6 @@ export const EncodeEvent2ComponentType: Record<EncodeEventTypeEnum, AllComponent
     BarEchartEnum.echartbothWayStripBar,
     BarEchartEnum.echartlineAndBar,
     BarEchartEnum.echartpictorialbar,
-    BarEchartEnum.echartrank,
     lineEchartEnum.echartline,
     lineEchartEnum.echartareaLine,
     pieEchartEnum.echartpie,
@@ -373,12 +364,6 @@ export const EncodeEvent2ComponentType: Record<EncodeEventTypeEnum, AllComponent
     pieEchartEnum.echartpluralRosePie,
     pieEchartEnum.echartthreePie,
     scatterEchartEnum.echartscatter,
-    projectEchartEnum.echartzebra,
-    projectEchartEnum.echartzebra2,
-    projectEchartEnum.echartrankBar,
-    projectEchartEnum.echartthreeQuartersPie,
-    projectEchartEnum.echartthinBar,
-    projectEchartEnum.echartscalePie,
     interactiveEnum.Subtabs,
     interactiveEnum.MultiSubtabs,
     interactiveEnum.RollSubtabs,
@@ -420,7 +405,6 @@ export const allowEventComponentList = [
   BarEchartEnum.echartbothWayStripBar, // 双向条形图
   BarEchartEnum.echartlineAndBar, // 折线柱状图
   BarEchartEnum.echartpictorialbar, // 象形图
-  BarEchartEnum.echartrank, // 排名图
   lineEchartEnum.echartline, // 折线图
   lineEchartEnum.echartareaLine, // 面积折线图
   pieEchartEnum.echartpie, // 饼图
@@ -428,12 +412,6 @@ export const allowEventComponentList = [
   pieEchartEnum.echartpluralRosePie, // 层叠玫瑰图
   pieEchartEnum.echartthreePie, // 3D饼图
   scatterEchartEnum.echartscatter, // 散点图
-  projectEchartEnum.echartzebra, // 斑马柱状图
-  projectEchartEnum.echartzebra2, // 斑马柱状图2
-  projectEchartEnum.echartrankBar, // 排名图
-  projectEchartEnum.echartthreeQuartersPie, // 环形饼图
-  projectEchartEnum.echartthinBar, // 细长柱状图
-  projectEchartEnum.echartscalePie, // 刻度饼图
   interactiveEnum.Subtabs,
   "vue-part",
   interactiveEnum.MultiSubtabs,

@@ -27,7 +27,6 @@ import echarts from "./utils";
 //   pieEchartType,
 //   lineEchartsType,
 //   scatterEchartType,
-//   projectEchartType
 // } from "@/views/build/components/buildRender/core/BaseComponent/type"
 type EchartsInstance = echarts.ECharts;
 type EchartsDispatchAction = "downplay" | "highlight" | "showTip";

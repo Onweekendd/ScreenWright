@@ -43,7 +43,6 @@ export {
   otherEchartEnumSchema,
   PanelEnumSchema,
   pieEchartEnumSchema,
-  projectEchartEnumSchema,
   ringEchartEnumSchema,
   scatterEchartEnumSchema,
   textEnumSchema,

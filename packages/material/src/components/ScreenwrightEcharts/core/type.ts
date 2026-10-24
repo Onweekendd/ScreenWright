@@ -9,7 +9,6 @@ import {
   LineEchartEnum,
   OtherEchartEnum,
   PieEchartEnum,
-  ProjectEchartEnum,
   RingEchartEnum,
   ScatterEchartEnum,
 } from "@screenwright/types";
@@ -18,7 +17,6 @@ import {
 export { BarEchartEnum as BarEchartType };
 export { PieEchartEnum as pieEchartType };
 export { ScatterEchartEnum as scatterEchartType };
-export { ProjectEchartEnum as projectEchartType };
 export { LineEchartEnum as lineEchartsType };
 export { OtherEchartEnum as otherEchartType };
 export { RingEchartEnum as ringEchartType };
@@ -32,7 +30,6 @@ export type componentType =
   | LineEchartEnum
   | ScatterEchartEnum
   | OtherEchartEnum
-  | ProjectEchartEnum
   | RingEchartEnum
   | IndicatorEchartEnum;
 
@@ -42,12 +39,12 @@ export const renderEchartComponentType: componentType[] = [
   BarEchartEnum.echartstripBar,
   BarEchartEnum.echartlineAndBar,
   BarEchartEnum.echartpictorialbar,
-  BarEchartEnum.echartrank,
   BarEchartEnum.echartbar,
   PieEchartEnum.echartpie,
   PieEchartEnum.echartloopRingPie,
   PieEchartEnum.echartpluralRosePie,
   PieEchartEnum.echartthreePie,
+  PieEchartEnum.echartthreeQuartersPie,
   LineEchartEnum.echartareaLine,
   LineEchartEnum.echartline,
   ScatterEchartEnum.echartscatter,
@@ -56,20 +53,6 @@ export const renderEchartComponentType: componentType[] = [
   OtherEchartEnum.echartfunnel,
   OtherEchartEnum.echartradar,
   OtherEchartEnum.echartsankey,
-  ProjectEchartEnum.echartzebra2,
-  ProjectEchartEnum.echartdoubleValueLine,
-  ProjectEchartEnum.echartgrowthRateBar,
-  ProjectEchartEnum.echarteffectScatter,
-  ProjectEchartEnum.echartoverlapBar,
-  ProjectEchartEnum.echartzebraBarAndLine,
-  ProjectEchartEnum.echartthreedBarAndLine,
-  ProjectEchartEnum.echartzebra,
-  ProjectEchartEnum.echartthreedBar,
-  ProjectEchartEnum.echartscalePie,
-  ProjectEchartEnum.echartmultiplyRankBar,
-  ProjectEchartEnum.echartrankBar,
-  ProjectEchartEnum.echartthreeQuartersPie,
-  ProjectEchartEnum.echartthinBar,
   IndicatorEchartEnum.echartprogress,
   IndicatorEchartEnum.echartgauge,
   IndicatorEchartEnum.echartliquidFill,

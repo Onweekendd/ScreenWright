@@ -1,6 +1,6 @@
 import { BaseChart } from "../BaseChart/index";
 import type { BaseChartProps } from "../type";
-import { projectEchartType } from "../type";
+import { pieEchartType } from "../type";
 
 class EchartthreeQuartersPie extends BaseChart {
   // 原始数据的option
@@ -13,7 +13,7 @@ class EchartthreeQuartersPie extends BaseChart {
   constructor() {
     const defaultChartProps = {
       name: "环形饼图",
-      prop: projectEchartType.echartthreeQuartersPie,
+      prop: pieEchartType.echartthreeQuartersPie,
       img: "/img/threeQuartersPie.25154957.png",
       groupName: "项目"
     };

@@ -16,8 +16,6 @@ import {
   otherEchartEnum,
   PieEchartEnum,
   pieEchartEnum,
-  ProjectEchartEnum,
-  projectEchartEnum,
   RingEchartEnum,
   ringEchartEnum,
   ScatterEchartEnum,
@@ -36,8 +34,6 @@ export {
   otherEchartEnum,
   PieEchartEnum,
   pieEchartEnum,
-  ProjectEchartEnum,
-  projectEchartEnum,
   RingEchartEnum,
   ringEchartEnum,
   ScatterEchartEnum,
@@ -53,7 +49,6 @@ export type {
   lineEchartsType,
   otherEchartType,
   pieEchartType,
-  projectEchartType,
   ringEchartType,
   scatterEchartType
 } from "./echart";
@@ -124,7 +119,6 @@ export const allComponentType: AllComponentType[] = [
   ...Object.values(LineEchartEnum),
   ...Object.values(OtherEchartEnum),
   ...Object.values(PieEchartEnum),
-  ...Object.values(ProjectEchartEnum),
   ...Object.values(RingEchartEnum),
   ...Object.values(ScatterEchartEnum),
   ...Object.values(PanelEnum),

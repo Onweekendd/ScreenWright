@@ -26,13 +26,13 @@ type dataChart = LoopRingPieDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：`echartloopRingPieGlobal.vue` / `echartloopRingPieSeries.vue`（引用 echartthreeQuartersPieSeries.vue） / `echartloopRingPieLoopAnimation.vue` / `echartloopRingPieAttrs.vue`
+基于配置文件：`echartloopRingPieGlobal.vue` / `echartloopRingPieSeries.vue`（引用 echartPieSeriesShared.vue） / `echartloopRingPieLoopAnimation.vue` / `echartloopRingPieAttrs.vue`
 
 轮播环形饼图是环形饼图带自动轮播展示功能的版本。
 
 ### 系列配置 (7字段)
 
-通过 echartthreeQuartersPieSeries 配置：
+通过 echartPieSeriesShared 配置：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|

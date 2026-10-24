@@ -8,7 +8,6 @@ import type {
   MediaEnum,
   PanelEnum,
   PieEchartEnum,
-  ProjectEchartEnum,
   ScatterEchartEnum,
   SceneEnum,
   TextEnum,
@@ -403,12 +402,6 @@ interface EchartpictorialbarEvents {
   };
 }
 
-interface EchartrankEvents {
-  [key: `${BarEchartEnum.echartrank}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
 /**
  * ECharts 折线图组件事件接口
  */
@@ -463,42 +456,6 @@ interface EchartscatterEvents {
 /**
  * ECharts 项目图表组件事件接口
  */
-interface EchartzebraEvents {
-  [key: `${ProjectEchartEnum.echartzebra}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface Echartzebra2Events {
-  [key: `${ProjectEchartEnum.echartzebra2}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartrankBarEvents {
-  [key: `${ProjectEchartEnum.echartrankBar}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartthreeQuartersPieEvents {
-  [key: `${ProjectEchartEnum.echartthreeQuartersPie}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartthinBarEvents {
-  [key: `${ProjectEchartEnum.echartthinBar}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartscalePieEvents {
-  [key: `${ProjectEchartEnum.echartscalePie}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
 interface FtUnrealEngineEvents {
   [key: `${ExtendsEnum.SwUnrealEngine}-${string}`]: {
     setupBlueprintData: (throwValue: any) => void;
@@ -630,7 +587,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   EchartbothWayStripBarEvents &
   EchartlineAndBarEvents &
   EchartpictorialbarEvents &
-  EchartrankEvents &
   EchartlineEvents &
   EchartareaLineEvents &
   EchartpieEvents &
@@ -638,12 +594,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   EchartpluralRosePieEvents &
   EchartthreePieEvents &
   EchartscatterEvents &
-  EchartzebraEvents &
-  Echartzebra2Events &
-  EchartrankBarEvents &
-  EchartthreeQuartersPieEvents &
-  EchartthinBarEvents &
-  EchartscalePieEvents &
   FtVideoEvents &
   ftDigitalHumanEvents &
   ftVuePartEvents &
@@ -686,7 +636,6 @@ export type toAddEvent =
   | EchartbothWayStripBarEvents
   | EchartlineAndBarEvents
   | EchartpictorialbarEvents
-  | EchartrankEvents
   | EchartlineEvents
   | EchartareaLineEvents
   | EchartpieEvents
@@ -694,12 +643,6 @@ export type toAddEvent =
   | EchartpluralRosePieEvents
   | EchartthreePieEvents
   | EchartscatterEvents
-  | EchartzebraEvents
-  | Echartzebra2Events
-  | EchartrankBarEvents
-  | EchartthreeQuartersPieEvents
-  | EchartthinBarEvents
-  | EchartscalePieEvents
   | FtVideoEvents
   | ftDigitalHumanEvents
   | ftVuePartEvents

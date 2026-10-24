@@ -27,7 +27,7 @@ type dataChart = LineAndBarDataItem[];
 
 ## option 完整字段参考
 
-基于配置文件：`echartlineAndBarGlobal.vue` / `echartlineAndBarSeries.vue`（引用 echartzebraBarAndLineSeries.vue） / `echartlineAndBarxAxis.vue` / `echartlineAndBarTooltip.vue`
+基于配置文件：`echartlineAndBarGlobal.vue` / `echartlineAndBarSeries.vue`（引用 echartLineAndBarSeriesShared.vue） / `echartlineAndBarxAxis.vue` / `echartlineAndBarTooltip.vue`
 
 ### 系列配置 (30字段)
 

@@ -20,8 +20,11 @@
         <div class="bg-tasks__status">
           <span :class="['bg-tasks__badge', activeTask.status]">{{ statusText(activeTask.status) }}</span>
         </div>
-        <template v-for="msg in activeTask.messages.value" :key="msg.id">
-          <AssistantMessage :message="msg" :is-loading="isLastRunning(activeTask, msg)" />
+        <template v-for="(msg, index) in displayMessages" :key="msg.id">
+          <AssistantMessage
+            :message="msg"
+            :is-loading="activeTask.status === 'running' && index === displayMessages.length - 1"
+          />
         </template>
         <div v-if="!activeTask.messages.value.length" class="bg-tasks__pending">任务已派发，等待执行…</div>
       </div>
@@ -32,9 +35,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 
-import type { UIMessage } from "ai";
-
 import { useActiveAgentBISession } from "../agentBISessionContext";
+import { createAssistantMessageGrouper } from "../hooks/groupAssistantMessages";
 import type { BackgroundTaskView } from "../hooks/useBackgroundTask";
 import AssistantMessage from "./AssistantMessage.vue";
 
@@ -61,9 +63,8 @@ watch(
 
 const activeTask = computed(() => tasks.value.find((task) => task.toolCallId === activeId.value) ?? null);
 
-/** 仅最后一条消息且任务运行中时显示生成动效 */
-const isLastRunning = (task: BackgroundTaskView, msg: UIMessage) =>
-  task.status === "running" && msg === task.messages.value[task.messages.value.length - 1];
+const groupMessages = createAssistantMessageGrouper();
+const displayMessages = computed(() => groupMessages(activeTask.value?.messages.value ?? []));
 
 /** agent-swExecutorAgent → "Bi Executor Agent" */
 const formatName = (toolName: string): string => {

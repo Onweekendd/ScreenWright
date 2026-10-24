@@ -31,6 +31,7 @@ vi.mock("@/views/build/components/agentBI/components/OMBufferingPart.vue", () =>
 
 import AssistantMessage from "@/views/build/components/agentBI/components/AssistantMessage.vue";
 import ExecutionProcessBlock from "@/views/build/components/agentBI/components/ExecutionProcessBlock.vue";
+import { createAssistantMessageGrouper } from "@/views/build/components/agentBI/hooks/groupAssistantMessages";
 import { groupAssistantParts } from "@/views/build/components/agentBI/hooks/groupAssistantParts";
 
 type Part = UIMessage["parts"][number];
@@ -55,6 +56,32 @@ const mountMessage = (parts: Part[], isLoading = false) =>
   });
 
 describe("对话执行过程折叠", () => {
+  it("跨消息 ID 的连续工具共用折叠入口，续接保持展开状态并显示当前工具", async () => {
+    const group = createAssistantMessageGrouper();
+    const first: UIMessage = { id: "first", role: "assistant", parts: [thought, tool("captureCanvasTool", "capture")] };
+    const second: UIMessage = { id: "second", role: "assistant", parts: [tool("readFileTool", "read")] };
+    const wrapper = mountMessage(group([first, second])[0].parts, true);
+    try {
+      expect(wrapper.findAll(".execution-process__toggle")).toHaveLength(1);
+      expect(wrapper.find(".execution-process__toggle").text()).toContain("2 次工具调用");
+      await wrapper.find(".execution-process__toggle").trigger("click");
+      const firstTool = wrapper.find(".test-tool").element;
+      const continued: UIMessage = {
+        id: "third",
+        role: "assistant",
+        parts: [thought, tool("editFilesTool", "edit", "input-available")]
+      };
+      await wrapper.setProps({ message: message(group([first, second, continued])[0].parts) });
+      expect(wrapper.findAll(".execution-process__toggle")).toHaveLength(1);
+      expect(wrapper.find(".execution-process__toggle").attributes("aria-expanded")).toBe("true");
+      expect(wrapper.find(".execution-process__status").text()).toBe("正在调用 editFilesTool");
+      expect(wrapper.find(".test-tool").element).toBe(firstTool);
+      expect(wrapper.findAll(".test-tool").map((item) => item.text())).toEqual(["capture", "read", "edit"]);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
   it("工具默认折叠时仍有扫光，展开、收起不撤销，消息卸载后清理", async () => {
     const editing = {
       ...tool("editFilesTool", "edit", "input-available"),

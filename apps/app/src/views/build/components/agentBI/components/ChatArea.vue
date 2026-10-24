@@ -10,14 +10,14 @@
       <div v-if="isLoadingMoreMessages" class="load-more-indicator">
         <span>加载更多...</span>
       </div>
-      <template v-for="item in messages" :key="item.id">
+      <template v-for="(item, index) in displayMessages" :key="item.id">
         <UserMessage
           v-if="item.role === 'user'"
           :parts="item.parts"
           :can-undo="canUndoMessage(item.id)"
           @undo="handleUndo(item.id)"
         />
-        <AssistantMessage v-else :message="item" :is-loading="isStreaming && item === messages[messages.length - 1]" />
+        <AssistantMessage v-else :message="item" :is-loading="isStreaming && index === displayMessages.length - 1" />
       </template>
       <!-- 已发送消息但首个 chunk 还未到达时，显示 loading 占位行 -->
       <AssistantMessage
@@ -38,6 +38,7 @@ import type { UIMessage } from "ai";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 import { useActiveAgentBISession } from "../agentBISessionContext";
+import { createAssistantMessageGrouper } from "../hooks/groupAssistantMessages";
 import { useAgentBIVersionHistory } from "../hooks/useAgentBIVersionHistory";
 import { useConfirm } from "../hooks/useConfirm";
 import { useRollbackExecutor } from "../hooks/useRollbackExecutor";
@@ -57,6 +58,9 @@ if (!session) {
 }
 const { messages, inputText, isStreaming, hasMoreMessages, isLoadingMoreMessages, loadOlderMessages, sendMessage } =
   session;
+
+const groupMessages = createAssistantMessageGrouper();
+const displayMessages = computed(() => groupMessages(messages.value));
 
 // 回退是「当前大屏」级操作，不属于某个会话：版本历史是全局单例，执行器直接操作画布，
 // 故直接消费全局 hook，而非经 session 转发。

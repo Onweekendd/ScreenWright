@@ -69,10 +69,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, watch } from "vue";
+import { computed } from "vue";
 
 import Icon from "@/components/Icon/index.vue";
-import { markComponentEditing, unmarkComponentEditing } from "@/hooks/useEditingComponents";
 
 import {
   imageSlotsOf,
@@ -90,9 +89,6 @@ const props = defineProps<{
 
 /** 需要在标题栏展示目标路径的高频工具（按注册对象 key 命名，兼容旧的 tool id 命名） */
 const PATH_TOOLS = new Set(["readFileTool", "editFilesTool", "read_file", "edit_files"]);
-
-/** 会真的改动组件文件的工具——只有这些调用期间才在画布上叠加扫光，只读工具不算 */
-const EDIT_TOOLS = new Set(["editFilesTool", "edit_files"]);
 
 /** 结果里带图片 url、需要直接出图预览的工具 */
 const IMAGE_TOOLS = new Set(["createImageTool", "captureCanvasTool", "capture_canvas", "readFileTool", "read_file"]);
@@ -211,57 +207,6 @@ const rawPaths = computed(() => {
 });
 
 const rawPath = computed(() => rawPaths.value.join("\n"));
-
-/**
- * 从 workspace 相对路径里抠出被编辑的组件 id（`{id}_{name}_{prop}.json` 约定的首段）。
- * 只取路径最后一段（真正被改的文件），不取中间目录段——分组/动态面板的路径形如
- * `.../{groupId}_{groupName}/{id}_{name}.json`，中间目录段也是"数字开头"，
- * 若不加区分会把父级分组一起标记成 editing，导致分组外框也跟着叠一层扫光。
- */
-const extractComponentIds = (paths: string[]): string[] => {
-  const ids: string[] = [];
-  for (const raw of paths) {
-    const segs = raw.split(/[\\/]/).filter(Boolean);
-    const leaf = segs[segs.length - 1];
-    if (!leaf) {
-      continue;
-    }
-    const id = leaf.split("_")[0];
-    if (/^\d+$/.test(id)) {
-      ids.push(id);
-    }
-  }
-  return ids;
-};
-
-/**
- * edit_files 执行期间在画布上给目标组件叠加扫光效果，让用户看到"agent 正在改这个组件"。
- * 记着这一轮实际标记过的 id，而不是每次都重新从 rawPaths 派生——一是 input 在流式阶段
- * 可能还不完整，二是组件卸载时的兜底清理需要知道"我到底标记了什么"，不能假设 props 还在。
- */
-let markedComponentIds: string[] = [];
-
-watch(
-  () => props.part.state,
-  (state) => {
-    if (!EDIT_TOOLS.has(toolName.value)) {
-      return;
-    }
-    if (state === "input-available") {
-      markedComponentIds = extractComponentIds(rawPaths.value);
-      markedComponentIds.forEach(markComponentEditing);
-    } else if (state === "output-available" || state === "output-error") {
-      markedComponentIds.forEach(unmarkComponentEditing);
-      markedComponentIds = [];
-    }
-  },
-  { immediate: true }
-);
-
-onUnmounted(() => {
-  markedComponentIds.forEach(unmarkComponentEditing);
-  markedComponentIds = [];
-});
 
 /**
  * 将 workspace 相对路径（形如 `screen_123/component/456_柱状图_bar.json`）压缩为 `name/name`。

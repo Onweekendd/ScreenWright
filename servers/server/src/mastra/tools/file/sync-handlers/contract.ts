@@ -49,6 +49,8 @@ export interface EditContext {
   /** 编辑开始时读到的原文；判断改名之类「改之前是什么」的问题只能问它 */
   readRecord: ReadFileRecord;
   needsApproval: boolean;
+  /** 编辑完成后是否截图；不传时默认开启。 */
+  capture?: boolean;
 }
 
 /**

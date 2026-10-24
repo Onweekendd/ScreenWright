@@ -1,26 +1,27 @@
 <template>
   <div class="content-msg">
     <el-timeline :class="['msg-timeline', { 'is-generating': isLoading }]">
-      <TransitionGroup
+      <Transition
+        v-for="(row, i) in displayRows as any[]"
+        :key="row.key"
+        v-memo="[row.part, row.visible, row.expanded, isLoading && i === displayRows.length - 1]"
         :css="false"
-        @enter="expandStep"
-        @leave="collapseStep"
+        appear
+        @enter="(element, done) => expandStep(element, done, row.key)"
+        @leave="(element, done) => collapseStep(element, done, row.key)"
+        @after-enter="finishStepAnimation(row.key)"
+        @after-leave="finishStepAnimation(row.key)"
         @enter-cancelled="cancelStepAnimation"
         @leave-cancelled="cancelStepAnimation"
       >
-        <el-timeline-item
-          v-for="(row, i) in displayRows as any[]"
-          :key="row.key"
-          v-memo="[row.part, processExpanded, isLoading && i === displayRows.length - 1]"
-          hide-timestamp
-          :class="row.className"
-        >
+        <el-timeline-item v-if="row.visible" hide-timestamp :class="row.className">
           <ExecutionProcessBlock
             v-if="row.part.type === 'data-execution-process'"
             :tool-count="row.part.toolCount"
             :running="row.part.running"
-            :expanded="processExpanded"
-            @toggle="manualProcessExpanded = !processExpanded"
+            :activity="row.part.activity"
+            :expanded="row.expanded"
+            @toggle="toggleProcess(row.part.id)"
           />
           <ReasoningPart v-else-if="row.part.type === 'reasoning'" :part="row.part" />
           <MarkdownContent v-else-if="row.part.type === 'text'" :content="(row.part as TextUIPart).text" />
@@ -41,7 +42,7 @@
             :failed-data="omFailedMap.get((row.part as RawPart).data.cycleId as string)"
           />
         </el-timeline-item>
-      </TransitionGroup>
+      </Transition>
       <!-- 尚无可渲染的 parts 但正在加载时，显示一个占位节点 -->
       <el-timeline-item v-if="isLoading && !hasVisibleParts" hide-timestamp class="timeline-item--placeholder" />
     </el-timeline>
@@ -53,7 +54,8 @@ import { computed, onUnmounted, ref } from "vue";
 
 import type { TextUIPart, UIMessage } from "ai";
 
-import { type AssistantDisplayPart, groupAssistantParts } from "../hooks/groupAssistantParts";
+import { type AssistantDisplayPart, groupAssistantParts, isProcessPart } from "../hooks/groupAssistantParts";
+import { useEditingToolParts } from "../hooks/useEditingToolParts";
 import ExecutionProcessBlock from "./ExecutionProcessBlock.vue";
 import WorkflowMessage from "./figmaToBIMessage/WorkflowMessage.vue";
 import LayoutTemplateResult from "./LayoutTemplateResult.vue";
@@ -128,21 +130,40 @@ const normalizedParts = computed(() => {
   return parts;
 });
 
-const groupedParts = computed(() => groupAssistantParts(normalizedParts.value, props.isLoading));
-const manualProcessExpanded = ref(false);
-const processExpanded = computed(() => manualProcessExpanded.value);
-const displayParts = computed(() =>
-  processExpanded.value ? groupAssistantParts(normalizedParts.value, props.isLoading, true) : groupedParts.value
-);
+useEditingToolParts(() => normalizedParts.value);
+
+const expandedProcessIds = ref(new Set<string>());
+const visitedProcessIds = ref(new Set<string>());
+const animatedStepKeys = new Set<string>();
+const toggleProcess = (id: string) => {
+  // 只为这次手动切换的既有步骤播放动画，流式追加不做布局测量。
+  for (const row of timelineRows.value) {
+    if (row.ownerId === id) {
+      animatedStepKeys.add(row.key);
+    }
+  }
+  if (!visitedProcessIds.value.has(id)) {
+    visitedProcessIds.value = new Set([...visitedProcessIds.value, id]);
+  }
+  const next = new Set(expandedProcessIds.value);
+  if (next.has(id)) {
+    next.delete(id);
+  } else {
+    next.add(id);
+  }
+  expandedProcessIds.value = next;
+};
+const displayParts = computed(() => groupAssistantParts(normalizedParts.value, props.isLoading, true));
 
 // 使用原始 part 序号作 key，收起过程时正文不会被当成工具节点替换。
-const displayRows = computed(() => {
+const timelineRows = computed(() => {
   const indices = new Map<AssistantDisplayPart, number[]>();
   normalizedParts.value.forEach((part, index) => {
     const occurrences = indices.get(part) ?? [];
     occurrences.push(index);
     indices.set(part, occurrences);
   });
+  let ownerId: string | undefined;
   return displayParts.value.flatMap((part) => {
     const originalIndex = indices.get(part)?.shift();
     // 流中还会透传 SDK 标准 part 联合之外的 error 帧。
@@ -166,9 +187,30 @@ const displayRows = computed(() => {
     if (!className) {
       return [];
     }
-    return [{ part, className, key: type === "data-execution-process" ? "process" : `part-${originalIndex}` }];
+    const groupId = type === "data-execution-process" && "id" in part ? String(part.id) : undefined;
+    if (groupId) {
+      ownerId = groupId;
+    } else if (type === "text") {
+      ownerId = undefined;
+    }
+    const processOwner = !groupId && isProcessPart(part) ? ownerId : undefined;
+    return [
+      {
+        part,
+        className,
+        key: groupId ?? `part-${originalIndex}`,
+        expanded: Boolean(groupId && expandedProcessIds.value.has(groupId)),
+        ownerId: processOwner,
+        visible: !processOwner || expandedProcessIds.value.has(processOwner)
+      }
+    ];
   });
 });
+// 从未展开的过程不挂载空 Transition；展开过的步骤保留轻量外壳以完成离场动画。
+const displayRows = computed(() =>
+  timelineRows.value.filter((row) => row.visible || (row.ownerId && visitedProcessIds.value.has(row.ownerId)))
+);
+const finishStepAnimation = (key: string) => animatedStepKeys.delete(key);
 
 const stepAnimations = new Map<HTMLElement, { cancel: () => void }>();
 const cancelStepAnimation = (element: Element) => stepAnimations.get(element as HTMLElement)?.cancel();
@@ -214,8 +256,10 @@ const animateStep = (element: Element, done: () => void, expanding: boolean) => 
     }
   });
 };
-const expandStep = (element: Element, done: () => void) => animateStep(element, done, true);
-const collapseStep = (element: Element, done: () => void) => animateStep(element, done, false);
+const expandStep = (element: Element, done: () => void, key: string) =>
+  animatedStepKeys.has(key) ? animateStep(element, done, true) : done();
+const collapseStep = (element: Element, done: () => void, key: string) =>
+  animatedStepKeys.has(key) ? animateStep(element, done, false) : done();
 onUnmounted(() => stepAnimations.forEach((animation) => animation.cancel()));
 
 type RawPart = { type: string; data: Record<string, unknown> };

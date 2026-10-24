@@ -22,7 +22,8 @@ export const pushComponentUpdate = (
   ctx: EditContext,
   purpose: string,
   component: ComponentType
-): EditFilesSuspendPayload => syncPayload(ctx, purpose, { op: "update_component", component });
+): EditFilesSuspendPayload =>
+  syncPayload(ctx, purpose, { op: "update_component", component, capture: ctx.capture ?? true });
 
 /**
  * title 是组件类型标识（「条形图」「图片」），前端靠它在组件菜单里找类型，不能改；组件名是 name。

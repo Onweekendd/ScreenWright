@@ -20,13 +20,13 @@
       </svg>
       <span>{{ toolCount ? "执行过程" : "思考过程" }}</span>
       <span v-if="toolCount" class="execution-process__count">{{ toolCount }} 次工具调用</span>
-      <span v-if="running" class="execution-process__status">进行中</span>
+      <span v-if="running" class="execution-process__status" :title="activity" role="status">{{ activity }}</span>
     </button>
   </section>
 </template>
 
 <script setup lang="ts">
-defineProps<{ toolCount: number; running?: boolean; expanded: boolean }>();
+defineProps<{ toolCount: number; running?: boolean; activity?: string; expanded: boolean }>();
 defineEmits<{ toggle: [] }>();
 </script>
 
@@ -77,6 +77,11 @@ defineEmits<{ toggle: [] }>();
   }
 
   &__status {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: $color-primary;
     font-size: 11px;
   }

@@ -57,6 +57,8 @@ export interface CanvasOpsDeps {
   ) => Promise<{ success: boolean; message: string } | void>;
   /** 把后端推来的组件增量合并到画布上的同 id 实例（merge 策略），并触发图层更新与关联关系同步 */
   applyComponentUpdate: (existing: ComponentType, incoming: ComponentType) => Promise<void>;
+  /** 复用 capture_canvas 截图上传；在同一画布队列内、更新完成之后执行。 */
+  captureComponent: (componentId: number) => Promise<ResumeData<SuspendType.CaptureCanvas>>;
   /** 保存过滤器；originalName 与 filter.name 不同即改名，需先删旧名 */
   saveFilter: (filter: OpOf<"save_filter">["filter"], originalName?: string) => Promise<unknown>;
   deleteFilter: (filterName: string) => Promise<{ success: boolean; error?: string }>;
@@ -84,13 +86,21 @@ const createOpHandlers = (deps: CanvasOpsDeps): OpHandlers => ({
    * 把后端过 core 之后的那一份组件合并到画布上的同 id 实例。
    * 先过 ComponentSchema：载荷是后端校验过的，但前端合并进响应式树之前再挡一道，坏数据不进画布。
    */
-  update_component: async ({ component }) => {
+  update_component: async ({ component, capture }) => {
     const parsed = ComponentSchema.parse(component);
     const existing = deps.getComponent(parsed.id);
     if (!existing) {
       return fail(`组件 ${parsed.id} 不存在`);
     }
     await deps.applyComponentUpdate(existing, parsed);
+    if (capture) {
+      try {
+        return { ok: true, screenshot: await deps.captureComponent(parsed.id) };
+      } catch (e) {
+        // 已完成的编辑不能因为截图失败被误报成失败，避免模型重复提交相同修改。
+        return { ok: true, screenshot: { ok: false, error: e instanceof Error ? e.message : String(e) } };
+      }
+    }
     return OK;
   },
 

@@ -25,6 +25,7 @@ const makeDeps = (overrides: Partial<CanvasOpsDeps> = {}): CanvasOpsDeps => {
       .mockResolvedValue({ success: true, message: "", componentId: 901, component: comp(901, { name: "副本" }) }),
     deleteComponent: vi.fn().mockResolvedValue({ success: true, message: "" }),
     applyComponentUpdate: vi.fn().mockResolvedValue(undefined),
+    captureComponent: vi.fn().mockResolvedValue({ ok: true, url: "https://example.com/edited.jpg" }),
     saveFilter: vi.fn().mockResolvedValue(undefined),
     deleteFilter: vi.fn().mockResolvedValue({ success: true }),
     updateScreenInfo: vi.fn().mockResolvedValue(undefined),
@@ -270,15 +271,44 @@ describe("canvas_ops 执行器", () => {
 
       expect(deps.applyComponentUpdate).toHaveBeenCalledWith(comp(3), expect.objectContaining({ id: 3 }));
       expect(reply).toEqual({ results: [{ ok: true }] });
+      expect(deps.captureComponent).not.toHaveBeenCalled();
+    });
+
+    it("编辑完成后才截图，把截图放进对应操作的回执", async () => {
+      const calls: string[] = [];
+      const deps = makeDeps({
+        applyComponentUpdate: vi.fn(async () => {
+          calls.push("update");
+        }),
+        captureComponent: vi.fn(async () => {
+          calls.push("capture");
+          return { ok: true, url: "https://example.com/edited.jpg", width: 200, height: 100 };
+        })
+      });
+      const reply = await run(deps, [{ op: "update_component", component: incoming(3) as never, capture: true }]);
+      expect(calls).toEqual(["update", "capture"]);
+      expect(deps.captureComponent).toHaveBeenCalledWith(3);
+      expect(reply).toEqual({
+        results: [
+          { ok: true, screenshot: { ok: true, url: "https://example.com/edited.jpg", width: 200, height: 100 } }
+        ]
+      });
+    });
+
+    it("截图失败仍然回报编辑成功", async () => {
+      const deps = makeDeps({ captureComponent: vi.fn().mockRejectedValue(new Error("上传失败")) });
+      const reply = await run(deps, [{ op: "update_component", component: incoming(3) as never, capture: true }]);
+      expect(reply).toEqual({ results: [{ ok: true, screenshot: { ok: false, error: "上传失败" } }] });
     });
 
     it("画布上没有这个组件：回 error，不合并", async () => {
       const deps = makeDeps();
 
-      const reply = await run(deps, [{ op: "update_component", component: incoming(999) as never }]);
+      const reply = await run(deps, [{ op: "update_component", component: incoming(999) as never, capture: true }]);
 
       expect(reply).toEqual({ results: [{ ok: false, error: "组件 999 不存在" }] });
       expect(deps.applyComponentUpdate).not.toHaveBeenCalled();
+      expect(deps.captureComponent).not.toHaveBeenCalled();
     });
 
     it("载荷过不了 ComponentSchema：记成这一项的 error，不进画布", async () => {

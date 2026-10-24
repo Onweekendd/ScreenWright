@@ -4,6 +4,8 @@ import { mount } from "@vue/test-utils";
 
 import type { UIMessage } from "ai";
 
+import { editingComponentIds } from "@/hooks/useEditingComponents";
+
 vi.mock("@/views/build/components/agentBI/components/MarkdownContent.vue", () => ({
   default: { props: ["content"], template: '<div class="test-markdown">{{ content }}</div>' }
 }));
@@ -42,7 +44,7 @@ const mountMessage = (parts: Part[], isLoading = false) =>
     props: { message: message(parts), isLoading },
     global: {
       stubs: {
-        TransitionGroup: false,
+        Transition: false,
         ElTimeline: { template: '<div class="timeline"><slot /></div>' },
         ElTimelineItem: {
           template:
@@ -53,6 +55,177 @@ const mountMessage = (parts: Part[], isLoading = false) =>
   });
 
 describe("对话执行过程折叠", () => {
+  it("工具默认折叠时仍有扫光，展开、收起不撤销，消息卸载后清理", async () => {
+    const editing = {
+      ...tool("editFilesTool", "edit", "input-available"),
+      input: { files: [{ path: "screen_1/component/100_分组/101_标题.vue" }] }
+    } as Part;
+    const wrapper = mountMessage([editing], true);
+    try {
+      expect(wrapper.find(".test-tool").exists()).toBe(false);
+      expect(editingComponentIds.has("101")).toBe(true);
+      expect(editingComponentIds.has("100")).toBe(false);
+      await wrapper.find(".execution-process__toggle").trigger("click");
+      expect(editingComponentIds.has("101")).toBe(true);
+      await wrapper.find(".execution-process__toggle").trigger("click");
+      expect(wrapper.find(".test-tool").exists()).toBe(false);
+      expect(editingComponentIds.has("101")).toBe(true);
+    } finally {
+      wrapper.unmount();
+    }
+    expect(editingComponentIds.has("101")).toBe(false);
+  });
+
+  it.each(["output-available", "output-error"])("折叠状态下编辑结束（%s）自动停止扫光", async (state) => {
+    const editing = {
+      ...tool("edit_files", "edit", "input-available"),
+      input: { path: "screen_1\\component\\102_标题.json" }
+    } as Part;
+    const wrapper = mountMessage([editing], true);
+    try {
+      expect(editingComponentIds.has("102")).toBe(true);
+      await wrapper.setProps({ message: message([{ ...editing, state } as Part]) });
+      expect(editingComponentIds.has("102")).toBe(false);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("同一组件多个编辑调用重叠，不因其中一个完成或另一个消息卸载而提前清理", async () => {
+    const editing = (id: string) =>
+      ({
+        ...tool("editFilesTool", id, "input-available"),
+        input: { files: [{ path: "screen_1/component/103_标题.json" }] }
+      }) as Part;
+    const first = mountMessage([editing("edit-1"), editing("edit-2")], true);
+    const second = mountMessage([editing("edit-3")], true);
+    try {
+      expect(editingComponentIds.has("103")).toBe(true);
+      await first.setProps({
+        message: message([{ ...editing("edit-1"), state: "output-available" } as Part, editing("edit-2")])
+      });
+      expect(editingComponentIds.has("103")).toBe(true);
+      second.unmount();
+      expect(editingComponentIds.has("103")).toBe(true);
+      await first.setProps({ message: message([text]) });
+      expect(editingComponentIds.has("103")).toBe(false);
+    } finally {
+      first.unmount();
+      second.unmount();
+    }
+  });
+
+  it("输入从不完整变为可执行后启动扫光，只读工具和历史编辑不触发", async () => {
+    const editing = tool("editFilesTool", "edit", "input-streaming");
+    const wrapper = mountMessage([editing], true);
+    const input = { files: [{ path: "screen_1/component/104_标题.vue" }] };
+    try {
+      expect(editingComponentIds.has("104")).toBe(false);
+      await wrapper.setProps({ message: message([{ ...editing, state: "input-available", input } as Part]) });
+      expect(editingComponentIds.has("104")).toBe(true);
+      await wrapper.setProps({
+        message: message([
+          { ...tool("readFileTool", "read", "input-available"), input } as Part,
+          { ...tool("editFilesTool", "history"), input } as Part
+        ])
+      });
+      expect(editingComponentIds.has("104")).toBe(false);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("长时间线流式追加文字不再反复测量历史节点，也不重建已有工具内容", async () => {
+    const steps = Array.from({ length: 80 }, (_, index) => tool("execute", `cmd-${index}`));
+    const wrapper = mountMessage([...steps, { type: "text", text: "结果", state: "streaming" }], true);
+    await wrapper.find(".execution-process__toggle").trigger("click");
+    const firstTool = wrapper.find(".test-tool").element;
+    const measure = vi.spyOn(Element.prototype, "getBoundingClientRect");
+    try {
+      for (let index = 0; index < 20; index++) {
+        await wrapper.setProps({
+          message: message([...steps, { type: "text", text: `结果${"继续".repeat(index + 1)}`, state: "streaming" }])
+        });
+      }
+      expect(measure).not.toHaveBeenCalled();
+      expect(wrapper.find(".test-tool").element).toBe(firstTool);
+      expect(wrapper.findAll(".test-tool")).toHaveLength(80);
+      expect(wrapper.find(".test-markdown").text()).toBe(`结果${"继续".repeat(20)}`);
+    } finally {
+      measure.mockRestore();
+      wrapper.unmount();
+    }
+  });
+
+  it("正文后新增的工具留在新阶段，独立显示状态和展开，不挪到最前面的块", async () => {
+    const first = tool("execute", "first");
+    const wrapper = mountMessage([first, text], true);
+    await wrapper.find(".execution-process__toggle").trigger("click");
+    await wrapper.setProps({
+      message: message([first, text, thought, tool("readFileTool", "second", "input-available")])
+    });
+    const toggles = wrapper.findAll(".execution-process__toggle");
+    expect(toggles).toHaveLength(2);
+    expect(toggles[0].attributes("aria-expanded")).toBe("true");
+    expect(toggles[1].attributes("aria-expanded")).toBe("false");
+    expect(wrapper.findAll(".test-tool").map((item) => item.text())).toEqual(["first"]);
+    const groups = wrapper.findAll(".execution-process");
+    expect(groups[0].find(".execution-process__status").exists()).toBe(false);
+    expect(groups[1].find(".execution-process__status").text()).toBe("正在调用 readFileTool");
+    expect(
+      wrapper.find(".test-markdown").element.compareDocumentPosition(groups[1].element) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    await toggles[1].trigger("click");
+    expect(wrapper.findAll(".test-tool").map((item) => item.text())).toEqual(["first", "second"]);
+    await toggles[0].trigger("click");
+    expect(wrapper.findAll(".test-tool").map((item) => item.text())).toEqual(["second"]);
+    expect(wrapper.findAll(".timeline")).toHaveLength(1);
+    wrapper.unmount();
+  });
+
+  it("折叠入口跟随思考、准备调用、工具执行和回复状态更新", async () => {
+    const thinking = { ...thought, state: "streaming" } as Part;
+    const wrapper = mountMessage([thinking], true);
+    const status = () => wrapper.find(".execution-process__status").text();
+    expect(status()).toBe("正在思考");
+    await wrapper.setProps({ message: message([thought, tool("readFileTool", "read", "input-streaming")]) });
+    expect(status()).toBe("准备调用 readFileTool");
+    await wrapper.setProps({ message: message([thought, tool("readFileTool", "read", "input-available")]) });
+    expect(status()).toBe("正在调用 readFileTool");
+    // 工具已经返回，但模型还在继续处理，不能把上一个工具误报为仍在执行。
+    await wrapper.setProps({ message: message([thought, tool("readFileTool", "read")]) });
+    expect(status()).toBe("正在思考");
+    await wrapper.setProps({ message: message([tool("readFileTool", "read"), thinking]) });
+    expect(status()).toBe("正在思考");
+    await wrapper.setProps({
+      message: message([thought, tool("readFileTool", "read"), { type: "text", text: "结果", state: "streaming" }])
+    });
+    expect(status()).toBe("正在回复");
+    expect(wrapper.find(".execution-process__toggle").attributes("aria-expanded")).toBe("false");
+    await wrapper.setProps({ isLoading: false });
+    expect(wrapper.find(".execution-process__status").exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it("展示并行工具的名称，后台占位保持执行状态直到结果回填", async () => {
+    const read = tool("readFileTool", "read", "input-available");
+    const execute = tool("execute", "cmd", "input-available");
+    const wrapper = mountMessage([read, execute, { type: "data-usage", data: {} }], true);
+    expect(wrapper.find(".execution-process__status").text()).toBe("正在调用 readFileTool、execute");
+    await wrapper.setProps({ message: message([tool("readFileTool", "read"), execute]) });
+    expect(wrapper.find(".execution-process__status").text()).toBe("正在调用 execute");
+    const background = {
+      ...tool("searchMediaAssetsTool", "assets"),
+      output: "Background task started. Task ID: task-1"
+    } as Part;
+    await wrapper.setProps({ message: message([background]) });
+    expect(wrapper.find(".execution-process__status").text()).toBe("正在调用 searchMediaAssetsTool");
+    await wrapper.setProps({ message: message([tool("searchMediaAssetsTool", "assets")]) });
+    expect(wrapper.find(".execution-process__status").text()).toBe("正在思考");
+    wrapper.unmount();
+  });
+
   it("收起时等伸缩动画结束再移除步骤，正文节点不被替换，连线不被裁剪", async () => {
     const descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "animate");
     const animations: Array<{ node: HTMLElement; frames: Keyframe[]; onfinish?: () => void; oncancel?: () => void }> =
@@ -154,7 +327,7 @@ describe("对话执行过程折叠", () => {
     wrapper.unmount();
   });
 
-  it("正文、协议帧和错误不再拆分执行块，全部工具和思考统一合并", async () => {
+  it("正文分隔执行阶段，协议帧和错误不额外拆块，每段独立展开且保持时间顺序", async () => {
     const wrapper = mountMessage([
       tool("execute", "first"),
       text,
@@ -164,11 +337,17 @@ describe("对话执行过程折叠", () => {
       tool("execute", "failed", "output-error"),
       thought
     ]);
-    expect(wrapper.findAll(".execution-process__toggle")).toHaveLength(1);
-    expect(wrapper.find(".execution-process__toggle").text()).toContain("2 次工具调用");
+    expect(wrapper.findAll(".execution-process__toggle")).toHaveLength(2);
+    expect(wrapper.findAll(".execution-process__toggle").map((item) => item.text())).toEqual([
+      "执行过程1 次工具调用",
+      "执行过程1 次工具调用"
+    ]);
     expect(wrapper.findAll(".test-tool").map((item) => item.text())).toEqual(["failed"]);
     expect(wrapper.find(".test-markdown").text()).toBe("成片已生成");
-    await wrapper.find(".execution-process__toggle").trigger("click");
+    await wrapper.findAll(".execution-process__toggle")[0].trigger("click");
+    expect(wrapper.findAll(".test-tool").map((item) => item.text())).toEqual(["first", "failed"]);
+    expect(wrapper.find(".test-reasoning").exists()).toBe(false);
+    await wrapper.findAll(".execution-process__toggle")[1].trigger("click");
     expect(wrapper.findAll(".test-tool").map((item) => item.text())).toEqual(["first", "second", "failed"]);
     expect(wrapper.findAll(".test-reasoning")).toHaveLength(2);
     expect(wrapper.findAll(".timeline")).toHaveLength(1);
@@ -187,7 +366,7 @@ describe("对话执行过程折叠", () => {
     const parts = [thought, tool("execute", "cmd", "input-available")];
     const wrapper = mountMessage(parts, true);
     expect(wrapper.find(".test-tool").exists()).toBe(false);
-    expect(wrapper.find(".execution-process__status").text()).toBe("进行中");
+    expect(wrapper.find(".execution-process__status").text()).toBe("正在调用 execute");
     await wrapper.setProps({ message: message([thought, tool("execute", "cmd")]), isLoading: false });
     expect(wrapper.find(".test-tool").exists()).toBe(false);
     expect(wrapper.find(".execution-process__toggle").attributes("aria-expanded")).toBe("false");

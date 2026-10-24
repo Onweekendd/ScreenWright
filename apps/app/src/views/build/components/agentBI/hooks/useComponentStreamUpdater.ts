@@ -1,4 +1,4 @@
-import { AgentMode, apiClient, type ResumeData, type SuspendPayload, SuspendType } from "@screenwright/server/rpc";
+import { AgentMode, type ResumeData, type SuspendPayload, SuspendType } from "@screenwright/server/rpc";
 import type { ComponentType } from "@screenwright/types";
 import { cloneDeep } from "lodash-es";
 
@@ -13,7 +13,7 @@ import { UpdateHistoryTypeEnum, useAction } from "../../buildRender/hooks/useAct
 import { createLocalPanelStatus } from "../../buildRender/hooks/useCommonPanelAction";
 import { useEditStore } from "../../buildRender/hooks/useEditStore";
 import { createCanvasOpsHandler, getBatchOperationFields } from "./canvasOps";
-import { captureCanvasForAgent } from "./captureCanvasForAgent";
+import { captureAndUploadCanvas } from "./captureAndUploadCanvas";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
 import { useConfirm } from "./useConfirm";
 import type { ComponentPlacement } from "./useCreateComponent";
@@ -114,6 +114,7 @@ export function useComponentStreamUpdater(
     createComponentFromConfig,
     deleteComponent: (id, placement) => onDeleteComponent(id, placement as ComponentPlacement),
     applyComponentUpdate,
+    captureComponent: (id) => captureAndUploadCanvas(sessionId, { componentIds: [id] }),
     saveFilter: handleSaveFilter,
     deleteFilter,
     updateScreenInfo: async ({ screenId, detail, minioIds }) => {
@@ -185,26 +186,7 @@ export function useComponentStreamUpdater(
    * @field componentIds - 只截这些组件；不传截整个画布
    */
   const handleCaptureCanvas: SuspendHandlerFn<SuspendType.CaptureCanvas> = async (info) => {
-    try {
-      const { componentIds, region: wantedRegion, grid, gridStep: wantedStep, snap } = info.suspendPayload;
-      const { file, width, height, region, scale, gridStep, snapped, missingIds } = await captureCanvasForAgent({
-        componentIds,
-        region: wantedRegion,
-        grid,
-        gridStep: wantedStep,
-        snap
-      });
-      const res = await apiClient.customApi["chat-images"].upload.$post({
-        form: { conversationId: sessionId, file }
-      });
-      const data = await res.json();
-      if (!data.success) {
-        return { ok: false, error: "截图上传失败" };
-      }
-      return { ok: true, url: data.data.url, width, height, region, scale, gridStep, snapped, missingIds };
-    } catch (e) {
-      return { ok: false, error: (e as Error).message };
-    }
+    return captureAndUploadCanvas(sessionId, info.suspendPayload);
   };
 
   /**

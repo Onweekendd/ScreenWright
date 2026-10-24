@@ -68,7 +68,8 @@ const CanvasOpSchema = z.discriminatedUnion("op", [
   }),
   z.object({
     op: z.literal("update_component"),
-    component: ComponentSchema.describe("后端过 core 之后那一份组件；前端按 merge 策略合并到画布上的同 id 实例")
+    component: ComponentSchema.describe("后端过 core 之后那一份组件；前端按 merge 策略合并到画布上的同 id 实例"),
+    capture: z.boolean().optional().describe("更新成功后回传该组件截图，供模型检查编辑效果")
   }),
   z.object({
     op: z.literal("save_filter"),
@@ -107,6 +108,20 @@ const CanvasOpSchema = z.discriminatedUnion("op", [
 
 export type CanvasOp = z.infer<typeof CanvasOpSchema>;
 
+/** capture_canvas 与组件编辑回执共用同一份截图协议。截图失败不代表编辑失败。 */
+export const CanvasCaptureResultSchema = z.object({
+  ok: z.boolean(),
+  url: z.string().optional().describe("截图上传后的访问 URL"),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  region: z.object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() }).optional(),
+  scale: z.number().optional().describe("每 1 设计稿像素对应的图片像素数"),
+  gridStep: z.number().optional(),
+  snapped: z.object({ left: z.boolean(), top: z.boolean(), right: z.boolean(), bottom: z.boolean() }).optional(),
+  missingIds: z.array(z.number()).optional(),
+  error: z.string().optional()
+});
+
 /**
  * 单个画布操作的回执。成功时带上**只有前端拿得到的产物**：
  * - `component`：前端建好的组件（含业务接口分配的真实 id）。真实 id 只有业务接口能分配，实例还要套组件菜单的
@@ -122,7 +137,8 @@ const OpResultSchema = z.union([
   z.object({
     ok: z.literal(true),
     component: z.record(z.string(), z.unknown()).optional(),
-    state: z.record(z.string(), z.unknown()).optional()
+    state: z.record(z.string(), z.unknown()).optional(),
+    screenshot: CanvasCaptureResultSchema.optional()
   }),
   z.object({ ok: z.literal(false), error: z.string() })
 ]);
@@ -230,24 +246,7 @@ export const SuspendDefs = {
       gridStep: z.number().positive().optional().describe("网格间距（设计稿像素），不传自动"),
       snap: z.boolean().optional().describe("只对 region 生效：四条边吸附到附近的边框线上")
     }),
-    resume: z.object({
-      ok: z.boolean(),
-      url: z.string().optional().describe("截图上传后的访问 URL"),
-      width: z.number().optional(),
-      height: z.number().optional(),
-      region: z
-        .object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() })
-        .optional()
-        .describe("截图在画布上实际覆盖的区域（设计稿像素，已按画布边界裁过）；整屏截图就是整块画布"),
-      scale: z.number().optional().describe("每 1 设计稿像素对应的图片像素数"),
-      gridStep: z.number().optional().describe("叠了网格时实际用的间距（设计稿像素），可能比请求的大"),
-      snapped: z
-        .object({ left: z.boolean(), top: z.boolean(), right: z.boolean(), bottom: z.boolean() })
-        .optional()
-        .describe("开了 snap 时每条边是否吸附到了边框线"),
-      missingIds: z.array(z.number()).optional().describe("画布上找不到或当前不可见的组件 id"),
-      error: z.string().optional()
-    })
+    resume: CanvasCaptureResultSchema
   },
 
   [SuspendType.SaveAiTemplate]: {

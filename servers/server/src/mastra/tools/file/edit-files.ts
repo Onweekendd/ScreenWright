@@ -4,8 +4,9 @@ import fsp from "node:fs/promises";
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
+import { TOOL_IMAGES_FIELD } from "../../provider/image-middleware";
 import { AgentMode } from "../../types/bi-chat";
-import { SuspendType } from "../../types/suspend";
+import { CanvasCaptureResultSchema, SuspendType } from "../../types/suspend";
 import { readCanvasOpResults } from "../canvas-ops";
 import { capChanges, type Change, ChangeSchema, diffChange } from "../change-report";
 import { applyEdits, findNoopEditIndex, type ReplaceResult } from "./apply-edits";
@@ -65,7 +66,12 @@ const fileEditSchema = z.object({
 });
 
 const editFilesInputSchema = z.object({
-  files: z.array(fileEditSchema).min(1).max(100).describe("Files to edit. Each file owns its replacement list.")
+  files: z.array(fileEditSchema).min(1).max(100).describe("Files to edit. Each file owns its replacement list."),
+  capture: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe("编辑组件后返回截图供视觉检查，默认 true；false 时跳过截图和上传。对普通文件无影响。")
 });
 
 const fileEditResultSchema = z.object({
@@ -75,6 +81,7 @@ const fileEditResultSchema = z.object({
   message: z.string(),
   frontendSynced: z.boolean().optional(),
   validationErrors: z.array(z.string()).optional(),
+  screenshot: CanvasCaptureResultSchema.optional().describe("编辑完成后的组件截图；截图失败不影响编辑结果"),
   change: z.array(ChangeSchema).optional().describe("这个文件改动后的样子，不必再读回来确认")
 });
 
@@ -86,7 +93,8 @@ const editFilesOutputSchema = z.object({
   replacements: z.number(),
   message: z.string(),
   results: z.array(fileEditResultSchema),
-  change: z.array(ChangeSchema).optional().describe("本批全部改动的汇总，与各 result.change 同源")
+  change: z.array(ChangeSchema).optional().describe("本批全部改动的汇总，与各 result.change 同源"),
+  [TOOL_IMAGES_FIELD]: z.array(z.object({ url: z.string(), label: z.string() })).optional()
 });
 
 type FileEditInput = z.input<typeof fileEditSchema>;
@@ -181,6 +189,11 @@ function buildBatchOutput(state: EditFilesBatchState) {
   const succeeded = results.filter((result) => result.success).length;
   const failed = results.length - succeeded;
   const replacements = results.reduce((sum, result) => sum + result.replacements, 0);
+  const images = results.flatMap((result) =>
+    result.success && result.screenshot?.ok && result.screenshot.url
+      ? [{ url: result.screenshot.url, label: `组件编辑后截图：${result.path}` }]
+      : []
+  );
   return {
     success: failed === 0 && results.length === state.results.length,
     total: state.results.length,
@@ -189,11 +202,16 @@ function buildBatchOutput(state: EditFilesBatchState) {
     replacements,
     message: `Edited ${succeeded}/${state.results.length} files; ${failed} failed; ${replacements} replacements.`,
     results,
-    change: capChanges(results.flatMap((result) => result.change ?? []))
+    change: capChanges(results.flatMap((result) => result.change ?? [])),
+    ...(images.length ? { [TOOL_IMAGES_FIELD]: images } : {})
   };
 }
 
-async function settlePendingOperation(state: EditFilesBatchState, resumeData: EditFilesResumeData): Promise<void> {
+async function settlePendingOperation(
+  state: EditFilesBatchState,
+  resumeData: EditFilesResumeData,
+  capture: boolean
+): Promise<void> {
   const pending = state.pending;
   if (!pending) {
     throw new Error("edit_files received resumeData without a pending operation.");
@@ -283,6 +301,10 @@ async function settlePendingOperation(state: EditFilesBatchState, resumeData: Ed
   if (reply.status === "done") {
     const receipt = reply.results[0];
     await commitThenSettle(receipt.ok, pending.kind, receipt.ok ? undefined : receipt.error);
+    const result = state.results[pending.index];
+    if (capture && pending.kind === "component" && result?.success && receipt.ok && receipt.screenshot) {
+      result.screenshot = receipt.screenshot;
+    }
     return;
   }
 
@@ -293,7 +315,8 @@ async function processFileEdit(
   file: FileEditInput,
   index: number,
   state: EditFilesBatchState,
-  mode: AgentMode | undefined
+  mode: AgentMode | undefined,
+  capture: boolean
 ): Promise<FileProcessOutcome> {
   const { path: filePath, edits } = file;
   const absPath = resolveFilePath(filePath);
@@ -354,7 +377,7 @@ async function processFileEdit(
   }
 
   if (handler) {
-    const prepared = await handler.prepare({ filePath, absPath, result, readRecord, needsApproval });
+    const prepared = await handler.prepare({ filePath, absPath, result, readRecord, needsApproval, capture });
     if (!prepared.ok) {
       return completeFile(filePath, false, 0, prepared.message, {
         ...(prepared.frontendSynced === undefined ? {} : { frontendSynced: prepared.frontendSynced }),
@@ -391,6 +414,7 @@ Rules:
 - Edits within one file are atomic and applied in order. If one edit fails, that file is not written.
 - Files are independent. A failure in one file never stops or rolls back other files.
 - Each component, filter, or screen-info update is suspended and resumed separately so every frontend update is processed.
+- capture defaults to true: successful component edits return a screenshot through imagesForModel for visual inspection. Set capture: false to skip capture and upload for this batch. If capture fails, the edit still succeeds; use capture_canvas to retry when needed.
 - Do not use this tool on binary or Jupyter (.ipynb) files.
 - Never use shell commands to modify workspace component files; use edit_files so validation and frontend synchronization run.`,
 
@@ -399,15 +423,16 @@ Rules:
   suspendSchema: editFilesSuspendSchema,
   resumeSchema: editFilesResumeSchema,
 
-  execute: async ({ files }, context) => {
+  execute: async ({ files, capture = true }, context) => {
     const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
     const { resumeData, suspend, toolCallId } = context?.agent ?? {};
     const executionKey = toolCallId ?? `direct:${randomUUID()}`;
     // resume 时 mastra 跳过 inputSchema 校验（tool.execute 里 skipInputValidation = isResuming），
     // 首次拿到的是 zod 补过 default 的 files，resume 拿到的是模型原始 args。
     // 直接 stringify 会因 replace_all 有无而不等，指纹必须先补齐 default 再算。
-    const inputSignature = JSON.stringify(
-      (files as FileEditInput[]).map((file) => ({
+    const inputSignature = JSON.stringify({
+      capture,
+      files: (files as FileEditInput[]).map((file) => ({
         path: file.path,
         edits: file.edits.map((edit) => ({
           old_string: edit.old_string,
@@ -415,7 +440,7 @@ Rules:
           replace_all: edit.replace_all ?? false
         }))
       }))
-    );
+    });
     let state = batchStates.get(executionKey);
 
     if (!state) {
@@ -447,7 +472,7 @@ Rules:
     }
 
     if (resumeData) {
-      await settlePendingOperation(state, resumeData);
+      await settlePendingOperation(state, resumeData, capture);
     }
 
     while (state.cursor < files.length) {
@@ -461,7 +486,7 @@ Rules:
 
       let outcome: FileProcessOutcome;
       try {
-        outcome = await processFileEdit(files[index], index, state, mode);
+        outcome = await processFileEdit(files[index], index, state, mode, capture);
       } catch (error) {
         outcome = completeFile(files[index].path, false, 0, error instanceof Error ? error.message : String(error));
       }

@@ -69,6 +69,8 @@ export async function mountAi(app: Hono): Promise<RoleMount> {
       return true;
     },
     close: async () => {
+      const { closeMediaAssetsMcp } = await import("@/mastra/mcp/media-assets/client");
+      await closeMediaAssetsMcp();
       await artifactAppPreviewManager.stopAll();
       previewProxy.close();
       await Promise.all([closeImageQueueClient(), closeVideoQueueClient()]);

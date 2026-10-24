@@ -19,6 +19,8 @@ const WRITE_TOOL_KEYS = new Set([
   "createActionTemplate",
   // 会往用户素材库里新增素材，规划阶段不动用户的库
   "pushAssetsTool",
+  "searchMediaAssetsTool",
+  "importMediaAssetsTool",
   // Artifact App 会切换任务分支并修改前端项目源码，PLAN 模式禁止执行。
   "delegateAppCodeTool",
   // 施工子 agent 的委派工具（Mastra 以 `agent-${name}` 为 key 注入）。

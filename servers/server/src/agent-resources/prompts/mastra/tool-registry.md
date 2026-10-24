@@ -25,6 +25,8 @@
 | `pullAssetsTool` | 把存储里的文件（素材库、生成的图、用户上传的）拉到当前大屏自己的 `screen_{id}/assets/`，供 `execute_command` 本地处理（裁切、缩放、拼图、转格式）；一次多个、并行；**返回每个文件的最终位置 `path`，必须用它，不要猜文件名** |
 | `pushAssetsTool` | 把当前大屏 `assets/` 里的图片 / 视频传到存储并新增到用户素材库，返回最终 `url` 和素材 id；一次多个、并行；只收这个大屏 `assets/` 里的 png/jpg/webp/gif/svg/mp4/webm/mov |
 | `createVideoTool` | 生成视频（文生视频，或把一张图当第一帧让它动起来），慢且贵，先和用户确认；自动进素材库「AI 生成」分组 |
+| `searchMediaAssetsTool` | 联网收集真实图片/视频，委托本地素材 Agent 搜索、下载并校验；后台等待，完成后自动转存到平台并进入「联网素材」分组。返回 `assets[].url` 是平台稳定地址，`sourceUrl` 仅为来源网页。图片可带 `sourceUrls`；视频当前支持抖音。不要关闭后台执行或手动轮询 |
+| `importMediaAssetsTool` | 导入用户提供的素材任务 `taskId`，或对同一任务重试导入；刷新临时下载地址后转存、入库，按内容去重，不会重新搜索。出现 `input_required` 时请用户完成服务提示的登录/验证再发起新任务 |
 
 **数据与事件配置（常驻）：**
 | 工具名 | 用途 |

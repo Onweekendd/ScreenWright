@@ -39,6 +39,7 @@ import { pullAssetsTool } from "../tools/pull-assets";
 import { pushAssetsTool } from "../tools/push-assets";
 import { saveAiTemplateTool } from "../tools/save-ai-template";
 import { searchComponentTool } from "../tools/search-component-tool";
+import { importMediaAssetsTool, searchMediaAssetsTool } from "../tools/search-media-assets";
 import { simulateEvent } from "../tools/simulate-event";
 import { claimTask, createTask, deleteTask, getTask, listTasks, resetTaskList, updateTask } from "../tools/task";
 import { todoWrite } from "../tools/todo";
@@ -159,6 +160,8 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       simulateEvent,
       createImageTool,
       createVideoTool,
+      searchMediaAssetsTool,
+      importMediaAssetsTool,
       // 本地处理素材的两头：拉到工作区 assets/ 才能用 execute_command 处理，处理完传回素材库。
       // 单个调用带多个文件、内部并行；agent 一想「本地处理图片」就要用到，跟生图工具一起常驻
       pullAssetsTool,

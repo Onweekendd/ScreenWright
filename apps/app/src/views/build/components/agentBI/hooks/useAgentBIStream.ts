@@ -129,7 +129,10 @@ function isMessagePartFinalized(part: MessagePart): boolean {
     if (state === "output-error" || state === "output-denied") {
       return true;
     }
-    return state === "output-available" && !(part as { preliminary?: boolean }).preliminary;
+    // 后台工具的首次回执只是占位，完成时仍会替换 output，不能提前冻结渲染引用。
+    const output = (part as { output?: unknown }).output;
+    const isBackgroundPlaceholder = typeof output === "string" && /^Background task started/.test(output);
+    return state === "output-available" && !(part as { preliminary?: boolean }).preliminary && !isBackgroundPlaceholder;
   }
 
   return type === "step-start" || type === "file" || type.startsWith("source-");

@@ -1,7 +1,16 @@
 <template>
   <div class="ft-img" :style="getFrostedStyle">
-    <div class="imgBox" :style="mergedStyle" ref="imgBoxRef" @click.stop="handleClick">
-      <img ref="imageRef" :src="setMinioUrl(dataChartItem.value)" :style="styleImgBoxName" />
+    <div
+      class="imgBox"
+      :style="mergedStyle"
+      ref="imgBoxRef"
+      @click.stop="handleClick"
+    >
+      <img
+        ref="imageRef"
+        :src="setMinioUrl(dataChartItem.value)"
+        :style="styleImgBoxName"
+      />
     </div>
   </div>
 </template>
@@ -14,9 +23,13 @@ import { useSwImg } from "./useSwImg";
 
 const props = defineProps<{ element: ComponentType }>();
 
-const { dataChartItem, imgBoxRef, imageRef, getFrostedStyle, mergedStyle, styleImgBoxName, handleClick } = useSwImg(
-  props.element
-);
+const {
+  dataChartItem,
+  getFrostedStyle,
+  mergedStyle,
+  styleImgBoxName,
+  handleClick,
+} = useSwImg(props.element);
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,3 @@
-import type { CSSProperties } from "vue";
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-
 import { useBaseData, useFrostedStyle } from "@screenwright/composables";
 import type { ComponentType } from "@screenwright/types";
 import { upgradeSwimgOption } from "@screenwright/types";
@@ -9,6 +6,15 @@ import { upgradeSwimgOption } from "@screenwright/types";
 // （运行时值导出不受影响，upgradeSwimgOption 从包根导入正常）。这是 @screenwright/types 构建产物的
 // 已知问题，不在本次 swimg 组件迁移范围内，这里绕开即可。
 import type { SwimgOption } from "@screenwright/types/schemas";
+import type { CSSProperties } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 
 import "@material/styles/atomicPresetAnimations.css";
 
@@ -31,17 +37,19 @@ export const buildTransformStyle = (option: SwimgOption): CSSProperties => {
  * 没有 animation 时返回空对象，避免覆盖其他样式来源。
  */
 export const buildAnimationStyle = (option: SwimgOption): CSSProperties => {
-  if (!option.animation) return {};
+  if (!option.animation) {
+    return {};
+  }
   return {
     animation: option.animation,
-    WebkitAnimation: option.animation
+    WebkitAnimation: option.animation,
   };
 };
 
 /** keyframes 播放的默认时长/循环次数，schema 未提供单独的时长字段时使用 */
 const DEFAULT_KEYFRAMES_OPTIONS: KeyframeAnimationOptions = {
   duration: 1000,
-  iterations: Infinity
+  iterations: Infinity,
 };
 
 export function useSwImg(element: ComponentType) {
@@ -51,7 +59,10 @@ export function useSwImg(element: ComponentType) {
 
   // 归一化 option：兼容旧数据格式，对已是当前格式的数据是恒等操作
   const option = computed<SwimgOption>(
-    () => upgradeSwimgOption(rawBase.option.value as Record<string, unknown>) as SwimgOption
+    () =>
+      upgradeSwimgOption(
+        rawBase.option.value as Record<string, unknown>,
+      ) as SwimgOption,
   );
 
   const imgBoxRef = ref<HTMLDivElement | null>(null);
@@ -60,14 +71,14 @@ export function useSwImg(element: ComponentType) {
   const customizeAnimationPlayer = ref<Animation | null>(null);
 
   const bgStyle = computed<CSSProperties>(() => ({
-    background: option.value.background
+    background: option.value.background,
   }));
 
   const mergedStyle = computed<CSSProperties>(() => ({
     ...bgStyle.value,
     ...buildAnimationStyle(option.value),
     minHeight: "100%",
-    minWidth: "100%"
+    minWidth: "100%",
   }));
 
   const styleImgBoxName = computed<CSSProperties>(() => ({
@@ -83,7 +94,7 @@ export function useSwImg(element: ComponentType) {
     width: "100%",
     height: "100%",
     ...buildFilterStyle(option.value),
-    ...buildTransformStyle(option.value)
+    ...buildTransformStyle(option.value),
   }));
 
   const clearCustomizeAnimation = () => {
@@ -97,17 +108,19 @@ export function useSwImg(element: ComponentType) {
   const playKeyframesAnimation = () => {
     clearCustomizeAnimation();
     const keyframes = option.value.keyframes;
-    if (!keyframes || !keyframes.length || !imageRef.value) return;
+    if (!keyframes || !keyframes.length || !imageRef.value) {
+      return;
+    }
     customizeAnimationPlayer.value = imageRef.value.animate(
       keyframes as Keyframe[],
-      DEFAULT_KEYFRAMES_OPTIONS
+      DEFAULT_KEYFRAMES_OPTIONS,
     );
   };
 
   const handleClick = () => {
     if (clickFormatter) {
       clickFormatter({
-        data: dataChartItem.value
+        data: dataChartItem.value,
       });
     }
   };
@@ -132,14 +145,14 @@ export function useSwImg(element: ComponentType) {
 
       dataChartItem.value = nextItem as any;
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   watch(
     () => option.value.keyframes,
     () => {
       playKeyframesAnimation();
-    }
+    },
   );
 
   onMounted(async () => {
@@ -161,6 +174,6 @@ export function useSwImg(element: ComponentType) {
     getFrostedStyle,
     mergedStyle,
     styleImgBoxName,
-    handleClick
+    handleClick,
   };
 }

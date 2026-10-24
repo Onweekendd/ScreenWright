@@ -283,7 +283,7 @@ background-task-suspended
 | `servers/server/src/mastra/services/chat/handle-bi-chat.ts` | 初始请求、主 run resume、background task resume |
 | `servers/server/src/mastra/provider/deepseek.ts` | 后台派发空结果占位回填 |
 | `servers/server/src/mastra/processors/keepBgDelegationsVisible.ts` | 防止模型把后台派发误判为孤儿调用 |
-| `servers/server/src/mastra/processors/rewriteSuspendedContinuationDirective.ts` | 改写 suspended 续接指令 |
+| `servers/server/src/mastra/processors/inlineBackgroundTaskResults.ts` | 续接提示只有任务 id，这里把后台任务的结果（取自后台任务表）写进提示里 |
 | `patches/@mastra__core.patch` | suspended/resume 的本地 Mastra 修复 |
 
 Mastra API 细节优先查看当前安装包：

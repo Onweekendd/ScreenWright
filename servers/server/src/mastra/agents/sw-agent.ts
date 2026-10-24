@@ -10,7 +10,7 @@ import { CompactionProcessor } from "../lib/compaction/processors/compaction";
 import { ToolResultCleanupProcessor } from "../lib/compaction/processors/toolResultCleanup";
 import { keepBgDelegationsVisible } from "../processors/keepBgDelegationsVisible";
 import { ModeGuardProcessor } from "../processors/mode-guard.processor";
-import { rewriteSuspendedContinuationDirective } from "../processors/rewriteSuspendedContinuationDirective";
+import { InlineBackgroundTaskResults } from "../processors/inlineBackgroundTaskResults";
 import { ToolCallArgsSanitizer } from "../processors/tool-call-args-sanitizer.processor";
 import { resolveReasoningModel } from "../provider/model-registry";
 import { memory } from "../storage/storage";
@@ -220,7 +220,8 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       }),
       new ToolCallArgsSanitizer(),
       new keepBgDelegationsVisible(),
-      new rewriteSuspendedContinuationDirective(),
+      // 后台任务完成后的续接提示只有任务 id，没有结果：在这里把结果写进提示里
+      new InlineBackgroundTaskResults(),
       // 必须放在 ToolSearchProcessor 之后,以便剥离 Search 动态注入的写工具(如 createConditionTemplate)
       new ModeGuardProcessor(),
       new ToolResultCleanupProcessor(),

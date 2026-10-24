@@ -21,6 +21,8 @@
 | `create_component` | 在工作区中创建组件；多个组件传 `components` 数组一次建完，比逐个调用快 |
 | `edit_files` | 独立编辑一个或多个工作区文件，并逐项同步前端 |
 | `delete_file` | 删除工作区文件 |
+| `pullAssetsTool` | 把存储里的文件（素材库、生成的图、用户上传的）拉到当前大屏自己的 `screen_{id}/assets/`，供 `execute_command` 本地处理（裁切、缩放、拼图、转格式）；一次多个、并行；**返回每个文件的最终位置 `path`，必须用它，不要猜文件名** |
+| `pushAssetsTool` | 把当前大屏 `assets/` 里的图片 / 视频传到存储并新增到用户素材库，返回最终 `url` 和素材 id；一次多个、并行；只收这个大屏 `assets/` 里的 png/jpg/webp/gif/svg/mp4/webm/mov |
 
 **数据与事件配置（常驻）：**
 | 工具名 | 用途 |

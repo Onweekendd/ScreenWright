@@ -34,6 +34,8 @@ import { listAvailableActions } from "../tools/list-available-actions";
 import { listAvailableEvents } from "../tools/list-available-events";
 import { moveComponentTool } from "../tools/move-component";
 import { enterPlanModeTool, submitPlanTool } from "../tools/plan";
+import { pullAssetsTool } from "../tools/pull-assets";
+import { pushAssetsTool } from "../tools/push-assets";
 import { saveAiTemplateTool } from "../tools/save-ai-template";
 import { searchComponentTool } from "../tools/search-component-tool";
 import { simulateEvent } from "../tools/simulate-event";
@@ -155,6 +157,10 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       // 跟 cmd.exe 的引号转义搏斗）；常驻成工具后一次调用
       simulateEvent,
       createImageTool,
+      // 本地处理素材的两头：拉到工作区 assets/ 才能用 execute_command 处理，处理完传回素材库。
+      // 单个调用带多个文件、内部并行；agent 一想「本地处理图片」就要用到，跟生图工具一起常驻
+      pullAssetsTool,
+      pushAssetsTool,
       // 任务管理：委派通信的核心通道，必须每轮规划都可用，不走动态搜索
       createTask,
       updateTask,

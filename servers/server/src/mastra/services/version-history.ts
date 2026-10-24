@@ -115,7 +115,15 @@ const isRepoInitialized = (screenRoot: string): boolean => {
 };
 
 /** 运行环境噪声，与大屏内容无关 */
-const BASE_IGNORE_PATTERNS = ["node_modules/", ".mastra/", "*.db", "*.log"];
+const BASE_IGNORE_PATTERNS = [
+  "node_modules/",
+  ".mastra/",
+  "*.db",
+  "*.log",
+  // 本地素材区（pullAssetsTool 拉下来的图片 / 视频）：二进制进快照会撑大历史；
+  // 回退用 git reset --hard，不会动被忽略的文件，agent 在这里处理到一半的素材不会被回退冲掉
+  "assets/"
+];
 
 /**
  * 由组件树派生、每次 syncScreenData 都会重算的索引文件，不进版本历史。

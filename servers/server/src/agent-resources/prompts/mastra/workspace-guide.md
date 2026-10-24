@@ -30,6 +30,8 @@ workspace/
     ├── dataFilterArr/           # 数据过滤器目录（每个过滤器一个文件，以过滤器名称命名）
     │   ├── {name}.json          # 过滤器元数据（dataFormatter 字段为 "{name}.js" 引用）
     │   └── {name}.js            # dataFormatter 函数体
+    ├── assets/                  # 本地素材区（本大屏专用，不进版本历史、回退不会动它）：从存储拉下来的 / 本地处理出来的图片和视频
+    │   └── {文件名}              # 用 pullAssetsTool 拉、pushAssetsTool 传；返回的 path 就是最终位置
     ├── aniFrameSet.json         # 动画帧信息
     ├── statusAnimation.json     # 状态动画信息
     └── component/
@@ -61,6 +63,16 @@ workspace/
 **⚠️ 操作规则：`_layout.json` 每次数据同步时自动重新生成，禁止手动写入或修改。需要理解分组或动态面板内部结构时，必须先读该容器子目录下的 `_layout.json`**，它提供：子组件的空间布局（ascii_map）、层叠顺序（zIndex）、子树规模摘要（childrenSummary）。读完后再按需精读具体子组件文件。跳过此步直接猜测内部结构会导致错误。
 
 **⚠️ 路径拼接规则（必读）**：读到 `_layout.json` 后，其 `container.dir` 字段即为该容器目录相对于 `component/` 的路径（如 `"3303567_card-右侧栏_动态面板/42tW3Gpd-zHho-41hN-bNPq-tbccR78oVwH5_设备检测右"`）。`components[]` 中每个子组件的文件路径为：`screen_{id}/component/{container.dir}/{idName}.json`，**不要**直接将子组件 id 拼到顶层 `component/` 下。
+
+## 本地素材区 assets/
+
+要在本地处理图片 / 视频（裁切、缩放、拼图、转格式……）时：
+
+1. `pullAssetsTool`（带当前 `screenId`）把存储里的文件（素材库、生成的图、用户上传的）拉到 `screen_{id}/assets/`，一次可以带多个、并行下载。**用返回的 `path`**——同名但内容不同的文件会自动改名避让，别自己猜文件名
+2. 用 `execute_command` 在 `screen_{id}/assets/` 里处理（工作目录是工作区根，路径写 `screen_{id}/assets/xxx.png`）；处理结果也写回这个目录
+3. `pushAssetsTool` 把这个大屏 `assets/` 里的结果传到存储并新增到用户素材库，一次可以带多个、并行上传；返回的 `url` 直接放进图片 / 视频组件
+
+`assets/` 只放素材，不放组件、过滤器、屏幕配置；那些仍然只用 `read_file` / `edit_files`。每个大屏的 `assets/` 互相独立，只能上传当前大屏 `assets/` 里的 png / jpg / webp / gif / svg / mp4 / webm / mov。
 
 ## 文件读写与前端同步
 

@@ -4,7 +4,7 @@ import { ResourceTypeEnum } from "@screenwright/types";
 import mime from "mime";
 import { z } from "zod";
 
-import { callMediaAssetsTool } from "../mcp/media-assets/client";
+import { callMediaAssetsTool } from "../../mcp/media-assets/client";
 import { addWorkspaceAsset, largeIdOf } from "./ai-asset-library";
 
 const MAX_BYTES = 50 * 1024 * 1024;

@@ -7,7 +7,7 @@ import { ResourceTypeEnum } from "@screenwright/types";
 import { assetStore } from "@/lib/storage";
 
 import { addWorkspaceAsset } from "./ai-asset-library";
-import { getScreenDirPath, getWorkspaceBase } from "./screen-workspace";
+import { getScreenDirPath, getWorkspaceBase } from "../screen/screen-workspace";
 
 /**
  * 每个大屏自己的本地素材区：`screen_{id}_{ver}/assets/`，放「拉下来 / 待上传」的图片和视频。

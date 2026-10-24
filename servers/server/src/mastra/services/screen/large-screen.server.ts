@@ -11,7 +11,7 @@ import {
   mirrorVersionToScreen,
   pickVersionFields,
   resolveVersionCode
-} from "@/mastra/services/version.server";
+} from "@/mastra/services/version/version.server";
 import type {
   LargeGroupSaveReq,
   LargeGroupUpdateReq,

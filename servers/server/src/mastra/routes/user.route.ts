@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
 
-import { getCurrentUser, getMenuTree, isSuperAdmin, login } from "@/mastra/services/user.server";
+import { getCurrentUser, getMenuTree, isSuperAdmin, login } from "@/mastra/services/admin/user.server";
 import type { AuthVariables } from "@/middleware/auth";
 import { authMiddleware } from "@/middleware/auth";
 

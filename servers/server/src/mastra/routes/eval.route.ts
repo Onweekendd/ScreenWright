@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-import { getEvalRun, listEvalRuns } from "../services/eval.server";
+import { getEvalRun, listEvalRuns } from "../services/admin/eval.server";
 
 export const evalRouter = new Hono()
   .get("/runs", async (c) => {

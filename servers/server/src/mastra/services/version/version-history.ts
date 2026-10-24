@@ -11,8 +11,8 @@ import {
   type SystemComponentProps
 } from "@screenwright/types";
 
-import { readFileState } from "../tools/file/state";
-import { getScreenDirPath, getWorkspaceBase } from "./screen-workspace";
+import { readFileState } from "../../tools/file/state";
+import { getScreenDirPath, getWorkspaceBase } from "../screen/screen-workspace";
 
 const execFileAsync = promisify(execFile);
 

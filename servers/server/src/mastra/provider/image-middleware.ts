@@ -1,7 +1,7 @@
 import type { LanguageModelMiddleware } from "ai";
 
-import { readStoredImage } from "../services/chat-image.server";
-import { shrinkToJpeg } from "../services/shrink-image";
+import { readStoredImage } from "../services/ai-assets/chat-image.server";
+import { shrinkToJpeg } from "../services/ai-assets/shrink-image";
 
 // ============================================================
 // 让主模型直接「看图」

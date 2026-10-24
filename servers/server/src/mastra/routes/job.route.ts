@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-import { getGenerationProgress } from "@/mastra/services/generation-progress";
+import { getGenerationProgress } from "@/mastra/services/ai-generation/generation-progress";
 import { getQueueMode } from "@/queue/config";
 import { getImageJobInfo } from "@/queue/image-client";
 

@@ -7,7 +7,7 @@ import type { Filter } from "@screenwright/types";
 import { z } from "zod";
 
 import { applyFilterSave } from "@/mastra/services/bi-data-sync/screen-mutation";
-import { getScreenDirPath } from "@/mastra/services/screen-workspace";
+import { getScreenDirPath } from "@/mastra/services/screen/screen-workspace";
 
 import { SuspendDefs, SuspendType } from "../../types/suspend";
 import { readCanvasOpResults, suspendCanvasOps } from "../canvas-ops";

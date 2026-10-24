@@ -5,7 +5,7 @@ import {
   generateAndStoreImage,
   type GeneratedImageRecord,
   type GenerateImageInput
-} from "@/mastra/services/image-generation.server";
+} from "@/mastra/services/ai-generation/image-generation.server";
 
 import { getQueueMode, getQueuePrefix } from "./config";
 import { createRedisConnection } from "./connection";

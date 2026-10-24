@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { computePromptHash, type GeneratedImageRecord } from "@/mastra/services/image-generation.server";
+import { computePromptHash, type GeneratedImageRecord } from "@/mastra/services/ai-generation/image-generation.server";
 
 /** 生图队列名。producer（ai 进程）与 consumer（worker 进程）必须一致。 */
 export const IMAGE_QUEUE = "image-generation";

@@ -1,7 +1,7 @@
 /**
  * 事件干跑工具：给定触发组件、事件类型、抛出值，真跑一遍事件链路，报出三段结论。
  *
- * 逻辑全在 `services/event-simulation.ts`，这里只是把它挂成工具。
+ * 逻辑全在 `services/events/event-simulation.ts`，这里只是把它挂成工具。
  * 之前是命令行脚本 `scripts/simulateEvent.ts`，agent 调一次要在沙箱里摸 shell 语法、
  * 读源码看用法、再跟 cmd.exe 的引号转义搏斗——实测一轮 7 次调用才跑通一次。
  * 做成工具后入参就是 JSON，一次调用。
@@ -11,7 +11,7 @@ import { createTool } from "@mastra/core/tools";
 import { EventTypeEnum } from "@screenwright/types";
 import { z } from "zod";
 
-import { simulateEvent as runSimulation } from "@/mastra/services/event-simulation";
+import { simulateEvent as runSimulation } from "@/mastra/services/events/event-simulation";
 
 const InputSchema = z.object({
   screenId: z.string().min(1).describe('大屏目录标识，格式 "{screenId}_{versionCode}"，如 "9001_1"'),

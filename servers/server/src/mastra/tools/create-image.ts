@@ -1,9 +1,9 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
-import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-asset-library";
-import { trackGeneration } from "@/mastra/services/generation-progress";
-import { deriveSeed } from "@/mastra/services/image-generation.server";
+import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-assets/ai-asset-library";
+import { trackGeneration } from "@/mastra/services/ai-generation/generation-progress";
+import { deriveSeed } from "@/mastra/services/ai-generation/image-generation.server";
 import { formatErrorChain } from "@/mastra/workflows/figma-to-bi/utils/async";
 import { generateImage } from "@/queue/image-client";
 

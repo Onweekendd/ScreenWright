@@ -1,7 +1,7 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
-import { MAX_ASSET_BYTES, pullAsset, type PulledAsset, type PullSource } from "@/mastra/services/workspace-assets";
+import { MAX_ASSET_BYTES, pullAsset, type PulledAsset, type PullSource } from "@/mastra/services/ai-assets/workspace-assets";
 
 /** 一次最多拉几个：并行下载，再多就该分批 */
 export const MAX_PULL_FILES = 16;

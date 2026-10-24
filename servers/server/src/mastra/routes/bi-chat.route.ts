@@ -15,9 +15,9 @@ import {
   handleListThreads,
   handleUpdateThread
 } from "../services/chat";
-import { buildScreenVersionKey } from "../services/screen-workspace";
-import { handleGenerateTitle, type TitleGenerationRequest } from "../services/title-generation.server";
-import { buildRollbackPlan, getRollbackPreview, listNodes, rollback } from "../services/version-history";
+import { buildScreenVersionKey } from "../services/screen/screen-workspace";
+import { handleGenerateTitle, type TitleGenerationRequest } from "../services/ai-generation/title-generation.server";
+import { buildRollbackPlan, getRollbackPreview, listNodes, rollback } from "../services/version/version-history";
 import { AgentMode, ListThreadMessagesRequestSchema } from "../types/bi-chat";
 import { SuspendTypeSchema } from "../types/suspend";
 

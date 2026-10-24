@@ -12,9 +12,9 @@ import { assetStore } from "@/lib/storage";
 import { prismaClient } from "@/mastra/storage/prisma";
 import { formatErrorChain, retryWithBackoff } from "@/mastra/workflows/figma-to-bi/utils/async";
 
+import { imageSize } from "../ai-assets/shrink-image";
 import { prepareReference } from "./image-generation.server";
 import { mediaTypeOf } from "./image-provider";
-import { imageSize } from "./shrink-image";
 import {
   buildSubmitRequest,
   getVideoConfig,

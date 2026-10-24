@@ -1,7 +1,7 @@
 import { HTTPException } from "hono/http-exception";
 
 import { recordStore } from "@/lib/storage";
-import { parseLlmExchangeContent } from "@/mastra/services/llm-exchange-content";
+import { parseLlmExchangeContent } from "@/mastra/services/llm-exchange/llm-exchange-content";
 import { prismaClient } from "@/mastra/storage/prisma";
 import { memory } from "@/mastra/storage/storage";
 import type { LlmExchangeRecord } from "@/mastra/types/llm-exchange";

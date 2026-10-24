@@ -1,7 +1,7 @@
-import { FALLBACK_MODEL_CONTEXT_LIMIT } from "../config/model-capability";
-import { compactionConfig } from "../lib/compaction/config";
-import { getModelConfigSync } from "../provider/model-registry";
-import { type ModelCapability, ModelCapabilitySchema } from "../types/model-capability";
+import { FALLBACK_MODEL_CONTEXT_LIMIT } from "../../config/model-capability";
+import { compactionConfig } from "../../lib/compaction/config";
+import { getModelConfigSync } from "../../provider/model-registry";
+import { type ModelCapability, ModelCapabilitySchema } from "../../types/model-capability";
 
 /**
  * 返回推理模型的能力快照 + 当前压缩配置。

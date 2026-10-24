@@ -3,8 +3,8 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 import { ok } from "@/lib/http/envelope";
-import { copyLayer, deleteLayer, getLayer, saveLayer, updateLayer } from "@/mastra/services/layers.server";
-import { resolveVersionCode } from "@/mastra/services/version.server";
+import { copyLayer, deleteLayer, getLayer, saveLayer, updateLayer } from "@/mastra/services/screen/layers.server";
+import { resolveVersionCode } from "@/mastra/services/version/version.server";
 import type { AuthVariables } from "@/middleware/auth";
 import { authMiddleware } from "@/middleware/auth";
 

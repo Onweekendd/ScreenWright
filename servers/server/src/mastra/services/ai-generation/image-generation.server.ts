@@ -16,7 +16,7 @@ import { prismaClient } from "@/mastra/storage/prisma";
 import { formatErrorChain, retryWithBackoff } from "@/mastra/workflows/figma-to-bi/utils/async";
 
 import { buildImageRequest, extractImage, imagesEndpoint, mediaTypeOf } from "./image-provider";
-import { imageSize, shrinkToJpeg } from "./shrink-image";
+import { imageSize, shrinkToJpeg } from "../ai-assets/shrink-image";
 
 export { imagesEndpoint };
 

@@ -6,7 +6,7 @@
  * 因此共用同一份契约、同一套 sink / 索引 / 阅卷链路。
  *
  * 【字段顺序即落盘 JSON 的顺序】新增字段一律追加在末尾：MinIO 里的历史档案、
- * Postgres 索引指针与阅卷室读取端（services/llm-exchange-content.ts）都按这个形状读，
+ * Postgres 索引指针与阅卷室读取端（services/llm-exchange/llm-exchange-content.ts）都按这个形状读，
  * 重排会让新旧档案失去可比性。
  */
 

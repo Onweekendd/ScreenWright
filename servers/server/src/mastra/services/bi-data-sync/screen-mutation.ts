@@ -2,7 +2,7 @@ import { type ComponentPlacement, extractComponentId, ScreenEditor } from "@scre
 import type { ComponentType, Filter, PanelState, ParsedLargeScreenInfo } from "@screenwright/types";
 import path from "path";
 
-import { getScreenDirPath, getWorkspaceBase } from "../screen-workspace";
+import { getScreenDirPath, getWorkspaceBase } from "../screen/screen-workspace";
 import { findJsonFile } from "./fs-utils";
 import { ScreenReader } from "./screen-read";
 import { syncScreenData } from "./screen-sync";

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { computeVideoHash, type GeneratedVideoRecord } from "@/mastra/services/video-generation.server";
-import { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/mastra/services/video-provider";
+import { computeVideoHash, type GeneratedVideoRecord } from "@/mastra/services/ai-generation/video-generation.server";
+import { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/mastra/services/ai-generation/video-provider";
 
 /** 视频队列名。producer（ai 进程）与 consumer（worker 进程）必须一致。 */
 export const VIDEO_QUEUE = "video-generation";

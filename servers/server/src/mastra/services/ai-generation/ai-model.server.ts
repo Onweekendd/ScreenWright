@@ -3,14 +3,14 @@ import { generateImage } from "ai";
 
 import { prismaClient } from "@/mastra/storage/prisma";
 
-import { createConfiguredEmbeddingModel } from "../provider/embedding-model";
+import { createConfiguredEmbeddingModel } from "../../provider/embedding-model";
 import {
   type AiModelConfig,
   MODEL_ROLES,
   type ModelRole,
   resolveEmbeddingModel,
   warmModelConfigs
-} from "../provider/model-registry";
+} from "../../provider/model-registry";
 import { buildSubmitRequest, parseSubmitResponse, resolveVideoConfig } from "./video-provider";
 
 export interface AiModelVo {
@@ -177,6 +177,6 @@ export async function testAiModel(
 export async function reindexEmbeddings(): Promise<{ embedded: number; failed: number }> {
   await warmModelConfigs();
   resolveEmbeddingModel(); // 校验嵌入模型配置可解析
-  const { seedComponentEmbeddings } = await import("../vector/seed-embeddings");
+  const { seedComponentEmbeddings } = await import("../../vector/seed-embeddings");
   return seedComponentEmbeddings({ reset: true });
 }

@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { getAgentWorkspacePath } from "@/agent-resources/workspace-path";
 import { applyComponentCreate } from "@/mastra/services/bi-data-sync/screen-mutation";
-import { getScreenVersionKeyFromPath } from "@/mastra/services/screen-workspace";
+import { getScreenVersionKeyFromPath } from "@/mastra/services/screen/screen-workspace";
 
 import { SuspendDefs, SuspendType } from "../types/suspend";
 import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";

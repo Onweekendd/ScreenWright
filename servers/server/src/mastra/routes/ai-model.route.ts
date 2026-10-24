@@ -9,7 +9,7 @@ import {
   testAiModel,
   updateAiModel,
   type UpdateAiModelInput
-} from "../services/ai-model.server";
+} from "../services/ai-generation/ai-model.server";
 
 /**
  * AI 模型配置（前端「设置」页）。挂在 /customApi 下：

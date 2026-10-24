@@ -8,8 +8,8 @@ import { toAISdkStream } from "@mastra/ai-sdk";
 import type { UIMessage } from "ai";
 import { createUIMessageStreamResponse } from "ai";
 
-import { titleAgent } from "../agents/title-agent";
-import { memory } from "../storage/storage";
+import { titleAgent } from "../../agents/title-agent";
+import { memory } from "../../storage/storage";
 
 // ========== 类型定义 ==========
 

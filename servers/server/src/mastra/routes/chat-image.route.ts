@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 
-import { uploadChatImage } from "../services/chat-image.server";
+import { uploadChatImage } from "../services/ai-assets/chat-image.server";
 import { UploadChatImageRequestSchema } from "../types/chat-image";
 
 export const chatImageRouter = new Hono().post(

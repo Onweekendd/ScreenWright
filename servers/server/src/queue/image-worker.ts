@@ -1,7 +1,7 @@
 import { type Job, UnrecoverableError, Worker } from "bullmq";
 
 import { warmModelConfigs } from "@/mastra/provider/model-registry";
-import { generateAndStoreImage, type GeneratedImageRecord } from "@/mastra/services/image-generation.server";
+import { generateAndStoreImage, type GeneratedImageRecord } from "@/mastra/services/ai-generation/image-generation.server";
 
 import { getQueuePrefix } from "./config";
 import { createRedisConnection } from "./connection";

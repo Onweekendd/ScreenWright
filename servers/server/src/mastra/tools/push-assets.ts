@@ -1,8 +1,8 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
-import { largeIdOf } from "@/mastra/services/ai-asset-library";
-import { MAX_ASSET_BYTES, pushAsset, type PushedAsset, type PushSource } from "@/mastra/services/workspace-assets";
+import { largeIdOf } from "@/mastra/services/ai-assets/ai-asset-library";
+import { MAX_ASSET_BYTES, pushAsset, type PushedAsset, type PushSource } from "@/mastra/services/ai-assets/workspace-assets";
 
 /** 一次最多传几个：并行上传，再多就该分批 */
 export const MAX_PUSH_FILES = 16;

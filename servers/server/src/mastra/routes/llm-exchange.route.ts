@@ -6,7 +6,7 @@ import {
   getThreadFileTree,
   listLlmExchangesByThread,
   listLlmExchangeThreads
-} from "../services/llm-exchange.server";
+} from "../services/llm-exchange/llm-exchange.server";
 
 export const llmExchangeRouter = new Hono()
   .get("/threads", async (c) => {

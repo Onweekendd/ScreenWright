@@ -2,9 +2,9 @@ import { createTool } from "@mastra/core/tools";
 import { ResourceTypeEnum } from "@screenwright/types";
 import { z } from "zod";
 
-import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-asset-library";
-import { trackGeneration } from "@/mastra/services/generation-progress";
-import { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/mastra/services/video-provider";
+import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-assets/ai-asset-library";
+import { trackGeneration } from "@/mastra/services/ai-generation/generation-progress";
+import { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/mastra/services/ai-generation/video-provider";
 import { formatErrorChain } from "@/mastra/workflows/figma-to-bi/utils/async";
 import { generateVideo } from "@/queue/video-client";
 

@@ -5,7 +5,7 @@ import { existsSync, rmSync } from "fs";
 import path from "path";
 
 import { buildIdNameBase, buildStateDirName, sanitizeFsName } from "../../tools/file/utils";
-import { getScreenIdFromVersionKey } from "../screen-workspace";
+import { getScreenIdFromVersionKey } from "../screen/screen-workspace";
 import { collectIncomingIds } from "./component-tree";
 import { buildCallbackFlowGraph, buildEventFlowGraph } from "./flow-graphs";
 import {

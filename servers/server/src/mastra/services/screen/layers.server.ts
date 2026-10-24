@@ -3,7 +3,7 @@ import { HTTPException } from "hono/http-exception";
 import type { Prisma } from "~/generated/prisma/client";
 
 import { ok } from "@/lib/http/envelope";
-import { patchVersionConfig } from "@/mastra/services/version.server";
+import { patchVersionConfig } from "@/mastra/services/version/version.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 type LayerRow = NonNullable<Awaited<ReturnType<typeof prismaClient.layers.findUnique>>>;

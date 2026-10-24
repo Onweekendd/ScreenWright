@@ -3,7 +3,7 @@ import type { Filter, ParsedLargeScreenInfo } from "@screenwright/types";
 import { FilterSchema } from "@screenwright/types/schemas";
 import type { ZodType } from "zod";
 
-import { getScreenVersionKeyFromPath } from "../screen-workspace";
+import { getScreenVersionKeyFromPath } from "../screen/screen-workspace";
 import { applyFilterSave, runScreenMutation } from "./screen-mutation";
 import { ScreenInfoSchema, type ScreenReader } from "./screen-read";
 

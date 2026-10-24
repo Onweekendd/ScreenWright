@@ -37,7 +37,7 @@ import {
 } from "@screenwright/core";
 import type { Action, ComponentType, EventTypeEnum, LargeScreeInfo } from "@screenwright/types";
 
-import { ScreenReader } from "./bi-data-sync/screen-read";
+import { ScreenReader } from "../bi-data-sync/screen-read";
 
 /** 一次动作派发的记录。Node 里动作不真执行，但"被触发了、目标是谁"本身就是结论。 */
 export interface SimulatedAction {

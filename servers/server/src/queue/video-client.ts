@@ -4,8 +4,8 @@ import {
   generateAndStoreVideo,
   type GeneratedVideoRecord,
   type GenerateVideoInput
-} from "@/mastra/services/video-generation.server";
-import { getVideoConfig } from "@/mastra/services/video-provider";
+} from "@/mastra/services/ai-generation/video-generation.server";
+import { getVideoConfig } from "@/mastra/services/ai-generation/video-provider";
 
 import { getQueueMode, getQueuePrefix } from "./config";
 import { createRedisConnection } from "./connection";

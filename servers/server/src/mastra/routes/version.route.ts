@@ -7,7 +7,7 @@ import {
   listVersion,
   publishVersion,
   updateVersion
-} from "@/mastra/services/version.server";
+} from "@/mastra/services/version/version.server";
 import type { AuthVariables } from "@/middleware/auth";
 import { authMiddleware } from "@/middleware/auth";
 

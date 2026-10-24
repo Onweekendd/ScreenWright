@@ -1,7 +1,7 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
-import { importMediaAssets, mediaAssetsResultSchema, searchMediaAssets } from "../services/media-assets.server";
+import { importMediaAssets, mediaAssetsResultSchema, searchMediaAssets } from "../services/ai-assets/media-assets.server";
 
 const screenId = z
   .string()

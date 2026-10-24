@@ -58,7 +58,7 @@ export const apiClient = hc<AppType>(BASE_URL, {
 /** RPC 客户端类型，供消费端（如 Next 服务端）按自定义 baseURL 重建同类型客户端。 */
 export type ApiClient = typeof apiClient;
 
-export type { FileChange, HistoryNode, RollbackOp, RollbackPlan } from "../services/version-history";
+export type { FileChange, HistoryNode, RollbackOp, RollbackPlan } from "../services/version/version-history";
 export {
   AgentMode,
   type AskUserQuestion,

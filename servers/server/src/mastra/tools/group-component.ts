@@ -6,7 +6,7 @@ import type { ComponentType } from "@screenwright/types";
 import { z } from "zod";
 
 import { applyComponentGroup } from "@/mastra/services/bi-data-sync/screen-mutation";
-import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen-workspace";
+import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen/screen-workspace";
 
 import { SuspendDefs, SuspendType } from "../types/suspend";
 import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";

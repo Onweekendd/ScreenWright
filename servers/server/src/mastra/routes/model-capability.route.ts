@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-import { getModelCapability } from "../services/model-capability.server";
+import { getModelCapability } from "../services/ai-generation/model-capability.server";
 
 /**
  * 只读的模型能力配置。前端上下文进度条据此计算占用与告警阈值，

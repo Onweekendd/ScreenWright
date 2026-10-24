@@ -50,8 +50,8 @@ import { DataType } from "@screenwright/types";
 import z from "zod";
 
 import { getAgentWorkspacePath } from "@/agent-resources/workspace-path";
-import { apiConnect } from "@/mastra/services/data-source.server";
-import { getSwaggerIndex, listRegisteredDatasourceIds, pathToFileName } from "@/mastra/services/swagger-registry";
+import { apiConnect } from "@/mastra/services/integrations/data-source.server";
+import { getSwaggerIndex, listRegisteredDatasourceIds, pathToFileName } from "@/mastra/services/integrations/swagger-registry";
 
 import { applyComponentEdit } from "../services/bi-data-sync/component-edit";
 import { prismaClient } from "../storage/prisma";

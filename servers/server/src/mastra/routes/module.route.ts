@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-import { getModule, listModules } from "@/mastra/services/module.server";
+import { getModule, listModules } from "@/mastra/services/admin/module.server";
 import type { AuthVariables } from "@/middleware/auth";
 import { authMiddleware } from "@/middleware/auth";
 

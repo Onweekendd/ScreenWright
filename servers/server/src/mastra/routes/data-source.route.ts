@@ -19,7 +19,7 @@ import {
   testDbConnection,
   updateLocal,
   updateSource
-} from "@/mastra/services/data-source.server";
+} from "@/mastra/services/integrations/data-source.server";
 import type { AuthVariables } from "@/middleware/auth";
 import { authMiddleware } from "@/middleware/auth";
 

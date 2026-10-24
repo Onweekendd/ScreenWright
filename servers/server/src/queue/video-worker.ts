@@ -1,7 +1,7 @@
 import { type Job, Worker } from "bullmq";
 
 import { warmModelConfigs } from "@/mastra/provider/model-registry";
-import { generateAndStoreVideo, type GeneratedVideoRecord } from "@/mastra/services/video-generation.server";
+import { generateAndStoreVideo, type GeneratedVideoRecord } from "@/mastra/services/ai-generation/video-generation.server";
 
 import { getQueuePrefix } from "./config";
 import { createRedisConnection } from "./connection";

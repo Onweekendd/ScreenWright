@@ -10,6 +10,7 @@ import {
 import { getQueueMode, getQueuePrefix } from "./config";
 import { createRedisConnection } from "./connection";
 import { IMAGE_JOB_NAME, IMAGE_QUEUE, type ImageJobData, imageJobId } from "./image-jobs";
+import { type GenerateOptions, waitWithProgress } from "./wait-with-progress";
 
 /**
  * 等任务出结果的上限。生图单次请求 180s、内部最多重试 3 次、队列再重试 1 次，
@@ -40,7 +41,7 @@ export async function closeImageQueueClient(): Promise<void> {
   events = undefined;
 }
 
-async function generateImageViaQueue(input: ImageJobData): Promise<GeneratedImageRecord> {
+async function generateImageViaQueue(input: ImageJobData, options: GenerateOptions): Promise<GeneratedImageRecord> {
   const q = getQueue();
   const jobId = imageJobId(input, getModelConfigSync("image").modelId);
 
@@ -60,7 +61,7 @@ async function generateImageViaQueue(input: ImageJobData): Promise<GeneratedImag
     removeOnFail: { age: RETENTION_SECONDS }
   });
 
-  const result = await job.waitUntilFinished(await getEvents(), WAIT_TIMEOUT_MS);
+  const result = await waitWithProgress(job, await getEvents(), WAIT_TIMEOUT_MS, options.onProgress);
   return { ...result, reused: result.reused || alreadyDone };
 }
 
@@ -70,11 +71,14 @@ async function generateImageViaQueue(input: ImageJobData): Promise<GeneratedImag
  * - inline 模式：当前进程直接执行（没有 Redis 的本地开发）。
  * 对调用方是同一个 `Promise<GeneratedImageRecord>`，执行位置对它透明。
  */
-export async function generateImage(input: GenerateImageInput): Promise<GeneratedImageRecord> {
+export async function generateImage(
+  input: GenerateImageInput,
+  options: GenerateOptions = {}
+): Promise<GeneratedImageRecord> {
   if (getQueueMode() === "inline") {
-    return generateAndStoreImage(input);
+    return generateAndStoreImage(input, { onProgress: options.onProgress });
   }
-  return generateImageViaQueue(input);
+  return generateImageViaQueue(input, options);
 }
 
 export interface ImageJobInfo {

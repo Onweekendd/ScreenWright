@@ -1,4 +1,4 @@
-import { type Job, Worker } from "bullmq";
+import { type Job, UnrecoverableError, Worker } from "bullmq";
 
 import { warmModelConfigs } from "@/mastra/provider/model-registry";
 import { generateAndStoreImage, type GeneratedImageRecord } from "@/mastra/services/image-generation.server";
@@ -16,8 +16,16 @@ export async function processImageJob(
   // worker 每个任务开始前重读一次（4 行小表），保证用的是最新的生图模型。
   await warmModelConfigs();
   await job.updateProgress(5);
-  const record = await generateAndStoreImage(data, { onProgress: (percent) => job.updateProgress(percent) });
-  return toImageRecord(record);
+  try {
+    const record = await generateAndStoreImage(data, { onProgress: (percent) => job.updateProgress(percent) });
+    return toImageRecord(record);
+  } catch (error) {
+    // 参考图不存在这类错重试不会好：直接判死，别让队列再跑一遍
+    if ((error as { permanent?: unknown } | null)?.permanent === true) {
+      throw new UnrecoverableError((error as Error).message);
+    }
+    throw error;
+  }
 }
 
 /** 启动生图 worker。并发度由 IMAGE_WORKER_CONCURRENCY 控制（默认 2，受上游生图接口限流约束）。 */

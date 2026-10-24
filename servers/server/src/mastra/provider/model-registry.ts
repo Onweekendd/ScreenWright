@@ -9,22 +9,26 @@ import { inlineImagesMiddleware } from "./image-middleware";
 import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from "./utils";
 
 /**
- * 模型配置化：只 4 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
+ * 模型配置化：5 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
  *
  * - **reasoning**：主 agent + 所有子 agent + 标题 + 摘要压缩 + 编排 + 截图 + subtab + artifact-app Pi
- * - **vision**：识图。主 agent 自己能看图后已没有使用方，角色先保留（「设置」页与库表都按 4 个角色建的）
+ * - **vision**：识图。主 agent 自己能看图后已没有使用方，角色先保留
  * - **embedding**：组件 RAG 向量
  * - **image**：生图（效果图、装饰素材重画）。走 `images.generations` 接口，不是 chat 补全，
  *   所以 `resolveImageModel` 返回 `ImageModel` 而不是 `WrapLMModel`，见下方单独的 warm/resolve。
+ * - **video**：生视频。走 MiniMax V2 异步任务接口，由 video-provider 读取独立配置。
  *
- * provider 一律按 OpenAI 兼容端点处理，reasoning 往返走 `provider/utils.ts` 的通用逻辑。
+ * 文本、嵌入、生图按 OpenAI 兼容端点处理，视频按 MiniMax V2 协议处理。
+ * reasoning 往返走 `provider/utils.ts` 的通用逻辑。
  * 配置热更新：写库后调 `warmModelConfigs()` 重建缓存，agent 的 `model: () => resolveXxx()`
  * 每次 run 重新解析，无需重启。
  */
 
-export type ModelRole = "reasoning" | "vision" | "embedding" | "image";
+export type ModelRole = "reasoning" | "vision" | "embedding" | "image" | "video";
 
-export const MODEL_ROLES: readonly ModelRole[] = ["reasoning", "vision", "embedding", "image"] as const;
+export const MODEL_ROLES: readonly ModelRole[] = ["reasoning", "vision", "embedding", "image", "video"] as const;
+
+export const DEFAULT_VIDEO_MODEL = "MiniMax-H3";
 
 export interface AiModelConfig {
   role: ModelRole;
@@ -36,7 +40,7 @@ export interface AiModelConfig {
 }
 
 /** 首启 seed 兜底：某行不存在时用 env 建。env 也空就建空行，等用户去设置页填。惰性读 env。 */
-function envDefault(role: ModelRole): Omit<AiModelConfig, "role"> {
+function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig, "role"> {
   const e = process.env;
   switch (role) {
     case "reasoning":
@@ -74,6 +78,18 @@ function envDefault(role: ModelRole): Omit<AiModelConfig, "role"> {
         contextLength: null,
         dimensions: null
       };
+    case "video":
+      // 升级时只初始化一次：优先 VIDEO_MODEL_*，缺项沿用原有生图配置。
+      // 后续与其他角色一样只读数据库，设置页保存后不会再被 env 或生图配置覆盖。
+      return {
+        baseUrl:
+          e.VIDEO_MODEL_BASE_URL?.trim() ||
+          (image?.baseUrl && URL.canParse(image.baseUrl) ? `${new URL(image.baseUrl).origin}/minimax/v2` : ""),
+        apiKey: e.VIDEO_MODEL_API_KEY?.trim() || image?.apiKey || "",
+        modelId: e.VIDEO_MODEL_ID?.trim() || DEFAULT_VIDEO_MODEL,
+        contextLength: null,
+        dimensions: null
+      };
   }
 }
 
@@ -96,7 +112,7 @@ const toConfig = (row: {
 });
 
 /**
- * 从库里读 3 个角色配置进同步缓存；缺行用 env 兜底 seed。
+ * 从库里读所有角色配置进同步缓存；缺行用 env 兜底 seed。
  * 在 `runtime.ts` 顶层 await、以及每次写 `ai_model` 后调用。
  *
  * 先在新表里读齐再整体替换，不能先 clear 再逐个填：生图 worker 每个任务开始前都会重读一次，
@@ -108,7 +124,7 @@ export async function warmModelConfigs(): Promise<void> {
   for (const role of MODEL_ROLES) {
     let row = await prismaClient.aiModel.findUnique({ where: { role } });
     if (!row) {
-      const d = envDefault(role);
+      const d = envDefault(role, next.get("image"));
       row = await prismaClient.aiModel.create({
         data: {
           role,

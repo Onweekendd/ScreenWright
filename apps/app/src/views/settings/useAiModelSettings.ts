@@ -16,6 +16,7 @@ export interface RoleMeta {
   title: string;
   desc: string;
   modelPlaceholder: string;
+  baseUrlPlaceholder?: string;
 }
 
 export const ROLE_META: RoleMeta[] = [
@@ -42,6 +43,13 @@ export const ROLE_META: RoleMeta[] = [
     title: "生图模型",
     desc: "效果图、装饰素材生成。需支持 images.generations 接口的 OpenAI 兼容端点。",
     modelPlaceholder: "留空需先联系模型服务商确认可用的生图模型 id"
+  },
+  {
+    role: "video",
+    title: "生视频模型",
+    desc: "MiniMax V2 文生视频、图生视频。支持填写接口前缀或完整提交地址。测试提交会生成一次 5 秒视频，可能产生费用。",
+    modelPlaceholder: "MiniMax-H3 或 MiniMax-H3-Max",
+    baseUrlPlaceholder: "https://llm-api.net/minimax/v2"
   }
 ];
 
@@ -70,7 +78,8 @@ export function useAiModelSettings() {
     reasoning: null,
     vision: null,
     embedding: null,
-    image: null
+    image: null,
+    video: null
   });
 
   const toForm = (vo: AiModelVo): RoleForm => ({

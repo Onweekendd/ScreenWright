@@ -18,7 +18,8 @@ export async function mountAi(app: Hono): Promise<RoleMount> {
     { ArtifactAppPreviewProxy },
     { initMastraRecordingBridge },
     { isLlmRecordingEnabled },
-    { closeImageQueueClient }
+    { closeImageQueueClient },
+    { closeVideoQueueClient }
   ] = await Promise.all([
     import("@mastra/hono"),
     import("@/mastra/index"),
@@ -27,7 +28,8 @@ export async function mountAi(app: Hono): Promise<RoleMount> {
     import("@/artifact-app/preview/local/artifact-app-preview-proxy"),
     import("@/mastra/record/branch-resolver"),
     import("@/recording/exchange-record"),
-    import("@/queue/image-client")
+    import("@/queue/image-client"),
+    import("@/queue/video-client")
   ]);
 
   // AI 接口与 Mastra 内置路由（/api/*）必须登录，否则任何人都能直接消耗模型额度。
@@ -69,7 +71,7 @@ export async function mountAi(app: Hono): Promise<RoleMount> {
     close: async () => {
       await artifactAppPreviewManager.stopAll();
       previewProxy.close();
-      await closeImageQueueClient();
+      await Promise.all([closeImageQueueClient(), closeVideoQueueClient()]);
     }
   };
 }

@@ -1,8 +1,8 @@
 import type { BaseEntity } from "@/model/BaseEntity";
 import { serverRequest } from "@/utils/serverService";
 
-/** 4 个模型角色 */
-export type ModelRole = "reasoning" | "vision" | "embedding" | "image";
+/** 5 个模型角色 */
+export type ModelRole = "reasoning" | "vision" | "embedding" | "image" | "video";
 
 export interface AiModelVo {
   role: ModelRole;
@@ -33,7 +33,7 @@ export interface TestAiModelResult {
 
 const base = "/customApi/ai-models";
 
-/** 拉 3 个角色配置（key 已脱敏） */
+/** 拉所有角色配置（key 已脱敏） */
 export const getAiModels = () =>
   serverRequest<BaseEntity<AiModelVo[]>>({ url: base, method: "get" }).then((r) => r.result);
 

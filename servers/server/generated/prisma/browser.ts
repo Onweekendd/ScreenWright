@@ -33,6 +33,12 @@ export type AiModel = Prisma.AiModelModel
  */
 export type GeneratedImage = Prisma.GeneratedImageModel
 /**
+ * Model GeneratedVideo
+ * AI 生成的视频。和 GeneratedImage 同一个思路：只存 url（视频文件在 `src/lib/storage/`），
+ * 这张表管「这份输入生成过没有」——视频慢且贵，同一份输入不重新生成。
+ */
+export type GeneratedVideo = Prisma.GeneratedVideoModel
+/**
  * Model FigmaKey
  * 
  */

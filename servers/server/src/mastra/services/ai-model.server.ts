@@ -11,6 +11,7 @@ import {
   resolveEmbeddingModel,
   warmModelConfigs
 } from "../provider/model-registry";
+import { buildSubmitRequest, parseSubmitResponse, resolveVideoConfig } from "./video-provider";
 
 export interface AiModelVo {
   role: ModelRole;
@@ -39,7 +40,7 @@ const toVo = (row: {
 });
 
 export async function listAiModels(): Promise<AiModelVo[]> {
-  // warm 一次，确保 3 行都存在（首次访问会 seed）
+  // warm 一次，确保所有角色都存在（首次访问会 seed）
   await warmModelConfigs();
   const rows = await prismaClient.aiModel.findMany();
   const byRole = new Map(rows.map((r) => [r.role, r]));
@@ -135,6 +136,25 @@ export async function testAiModel(
       const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
       const model = provider.imageModel(cfg.modelId);
       await generateImage({ model, prompt: "a single red dot on white background", n: 1, size: "1024x1024" });
+    } else if (role === "video") {
+      // 视频是异步任务：验证提交成功即可，不等待生成完成。
+      const request = buildSubmitRequest(resolveVideoConfig(cfg), {
+        prompt: "白色背景上的一朵云缓慢移动",
+        durationSec: 5,
+        resolution: "768P",
+        ratio: "16:9"
+      });
+      const response = await fetch(request.url, {
+        method: "POST",
+        headers: request.headers,
+        body: request.body,
+        signal: AbortSignal.timeout(45_000)
+      });
+      const body: unknown = await response.json();
+      if (!response.ok) {
+        throw new Error(`视频接口请求失败（HTTP ${response.status}）：${JSON.stringify(body)}`);
+      }
+      parseSubmitResponse(body);
     } else {
       const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
       const model = provider.chat(cfg.modelId);

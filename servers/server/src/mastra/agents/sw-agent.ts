@@ -27,6 +27,7 @@ import { createConditionTemplate } from "../tools/create-condition-template";
 import { createEchartOptionTool } from "../tools/create-echart-option";
 import { createEventTemplate } from "../tools/create-event-template";
 import { createImageTool } from "../tools/create-image";
+import { createVideoTool } from "../tools/create-video";
 import { executeInBrowserTool } from "../tools/execute-in-browser";
 import { createComponentTool, createDataFilterTool, deleteFileTool, editFilesTool, readFileTool } from "../tools/file";
 import { groupComponentTool } from "../tools/group-component";
@@ -157,6 +158,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       // 跟 cmd.exe 的引号转义搏斗）；常驻成工具后一次调用
       simulateEvent,
       createImageTool,
+      createVideoTool,
       // 本地处理素材的两头：拉到工作区 assets/ 才能用 execute_command 处理，处理完传回素材库。
       // 单个调用带多个文件、内部并行；agent 一想「本地处理图片」就要用到，跟生图工具一起常驻
       pullAssetsTool,

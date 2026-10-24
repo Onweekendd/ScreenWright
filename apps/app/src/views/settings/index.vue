@@ -3,7 +3,7 @@
     <div class="sw-settings__body">
       <header class="sw-settings__head">
         <h1>模型设置</h1>
-        <p>配置保存在本地数据库，运行时热更新（下一次对话生效）。留空则回退到安装目录 .env 里的兜底值。</p>
+        <p>配置保存在本地数据库，运行时热更新。API Key 留空则保留已存密钥；.env 仅用于首次初始化。</p>
       </header>
 
       <section v-for="meta in ROLE_META" :key="meta.role" class="sw-card">
@@ -16,7 +16,10 @@
         <template v-if="states[meta.role]">
           <div class="sw-field">
             <label>Base URL</label>
-            <el-input v-model="states[meta.role]!.form.baseUrl" placeholder="https://api.example.com/v1" />
+            <el-input
+              v-model="states[meta.role]!.form.baseUrl"
+              :placeholder="meta.baseUrlPlaceholder || 'https://api.example.com/v1'"
+            />
           </div>
 
           <div class="sw-field">
@@ -69,14 +72,10 @@
               </span>
             </div>
             <div class="sw-card__actions">
-              <el-button
-                v-if="meta.role === 'embedding'"
-                :loading="reindexing"
-                @click="reindex"
-              >
-                重建索引
+              <el-button v-if="meta.role === 'embedding'" :loading="reindexing" @click="reindex"> 重建索引 </el-button>
+              <el-button :loading="states[meta.role]!.testing" @click="test(meta.role)">
+                {{ meta.role === "video" ? "测试提交" : "测试连接" }}
               </el-button>
-              <el-button :loading="states[meta.role]!.testing" @click="test(meta.role)">测试连接</el-button>
               <el-button class="sw-btn-primary" :loading="states[meta.role]!.saving" @click="save(meta.role)">
                 保存
               </el-button>

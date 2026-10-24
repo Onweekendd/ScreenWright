@@ -439,6 +439,42 @@ describe("generateAndStoreImage", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("参考图文件不存在（模型把哈希抄错了）：报永久失败，并告诉模型原样复制 url 或不带参考图", async () => {
+    prismaMocks.findUnique.mockResolvedValue(null);
+    storeMocks.keyFromUrl.mockReturnValue("generated-images/typo.png");
+    storeMocks.get.mockRejectedValue(Object.assign(new Error("ENOENT: no such file"), { code: "ENOENT" }));
+
+    const failure = await generateAndStoreImage({
+      prompt: "p",
+      seed: 1,
+      width: 512,
+      height: 512,
+      seedImageUrls: ["https://blobs/generated-images/typo.png"]
+    }).catch((error: unknown) => error);
+
+    expect(failure).toMatchObject({ permanent: true });
+    expect((failure as Error).message).toContain("参考图不存在：https://blobs/generated-images/typo.png");
+    expect((failure as Error).message).toContain("原样复制");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("读参考图遇到别的错（网络抖动等）原样抛出，不当作永久失败，让队列重试", async () => {
+    prismaMocks.findUnique.mockResolvedValue(null);
+    storeMocks.keyFromUrl.mockReturnValue("chat-images/c/shot.jpg");
+    storeMocks.get.mockRejectedValue(new Error("connect ETIMEDOUT"));
+
+    const failure = await generateAndStoreImage({
+      prompt: "p",
+      seed: 1,
+      width: 512,
+      height: 512,
+      seedImageUrls: ["https://blobs/chat-images/c/shot.jpg"]
+    }).catch((error: unknown) => error);
+
+    expect(failure).toMatchObject({ message: "connect ETIMEDOUT" });
+    expect(failure).not.toHaveProperty("permanent");
+  });
+
   it("同一份 prompt+seed，参考图不同则 promptHash 不同——不会互相顶替对方的幂等结果", () => {
     expect(computePromptHash("p", 1, "m", ["https://blobs/a.png"])).not.toBe(
       computePromptHash("p", 1, "m", ["https://blobs/b.png"])

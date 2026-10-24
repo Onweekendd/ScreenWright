@@ -35,7 +35,13 @@ beforeEach(() => {
   prismaMocks.findUnique.mockImplementation(({ where }: { where: { role: string } }) =>
     Promise.resolve(row(where.role))
   );
-  prismaMocks.findMany.mockResolvedValue([row("reasoning"), row("vision"), row("embedding"), row("image")]);
+  prismaMocks.findMany.mockResolvedValue([
+    row("reasoning"),
+    row("vision"),
+    row("embedding"),
+    row("image"),
+    row("video")
+  ]);
 });
 
 afterEach(() => vi.unstubAllGlobals());
@@ -82,7 +88,8 @@ describe("ai-model.server", () => {
 
   it("listAiModels：不回传 key 明文/片段，只给 hasApiKey", async () => {
     const list = await listAiModels();
-    expect(list).toHaveLength(4);
+    expect(list).toHaveLength(5);
+    expect(list.find((model) => model.role === "video")?.hasApiKey).toBe(true);
     expect(list[0].hasApiKey).toBe(true);
     const leaked = list[0] as unknown as Record<string, unknown>;
     expect(leaked.apiKey).toBeUndefined();
@@ -104,5 +111,49 @@ describe("ai-model.server", () => {
     prismaMocks.upsert.mockResolvedValue(row("vision"));
     await updateAiModel("vision", { apiKey: "sk-new" });
     expect(prismaMocks.upsert.mock.calls[0][0].update.apiKey).toBe("sk-new");
+  });
+
+  it("视频测试向任务接口提交临时配置，未重填的密钥使用 video 角色已存值", async () => {
+    const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ task_id: "task-test" })));
+    vi.stubGlobal("fetch", fetch);
+
+    const result = await testAiModel("video", {
+      baseUrl: "https://llm-api.net//minimax/v2/video_generation",
+      modelId: "MiniMax-H3"
+    });
+
+    expect(result.ok).toBe(true);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const [url, request] = fetch.mock.calls[0];
+    expect(url).toBe("https://llm-api.net/minimax/v2/video_generation");
+    expect(request.method).toBe("POST");
+    expect(request.headers.Authorization).toBe("Bearer sk-secret-1234");
+    expect(JSON.parse(request.body)).toMatchObject({ model: "MiniMax-H3", duration: 5, resolution: "768P" });
+    expect(prismaMocks.findUnique).toHaveBeenCalledWith({ where: { role: "video" } });
+    expect(prismaMocks.upsert).not.toHaveBeenCalled();
+  });
+
+  it("视频测试拒绝 HTTP 错误以及没有任务 ID 的响应", async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ id: "task-invalid" }), { status: 401 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ error: { message: "model unavailable" } })));
+    vi.stubGlobal("fetch", fetch);
+
+    expect(await testAiModel("video", {})).toMatchObject({ ok: false, error: expect.stringContaining("HTTP 401") });
+    expect(await testAiModel("video", {})).toMatchObject({
+      ok: false,
+      error: expect.stringContaining("model unavailable")
+    });
+  });
+
+  it("video 保存后热更新，空密钥保留旧值", async () => {
+    prismaMocks.upsert.mockResolvedValue(row("video", { modelId: "new-video-model" }));
+    await updateAiModel("video", { modelId: "new-video-model", apiKey: "" });
+    expect(prismaMocks.upsert.mock.calls[0][0]).toMatchObject({
+      where: { role: "video" },
+      update: { modelId: "new-video-model" }
+    });
+    expect(prismaMocks.upsert.mock.calls[0][0].update).not.toHaveProperty("apiKey");
   });
 });

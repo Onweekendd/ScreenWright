@@ -208,6 +208,32 @@ export interface GenerateImageOptions {
   onProgress?: (percent: number) => void | Promise<void>;
 }
 
+/**
+ * 重试也不会好的失败（参考图根本不存在、地址不对）。队列据此直接判死、不再重试——
+ * 否则同一个错会白白重跑好几轮，用户干等。用 `permanent` 标记而不是 instanceof，worker 侧不必依赖这个类。
+ */
+export class PermanentImageError extends Error {
+  readonly permanent = true;
+}
+
+const NOT_FOUND_CODES = new Set(["ENOENT", "NoSuchKey", "NotFound"]);
+
+/** 读参考图字节：文件不存在是永久失败（多半是模型把 64 位哈希抄错了），其他错误（网络抖动等）原样抛出让队列重试 */
+async function readSeedImage(key: string, seedImageUrl: string): Promise<Buffer> {
+  try {
+    return await assetStore().get(key);
+  } catch (error) {
+    const code = (error as { code?: unknown } | null)?.code;
+    if (typeof code === "string" && NOT_FOUND_CODES.has(code)) {
+      throw new PermanentImageError(
+        `参考图不存在：${seedImageUrl}。seedImages 的 url 要原样复制工具返回的那一串，哈希有 64 位，错一个字符就找不到；` +
+          "拿不准就不带 seedImages，只用提示词生成。"
+      );
+    }
+    throw error;
+  }
+}
+
 /** 生成一张图，命中已有 promptHash 时直接返回旧记录、不重新调用模型。 */
 export async function generateAndStoreImage(
   input: GenerateImageInput,
@@ -230,9 +256,9 @@ export async function generateAndStoreImage(
     (input.seedImageUrls ?? []).map(async (seedImageUrl) => {
       const key = assetStore().keyFromUrl(seedImageUrl);
       if (!key) {
-        throw new Error(`种子图片不是内部 assetStore 的资源，无法解析：${seedImageUrl}`);
+        throw new PermanentImageError(`种子图片不是内部 assetStore 的资源，无法解析：${seedImageUrl}`);
       }
-      return prepareReference(await assetStore().get(key));
+      return prepareReference(await readSeedImage(key, seedImageUrl));
     })
   );
 

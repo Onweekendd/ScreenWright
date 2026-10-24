@@ -37,7 +37,10 @@ beforeEach(() => {
   invalidateModelConfigs();
 });
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
+});
 
 describe("model-registry", () => {
   it("embedding-3 的配置维度进入真实 SDK 请求，建库与检索都返回 1024 维", async () => {
@@ -141,6 +144,49 @@ describe("model-registry", () => {
     release();
     await rewarm;
     expect(getModelConfigSync("image").modelId).toBe("m2");
+  });
+
+  it("缺少 video 角色时沿用数据库里的生图网关和密钥，保存独立配置", async () => {
+    for (const name of ["VIDEO_MODEL_BASE_URL", "VIDEO_MODEL_API_KEY", "VIDEO_MODEL_ID"]) {
+      vi.stubEnv(name, "");
+    }
+    prismaMocks.findUnique.mockImplementation(({ where }: { where: { role: string } }) =>
+      Promise.resolve(where.role === "video" ? null : row(where.role, { baseUrl: "https://images.example/v1" }))
+    );
+    prismaMocks.create.mockImplementation(({ data }: { data: Record<string, unknown> }) => Promise.resolve(data));
+
+    await warmModelConfigs();
+
+    expect(prismaMocks.create).toHaveBeenCalledTimes(1);
+    expect(getModelConfigSync("video")).toMatchObject({
+      role: "video",
+      baseUrl: "https://images.example/minimax/v2",
+      apiKey: "k",
+      modelId: "MiniMax-H3"
+    });
+  });
+
+  it("VIDEO_MODEL_* 仅用于初始化，已有 video 配置不被 env 或生图配置覆盖", async () => {
+    vi.stubEnv("VIDEO_MODEL_BASE_URL", "https://video.example/api/v3");
+    vi.stubEnv("VIDEO_MODEL_API_KEY", "video-key");
+    vi.stubEnv("VIDEO_MODEL_ID", "video-model");
+    prismaMocks.findUnique.mockImplementation(({ where }: { where: { role: string } }) =>
+      Promise.resolve(where.role === "video" ? null : row(where.role))
+    );
+    prismaMocks.create.mockImplementation(({ data }: { data: Record<string, unknown> }) => Promise.resolve(data));
+    await warmModelConfigs();
+    expect(getModelConfigSync("video")).toMatchObject({
+      baseUrl: "https://video.example/api/v3",
+      apiKey: "video-key",
+      modelId: "video-model"
+    });
+
+    prismaMocks.findUnique.mockImplementation(({ where }: { where: { role: string } }) =>
+      Promise.resolve(row(where.role))
+    );
+    await warmModelConfigs();
+    expect(getModelConfigSync("video")).toMatchObject({ baseUrl: "https://x/v1", apiKey: "k", modelId: "m" });
+    expect(prismaMocks.create).toHaveBeenCalledTimes(1);
   });
 
   it("getModelConfigSync：未 warm 抛错", () => {

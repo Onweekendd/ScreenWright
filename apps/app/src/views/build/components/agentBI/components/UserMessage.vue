@@ -1,16 +1,13 @@
 <template>
   <div class="user-msg">
     <div class="bubble">
-      <div v-if="imageFiles.length > 0 || selectedComponentNames.length > 0" class="attachment-grid">
-        <el-image
-          v-for="(file, idx) in imageFiles"
+      <div v-if="mediaFiles.length > 0 || selectedComponentNames.length > 0" class="attachment-grid">
+        <MediaAttachmentPreview
+          v-for="file in mediaFiles"
           :key="file.url"
-          :src="file.url"
-          :preview-src-list="imageUrls"
-          :initial-index="idx"
-          fit="cover"
+          :media="file"
+          :preview-media="mediaFiles"
           class="attachment-thumb"
-          preview-teleported
         />
         <span v-for="(name, idx) in selectedComponentNames" :key="`${name}-${idx}`" class="component-tag">{{
           name
@@ -47,13 +44,19 @@ import type { UIMessage } from "ai";
 
 import Icon from "@/components/Icon/index.vue";
 
+import type { MediaAttachment } from "../hooks/attachmentMedia";
+import { parseVideoAttachments } from "../hooks/attachmentMessage";
 import ComponentRefChip from "./ComponentRefChip.vue";
+import MediaAttachmentPreview from "./MediaAttachmentPreview.vue";
 
 type MessagePart = UIMessage["parts"][number];
-type FilePart = Extract<MessagePart, { type: "file" }>;
 
 const props = defineProps<{ parts: UIMessage["parts"]; canUndo?: boolean }>();
 const emit = defineEmits<{ undo: [] }>();
+
+const parsedParts = computed(() =>
+  (props.parts ?? []).map((part) => (part.type === "text" ? { ...part, ...parseVideoAttachments(part.text) } : part))
+);
 
 // 点图标不直接撤销，而是展开 el-select 下拉，选中「撤销到此处」才触发
 const onUndoSelect = (val: string) => {
@@ -66,27 +69,37 @@ const onUndoSelect = (val: string) => {
 // <user-message> 内的纯文本；缺失标签时降级为原 text，避免历史结构差异导致空气泡
 // 欢迎页示例点击发出的消息会再包一层 <welcome>，展示时同样提炼出标签内的纯文本
 const textContent = computed(() =>
-  (props.parts ?? [])
-    .filter((p): p is Extract<MessagePart, { type: "text" }> => p.type === "text")
-    .map((p) => {
+  parsedParts.value
+    .flatMap((p) => {
+      if (p.type !== "text") {
+        return [];
+      }
       const match = p.text.match(/<user-message>([\s\S]*?)<\/user-message>/);
       const inner = match ? match[1].trim() : p.text;
       const welcomeMatch = inner.match(/<welcome>([\s\S]*?)<\/welcome>/);
-      return welcomeMatch ? welcomeMatch[1].trim() : inner;
+      return [welcomeMatch ? welcomeMatch[1].trim() : inner];
     })
     .join("")
 );
 
-const imageFiles = computed<FilePart[]>(() =>
-  (props.parts ?? []).filter(
-    (p): p is FilePart =>
-      p.type === "file" &&
-      typeof (p as FilePart).mediaType === "string" &&
-      (p as FilePart).mediaType.startsWith("image/")
-  )
-);
-
-const imageUrls = computed(() => imageFiles.value.map((f) => f.url));
+const mediaFiles = computed(() => {
+  const files: MediaAttachment[] = [];
+  for (const part of parsedParts.value) {
+    if (part.type === "text") {
+      files.push(...part.videos);
+    } else if (part.type === "file" && (part.mediaType.startsWith("image/") || part.mediaType.startsWith("video/"))) {
+      files.push({ filename: part.filename || "", mediaType: part.mediaType, url: part.url });
+    }
+  }
+  const seen = new Set<string>();
+  return files.filter((file) => {
+    if (seen.has(file.url)) {
+      return false;
+    }
+    seen.add(file.url);
+    return true;
+  });
+});
 
 // 发送时拼入 <selected-components> 的画布选中组件，只取 name 展示在附件区
 const selectedComponentNames = computed(() => {
@@ -215,12 +228,7 @@ const segments = computed(() => {
   margin-bottom: 4px;
 
   .attachment-thumb {
-    width: 64px;
-    height: 64px;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid $color-lp-25;
-    cursor: zoom-in;
+    flex-shrink: 0;
   }
 
   .component-tag {

@@ -3,14 +3,14 @@ import { computed, ref, shallowRef } from "vue";
 import type { CustomStorageThreadType } from "@screenwright/server/rpc";
 import { apiClient } from "@screenwright/server/rpc";
 import { type ComponentType } from "@screenwright/types";
-import type { FileUIPart, UIMessage } from "ai";
+import type { UIMessage } from "ai";
 import { ElMessage } from "element-plus";
 
 import { mastraClient } from "@/api/mastra";
 import { uuid } from "@/utils/utils";
 
 import { useLargeScreenInfo } from "../../useLargeScreenInfo";
-import { useAgentAttachment } from "./hooks/useAgentAttachment";
+import { type AttachmentPart, useAgentAttachment } from "./hooks/useAgentAttachment";
 import { useAgentBIMemory } from "./hooks/useAgentBIMemory";
 import { type StreamState, useAgentBIStream } from "./hooks/useAgentBIStream";
 import { useAgentBISystemContext } from "./hooks/useAgentBISystemContext";
@@ -60,6 +60,7 @@ export function createAgentBISession() {
 
   const {
     addFiles,
+    addMedia,
     attachments,
     clearAttachments,
 
@@ -134,7 +135,7 @@ export function createAgentBISession() {
    */
   const buildCurrentUserMessage = ({
     currentText,
-    fileParts = [],
+    attachmentParts = [],
     systemContext,
 
     userInput
@@ -142,7 +143,7 @@ export function createAgentBISession() {
     userInput: string | UIMessage | undefined;
     currentText: string;
     systemContext?: string;
-    fileParts?: FileUIPart[];
+    attachmentParts?: AttachmentPart[];
   }): UIMessage => {
     if (typeof userInput === "object" && userInput !== null) {
       return userInput;
@@ -151,7 +152,7 @@ export function createAgentBISession() {
     return {
       content,
       id: uuid(),
-      parts: [{ text: content, type: "text" }, ...fileParts],
+      parts: [{ text: content, type: "text" }, ...attachmentParts],
       role: "user"
     } as UIMessage;
   };
@@ -295,9 +296,9 @@ export function createAgentBISession() {
       return;
     }
 
-    // 先上传附件，拿到 FileUIPart 列表
-    const fileParts = await uploadAllAndGetParts(activeThreadId.value ?? undefined);
-    if (!text && fileParts.length === 0) {
+    // 上传附件，图片作为文件、视频作为 URL 文本发送。
+    const attachmentParts = await uploadAllAndGetParts(activeThreadId.value ?? undefined);
+    if (!text && attachmentParts.length === 0) {
       return;
     }
 
@@ -305,7 +306,7 @@ export function createAgentBISession() {
     const systemContext = buildSystemContext(mentionedComponents.value);
     const userMessage = buildCurrentUserMessage({
       currentText: text,
-      fileParts,
+      attachmentParts,
       systemContext,
 
       userInput: userMessageOrText
@@ -353,6 +354,7 @@ export function createAgentBISession() {
     activeTab,
     activeThreadId,
     addFiles,
+    addMedia,
     attachments,
     backgroundTasks,
     compacting,

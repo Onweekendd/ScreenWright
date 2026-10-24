@@ -322,6 +322,23 @@ describe("validateComponentContent 的两层校验", () => {
     expect(result.ok && result.warnings?.join()).toContain("yAxisIndex");
   });
 
+  it("zIndex 写成非法键（a20）时放行但警告，并说清楚不要手写", () => {
+    const result = validateComponentContent(lineAndBar({ zIndex: "a20" }));
+
+    expect(result.ok).toBe(true);
+    const warnings = result.ok ? (result.warnings ?? []).join() : "";
+    expect(warnings).toContain('zIndex "a20" 不是合法的排序键');
+    expect(warnings).toContain("不要手写");
+  });
+
+  it("zIndex 是合法键（a1、a1V）时没有 zIndex 警告", () => {
+    for (const zIndex of ["a1", "a1V"]) {
+      const result = validateComponentContent(lineAndBar({ zIndex }));
+
+      expect(result.ok && (result.warnings ?? []).join()).not.toContain("排序键");
+    }
+  });
+
   it("属性层放行时交出的仍是结构层的产物，不是半截的 parse 结果", () => {
     const result = validateComponentContent(lineAndBar());
 

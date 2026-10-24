@@ -56,11 +56,25 @@ export const sortByZIndex = <T extends HasZIndex>(items: readonly T[], direction
   return direction === "desc" ? sorted.reverse() : sorted;
 };
 
+/**
+ * 取极值用的键：非法的键（如 agent 手写的 `a20`，小数部分以 0 结尾）直接忽略。
+ * 极值的用途是「在它上面 / 下面再生成一个键」，而 generateKeyBetween 见到非法键会抛——
+ * 一个坏键不能让整个容器再也加不进新组件（实测一次批量创建 18 个组件全部因此失败）。
+ * 坏键本身留给 assignOrderedZIndexes 在重排时修掉。
+ */
+const validKeyOf = (value: ZIndexInput): ZIndex | null => {
+  const key = toKey(value);
+  return isValidZIndex(key) ? key : null;
+};
+
 /** 一组组件里最上层的键；空数组返回 null */
 export const maxZIndex = (items: readonly HasZIndex[]): ZIndex | null => {
   let max: ZIndex | null = null;
   for (const { zIndex } of items) {
-    const key = toKey(zIndex);
+    const key = validKeyOf(zIndex);
+    if (key === null) {
+      continue;
+    }
     if (max === null || key > max) {
       max = key;
     }
@@ -72,7 +86,10 @@ export const maxZIndex = (items: readonly HasZIndex[]): ZIndex | null => {
 export const minZIndex = (items: readonly HasZIndex[]): ZIndex | null => {
   let min: ZIndex | null = null;
   for (const { zIndex } of items) {
-    const key = toKey(zIndex);
+    const key = validKeyOf(zIndex);
+    if (key === null) {
+      continue;
+    }
     if (min === null || key < min) {
       min = key;
     }

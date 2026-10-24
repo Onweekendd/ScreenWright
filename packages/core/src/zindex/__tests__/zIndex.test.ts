@@ -100,6 +100,25 @@ describe("zIndex 键", () => {
     expect(minZIndex([item("a1"), item("a3"), item("a2")])).toBe("a1");
   });
 
+  it("容器里有非法键（agent 手写的 a20）时，极值忽略它，getTopIndex / getBottomIndex 不抛错", () => {
+    // a20：整数部分 a2，小数部分 0 以 0 结尾，是非法键。以前 getTopIndex 会在它上面生成键而抛
+    // "invalid order key: a20"，一次批量创建 18 个组件全部失败
+    const list = [item("a1"), item("a20"), item("a3")];
+
+    expect(maxZIndex(list)).toBe("a3");
+    expect(minZIndex(list)).toBe("a1");
+    expect(() => getTopIndex(list)).not.toThrow();
+    expect(getTopIndex(list) > "a3").toBe(true);
+    expect(getBottomIndex(list) < "a1").toBe(true);
+  });
+
+  it("容器里全是非法键时当作空容器：给第一个键", () => {
+    const list = [item("a20"), item("")];
+
+    expect(maxZIndex(list)).toBeNull();
+    expect(getTopIndex(list)).toBe(INDEX_ZERO);
+  });
+
   it("getTopIndex / getBottomIndex：空容器给第一个键，否则越过现有的", () => {
     expect(getTopIndex([])).toBe(INDEX_ZERO);
     expect(getBottomIndex([])).toBe(INDEX_ZERO);

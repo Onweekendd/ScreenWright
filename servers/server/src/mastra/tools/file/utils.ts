@@ -1,6 +1,7 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
 
+import { isValidZIndex } from "@screenwright/core";
 import {
   ComponentFlatSchema,
   type ComponentProp,
@@ -263,6 +264,23 @@ function unrecognizedTopLevelKeys(candidate: Record<string, unknown>): string[] 
  * 顶层多余键（见 `unrecognizedTopLevelKeys`）也走 `warnings`，跟属性层的警告合并返回。
  */
 export function validateComponentContent(
+  content: string
+):
+  | { ok: true; data: ComponentFlatType; warnings?: string[] }
+  | { ok: false; message: string; validationErrors?: string[] } {
+  const result = validateComponentContentLayers(content);
+  if (!result.ok || isValidZIndex(result.data.zIndex)) {
+    return result;
+  }
+  // zIndex 是 fractional-indexing 的排序键，不是数字：`a20` 看着像「层级 20」，其实小数部分以 0 结尾，是非法键。
+  // 它不进硬闸门（见上面「组件被历史脏数据永久锁死」），但要明说，否则 agent 不知道自己写坏了什么。
+  const warning =
+    `zIndex "${result.data.zIndex}" 不是合法的排序键，已放行但层级可能错乱：zIndex 是系统维护的排序键（如 "a0"、"a1"、"a1V"，` +
+    `小数部分不能以 0 结尾），不要手写、不要当数字用。新建的组件系统会自动放到最上层，别去改这个字段`;
+  return { ...result, warnings: [...(result.warnings ?? []), warning] };
+}
+
+function validateComponentContentLayers(
   content: string
 ):
   | { ok: true; data: ComponentFlatType; warnings?: string[] }

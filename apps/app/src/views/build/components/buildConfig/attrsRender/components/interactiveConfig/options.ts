@@ -311,31 +311,6 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
         }
       };
 
-    case ActionTypeEnum.SwitchMapChildComponentVisible:
-      return {
-        ...base,
-        mapChildComponent: {
-          nameList: [],
-          childComponentInfoList: [],
-          visible: VisibleTypeEnum.Show
-        }
-      };
-
-    case ActionTypeEnum.GlMapIconActive:
-      return {
-        ...base,
-        glMapIconActive: {
-          childId: "",
-          matchField: "name",
-          matchValue: "",
-          matchValueSource: "static",
-          eventField: "name",
-          action: "select",
-          exclusive: true,
-          clearWhenMiss: false
-        }
-      };
-
     case ActionTypeEnum.HandleApiInstruction:
       return { ...base, apiInstructionDetail: "", apiInstructionDelay: 0 };
 
@@ -626,12 +601,6 @@ export const switchSceneChildComponentVisibleProp = (prop: AllComponentType) => 
   return propActions.includes(ActionTypeEnum.SwitchSceneChildComponentVisible);
 };
 
-export const switchMapChildComponentVisibleProp = (prop: AllComponentType) => {
-  const getComponent2ActionMap = createComponent2ActionMapGetter();
-  const propActions = getComponent2ActionMap().get(prop) || "";
-  return propActions.includes(ActionTypeEnum.SwitchMapChildComponentVisible);
-};
-
 export const handleApiInstructionProp = (prop: AllComponentType) => {
   const getComponent2ActionMap = createComponent2ActionMapGetter();
   const propActions = getComponent2ActionMap().get(prop) || "";
@@ -651,7 +620,6 @@ export const hasCustomEvents = (prop: AllComponentType) => {
     interactiveEnum.SwSearch,
     interactiveEnum.SwTimerShaft,
     interactiveEnum.SwCustomSelect,
-    "echartcommonMap",
     "threescene",
     interactiveEnum.SwLegend,
     textEnum.SwTextWordCloud,

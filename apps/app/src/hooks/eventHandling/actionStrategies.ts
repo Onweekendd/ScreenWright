@@ -26,14 +26,6 @@ const delay = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const getValueByPath = (data: unknown, field: string) => {
-  const source = Array.isArray(data) ? data[0] : data;
-  if (!field || source == null || typeof source !== "object") {
-    return undefined;
-  }
-  return field.split(".").reduce((target: any, key) => (target == null ? undefined : target[key]), source as any);
-};
-
 /**
  * 动作处理策略接口
  */
@@ -638,119 +630,6 @@ export class SwitchSceneChildComponentVisibleStrategy implements ActionStrategy<
 /**
  * 切换地图模板组件地图子组件显隐状态动作策略
  */
-export class SwitchMapChildComponentVisibleStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    mapChildComponent,
-    componentIds,
-    isConditionSatisfied,
-    eventList
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!mapChildComponent) {
-      return;
-    }
-    const { childComponentInfoList, visible } = mapChildComponent;
-    const isVisible = visible === "show";
-    // 符合条件则显示/隐藏，否则反选
-    const visibleRes = isConditionSatisfied ? isVisible : !isVisible;
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    event?.updateMapChildComponentVisible(childComponentInfoList, visibleRes);
-  }
-}
-
-export class GlMapRegionLiftStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    glMapRegionLift,
-    componentIds,
-    isConditionSatisfied,
-    eventList
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!isConditionSatisfied) {
-      return;
-    }
-
-    const adcode = String(glMapRegionLift?.adcode || glMapRegionLift?.regionId || "");
-    const height = Number(glMapRegionLift?.height ?? 1);
-    const duration = Number(glMapRegionLift?.duration ?? 300);
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    event?.liftRegionByAdcode?.(adcode, {
-      height: Number.isFinite(height) ? height : 1,
-      duration: Number.isFinite(duration) ? duration : 300
-    });
-  }
-}
-
-export class GlMapSceneRoamStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    glMapSceneRoam,
-    componentIds,
-    isConditionSatisfied,
-    eventList
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!isConditionSatisfied) {
-      return;
-    }
-
-    const sceneId = String(glMapSceneRoam?.sceneId || "");
-    if (!sceneId) {
-      return;
-    }
-
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    void event?.playSceneRoam?.(sceneId);
-  }
-}
-
-export class GlMapIconActiveStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    glMapIconActive,
-    componentIds,
-    isConditionSatisfied,
-    eventList,
-    info
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!isConditionSatisfied) {
-      return;
-    }
-    if (!glMapIconActive) {
-      return;
-    }
-
-    const action = ["select", "unselect", "toggle"].includes(glMapIconActive.action)
-      ? glMapIconActive.action
-      : "select";
-    const value =
-      glMapIconActive.matchValueSource === "event"
-        ? getValueByPath(info, glMapIconActive.eventField || "name")
-        : glMapIconActive.matchValue;
-
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    event?.setMapGlIconActive?.({
-      childId: String(glMapIconActive.childId || ""),
-      field: String(glMapIconActive.matchField || "name"),
-      value,
-      action,
-      exclusive: glMapIconActive.exclusive !== false,
-      clearWhenMiss: Boolean(glMapIconActive.clearWhenMiss)
-    });
-  }
-}
-
 export class SetAnimationPlayStrategy implements ActionStrategy<ActionExecutionParams> {
   execute({
     componentRootDoms,
@@ -862,9 +741,7 @@ export class FollowIconStrategy
       return;
     }
 
-    const componentType = componentProp === "echart-glmap" ? sceneEnumType.EchartGlmap : sceneEnumType.ThreeScene;
-
-    const event = eventList[`${componentType}-${sourceComponentId || componentIds[0]}`];
+    const event = eventList[`${sceneEnumType.ThreeScene}-${sourceComponentId || componentIds[0]}`];
     const { boxOffsetX, boxOffsetY } = mapBox;
 
     event?.setMapBoxBom(componentRootDoms[0], info.id || info.componentId, boxOffsetX, boxOffsetY);
@@ -1456,10 +1333,6 @@ export class ActionStrategyFactory {
     [ActionTypeEnum.SetIndex]: new SetIndexStrategy(),
     [ActionTypeEnum.HandleApiInstruction]: new HandleApiInstructionStrategy(),
     [ActionTypeEnum.SwitchSceneChildComponentVisible]: new SwitchSceneChildComponentVisibleStrategy(),
-    [ActionTypeEnum.SwitchMapChildComponentVisible]: new SwitchMapChildComponentVisibleStrategy(),
-    [ActionTypeEnum.GlMapRegionLift]: new GlMapRegionLiftStrategy(),
-    [ActionTypeEnum.GlMapSceneRoam]: new GlMapSceneRoamStrategy(),
-    [ActionTypeEnum.GlMapIconActive]: new GlMapIconActiveStrategy(),
     [ActionTypeEnum.SetAnimationPlay]: new SetAnimationPlayStrategy(),
     [ActionTypeEnum.SetAnimationPause]: new SetAnimationPauseStrategy(),
     [ActionTypeEnum.SetStateAnimationPlay]: new SetStateAnimationPlayStrategy(),

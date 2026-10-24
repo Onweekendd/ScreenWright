@@ -6,7 +6,6 @@ import type {
   BarEchartType,
   lineEchartsType,
   pieEchartType,
-  projectEchartType,
   scatterEchartType
 } from "@/views/build/components/buildRender/core/BaseComponent/type";
 import type { ExhibitEnumType } from "@/views/build/components/buildRender/core/ExhibitComponent/type";
@@ -254,56 +253,6 @@ interface CustomTableListEvents {
   };
 }
 
-interface EchartcommonMapEvents {
-  [key: `${sceneEnumType.EchartcommonMap}-${string}`]: {
-    /**
-     * @description 点击事件
-     * @param info - 组件数据
-     * @param isExecuteOnlyConditionSatisfied - 是否仅执行满足条件的事件，默认false
-     */
-    handleClick: (info: any, isExecuteOnlyConditionSatisfied?: boolean) => void;
-  };
-}
-
-interface EchartGlMapEvents {
-  [key: `${sceneEnumType.EchartGlmap}-${string}`]: {
-    /**
-     * @description 点击事件
-     */
-    // handleClick: (info: any) => void;
-    /**
-     *
-     * @description 显隐子组件事件
-     */
-    updateMapChildComponentVisible: (index: any[], visible: boolean) => void;
-    /**
-     *
-     * @description 设置地图盒子bom
-     */
-    setMapBoxBom: (componentRootDoms: Element, componentId: string, boxOffsetX: number, boxOffsetY: number) => void;
-    /**
-     * @description 抬升指定 2.5D 地图地块
-     */
-    liftRegionByAdcode: (adcode: string, options?: { height?: number; duration?: number }) => void;
-    setMapGlIconActive: (options: {
-      childId?: string;
-      field?: string;
-      value?: unknown;
-      action?: "select" | "unselect" | "toggle";
-      exclusive?: boolean;
-      clearWhenMiss?: boolean;
-    }) => boolean;
-    /**
-     * @description 播放 2.5D 地图场景管理里的视角漫游
-     */
-    playSceneRoam: (sceneId: string) => void | Promise<void>;
-    /**
-     * @description 停止 2.5D 地图视角漫游
-     */
-    stopSceneRoam: () => void;
-  };
-}
-
 interface ftParticlesEvents {
   /**
    * 空间粒子init方法
@@ -341,12 +290,6 @@ interface EchartlineAndBarEvents {
 
 interface EchartpictorialbarEvents {
   [key: `${BarEchartType.echartpictorialbar}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartrankEvents {
-  [key: `${BarEchartType.echartrank}-${string}`]: {
     handleClick: (throwValue: any) => void;
   };
 }
@@ -405,42 +348,6 @@ interface EchartscatterEvents {
 /**
  * ECharts 项目图表组件事件接口
  */
-interface EchartzebraEvents {
-  [key: `${projectEchartType.echartzebra}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface Echartzebra2Events {
-  [key: `${projectEchartType.echartzebra2}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartrankBarEvents {
-  [key: `${projectEchartType.echartrankBar}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartthreeQuartersPieEvents {
-  [key: `${projectEchartType.echartthreeQuartersPie}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartthinBarEvents {
-  [key: `${projectEchartType.echartthinBar}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
-interface EchartscalePieEvents {
-  [key: `${projectEchartType.echartscalePie}-${string}`]: {
-    handleClick: (throwValue: any) => void;
-  };
-}
-
 interface FtUnrealEngineEvents {
   [key: `${extendsEnumType.SwUnrealEngine}-${string}`]: {
     setupBlueprintData: (throwValue: any) => void;
@@ -571,15 +478,12 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   FtScrollEvents &
   FtSwiperCardEvents &
   CustomTableListEvents &
-  EchartcommonMapEvents &
-  EchartGlMapEvents &
   ftParticlesEvents &
   EchartbarEvents &
   EchartstripBarEvents &
   EchartbothWayStripBarEvents &
   EchartlineAndBarEvents &
   EchartpictorialbarEvents &
-  EchartrankEvents &
   EchartlineEvents &
   EchartareaLineEvents &
   EchartpieEvents &
@@ -587,12 +491,6 @@ export type TotalPanelEventMap = DynamicPanelEvents &
   EchartpluralRosePieEvents &
   EchartthreePieEvents &
   EchartscatterEvents &
-  EchartzebraEvents &
-  Echartzebra2Events &
-  EchartrankBarEvents &
-  EchartthreeQuartersPieEvents &
-  EchartthinBarEvents &
-  EchartscalePieEvents &
   FtVideoEvents &
   ftDigitalHumanEvents &
   ftVuePartEvents &
@@ -624,15 +522,12 @@ export type toAddEvent =
   | FtScrollEvents
   | FtSwiperCardEvents
   | CustomTableListEvents
-  | EchartcommonMapEvents
-  | EchartGlMapEvents
   | ftParticlesEvents
   | EchartbarEvents
   | EchartstripBarEvents
   | EchartbothWayStripBarEvents
   | EchartlineAndBarEvents
   | EchartpictorialbarEvents
-  | EchartrankEvents
   | EchartlineEvents
   | EchartareaLineEvents
   | EchartpieEvents
@@ -640,12 +535,6 @@ export type toAddEvent =
   | EchartpluralRosePieEvents
   | EchartthreePieEvents
   | EchartscatterEvents
-  | EchartzebraEvents
-  | Echartzebra2Events
-  | EchartrankBarEvents
-  | EchartthreeQuartersPieEvents
-  | EchartthinBarEvents
-  | EchartscalePieEvents
   | FtVideoEvents
   | ftDigitalHumanEvents
   | ftVuePartEvents

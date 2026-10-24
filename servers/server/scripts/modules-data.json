@@ -1,5 +1,5 @@
 ﻿[
-  {
+{
     "id": 1,
     "user_id": null,
     "type": 0,
@@ -16,7 +16,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":2378},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":1779},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":1788},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":2232}]",
     "status": 1
   },
-  {
+{
     "id": 2,
     "user_id": null,
     "type": 0,
@@ -33,7 +33,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":2378},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":1779},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":1788},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":2232}]",
     "status": 1
   },
-  {
+{
     "id": 3,
     "user_id": null,
     "type": 0,
@@ -50,7 +50,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":2378},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":1779},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":1788},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":2232}]",
     "status": 1
   },
-  {
+{
     "id": 4,
     "user_id": null,
     "type": 0,
@@ -67,7 +67,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":2378},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":1779},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":1788},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":2232}]",
     "status": 1
   },
-  {
+{
     "id": 5,
     "user_id": null,
     "type": 0,
@@ -84,24 +84,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920}]",
     "status": 1
   },
-  {
-    "id": 6,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"排名图\",\"title\":\"排名图\",\"display\":true,\"icon\":\"icon-bar\",\"img\":\"/img/echart-rank.475870a4.png\",\"csvType\":0,\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"sql\":\"SELECT * FROM\",\"data\":[{\"name\":\"A\",\"value\":2024},{\"name\":\"B\",\"value\":1423},{\"name\":\"C\",\"value\":1532},{\"name\":\"D\",\"value\":1920},{\"name\":\"E\",\"value\":1322},{\"name\":\"F\",\"value\":1120},{\"name\":\"G\",\"value\":1627},{\"name\":\"H\",\"value\":1554}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"\",\"path\":\"\",\"time\":30,\"component\":{\"width\":500,\"height\":250,\"name\":\"echart-rank\",\"prop\":\"echartrank\"},\"option\":{\"refresh\":true,\"stack\":false,\"seriesTabsName\":[\"排名1\",\"排名2\",\"排名3\",\"排名4\",\"排名5\",\"排名6\",\"排名7\",\"排名8\"],\"sortType\":\"desc\",\"defaultSeriesColor\":{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},\"defaultSeriesOpacity\":100,\"seriesColor\":[{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(137,181,252,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]}],\"seriesColorpicker\":[\"linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)\",\"linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)\"],\"seriesOpacity\":[100,100,100,100,100,100,100,100],\"barGap\":50,\"barCategoryGap\":60,\"barBorderRadius\":\"default\",\"gridLeft\":60,\"gridTop\":50,\"gridRight\":70,\"gridBottom\":60,\"legendShow\":false,\"legendWidth\":800,\"legendHeight\":800,\"legendItemWidth\":20,\"legendItemHeight\":10,\"legendItemGap\":20,\"legendFontFamily\":\"siayuan-normal\",\"legendFontSize\":16,\"legendColor\":\"rgba(255, 255, 255, 1)\",\"legendFontStyle\":\"normal\",\"legendFontWeight\":\"normal\",\"legendTextLeftPadding\":0,\"legendSelectedMode\":true,\"legendGrid\":{\"top\":0,\"left\":\"center\"},\"legendOffsetX\":0,\"legendOffsetY\":0,\"xNameFontSize\":16,\"yNameFontSize\":16,\"seriesLabelShow\":[true,true,false],\"seriesLabelColor\":[\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\"],\"seriesLabelFontFamily\":[\"siayuan-normal\",\"siayuan-normal\",\"siayuan-normal\"],\"seriesLabelFontSize\":[16,18,14],\"seriesLabelFontWeight\":[\"normal\",\"normal\",\"normal\"],\"seriesLabelFontStyle\":[\"normal\",\"normal\",\"normal\"],\"seriesLabelOffsetX\":[0,6,0],\"seriesLabelOffsetY\":[0,-18,0],\"seriesLabelSuffix\":\"\",\"defaultSeriesLabelBackground\":\"\",\"seriesLabelBackground\":[],\"legendOrient\":\"horizontal\",\"yAxisInverse\":true,\"xAxisInverse\":false,\"xAxisShow\":false,\"yAxisShow\":false,\"xAxisLabelShow\":true,\"yAxisLabelShow\":true,\"yAxisType\":\"category\",\"yAxisInterval\":0,\"yAxisRotate\":0,\"xAxisMin\":\"0\",\"xAxisMax\":\"\",\"xAxisMargin\":8,\"yAxisMargin\":8,\"xAxisFontFamily\":\"siayuan-normal\",\"yAxisFontFamily\":\"siayuan-normal\",\"xAxisFontSize\":18,\"yAxisFontSize\":16,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":\"normal\",\"xAxisNameShow\":false,\"xAxisName\":\"单位\",\"xAxisNameFontFamily\":\"siayuan-normal\",\"xAxisNameFontSize\":14,\"xAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"xAxisNameFontStyle\":\"normal\",\"xAxisNameFontWeight\":\"normal\",\"xAxisNameGap\":26,\"xAxisLineShow\":false,\"yAxisLineShow\":true,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"yAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":0.5,\"xAxisTickShow\":false,\"yAxisTickShow\":true,\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"yAxisTickWidth\":1,\"xAxisTickLength\":2,\"yAxisTickLength\":2,\"xAxisSplitLineShow\":true,\"yAxisSplitLineShow\":false,\"yAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":\"#383d47\",\"barBackgroundColor\":\"rgba(255, 255, 255, 0)\",\"dataLoop\":false,\"dataLoopInterval\":5,\"dataLoopDisplayRows\":4,\"dataLoopRollNum\":1,\"dataZoomShow\":true,\"moveHandleSize\":10,\"moveHandleColor\":\"#d2dbee\",\"moveHandleEmphasisColor\":\"#d2dbee\",\"dataZoomRight\":20}}",
-    "level": 0,
-    "second_level_menu": "柱形图",
-    "first_level_menu": "图表",
-    "name": "排名图",
-    "thumbnail": "/img/echart-rank.475870a4.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:25.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:51.000Z",
-    "template": "[{\"name\":\"A\",\"value\":2024},{\"name\":\"B\",\"value\":1423},{\"name\":\"C\",\"value\":1532},{\"name\":\"D\",\"value\":1920},{\"name\":\"E\",\"value\":1322},{\"name\":\"F\",\"value\":1120},{\"name\":\"G\",\"value\":1627},{\"name\":\"H\",\"value\":1554}]",
-    "status": 1
-  },
-  {
+{
     "id": 7,
     "user_id": null,
     "type": 0,
@@ -118,7 +101,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":2378},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":1779},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":1788},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":2232}]",
     "status": 1
   },
-  {
+{
     "id": 8,
     "user_id": null,
     "type": 0,
@@ -135,7 +118,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":1378},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":779},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":788},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":1232},{\"seriesName\":\"系列一\",\"name\":\"E\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"E\",\"value\":1232},{\"seriesName\":\"系列一\",\"name\":\"F\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"F\",\"value\":1232}]",
     "status": 1
   },
-  {
+{
     "id": 9,
     "user_id": null,
     "type": 0,
@@ -152,7 +135,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"value\":2024},{\"seriesName\":\"系列二\",\"value\":2378},{\"seriesName\":\"系列三\",\"value\":1423}]",
     "status": 1
   },
-  {
+{
     "id": 10,
     "user_id": null,
     "type": 0,
@@ -169,7 +152,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"value\":2024},{\"seriesName\":\"系列二\",\"value\":2378},{\"seriesName\":\"系列三\",\"value\":1423}]",
     "status": 1
   },
-  {
+{
     "id": 11,
     "user_id": null,
     "type": 0,
@@ -186,7 +169,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":20},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":23},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":14},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":17},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":15},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":17},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":19},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":22}]",
     "status": 1
   },
-  {
+{
     "id": 12,
     "user_id": null,
     "type": 0,
@@ -203,7 +186,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"value\":2024},{\"seriesName\":\"系列二\",\"value\":2378},{\"seriesName\":\"系列三\",\"value\":1423}]",
     "status": 1
   },
-  {
+{
     "id": 13,
     "user_id": null,
     "type": 0,
@@ -220,7 +203,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":1788},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":2232}]",
     "status": 1
   },
-  {
+{
     "id": 14,
     "user_id": null,
     "type": 0,
@@ -237,7 +220,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"value\":200},{\"seriesName\":\"系列二\",\"value\":150},{\"seriesName\":\"系列三\",\"value\":100},{\"seriesName\":\"系列四\",\"value\":50}]",
     "status": 1
   },
-  {
+{
     "id": 15,
     "user_id": null,
     "type": 0,
@@ -254,7 +237,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"name\":\"维度一\",\"value\":20},{\"seriesName\":\"系列一\",\"name\":\"维度二\",\"value\":80},{\"seriesName\":\"系列一\",\"name\":\"维度三\",\"value\":50},{\"seriesName\":\"系列一\",\"name\":\"维度四\",\"value\":20},{\"seriesName\":\"系列一\",\"name\":\"维度五\",\"value\":90},{\"seriesName\":\"系列一\",\"name\":\"维度六\",\"value\":40},{\"seriesName\":\"系列二\",\"name\":\"维度一\",\"value\":80},{\"seriesName\":\"系列二\",\"name\":\"维度二\",\"value\":80},{\"seriesName\":\"系列二\",\"name\":\"维度三\",\"value\":20},{\"seriesName\":\"系列二\",\"name\":\"维度四\",\"value\":95},{\"seriesName\":\"系列二\",\"name\":\"维度五\",\"value\":80},{\"seriesName\":\"系列二\",\"name\":\"维度六\",\"value\":88}]",
     "status": 1
   },
-  {
+{
     "id": 16,
     "user_id": null,
     "type": 0,
@@ -271,7 +254,7 @@
     "template": "[{\"categories\":[\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\"],\"series\":[{\"name\":\"系列一\",\"data\":[10,30,20,40,50]},{\"name\":\"系列二\",\"data\":[10,30,20,40,50]}]}]",
     "status": 1
   },
-  {
+{
     "id": 17,
     "user_id": null,
     "type": 0,
@@ -288,7 +271,7 @@
     "template": "[{\"categories\":[\"苹果\",\"三星\",\"小米\",\"oppo\",\"vivo\"],\"series\":[{\"name\":\"手机品牌\",\"data\":[1000879,3400879,2300879,5400879,3400879]}]}]",
     "status": 1
   },
-  {
+{
     "id": 18,
     "user_id": null,
     "type": 0,
@@ -305,7 +288,7 @@
     "template": "[{\"source\":\"安徽\",\"target\":\"江苏 \",\"value\":18.68},{\"source\":\"安徽\",\"target\":\"浙江 \",\"value\":12.38},{\"source\":\"广西\",\"target\":\"广东 \",\"value\":30.36},{\"source\":\"江西\",\"target\":\"广东 \",\"value\":12.48},{\"source\":\"江西\",\"target\":\"浙江 \",\"value\":12.67},{\"source\":\"青海\",\"target\":\"广东 \",\"value\":13.47},{\"source\":\"青海\",\"target\":\"浙江 \",\"value\":11.03},{\"source\":\"湖南\",\"target\":\"广东 \",\"value\":19.11},{\"source\":\"四川\",\"target\":\"重庆 \",\"value\":15.02},{\"source\":\"湖北\",\"target\":\"广东 \",\"value\":11.66}]",
     "status": 1
   },
-  {
+{
     "id": 19,
     "user_id": null,
     "type": 0,
@@ -322,7 +305,7 @@
     "template": "[{\"name\":\"节点A\",\"value\":2},{\"name\":\"节点B\",\"value\":1},{\"name\":\"节点C\",\"value\":1},{\"name\":\"节点D\",\"value\":2},{\"name\":\"节点E\",\"value\":1},{\"name\":\"节点F\",\"value\":3},{\"name\":\"节点G\",\"value\":1},{\"name\":\"节点H\",\"value\":1}]",
     "status": 1
   },
-  {
+{
     "id": 20,
     "user_id": null,
     "type": 0,
@@ -339,7 +322,7 @@
     "template": "[{\"name\":\"节点A\",\"value\":50,\"children\":[{\"name\":\"节点A-1\",\"value\":10},{\"name\":\"节点A-2\",\"value\":10},{\"name\":\"节点A-3\",\"value\":10},{\"name\":\"节点A-4\",\"value\":10},{\"name\":\"节点A-5\",\"value\":10}]},{\"name\":\"节点B\",\"value\":40,\"children\":[{\"name\":\"节点B-1\",\"value\":22},{\"name\":\"节点B-2\",\"value\":18},{\"name\":\"节点B-3\",\"value\":10}]},{\"name\":\"节点C\",\"value\":36.5},{\"name\":\"节点D\",\"value\":25.5},{\"name\":\"节点E\",\"value\":20.8}]",
     "status": 1
   },
-  {
+{
     "id": 21,
     "user_id": null,
     "type": 0,
@@ -356,58 +339,7 @@
     "template": "[{\"name\":\"广州\",\"value\":10},{\"name\":\"深圳\",\"value\":10},{\"name\":\"佛山\",\"value\":10}]",
     "status": 1
   },
-  {
-    "id": 22,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"斑马柱状图\",\"title\":\"斑马柱状图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/zebra.20240514.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"name\":\"A\",\"value\":2024},{\"name\":\"B\",\"value\":1423},{\"name\":\"C\",\"value\":1532},{\"name\":\"D\",\"value\":1920},{\"name\":\"E\",\"value\":1824},{\"name\":\"F\",\"value\":1725}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":600,\"height\":300,\"name\":\"echart-zebra\",\"prop\":\"echartzebra\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"seriesColor\":{\"type\":\"linear-gradient\",\"angle\":\"180\",\"colors\":[{\"color\":\"rgb(0,255,241)\",\"per\":0},{\"color\":\"rgb(23,203,246)\",\"per\":37},{\"color\":\"rgba(62,112,255,0)\",\"per\":100}]},\"hoverColor\":{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(255,153,62,0)\",\"per\":0},{\"color\":\"rgb(255,228,77)\",\"per\":100}]},\"intervalColor\":\"rgba(35,38,48,0.8)\",\"isSort\":true,\"isHover\":false,\"seriesWidth\":18,\"seriesOpacity\":100,\"gridLeft\":90,\"gridTop\":60,\"gridRight\":20,\"gridBottom\":60,\"xNameFontSize\":16,\"yNameFontSize\":16,\"yAxisInverse\":false,\"xAxisInverse\":false,\"xAxisShow\":true,\"yAxisShow\":true,\"xAxisLabelShow\":true,\"yAxisLabelShow\":true,\"xAxisType\":\"category\",\"xAxisLabelLimit\":false,\"xAxisLabelLimitNum\":1,\"xAxisInterval\":0,\"xAxisRotate\":0,\"yAxisMin\":\"0\",\"yAxisMax\":\"\",\"xAxisMargin\":8,\"yAxisMargin\":8,\"xAxisFontFamily\":\"siayuan-normal\",\"yAxisFontFamily\":\"siayuan-normal\",\"xAxisFontSize\":18,\"yAxisFontSize\":18,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":\"normal\",\"yAxisNameShow\":true,\"yAxisName\":\"单位\",\"yAxisNameFontFamily\":\"siayuan-normal\",\"yAxisNameFontSize\":14,\"yAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"yAxisNameFontStyle\":\"normal\",\"yAxisNameFontWeight\":\"normal\",\"yAxisNamePaddingTop\":0,\"yAxisNamePaddingBottom\":0,\"yAxisNamePaddingLeft\":0,\"yAxisNamePaddingRight\":40,\"xAxisLineShow\":true,\"yAxisLineShow\":false,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"yAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":0.5,\"xAxisTickShow\":true,\"yAxisTickShow\":false,\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"yAxisTickWidth\":1,\"xAxisTickLength\":2,\"yAxisTickLength\":2,\"xAxisSplitLineShow\":false,\"yAxisSplitLineShow\":true,\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":\"#383d47\",\"tooltipLoop\":false,\"tooltipLoopInterval\":3,\"tooltipUnit\":\"\",\"tooltipFixed\":0}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "斑马柱状图",
-    "thumbnail": "/img/zebra.20240514.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "admin",
-    "updated_time": "2024-06-17T10:56:27.000Z",
-    "template": "[{\"name\":\"A\",\"value\":2024},{\"name\":\"B\",\"value\":1423},{\"name\":\"C\",\"value\":1532},{\"name\":\"D\",\"value\":1920},{\"name\":\"E\",\"value\":1824},{\"name\":\"F\",\"value\":1725}]",
-    "status": 1
-  },
-  {
-    "id": 23,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"3D柱状图\",\"title\":\"3D柱状图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/3Dbar.20240514.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"name\":\"A\",\"value\":2024},{\"name\":\"B\",\"value\":1423},{\"name\":\"C\",\"value\":1532},{\"name\":\"D\",\"value\":1920},{\"name\":\"E\",\"value\":1824},{\"name\":\"F\",\"value\":1725}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-threedBar\",\"prop\":\"echartthreedBar\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"seriesColor\":[{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(0, 209, 255,1)\",\"per\":0},{\"color\":\"rgba(0, 209, 255,0)\",\"per\":100}]}],\"seriesTopColor\":\"#00bfff\",\"seriesBottomColor\":\"rgba(105,213,243,0.48)\",\"hoverColor\":{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(255,153,62,0)\",\"per\":0},{\"color\":\"rgb(255,228,77)\",\"per\":100}]},\"isSort\":false,\"isHover\":false,\"seriesWidth\":18,\"seriesOpacity\":56,\"gridLeft\":45,\"gridTop\":30,\"gridRight\":25,\"gridBottom\":25,\"xNameFontSize\":16,\"yNameFontSize\":16,\"yAxisInverse\":false,\"xAxisInverse\":false,\"xAxisShow\":true,\"yAxisShow\":true,\"xAxisLabelShow\":true,\"yAxisLabelShow\":true,\"xAxisType\":\"category\",\"xAxisInterval\":0,\"xAxisRotate\":0,\"yAxisMin\":\"0\",\"yAxisMax\":\"\",\"xAxisMargin\":8,\"yAxisMargin\":6,\"xAxisFontFamily\":\"siayuan-normal\",\"yAxisFontFamily\":\"siayuan-normal\",\"xAxisFontSize\":12,\"yAxisFontSize\":12,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":\"normal\",\"yAxisNameShow\":true,\"yAxisName\":\"单位\",\"yAxisNameFontFamily\":\"siayuan-normal\",\"yAxisNameFontSize\":12,\"yAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"yAxisNameFontStyle\":\"normal\",\"yAxisNameFontWeight\":\"normal\",\"yAxisNamePaddingTop\":10,\"yAxisNamePaddingBottom\":0,\"yAxisNamePaddingLeft\":0,\"yAxisNamePaddingRight\":40,\"xAxisLineShow\":true,\"yAxisLineShow\":false,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"yAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":0.5,\"xAxisTickShow\":true,\"yAxisTickShow\":false,\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"yAxisTickWidth\":1,\"xAxisTickLength\":2,\"yAxisTickLength\":2,\"xAxisSplitLineShow\":false,\"yAxisSplitLineShow\":true,\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":\"#383d47\",\"tooltipLoop\":false,\"tooltipLoopInterval\":3,\"tooltipUnit\":\"\",\"tooltipFixed\":0}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "3D柱状图",
-    "thumbnail": "/img/3Dbar.20240514.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-26T15:00:06.000Z",
-    "template": "[{\"name\":\"A\",\"value\":2024},{\"name\":\"B\",\"value\":1423},{\"name\":\"C\",\"value\":1532},{\"name\":\"D\",\"value\":1920},{\"name\":\"E\",\"value\":1824},{\"name\":\"F\",\"value\":1725}]",
-    "status": 1
-  },
-  {
-    "id": 24,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"排名图\",\"title\":\"排名图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/rankBar.20240514.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"name\":\"范例1\",\"value\":2024},{\"name\":\"范例2\",\"value\":1920},{\"name\":\"范例3\",\"value\":1824},{\"name\":\"范例4\",\"value\":1725},{\"name\":\"范例5\",\"value\":1532},{\"name\":\"范例6\",\"value\":1423}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-rankBar\",\"prop\":\"echartrankBar\"},\"option\":{\"refresh\":true,\"seriesWidth\":18,\"intervalColor\":\"rgba(35,38,48,0.8)\",\"gridLeft\":160,\"gridTop\":0,\"gridRight\":90,\"gridBottom\":0,\"valueShow\":true,\"valueFontFamily\":\"siayuan-normal\",\"valueFontSize\":12,\"valueColor\":\"rgba(255, 255, 255, 1)\",\"valueFontStyle\":\"normal\",\"valueFontWeight\":\"normal\",\"valueOffSetX\":10,\"valueOffSetY\":0,\"nameFontFamily\":\"siayuan-normal\",\"nameFontSize\":12,\"nameColor\":\"rgba(255, 255, 255, 1)\",\"nameFontStyle\":\"normal\",\"nameFontWeight\":\"normal\",\"nameWidth\":100,\"nameLeftPadding\":320,\"dataLoop\":false,\"dataLoopInterval\":5,\"dataLoopDisplayRows\":4,\"dataLoopRollNum\":1}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "排名图",
-    "thumbnail": "/img/rankBar.20240514.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"name\":\"范例1\",\"value\":2024},{\"name\":\"范例2\",\"value\":1920},{\"name\":\"范例3\",\"value\":1824},{\"name\":\"范例4\",\"value\":1725},{\"name\":\"范例5\",\"value\":1532},{\"name\":\"范例6\",\"value\":1423}]",
-    "status": 1
-  },
-  {
+{
     "id": 25,
     "user_id": null,
     "type": 0,
@@ -424,160 +356,7 @@
     "template": "[{\"seriesName\":\"系列一\",\"value\":2024},{\"seriesName\":\"系列二\",\"value\":1423},{\"seriesName\":\"系列三\",\"value\":1532}]",
     "status": 1
   },
-  {
-    "id": 26,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"细长柱状图\",\"title\":\"细长柱状图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/rankBar2.20240514.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"name\":\"A\",\"value\":2024},{\"name\":\"F\",\"value\":1423},{\"name\":\"E\",\"value\":1532},{\"name\":\"B\",\"value\":1920},{\"name\":\"C\",\"value\":1824},{\"name\":\"D\",\"value\":1725}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-thinBar\",\"prop\":\"echartthinBar\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"seriesColor\":{\"type\":\"linear-gradient\",\"angle\":\"180\",\"colors\":[{\"color\":\"rgb(255,255,255)\",\"per\":0},{\"color\":\"rgb(128,249,255)\",\"per\":7},{\"color\":\"rgb(115,248,255)\",\"per\":8},{\"color\":\"rgba(0,242,254,0.93)\",\"per\":14},{\"color\":\"rgba(62,112,255,0.47)\",\"per\":57},{\"color\":\"rgba(62,112,255,0)\",\"per\":100}]},\"hoverColor\":{\"type\":\"linear-gradient\",\"angle\":\"180\",\"colors\":[{\"color\":\"rgb(255,255,255)\",\"per\":0},{\"color\":\"rgb(252,236,162)\",\"per\":8},{\"color\":\"rgba(249,220,85,0.93)\",\"per\":14},{\"color\":\"rgba(255,162,62,0.47)\",\"per\":57},{\"color\":\"rgba(255,162,62,0)\",\"per\":100}]},\"isSort\":true,\"isHover\":true,\"seriesWidth\":9,\"seriesOpacity\":100,\"gridLeft\":70,\"gridTop\":45,\"gridRight\":10,\"gridBottom\":35,\"xNameFontSize\":16,\"yNameFontSize\":16,\"yAxisInverse\":false,\"xAxisInverse\":false,\"xAxisShow\":true,\"yAxisShow\":true,\"xAxisLabelShow\":true,\"yAxisLabelShow\":true,\"xAxisType\":\"category\",\"xAxisInterval\":0,\"xAxisRotate\":0,\"yAxisMin\":\"0\",\"yAxisMax\":\"\",\"xAxisMargin\":8,\"yAxisMargin\":8,\"xAxisFontFamily\":\"siayuan-normal\",\"yAxisFontFamily\":\"siayuan-normal\",\"xAxisFontSize\":12,\"yAxisFontSize\":12,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":\"normal\",\"yAxisNameShow\":true,\"yAxisName\":\"单位\",\"yAxisNameFontFamily\":\"siayuan-normal\",\"yAxisNameFontSize\":12,\"yAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"yAxisNameFontStyle\":\"normal\",\"yAxisNameFontWeight\":\"normal\",\"yAxisNamePaddingTop\":0,\"yAxisNamePaddingBottom\":0,\"yAxisNamePaddingLeft\":0,\"yAxisNamePaddingRight\":40,\"xAxisLineShow\":true,\"yAxisLineShow\":false,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"yAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":0.5,\"xAxisTickShow\":true,\"yAxisTickShow\":false,\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"yAxisTickWidth\":1,\"xAxisTickLength\":2,\"yAxisTickLength\":2,\"xAxisSplitLineShow\":false,\"yAxisSplitLineShow\":true,\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":\"#383d47\",\"tooltipLoop\":false,\"tooltipLoopInterval\":3,\"tooltipUnit\":\"\",\"tooltipFixed\":0}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "细长柱状图",
-    "thumbnail": "/img/rankBar2.20240514.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"name\":\"A\",\"value\":2024},{\"name\":\"F\",\"value\":1423},{\"name\":\"E\",\"value\":1532},{\"name\":\"B\",\"value\":1920},{\"name\":\"C\",\"value\":1824},{\"name\":\"D\",\"value\":1725}]",
-    "status": 1
-  },
-  {
-    "id": 27,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"刻度饼图\",\"title\":\"刻度饼图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/scalePie.5a9a0f01.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"seriesName\":\"系列一\",\"value\":92},{\"seriesName\":\"系列二\",\"value\":15},{\"seriesName\":\"系列三\",\"value\":6}],\"dataRemark\":[{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"},{\"key\":\"seriesName\",\"map\":\"seriesName\",\"decription\":\"系列\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-scalePie\",\"prop\":\"echartscalePie\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\",\"系列三\"],\"seriesName\":[\"系列一\",\"系列二\",\"系列三\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"},{\"name\":\"系列3\",\"value\":\"系列三\"}],\"pieCenterX\":40,\"pieCenterY\":50,\"pieRadiusMax\":48,\"pieRadiusMin\":60,\"gaugeShow\":true,\"gaugeRadius\":73,\"gaugeLength\":18,\"gaugeCenterX\":40,\"gaugeCenterY\":50,\"gaugeColor\":\"rgba(35,38,48,1)\",\"seriesLabelShow\":true,\"seriesDistanceToLabelLine\":5,\"seriesLabelLineLength\":15,\"seriesLabelSeriesShow\":false,\"seriesLabelSeriesFontFamily\":\"siayuan-normal\",\"seriesLabelSeriesFontSize\":12,\"seriesLabelSeriesColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelSeriesFontStyle\":\"normal\",\"seriesLabelSeriesFontWeight\":\"normal\",\"seriesLabelPercentShow\":true,\"seriesLabelPercentValue\":2,\"seriesLabelPercentFontFamily\":\"siayuan-normal\",\"seriesLabelPercentFontSize\":12,\"seriesLabelPercentColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelPercentFontStyle\":\"normal\",\"seriesLabelPercentFontWeight\":\"normal\",\"seriesLabelValueShow\":true,\"seriesLabelUnit\":\"种，占比 \",\"seriesLabelUnitFontSize\":12,\"seriesLabelUnitLeftPadding\":5,\"seriesLabelValueLeftPadding\":0,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\",\"legendShow\":true,\"legendItemWidthAndHeight\":22,\"legendTextLeftPadding\":20,\"legendFontFamily\":\"siayuan-normal\",\"legendFontSize\":12,\"legendColor\":\"rgba(255, 255, 255, 1)\",\"legendFontStyle\":\"normal\",\"legendFontWeight\":\"normal\",\"legendOrient\":\"vertical\",\"legendWidth\":800,\"legendHeight\":800,\"legendItemGap\":20,\"legendGrid\":{\"top\":\"center\",\"right\":0},\"legendOffsetX\":0,\"legendOffsetY\":0,\"seriesColor\":[{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(0,150,254,1)\",\"per\":0},{\"color\":\"rgba(1,246,255,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(56,207,160,1)\",\"per\":0},{\"color\":\"rgba(106,229,175,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(250,241,93,1)\",\"per\":0},{\"color\":\"rgba(234,178,32,1)\",\"per\":100}]}],\"seriesOpacity\":[100,100,100]}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "刻度饼图",
-    "thumbnail": "/img/scalePie.5a9a0f01.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"value\":92},{\"seriesName\":\"系列二\",\"value\":15},{\"seriesName\":\"系列三\",\"value\":6}]",
-    "status": 1
-  },
-  {
-    "id": 28,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"总数排名图\",\"title\":\"总数排名图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/rankBar3.20240514.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"seriesName\":\"系列一\",\"name\":\"范例1\",\"value\":19},{\"seriesName\":\"系列二\",\"name\":\"范例1\",\"value\":22},{\"seriesName\":\"系列三\",\"name\":\"范例1\",\"value\":13},{\"seriesName\":\"系列四\",\"name\":\"范例1\",\"value\":41},{\"seriesName\":\"系列一\",\"name\":\"范例2\",\"value\":20},{\"seriesName\":\"系列二\",\"name\":\"范例2\",\"value\":23},{\"seriesName\":\"系列三\",\"name\":\"范例2\",\"value\":34},{\"seriesName\":\"系列四\",\"name\":\"范例2\",\"value\":12},{\"seriesName\":\"系列一\",\"name\":\"范例3\",\"value\":15},{\"seriesName\":\"系列二\",\"name\":\"范例3\",\"value\":17},{\"seriesName\":\"系列三\",\"name\":\"范例3\",\"value\":13},{\"seriesName\":\"系列四\",\"name\":\"范例3\",\"value\":31},{\"seriesName\":\"系列一\",\"name\":\"范例4\",\"value\":14},{\"seriesName\":\"系列二\",\"name\":\"范例4\",\"value\":17},{\"seriesName\":\"系列三\",\"name\":\"范例4\",\"value\":15},{\"seriesName\":\"系列四\",\"name\":\"范例4\",\"value\":13},{\"seriesName\":\"系列一\",\"name\":\"范例5\",\"value\":14},{\"seriesName\":\"系列二\",\"name\":\"范例5\",\"value\":17},{\"seriesName\":\"系列三\",\"name\":\"范例5\",\"value\":12},{\"seriesName\":\"系列四\",\"name\":\"范例5\",\"value\":6}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"},{\"key\":\"seriesName\",\"map\":\"seriesName\",\"decription\":\"系列\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-multiplyRankBar\",\"prop\":\"echartmultiplyRankBar\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\",\"系列三\",\"系列四\"],\"seriesName\":[\"系列一\",\"系列二\",\"系列三\",\"系列四\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"},{\"name\":\"系列3\",\"value\":\"系列三\"},{\"name\":\"系列4\",\"value\":\"系列四\"}],\"seriesWidth\":18,\"intervalColor\":\"rgba(35,38,48,0.8)\",\"gridLeft\":170,\"gridTop\":30,\"gridRight\":70,\"gridBottom\":0,\"legendShow\":true,\"legendOrient\":\"horizontal\",\"legendWidth\":800,\"legendHeight\":800,\"legendItemWidth\":20,\"legendItemHeight\":10,\"legendItemGap\":20,\"legendFontFamily\":\"siayuan-normal\",\"legendFontSize\":12,\"legendColor\":\"rgba(255, 255, 255, 1)\",\"legendFontStyle\":\"normal\",\"legendFontWeight\":\"normal\",\"legendTextLeftPadding\":0,\"legendSelectedMode\":true,\"legendGrid\":{\"top\":0,\"left\":\"center\"},\"legendOffsetX\":0,\"legendOffsetY\":0,\"valueShow\":true,\"valueFontFamily\":\"siayuan-normal\",\"valueFontSize\":12,\"valueColor\":\"rgba(255, 255, 255, 1)\",\"valueFontStyle\":\"normal\",\"valueFontWeight\":\"normal\",\"valueOffSetX\":10,\"valueOffSetY\":0,\"nameFontFamily\":\"siayuan-normal\",\"nameFontSize\":12,\"nameColor\":\"rgba(255, 255, 255, 1)\",\"nameFontStyle\":\"normal\",\"nameFontWeight\":\"normal\",\"nameWidth\":100,\"nameLeftPadding\":320,\"dataLoop\":false,\"dataLoopInterval\":5,\"dataLoopDisplayRows\":4,\"dataLoopRollNum\":1,\"seriesColor\":[{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(0,120,255,0)\",\"per\":0},{\"color\":\"rgba(0,120,255,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(34,180,255,0)\",\"per\":0},{\"color\":\"rgba(34,180,255,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(40,255,247,0)\",\"per\":0},{\"color\":\"rgba(40,255,247,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(62,235,255,0)\",\"per\":0},{\"color\":\"rgba(176,247,255,1)\",\"per\":64},{\"color\":\"rgba(239,253,255,1)\",\"per\":100}]}],\"seriesOpacity\":[100,100,100,100]}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "总数排名图",
-    "thumbnail": "/img/rankBar3.20240514.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"name\":\"范例1\",\"value\":19},{\"seriesName\":\"系列二\",\"name\":\"范例1\",\"value\":22},{\"seriesName\":\"系列三\",\"name\":\"范例1\",\"value\":13},{\"seriesName\":\"系列四\",\"name\":\"范例1\",\"value\":41},{\"seriesName\":\"系列一\",\"name\":\"范例2\",\"value\":20},{\"seriesName\":\"系列二\",\"name\":\"范例2\",\"value\":23},{\"seriesName\":\"系列三\",\"name\":\"范例2\",\"value\":34},{\"seriesName\":\"系列四\",\"name\":\"范例2\",\"value\":12},{\"seriesName\":\"系列一\",\"name\":\"范例3\",\"value\":15},{\"seriesName\":\"系列二\",\"name\":\"范例3\",\"value\":17},{\"seriesName\":\"系列三\",\"name\":\"范例3\",\"value\":13},{\"seriesName\":\"系列四\",\"name\":\"范例3\",\"value\":31},{\"seriesName\":\"系列一\",\"name\":\"范例4\",\"value\":14},{\"seriesName\":\"系列二\",\"name\":\"范例4\",\"value\":17},{\"seriesName\":\"系列三\",\"name\":\"范例4\",\"value\":15},{\"seriesName\":\"系列四\",\"name\":\"范例4\",\"value\":13},{\"seriesName\":\"系列一\",\"name\":\"范例5\",\"value\":14},{\"seriesName\":\"系列二\",\"name\":\"范例5\",\"value\":17},{\"seriesName\":\"系列三\",\"name\":\"范例5\",\"value\":12},{\"seriesName\":\"系列四\",\"name\":\"范例5\",\"value\":6}]",
-    "status": 1
-  },
-  {
-    "id": 29,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"3D柱状折线图\",\"title\":\"3D柱状折线图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/threedBarAndLine.aa0e3b27.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":23},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":17},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":17},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":22}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"},{\"key\":\"seriesName\",\"map\":\"seriesName\",\"decription\":\"系列\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-threedBarAndLine\",\"prop\":\"echartthreedBarAndLine\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"seriesColor\":{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(0, 209, 255,1)\",\"per\":0},{\"color\":\"rgba(0, 209, 255,0)\",\"per\":100}]},\"seriesTopColor\":\"#00bfff\",\"seriesBottomColor\":\"rgba(105,213,243,0.48)\",\"seriesHoverColor\":{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(255,227,77,1)\",\"per\":0},{\"color\":\"rgba(255,144,77,0.3)\",\"per\":100}]},\"seriesHoverOpacity\":100,\"seriesHoverTopColor\":\"rgba(255,227,77,1)\",\"seriesHoverBottomColor\":\"rgba(255,227,77,0.48)\",\"isSort\":false,\"isHover\":true,\"seriesWidth\":18,\"seriesOpacity\":56,\"gridLeft\":55,\"gridTop\":45,\"gridRight\":45,\"gridBottom\":25,\"legendShow\":true,\"legendWidth\":800,\"legendHeight\":800,\"legendItemWidth\":20,\"legendItemHeight\":10,\"legendItemGap\":20,\"legendFontFamily\":\"siayuan-normal\",\"legendFontSize\":12,\"legendColor\":\"rgba(255, 255, 255, 1)\",\"legendFontStyle\":\"normal\",\"legendFontWeight\":\"normal\",\"legendTextLeftPadding\":0,\"legendSelectedMode\":true,\"legendGrid\":{\"top\":0,\"left\":\"center\"},\"legendOffsetX\":0,\"legendOffsetY\":0,\"legendOrient\":\"horizontal\",\"xNameFontSize\":16,\"yNameFontSize\":16,\"yAxisInverse\":false,\"xAxisInverse\":false,\"xAxisShow\":true,\"yAxisShow\":[true,true],\"xAxisLabelShow\":true,\"yAxisLabelShow\":[true,true],\"xAxisType\":\"category\",\"xAxisInterval\":0,\"xAxisRotate\":0,\"xAxisMargin\":8,\"yAxisMargin\":[8,8],\"xAxisFontFamily\":\"siayuan-normal\",\"yAxisFontFamily\":[\"siayuan-normal\",\"siayuan-normal\"],\"xAxisFontSize\":12,\"yAxisFontSize\":[12,18],\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":[\"rgba(209, 209, 209, 1)\",\"rgba(209, 209, 209, 1)\"],\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":[\"normal\",\"normal\"],\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":[\"normal\",\"normal\"],\"xAxisLineShow\":true,\"yAxisLineShow\":[false,false],\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":[\"rgba(209, 209, 209, 0.5)\",\"rgba(209, 209, 209, 0.5)\"],\"xAxisLineWidth\":1,\"yAxisLineWidth\":[1,1],\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":[0.5,0.5],\"xAxisTickShow\":true,\"yAxisTickShow\":[false,false],\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":[\"#65686f\",\"#65686f\"],\"xAxisTickWidth\":1,\"yAxisTickWidth\":[1,1],\"xAxisTickLength\":2,\"yAxisTickLength\":[2,2],\"xAxisSplitLineShow\":false,\"yAxisSplitLineShow\":[true,false],\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":[1,1],\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":[\"#383d47\",\"#383d47\"],\"tooltipLoop\":false,\"tooltipLoopInterval\":3,\"tooltipFixed\":0,\"tooltipUnitTabsName\":[\"后缀1\",\"后缀2\"],\"tooltipUnit\":[\"\",\"%\"],\"seriesLineColor\":{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(255,227,77,1)\",\"per\":0},{\"color\":\"rgba(250,145,51,1)\",\"per\":100}]},\"seriesLineOpacity\":100,\"seriesLineWidth\":2,\"seriesSmoothShow\":true,\"seriesSmooth\":0.5,\"lyAxisLabelShow\":false}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "3D柱状折线图",
-    "thumbnail": "/img/threedBarAndLine.aa0e3b27.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":23},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":17},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":17},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":22}]",
-    "status": 1
-  },
-  {
-    "id": 30,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"特殊型折线图\",\"title\":\"特殊型折线图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/doubleValueLine.c9dcda6c.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"seriesName\":\"系列一\",\"value\":[[0,0],[3,5],[4,6],[5,5],[6,3],[7,5]]},{\"seriesName\":\"系列二\",\"value\":[[0,0],[4,7],[5,6],[6,10],[7,12],[8,8]]},{\"seriesName\":\"系列三\",\"value\":[[0,0],[5,10],[5,8],[6,5],[7,12],[8,13]]},{\"seriesName\":\"系列四\",\"value\":[[0,0],[5,3],[10,4],[15,2],[20,1],[25,3]]},{\"seriesName\":\"系列五\",\"value\":[[0,0],[7,12],[8,13],[10,15],[13,10],[14,16]]}],\"dataRemark\":[{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"},{\"key\":\"seriesName\",\"map\":\"seriesName\",\"decription\":\"系列\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-doubleValueLine\",\"prop\":\"echartdoubleValueLine\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\",\"系列三\",\"系列四\",\"系列五\"],\"seriesName\":[\"系列一\",\"系列二\",\"系列三\",\"系列四\",\"系列五\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"},{\"name\":\"系列3\",\"value\":\"系列三\"},{\"name\":\"系列4\",\"value\":\"系列四\"},{\"name\":\"系列5\",\"value\":\"系列五\"}],\"gridLeft\":45,\"gridTop\":45,\"gridRight\":45,\"gridBottom\":25,\"xNameFontSize\":16,\"yNameFontSize\":16,\"xAxisLabelUtil\":\"\",\"yAxisLabelUtil\":\"\",\"yAxisInverse\":false,\"xAxisInverse\":false,\"xAxisShow\":true,\"yAxisShow\":true,\"xAxisLabelShow\":true,\"yAxisLabelShow\":true,\"yAxisMin\":\"0\",\"yAxisMax\":\"\",\"xAxisMargin\":8,\"yAxisMargin\":8,\"xAxisFontFamily\":\"siayuan-normal\",\"yAxisFontFamily\":\"siayuan-normal\",\"xAxisFontSize\":12,\"yAxisFontSize\":12,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":\"normal\",\"yAxisNameShow\":true,\"yAxisName\":\"\",\"yAxisNameFontFamily\":\"siayuan-normal\",\"yAxisNameFontSize\":14,\"yAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"yAxisNameFontStyle\":\"normal\",\"yAxisNameFontWeight\":\"normal\",\"yAxisNamePaddingTop\":0,\"yAxisNamePaddingBottom\":0,\"yAxisNamePaddingLeft\":0,\"yAxisNamePaddingRight\":40,\"xAxisLineShow\":true,\"yAxisLineShow\":false,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"yAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":0.5,\"xAxisTickShow\":true,\"yAxisTickShow\":false,\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"yAxisTickWidth\":1,\"xAxisTickLength\":2,\"yAxisTickLength\":2,\"xAxisSplitLineShow\":false,\"yAxisSplitLineShow\":true,\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":\"#383d47\",\"seriesColor\":[\"rgba(254,226,77,1)\",\"rgba(0,255,255,1)\",\"rgba(248,243,204,1)\",\"rgba(104,229,174,1)\",\"rgba(0,96,255,1)\"],\"seriesLabelShow\":[true,true,true,true,true],\"seriesLabelColor\":[\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\"],\"seriesLabelFontFamily\":[\"siayuan-normal\",\"siayuan-normal\",\"siayuan-normal\",\"siayuan-normal\",\"siayuan-normal\"],\"seriesLabelFontSize\":[12,12,12,12,12],\"seriesLabelFontWeight\":[\"normal\",\"normal\",\"normal\",\"normal\",\"normal\"],\"seriesLabelFontStyle\":[\"normal\",\"normal\",\"normal\",\"normal\",\"normal\"],\"seriesLabelOffsetX\":[0,0,0,0,0],\"seriesLabelOffsetY\":[0,0,-10,0,-15]}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "特殊型折线图",
-    "thumbnail": "/img/doubleValueLine.c9dcda6c.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"value\":[[0,0],[3,5],[4,6],[5,5],[6,3],[7,5]]},{\"seriesName\":\"系列二\",\"value\":[[0,0],[4,7],[5,6],[6,10],[7,12],[8,8]]},{\"seriesName\":\"系列三\",\"value\":[[0,0],[5,10],[5,8],[6,5],[7,12],[8,13]]},{\"seriesName\":\"系列四\",\"value\":[[0,0],[5,3],[10,4],[15,2],[20,1],[25,3]]},{\"seriesName\":\"系列五\",\"value\":[[0,0],[7,12],[8,13],[10,15],[13,10],[14,16]]}]",
-    "status": 1
-  },
-  {
-    "id": 31,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"斑马柱状折线图\",\"title\":\"斑马柱状折线图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/BarAndLine.20240514.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":83},{\"seriesName\":\"系列三\",\"name\":\"A\",\"value\":93},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":77},{\"seriesName\":\"系列三\",\"name\":\"B\",\"value\":87},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":77},{\"seriesName\":\"系列三\",\"name\":\"C\",\"value\":87},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":82},{\"seriesName\":\"系列三\",\"name\":\"D\",\"value\":92}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"},{\"key\":\"seriesName\",\"map\":\"seriesName\",\"decription\":\"系列\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-zebraBarAndLine\",\"prop\":\"echartzebraBarAndLine\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\",\"系列三\"],\"seriesName\":[\"系列一\",\"系列二\",\"系列三\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"},{\"name\":\"系列3\",\"value\":\"系列三\"}],\"seriesType\":[\"bar\",\"line\",\"line\"],\"seriesBarColor\":[{\"type\":\"linear-gradient\",\"angle\":\"180\",\"colors\":[{\"color\":\"rgba(0,255,241,1)\",\"per\":0},{\"color\":\"rgba(23,203,246,1)\",\"per\":37},{\"color\":\"rgba(62,112,255,0)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"180\",\"colors\":[{\"color\":\"rgba(0,255,241,1)\",\"per\":0},{\"color\":\"rgba(23,203,246,1)\",\"per\":37},{\"color\":\"rgba(62,112,255,0)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"180\",\"colors\":[{\"color\":\"rgba(0,255,241,1)\",\"per\":0},{\"color\":\"rgba(23,203,246,1)\",\"per\":37},{\"color\":\"rgba(62,112,255,0)\",\"per\":100}]}],\"seriesBarOpacity\":[100,100,100],\"intervalColor\":[\"rgba(35,38,48,0.8)\",\"rgba(35,38,48,0.8)\",\"rgba(35,38,48,0.8)\"],\"seriesLineColor\":[{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(255,227,77,1)\",\"per\":0},{\"color\":\"rgba(250,145,51,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(250,145,51,1)\",\"per\":0},{\"color\":\"rgba(255,227,77,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(37,157,57,1)\",\"per\":0},{\"color\":\"rgba(109,227,153,1)\",\"per\":100}]}],\"seriesLineOpacity\":[100,100,100],\"seriesLineWidth\":[2,2,2],\"seriesSmoothShow\":[true,true,true],\"seriesSmooth\":[0.5,0.5,0.5],\"seriesConnectNulls\":[false,false,false],\"seriesSymbolShow\":[false,false,false],\"seriesSymbol\":[\"circle\",\"circle\",\"circle\"],\"seriesSymbolImage\":[\"\",\"\",\"\"],\"seriesSymbolWidth\":[10,10,10],\"seriesSymbolHeight\":[10,10,10],\"seriesItemColor\":[\"rgba(255,227,77,1)\",\"rgba(250,145,51,1)\",\"rgba(37,157,57,1)\"],\"seriesItemBorderWidth\":[0,0,0],\"seriesItemBorderColor\":[\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\"],\"seriesLabelShow\":[false,false,false],\"seriesLabelColor\":[\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\"],\"seriesLabelFontFamily\":[\"siayuan-normal\",\"siayuan-normal\",\"siayuan-normal\"],\"seriesLabelFontSize\":[14,14,14],\"seriesLabelFontWeight\":[\"normal\",\"normal\",\"normal\"],\"seriesLabelFontStyle\":[\"normal\",\"normal\",\"normal\"],\"seriesLabelOffsetX\":[0,0,0],\"seriesLabelOffsetY\":[0,0,0],\"isSort\":true,\"isHover\":false,\"seriesWidth\":[18,18,18],\"gridLeft\":60,\"gridTop\":50,\"gridRight\":45,\"gridBottom\":25,\"legendShow\":true,\"legendWidth\":800,\"legendHeight\":800,\"legendItemWidth\":20,\"legendItemHeight\":10,\"legendItemGap\":20,\"legendFontFamily\":\"siayuan-normal\",\"legendFontSize\":12,\"legendColor\":\"rgba(255, 255, 255, 1)\",\"legendFontStyle\":\"normal\",\"legendFontWeight\":\"normal\",\"legendTextLeftPadding\":0,\"legendSelectedMode\":true,\"legendGrid\":{\"top\":0,\"left\":\"center\"},\"legendOffsetX\":0,\"legendOffsetY\":0,\"legendOrient\":\"horizontal\",\"xNameFontSize\":16,\"yNameFontSize\":16,\"yAxisInverse\":false,\"xAxisInverse\":false,\"xAxisShow\":true,\"lyAxisShow\":true,\"ryAxisShow\":true,\"xAxisLabelShow\":true,\"lyAxisLabelShow\":true,\"ryAxisLabelShow\":true,\"xAxisType\":\"category\",\"xAxisInterval\":0,\"xAxisRotate\":0,\"lyAxisMin\":\"0\",\"ryAxisMin\":\"0\",\"lyAxisMax\":\"\",\"ryAxisMax\":\"\",\"xAxisMargin\":8,\"lyAxisMargin\":8,\"ryAxisMargin\":8,\"xAxisFontFamily\":\"siayuan-normal\",\"lyAxisFontFamily\":\"siayuan-normal\",\"ryAxisFontFamily\":\"siayuan-normal\",\"xAxisFontSize\":12,\"lyAxisFontSize\":12,\"ryAxisFontSize\":12,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"lyAxisColor\":\"rgba(209, 209, 209, 1)\",\"ryAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"lyAxisFontStyle\":\"normal\",\"ryAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"lyAxisFontWeight\":\"normal\",\"ryAxisFontWeight\":\"normal\",\"lyAxisNameShow\":true,\"ryAxisNameShow\":true,\"lyAxisName\":\"单位\",\"lyAxisNameFontFamily\":\"siayuan-normal\",\"lyAxisNameFontSize\":12,\"lyAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"lyAxisNameFontStyle\":\"normal\",\"lyAxisNameFontWeight\":\"normal\",\"lyAxisNamePaddingTop\":0,\"lyAxisNamePaddingBottom\":0,\"lyAxisNamePaddingLeft\":0,\"lyAxisNamePaddingRight\":40,\"ryAxisName\":\"%\",\"ryAxisNameFontFamily\":\"siayuan-normal\",\"ryAxisNameFontSize\":14,\"ryAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"ryAxisNameFontStyle\":\"normal\",\"ryAxisNameFontWeight\":\"normal\",\"ryAxisNamePaddingTop\":0,\"ryAxisNamePaddingBottom\":0,\"ryAxisNamePaddingLeft\":35,\"ryAxisNamePaddingRight\":0,\"xAxisLineShow\":true,\"lyAxisLineShow\":false,\"ryAxisLineShow\":false,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"lyAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"ryAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"lyAxisLineWidth\":1,\"ryAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"lyAxisLineOpacity\":0.5,\"ryAxisLineOpacity\":0.5,\"xAxisTickShow\":true,\"lyAxisTickShow\":false,\"ryAxisTickShow\":false,\"xAxisTickColor\":\"#65686f\",\"lyAxisTickColor\":\"#65686f\",\"ryAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"lyAxisTickWidth\":1,\"ryAxisTickWidth\":1,\"xAxisTickLength\":2,\"lyAxisTickLength\":2,\"ryAxisTickLength\":2,\"xAxisSplitLineShow\":false,\"lyAxisSplitLineShow\":true,\"ryAxisSplitLineShow\":false,\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"lyAxisSplitLineWidth\":1,\"ryAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"lyAxisSplitLineColor\":\"#383d47\",\"ryAxisSplitLineColor\":\"#383d47\",\"tooltipLoop\":false,\"tooltipLoopInterval\":3,\"tooltipUnit\":\"\",\"tooltipFixed\":0,\"tooltipSeriesName\":false}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "斑马柱状折线图",
-    "thumbnail": "/img/BarAndLine.20240514.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":83},{\"seriesName\":\"系列三\",\"name\":\"A\",\"value\":93},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":77},{\"seriesName\":\"系列三\",\"name\":\"B\",\"value\":87},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":77},{\"seriesName\":\"系列三\",\"name\":\"C\",\"value\":87},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":82},{\"seriesName\":\"系列三\",\"name\":\"D\",\"value\":92}]",
-    "status": 1
-  },
-  {
-    "id": 32,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"堆叠占比图\",\"title\":\"堆叠占比图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/overlapBar.8ea5f49e.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"sql\":\"SELECT * FROM\",\"data\":[{\"seriesName\":\"系列一\",\"name\":\"1小时内等时圈\",\"value\":7.31},{\"seriesName\":\"系列一\",\"name\":\"2小时内等时圈\",\"value\":34.2},{\"seriesName\":\"系列一\",\"name\":\"3小时内等时圈\",\"value\":65.02},{\"seriesName\":\"系列一\",\"name\":\"4小时内等时圈\",\"value\":87.85},{\"seriesName\":\"系列一\",\"name\":\"5小时内等时圈\",\"value\":98.71},{\"seriesName\":\"系列一\",\"name\":\"6小时内等时圈\",\"value\":99.96},{\"seriesName\":\"系列一\",\"name\":\"7小时内等时圈\",\"value\":100},{\"seriesName\":\"系列二\",\"name\":\"1小时内等时圈\",\"value\":12.03},{\"seriesName\":\"系列二\",\"name\":\"2小时内等时圈\",\"value\":51.94},{\"seriesName\":\"系列二\",\"name\":\"3小时内等时圈\",\"value\":90.32},{\"seriesName\":\"系列二\",\"name\":\"4小时内等时圈\",\"value\":99.65},{\"seriesName\":\"系列二\",\"name\":\"5小时内等时圈\",\"value\":99.94},{\"seriesName\":\"系列二\",\"name\":\"6小时内等时圈\",\"value\":99.99},{\"seriesName\":\"系列二\",\"name\":\"7小时内等时圈\",\"value\":100}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"},{\"key\":\"seriesName\",\"map\":\"seriesName\",\"decription\":\"系列\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":650,\"height\":210,\"name\":\"echart-overlapBar\",\"prop\":\"echartoverlapBar\"},\"option\":{\"refresh\":true,\"seriesWidth\":[8,8],\"intervalColor\":\"rgba(35,38,48,0.8)\",\"gridLeft\":120,\"gridTop\":0,\"gridRight\":135,\"gridBottom\":0,\"splitLineFontSize\":12,\"splitLineColor\":\"rgb(255,255,255,0.5)\",\"valueShow\":[true,true],\"valueFontFamily\":[\"siayuan-normal\",\"siayuan-normal\"],\"valueFontSize\":[12,12],\"valueColor\":[\"rgba(56,248,211,1)\",\"rgba(49,201,233,1)\"],\"valueFontStyle\":[\"normal\",\"normal\"],\"valueFontWeight\":[\"normal\",\"normal\"],\"valueOffSetX\":[458,518],\"valueOffSetY\":[0,0],\"seriesTabsName\":[\"系列1\",\"系列2\"],\"nameFontFamily\":\"siayuan-normal\",\"nameFontSize\":12,\"nameColor\":\"rgba(255, 255, 255,0.8)\",\"nameFontStyle\":\"normal\",\"nameFontWeight\":\"bold\",\"barBodyOpacity\":[100,100],\"barBorderColor\":\"rgba(0, 0, 0, 0)\",\"borderWidth\":1,\"barBodyColor\":[{\"type\":\"linear-gradient\",\"angle\":\"90\",\"colors\":[{\"color\":\"rgba(56,248,211,0)\",\"per\":0},{\"color\":\"rgba(56,248,211,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"270\",\"colors\":[{\"color\":\"rgba(0,162,255,1)\",\"per\":0},{\"color\":\"rgba(0,162,255,0)\",\"per\":100}]}],\"nameWidth\":100,\"nameLeftPadding\":20,\"dataLoop\":false,\"dataLoopInterval\":5,\"dataLoopDisplayRows\":4,\"dataLoopRollNum\":1,\"xAxisSplitLineShow\":true,\"xAxisSplitLineColor\":\"rgba(255,255,255,.20)\",\"xAxisSplitLineType\":\"dashed\",\"xAxisSplitLineWidth\":1}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "堆叠占比图",
-    "thumbnail": "/img/overlapBar.8ea5f49e.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"name\":\"1小时内等时圈\",\"value\":7.31},{\"seriesName\":\"系列一\",\"name\":\"2小时内等时圈\",\"value\":34.2},{\"seriesName\":\"系列一\",\"name\":\"3小时内等时圈\",\"value\":65.02},{\"seriesName\":\"系列一\",\"name\":\"4小时内等时圈\",\"value\":87.85},{\"seriesName\":\"系列一\",\"name\":\"5小时内等时圈\",\"value\":98.71},{\"seriesName\":\"系列一\",\"name\":\"6小时内等时圈\",\"value\":99.96},{\"seriesName\":\"系列一\",\"name\":\"7小时内等时圈\",\"value\":100},{\"seriesName\":\"系列二\",\"name\":\"1小时内等时圈\",\"value\":12.03},{\"seriesName\":\"系列二\",\"name\":\"2小时内等时圈\",\"value\":51.94},{\"seriesName\":\"系列二\",\"name\":\"3小时内等时圈\",\"value\":90.32},{\"seriesName\":\"系列二\",\"name\":\"4小时内等时圈\",\"value\":99.65},{\"seriesName\":\"系列二\",\"name\":\"5小时内等时圈\",\"value\":99.94},{\"seriesName\":\"系列二\",\"name\":\"6小时内等时圈\",\"value\":99.99},{\"seriesName\":\"系列二\",\"name\":\"7小时内等时圈\",\"value\":100}]",
-    "status": 1
-  },
-  {
-    "id": 33,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"Top10气泡图\",\"title\":\"Top10气泡图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/effectScatter.60f2a868.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"dataMethod\":\"get\",\"data\":[{\"name\":\"地区A\",\"value\":150},{\"name\":\"地区B\",\"value\":130},{\"name\":\"地区C\",\"value\":120},{\"name\":\"地区D\",\"value\":110},{\"name\":\"地区E\",\"value\":110},{\"name\":\"地区F\",\"value\":90},{\"name\":\"地区G\",\"value\":85},{\"name\":\"地区H\",\"value\":80},{\"name\":\"地区I\",\"value\":75},{\"name\":\"地区J\",\"value\":70}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-effectScatter\",\"prop\":\"echarteffectScatter\"},\"option\":{\"refresh\":true,\"gridLeft\":50,\"gridTop\":0,\"gridRight\":50,\"gridBottom\":0,\"borderWidth\":2,\"borderColor\":\"rgba(59, 147, 203, 0.23)\",\"rippleEffectNumber\":3,\"rippleEffectPeriod\":5,\"rippleEffectScale\":0.5,\"rippleEffectBrushType\":\"fill\",\"points\":[\"Top1\",\"Top2\",\"Top3\",\"Top4\",\"Top5\",\"Top6\",\"Top7\",\"Top8\",\"Top9\",\"Top10\"],\"seriesList\":[{\"name\":\"地区A\",\"tabName\":\"Top1\",\"translateX\":55,\"translateY\":57,\"size\":65,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(22,137,226,0.5)\",\"showEffectOn\":\"render\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区B\",\"tabName\":\"Top2\",\"translateX\":27,\"translateY\":75,\"size\":60,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(13,241,147,0.5)\",\"showEffectOn\":\"render\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区C\",\"tabName\":\"Top3\",\"translateX\":30,\"translateY\":31,\"size\":55,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(234,178,32,0.5)\",\"showEffectOn\":\"render\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区D\",\"tabName\":\"Top4\",\"translateX\":80,\"translateY\":81,\"size\":50,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(137,180,252,0.5)\",\"showEffectOn\":\"emphasis\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区E\",\"tabName\":\"Top5\",\"translateX\":5,\"translateY\":25,\"size\":45,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(137,180,252,0.35)\",\"showEffectOn\":\"emphasis\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区F\",\"tabName\":\"Top6\",\"translateX\":85,\"translateY\":45,\"size\":40,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(137,180,252,0.35)\",\"showEffectOn\":\"emphasis\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区G\",\"tabName\":\"Top7\",\"translateX\":70,\"translateY\":27,\"size\":35,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(137,180,252,0.35)\",\"showEffectOn\":\"emphasis\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区H\",\"tabName\":\"Top8\",\"translateX\":3,\"translateY\":75,\"size\":30,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(137,180,252,0.35)\",\"showEffectOn\":\"emphasis\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区I\",\"tabName\":\"Top9\",\"translateX\":0,\"translateY\":45,\"size\":25,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(137,180,252,0.35)\",\"showEffectOn\":\"emphasis\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"},{\"name\":\"地区J\",\"tabName\":\"Top10\",\"translateX\":100,\"translateY\":65,\"size\":20,\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(137,180,252,0.35)\",\"showEffectOn\":\"emphasis\",\"seriesLabelTopShow\":true,\"seriesLabelTopFontFamily\":\"siayuan-normal\",\"seriesLabelTopFontSize\":12,\"seriesLabelTopColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelTopFontStyle\":\"normal\",\"seriesLabelTopFontWeight\":\"normal\",\"seriesLabelNameShow\":true,\"seriesLabelNameFontFamily\":\"siayuan-normal\",\"seriesLabelNameFontSize\":12,\"seriesLabelNameColor\":\"rgba(60, 233, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"siayuan-normal\",\"seriesLabelValueFontSize\":12,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"}]}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "Top10气泡图",
-    "thumbnail": "/img/effectScatter.60f2a868.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"name\":\"地区A\",\"value\":150},{\"name\":\"地区B\",\"value\":130},{\"name\":\"地区C\",\"value\":120},{\"name\":\"地区D\",\"value\":110},{\"name\":\"地区E\",\"value\":110},{\"name\":\"地区F\",\"value\":90},{\"name\":\"地区G\",\"value\":85},{\"name\":\"地区H\",\"value\":80},{\"name\":\"地区I\",\"value\":75},{\"name\":\"地区J\",\"value\":70}]",
-    "status": 1
-  },
-  {
-    "id": 34,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"增长率柱状图\",\"title\":\"增长率柱状图\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/RateBar.20240514.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":20},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":22},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":28},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":30},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":42},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":40},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":50},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":52},{\"seriesName\":\"系列一\",\"name\":\"E\",\"value\":62},{\"seriesName\":\"系列二\",\"name\":\"E\",\"value\":60},{\"seriesName\":\"系列一\",\"name\":\"F\",\"value\":70},{\"seriesName\":\"系列二\",\"name\":\"F\",\"value\":72}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-growthRateBar\",\"prop\":\"echartgrowthRateBar\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[\"系列1\",\"系列2\"],\"seriesColor\":[\"rgba(34,180,255,1)\",\"rgba(40,255,247,1)\"],\"borderColor\":[\"rgba(35,38,48,0.8)\",\"rgba(35,38,48,0.8)\"],\"isSort\":true,\"isHover\":true,\"seriesWidth\":12,\"seriesOpacity\":100,\"gridLeft\":45,\"gridTop\":30,\"gridRight\":45,\"gridBottom\":30,\"legendShow\":true,\"legendItemWidth\":15,\"legendItemHeight\":9,\"legendItemGap\":30,\"legendFontFamily\":\"siayuan-normal\",\"legendFontSize\":12,\"legendColor\":\"rgba(255, 255, 255, 1)\",\"legendFontStyle\":\"normal\",\"legendFontWeight\":\"normal\",\"yAxisLabelHover\":[true,false,true,false,false,false],\"yAxisLabelHoverColor\":[\"rgba(241,205,59,1)\",\"rgba(241,205,59,1)\",\"rgba(241,205,59,1)\",\"#ffffff\",\"#ffffff\",\"#ffffff\"],\"xNameFontSize\":16,\"yNameFontSize\":16,\"yAxisInverse\":true,\"xAxisInverse\":false,\"xAxisShow\":true,\"yAxisShow\":true,\"xAxisLabelShow\":true,\"yAxisLabelShow\":true,\"yAxisType\":\"category\",\"yAxisInterval\":0,\"yAxisRotate\":0,\"xAxisMin\":\"0\",\"xAxisMax\":\"\",\"xAxisMargin\":8,\"yAxisMargin\":8,\"xAxisFontFamily\":\"siayuan-normal\",\"yAxisFontFamily\":\"siayuan-normal\",\"xAxisFontSize\":12,\"yAxisFontSize\":20,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":\"normal\",\"xAxisNameShow\":true,\"xAxisName\":\"单位\",\"xAxisNameFontFamily\":\"siayuan-normal\",\"xAxisNameFontSize\":14,\"xAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"xAxisNameFontStyle\":\"normal\",\"xAxisNameFontWeight\":\"normal\",\"xAxisNamePaddingTop\":0,\"xAxisNamePaddingBottom\":0,\"xAxisNamePaddingLeft\":0,\"xAxisNamePaddingRight\":40,\"xAxisLineShow\":true,\"yAxisLineShow\":true,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"yAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":0.5,\"xAxisTickShow\":false,\"yAxisTickShow\":false,\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"yAxisTickWidth\":1,\"xAxisTickLength\":2,\"yAxisTickLength\":2,\"xAxisSplitLineShow\":true,\"yAxisSplitLineShow\":false,\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":\"#383d47\",\"tooltipLoop\":false,\"tooltipLoopInterval\":3,\"tooltipUnit\":\"\",\"tooltipFixed\":0}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "增长率柱状图",
-    "thumbnail": "/img/RateBar.20240514.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:26.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-24T16:33:52.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":20},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":22},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":28},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":30},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":42},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":40},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":50},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":52},{\"seriesName\":\"系列一\",\"name\":\"E\",\"value\":62},{\"seriesName\":\"系列二\",\"name\":\"E\",\"value\":60},{\"seriesName\":\"系列一\",\"name\":\"F\",\"value\":70},{\"seriesName\":\"系列二\",\"name\":\"F\",\"value\":72}]",
-    "status": 1
-  },
-  {
+{
     "id": 37,
     "user_id": null,
     "type": 0,
@@ -594,7 +373,7 @@
     "template": "[{\"value\":75,\"total\":100}]",
     "status": 1
   },
-  {
+{
     "id": 38,
     "user_id": null,
     "type": 0,
@@ -611,7 +390,7 @@
     "template": "[{\"value\":75,\"max\":100,\"min\":0}]",
     "status": 1
   },
-  {
+{
     "id": 39,
     "user_id": null,
     "type": 0,
@@ -628,7 +407,7 @@
     "template": "[{\"value\":33}]",
     "status": 1
   },
-  {
+{
     "id": 40,
     "user_id": null,
     "type": 0,
@@ -645,7 +424,7 @@
     "template": "[{\"name\":\"ScreenWright\",\"value\":9999},{\"name\":\"花鸟市场\",\"value\":1446},{\"name\":\"汽车\",\"value\":928},{\"name\":\"视频\",\"value\":906},{\"name\":\"电视\",\"value\":825},{\"name\":\"Lover Boy 88\",\"value\":514},{\"name\":\"动漫\",\"value\":486},{\"name\":\"音乐\",\"value\":5999},{\"name\":\"直播\",\"value\":163},{\"name\":\"广播电台\",\"value\":86},{\"name\":\"戏曲曲艺\",\"value\":17},{\"name\":\"演出票务\",\"value\":6},{\"name\":\"给陌生的你听\",\"value\":1},{\"name\":\"资讯\",\"value\":1437},{\"name\":\"商业财经\",\"value\":422},{\"name\":\"娱乐八卦\",\"value\":353},{\"name\":\"军事\",\"value\":331},{\"name\":\"科技资讯\",\"value\":313},{\"name\":\"社会时政\",\"value\":307},{\"name\":\"时尚\",\"value\":43},{\"name\":\"网络奇闻\",\"value\":15},{\"name\":\"旅游出行\",\"value\":438},{\"name\":\"景点类型\",\"value\":957},{\"name\":\"国内游\",\"value\":927},{\"name\":\"远途出行方式\",\"value\":908},{\"name\":\"酒店\",\"value\":693},{\"name\":\"关注景点\",\"value\":611},{\"name\":\"旅游网站偏好\",\"value\":512},{\"name\":\"出国游\",\"value\":382},{\"name\":\"交通票务\",\"value\":312},{\"name\":\"旅游方式\",\"value\":187},{\"name\":\"旅游主题\",\"value\":163},{\"name\":\"港澳台\",\"value\":104},{\"name\":\"本地周边游\",\"value\":3},{\"name\":\"小卖家\",\"value\":1331},{\"name\":\"全日制学校\",\"value\":941},{\"name\":\"基础教育科目\",\"value\":585},{\"name\":\"考试培训\",\"value\":473},{\"name\":\"语言学习\",\"value\":358},{\"name\":\"留学\",\"value\":246},{\"name\":\"K12课程培训\",\"value\":207},{\"name\":\"艺术培训\",\"value\":194},{\"name\":\"技能培训\",\"value\":104},{\"name\":\"IT培训\",\"value\":87},{\"name\":\"高等教育专业\",\"value\":63},{\"name\":\"家教\",\"value\":48},{\"name\":\"体育培训\",\"value\":23},{\"name\":\"职场培训\",\"value\":5},{\"name\":\"金融财经\",\"value\":1328},{\"name\":\"银行\",\"value\":765},{\"name\":\"股票\",\"value\":452},{\"name\":\"保险\",\"value\":415},{\"name\":\"贷款\",\"value\":253},{\"name\":\"基金\",\"value\":211},{\"name\":\"信用卡\",\"value\":180},{\"name\":\"外汇\",\"value\":138},{\"name\":\"P2P\",\"value\":116},{\"name\":\"贵金属\",\"value\":98},{\"name\":\"债券\",\"value\":93},{\"name\":\"网络理财\",\"value\":92},{\"name\":\"信托\",\"value\":90},{\"name\":\"征信\",\"value\":76},{\"name\":\"期货\",\"value\":76},{\"name\":\"公积金\",\"value\":40},{\"name\":\"银行理财\",\"value\":36},{\"name\":\"银行业务\",\"value\":30},{\"name\":\"典当\",\"value\":7},{\"name\":\"海外置业\",\"value\":1},{\"name\":\"汽车\",\"value\":1309},{\"name\":\"汽车档次\",\"value\":965},{\"name\":\"汽车品牌\",\"value\":900},{\"name\":\"汽车车型\",\"value\":727},{\"name\":\"购车阶段\",\"value\":461},{\"name\":\"二手车\",\"value\":309},{\"name\":\"汽车美容\",\"value\":260},{\"name\":\"新能源汽车\",\"value\":173},{\"name\":\"汽车维修\",\"value\":155},{\"name\":\"租车服务\",\"value\":136},{\"name\":\"车展\",\"value\":121},{\"name\":\"违章查询\",\"value\":76},{\"name\":\"汽车改装\",\"value\":62},{\"name\":\"汽车用品\",\"value\":37},{\"name\":\"路况查询\",\"value\":32},{\"name\":\"汽车保险\",\"value\":28},{\"name\":\"陪驾代驾\",\"value\":4},{\"name\":\"网络购物\",\"value\":1275},{\"name\":\"做我的猫\",\"value\":1088},{\"name\":\"只想要你知道\",\"value\":907},{\"name\":\"团购\",\"value\":837},{\"name\":\"比价\",\"value\":201},{\"name\":\"海淘\",\"value\":195},{\"name\":\"移动APP购物\",\"value\":179},{\"name\":\"支付方式\",\"value\":119},{\"name\":\"代购\",\"value\":43},{\"name\":\"体育健身\",\"value\":1234},{\"name\":\"体育赛事项目\",\"value\":802},{\"name\":\"运动项目\",\"value\":405},{\"name\":\"体育类赛事\",\"value\":337},{\"name\":\"健身项目\",\"value\":199},{\"name\":\"健身房健身\",\"value\":78},{\"name\":\"运动健身\",\"value\":77},{\"name\":\"家庭健身\",\"value\":36},{\"name\":\"健身器械\",\"value\":29},{\"name\":\"办公室健身\",\"value\":3},{\"name\":\"商务服务\",\"value\":1201},{\"name\":\"法律咨询\",\"value\":508},{\"name\":\"化工材料\",\"value\":147},{\"name\":\"广告服务\",\"value\":125},{\"name\":\"会计审计\",\"value\":115},{\"name\":\"人员招聘\",\"value\":101},{\"name\":\"印刷打印\",\"value\":66},{\"name\":\"知识产权\",\"value\":32},{\"name\":\"翻译\",\"value\":22},{\"name\":\"安全安保\",\"value\":9},{\"name\":\"公关服务\",\"value\":8},{\"name\":\"商旅服务\",\"value\":2},{\"name\":\"展会服务\",\"value\":2},{\"name\":\"特许经营\",\"value\":1},{\"name\":\"休闲爱好\",\"value\":1169},{\"name\":\"收藏\",\"value\":412},{\"name\":\"摄影\",\"value\":393},{\"name\":\"温泉\",\"value\":230},{\"name\":\"博彩彩票\",\"value\":211},{\"name\":\"美术\",\"value\":207},{\"name\":\"书法\",\"value\":139},{\"name\":\"DIY手工\",\"value\":75},{\"name\":\"舞蹈\",\"value\":23},{\"name\":\"钓鱼\",\"value\":21},{\"name\":\"棋牌桌游\",\"value\":17},{\"name\":\"KTV\",\"value\":6},{\"name\":\"密室\",\"value\":5},{\"name\":\"采摘\",\"value\":4},{\"name\":\"电玩\",\"value\":1},{\"name\":\"真人CS\",\"value\":1},{\"name\":\"轰趴\",\"value\":1},{\"name\":\"家电数码\",\"value\":1111},{\"name\":\"手机\",\"value\":885},{\"name\":\"电脑\",\"value\":543},{\"name\":\"大家电\",\"value\":321},{\"name\":\"家电关注品牌\",\"value\":253},{\"name\":\"网络设备\",\"value\":162},{\"name\":\"摄影器材\",\"value\":149},{\"name\":\"影音设备\",\"value\":133},{\"name\":\"办公数码设备\",\"value\":113},{\"name\":\"生活电器\",\"value\":67},{\"name\":\"厨房电器\",\"value\":54},{\"name\":\"智能设备\",\"value\":45},{\"name\":\"个人护理电器\",\"value\":22},{\"name\":\"服饰鞋包\",\"value\":1047},{\"name\":\"服装\",\"value\":566},{\"name\":\"饰品\",\"value\":289},{\"name\":\"鞋\",\"value\":184},{\"name\":\"箱包\",\"value\":168},{\"name\":\"奢侈品\",\"value\":137},{\"name\":\"母婴亲子\",\"value\":1041},{\"name\":\"孕婴保健\",\"value\":505},{\"name\":\"母婴社区\",\"value\":299},{\"name\":\"早教\",\"value\":103},{\"name\":\"奶粉辅食\",\"value\":66},{\"name\":\"童车童床\",\"value\":41},{\"name\":\"关注品牌\",\"value\":271},{\"name\":\"宝宝玩乐\",\"value\":30},{\"name\":\"母婴护理服务\",\"value\":25},{\"name\":\"纸尿裤湿巾\",\"value\":16},{\"name\":\"妈妈用品\",\"value\":15},{\"name\":\"宝宝起名\",\"value\":12},{\"name\":\"童装童鞋\",\"value\":9},{\"name\":\"胎教\",\"value\":8},{\"name\":\"宝宝安全\",\"value\":1},{\"name\":\"宝宝洗护用品\",\"value\":1},{\"name\":\"软件应用\",\"value\":1018},{\"name\":\"系统工具\",\"value\":896},{\"name\":\"理财购物\",\"value\":440},{\"name\":\"生活实用\",\"value\":365},{\"name\":\"影音图像\",\"value\":256},{\"name\":\"社交通讯\",\"value\":214},{\"name\":\"手机美化\",\"value\":39},{\"name\":\"办公学习\",\"value\":28},{\"name\":\"应用市场\",\"value\":23},{\"name\":\"母婴育儿\",\"value\":14},{\"name\":\"游戏\",\"value\":946},{\"name\":\"手机游戏\",\"value\":565},{\"name\":\"PC游戏\",\"value\":353},{\"name\":\"网页游戏\",\"value\":254},{\"name\":\"游戏机\",\"value\":188},{\"name\":\"模拟辅助\",\"value\":166},{\"name\":\"个护美容\",\"value\":942},{\"name\":\"护肤品\",\"value\":177},{\"name\":\"彩妆\",\"value\":133},{\"name\":\"美发\",\"value\":80},{\"name\":\"香水\",\"value\":50},{\"name\":\"个人护理\",\"value\":46},{\"name\":\"美甲\",\"value\":26},{\"name\":\"SPA美体\",\"value\":21},{\"name\":\"花鸟萌宠\",\"value\":914},{\"name\":\"绿植花卉\",\"value\":311},{\"name\":\"狗\",\"value\":257},{\"name\":\"其他宠物\",\"value\":131},{\"name\":\"水族\",\"value\":125},{\"name\":\"猫\",\"value\":122},{\"name\":\"动物\",\"value\":81},{\"name\":\"鸟\",\"value\":67},{\"name\":\"宠物用品\",\"value\":41},{\"name\":\"宠物服务\",\"value\":26},{\"name\":\"书籍阅读\",\"value\":913},{\"name\":\"网络小说\",\"value\":483},{\"name\":\"关注书籍\",\"value\":128},{\"name\":\"文学\",\"value\":105},{\"name\":\"报刊杂志\",\"value\":77},{\"name\":\"人文社科\",\"value\":22},{\"name\":\"建材家居\",\"value\":907},{\"name\":\"装修建材\",\"value\":644},{\"name\":\"家具\",\"value\":273},{\"name\":\"家居风格\",\"value\":187},{\"name\":\"家居家装关注品牌\",\"value\":140},{\"name\":\"家纺\",\"value\":107},{\"name\":\"厨具\",\"value\":47},{\"name\":\"灯具\",\"value\":43},{\"name\":\"家居饰品\",\"value\":29},{\"name\":\"家居日常用品\",\"value\":10},{\"name\":\"生活服务\",\"value\":883},{\"name\":\"物流配送\",\"value\":536},{\"name\":\"家政服务\",\"value\":108},{\"name\":\"摄影服务\",\"value\":49},{\"name\":\"搬家服务\",\"value\":38},{\"name\":\"物业维修\",\"value\":37},{\"name\":\"婚庆服务\",\"value\":24},{\"name\":\"二手回收\",\"value\":24},{\"name\":\"鲜花配送\",\"value\":3},{\"name\":\"维修服务\",\"value\":3},{\"name\":\"殡葬服务\",\"value\":1},{\"name\":\"求职创业\",\"value\":874},{\"name\":\"创业\",\"value\":363},{\"name\":\"目标职位\",\"value\":162},{\"name\":\"目标行业\",\"value\":50},{\"name\":\"兼职\",\"value\":21},{\"name\":\"期望年薪\",\"value\":20},{\"name\":\"实习\",\"value\":16},{\"name\":\"雇主类型\",\"value\":10},{\"name\":\"星座运势\",\"value\":789},{\"name\":\"星座\",\"value\":316},{\"name\":\"算命\",\"value\":303},{\"name\":\"解梦\",\"value\":196},{\"name\":\"风水\",\"value\":93},{\"name\":\"面相分析\",\"value\":47},{\"name\":\"手相\",\"value\":32},{\"name\":\"公益\",\"value\":90}]",
     "status": 1
   },
-  {
+{
     "id": 41,
     "user_id": null,
     "type": 0,
@@ -662,7 +441,7 @@
     "template": "[{\"seriesName\":\"A\",\"percent\":0.5}]",
     "status": 1
   },
-  {
+{
     "id": 42,
     "user_id": null,
     "type": 0,
@@ -679,7 +458,7 @@
     "template": "[{\"name\":\"广州\",\"value\":9999},{\"name\":\"深圳\",\"value\":9000},{\"name\":\"佛山\",\"value\":8000},{\"name\":\"东莞\",\"value\":7000},{\"name\":\"湛江\",\"value\":6000}]",
     "status": 1
   },
-  {
+{
     "id": 43,
     "user_id": null,
     "type": 0,
@@ -696,7 +475,7 @@
     "template": "[{\"value\":\"version-test/assets/defaultImg/default.png\"}]",
     "status": 1
   },
-  {
+{
     "id": 44,
     "user_id": null,
     "type": 0,
@@ -713,7 +492,7 @@
     "template": "version-test/assets/defaultImg/imgBorderDefault.png",
     "status": 1
   },
-  {
+{
     "id": 45,
     "user_id": null,
     "type": 0,
@@ -730,7 +509,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 46,
     "user_id": null,
     "type": 0,
@@ -747,7 +526,7 @@
     "template": "[{\"value\":\"\"}]",
     "status": 1
   },
-  {
+{
     "id": 47,
     "user_id": null,
     "type": 0,
@@ -764,7 +543,7 @@
     "template": "[{\"cover\":\"\",\"value\":\"version-test/assets/defaultImg/video.mp4\"}]",
     "status": 1
   },
-  {
+{
     "id": 48,
     "user_id": null,
     "type": 0,
@@ -781,7 +560,7 @@
     "template": "[{\"name\":\"video1\",\"url\":\"version-test/assets/defaultImg/video.mp4\"},{\"name\":\"video2\",\"url\":\"version-test/assets/defaultImg/video.mp4\"},{\"name\":\"video3\",\"url\":\"version-test/assets/defaultImg/video.mp4\"},{\"name\":\"video4\",\"url\":\"version-test/assets/defaultImg/video.mp4\"},{\"name\":\"video5\",\"url\":\"version-test/assets/defaultImg/video.mp4\"}]",
     "status": 1
   },
-  {
+{
     "id": 49,
     "user_id": null,
     "type": 0,
@@ -798,7 +577,7 @@
     "template": "[{\"label\":\"Tab A\",\"value\":1},{\"label\":\"Tab B\",\"value\":2},{\"label\":\"Tab C\",\"value\":3}]",
     "status": 1
   },
-  {
+{
     "id": 50,
     "user_id": null,
     "type": 0,
@@ -815,7 +594,7 @@
     "template": "[{\"label\":\"区域点击\",\"value\":1}]",
     "status": 1
   },
-  {
+{
     "id": 51,
     "user_id": null,
     "type": 0,
@@ -832,7 +611,7 @@
     "template": "[{\"value\":\"\"}]",
     "status": 1
   },
-  {
+{
     "id": 52,
     "user_id": null,
     "type": 0,
@@ -849,7 +628,7 @@
     "template": "[{\"label\":2019,\"value\":2019},{\"label\":2020,\"value\":2020},{\"label\":2021,\"value\":2021},{\"label\":2022,\"value\":2022}]",
     "status": 1
   },
-  {
+{
     "id": 53,
     "user_id": null,
     "type": 0,
@@ -866,7 +645,7 @@
     "template": "[{\"label\":\"广州\",\"value\":\"10\",\"disabled\":false,\"select\":false},{\"label\":\"韶关\",\"value\":\"20\",\"disabled\":false,\"select\":false},{\"label\":\"深圳\",\"value\":\"30\",\"disabled\":false,\"select\":false},{\"label\":\"珠海\",\"value\":\"40\",\"disabled\":false,\"select\":false},{\"label\":\"汕头\",\"value\":\"50\",\"disabled\":false,\"select\":false},{\"label\":\"佛山\",\"value\":\"60\",\"disabled\":false,\"select\":false},{\"label\":\"江门\",\"value\":\"70\",\"disabled\":false,\"select\":false},{\"label\":\"湛江\",\"value\":\"80\",\"disabled\":false,\"select\":false},{\"label\":\"茂名\",\"value\":\"90\",\"disabled\":false,\"select\":false},{\"label\":\"肇庆\",\"value\":\"120\",\"disabled\":false,\"select\":false},{\"label\":\"惠州\",\"value\":\"130\",\"disabled\":false,\"select\":false},{\"label\":\"梅州\",\"value\":\"140\",\"disabled\":false,\"select\":false},{\"label\":\"汕尾\",\"value\":\"150\",\"disabled\":false,\"select\":false},{\"label\":\"河源\",\"value\":\"160\",\"disabled\":false,\"select\":false},{\"label\":\"阳江\",\"value\":\"170\",\"disabled\":false,\"select\":false},{\"label\":\"清远\",\"value\":\"180\",\"disabled\":false,\"select\":false},{\"label\":\"东莞\",\"value\":\"190\",\"disabled\":false,\"select\":false},{\"label\":\"中山\",\"value\":\"200\",\"disabled\":false,\"select\":false},{\"label\":\"潮州\",\"value\":\"210\",\"disabled\":false,\"select\":false},{\"label\":\"揭阳\",\"value\":\"220\",\"disabled\":false,\"select\":false},{\"label\":\"云浮\",\"value\":\"230\",\"disabled\":false,\"select\":false}]",
     "status": 1
   },
-  {
+{
     "id": 54,
     "user_id": null,
     "type": 0,
@@ -883,7 +662,7 @@
     "template": "[{\"label\":\"选项A\",\"value\":1,\"isChecked\":false,\"children\":[{\"label\":\"选项A-1\",\"value\":1.1,\"isChecked\":false},{\"label\":\"选项A-2\",\"value\":1.2,\"isChecked\":false}]},{\"label\":\"选项B\",\"value\":2,\"isChecked\":true},{\"label\":\"选项C\",\"value\":3,\"isChecked\":false},{\"label\":\"选项D\",\"value\":4,\"isChecked\":false}]",
     "status": 1
   },
-  {
+{
     "id": 55,
     "user_id": null,
     "type": 0,
@@ -900,7 +679,7 @@
     "template": "[{\"pageIndex\":1,\"pageTotal\":1000,\"pageSize\":10}]",
     "status": 1
   },
-  {
+{
     "id": 56,
     "user_id": null,
     "type": 0,
@@ -917,24 +696,7 @@
     "template": "[{\"pageIndex\":1,\"pageTotal\":2,\"textPage\":[\"分页一\",\"分页二\"]}]",
     "status": 1
   },
-  {
-    "id": 57,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"title\":\"中国2D地图\",\"name\":\"中国2D地图\",\"display\":true,\"icon\":\"icon-scatter\",\"img\":\"/img/commonMap.6d3dd447.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"path\":\"\",\"time\":30,\"url\":\"./scatter\",\"data\":[{\"name\":\"中华人民共和国\",\"adcode\":\"100000\"}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"adcode\",\"map\":\"adcode\",\"decription\":\"区域代码\"}],\"openFilter\":false,\"listenArgs\":[],\"cbArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":1920,\"height\":1080,\"name\":\"echart-commonMap\",\"prop\":\"echartcommonMap\"},\"presetChild\":[{\"name\":\"飞线\",\"title\":\"飞线\",\"isEdit\":false,\"showOperation\":false,\"type\":\"mapLines\",\"listenArgs\":[],\"show\":true,\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"sql\":\"SELECT * FROM\",\"data\":[{\"name\":\"上海-北京\",\"coords\":[[121.4692688,31.2381763],[116.405285,39.904989]]},{\"name\":\"重庆-北京\",\"coords\":[[106.548425,29.5549144],[116.405285,39.904989]]},{\"name\":\"辽宁-北京\",\"coords\":[[123.4116821,41.7966156],[116.405285,39.904989]]},{\"name\":\"吉林-北京\",\"coords\":[[125.3154297,43.8925629],[116.405285,39.904989]]},{\"name\":\"黑龙江-北京\",\"coords\":[[126.6433411,45.7414932],[116.405285,39.904989]]},{\"name\":\"浙江-北京\",\"coords\":[[120.1592484,30.265995],[116.405285,39.904989]]},{\"name\":\"福建-北京\",\"coords\":[[119.2978134,26.0785904],[116.405285,39.904989]]},{\"name\":\"河南-北京\",\"coords\":[[113.6500473,34.7570343],[116.405285,39.904989]]},{\"name\":\"湖北-北京\",\"coords\":[[114.2919388,30.5675144],[116.405285,39.904989]]},{\"name\":\"湖南-北京\",\"coords\":[[112.9812698,28.2008247],[116.405285,39.904989]]},{\"name\":\"广东-北京\",\"coords\":[[113.2614288,23.1189117],[116.405285,39.904989]]},{\"name\":\"海南-北京\",\"coords\":[[110.3465118,20.0317936],[116.405285,39.904989]]},{\"name\":\"四川-北京\",\"coords\":[[104.0817566,30.6610565],[116.405285,39.904989]]},{\"name\":\"贵州-北京\",\"coords\":[[106.7113724,26.5768738],[116.405285,39.904989]]},{\"name\":\"云南-北京\",\"coords\":[[102.704567,25.0438442],[116.405285,39.904989]]},{\"name\":\"江西-北京\",\"coords\":[[115.8999176,28.6759911],[116.405285,39.904989]]},{\"name\":\"陕西-北京\",\"coords\":[[108.949028,34.2616844],[116.405285,39.904989]]},{\"name\":\"青海-北京\",\"coords\":[[101.7874527,36.6094475],[116.405285,39.904989]]},{\"name\":\"甘肃-北京\",\"coords\":[[103.7500534,36.0680389],[116.405285,39.904989]]},{\"name\":\"广西-北京\",\"coords\":[[108.3117676,22.8065434],[116.405285,39.904989]]},{\"name\":\"新疆-北京\",\"coords\":[[87.6061172,43.7909393],[116.405285,39.904989]]},{\"name\":\"西藏-北京\",\"coords\":[[91.1320496,29.657589],[116.405285,39.904989]]},{\"name\":\"宁夏-北京\",\"coords\":[[106.2719421,38.4680099],[116.405285,39.904989]]},{\"name\":\"台湾-北京\",\"coords\":[[120.9581316,23.8516062],[116.405285,39.904989]]},{\"name\":\"香港-北京\",\"coords\":[[114.139452,22.391577],[116.405285,39.904989]]},{\"name\":\"澳门-北京\",\"coords\":[[113.5678411,22.167654],[116.405285,39.904989]]},{\"name\":\"安徽-北京\",\"coords\":[[117.2757034,31.8632545],[116.405285,39.904989]]},{\"name\":\"江苏-北京\",\"coords\":[[118.7727814,32.0476151],[116.405285,39.904989]]}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"名称\"},{\"key\":\"coords\",\"map\":\"coords\",\"decription\":\"经纬度\"}],\"component\":{\"name\":\"echart-mapLines\",\"prop\":\"echartmapLines\"},\"option\":{\"effectShow\":true,\"effectType\":\"constantSpeed\",\"period\":4,\"constantSpeed\":80,\"delay\":0,\"effectSymbol\":\"arrow\",\"effectSymbolImage\":\"\",\"effectSymbolWidth\":2,\"effectSymbolHeight\":20,\"effectColor\":{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(253, 143, 209, 1)\",\"per\":0},{\"color\":\"rgba(255, 255, 255, 1)\",\"per\":100}]},\"effectOpacity\":100,\"trailLength\":0.86,\"loop\":true,\"lineColor\":{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(88, 179, 204, 1)\",\"per\":0},{\"color\":\"rgba(255, 255, 255, 1)\",\"per\":100}]},\"lineOpacity\":50,\"lineWidth\":0,\"lineCurveness\":0.1,\"lineLabelShow\":false,\"lineLabelPosition\":\"end\",\"lineLabelColor\":\"rgba(255,255,255,1)\",\"lineLabelFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"lineLabelFontSize\":18,\"lineLabelFontWeight\":\"bolder\",\"lineLabelFontStyle\":\"normal\"}},{\"name\":\"散点\",\"title\":\"散点\",\"isEdit\":false,\"showOperation\":false,\"type\":\"mapEffectScatter\",\"listenArgs\":[],\"show\":true,\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"sql\":\"SELECT * FROM\",\"data\":[{\"name\":\"上海\",\"value\":[\"121.4692688\",\"31.2381763\",75]},{\"name\":\"重庆\",\"value\":[\"106.548425\",\"29.5549144\",78]},{\"name\":\"辽宁\",\"value\":[\"123.4116821\",\"41.7966156\",96]},{\"name\":\"吉林\",\"value\":[\"125.3154297\",\"43.8925629\",46]},{\"name\":\"黑龙江\",\"value\":[\"126.6433411\",\"45.7414932\",97]},{\"name\":\"浙江\",\"value\":[\"120.1592484\",\"30.265995\",32]},{\"name\":\"福建\",\"value\":[\"119.2978134\",\"26.0785904\",2]},{\"name\":\"河南\",\"value\":[\"113.6500473\",\"34.7570343\",23]},{\"name\":\"湖北\",\"value\":[\"114.2919388\",\"30.5675144\",76]},{\"name\":\"湖南\",\"value\":[\"112.9812698\",\"28.2008247\",71]},{\"name\":\"广东\",\"value\":[\"113.2614288\",\"23.1189117\",6]},{\"name\":\"海南\",\"value\":[\"110.3465118\",\"20.0317936\",64]},{\"name\":\"四川\",\"value\":[\"104.0817566\",\"30.6610565\",54]},{\"name\":\"贵州\",\"value\":[\"106.7113724\",\"26.5768738\",1]},{\"name\":\"云南\",\"value\":[\"102.704567\",\"25.0438442\",78]},{\"name\":\"江西\",\"value\":[\"115.8999176\",\"28.6759911\",16]},{\"name\":\"陕西\",\"value\":[\"108.949028\",\"34.2616844\",14]},{\"name\":\"青海\",\"value\":[\"101.7874527\",\"36.6094475\",22]},{\"name\":\"甘肃\",\"value\":[\"103.7500534\",\"36.0680389\",37]},{\"name\":\"广西\",\"value\":[\"108.3117676\",\"22.8065434\",52]},{\"name\":\"新疆\",\"value\":[\"87.6061172\",\"43.7909393\",11]},{\"name\":\"西藏\",\"value\":[\"91.1320496\",\"29.657589\",6]},{\"name\":\"宁夏\",\"value\":[\"106.2719421\",\"38.4680099\",64]},{\"name\":\"台湾\",\"value\":[\"120.9581316\",\"23.8516062\",49]},{\"name\":\"香港\",\"value\":[\"114.139452\",\"22.391577\",49]},{\"name\":\"澳门\",\"value\":[\"113.5678411\",\"22.167654\",36]},{\"name\":\"安徽\",\"value\":[\"117.2757034\",\"31.8632545\",78]},{\"name\":\"江苏\",\"value\":[\"118.7727814\",\"32.0476151\",98]}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"component\":{\"width\":850,\"height\":450,\"name\":\"echart-mapEffectScatter\",\"prop\":\"echartmapEffectScatter\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"gridLeft\":50,\"gridTop\":0,\"gridRight\":50,\"gridBottom\":0,\"symbolSize\":6,\"borderWidth\":2,\"borderColor\":\"rgba(59, 147, 203, 0.23)\",\"rippleEffectNumber\":3,\"rippleEffectPeriod\":5,\"rippleEffectScale\":1.5,\"rippleEffectBrushType\":\"stroke\",\"insideColor\":\"rgba(255,255,255,1)\",\"outsideColor\":\"rgba(255,255,255,1)\",\"showEffectOn\":\"render\",\"seriesLabelNameShow\":false,\"seriesLabelNameFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"seriesLabelNameFontSize\":18,\"seriesLabelNameColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"seriesLabelValueFontSize\":18,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"}},{\"name\":\"散点\",\"title\":\"散点\",\"isEdit\":false,\"showOperation\":false,\"type\":\"mapEffectScatter\",\"listenArgs\":[],\"show\":true,\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"sql\":\"SELECT * FROM\",\"data\":[{\"name\":\"北京\",\"value\":[\"116.3979471\",\"39.9081726\",78]}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"component\":{\"width\":850,\"height\":450,\"name\":\"echart-mapEffectScatter\",\"prop\":\"echartmapEffectScatter\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"gridLeft\":50,\"gridTop\":0,\"gridRight\":50,\"gridBottom\":0,\"symbolSize\":30,\"borderWidth\":2,\"borderColor\":\"rgba(59, 147, 203, 0.23)\",\"rippleEffectNumber\":3,\"rippleEffectPeriod\":5,\"rippleEffectScale\":12,\"rippleEffectBrushType\":\"stroke\",\"insideColor\":\"rgba(0,0,0,0)\",\"outsideColor\":\"rgba(253,143,209,1)\",\"showEffectOn\":\"render\",\"seriesLabelNameShow\":false,\"seriesLabelNameFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"seriesLabelNameFontSize\":18,\"seriesLabelNameColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"seriesLabelValueFontSize\":18,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"}}],\"unitPavenType\":\"\",\"option\":{\"refresh\":true,\"roam\":true,\"adcode\":{\"label\":\"中华人民共和国\",\"value\":\"100000\"},\"areaColor\":\"#171a24\",\"borderWidth\":1,\"borderColor\":\"#87c0ff\",\"shadowColor\":\"#87c0ff\",\"shadowOffsetX\":0,\"shadowOffsetY\":0,\"shadowBlur\":10,\"geoLabelShow\":false,\"geoLabelFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"geoLabelFontSize\":16,\"geoLabelColor\":\"rgba(240, 242, 245, 1)\",\"geoLabelFontStyle\":\"normal\",\"geoLabelFontWeight\":\"normal\"}}",
-    "level": 0,
-    "second_level_menu": "",
-    "first_level_menu": "地图",
-    "name": "中国2D地图",
-    "thumbnail": "/img/commonMap.6d3dd447.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:27.000Z",
-    "updated_by": "admin",
-    "updated_time": "2024-06-17T10:56:29.000Z",
-    "template": "{\"name\":\"中华人民共和国\",\"adcode\":\"100000\"}",
-    "status": 1
-  },
-  {
+{
     "id": 61,
     "user_id": null,
     "type": 0,
@@ -951,7 +713,7 @@
     "template": "[{\"accidentType\":\"car\",\"status\":\"已解决\",\"time\":\"07:33:40\",\"content\":\"左侧OBU无响应\"},{\"accidentType\":\"config\",\"status\":\"处理中\",\"time\":\"07:31:22\",\"content\":\"金链路5G基站信号丢失,中山路5G基站信号丢失\"},{\"accidentType\":\"accident\",\"status\":\"已解决\",\"time\":\"07:30:48\",\"content\":\"闯红灯\"},{\"accidentType\":\"car\",\"status\":\"已解决\",\"time\":\"07:14:40\",\"content\":\"左侧OBU无响应\"},{\"accidentType\":\"config\",\"status\":\"已解决\",\"time\":\"07:06:40\",\"content\":\"金链路监控信号丢失\"},{\"accidentType\":\"car\",\"status\":\"已解决\",\"time\":\"06:55:40\",\"content\":\"智慧出租00031闯红灯\"},{\"accidentType\":\"accident\",\"status\":\"处理中\",\"time\":\"06:33:40\",\"content\":\"左侧OBU无响应\"},{\"accidentType\":\"car\",\"status\":\"已解决\",\"time\":\"05:33:40\",\"content\":\"左侧OBU无响应\"}]",
     "status": 1
   },
-  {
+{
     "id": 62,
     "user_id": null,
     "type": 0,
@@ -968,7 +730,7 @@
     "template": "[{\"地区\":\"深圳\",\"小学\":0.08905,\"初中\":0.440881,\"高中（含中专）\":0.239027,\"大学及以上（含大专）\":0.176439},{\"地区\":\"广州\",\"小学\":0.155875,\"初中\":0.356219,\"高中（含中专）\":0.231826,\"大学及以上（含大专）\":0.196166},{\"地区\":\"珠海\",\"小学\":0.161912,\"初中\":0.335511,\"高中（含中专）\":0.245931,\"大学及以上（含大专）\":0.185492},{\"地区\":\"佛山\",\"小学\":0.205987,\"初中\":0.433138,\"高中（含中专）\":0.198142,\"大学及以上（含大专）\":0.097418},{\"地区\":\"中山\",\"小学\":0.195153,\"初中\":0.446148,\"高中（含中专）\":0.216246,\"大学及以上（含大专）\":0.080086},{\"地区\":\"东莞\",\"小学\":0.134428,\"初中\":0.543325,\"高中（含中专）\":0.206168,\"大学及以上（含大专）\":0.072514},{\"地区\":\"惠州\",\"小学\":0.213061,\"初中\":0.466479,\"高中（含中专）\":0.160067,\"大学及以上（含大专）\":0.063774},{\"地区\":\"江门\",\"小学\":0.242305,\"初中\":0.418112,\"高中（含中专）\":0.208383,\"大学及以上（含大专）\":0.055914},{\"地区\":\"韶关\",\"小学\":0.262672,\"初中\":0.379626,\"高中（含中专）\":0.168311,\"大学及以上（含大专）\":0.071267},{\"地区\":\"清远\",\"小学\":0.307167,\"初中\":0.416855,\"高中（含中专）\":0.114893,\"大学及以上（含大专）\":0.041551},{\"地区\":\"阳江\",\"小学\":0.284201,\"初中\":0.406695,\"高中（含中专）\":0.1478,\"大学及以上（含大专）\":0.047091},{\"地区\":\"湛江\",\"小学\":0.282866,\"初中\":0.413751,\"高中（含中专）\":0.133593,\"大学及以上（含大专）\":0.05092},{\"地区\":\"肇庆\",\"小学\":0.291317,\"初中\":0.431513,\"高中（含中专）\":0.120992,\"大学及以上（含大专）\":0.046395},{\"地区\":\"河源\",\"小学\":0.243281,\"初中\":0.432312,\"高中（含中专）\":0.140451,\"大学及以上（含大专）\":0.043376},{\"地区\":\"梅州\",\"小学\":0.227222,\"初中\":0.445932,\"高中（含中专）\":0.168047,\"大学及以上（含大专）\":0.048599},{\"地区\":\"汕头\",\"小学\":0.335758,\"初中\":0.372554,\"高中（含中专）\":0.145416,\"大学及以上（含大专）\":0.042751},{\"地区\":\"茂名\",\"小学\":0.294418,\"初中\":0.389356,\"高中（含中专）\":0.140016,\"大学及以上（含大专）\":0.045957},{\"地区\":\"潮州\",\"小学\":0.327569,\"初中\":0.396373,\"高中（含中专）\":0.132243,\"大学及以上（含大专）\":0.041222},{\"地区\":\"云浮\",\"小学\":0.275043,\"初中\":0.453673,\"高中（含中专）\":0.114804,\"大学及以上（含大专）\":0.032407},{\"地区\":\"汕尾\",\"小学\":0.338157,\"初中\":0.399678,\"高中（含中专）\":0.108722,\"大学及以上（含大专）\":0.024214},{\"地区\":\"揭阳\",\"小学\":0.334974,\"初中\":0.43348,\"高中（含中专）\":0.113474,\"大学及以上（含大专）\":0.018774}]",
     "status": 1
   },
-  {
+{
     "id": 63,
     "user_id": null,
     "type": 0,
@@ -985,7 +747,7 @@
     "template": "[{\"value\":\"我是一个标题\"}]",
     "status": 1
   },
-  {
+{
     "id": 64,
     "user_id": null,
     "type": 0,
@@ -1002,7 +764,7 @@
     "template": "[{\"value\":\"跑马灯\"}]",
     "status": 1
   },
-  {
+{
     "id": 65,
     "user_id": null,
     "type": 0,
@@ -1019,7 +781,7 @@
     "template": "[{\"value\":\"超链接\"}]",
     "status": 1
   },
-  {
+{
     "id": 66,
     "user_id": null,
     "type": 0,
@@ -1036,7 +798,7 @@
     "template": null,
     "status": 1
   },
-  {
+{
     "id": 67,
     "user_id": null,
     "type": 0,
@@ -1053,7 +815,7 @@
     "template": "[{\"name\":\"文字段落1\",\"src\":\"\"},{\"name\":\"文字段落2\",\"src\":\"\"},{\"name\":\"文字段落3\",\"src\":\"\"}]",
     "status": 1
   },
-  {
+{
     "id": 68,
     "user_id": null,
     "type": 0,
@@ -1070,7 +832,7 @@
     "template": "[{\"text\":\"北京\",\"value\":93},{\"text\":\"上海\",\"value\":45},{\"text\":\"广州\",\"value\":56},{\"text\":\"深圳\",\"value\":80},{\"text\":\"杭州\",\"value\":88},{\"text\":\"成都\",\"value\":64},{\"text\":\"苏州\",\"value\":71},{\"text\":\"天津\",\"value\":70},{\"text\":\"武汉\",\"value\":61},{\"text\":\"重庆\",\"value\":64},{\"text\":\"南京\",\"value\":62},{\"text\":\"长沙\",\"value\":57},{\"text\":\"郑州\",\"value\":55},{\"text\":\"西安\",\"value\":53},{\"text\":\"大连\",\"value\":54},{\"text\":\"无锡\",\"value\":60},{\"text\":\"青岛\",\"value\":57},{\"text\":\"济南\",\"value\":48},{\"text\":\"沈阳\",\"value\":49},{\"text\":\"宁波\",\"value\":58},{\"text\":\"佛山\",\"value\":62},{\"text\":\"南通\",\"value\":54},{\"text\":\"长春\",\"value\":45},{\"text\":\"烟台\",\"value\":48},{\"text\":\"哈尔滨\",\"value\":43},{\"text\":\"石家庄\",\"value\":43},{\"text\":\"福州\",\"value\":45},{\"text\":\"东莞\",\"value\":49},{\"text\":\"常州\",\"value\":49},{\"text\":\"太原\",\"value\":38},{\"text\":\"合肥\",\"value\":40},{\"text\":\"昆明\",\"value\":37},{\"text\":\"唐山\",\"value\":49},{\"text\":\"绍兴\",\"value\":44},{\"text\":\"温州\",\"value\":42},{\"text\":\"潍坊\",\"value\":38},{\"text\":\"泉州\",\"value\":39},{\"text\":\"南昌\",\"value\":56},{\"text\":\"嘉兴\",\"value\":40},{\"text\":\"徐州\",\"value\":35},{\"text\":\"淄博\",\"value\":37},{\"text\":\"厦门\",\"value\":66},{\"text\":\"鄂尔多斯\",\"value\":44},{\"text\":\"贵阳\",\"value\":28},{\"text\":\"扬州\",\"value\":39},{\"text\":\"南宁\",\"value\":29},{\"text\":\"呼和浩特\",\"value\":33},{\"text\":\"金华\",\"value\":40},{\"text\":\"台州\",\"value\":37},{\"text\":\"乌鲁木齐\",\"value\":29},{\"text\":\"镇江\",\"value\":36},{\"text\":\"威海\",\"value\":33},{\"text\":\"珠海\",\"value\":32},{\"text\":\"中山\",\"value\":36}]",
     "status": 1
   },
-  {
+{
     "id": 69,
     "user_id": null,
     "type": 0,
@@ -1087,7 +849,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 70,
     "user_id": null,
     "type": 0,
@@ -1104,7 +866,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 71,
     "user_id": null,
     "type": 0,
@@ -1121,7 +883,7 @@
     "template": "[{\"startTime\":\"2000-01-01 00:00:00\",\"value\":\"2023-01-01 00:00:00\",\"endTime\":\"2040-01-01 00:00:00\"}]",
     "status": 1
   },
-  {
+{
     "id": 72,
     "user_id": null,
     "type": 0,
@@ -1138,7 +900,7 @@
     "template": "[{\"startTime\":\"2023-01-01 00:00:00\",\"endTime\":\"2023-02-01 00:00:00\"}]",
     "status": 1
   },
-  {
+{
     "id": 74,
     "user_id": null,
     "type": 0,
@@ -1155,7 +917,7 @@
     "template": "[{\"value\":10}]",
     "status": 1
   },
-  {
+{
     "id": 75,
     "user_id": null,
     "type": 0,
@@ -1172,7 +934,7 @@
     "template": null,
     "status": 1
   },
-  {
+{
     "id": 76,
     "user_id": null,
     "type": 0,
@@ -1189,7 +951,7 @@
     "template": "[{\"src\":\"\",\"title\":\"标题1\"},{\"src\":\"\",\"title\":\"标题2\"},{\"src\":\"\",\"title\":\"标题3\"},{\"src\":\"\",\"title\":\"标题4\"},{\"src\":\"\",\"title\":\"标题5\"}]",
     "status": 1
   },
-  {
+{
     "id": 77,
     "user_id": null,
     "type": 0,
@@ -1206,7 +968,7 @@
     "template": "[{\"label\":\"Tab A\",\"value\":1},{\"label\":\"Tab B\",\"value\":2},{\"label\":\"Tab C\",\"value\":3}]",
     "status": 1
   },
-  {
+{
     "id": 78,
     "user_id": null,
     "type": 0,
@@ -1223,7 +985,7 @@
     "template": "[{\"label\":\"Tab A\",\"value\":1},{\"label\":\"Tab B\",\"value\":2},{\"label\":\"Tab C\",\"value\":3}]",
     "status": 1
   },
-  {
+{
     "id": 79,
     "user_id": null,
     "type": 0,
@@ -1240,7 +1002,7 @@
     "template": "{\"text\":\"数据容器\"}",
     "status": 1
   },
-  {
+{
     "id": 80,
     "user_id": null,
     "type": 0,
@@ -1257,7 +1019,7 @@
     "template": "[{\"value\":\"zhinan\",\"label\":\"指南\",\"disabled\":false,\"children\":[{\"value\":\"shejiyuanze\",\"label\":\"设计原则\",\"children\":[{\"value\":\"yizhi\",\"label\":\"一致\"},{\"value\":\"fankui\",\"label\":\"反馈\"},{\"value\":\"xiaolv\",\"label\":\"效率\"},{\"value\":\"kekong\",\"label\":\"可控\"}]},{\"value\":\"daohang\",\"label\":\"导航\",\"children\":[{\"value\":\"cexiangdaohang\",\"label\":\"侧向导航\"},{\"value\":\"dingbudaohang\",\"label\":\"顶部导航\"}]}]},{\"value\":\"zujian\",\"label\":\"组件\",\"disabled\":false,\"children\":[{\"value\":\"basic\",\"label\":\"Basic\",\"children\":[{\"value\":\"layout\",\"label\":\"Layout 布局\"},{\"value\":\"color\",\"label\":\"Color 色彩\"},{\"value\":\"typography\",\"label\":\"Typography 字体\"},{\"value\":\"icon\",\"label\":\"Icon 图标\"},{\"value\":\"button\",\"label\":\"Button 按钮\"}]},{\"value\":\"form\",\"label\":\"Form\",\"children\":[{\"value\":\"radio\",\"label\":\"Radio 单选框\"},{\"value\":\"checkbox\",\"label\":\"Checkbox 多选框\"},{\"value\":\"input\",\"label\":\"Input 输入框\"},{\"value\":\"input-number\",\"label\":\"InputNumber 计数器\"},{\"value\":\"select\",\"label\":\"Select 选择器\"},{\"value\":\"cascader\",\"label\":\"Cascader 级联选择器\"},{\"value\":\"switch\",\"label\":\"Switch 开关\"},{\"value\":\"slider\",\"label\":\"Slider 滑块\"},{\"value\":\"time-picker\",\"label\":\"TimePicker 时间选择器\"},{\"value\":\"date-picker\",\"label\":\"DatePicker 日期选择器\"},{\"value\":\"datetime-picker\",\"label\":\"DateTimePicker 日期时间选择器\"},{\"value\":\"upload\",\"label\":\"Upload 上传\"},{\"value\":\"rate\",\"label\":\"Rate 评分\"},{\"value\":\"form\",\"label\":\"Form 表单\"}]},{\"value\":\"data\",\"label\":\"Data\",\"children\":[{\"value\":\"table\",\"label\":\"Table 表格\"},{\"value\":\"tag\",\"label\":\"Tag 标签\"},{\"value\":\"progress\",\"label\":\"Progress 进度条\"},{\"value\":\"tree\",\"label\":\"Tree 树形控件\"},{\"value\":\"pagination\",\"label\":\"Pagination 分页\"},{\"value\":\"badge\",\"label\":\"Badge 标记\"}]},{\"value\":\"notice\",\"label\":\"Notice\",\"children\":[{\"value\":\"alert\",\"label\":\"Alert 警告\"},{\"value\":\"loading\",\"label\":\"Loading 加载\"},{\"value\":\"message\",\"label\":\"Message 消息提示\"},{\"value\":\"message-box\",\"label\":\"MessageBox 弹框\"},{\"value\":\"notification\",\"label\":\"Notification 通知\"}]},{\"value\":\"navigation\",\"label\":\"Navigation\",\"children\":[{\"value\":\"menu\",\"label\":\"NavMenu 导航菜单\"},{\"value\":\"tabs\",\"label\":\"Tabs 标签页\"},{\"value\":\"breadcrumb\",\"label\":\"Breadcrumb 面包屑\"},{\"value\":\"dropdown\",\"label\":\"Dropdown 下拉菜单\"},{\"value\":\"steps\",\"label\":\"Steps 步骤条\"}]},{\"value\":\"others\",\"label\":\"Others\",\"children\":[{\"value\":\"dialog\",\"label\":\"Dialog 对话框\"},{\"value\":\"tooltip\",\"label\":\"Tooltip 文字提示\"},{\"value\":\"popover\",\"label\":\"Popover 弹出框\"},{\"value\":\"card\",\"label\":\"Card 卡片\"},{\"value\":\"carousel\",\"label\":\"Carousel 走马灯\"},{\"value\":\"collapse\",\"label\":\"Collapse 折叠面板\"}]}]},{\"value\":\"ziyuan\",\"label\":\"资源\",\"disabled\":true,\"children\":[{\"value\":\"axure\",\"label\":\"Axure Components\"},{\"value\":\"sketch\",\"label\":\"Sketch Templates\"},{\"value\":\"jiaohu\",\"label\":\"组件交互文档\"}]}]",
     "status": 1
   },
-  {
+{
     "id": 82,
     "user_id": null,
     "type": 0,
@@ -1274,7 +1036,7 @@
     "template": "[{\"weather\":\"晴\",\"temperature\":{\"min\":17,\"max\":28},\"wind\":{\"direction\":\"东南风\",\"level\":\"3\"}}]",
     "status": 1
   },
-  {
+{
     "id": 84,
     "user_id": null,
     "type": 0,
@@ -1291,7 +1053,7 @@
     "template": "[{\"label\":\"选项A\",\"value\":1,\"isChecked\":false},{\"label\":\"选项B\",\"value\":2,\"isChecked\":true},{\"label\":\"选项C\",\"value\":3,\"isChecked\":false},{\"label\":\"选项D\",\"value\":4,\"isChecked\":false}]",
     "status": 1
   },
-  {
+{
     "id": 85,
     "user_id": null,
     "type": 0,
@@ -1308,7 +1070,7 @@
     "template": "[{\"id\":\"1\",\"姓名\":\"张三\",\"性别\":\"男\",\"岗位\":\"保安\",\"电话\":13265555444,\"考勤班组\":\"班组1\",\"状态\":\"正常\"},{\"id\":\"2\",\"姓名\":\"李四\",\"性别\":\"男\",\"岗位\":\"保安组长\",\"电话\":132611112222,\"考勤班组\":\"班组2\",\"状态\":\"正常\"},{\"id\":\"3\",\"姓名\":\"阿珍\",\"性别\":\"女\",\"岗位\":\"保洁\",\"电话\":132622223333,\"考勤班组\":\"班组3\",\"状态\":\"紧急\"},{\"id\":\"4\",\"姓名\":\"阿强\",\"性别\":\"男\",\"岗位\":\"主管\",\"电话\":132666667777,\"考勤班组\":\"班组3\",\"状态\":\"正常\"},{\"id\":\"5\",\"姓名\":\"王五\",\"性别\":\"男\",\"岗位\":\"保安\",\"电话\":13245678978,\"考勤班组\":\"班组4\",\"状态\":\"正常\"},{\"id\":\"6\",\"姓名\":\"赵六\",\"性别\":\"男\",\"岗位\":\"保安\",\"电话\":13267676767,\"考勤班组\":\"班组5\",\"状态\":\"正常\"}]",
     "status": 1
   },
-  {
+{
     "id": 88,
     "user_id": null,
     "type": 0,
@@ -1325,7 +1087,7 @@
     "template": "[{\"text\":\"放射性渐变遮罩层\"}]",
     "status": 1
   },
-  {
+{
     "id": 89,
     "user_id": null,
     "type": 0,
@@ -1342,7 +1104,7 @@
     "template": "[{\"cover\":\"\",\"value\":\"\"}]",
     "status": 1
   },
-  {
+{
     "id": 90,
     "user_id": null,
     "type": 0,
@@ -1359,7 +1121,7 @@
     "template": "[{\"name\":\"产品-001\",\"value\":3209},{\"name\":\"产品-002\",\"value\":4465},{\"name\":\"产品-003\",\"value\":876},{\"name\":\"产品-004\",\"value\":312},{\"name\":\"产品-005\",\"value\":576},{\"name\":\"产品-006\",\"value\":842}]",
     "status": 1
   },
-  {
+{
     "id": 91,
     "user_id": null,
     "type": 0,
@@ -1376,7 +1138,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 92,
     "user_id": null,
     "type": 0,
@@ -1393,7 +1155,7 @@
     "template": "[{\"value\":\"\"}]",
     "status": 1
   },
-  {
+{
     "id": 93,
     "user_id": null,
     "type": 0,
@@ -1410,7 +1172,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 95,
     "user_id": null,
     "type": 0,
@@ -1427,7 +1189,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 96,
     "user_id": null,
     "type": 0,
@@ -1444,7 +1206,7 @@
     "template": "[{\"content\":\"Tab A\",\"s\":\"1\"},{\"content\":\"Tab B\",\"s\":\"2\"},{\"content\":\"Tab C\",\"s\":\"3\"},{\"content\":\"Tab D\",\"s\":\"4\"},{\"content\":\"Tab E\",\"s\":\"5\"},{\"content\":\"Tab F\",\"s\":\"6\"},{\"content\":\"Tab G\",\"s\":\"7\"},{\"content\":\"Tab H\",\"s\":\"8\"},{\"content\":\"Tab I\",\"s\":\"9\"},{\"content\":\"Tab J\",\"s\":\"10\"},{\"content\":\"Tab K\",\"s\":\"11\"},{\"content\":\"Tab L\",\"s\":\"12\"},{\"content\":\"Tab M\",\"s\":\"13\"},{\"content\":\"Tab N\",\"s\":\"14\"}]",
     "status": 1
   },
-  {
+{
     "id": 97,
     "user_id": null,
     "type": 0,
@@ -1461,7 +1223,7 @@
     "template": "[{\"text\":\"2002.07\",\"value\":\"凡拓创意总部创立于广州\"},{\"text\":\"2005.08\",\"value\":\"上海公司成立\"},{\"text\":\"2006.09\",\"value\":\"凡拓创意参与2008北京奥运会场馆图像设计\"},{\"text\":\"2008.05\",\"value\":\"成立2010年广州亚运会图像设计独家供应商；深圳公司成立\"},{\"text\":\"2009.09\",\"value\":\"北京公司成立，布局华北地区\"},{\"text\":\"2010.02\",\"value\":\"参与上海世博会中国馆设计宣传服务、山东•海阳2012亚洲沙滩运动会数字服务赞助商\"},{\"text\":\"2013.03\",\"value\":\"凡拓创意推动数字体验中心新标准，开启5D数字体验时代\"},{\"text\":\"2014.05\",\"value\":\"荣获中国地产最佳数字服务商\"}]",
     "status": 1
   },
-  {
+{
     "id": 98,
     "user_id": null,
     "type": 0,
@@ -1478,7 +1240,7 @@
     "template": "[{\"value\":\"0.65\"}]",
     "status": 1
   },
-  {
+{
     "id": 99,
     "user_id": null,
     "type": 0,
@@ -1495,7 +1257,7 @@
     "template": "[{\"name\":\"剩余数\",\"value\":20},{\"name\":\"使用数\",\"value\":43},{\"name\":\"故障数\",\"value\":20}]",
     "status": 1
   },
-  {
+{
     "id": 100,
     "user_id": null,
     "type": 0,
@@ -1512,7 +1274,7 @@
     "template": "[{\"name\":\"men\",\"value\":0.57},{\"name\":\"women\",\"value\":0.43}]",
     "status": 1
   },
-  {
+{
     "id": 101,
     "user_id": null,
     "type": 0,
@@ -1529,7 +1291,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 102,
     "user_id": null,
     "type": 0,
@@ -1546,7 +1308,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 103,
     "user_id": null,
     "type": 0,
@@ -1563,7 +1325,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 104,
     "user_id": null,
     "type": 0,
@@ -1580,7 +1342,7 @@
     "template": "[{\"text\":\"线性渐变遮罩层\"}]",
     "status": 1
   },
-  {
+{
     "id": 105,
     "user_id": null,
     "type": 0,
@@ -1597,7 +1359,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 106,
     "user_id": null,
     "type": 0,
@@ -1614,7 +1376,7 @@
     "template": "[{\"label\":\"开关\",\"value\":false}]",
     "status": 1
   },
-  {
+{
     "id": 107,
     "user_id": null,
     "type": 0,
@@ -1631,7 +1393,7 @@
     "template": "[{\"label\":\"音量\",\"value\":20}]",
     "status": 1
   },
-  {
+{
     "id": 108,
     "user_id": null,
     "type": 0,
@@ -1648,7 +1410,7 @@
     "template": "[{\"label\":\"导航一\",\"value\":\"1\",\"image\":\"version-test/assets/defaultImg/navmenu-icon.png\",\"disabled\":false,\"children\":[{\"label\":\"选项1\",\"value\":\"1-1\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false},{\"label\":\"选项2\",\"value\":\"1-2\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false},{\"label\":\"选项3\",\"value\":\"1-3\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false}]},{\"label\":\"导航二\",\"value\":\"2\",\"image\":\"version-test/assets/defaultImg/navmenu-icon.png\",\"disabled\":false,\"children\":[{\"label\":\"选项1\",\"value\":\"2-1\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":true},{\"label\":\"选项2\",\"value\":\"2-2\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false}]},{\"label\":\"导航三\",\"value\":\"3\",\"image\":\"version-test/assets/defaultImg/navmenu-icon.png\",\"disabled\":true,\"children\":[{\"label\":\"选项1\",\"value\":\"3-1\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false},{\"label\":\"选项2\",\"value\":\"3-2\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false}]},{\"label\":\"导航四\",\"value\":\"4\",\"image\":\"version-test/assets/defaultImg/navmenu-icon.png\",\"disabled\":false,\"children\":[{\"label\":\"选项1\",\"value\":\"4-1\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false},{\"label\":\"选项2\",\"value\":\"4-2\",\"image\":\"version-test/assets/defaultImg/submenu-icon.png\",\"disabled\":false}]},{\"label\":\"导航五\",\"value\":\"5\",\"image\":\"version-test/assets/defaultImg/navmenu-icon.png\",\"disabled\":false}]",
     "status": 1
   },
-  {
+{
     "id": 109,
     "user_id": null,
     "type": 0,
@@ -1665,7 +1427,7 @@
     "template": "[{\"label\":\"周一\",\"value\":\"1\",\"isChecked\":true,\"disabled\":false},{\"label\":\"周二\",\"value\":\"2\",\"isChecked\":true,\"disabled\":false},{\"label\":\"周三\",\"value\":\"3\",\"isChecked\":true,\"disabled\":false},{\"label\":\"周四\",\"value\":\"4\",\"disabled\":false},{\"label\":\"周五\",\"value\":\"5\",\"disabled\":false},{\"label\":\"周六\",\"value\":\"6\",\"disabled\":false},{\"label\":\"周日\",\"value\":\"7\",\"disabled\":false}]",
     "status": 1
   },
-  {
+{
     "id": 111,
     "user_id": null,
     "type": 0,
@@ -1682,24 +1444,7 @@
     "template": "[]",
     "status": 1
   },
-  {
-    "id": 112,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"name\":\"斑马柱状图2\",\"title\":\"斑马柱状图2\",\"display\":true,\"icon\":\"icon-line\",\"img\":\"/img/zebra2.f1d2ff44.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"data\":[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":1824},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":2423},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":2532},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":1720}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"openFilter\":false,\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"url\":\"./bar\",\"time\":30,\"component\":{\"width\":420,\"height\":210,\"name\":\"echart-zebra2\",\"prop\":\"echartzebra2\"},\"option\":{\"refresh\":true,\"stack\":false,\"barWidth\":25,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"seriesColor\":[{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(137,181,252,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]}],\"seriesColorpicker\":[\"linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)\",\"linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)\"],\"seriesOpacity\":[100,100],\"extremeShow\":[false,false],\"extremeType\":[\"max\",\"max\"],\"xAxisSplitLineType\":\"dashed\",\"yAxisSplitLineType\":\"dashed\",\"extremeColor\":[{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(61,227,251,1)\",\"per\":100}]},{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(62,67,244,1)\",\"per\":0},{\"color\":\"rgba(137,181,252,1)\",\"per\":100}]}],\"extremeOpacity\":[100,100],\"extremeColorpicker\":[\"linear-gradient(0.0deg,#3e43f4 0.0,#3de3fb 100.0%)\",\"linear-gradient(0.0deg,#3e43f4 0.0,#89b5fc 100.0%)\"],\"markLineDataType\":[\"average\",\"average\"],\"markLineData\":[2000,2000],\"markLineSymbolStart\":[\"circle\",\"circle\"],\"markLineSymbolStartImage\":[\"\",\"\"],\"markLineSymbolEnd\":[\"arrow\",\"arrow\"],\"markLineSymbolEndImage\":[\"\",\"\"],\"markLineSymbolWidth\":[10,10],\"markLineSymbolHeight\":[10,10],\"markLineLabelShow\":[true,true],\"markLineLabelPosition\":[\"middle\",\"middle\"],\"markLineLabelDistance\":[0,0],\"markLineLabelCustom\":[\"\",\"\"],\"markLineLabelFontFamily\":[\"Source Han Sans CN-Normal, Source Han Sans CN\",\"Source Han Sans CN-Normal, Source Han Sans CN\"],\"markLineLabelFontStyle\":[\"normal\",\"normal\"],\"markLineLabelFontSize\":[16,16],\"markLineLabelColor\":[\"rgba(255,255,255,1)\",\"rgba(255,255,255,1)\"],\"markLineLabelFontWeight\":[\"normal\",\"normal\"],\"markLineLabelPaddingTop\":[0,0],\"markLineLabelPaddingRight\":[0,0],\"markLineLabelPaddingBottom\":[0,0],\"markLineLabelPaddingLeft\":[0,0],\"markLineLineColor\":[\"rgba(137,181,252,1)\",\"rgba(61,227,251,1)\"],\"markLineLineWidth\":[2,2],\"markLineLineType\":[\"dashed\",\"dashed\"],\"markLineShow\":[false,false],\"barGap\":70,\"barCategoryGap\":5,\"barBlockItemHeight\":15,\"barBlockItemInterval\":4,\"barBlockItemRadio\":4,\"barBorderRadius\":\"default\",\"gridLeft\":45,\"gridTop\":50,\"gridRight\":25,\"gridBottom\":25,\"legendShow\":true,\"legendWidth\":800,\"legendHeight\":800,\"legendItemWidth\":10,\"legendItemHeight\":10,\"legendItemGap\":20,\"legendFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"legendFontSize\":12,\"legendColor\":\"rgba(255, 255, 255, 1)\",\"legendFontStyle\":\"normal\",\"legendFontWeight\":\"normal\",\"legendTextLeftPadding\":5,\"legendSelectedMode\":true,\"legendGrid\":{\"top\":0,\"left\":\"center\"},\"legendOffsetX\":0,\"legendOffsetY\":0,\"xNameFontSize\":16,\"yNameFontSize\":16,\"seriesLabelShow\":false,\"seriesLabelColor\":\"rgba(255,255,255,1)\",\"seriesLabelFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"seriesLabelFontSize\":14,\"seriesLabelFontWeight\":\"normal\",\"seriesLabelFontStyle\":\"normal\",\"seriesLabelOffsetX\":0,\"seriesLabelOffsetY\":0,\"legendOrient\":\"horizontal\",\"yAxisInverse\":false,\"xAxisInverse\":false,\"xAxisShow\":true,\"yAxisShow\":true,\"xAxisLabelShow\":true,\"yAxisLabelShow\":true,\"xAxisType\":\"category\",\"xAxisLabelLimit\":false,\"xAxisLabelLimitNum\":1,\"xAxisInterval\":0,\"xAxisRotate\":0,\"yAxisMin\":\"0\",\"yAxisMax\":\"\",\"xAxisMargin\":8,\"yAxisMargin\":8,\"xAxisFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"yAxisFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"xAxisFontSize\":12,\"yAxisFontSize\":12,\"xAxisColor\":\"rgba(209, 209, 209, 1)\",\"yAxisColor\":\"rgba(209, 209, 209, 1)\",\"xAxisFontStyle\":\"normal\",\"yAxisFontStyle\":\"normal\",\"xAxisFontWeight\":\"normal\",\"yAxisFontWeight\":\"normal\",\"yAxisNameShow\":true,\"yAxisName\":\"单位\",\"yAxisNameFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"yAxisNameFontSize\":12,\"yAxisNameColor\":\"rgba(209, 209, 209, 1)\",\"yAxisNameFontStyle\":\"normal\",\"yAxisNameFontWeight\":\"normal\",\"yAxisNamePaddingTop\":0,\"yAxisNamePaddingBottom\":0,\"yAxisNamePaddingLeft\":0,\"yAxisNamePaddingRight\":40,\"xAxisLineShow\":true,\"yAxisLineShow\":false,\"xAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"yAxisLineColor\":\"rgba(209, 209, 209, 0.5)\",\"xAxisLineWidth\":1,\"yAxisLineWidth\":1,\"xAxisLineOpacity\":0.5,\"yAxisLineOpacity\":0.5,\"xAxisTickShow\":true,\"yAxisTickShow\":false,\"xAxisTickColor\":\"#65686f\",\"yAxisTickColor\":\"#65686f\",\"xAxisTickWidth\":1,\"yAxisTickWidth\":1,\"xAxisTickLength\":2,\"yAxisTickLength\":2,\"xAxisSplitLineShow\":false,\"yAxisSplitLineShow\":true,\"xAxisSplitLineInterval\":0,\"xAxisSplitLineWidth\":1,\"yAxisSplitLineWidth\":1,\"xAxisSplitLineColor\":\"#383d47\",\"yAxisSplitLineColor\":\"#383d47\",\"barBackgroundColor\":\"rgba(255, 255, 255, 0)\",\"dataLoop\":false,\"dataLoopInterval\":5,\"dataLoopDisplayRows\":4,\"dataLoopRollNum\":1,\"dataZoomShow\":false,\"moveHandleSize\":10,\"moveHandleColor\":\"#d2dbee\",\"moveHandleEmphasisColor\":\"#d2dbee\",\"dataZoomBottom\":10,\"tooltipLoop\":false,\"tooltipLoopInterval\":3,\"tooltipTriggerOn\":true,\"tooltipOffsetX\":50,\"tooltipOffsetY\":30,\"tooltipBackground\":\"\",\"tooltipWidth\":120,\"tooltipHeight\":110,\"tooltipPaddingTop\":13,\"tooltipPaddingBottom\":10,\"tooltipPaddingLeft\":12,\"tooltipPaddingRight\":12,\"tooltipNameFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"tooltipNameFontSize\":16,\"tooltipNameColor\":\"rgba(255, 255, 255, 1)\",\"tooltipNameFontWeight\":\"normal\",\"tooltipNameFontStyle\":\"normal\",\"tooltipAlign\":\"left\",\"tooltipNameOffsetX\":0,\"tooltipNameOffsetY\":0,\"tooltipArrLineHeight\":5,\"tooltipSeriesNameFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"tooltipSeriesNameFontSize\":12,\"tooltipSeriesNameColor\":\"rgba(255, 255, 255, 1)\",\"tooltipSeriesNameFontWeight\":\"normal\",\"tooltipSeriesNameFontStyle\":\"normal\",\"tooltipValueFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"tooltipValueFontSize\":12,\"tooltipValueColor\":\"rgba(255, 255, 255, 1)\",\"tooltipValueFontWeight\":\"normal\",\"tooltipValueFontStyle\":\"normal\",\"tooltipUnit\":[\"\",\"\"],\"tooltipUnitFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"tooltipUnitFontSize\":12,\"tooltipUnitColor\":\"rgba(255, 255, 255, 1)\",\"tooltipUnitFontWeight\":\"normal\",\"tooltipUnitFontStyle\":\"normal\",\"tooltipUnitOffsetX\":0,\"tooltipUnitOffsetY\":0,\"tooltipMarkerSize\":10,\"dataUnitName\":[\"系列一\",\"系列二\"],\"unitTabsName\":[{\"name\":\"后缀1\",\"value\":\"个\"},{\"name\":\"后缀2\",\"value\":\"个\"}],\"tooltipAxisPointerWidth\":50,\"tooltipAxisPointerColor\":\"rgba(255, 255, 255, 1)\",\"tooltipLabelGapSapce\":5}}",
-    "level": 0,
-    "second_level_menu": "项目",
-    "first_level_menu": "图表",
-    "name": "斑马柱状图2",
-    "thumbnail": "/img/zebra2.f1d2ff44.png",
-    "created_by": "admin",
-    "created_time": "2024-06-04T09:50:18.000Z",
-    "updated_by": "system",
-    "updated_time": "2026-01-26T15:00:06.000Z",
-    "template": "[{\"seriesName\":\"系列一\",\"name\":\"A\",\"value\":2024},{\"seriesName\":\"系列一\",\"name\":\"B\",\"value\":1423},{\"seriesName\":\"系列一\",\"name\":\"C\",\"value\":1532},{\"seriesName\":\"系列一\",\"name\":\"D\",\"value\":1920},{\"seriesName\":\"系列二\",\"name\":\"A\",\"value\":1824},{\"seriesName\":\"系列二\",\"name\":\"B\",\"value\":2423},{\"seriesName\":\"系列二\",\"name\":\"C\",\"value\":2532},{\"seriesName\":\"系列二\",\"name\":\"D\",\"value\":1720}]",
-    "status": 1
-  },
-  {
+{
     "id": 113,
     "user_id": null,
     "type": 0,
@@ -1716,7 +1461,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 115,
     "user_id": null,
     "type": 0,
@@ -1733,7 +1478,7 @@
     "template": "[{\"label\":\"一级1\",\"isChecked\":false,\"value\":1,\"children\":[{\"label\":\"一级1-1\",\"value\":\"1-1\",\"isChecked\":false,\"children\":[{\"label\":\"一级1-1-1\",\"value\":\"1-1-1\",\"isChecked\":false}]}]},{\"label\":\"二级1\",\"value\":\"2\",\"isChecked\":false}]",
     "status": 1
   },
-  {
+{
     "id": 116,
     "user_id": null,
     "type": 0,
@@ -1750,7 +1495,7 @@
     "template": "[{\"value\":\"我是一个标题\"}]",
     "status": 1
   },
-  {
+{
     "id": 126,
     "user_id": null,
     "type": 0,
@@ -1767,7 +1512,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 141,
     "user_id": null,
     "type": 0,
@@ -1784,7 +1529,7 @@
     "template": "[]",
     "status": 1
   },
-  {
+{
     "id": 147,
     "user_id": null,
     "type": 0,
@@ -1801,24 +1546,7 @@
     "template": "[]",
     "status": 1
   },
-  {
-    "id": 148,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"title\":\"中国2.5D地图\",\"name\":\"中国2.5D地图\",\"display\":true,\"icon\":\"icon-scatter\",\"img\":\"/img/commonMap.6d3dd447.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"path\":\"\",\"time\":30,\"url\":\"./scatter\",\"data\":[{\"name\":\"中华人民共和国\",\"adcode\":\"100000\"}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"adcode\",\"map\":\"adcode\",\"decription\":\"区域代码\"}],\"openFilter\":false,\"listenArgs\":[],\"cbArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":1920,\"height\":1080,\"name\":\"echart-glmap\",\"prop\":\"echart-glmap\"},\"presetChild\":[{\"name\":\"飞线\",\"title\":\"飞线\",\"isEdit\":false,\"showOperation\":false,\"type\":\"mapLines\",\"listenArgs\":[],\"show\":true,\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"sql\":\"SELECT * FROM\",\"data\":[{\"name\":\"上海-北京\",\"coords\":[[121.4692688,31.2381763],[116.405285,39.904989]]},{\"name\":\"广东-北京\",\"coords\":[[113.2614288,23.1189117],[116.405285,39.904989]]},{\"name\":\"台湾-北京\",\"coords\":[[120.9581316,23.8516062],[116.405285,39.904989]]},{\"name\":\"香港-北京\",\"coords\":[[114.139452,22.391577],[116.405285,39.904989]]},{\"name\":\"澳门-北京\",\"coords\":[[113.5678411,22.167654],[116.405285,39.904989]]}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"名称\"},{\"key\":\"coords\",\"map\":\"coords\",\"decription\":\"经纬度\"}],\"component\":{\"name\":\"echart-mapLines\",\"prop\":\"echartmapLines\"},\"option\":{\"effectShow\":true,\"effectType\":\"constantSpeed\",\"period\":4,\"constantSpeed\":80,\"delay\":0,\"effectSymbol\":\"pin\",\"effectSymbolImage\":\"\",\"effectSymbolWidth\":2,\"effectSymbolHeight\":20,\"effectColor\":{\"type\":\"linear-gradient\",\"angle\":\"0\",\"colors\":[{\"color\":\"rgba(253, 143, 209, 1)\",\"per\":0},{\"color\":\"rgba(255, 255, 255, 1)\",\"per\":100}]},\"effectOpacity\":100,\"trailLength\":0.86,\"loop\":true,\"lineColor\":\"rgba(88, 179, 204, 1)\",\"lineOpacity\":50,\"lineWidth\":0,\"lineCurveness\":0.1,\"lineLabelShow\":false,\"lineLabelPosition\":\"end\",\"lineLabelColor\":\"rgba(255,255,255,1)\",\"lineLabelFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"lineLabelFontSize\":18,\"lineLabelFontWeight\":\"bolder\",\"lineLabelFontStyle\":\"normal\"}},{\"name\":\"散点\",\"title\":\"散点\",\"isEdit\":false,\"showOperation\":false,\"type\":\"mapGlScatter\",\"listenArgs\":[],\"show\":true,\"dataMethod\":\"get\",\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"sql\":\"SELECT * FROM\",\"data\":[{\"name\":\"北京\",\"value\":[\"116.3979471\",\"39.9081726\",0]},{\"name\":\"上海\",\"value\":[\"121.4692688\",\"31.2381763\",0]},{\"name\":\"广东\",\"value\":[\"113.2614288\",\"23.1189117\",0]},{\"name\":\"台湾\",\"value\":[\"120.9581316\",\"23.8516062\",0]},{\"name\":\"香港\",\"value\":[\"114.139452\",\"22.391577\",0]}],\"dataRemark\":[{\"key\":\"name\",\"map\":\"name\",\"decription\":\"类目\"},{\"key\":\"value\",\"map\":\"value\",\"decription\":\"值\"}],\"component\":{\"width\":850,\"height\":450,\"name\":\"echart-mapGlScatter\",\"prop\":\"echartmapGlScatter\"},\"option\":{\"refresh\":true,\"dataSeriesName\":[\"系列一\",\"系列二\"],\"seriesName\":[\"系列一\",\"系列二\"],\"seriesTabsName\":[{\"name\":\"系列1\",\"value\":\"系列一\"},{\"name\":\"系列2\",\"value\":\"系列二\"}],\"gridLeft\":50,\"gridTop\":0,\"gridRight\":50,\"gridBottom\":0,\"symbolSize\":15,\"borderWidth\":2,\"borderColor\":\"rgba(59, 147, 203, 0.23)\",\"rippleEffectNumber\":3,\"rippleEffectPeriod\":5,\"rippleEffectScale\":1.5,\"rippleEffectBrushType\":\"stroke\",\"insideColor\":\"rgba(255,255,255,1)\",\"outsideColor\":\"rgba(255,255,255,1)\",\"showEffectOn\":\"render\",\"seriesLabelNameShow\":false,\"seriesLabelNameFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"seriesLabelNameFontSize\":18,\"seriesLabelNameColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelNameFontStyle\":\"normal\",\"seriesLabelNameFontWeight\":\"normal\",\"seriesLabelValueShow\":false,\"seriesLabelValueFontFamily\":\"Source Han Sans CN-Normal, Source Han Sans CN\",\"seriesLabelValueFontSize\":18,\"seriesLabelValueColor\":\"rgba(255, 255, 255, 1)\",\"seriesLabelValueFontStyle\":\"normal\",\"seriesLabelValueFontWeight\":\"normal\"}}],\"unitPavenType\":\"\",\"option\":{\"adcode\":{\"label\":\"中华人民共和国\",\"value\":\"100000\"},\"fillType\":\"picture\",\"areaColor\":\"rgba(5, 87, 255, 1)\",\"activeAreaColor\":\"rgba(181, 222, 255, 1)\",\"picture\":\"http://127.0.0.1:60034/version-test/resource/35/01730341-25dd-4380-88cf-27c0c5df4a19.png\",\"activePicture\":\"\",\"borderWidth\":1,\"borderColor\":\"rgba(17, 164, 255, 1)\",\"activeBorderColor\":\"#ffffff\",\"textStyle\":{\"fontFamily\":\"sans-serif\",\"fontSize\":3.5,\"color\":\"rgba(255, 255, 255, 1)\",\"fontStyle\":\"normal\",\"fontWeight\":\"normal\"},\"sceneControl\":{\"regionHeight\":100,\"autoRotate\":false,\"rotateSpeed\":1,\"initialRotationAngle\":0,\"mapRotationAngle\":0,\"bloom\":{\"enable\":false,\"strength\":0.9,\"radius\":0.25,\"threshold\":0.65}},\"backgroundColor\":\"#0a1122\",\"fog\":false,\"fogColor\":\"#000\",\"camera\":{\"distance\":30,\"verticalTiltAngle\":20,\"horizontalRotationAngle\":0},\"light\":{\"ambientIntensity\":5,\"directionalIntensity\":10,\"directionalPosition\":[5,10,5],\"ambientColor\":\"rgba(242, 247, 250, 1)\",\"directionalColor\":\"rgba(74, 112, 144, 1)\"},\"mouseControl\":{\"zoomSpeed\":25,\"panSpeed\":10,\"rotateSpeed\":25},\"hoverLift\":{\"height\":1,\"duration\":300,\"hoverLiftHeight\":3},\"geoLabelShow\":false,\"maxDrillDownLevel\":2,\"autoDrillDown\":true,\"borderAreaColor\":\"rgba(33, 138, 208, 1)\",\"sideGlowStrength\":1.2,\"normalMapIntensity\":1,\"sideGlowColor\":\"rgba(56, 86, 145, 1)\"}}",
-    "level": 0,
-    "second_level_menu": "",
-    "first_level_menu": "地图",
-    "name": "中国2.5D地图",
-    "thumbnail": "/img/commonMap.6d3dd447.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:27.000Z",
-    "updated_by": "admin",
-    "updated_time": "2024-06-17T10:56:29.000Z",
-    "template": "{\"name\":\"中华人民共和国\",\"adcode\":\"100000\"}",
-    "status": 1
-  },
-  {
+{
     "id": 152,
     "user_id": null,
     "type": 0,
@@ -1835,7 +1563,7 @@
     "template": "[{\"value\":12345}]",
     "status": 1
   },
-  {
+{
     "id": 154,
     "user_id": null,
     "type": 0,
@@ -1856,12 +1584,12 @@
     "id": 155,
     "user_id": null,
     "type": 0,
-    "java_script": "{\"title\":\"矩形\",\"name\":\"矩形\",\"display\":true,\"icon\":\"icon-rect\",\"img\":\"/img/rect.default.png\",\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"time\":30,\"dataType\":0,\"dataMethod\":\"get\",\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"data\":[],\"dataRemark\":[],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":200,\"height\":120,\"name\":\"sw-box\",\"prop\":\"swBox\"},\"unitPavenType\":\"\",\"option\":{}}",
+    "java_script": "{\"title\":\"科技面板矩形\",\"name\":\"科技面板矩形\",\"display\":true,\"icon\":\"icon-rect\",\"img\":\"/img/rect-tech-panel.png\",\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"time\":30,\"dataType\":0,\"dataMethod\":\"get\",\"dataSource\":{},\"requestHeader\":\"{}\",\"requestBody\":\"{}\",\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"data\":[],\"dataRemark\":[],\"listenArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":200,\"height\":120,\"name\":\"sw-box\",\"prop\":\"swBox\"},\"unitPavenType\":\"\",\"option\":{\"background\":\"url('/img/rect-tech-panel.png') center / 100% 100% no-repeat\"}}",
     "level": 0,
     "second_level_menu": "",
     "first_level_menu": "媒体",
-    "name": "矩形",
-    "thumbnail": "/img/rect.default.png",
+    "name": "科技面板矩形",
+    "thumbnail": "/img/rect-tech-panel.png",
     "created_by": "system",
     "created_time": "2026-09-24T09:52:55.240Z",
     "updated_by": "system",

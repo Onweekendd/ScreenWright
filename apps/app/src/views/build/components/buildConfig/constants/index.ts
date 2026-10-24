@@ -86,8 +86,6 @@ export const notAllowToGroup = [
   extendsEnumType.SwDigitalHuman,
   sceneEnumType.MapProjection,
   sceneEnumType.Maptalks,
-  sceneEnumType.EchartcommonMap,
-  sceneEnumType.EchartGlmap,
   sceneEnumType.Mapmars,
   sceneEnumType.ThreeScene,
   sceneEnumType.IndustryScene
@@ -98,8 +96,6 @@ export const notAllowToDynamicPanel = [
   PanelType.encodePanel,
   sceneEnumType.MapProjection,
   sceneEnumType.Maptalks,
-  sceneEnumType.EchartcommonMap,
-  sceneEnumType.EchartGlmap,
   sceneEnumType.Mapmars,
   sceneEnumType.ThreeScene,
   sceneEnumType.IndustryScene

@@ -1,14 +1,11 @@
 import { toRaw } from "vue";
 
-import { SceneEnum } from "@screenwright/types";
 import { ElMessage } from "element-plus";
-import { assign, cloneDeep } from "lodash-es";
+import { assign } from "lodash-es";
 
-import { uuid } from "@/utils/utils";
 
 import { FileTypeEnum } from "../../buildTabs/assetsEditFrom/type";
 import type { MenuItemForRender } from "../../buildTabs/selectAssets/assetsMenuType";
-import { defaultGlData } from "../defaultGlData";
 import type { ComponentMinioAsset, ComponentType } from "../type";
 import { getTopIndex, UpdateHistoryTypeEnum, validateComponentForAdd } from "../utils";
 import type { ActionContext } from "./useActionContext";
@@ -18,20 +15,6 @@ export interface DragAttrs {
   left?: number;
   top?: number;
 }
-
-const glPresetChildTemplateMap = new Map(defaultGlData.map((child) => [child.type, child] as const));
-
-const isRecord = (value: unknown): value is Record<PropertyKey, unknown> => typeof value === "object" && value !== null;
-
-const isScatterPoint = (value: unknown) =>
-  isRecord(value) && Number.isFinite(Number(value.lng)) && Number.isFinite(Number(value.lat));
-
-const isFlowLine = (value: unknown) =>
-  isRecord(value) &&
-  Array.isArray(value.from) &&
-  value.from.length === 2 &&
-  Array.isArray(value.to) &&
-  value.to.length === 2;
 
 export const useComponentCreateActions = (
   {
@@ -84,65 +67,6 @@ export const useComponentCreateActions = (
     const left = Number(((attrs?.left ?? 0) - width / 2).toFixed(2));
     const top = Number(((attrs?.top ?? 0) - height / 2).toFixed(2));
     return { left, top };
-  };
-
-  const normalizePresetChildren = (component: ComponentType) => {
-    if (!Array.isArray(component.presetChild) || component.presetChild.length === 0) {
-      return;
-    }
-
-    component.presetChild = component.presetChild.map((child) => {
-      const normalizedType =
-        child.type === "mapGlScatter" ? "mapScatter" : child.type === "mapLines" ? "flowLine" : child.type;
-      if (!["mapScatter", "flowLine"].includes(normalizedType)) {
-        return {
-          ...child,
-          id: child.id || uuid(),
-          parentId: child.parentId ?? component.id,
-          type: normalizedType
-        };
-      }
-
-      const template =
-        component.component.prop === SceneEnum.EchartGlmap ? glPresetChildTemplateMap.get(normalizedType) : undefined;
-      const hasRenderableData =
-        normalizedType === "mapScatter"
-          ? Array.isArray(child.data) && child.data.some(isScatterPoint)
-          : Array.isArray(child.data) && child.data.some(isFlowLine);
-      const mergedChild = template
-        ? {
-            ...cloneDeep(template),
-            ...child,
-            component: {
-              ...cloneDeep(template.component || {}),
-              ...(child.component || {})
-            },
-            data: hasRenderableData ? cloneDeep(child.data) : cloneDeep(template.data || []),
-            dataRemark:
-              Array.isArray(child.dataRemark) && child.dataRemark.length > 0
-                ? cloneDeep(child.dataRemark)
-                : cloneDeep(template.dataRemark || []),
-            listenArgs:
-              Array.isArray(child.listenArgs) && child.listenArgs.length > 0
-                ? cloneDeep(child.listenArgs)
-                : cloneDeep(template.listenArgs || []),
-            option: {
-              ...cloneDeep(template.option || {}),
-              ...(child.option || {})
-            },
-            type: normalizedType
-          }
-        : {
-            ...child,
-            type: normalizedType
-          };
-
-      return {
-        ...mergedChild,
-        id: child.id || uuid(),
-        parentId: child.parentId ?? component.id
-      };
-    });
   };
 
   const getNewComponentOptions = async (
@@ -199,7 +123,6 @@ export const useComponentCreateActions = (
       left: attrs?.left || 0,
       top: attrs?.top || 0
     } as ComponentType;
-    normalizePresetChildren(newComponent);
 
     newComponent.zIndex = getTopIndex(componentList.value);
 

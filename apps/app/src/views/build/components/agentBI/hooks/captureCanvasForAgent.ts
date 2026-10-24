@@ -1,6 +1,7 @@
 import { captureEditorScreenShot } from "../../buildConfig/graphConfig/screenCapture";
 import { withCullingSuspended } from "../../buildRender/hooks/cullingSuspend";
 import { type Edge, snapToBorders } from "./borderSnap";
+import { freezeVideosForCapture } from "./freezeVideos";
 
 /**
  * capture_canvas 工具的前端实现：给主模型截「它要看的那部分画布」。
@@ -293,20 +294,26 @@ const canvasBackground = (canvas: HTMLElement): string | undefined => {
 };
 
 const shoot = async (target: HTMLElement, scale: number, backgroundColor?: string): Promise<File> => {
-  const shot = await captureEditorScreenShot({
-    screenShotMode: "simple",
-    canvas: target,
-    mimeType: "image/jpeg",
-    exclude: CAPTURE_EXCLUDE,
-    scale,
-    backgroundColor,
-    dpr: 1,
-    outerShadows: false
-  });
-  if (!shot) {
-    throw new Error("截图失败");
+  // snapdom 画不出 video 的画面（视频组件会是一块黑），截图前先把视频换成当前帧，截完还原
+  const restoreVideos = await freezeVideosForCapture(target);
+  try {
+    const shot = await captureEditorScreenShot({
+      screenShotMode: "simple",
+      canvas: target,
+      mimeType: "image/jpeg",
+      exclude: CAPTURE_EXCLUDE,
+      scale,
+      backgroundColor,
+      dpr: 1,
+      outerShadows: false
+    });
+    if (!shot) {
+      throw new Error("截图失败");
+    }
+    return shot.file;
+  } finally {
+    restoreVideos();
   }
-  return shot.file;
 };
 
 /** 小区域放大渲染：长边凑到 DETAIL_TARGET_LONG_EDGE，最多 DETAIL_MAX_SCALE 倍 */

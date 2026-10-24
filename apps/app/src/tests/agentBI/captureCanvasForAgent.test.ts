@@ -3,6 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("@/views/build/components/buildConfig/graphConfig/screenCapture", () => ({
   captureEditorScreenShot: vi.fn()
 }));
+vi.mock("@/views/build/components/agentBI/hooks/freezeVideos", () => ({
+  freezeVideosForCapture: vi.fn(async () => () => undefined)
+}));
 
 import {
   CAPTURE_EXCLUDE,
@@ -15,6 +18,7 @@ import {
   MIN_GRID_PX,
   REGION_PADDING
 } from "@/views/build/components/agentBI/hooks/captureCanvasForAgent";
+import { freezeVideosForCapture } from "@/views/build/components/agentBI/hooks/freezeVideos";
 import { captureEditorScreenShot } from "@/views/build/components/buildConfig/graphConfig/screenCapture";
 
 /**
@@ -206,6 +210,42 @@ describe("captureCanvasForAgent 按区域截图", () => {
     );
     // outerShadows 必须是 false：snapdom 2.0.1 里 true 才按阴影外扩（与它的类型注释相反）。画布曾带阴影时整屏多出 20×44；阴影已去掉，这里仍兜底，免得以后加回来又偏
     expect(captureEditorScreenShot).toHaveBeenCalledWith(expect.objectContaining({ dpr: 1, outerShadows: false }));
+  });
+});
+
+describe("captureCanvasForAgent 截图前冻结视频（snapdom 画不出 video，视频组件会是黑块）", () => {
+  afterEach(() => {
+    vi.mocked(captureEditorScreenShot).mockReset();
+    vi.mocked(freezeVideosForCapture).mockClear();
+  });
+
+  it("先冻结视频再截图，截完才还原", async () => {
+    const order: string[] = [];
+    const canvas = buildCanvas();
+    vi.mocked(freezeVideosForCapture).mockImplementationOnce(async (root) => {
+      expect(root).toBe(canvas);
+      order.push("freeze");
+      return () => order.push("restore");
+    });
+    vi.mocked(captureEditorScreenShot).mockImplementation(async () => {
+      order.push("shot");
+      return null;
+    });
+
+    await expect(captureCanvasForAgent()).rejects.toThrow("截图失败");
+
+    expect(order).toEqual(["freeze", "shot", "restore"]);
+  });
+
+  it("截图失败也要还原，不能把视频永远留成隐藏", async () => {
+    const restore = vi.fn();
+    buildCanvas();
+    vi.mocked(freezeVideosForCapture).mockResolvedValueOnce(restore);
+    vi.mocked(captureEditorScreenShot).mockRejectedValue(new Error("snapdom 崩了"));
+
+    await expect(captureCanvasForAgent()).rejects.toThrow("snapdom 崩了");
+
+    expect(restore).toHaveBeenCalledTimes(1);
   });
 });
 

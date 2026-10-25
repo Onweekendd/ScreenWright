@@ -146,6 +146,8 @@ services:
       <<: *server-env
       ROLE: ai
       PORT: "4112"
+      MEDIA_ASSETS_MCP_URL: ${MEDIA_ASSETS_MCP_URL:-}
+      MEDIA_ASSETS_MCP_TOKEN: ${MEDIA_ASSETS_MCP_TOKEN:-}
     volumes:
       - ai_workspace:/data/agent-workspace
     depends_on:

@@ -40,6 +40,26 @@ docker compose logs --tail 100 api ai worker
 
 首次登录后，在「设置」页配置模型。镜像不携带本机 `.env`、数据库或大屏工作区数据；本地 MCP 服务需要另外配置服务器可访问的地址。
 
+### 联网图片 / 视频素材搜索 MCP
+
+素材 MCP 由 `ai` 容器按需连接，使用 Streamable HTTP 和 Bearer Token。将以下两项写入服务器 `/root/funbi/.env`：
+
+```dotenv
+MEDIA_ASSETS_MCP_URL=http://<服务器可访问的MCP主机>:8766/mcp
+MEDIA_ASSETS_MCP_TOKEN=<该MCP服务签发的Token>
+```
+
+编辑 `.env` 时不要把 Token 粘贴到聊天或命令行参数中；保存后确认文件权限为 `600`。之后只重建 AI 容器以载入环境变量：
+
+```bash
+cd /root/funbi
+chmod 600 .env
+docker compose up -d --no-deps --force-recreate ai
+docker compose logs --tail 50 ai
+```
+
+`127.0.0.1` 指向当前容器自身。若 MCP 仍只运行在你的 Windows 电脑上，云服务器无法访问电脑的 `127.0.0.1:8766`；请将 MCP 服务部署到服务器可达的主机 / 私有网络，并确保 AI 容器能访问该地址。不要为了连接而将带 Token 的 MCP 端口直接公开到公网。
+
 # GitHub CI/CD
 
 | 操作 | 工作流行为 |

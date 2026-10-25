@@ -82,7 +82,7 @@
     },
     "test": {
       "dependsOn": ["check-types"],
-      "env": ["TEST_REDIS_URL"],
+      "env": ["TEST_REDIS_URL", "PRISMA_DATABASE_URL", "MASTRA_DATABASE_URL"],
       "cache": true
     },
     "mastra:check-types": {

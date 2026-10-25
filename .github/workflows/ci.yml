@@ -11,6 +11,7 @@ permissions:
 env:
   # prisma.config.ts 的 env() 缺失即抛错，postinstall 的 prisma generate 需要
   PRISMA_DATABASE_URL: postgresql://ci:ci@localhost:5432/screenwright_ci
+  MASTRA_DATABASE_URL: postgresql://ci:ci@localhost:5432/screenwright_ci
   CI: "true"
 
 jobs:
@@ -51,6 +52,9 @@ jobs:
 
       - name: Validate database migrations
         run: pnpm --filter @screenwright/server exec prisma migrate deploy
+
+      - name: Seed component catalog for integration tests
+        run: pnpm --filter @screenwright/server exec tsx scripts/seed-modules.ts
 
       - name: Test deployment success and rollback
         run: node --test docker/tests/deploy-registry.test.mjs

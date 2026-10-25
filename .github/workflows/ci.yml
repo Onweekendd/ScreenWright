@@ -7,7 +7,7 @@ on:
 
 env:
   # prisma.config.ts 的 env() 缺失即抛错，postinstall 的 prisma generate 需要
-  PRISMA_DATABASE_URL: file:./.data/screenwright.db
+  PRISMA_DATABASE_URL: postgresql://ci:ci@localhost:5432/screenwright_ci
 
 jobs:
   check:

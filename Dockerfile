@@ -69,9 +69,9 @@ RUN pnpm --filter @screenwright/server deploy --legacy --prod /prod/server
 
 # ───────────── server：后端运行镜像 ─────────────
 FROM node:${NODE_VERSION}-bookworm-slim AS server
-# git：大屏工作区的版本快照 / 回退通过 execFile 调用 git 二进制
+# git：大屏工作区版本快照；ffmpeg 同时提供视频处理和 ffprobe 媒体信息读取
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git openssl ca-certificates \
+    && apt-get install -y --no-install-recommends git openssl ca-certificates ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # WORKSPACE_SEED_DIR：镜像里自带的 agent-workspace 模板（skills 等），启动时同步进持久化的工作区卷
@@ -82,17 +82,17 @@ ENV NODE_ENV=production \
     MASTRA_WORKSPACE_PATH=/data/agent-workspace
 
 WORKDIR /app/servers/server
-COPY --from=server-build /prod/server ./
+COPY --from=server-build --chown=node:node /prod/server ./
 # deploy 只带 package.json 的 files 清单里的文件；迁移 / 种子脚本还要源码和 prisma 配置
-COPY --from=server-build /app/servers/server/src ./src
-COPY --from=server-build /app/servers/server/scripts ./scripts
-COPY --from=server-build /app/servers/server/prisma ./prisma
-COPY --from=server-build /app/servers/server/prisma.config.ts /app/servers/server/tsconfig.json ./
-COPY --from=server-build /app/servers/server/agent-workspace ./agent-workspace
+COPY --from=server-build --chown=node:node /app/servers/server/src ./src
+COPY --from=server-build --chown=node:node /app/servers/server/scripts ./scripts
+COPY --from=server-build --chown=node:node /app/servers/server/prisma ./prisma
+COPY --from=server-build --chown=node:node /app/servers/server/prisma.config.ts /app/servers/server/tsconfig.json ./
+COPY --from=server-build --chown=node:node /app/servers/server/agent-workspace ./agent-workspace
 COPY docker/server-entrypoint.sh docker/migrate.sh /docker/
 RUN sed -i 's/\r$//' /docker/*.sh && chmod +x /docker/*.sh \
     && mkdir -p /data/agent-workspace /app/servers/server/blob-storage \
-    && chown -R node:node /data /app/servers/server
+    && chown node:node /data /data/agent-workspace /app/servers/server /app/servers/server/blob-storage
 
 USER node
 EXPOSE 4111

@@ -10,6 +10,10 @@
 **/.next
 **/.eslintcache
 **/*.log
+packages/alignment-wasm/target
+.codex-tmp
+temp
+funbi-release.tar*
 
 # 本地运行数据（含密钥 / 体积大）
 .env
@@ -24,6 +28,8 @@ servers/server/agent-workspace/plan
 servers/server/agent-workspace/echart-options
 servers/server/agent-workspace/api-registry
 servers/server/agent-workspace/artifact-app
+servers/server/agent-workspace/.tmp*
+servers/server/agent-workspace/assets
 
 # 编辑器 / 工具
 .vscode

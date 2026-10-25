@@ -39,3 +39,42 @@ docker compose logs --tail 100 api ai worker
 ```
 
 首次登录后，在「设置」页配置模型。镜像不携带本机 `.env`、数据库或大屏工作区数据；本地 MCP 服务需要另外配置服务器可访问的地址。
+
+# GitHub CI/CD
+
+| 操作 | 工作流行为 |
+| --- | --- |
+| 创建或更新 PR | 检查数据库迁移、类型、测试和两个 Linux 镜像构建；不发布镜像 |
+| 合并到 main | 检查通过后，将 server / web 镜像推送到 GHCR；不更新服务器 |
+| 手动运行 Release，deploy 不勾选 | 检查并发布镜像 |
+| 手动运行 Release，选择 main 并勾选 deploy | 检查、发布镜像、备份数据库、迁移并更新服务器 |
+
+镜像地址为 `ghcr.io/<owner>/<repo>/server:sha-<完整提交SHA>` 和 `ghcr.io/<owner>/<repo>/web:sha-<完整提交SHA>`，owner / repo 自动转为小写。api、ai、worker、migrate 继续使用同一个 server 镜像。
+
+仓库 Actions Secrets 需要以下四项；当前 ScreenWright 仓库已配置：
+
+| Secret | 内容 |
+| --- | --- |
+| DEPLOY_HOST | 服务器地址 |
+| DEPLOY_USER | SSH 用户名 |
+| DEPLOY_SSH_KEY | CI 专用私钥 |
+| DEPLOY_HOST_FINGERPRINT | 服务器 ECDSA 主机公钥的 SHA-256 指纹 |
+
+生产环境 `production` 只允许 main 发布。GitHub Actions 在临时 runner 上核对主机指纹，然后上传这次提交的部署文件到 `/root/funbi/releases/<tag>/`。GHCR 使用本次运行的 `GITHUB_TOKEN`；服务器只临时登录，脚本退出时删除登录文件，不需要另存长期镜像仓库 Token。
+
+`deploy-registry.sh` 只拉取 server / web 镜像，使用服务器已有的 PostgreSQL、Redis 和 MinIO。更新前在 `backups/<时间>-<tag>/` 保存 PostgreSQL 自定义格式备份、原 `.env` 和 Compose 文件。迁移失败时保持旧应用；应用或 HTTP 健康检查失败时恢复原配置并重建旧版应用。**数据库不会自动回滚**，不兼容的迁移需要根据备份人工恢复。MinIO 数据和 AI 工作区继续保留在原命名卷。
+
+首次使用时，先把工作流合并到 main，再打开 GitHub **Actions → Release → Run workflow**，选择 main，勾选 deploy 后运行。后续仍采用这个手动发布步骤。
+
+手动备份可以在服务器部署目录运行对应版本中的脚本：
+
+```bash
+cd /root/funbi
+bash releases/<tag>/backup.sh
+```
+
+工作流语法和 Shell 脚本可用 actionlint / ShellCheck 检查。部署成功、备份失败、迁移失败和健康检查回退测试执行：
+
+```bash
+node --test docker/tests/deploy-registry.test.mjs
+```

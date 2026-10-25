@@ -1,24 +1,47 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
 
 env:
   # prisma.config.ts 的 env() 缺失即抛错，postinstall 的 prisma generate 需要
   PRISMA_DATABASE_URL: postgresql://ci:ci@localhost:5432/screenwright_ci
+  CI: "true"
 
 jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: screenwright_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ci -d screenwright_ci"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      TEST_REDIS_URL: redis://localhost:6379
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6.1.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: pnpm
@@ -26,6 +49,34 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      - name: Validate database migrations
+        run: pnpm --filter @screenwright/server exec prisma migrate deploy
+
+      - name: Test deployment success and rollback
+        run: node --test docker/tests/deploy-registry.test.mjs
+
       # turbo pipeline：test 依赖 check-types，check-types 依赖上游包 build
       - name: Type check & test
-        run: pnpm turbo run test --output-logs=errors-only
+        run: pnpm turbo run test --concurrency=2 --output-logs=errors-only
+
+  images:
+    if: github.event_name == 'pull_request'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [server, web]
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: docker/setup-buildx-action@v4.4.1
+      - name: Build ${{ matrix.target }} image
+        uses: docker/build-push-action@v7.4.0
+        with:
+          context: .
+          target: ${{ matrix.target }}
+          platforms: linux/amd64
+          push: false
+          cache-from: type=gha,scope=funbi-${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=funbi-${{ matrix.target }}

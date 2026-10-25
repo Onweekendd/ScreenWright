@@ -110,7 +110,7 @@ services:
       target: server
       args:
         NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org}
-    image: funbi-server:${TAG:-local}
+    image: ${SERVER_IMAGE:-funbi-server}:${TAG:-local}
     environment:
       <<: *server-env
       ROLE: migrate
@@ -121,7 +121,7 @@ services:
     restart: "no"
 
   api:
-    image: funbi-server:${TAG:-local}
+    image: ${SERVER_IMAGE:-funbi-server}:${TAG:-local}
     init: true
     environment:
       <<: *server-env
@@ -140,7 +140,7 @@ services:
 
   # 对话状态在进程内存里，只能单副本（见 docker/nginx.conf 里的 upstream 说明）
   ai:
-    image: funbi-server:${TAG:-local}
+    image: ${SERVER_IMAGE:-funbi-server}:${TAG:-local}
     init: true
     environment:
       <<: *server-env
@@ -164,7 +164,7 @@ services:
     restart: unless-stopped
 
   worker:
-    image: funbi-server:${TAG:-local}
+    image: ${SERVER_IMAGE:-funbi-server}:${TAG:-local}
     init: true
     environment:
       <<: *server-env
@@ -184,7 +184,7 @@ services:
       target: web
       args:
         NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org}
-    image: funbi-web:${TAG:-local}
+    image: ${WEB_IMAGE:-funbi-web}:${TAG:-local}
     ports:
       - "${HTTP_PORT:-8080}:80"
     depends_on:

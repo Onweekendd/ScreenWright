@@ -1,0 +1,107 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "检查和镜像发布成功后，更新生产服务器（仅 main）"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [server, web]
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - id: image
+        name: Image coordinates
+        run: |
+          echo "namespace=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "tag=sha-$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v4.4.1
+      - uses: docker/login-action@v4.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish ${{ matrix.target }} image
+        uses: docker/build-push-action@v7.4.0
+        with:
+          context: .
+          target: ${{ matrix.target }}
+          platforms: linux/amd64
+          push: true
+          tags: ghcr.io/${{ steps.image.outputs.namespace }}/${{ matrix.target }}:${{ steps.image.outputs.tag }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha,scope=funbi-${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=funbi-${{ matrix.target }}
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy && github.ref == 'refs/heads/main'
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: production
+    permissions:
+      contents: read
+      packages: read
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+      DEPLOY_HOST_FINGERPRINT: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Configure SSH and verify server identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${DEPLOY_HOST:?Missing DEPLOY_HOST}"
+          : "${DEPLOY_USER:?Missing DEPLOY_USER}"
+          : "${DEPLOY_SSH_KEY:?Missing DEPLOY_SSH_KEY}"
+          : "${DEPLOY_HOST_FINGERPRINT:?Missing DEPLOY_HOST_FINGERPRINT}"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -T 10 -t ecdsa "$DEPLOY_HOST" > ~/.ssh/known_hosts
+          actual="$(ssh-keygen -lf ~/.ssh/known_hosts -E sha256 | awk '{print $2}')"
+          test "$actual" = "$DEPLOY_HOST_FINGERPRINT" || { echo 'SSH host fingerprint mismatch' >&2; exit 1; }
+      - name: Upload deployment files and activate release
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="sha-$GITHUB_SHA"
+          namespace="${GITHUB_REPOSITORY,,}"
+          remote="$DEPLOY_USER@$DEPLOY_HOST"
+          options=(-i ~/.ssh/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=15)
+          ssh "${options[@]}" "$remote" "mkdir -p /root/funbi/releases/$tag"
+          scp "${options[@]}" docker-compose.yml docker/deploy-registry.sh docker/backup.sh "$remote:/root/funbi/releases/$tag/"
+          printf '%s\n' "$GHCR_TOKEN" | ssh "${options[@]}" "$remote" \
+            "cd /root/funbi && bash releases/$tag/deploy-registry.sh '$namespace' '$tag' '$GITHUB_ACTOR'"
+      - name: Remove SSH credentials
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

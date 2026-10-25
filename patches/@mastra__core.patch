@@ -1,5 +1,5 @@
 diff --git a/dist/agent-BMi0F5ou.cjs b/dist/agent-BMi0F5ou.cjs
-index fadfaa7621f4f5bcdd6bed34f974b8d1bdf7e246..b523e9d523c97497adee0d1e35d4ad83a7b06a73 100644
+index fadfaa7621f4f5bcdd6bed34f974b8d1bdf7e246..7ba76e0ed3bd967f28af3973d3f7813f199b7cca 100644
 --- a/dist/agent-BMi0F5ou.cjs
 +++ b/dist/agent-BMi0F5ou.cjs
 @@ -31393,10 +31393,15 @@ var SaveQueueManager = class SaveQueueManager {
@@ -111,8 +111,20 @@ index fadfaa7621f4f5bcdd6bed34f974b8d1bdf7e246..b523e9d523c97497adee0d1e35d4ad83
  				const terminalKey = taskId && TERMINAL_BG_CHUNKS.has(chunk.type) ? `${taskId}:${chunk.type}` : void 0;
  				if (terminalKey && processedTerminalKeys.has(terminalKey)) continue;
  				updateIdleTimer();
+@@ -31753,7 +31809,10 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 				if (!taskId) continue;
+ 				if (chunk.type === "background-task-running" || chunk.type === "background-task-resumed") runningTaskIds.add(taskId);
+ 				else if (TERMINAL_BG_CHUNKS.has(chunk.type)) {
+-					runningTaskIds.delete(taskId);
++					// A suspended background task still awaits resume and a final result.
++					// Keep its subscription alive regardless of when the foreground finishes.
++					if (chunk.type === "background-task-suspended") runningTaskIds.add(taskId);
++					else runningTaskIds.delete(taskId);
+ 					pendingCompletions.push(chunk);
+ 					processIfIdle();
+ 				}
 diff --git a/dist/agent-CEHR0Wd8.js b/dist/agent-CEHR0Wd8.js
-index 3a27f1c85b2639362979195cb0ca6fd81f5ce227..69126aa9c04946774241c0060671709d8075b35f 100644
+index 3a27f1c85b2639362979195cb0ca6fd81f5ce227..a2aed40cc9a74b3d61525c8067e0f934a8a45d95 100644
 --- a/dist/agent-CEHR0Wd8.js
 +++ b/dist/agent-CEHR0Wd8.js
 @@ -31391,10 +31391,15 @@ var SaveQueueManager = class SaveQueueManager {
@@ -224,3 +236,15 @@ index 3a27f1c85b2639362979195cb0ca6fd81f5ce227..69126aa9c04946774241c0060671709d
  				const terminalKey = taskId && TERMINAL_BG_CHUNKS.has(chunk.type) ? `${taskId}:${chunk.type}` : void 0;
  				if (terminalKey && processedTerminalKeys.has(terminalKey)) continue;
  				updateIdleTimer();
+@@ -31751,7 +31807,10 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 				if (!taskId) continue;
+ 				if (chunk.type === "background-task-running" || chunk.type === "background-task-resumed") runningTaskIds.add(taskId);
+ 				else if (TERMINAL_BG_CHUNKS.has(chunk.type)) {
+-					runningTaskIds.delete(taskId);
++					// A suspended background task still awaits resume and a final result.
++					// Keep its subscription alive regardless of when the foreground finishes.
++					if (chunk.type === "background-task-suspended") runningTaskIds.add(taskId);
++					else runningTaskIds.delete(taskId);
+ 					pendingCompletions.push(chunk);
+ 					processIfIdle();
+ 				}

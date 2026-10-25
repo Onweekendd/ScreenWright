@@ -45,7 +45,7 @@ docker compose logs --tail 100 api ai worker
 | 操作 | 工作流行为 |
 | --- | --- |
 | 创建或更新 PR | 检查数据库迁移、类型、测试、两个 Linux 镜像构建及 server 运行工具；不发布镜像 |
-| 合并到 main | 检查通过后，将 server / web 镜像推送到 GHCR；不更新服务器 |
+| 合并或推送到 main | 检查通过后，将 server / web 镜像推送到 GHCR，再自动备份、迁移并更新服务器 |
 | 手动运行 Release，deploy 不勾选 | 检查并发布镜像 |
 | 手动运行 Release，选择 main 并勾选 deploy | 检查、发布镜像、备份数据库、迁移并更新服务器 |
 
@@ -64,7 +64,9 @@ docker compose logs --tail 100 api ai worker
 
 `deploy-registry.sh` 只拉取 server / web 镜像，使用服务器已有的 PostgreSQL、Redis 和 MinIO。更新前在 `backups/<时间>-<tag>/` 保存 PostgreSQL 自定义格式备份、原 `.env` 和 Compose 文件。迁移失败时保持旧应用；应用或 HTTP 健康检查失败时恢复原配置并重建旧版应用。**数据库不会自动回滚**，不兼容的迁移需要根据备份人工恢复。MinIO 数据和 AI 工作区继续保留在原命名卷。
 
-首次使用时，先把工作流合并到 main，再打开 GitHub **Actions → Release → Run workflow**，选择 main，勾选 deploy 后运行。后续仍采用这个手动发布步骤。
+将工作流合并到 main 后，本次合并以及后续 main 更新都会自动执行检查、发布镜像并部署。检查或任一镜像发布失败时，部署不会开始。同一分支的发布串行执行，避免并发更新服务器。
+
+需要手动重发时，打开 GitHub **Actions → Release → Run workflow**，选择 main，勾选 deploy 后运行。不勾选时仅检查并发布镜像。
 
 手动备份可以在服务器部署目录运行对应版本中的脚本：
 

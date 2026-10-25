@@ -30,82 +30,108 @@ const modelReply = (tool?: string) => ({
 });
 
 describe("Mastra untilIdle 的前台挂起边界", () => {
-  it("后台工具自身的审批继续走后台恢复，不被当成前台挂起关闭", async () => {
-    let first = true;
-    const agent = new Agent({
-      id: "background-approval-test",
-      name: "background-approval-test",
-      instructions: "x",
-      model: new MockLanguageModelV3({
-        doStream: async () => {
-          const tool = first ? "collect" : undefined;
-          first = false;
-          return modelReply(tool);
-        }
-      }) as never,
-      memory: new Memory({ options: { lastMessages: 20 } }),
-      tools: {
-        collect: createTool({
-          id: "collect",
-          description: "collect",
-          inputSchema: z.object({}),
-          background: { enabled: true },
-          suspendSchema: z.object({ type: z.literal("approval") }),
-          resumeSchema: z.object({ approved: z.boolean() }),
-          execute: async (_, context) => {
-            if (context?.agent?.resumeData) {
-              return { url: "http://example.com/asset.jpg" };
+  it.each(["before", "after"] as const)(
+    "后台审批在前台结束 %s 到达时，保持流直到后台恢复完成",
+    async (order) => {
+      let releaseBackground!: () => void;
+      let releaseForeground!: () => void;
+      const background = new Promise<void>((resolve) => {
+        releaseBackground = resolve;
+      });
+      const foreground = new Promise<void>((resolve) => {
+        releaseForeground = resolve;
+      });
+      let first = true;
+      const agent = new Agent({
+        id: "background-approval-test",
+        name: "background-approval-test",
+        instructions: "x",
+        model: new MockLanguageModelV3({
+          doStream: async () => {
+            const tool = first ? "collect" : undefined;
+            first = false;
+            if (!tool && order === "before") {
+              await foreground;
             }
-            return context?.agent?.suspend?.({ type: "approval" }) as never;
+            return modelReply(tool);
           }
-        })
-      }
-    });
-    const storage = new InMemoryStore();
-    const mastra = new Mastra({ agents: { agent }, storage, backgroundTasks: { enabled: true } });
-    const abort = new AbortController();
-    const chunks: Array<{ type: string; payload?: { taskId?: string } }> = [];
-    let drain: Promise<void> | undefined;
-    try {
-      const initial = await agent.stream("收集素材", {
-        memory: { thread: "bg-approval", resource: "r" },
-        untilIdle: true,
-        abortSignal: abort.signal
-      });
-      drain = (async () => {
-        for await (const chunk of initial.fullStream) {
-          chunks.push(chunk as never);
-        }
-      })();
-      await vi.waitFor(() => expect(chunks.some((chunk) => chunk.type === "background-task-suspended")).toBe(true), {
-        timeout: 3000
-      });
-      const taskId = chunks.find((chunk) => chunk.type === "background-task-suspended")!.payload!.taskId!;
-      const workflows = await storage.getStore("workflows");
-      await vi.waitFor(async () =>
-        expect(
-          (
-            (await workflows!.loadWorkflowSnapshot({ workflowName: "__background-task", runId: taskId })) as {
-              status?: string;
+        }) as never,
+        memory: new Memory({ options: { lastMessages: 20 } }),
+        tools: {
+          collect: createTool({
+            id: "collect",
+            description: "collect",
+            inputSchema: z.object({}),
+            background: { enabled: true },
+            suspendSchema: z.object({ type: z.literal("approval") }),
+            resumeSchema: z.object({ approved: z.boolean() }),
+            execute: async (_, context) => {
+              if (context?.agent?.resumeData) {
+                return { url: "http://example.com/asset.jpg" };
+              }
+              if (order === "after") {
+                await background;
+              }
+              return context?.agent?.suspend?.({ type: "approval" }) as never;
             }
-          )?.status
-        ).toBe("suspended")
-      );
-      expect(
-        await Promise.race([
-          drain.then(() => "closed"),
-          new Promise((resolve) => setTimeout(() => resolve("waiting"), 50))
-        ])
-      ).toBe("waiting");
-      await mastra.backgroundTaskManager!.resume(taskId, { approved: true });
-      await drain;
-      expect(chunks.some((chunk) => chunk.type === "background-task-completed")).toBe(true);
-    } finally {
-      abort.abort();
-      await drain?.catch(() => {});
-      await mastra.shutdown();
-    }
-  }, 15000);
+          })
+        }
+      });
+      const storage = new InMemoryStore();
+      const mastra = new Mastra({ agents: { agent }, storage, backgroundTasks: { enabled: true } });
+      const abort = new AbortController();
+      const chunks: Array<{ type: string; payload?: { taskId?: string } }> = [];
+      let drain: Promise<void> | undefined;
+      try {
+        const initial = await agent.stream("收集素材", {
+          memory: { thread: "bg-approval", resource: "r" },
+          untilIdle: true,
+          abortSignal: abort.signal
+        });
+        drain = (async () => {
+          for await (const chunk of initial.fullStream) {
+            chunks.push(chunk as never);
+          }
+        })();
+        if (order === "after") {
+          await vi.waitFor(() => expect(chunks.some((chunk) => chunk.type === "finish")).toBe(true), { timeout: 3000 });
+          releaseBackground();
+        }
+        await vi.waitFor(() => expect(chunks.some((chunk) => chunk.type === "background-task-suspended")).toBe(true), {
+          timeout: 3000
+        });
+        releaseForeground();
+        await vi.waitFor(() => expect(chunks.some((chunk) => chunk.type === "finish")).toBe(true), { timeout: 3000 });
+        const taskId = chunks.find((chunk) => chunk.type === "background-task-suspended")!.payload!.taskId!;
+        const workflows = await storage.getStore("workflows");
+        await vi.waitFor(async () =>
+          expect(
+            (
+              (await workflows!.loadWorkflowSnapshot({ workflowName: "__background-task", runId: taskId })) as {
+                status?: string;
+              }
+            )?.status
+          ).toBe("suspended")
+        );
+        expect(
+          await Promise.race([
+            drain.then(() => "closed"),
+            new Promise((resolve) => setTimeout(() => resolve("waiting"), 50))
+          ])
+        ).toBe("waiting");
+        await mastra.backgroundTaskManager!.resume(taskId, { approved: true });
+        await drain;
+        expect(chunks.some((chunk) => chunk.type === "background-task-completed")).toBe(true);
+      } finally {
+        releaseBackground();
+        releaseForeground();
+        abort.abort();
+        await drain?.catch(() => {});
+        await mastra.shutdown();
+      }
+    },
+    15000
+  );
 
   it.each([1, 2])(
     "后台任务未完成时释放审批恢复队列，%s 个后台结果回填后仍保留编辑回执",

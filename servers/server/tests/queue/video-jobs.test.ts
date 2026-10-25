@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as VideoGeneration from "@/mastra/services/video-generation.server";
+import type * as VideoGeneration from "@/mastra/services/ai-generation/video-generation.server";
 
 const mocks = vi.hoisted(() => ({ warmModelConfigs: vi.fn(), generateAndStoreVideo: vi.fn() }));
 
@@ -10,7 +10,7 @@ vi.mock("@/mastra/provider/model-registry", () => ({
   getModelConfigSync: () => ({ baseUrl: "https://gw.example/v1", apiKey: "k", modelId: "m" }),
   warmModelConfigs: mocks.warmModelConfigs
 }));
-vi.mock("@/mastra/services/video-generation.server", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-generation/video-generation.server", async (importOriginal) => ({
   ...(await importOriginal<typeof VideoGeneration>()),
   generateAndStoreVideo: mocks.generateAndStoreVideo
 }));
@@ -29,6 +29,10 @@ const record = {
   ratio: "16:9",
   url: "http://x/a.mp4",
   firstFrameUrl: null,
+  lastFrameUrl: null,
+  referenceImageUrls: [],
+  referenceVideoUrls: [],
+  referenceAudioUrls: [],
   reused: false,
   createdTime: new Date(),
   taskId: "task_1"
@@ -54,7 +58,7 @@ describe("videoJobId", () => {
   });
 
   it("id 与服务落库用的 promptHash 是同一个口径", async () => {
-    const { computeVideoHash } = await import("@/mastra/services/video-generation.server");
+    const { computeVideoHash } = await import("@/mastra/services/ai-generation/video-generation.server");
     expect(videoJobId(base, "m")).toBe(computeVideoHash(base, "m"));
   });
 });
@@ -62,7 +66,27 @@ describe("videoJobId", () => {
 describe("VideoJobDataSchema", () => {
   it("接受合法数据（首帧可选）", () => {
     expect(VideoJobDataSchema.parse(base)).toEqual(base);
-    expect(VideoJobDataSchema.parse({ ...base, firstFrameUrl: "u" }).firstFrameUrl).toBe("u");
+    expect(VideoJobDataSchema.parse({ ...base, firstFrameUrl: "http://store/u" }).firstFrameUrl).toBe("http://store/u");
+  });
+
+  it("新增素材字段不会在入队校验时被丢弃，且参与任务去重", () => {
+    for (const patch of [
+      { lastFrameUrl: "http://store/last.png" },
+      { referenceImageUrls: ["http://store/ref.png"] },
+      { referenceVideoUrls: ["http://public.example/ref.mp4"] },
+      { referenceAudioUrls: ["http://public.example/ref.mp3"] }
+    ]) {
+      const data = VideoJobDataSchema.parse({ ...base, ...patch });
+      expect(data).toMatchObject(patch);
+      expect(videoJobId(data, "m")).not.toBe(videoJobId(base, "m"));
+    }
+    expect(
+      VideoJobDataSchema.safeParse({
+        ...base,
+        firstFrameUrl: "http://store/first.png",
+        referenceVideoUrls: ["http://public.example/ref.mp4"]
+      }).success
+    ).toBe(false);
   });
 
   it.each([

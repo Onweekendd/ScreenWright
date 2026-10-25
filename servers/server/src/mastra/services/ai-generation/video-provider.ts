@@ -10,6 +10,9 @@
  */
 import { DEFAULT_VIDEO_MODEL, getModelConfigSync } from "@/mastra/provider/model-registry";
 
+import type { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "./video-input";
+import { videoModeError } from "./video-input";
+
 export { DEFAULT_VIDEO_MODEL } from "@/mastra/provider/model-registry";
 
 export interface VideoConfig {
@@ -19,10 +22,9 @@ export interface VideoConfig {
   modelId: string;
 }
 
-export const VIDEO_RESOLUTIONS = ["480P", "768P", "2K"] as const;
+export { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "./video-input";
 export type VideoResolution = (typeof VIDEO_RESOLUTIONS)[number];
 
-export const VIDEO_RATIOS = ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"] as const;
 export type VideoRatio = (typeof VIDEO_RATIOS)[number];
 
 /**
@@ -64,8 +66,12 @@ export interface VideoParams {
   durationSec: number;
   resolution: VideoResolution;
   ratio: VideoRatio;
-  /** 首帧图（data URL 或可公网访问的 url）；没有就是文生视频 */
+  /** 图片已由服务层转为 data URL；首尾帧与多模态参考不可混用。 */
   firstFrame?: string;
+  lastFrame?: string;
+  referenceImages?: string[];
+  referenceVideos?: string[];
+  referenceAudios?: string[];
 }
 
 export const tasksEndpoint = (baseUrl: string): string => `${normalizeVideoBaseUrl(baseUrl)}/video_generation`;
@@ -77,13 +83,28 @@ export interface VideoRequest {
 }
 
 export const buildSubmitRequest = (config: VideoConfig, params: VideoParams): VideoRequest => {
+  if (!params.prompt.trim()) {
+    throw new Error("视频提示词不能为空");
+  }
+  const modeError = videoModeError({
+    firstFrameUrl: params.firstFrame,
+    lastFrameUrl: params.lastFrame,
+    referenceImageUrls: params.referenceImages,
+    referenceVideoUrls: params.referenceVideos,
+    referenceAudioUrls: params.referenceAudios
+  });
+  if (modeError) {
+    throw new Error(modeError);
+  }
   const isMax = config.modelId === "MiniMax-H3-Max";
   if (!Number.isInteger(params.durationSec) || params.durationSec < (isMax ? 5 : 4) || params.durationSec > 15) {
     throw new Error(`${config.modelId} 时长必须为 ${isMax ? "5" : "4"}~15 秒的整数`);
   }
+
   if ((isMax && params.resolution === "2K") || (!isMax && params.resolution === "480P")) {
     throw new Error(`${config.modelId} 不支持 ${params.resolution}，请使用 ${isMax ? "480P / 768P" : "768P / 2K"}`);
   }
+
   return {
     url: tasksEndpoint(config.baseUrl),
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}` },
@@ -93,10 +114,26 @@ export const buildSubmitRequest = (config: VideoConfig, params: VideoParams): Vi
         { type: "text", text: params.prompt },
         ...(params.firstFrame
           ? [{ type: "image_url", image_url: { url: params.firstFrame }, role: "first_frame" }]
-          : [])
+          : []),
+        ...(params.lastFrame ? [{ type: "image_url", image_url: { url: params.lastFrame }, role: "last_frame" }] : []),
+        ...(params.referenceImages ?? []).map((url) => ({
+          type: "image_url",
+          image_url: { url },
+          role: "reference_image"
+        })),
+        ...(params.referenceVideos ?? []).map((url) => ({
+          type: "video_url",
+          video_url: { url },
+          role: "reference_video"
+        })),
+        ...(params.referenceAudios ?? []).map((url) => ({
+          type: "audio_url",
+          audio_url: { url },
+          role: "reference_audio"
+        }))
       ],
       resolution: params.resolution,
-      ratio: params.firstFrame ? "adaptive" : params.ratio,
+      ratio: params.firstFrame || params.lastFrame ? "adaptive" : params.ratio,
       duration: params.durationSec,
       aigc_watermark: false
     })

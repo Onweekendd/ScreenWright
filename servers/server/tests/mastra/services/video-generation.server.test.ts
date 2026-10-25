@@ -16,16 +16,25 @@ vi.mock("@/mastra/provider/model-registry", () => ({
   DEFAULT_VIDEO_MODEL: "MiniMax-H3"
 }));
 
-const storeMocks = vi.hoisted(() => ({ put: vi.fn(), keyFromUrl: vi.fn(), get: vi.fn() }));
+const storeMocks = vi.hoisted(() => ({
+  put: vi.fn(),
+  keyFromUrl: vi.fn(),
+  get: vi.fn(),
+  head: vi.fn(),
+  signedUrl: vi.fn(),
+  publicUrl: vi.fn()
+}));
 vi.mock("@/lib/storage", () => ({
-  assetStore: () => ({ put: storeMocks.put, keyFromUrl: storeMocks.keyFromUrl, get: storeMocks.get })
+  assetStore: () => storeMocks
 }));
 
 const imageMocks = vi.hoisted(() => ({ prepareReference: vi.fn(), imageSize: vi.fn() }));
-vi.mock("@/mastra/services/image-generation.server", () => ({ prepareReference: imageMocks.prepareReference }));
-vi.mock("@/mastra/services/shrink-image", () => ({ imageSize: imageMocks.imageSize }));
+vi.mock("@/mastra/services/ai-generation/image-generation.server", () => ({
+  prepareReference: imageMocks.prepareReference
+}));
+vi.mock("@/mastra/services/ai-assets/shrink-image", () => ({ imageSize: imageMocks.imageSize }));
 
-import { computeVideoHash, generateAndStoreVideo } from "@/mastra/services/video-generation.server";
+import { computeVideoHash, generateAndStoreVideo } from "@/mastra/services/ai-generation/video-generation.server";
 
 const input = { prompt: "云层流动", durationSec: 5, resolution: "768P", ratio: "16:9" } as const;
 const TASKS = "https://gw.example/minimax/v2/video_generation";
@@ -60,6 +69,10 @@ const submitCalls = () =>
 
 beforeEach(() => {
   vi.clearAllMocks();
+  storeMocks.keyFromUrl.mockReturnValue(null);
+  storeMocks.publicUrl.mockImplementation((key: string) => `http://store/blobs/${key}`);
+  storeMocks.head.mockResolvedValue({ size: 4 });
+  storeMocks.signedUrl.mockResolvedValue("http://117.72.206.37/blobs/ref.mp4?sig=1");
   fetchMock = spyFetch();
   prismaMocks.findUnique.mockResolvedValue(null);
   imageMocks.imageSize.mockResolvedValue({ width: 1672, height: 940 });
@@ -80,15 +93,102 @@ describe("computeVideoHash", () => {
       { durationSec: 6 },
       { resolution: "480P" as const },
       { ratio: "9:16" as const },
-      { firstFrameUrl: "http://store/a.png" }
+      { firstFrameUrl: "http://store/a.png" },
+      { lastFrameUrl: "http://store/last.png" },
+      { referenceImageUrls: ["http://store/ref.png"] },
+      { referenceVideoUrls: ["http://store/ref.mp4"] },
+      { referenceAudioUrls: ["http://store/ref.mp3"] }
     ]) {
       expect(computeVideoHash({ ...input, ...patch }, "m")).not.toBe(base);
     }
     expect(computeVideoHash(input, "other")).not.toBe(base);
+    expect(
+      computeVideoHash({ ...input, referenceImageUrls: [], referenceVideoUrls: [], referenceAudioUrls: [] }, "m")
+    ).toBe(base);
   });
 });
 
 describe("generateAndStoreVideo", () => {
+  it("外部 URL 即使能被存储的 keyFromUrl 解析，也不应被当成本地对象签名", async () => {
+    storeMocks.keyFromUrl.mockReturnValue("ref.mp4");
+    respondTo({ poll: [succeeded] });
+    await generateAndStoreVideo({ ...input, referenceVideoUrls: ["http://117.72.206.37/videos/ref.mp4"] });
+    expect(JSON.parse(submitCalls()[0][1]!.body as string).content[1].video_url.url).toBe(
+      "http://117.72.206.37/videos/ref.mp4"
+    );
+    expect(storeMocks.head).not.toHaveBeenCalled();
+    expect(storeMocks.signedUrl).not.toHaveBeenCalled();
+  });
+  it("尾帧同样读取内部图片并转为 data URL，保存原始尾帧地址", async () => {
+    storeMocks.keyFromUrl.mockReturnValue("last.png");
+    storeMocks.get.mockResolvedValue(Buffer.from("png"));
+    imageMocks.prepareReference.mockResolvedValue(Buffer.from([0xff, 0xd8, 0xff, 1]));
+    respondTo({ poll: [succeeded] });
+    await generateAndStoreVideo({ ...input, lastFrameUrl: "http://store/blobs/last.png" });
+    expect(JSON.parse(submitCalls()[0][1]!.body as string).content[1]).toMatchObject({
+      role: "last_frame",
+      image_url: { url: expect.stringMatching(/^data:image\/jpeg;base64,/) }
+    });
+    expect(prismaMocks.create.mock.calls[0][0].data.lastFrameUrl).toBe("http://store/blobs/last.png");
+  });
+
+  it("参考组合：图片转 data URL，内部视频签名，公网音频原样传递，落库保留原始地址", async () => {
+    storeMocks.keyFromUrl.mockImplementation((url: string) =>
+      url.includes("/blobs/") ? url.split("/blobs/")[1] : null
+    );
+    storeMocks.get.mockResolvedValue(Buffer.from("png"));
+    imageMocks.prepareReference.mockResolvedValue(Buffer.from([0xff, 0xd8, 0xff, 1]));
+    respondTo({ poll: [succeeded] });
+    const references = {
+      referenceImageUrls: ["http://store/blobs/ref.png"],
+      referenceVideoUrls: ["http://store/blobs/ref.mp4"],
+      referenceAudioUrls: ["https://audio.example/ref.mp3"]
+    };
+    await generateAndStoreVideo({ ...input, ...references });
+    const content = JSON.parse(submitCalls()[0][1]!.body as string).content;
+    expect(content[1].image_url.url).toMatch(/^data:image\/jpeg;base64,/);
+    expect(content[2]).toMatchObject({
+      role: "reference_video",
+      video_url: { url: "http://117.72.206.37/blobs/ref.mp4?sig=1" }
+    });
+    expect(content[3]).toMatchObject({ role: "reference_audio", audio_url: { url: references.referenceAudioUrls[0] } });
+    expect(storeMocks.signedUrl).toHaveBeenCalledWith("ref.mp4", 3600);
+    expect(prismaMocks.create.mock.calls[0][0].data).toMatchObject(references);
+  });
+
+  it.each(["http://localhost:4111/a.mp4", "http://192.168.1.2/a.mp4", "http://127.0.0.1/a.mp4"])(
+    "参考视频为内网地址时提交前拒绝：%s",
+    async (url) => {
+      await expect(generateAndStoreVideo({ ...input, referenceVideoUrls: [url] })).rejects.toThrow("公网 HTTP/HTTPS");
+      expect(fetchMock).not.toHaveBeenCalled();
+    }
+  );
+
+  it("内部素材签名后仍指向 localhost 时拒绝，素材不存在时也拒绝", async () => {
+    storeMocks.keyFromUrl.mockReturnValue("ref.mp4");
+    storeMocks.signedUrl.mockResolvedValue("http://localhost:4111/blobs/ref.mp4");
+    await expect(
+      generateAndStoreVideo({ ...input, referenceVideoUrls: ["http://store/blobs/ref.mp4"] })
+    ).rejects.toThrow("ASSET_PUBLIC_BASE_URL");
+    storeMocks.head.mockResolvedValue(null);
+    await expect(
+      generateAndStoreVideo({ ...input, referenceVideoUrls: ["http://store/blobs/ref.mp4"] })
+    ).rejects.toThrow("不存在");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("互斥组合在读素材、查询缓存及提交任务前被拒绝", async () => {
+    await expect(
+      generateAndStoreVideo({
+        ...input,
+        lastFrameUrl: "http://store/last.png",
+        referenceAudioUrls: ["https://audio.example/ref.mp3"]
+      })
+    ).rejects.toThrow("互斥");
+    expect(prismaMocks.findUnique).not.toHaveBeenCalled();
+    expect(storeMocks.get).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
   it("提交 → 轮询到成功 → 下载转存到 assetStore → 记库，返回的是我们自己的 url", async () => {
     respondTo({ poll: [running, running, succeeded] });
 

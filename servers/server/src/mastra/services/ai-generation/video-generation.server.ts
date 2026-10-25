@@ -2,7 +2,7 @@
  * 视频生成核心：给一份参数，拿回一个落库、落存储的视频。和 `image-generation.server.ts` 同一个分层——
  * 只管「提交任务 → 轮询 → 转存 → 记库」，不管队列。
  *
- * 幂等同样靠 `promptHash`：同一份输入（提示词 + 模型 + 时长 / 分辨率 / 比例 + 首帧）命中旧记录直接返回。
+ * 幂等同样靠 `promptHash`：同一份输入（提示词 + 模型 + 输出参数 + 所有输入素材）命中旧记录直接返回。
  * 视频比图更慢更贵，所以**提交任务不重试**——提交请求可能已经被服务商收下只是响应丢了，
  * 重试就是重复计费；轮询和下载可以放心重试。
  */
@@ -15,6 +15,7 @@ import { formatErrorChain, retryWithBackoff } from "@/mastra/workflows/figma-to-
 import { imageSize } from "../ai-assets/shrink-image";
 import { prepareReference } from "./image-generation.server";
 import { mediaTypeOf } from "./image-provider";
+import { type GenerateVideoInput, VideoGenerationInputSchema } from "./video-input";
 import {
   buildSubmitRequest,
   getVideoConfig,
@@ -25,14 +26,7 @@ import {
   type VideoParams
 } from "./video-provider";
 
-export interface GenerateVideoInput {
-  prompt: string;
-  durationSec: number;
-  resolution: VideoParams["resolution"];
-  ratio: VideoParams["ratio"];
-  /** 首帧图 url，**必须是我们自己 assetStore 里的资源**（和生图的参考图同一条规矩）；不传就是文生视频 */
-  firstFrameUrl?: string;
-}
+export type { GenerateVideoInput } from "./video-input";
 
 export interface GeneratedVideoRecord {
   id: string;
@@ -44,6 +38,10 @@ export interface GeneratedVideoRecord {
   ratio: string;
   url: string;
   firstFrameUrl: string | null;
+  lastFrameUrl: string | null;
+  referenceImageUrls: string[];
+  referenceVideoUrls: string[];
+  referenceAudioUrls: string[];
   /** 命中已有记录时为 true */
   reused: boolean;
 }
@@ -57,7 +55,11 @@ export const computeVideoHash = (input: GenerateVideoInput, model: string): stri
         durationSec: input.durationSec,
         resolution: input.resolution,
         ratio: input.ratio,
-        firstFrameUrl: input.firstFrameUrl
+        firstFrameUrl: input.firstFrameUrl,
+        lastFrameUrl: input.lastFrameUrl,
+        referenceImageUrls: input.referenceImageUrls?.length ? input.referenceImageUrls : undefined,
+        referenceVideoUrls: input.referenceVideoUrls?.length ? input.referenceVideoUrls : undefined,
+        referenceAudioUrls: input.referenceAudioUrls?.length ? input.referenceAudioUrls : undefined
       })
     )
     .digest("hex");
@@ -84,24 +86,58 @@ const toDataUrl = (bytes: Buffer): string => `data:${mediaTypeOf(bytes)};base64,
  */
 const FIRST_FRAME_RATIO_RANGE = { min: 0.4, max: 2.5 } as const;
 
-async function readFirstFrame(firstFrameUrl: string): Promise<string> {
-  const key = assetStore().keyFromUrl(firstFrameUrl);
+async function readImage(imageUrl: string, label: string, isFrame = true): Promise<string> {
+  const key = assetStore().keyFromUrl(imageUrl);
   if (!key) {
-    throw new Error(`首帧图片不是内部 assetStore 的资源，无法解析：${firstFrameUrl}`);
+    throw new Error(`${label}图片不是内部 assetStore 的资源，无法解析：${imageUrl}`);
   }
   const original = await assetStore().get(key);
   const size = await imageSize(original);
-  if (size) {
+  if (isFrame && size) {
     const ratio = size.width / size.height;
     if (ratio < FIRST_FRAME_RATIO_RANGE.min || ratio > FIRST_FRAME_RATIO_RANGE.max) {
       throw new Error(
-        `首帧图片 ${size.width}×${size.height}（宽高比 ${ratio.toFixed(2)}）超出视频模型的限制` +
-          `（${FIRST_FRAME_RATIO_RANGE.min}~${FIRST_FRAME_RATIO_RANGE.max}）：太扁或太窄的图不能当首帧，换一张接近画幅的图，或改用文生视频`
+        `${label}图片 ${size.width}×${size.height}（宽高比 ${ratio.toFixed(2)}）超出视频模型的限制` +
+          `（${FIRST_FRAME_RATIO_RANGE.min}~${FIRST_FRAME_RATIO_RANGE.max}）：太扁或太窄的图不能当首尾帧，换一张接近画幅的图，或改用文生视频`
       );
     }
   }
   // 服务商拿不到我们的内网 / localhost 地址，只能把图直接放进请求；压成 JPEG 控制请求体大小
   return toDataUrl(await prepareReference(original));
+}
+
+/** 视频/音频由服务商拉取；内部资源生成临时签名，不把大文件编码进提交请求。 */
+async function referenceMediaUrl(sourceUrl: string): Promise<string> {
+  const store = assetStore();
+  const candidate = store.keyFromUrl(sourceUrl);
+  const source = new URL(sourceUrl);
+  const canonical = candidate ? new URL(store.publicUrl(candidate)) : undefined;
+  // keyFromUrl 只解析路径（MinIO 尤其宽松），还需匹配存储地址，避免把外部素材误认成本地对象。
+  const key = canonical?.origin === source.origin && canonical.pathname === source.pathname ? candidate : null;
+  if (key && !(await store.head(key))) {
+    throw new Error(`参考素材不存在：${sourceUrl}`);
+  }
+  const url = key ? await store.signedUrl(key, 3600) : sourceUrl;
+  const parsed = new URL(url);
+  const host = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  const privateHost =
+    host === "localhost" ||
+    host.endsWith(".localhost") ||
+    host.endsWith(".local") ||
+    /^(?:0|10|127)\./.test(host) ||
+    /^192\.168\./.test(host) ||
+    /^172\.(?:1[6-9]|2\d|3[01])\./.test(host) ||
+    /^169\.254\./.test(host) ||
+    host === "::" ||
+    host === "::1" ||
+    /^(?:fc|fd|fe[89ab])[\da-f]*:/.test(host) ||
+    host.startsWith("::ffff:");
+  if (!["http:", "https:"].includes(parsed.protocol) || privateHost || parsed.username || parsed.password) {
+    throw new Error(
+      "参考视频/音频必须提供服务商可直接下载的公网 HTTP/HTTPS URL；内部素材请配置 ASSET_PUBLIC_BASE_URL 或 MinIO 公网地址"
+    );
+  }
+  return url;
 }
 
 async function submitTask(config: VideoConfig, params: VideoParams): Promise<string> {
@@ -198,6 +234,7 @@ export async function generateAndStoreVideo(
   input: GenerateVideoInput,
   options: GenerateVideoOptions = {}
 ): Promise<GeneratedVideoRecord> {
+  input = VideoGenerationInputSchema.parse(input);
   const report = async (percent: number) => {
     await options.onProgress?.(percent);
   };
@@ -209,14 +246,24 @@ export async function generateAndStoreVideo(
     return { ...existing, reused: true };
   }
 
-  const firstFrame = input.firstFrameUrl ? await readFirstFrame(input.firstFrameUrl) : undefined;
+  const [firstFrame, lastFrame, referenceImages, referenceVideos, referenceAudios] = await Promise.all([
+    input.firstFrameUrl ? readImage(input.firstFrameUrl, "首帧") : undefined,
+    input.lastFrameUrl ? readImage(input.lastFrameUrl, "尾帧") : undefined,
+    Promise.all((input.referenceImageUrls ?? []).map((url) => readImage(url, "参考", false))),
+    Promise.all((input.referenceVideoUrls ?? []).map(referenceMediaUrl)),
+    Promise.all((input.referenceAudioUrls ?? []).map(referenceMediaUrl))
+  ]);
   await report(5);
   const taskId = await submitTask(config, {
     prompt: input.prompt,
     durationSec: input.durationSec,
     resolution: input.resolution,
     ratio: input.ratio,
-    firstFrame
+    firstFrame,
+    lastFrame,
+    referenceImages,
+    referenceVideos,
+    referenceAudios
   });
   await report(20);
 
@@ -238,6 +285,10 @@ export async function generateAndStoreVideo(
       ratio: input.ratio,
       url,
       firstFrameUrl: input.firstFrameUrl ?? null,
+      lastFrameUrl: input.lastFrameUrl ?? null,
+      referenceImageUrls: input.referenceImageUrls ?? [],
+      referenceVideoUrls: input.referenceVideoUrls ?? [],
+      referenceAudioUrls: input.referenceAudioUrls ?? [],
       taskId
     }
   });

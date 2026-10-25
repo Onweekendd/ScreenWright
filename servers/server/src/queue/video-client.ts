@@ -5,6 +5,7 @@ import {
   type GeneratedVideoRecord,
   type GenerateVideoInput
 } from "@/mastra/services/ai-generation/video-generation.server";
+import { VideoGenerationInputSchema } from "@/mastra/services/ai-generation/video-input";
 import { getVideoConfig } from "@/mastra/services/ai-generation/video-provider";
 
 import { getQueueMode, getQueuePrefix } from "./config";
@@ -74,6 +75,7 @@ export async function generateVideo(
   input: GenerateVideoInput,
   options: GenerateOptions = {}
 ): Promise<GeneratedVideoRecord> {
+  input = VideoGenerationInputSchema.parse(input);
   if (getQueueMode() === "inline") {
     return generateAndStoreVideo(input, { onProgress: options.onProgress });
   }

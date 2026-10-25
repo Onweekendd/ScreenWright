@@ -15,7 +15,7 @@ import {
   resolveVideoConfig,
   tasksEndpoint,
   taskUrl
-} from "@/mastra/services/video-provider";
+} from "@/mastra/services/ai-generation/video-provider";
 
 const config = { baseUrl: "https://llm-api.net/minimax/v2", apiKey: "k", modelId: "MiniMax-H3" };
 const params = { prompt: "云层流动", durationSec: 5, resolution: "768P", ratio: "16:9" } as const;
@@ -53,6 +53,47 @@ describe("resolveVideoConfig", () => {
 });
 
 describe("buildSubmitRequest", () => {
+  it.each([false, true])("尾帧和首尾帧模式（包含首帧=%s）", (withFirst) => {
+    const body = JSON.parse(
+      buildSubmitRequest(config, {
+        ...params,
+        lastFrame: "data:image/jpeg;base64,LAST",
+        ...(withFirst ? { firstFrame: "data:image/jpeg;base64,FIRST" } : {})
+      }).body
+    );
+    expect(body.content.map((item: { role?: string }) => item.role)).toEqual(
+      withFirst ? [undefined, "first_frame", "last_frame"] : [undefined, "last_frame"]
+    );
+    expect(body.ratio).toBe("adaptive");
+  });
+
+  it("图片、视频、音频参考组合编码为各自的类型和 role，保留指定画幅", () => {
+    const body = JSON.parse(
+      buildSubmitRequest(config, {
+        ...params,
+        referenceImages: ["data:image/jpeg;base64,REF"],
+        referenceVideos: ["http://117.72.206.37/videos/ref.mp4"],
+        referenceAudios: ["https://assets.example/ref.mp3"]
+      }).body
+    );
+    expect(body.content).toEqual([
+      { type: "text", text: params.prompt },
+      { type: "image_url", image_url: { url: "data:image/jpeg;base64,REF" }, role: "reference_image" },
+      { type: "video_url", video_url: { url: "http://117.72.206.37/videos/ref.mp4" }, role: "reference_video" },
+      { type: "audio_url", audio_url: { url: "https://assets.example/ref.mp3" }, role: "reference_audio" }
+    ]);
+    expect(body.ratio).toBe("16:9");
+  });
+
+  it.each(["referenceImages", "referenceVideos", "referenceAudios"] as const)("拒绝首尾帧与 %s 混用", (field) => {
+    for (const frame of ["firstFrame", "lastFrame"]) {
+      expect(() => buildSubmitRequest(config, { ...params, [frame]: "frame", [field]: ["ref"] })).toThrow("互斥");
+    }
+  });
+
+  it("拒绝仅空白的提示词", () => {
+    expect(() => buildSubmitRequest(config, { ...params, prompt: "  " })).toThrow("不能为空");
+  });
   it("文生视频：只有一段文本；时长、分辨率、比例用 JSON 字段，不拼在提示词后面", () => {
     const request = buildSubmitRequest(config, params);
     const body = JSON.parse(request.body);

@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as AiAssetLibrary from "@/mastra/services/ai-asset-library";
+import type * as AiAssetLibrary from "@/mastra/services/ai-assets/ai-asset-library";
 
 const mocks = vi.hoisted(() => ({ generateVideo: vi.fn(), addAiAsset: vi.fn() }));
 
 vi.mock("@/queue/video-client", () => ({ generateVideo: mocks.generateVideo }));
-vi.mock("@/mastra/services/ai-asset-library", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (importOriginal) => ({
   ...(await importOriginal<typeof AiAssetLibrary>()),
   addAiAsset: mocks.addAiAsset
 }));
@@ -39,6 +39,35 @@ beforeEach(() => {
 });
 
 describe("createVideoTool 的入参", () => {
+  it("支持尾帧、首尾帧和多模态参考，拒绝混用及空白提示词", () => {
+    const base = { screenId: "5_1", prompt: "p" };
+    expect(createVideoInputSchema.safeParse({ ...base, lastFrameImage: "http://store/last.png" }).success).toBe(true);
+    expect(
+      createVideoInputSchema.safeParse({
+        ...base,
+        firstFrameImage: "http://store/first.png",
+        lastFrameImage: "http://store/last.png"
+      }).success
+    ).toBe(true);
+    expect(
+      createVideoInputSchema.safeParse({
+        ...base,
+        referenceImages: ["http://store/ref.png"],
+        referenceVideos: ["http://public.example/ref.mp4"],
+        referenceAudios: ["http://public.example/ref.mp3"]
+      }).success
+    ).toBe(true);
+    for (const field of ["referenceImages", "referenceVideos", "referenceAudios"]) {
+      expect(
+        createVideoInputSchema.safeParse({
+          ...base,
+          lastFrameImage: "http://store/last.png",
+          [field]: ["http://public.example/ref"]
+        }).success
+      ).toBe(false);
+    }
+    expect(createVideoInputSchema.safeParse({ ...base, prompt: "  " }).success).toBe(false);
+  });
   const schema = createVideoInputSchema;
 
   it("时长、分辨率、画幅有默认值：5 秒 768P 16:9", () => {
@@ -59,6 +88,23 @@ describe("createVideoTool 的入参", () => {
 });
 
 describe("createVideoTool 的执行", () => {
+  it("多模态参考完整传给生成服务，并记录素材库引用", async () => {
+    await run({
+      referenceImages: ["http://store/ref.png"],
+      referenceVideos: ["http://public.example/ref.mp4"],
+      referenceAudios: ["http://public.example/ref.mp3"]
+    });
+    expect(mocks.generateVideo.mock.calls[0][0]).toMatchObject({
+      referenceImageUrls: ["http://store/ref.png"],
+      referenceVideoUrls: ["http://public.example/ref.mp4"],
+      referenceAudioUrls: ["http://public.example/ref.mp3"]
+    });
+    expect(mocks.addAiAsset.mock.calls[0][0].referenceUrls).toEqual([
+      "http://store/ref.png",
+      "http://public.example/ref.mp4",
+      "http://public.example/ref.mp3"
+    ]);
+  });
   it("把参数交给视频生成，首帧图带过去", async () => {
     await run({ firstFrameImage: "http://store/a.png" });
 

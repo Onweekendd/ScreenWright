@@ -2,16 +2,16 @@ import { createHash } from "node:crypto";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as AssetLibrary from "@/mastra/services/ai-asset-library";
+import type * as AssetLibrary from "@/mastra/services/ai-assets/ai-asset-library";
 
 const mocks = vi.hoisted(() => ({ call: vi.fn(), save: vi.fn(), fetch: vi.fn() }));
 vi.mock("@/mastra/mcp/media-assets/client", () => ({ callMediaAssetsTool: mocks.call }));
-vi.mock("@/mastra/services/ai-asset-library", async (original) => ({
+vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (original) => ({
   ...(await original<typeof AssetLibrary>()),
   addWorkspaceAsset: mocks.save
 }));
 
-import { importMediaAssets, searchMediaAssets } from "@/mastra/services/media-assets.server";
+import { importMediaAssets, searchMediaAssets } from "@/mastra/services/ai-assets/media-assets.server";
 
 const bytes = Buffer.from("downloaded-video");
 const asset = {

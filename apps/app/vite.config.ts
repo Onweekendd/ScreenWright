@@ -227,6 +227,8 @@ export default ({ mode }: { mode: string }) => {
     },
     // @ts-ignore
     test: {
+      minThreads: 1,
+      maxThreads: process.env.CI ? 2 : undefined,
       exclude: ["node_modules", "dist", "public"],
       environment: "jsdom",
       setupFiles: ["./src/tests/setup.ts"],

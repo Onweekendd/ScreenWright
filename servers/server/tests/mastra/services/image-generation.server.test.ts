@@ -37,7 +37,7 @@ import {
   generateEffectImages,
   imagesEndpoint,
   prepareReference
-} from "@/mastra/services/image-generation.server";
+} from "@/mastra/services/ai-generation/image-generation.server";
 
 let fetchMock: ReturnType<typeof spyFetch>;
 const spyFetch = () => vi.spyOn(globalThis, "fetch");

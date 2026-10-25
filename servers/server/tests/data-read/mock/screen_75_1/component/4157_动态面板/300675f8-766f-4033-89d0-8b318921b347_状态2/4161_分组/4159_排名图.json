@@ -82,7 +82,7 @@
     "width": 600,
     "height": 300,
     "name": "echart-rank",
-    "prop": "echartrank"
+    "prop": "echartstripBar"
   },
   "option": {
     "refresh": true,

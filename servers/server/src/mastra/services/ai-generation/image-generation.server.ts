@@ -5,8 +5,8 @@
  * 命中直接返回旧记录，不重新调用生图模型。**调用方每次生成都必须传显式 seed**——
  * 不落到这一层来随机，否则同一份 prompt 每次都会因为 seed 不同而 miss 掉幂等。
  *
- * 这一层之上是 D9 的 JobRunner handler（`type: "image.generate"`）：重活、会失败、
- * 要重试的部分交给它；这一层本身保持同步可测，不依赖 JobRunner 也能直接调用验证。
+ * 上层由 BullMQ image-worker 或 inline producer 调用，负责排队与调度；
+ * 本层可以独立调用和测试。
  */
 import { createHash } from "node:crypto";
 
@@ -15,8 +15,8 @@ import { getModelConfigSync } from "@/mastra/provider/model-registry";
 import { prismaClient } from "@/mastra/storage/prisma";
 import { formatErrorChain, retryWithBackoff } from "@/mastra/workflows/figma-to-bi/utils/async";
 
-import { buildImageRequest, extractImage, imagesEndpoint, mediaTypeOf } from "./image-provider";
 import { imageSize, shrinkToJpeg } from "../ai-assets/shrink-image";
+import { buildImageRequest, extractImage, imagesEndpoint, mediaTypeOf } from "./image-provider";
 
 export { imagesEndpoint };
 

@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/mastra/services/chat-image.server", () => ({ readStoredImage: vi.fn() }));
+vi.mock("@/mastra/services/ai-assets/chat-image.server", () => ({ readStoredImage: vi.fn() }));
 
 import { type ImageReader, inlineImages, MAX_TOOL_IMAGES, TOOL_IMAGES_FIELD } from "@/mastra/provider/image-middleware";
 

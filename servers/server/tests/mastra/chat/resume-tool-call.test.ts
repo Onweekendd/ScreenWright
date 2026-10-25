@@ -20,7 +20,7 @@ vi.mock("@/mastra/storage/storage", () => ({
   memory: { getThreadById: mocks.getThreadById }
 }));
 vi.mock("@/mastra/index", () => ({ mastra: {} }));
-vi.mock("@/mastra/services/version-history", () => ({
+vi.mock("@/mastra/services/version/version-history", () => ({
   commitScreenSnapshot: vi.fn().mockResolvedValue(undefined)
 }));
 

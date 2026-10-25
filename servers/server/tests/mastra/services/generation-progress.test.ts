@@ -8,7 +8,7 @@ import {
   stageOf,
   startProgress,
   trackGeneration
-} from "@/mastra/services/generation-progress";
+} from "@/mastra/services/ai-generation/generation-progress";
 
 beforeEach(resetProgressForTest);
 

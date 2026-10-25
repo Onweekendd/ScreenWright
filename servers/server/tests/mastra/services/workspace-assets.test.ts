@@ -15,9 +15,15 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/storage", () => ({
   assetStore: () => ({ head: mocks.head, get: mocks.get, keyFromUrl: mocks.keyFromUrl })
 }));
-vi.mock("@/mastra/services/ai-asset-library", () => ({ addWorkspaceAsset: mocks.addWorkspaceAsset }));
+vi.mock("@/mastra/services/ai-assets/ai-asset-library", () => ({ addWorkspaceAsset: mocks.addWorkspaceAsset }));
 
-import { MAX_ASSET_BYTES, pullAsset, pushAsset, safeFileName, screenKeyOf } from "@/mastra/services/workspace-assets";
+import {
+  MAX_ASSET_BYTES,
+  pullAsset,
+  pushAsset,
+  safeFileName,
+  screenKeyOf
+} from "@/mastra/services/ai-assets/workspace-assets";
 
 const SCREEN = "9_1";
 const ASSETS = "screen_9_1/assets";

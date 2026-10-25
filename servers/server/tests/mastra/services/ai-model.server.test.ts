@@ -18,7 +18,7 @@ vi.mock("@/mastra/storage/prisma", () => ({
   }
 }));
 
-import { listAiModels, testAiModel, updateAiModel } from "@/mastra/services/ai-model.server";
+import { listAiModels, testAiModel, updateAiModel } from "@/mastra/services/ai-generation/ai-model.server";
 
 const row = (role: string, over: Record<string, unknown> = {}) => ({
   role,

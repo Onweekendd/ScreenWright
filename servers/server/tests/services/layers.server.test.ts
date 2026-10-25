@@ -23,7 +23,7 @@ vi.mock("@/mastra/storage/prisma", () => ({
   }
 }));
 
-import { copyLayer, deleteLayer, getLayer, saveLayer, updateLayer } from "@/mastra/services/layers.server";
+import { copyLayer, deleteLayer, getLayer, saveLayer, updateLayer } from "@/mastra/services/screen/layers.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 const layerRow = (over: Record<string, unknown> = {}) => ({
@@ -62,7 +62,11 @@ describe("saveLayer", () => {
   });
 
   it("非动态面板组件：注入 id 到 config，并加入版本 config 数组（镜像到大屏）", async () => {
-    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({ id: 9001, config: [1, 2], versionCode: "1" } as never);
+    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({
+      id: 9001,
+      config: [1, 2],
+      versionCode: "1"
+    } as never);
     vi.mocked(prismaClient.module.findFirst).mockResolvedValue({ javaScript: '{"name":"柱状图"}' } as never);
     vi.mocked(prismaClient.layers.create).mockResolvedValue(layerRow() as never);
     vi.mocked(prismaClient.layers.update).mockResolvedValue(layerRow({ config: { name: "柱状图", id: 100 } }) as never);
@@ -81,7 +85,11 @@ describe("saveLayer", () => {
   });
 
   it("动态面板内组件（status=true）：不进 config 数组", async () => {
-    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({ id: 9001, config: [], versionCode: "1" } as never);
+    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({
+      id: 9001,
+      config: [],
+      versionCode: "1"
+    } as never);
     vi.mocked(prismaClient.module.findFirst).mockResolvedValue(null);
     vi.mocked(prismaClient.layers.create).mockResolvedValue(layerRow() as never);
     vi.mocked(prismaClient.layers.update).mockResolvedValue(layerRow() as never);
@@ -121,7 +129,11 @@ describe("getLayer", () => {
 describe("deleteLayer", () => {
   it("删行并从版本 config 移除（镜像到大屏）", async () => {
     vi.mocked(prismaClient.layers.findUnique).mockResolvedValue(layerRow({ largeId: 9001, versionCode: "1" }) as never);
-    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({ id: 9001, config: [100, 200], versionCode: "1" } as never);
+    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({
+      id: 9001,
+      config: [100, 200],
+      versionCode: "1"
+    } as never);
     mockVersionConfig([100, 200]);
     const res = await deleteLayer(100);
     expect(res.success).toBe(true);
@@ -147,7 +159,11 @@ describe("copyLayer", () => {
     vi.mocked(prismaClient.layers.update).mockResolvedValue(
       layerRow({ id: 101, config: { name: "A", id: 101 } }) as never
     );
-    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({ id: 9001, config: [100], versionCode: "1" } as never);
+    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({
+      id: 9001,
+      config: [100],
+      versionCode: "1"
+    } as never);
     mockVersionConfig([100]);
 
     const res = await copyLayer(100, 1, false);

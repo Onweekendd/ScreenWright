@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as WorkspaceAssets from "@/mastra/services/workspace-assets";
+import type * as WorkspaceAssets from "@/mastra/services/ai-assets/workspace-assets";
 
 const mocks = vi.hoisted(() => ({ pullAsset: vi.fn(), pushAsset: vi.fn() }));
 
-vi.mock("@/mastra/services/workspace-assets", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-assets/workspace-assets", async (importOriginal) => ({
   ...(await importOriginal<typeof WorkspaceAssets>()),
   pullAsset: mocks.pullAsset,
   pushAsset: mocks.pushAsset

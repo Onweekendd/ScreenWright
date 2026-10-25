@@ -30,7 +30,7 @@ describe("imageJobId", () => {
   });
 
   it("id 与生图服务落库用的 promptHash 一致，两边的幂等口径是同一个", async () => {
-    const { computePromptHash } = await import("@/mastra/services/image-generation.server");
+    const { computePromptHash } = await import("@/mastra/services/ai-generation/image-generation.server");
     expect(imageJobId(base, "m")).toBe(computePromptHash(base.prompt, base.seed, "m", undefined));
   });
 });

@@ -1,6 +1,7 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "globalEnv": ["CI"],
   "tasks": {
     "build": {
       "dependsOn": ["test"],
@@ -81,6 +82,7 @@
     },
     "test": {
       "dependsOn": ["check-types"],
+      "env": ["TEST_REDIS_URL"],
       "cache": true
     },
     "mastra:check-types": {

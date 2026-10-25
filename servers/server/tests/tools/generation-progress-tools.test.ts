@@ -1,17 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as AiAssetLibrary from "@/mastra/services/ai-asset-library";
+import type * as AiAssetLibrary from "@/mastra/services/ai-assets/ai-asset-library";
 
 const mocks = vi.hoisted(() => ({ generateImage: vi.fn(), generateVideo: vi.fn(), addAiAsset: vi.fn() }));
 
 vi.mock("@/queue/image-client", () => ({ generateImage: mocks.generateImage }));
 vi.mock("@/queue/video-client", () => ({ generateVideo: mocks.generateVideo }));
-vi.mock("@/mastra/services/ai-asset-library", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (importOriginal) => ({
   ...(await importOriginal<typeof AiAssetLibrary>()),
   addAiAsset: mocks.addAiAsset
 }));
 
-import { getGenerationProgress, resetProgressForTest } from "@/mastra/services/generation-progress";
+import { getGenerationProgress, resetProgressForTest } from "@/mastra/services/ai-generation/generation-progress";
 import { createImageTool } from "@/mastra/tools/create-image";
 import { createVideoTool } from "@/mastra/tools/create-video";
 

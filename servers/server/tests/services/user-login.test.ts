@@ -15,7 +15,7 @@ import { hashPassword } from "@/lib/auth/password";
 import { verifyToken } from "@/lib/auth/token";
 import { fail } from "@/lib/http/envelope";
 import { userRouter } from "@/mastra/routes/user.route";
-import { login } from "@/mastra/services/user.server";
+import { login } from "@/mastra/services/admin/user.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 const findUnique = vi.mocked(prismaClient.biUser.findUnique);

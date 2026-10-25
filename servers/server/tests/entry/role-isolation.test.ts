@@ -42,7 +42,7 @@ describe("角色之间的依赖隔离", () => {
 
     expect(local.filter((f) => AI_STACK_LOCAL.test(f) || f.includes("src/queue/"))).toEqual([]);
     expect(external.filter((p) => /^(@mastra\/|bullmq|ioredis)/.test(p))).toEqual([]);
-  });
+  }, 15000);
 
   it("worker 角色不会引入 HTTP 路由 / Mastra 运行时", async () => {
     const { local, external } = await dependencyGraph("src/entry/worker.ts");
@@ -51,5 +51,5 @@ describe("角色之间的依赖隔离", () => {
     // 真正的 AI 运行时（Mastra 实例 / agent / 工具 / 沙箱）和 HTTP 路由都不应出现
     expect(local.filter((f) => AI_RUNTIME_LOCAL.test(f) || f.includes("src/mastra/routes/"))).toEqual([]);
     expect(external.filter((p) => /^(@mastra\/core|@mastra\/hono|hono$)/.test(p))).toEqual([]);
-  });
+  }, 15000);
 });

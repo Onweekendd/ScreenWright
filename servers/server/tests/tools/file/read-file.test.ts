@@ -16,7 +16,7 @@ vi.mock("@/lib/storage", () => ({
 }));
 
 import { inlineImages, TOOL_IMAGES_FIELD } from "@/mastra/provider/image-middleware";
-import { readStoredImage } from "@/mastra/services/chat-image.server";
+import { readStoredImage } from "@/mastra/services/ai-assets/chat-image.server";
 import { readFileTool } from "@/mastra/tools/file/read-file";
 import { readFileState } from "@/mastra/tools/file/state";
 

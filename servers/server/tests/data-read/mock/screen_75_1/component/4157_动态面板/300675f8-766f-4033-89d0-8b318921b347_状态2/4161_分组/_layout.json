@@ -37,7 +37,7 @@
     {
       "id": 4159,
       "type": "排名图",
-      "prop": "echartrank",
+      "prop": "echartstripBar",
       "name": "排名图",
       "zIndex": "a1",
       "rectPx": {

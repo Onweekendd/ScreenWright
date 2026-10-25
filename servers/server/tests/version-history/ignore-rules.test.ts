@@ -16,7 +16,7 @@ import {
   getRollbackPreview,
   listNodes,
   rollback
-} from "@/mastra/services/version-history";
+} from "@/mastra/services/version/version-history";
 
 const SCREEN_ID = "900";
 const DIR_KEY = `${SCREEN_ID}_1`;

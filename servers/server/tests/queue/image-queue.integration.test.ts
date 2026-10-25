@@ -7,7 +7,7 @@
 import IORedis from "ioredis";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as ImageGenerationModule from "@/mastra/services/image-generation.server";
+import type * as ImageGenerationModule from "@/mastra/services/ai-generation/image-generation.server";
 import type * as ImageClientModule from "@/queue/image-client";
 import type * as ImageJobsModule from "@/queue/image-jobs";
 
@@ -19,7 +19,7 @@ vi.mock("@/mastra/provider/model-registry", () => ({
   warmModelConfigs: vi.fn(),
   getModelConfigSync: () => ({ modelId: "test-model" })
 }));
-vi.mock("@/mastra/services/image-generation.server", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-generation/image-generation.server", async (importOriginal) => ({
   ...(await importOriginal<typeof ImageGenerationModule>()),
   generateAndStoreImage: mocks.generateAndStoreImage
 }));

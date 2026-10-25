@@ -13,7 +13,7 @@ import path from "node:path";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import type { SwaggerIndex } from "@/mastra/services/swagger-registry";
+import type { SwaggerIndex } from "@/mastra/services/integrations/swagger-registry";
 
 import {
   methodsOf,

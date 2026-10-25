@@ -1,5 +1,5 @@
 import { closeMediaAssetsMcp, getMediaAssetsTools } from "../src/mastra/mcp/media-assets/client";
-import { getMediaAssetsTask } from "../src/mastra/services/media-assets.server";
+import { getMediaAssetsTask } from "../src/mastra/services/ai-assets/media-assets.server";
 
 try {
   const tools = await getMediaAssetsTools();

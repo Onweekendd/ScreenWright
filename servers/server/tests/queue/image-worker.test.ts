@@ -9,7 +9,7 @@ vi.mock("@/mastra/provider/model-registry", () => ({
   warmModelConfigs: mocks.warmModelConfigs,
   getModelConfigSync: () => ({ modelId: "m" })
 }));
-vi.mock("@/mastra/services/image-generation.server", () => ({
+vi.mock("@/mastra/services/ai-generation/image-generation.server", () => ({
   generateAndStoreImage: mocks.generateAndStoreImage,
   computePromptHash: () => "hash"
 }));

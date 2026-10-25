@@ -7,7 +7,7 @@ import {
   imagesEndpoint,
   resolveGptImageSize,
   resolveImageApiStyle
-} from "@/mastra/services/image-provider";
+} from "@/mastra/services/ai-generation/image-provider";
 
 const input = { prompt: "画一张大屏背景", seed: 7, width: 1920, height: 1080 };
 const args = { baseUrl: "https://llm-api.net/v1", apiKey: "k", modelId: "gpt-image-2", input };

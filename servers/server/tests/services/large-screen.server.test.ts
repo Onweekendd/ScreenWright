@@ -51,7 +51,7 @@ import {
   openScreen,
   quoteInfo,
   updateScreen
-} from "@/mastra/services/large-screen.server";
+} from "@/mastra/services/screen/large-screen.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 /** 构造一条 LargeScreen 行；config/detail 为对象，用于验证读取时的字符串化 */
@@ -261,10 +261,14 @@ describe("openScreen / openCheck", () => {
   });
 
   it("分组成员即使残留在大屏 config 顶层，也只通过 children 回填一次（不重复渲染）", async () => {
-    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue(
-      { ...screenRow(), id: 1, config: [43, 2, 40] } as never
+    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({
+      ...screenRow(),
+      id: 1,
+      config: [43, 2, 40]
+    } as never);
+    vi.mocked(prismaClient.largeScreenVersion.findUnique).mockResolvedValue(
+      versionRow({ config: [43, 2, 40] }) as never
     );
-    vi.mocked(prismaClient.largeScreenVersion.findUnique).mockResolvedValue(versionRow({ config: [43, 2, 40] }) as never);
     vi.mocked(prismaClient.layers.findMany).mockResolvedValue([
       { id: 2, moduleId: 1, config: { id: 2, name: "柱状图" } },
       { id: 40, moduleId: 75, config: { id: 40, name: "分组", children: [43, 2] } },

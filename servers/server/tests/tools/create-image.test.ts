@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as AiAssetLibrary from "@/mastra/services/ai-asset-library";
+import type * as AiAssetLibrary from "@/mastra/services/ai-assets/ai-asset-library";
 
 const mocks = vi.hoisted(() => ({ generateImage: vi.fn(), addAiAsset: vi.fn() }));
 
 vi.mock("@/queue/image-client", () => ({ generateImage: mocks.generateImage }));
-vi.mock("@/mastra/services/ai-asset-library", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (importOriginal) => ({
   ...(await importOriginal<typeof AiAssetLibrary>()),
   addAiAsset: mocks.addAiAsset
 }));

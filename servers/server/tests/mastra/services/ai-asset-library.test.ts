@@ -13,7 +13,7 @@ vi.mock("@/mastra/storage/prisma", () => ({
   prismaClient: { largeScreen: db.screen, minioGroup: db.group, minioFile: db.file }
 }));
 
-import { addAiAsset, addWorkspaceAsset, AI_GROUP_NAME, largeIdOf } from "@/mastra/services/ai-asset-library";
+import { addAiAsset, addWorkspaceAsset, AI_GROUP_NAME, largeIdOf } from "@/mastra/services/ai-assets/ai-asset-library";
 
 const input = { largeId: 5, name: "卡片底板", url: "http://store/generated-images/abc.png", generatedImageId: "img-1" };
 

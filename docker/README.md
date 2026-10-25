@@ -42,10 +42,12 @@ docker compose logs --tail 100 api ai worker
 
 ### 联网图片 / 视频素材搜索 MCP
 
-素材 MCP 由 `ai` 容器按需连接，使用 SSE 和 Bearer Token。当前服务器的 Answer SSE 路由是 `http://127.0.0.1:8080/answer/api/v1/mcp/sse`。在 AI 容器中应通过 Docker 主机网关访问，因此写入服务器 `/root/funbi/.env` 的 URL 为：
+素材搜索连接的是独立的 Answer Media Agent MCP 服务，使用 `/mcp` Streamable HTTP 接口。Answer 网站的 `http://127.0.0.1:8080/answer/api/v1/mcp/sse` 是另一个问答 MCP，提供问题、回答、评论和标签等工具，不包含图片 / 视频素材搜索，不能填在这里。
+
+将 Answer Media Agent 的地址和它签发的 Bearer Token 写入服务器 `/root/funbi/.env`。若素材服务与 FunBI AI 容器处于同一 Docker 网络，地址可用服务名：
 
 ```dotenv
-MEDIA_ASSETS_MCP_URL=http://host.docker.internal:8080/answer/api/v1/mcp/sse
+MEDIA_ASSETS_MCP_URL=http://<素材服务名>:8766/mcp
 MEDIA_ASSETS_MCP_TOKEN=<该MCP服务签发的Token>
 ```
 
@@ -58,7 +60,7 @@ docker compose up -d --no-deps --force-recreate ai
 docker compose logs --tail 50 ai
 ```
 
-Compose 会将 `host.docker.internal` 映射到 Linux 宿主机，避免 `127.0.0.1` 指向 AI 容器自身。不要为了连接而将另一个带 Token 的 MCP 端口直接公开到公网。
+在服务器上检查过：FunBI 正常运行，Answer 网站也正常；但素材服务的 `8766` 端口当前没有监听。`127.0.0.1` 在容器里指向 AI 容器自身，因此先要在服务器启动 Answer Media Agent，并让 AI 容器通过同一 Docker 网络或受限私有网络访问它。不要为了连接而把带 Token 的素材 MCP 端口直接公开到公网。
 
 # GitHub CI/CD
 

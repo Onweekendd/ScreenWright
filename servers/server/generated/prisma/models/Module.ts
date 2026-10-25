@@ -1359,6 +1359,7 @@ export type ModuleCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many Modules.
    */
   data: Prisma.ModuleCreateManyInput | Prisma.ModuleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1377,6 +1378,7 @@ export type ModuleCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Modules.
    */
   data: Prisma.ModuleCreateManyInput | Prisma.ModuleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

@@ -1,5 +1,5 @@
 <template>
-  <buildEditRule ref="buildEditRuleRef">
+  <buildInfiniteCanvas :persist-key="cameraKey">
     <div
       id="go-chart-edit-content"
       :style="cEditContent"
@@ -16,16 +16,15 @@
       <!-- 选择框 -->
       <EditSelect />
     </div>
-  </buildEditRule>
+  </buildInfiniteCanvas>
 </template>
 <script setup lang="ts">
-import type { ComponentPublicInstance } from "vue";
-import { computed, nextTick, ref } from "vue";
-import { onMounted } from "vue";
+import { computed } from "vue";
 
 import { type ComponentType, EditCanvasTypeEnum } from "@/views/build/components/buildRender/type";
+import { useLargeScreenInfo } from "@/views/build/useLargeScreenInfo";
 
-import buildEditRule from "../buildEditRule/index.vue";
+import buildInfiniteCanvas from "../buildInfiniteCanvas/index.vue";
 import AlignmentLines from "./components/AlignmentLines.vue";
 import EditSelect from "./EditSelect.vue";
 import GridRect from "./GridRect.vue";
@@ -40,8 +39,13 @@ const { dragHandle, dragoverHandle } = useDrag();
 const { componentList, editConfig, isBuild, editCanvas, targetChart } = useEditStore();
 const { initDirection } = useDirection();
 const { syncComponentData } = useAlignmentWasm();
+const { navInfo } = useLargeScreenInfo();
 
-const buildEditRuleRef = ref<ComponentPublicInstance<InstanceType<typeof buildEditRule>> | null>(null);
+// 画布相机（平移 + 缩放）按大屏和版本记忆；大屏还没加载出来（id 无效）时不记
+const cameraKey = computed(() => {
+  const id = Number(navInfo.value.id);
+  return id > 0 ? `${id}_${navInfo.value.versionCode ?? ""}` : undefined;
+});
 
 const isDrag = computed(() => editCanvas.value[EditCanvasTypeEnum.IS_DRAG]);
 
@@ -51,10 +55,7 @@ const cEditContent = computed(() => {
   return {
     width: `${Number(editConfig.value.width)}px`,
     height: `${Number(editConfig.value.height)}px`,
-    overflow: "visible",
-    boxShadow: "0 8px 10px rgb(30 30 30 / 12%)",
-    transform: `scale(${editConfig.value.scale})`,
-    flexShrink: 0
+    overflow: "visible"
   };
 });
 
@@ -68,13 +69,6 @@ const initRender = (newVal: ComponentType[]) => {
     });
   }
 };
-
-onMounted(async () => {
-  await nextTick();
-  if (buildEditRuleRef.value) {
-    buildEditRuleRef.value.resizeCanvasAndRuler(Number(editConfig.value.width), Number(editConfig.value.height));
-  }
-});
 
 defineExpose({
   initRender,

@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model AiModel
- * AI 模型配置：只 3 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
+ * AI 模型配置：5 个角色，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
  * 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
  */
 export type AiModelModel = runtime.Types.Result.DefaultSelection<Prisma.$AiModelPayload>
@@ -1106,6 +1106,7 @@ export type AiModelCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many AiModels.
    */
   data: Prisma.AiModelCreateManyInput | Prisma.AiModelCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1124,6 +1125,7 @@ export type AiModelCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many AiModels.
    */
   data: Prisma.AiModelCreateManyInput | Prisma.AiModelCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

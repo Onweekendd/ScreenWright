@@ -1238,6 +1238,7 @@ export type EvalRunCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many EvalRuns.
    */
   data: Prisma.EvalRunCreateManyInput | Prisma.EvalRunCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1256,6 +1257,7 @@ export type EvalRunCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many EvalRuns.
    */
   data: Prisma.EvalRunCreateManyInput | Prisma.EvalRunCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

@@ -5,6 +5,7 @@ import { get, merge } from "lodash-es";
 import type { UpdateHistoryTypeEnum } from "@/views/build/components/buildRender/hooks/useAction";
 import { useCacheData } from "@/views/build/useCacheData";
 
+import { getApiBaseUrl } from "./apiBase";
 import { getToken } from "./auth";
 import { handleNotAuthor } from "./handleNotAuthor";
 import { removeSurroundingQuotes } from "./utils";
@@ -104,7 +105,7 @@ function createServiceWithCache() {
         console.error("处理缓存错误时发生异常:", e);
         // 如果不是缓存错误，继续处理其他错误
         const status = get(error, "response.status");
-        // 开源单机版无登录：不再对 401 做登出/刷新
+        // 401 → 登出跳登录页；403 → 无权限弹窗
         handleNotAuthor(status);
         return Promise.reject(error);
       }
@@ -128,10 +129,11 @@ function createRequestWithCache(service: AxiosInstance, resolveBaseURL: () => st
     const isFree = freeAPI.findIndex((url) => config.url?.indexOf(url) !== -1) !== -1;
     const versionCode = getLocationSearch() || getVersionCode() || "";
     config.headers = config.headers || {};
-    if (token && !isFree) {
+    // 令牌有就带：后端按路径决定哪些接口允许匿名，前端 freeAPI 清单只用来决定是否附带 Version-Code
+    if (token) {
       config.headers["X-Access-Token"] = token;
     }
-    // Version-Code 与 token 解耦：开源去登录版没 token，但大屏多版本读取仍要靠这个头
+    // Version-Code 与 token 解耦：匿名访问分享预览时没 token，但大屏多版本读取仍要靠这个头
     if (!isFree && versionCode) {
       config.headers["Version-Code"] = versionCode === "undefined" ? "1" : removeSurroundingQuotes(versionCode);
     }
@@ -159,7 +161,4 @@ export const requestWithCache = createRequestWithCache(serviceWithCache, () => i
  * 供 saveLayersAgg / updateLayersAgg / delLayersAgg / copyLayers / updateLargeScreen /
  * getScreenObj 等原先走 requestWithCache 的回落接口使用。
  */
-export const serverRequestWithCache = createRequestWithCache(
-  createServiceWithCache(),
-  () => import.meta.env.VITE_FUNAI_API_URL ?? "http://localhost:4111"
-);
+export const serverRequestWithCache = createRequestWithCache(createServiceWithCache(), getApiBaseUrl);

@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { getScreenVersionKeyFromPath } from "@/mastra/services/screen-workspace";
+import { getScreenVersionKeyFromPath } from "@/mastra/services/screen/screen-workspace";
 
 /**
  * 「这是哪一类文件」的判定，全是路径上的纯函数（不碰磁盘、不看内容）。

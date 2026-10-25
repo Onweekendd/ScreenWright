@@ -1,12 +1,16 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import { ElLoading } from "element-plus";
 
+import { getApiBaseUrl } from "./apiBase";
 import { getToken } from "./auth";
+import { handleUnauthorized } from "./session";
 import { getVersionCode } from "./version";
 
 let loadingInstance: any = null;
 
-// 免鉴权接口（对齐 service.ts 的 freeAPI：登录/注册/公开大屏等不带 token）
+// 免鉴权接口（对齐 service.ts 的 freeAPI：登录/注册/公开大屏等）。
+// 仅用于判断是否附带 Version-Code；令牌只要本地有就一律带上——后端按路径决定哪些接口允许匿名，
+// 而不是前端靠这份清单（有些「免鉴权」的数据查询接口在 B/S 下同样需要身份）。
 const freeAPI = [
   "/user/login",
   "/user/register",
@@ -33,7 +37,10 @@ function createFunaiService(): AxiosInstance {
       if (loadingInstance) {
         loadingInstance.close();
       }
-      // 开源单机版无登录：不再对 401 做登出/刷新
+      // 令牌过期 / 失效 → 登出跳登录页；登录接口自身的 401（口令错误）交给登录页提示，不能在这里跳转
+      if (error?.response?.status === 401 && !String(error.config?.url ?? "").includes("/user/login")) {
+        handleUnauthorized();
+      }
       return Promise.reject(error);
     }
   );
@@ -65,10 +72,10 @@ export function serverRequest<T>(
   const token = getToken();
   const isFree = freeAPI.findIndex((url) => config.url?.indexOf(url) !== -1) !== -1;
   config.headers = config.headers || {};
-  if (token && !isFree) {
+  if (token) {
     config.headers["X-Access-Token"] = token;
   }
-  // Version-Code 与 token 解耦：开源去登录版没 token，但大屏多版本读写仍要靠这个头
+  // Version-Code 与 token 解耦：匿名访问分享预览时没 token，但大屏多版本读写仍要靠这个头
   if (!isFree) {
     const versionCode = config.versionCode || getVersionCode() || "";
     if (versionCode) {
@@ -76,7 +83,7 @@ export function serverRequest<T>(
     }
   }
   return funaiAxios({
-    baseURL: process.env.VITE_FUNAI_API_URL ?? "http://localhost:4111",
+    baseURL: getApiBaseUrl(),
     timeout: config.timeout === 0 ? 0 : config.timeOut || 1000 * 60,
     data: {},
     ...config,

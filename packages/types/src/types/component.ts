@@ -141,8 +141,8 @@ export interface StandardComponentType<
   /** 是否锁定 */
   isLock?: boolean;
 
-  /** Z轴层级 */
-  zIndex: number;
+  /** Z轴层级：字符串排序键（fractional indexing），越大越靠上，只能按字符串比较 */
+  zIndex: string;
 
   /** 是否显示 */
   display: boolean;

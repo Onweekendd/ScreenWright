@@ -23,7 +23,7 @@ import {
   listVersion,
   publishVersion,
   updateVersion
-} from "@/mastra/services/version.server";
+} from "@/mastra/services/version/version.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 const now = new Date("2025-01-01T00:00:00.000Z");
@@ -59,9 +59,8 @@ beforeEach(() => {
   vi.mocked(prismaClient.largeScreen.update).mockResolvedValue(screen() as never);
   vi.mocked(prismaClient.largeScreenVersion.findUnique).mockResolvedValue(versionRow() as never);
   vi.mocked(prismaClient.largeScreenVersion.findMany).mockResolvedValue([versionRow()] as never);
-  vi.mocked(prismaClient.largeScreenVersion.create).mockImplementation(
-    (({ data }: { data: Record<string, unknown> }) => Promise.resolve(versionRow(data))) as never
-  );
+  vi.mocked(prismaClient.largeScreenVersion.create).mockImplementation((({ data }: { data: Record<string, unknown> }) =>
+    Promise.resolve(versionRow(data))) as never);
   vi.mocked(prismaClient.largeScreenVersion.update).mockResolvedValue(versionRow() as never);
   vi.mocked(prismaClient.largeScreenVersion.deleteMany).mockResolvedValue({ count: 1 } as never);
   vi.mocked(prismaClient.layers.deleteMany).mockResolvedValue({ count: 0 } as never);
@@ -168,9 +167,7 @@ describe("version.server（多版本）", () => {
   });
 
   it("publishVersion 置当前版本 status=true", async () => {
-    vi.mocked(prismaClient.largeScreenVersion.findUnique).mockResolvedValue(
-      versionRow({ status: true }) as never
-    );
+    vi.mocked(prismaClient.largeScreenVersion.findUnique).mockResolvedValue(versionRow({ status: true }) as never);
     const res = await publishVersion(1, "onweekend", { path: "/p" });
     expect(res.result?.status).toBe(true);
     expect(vi.mocked(prismaClient.largeScreenVersion.update).mock.calls[0][0].data).toMatchObject({ status: true });

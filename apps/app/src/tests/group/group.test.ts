@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { initDataFilterPersistence } from "@screenwright/composables";
+import { compareZIndex } from "@screenwright/core";
 import dayjs from "dayjs";
 
 import { getLargeScreenInfo } from "@/api/build";
@@ -227,7 +228,7 @@ describe("useTree - 分组功能测试", () => {
       expect(groupItem!.children, "分组项应该包含2个子组件").toHaveLength(2);
 
       // 按 zIndex 从大到小排序来验证，不依赖选中顺序
-      const sortedChildren = groupItem!.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedChildren = groupItem!.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const sortedIds = sortedChildren.map((c) => c.id);
       expect(sortedIds).toContain(echart1.id);
       expect(sortedIds).toContain(echart2.id);
@@ -322,7 +323,7 @@ describe("useTree - 分组功能测试", () => {
       expect(groupItem.children, "分组项的子组件应该包含2个组件").toHaveLength(2);
 
       // 按 zIndex 从大到小排序验证
-      const sortedChildren2 = groupItem.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedChildren2 = groupItem.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const childrenIds = sortedChildren2.map((c) => c.id);
       expect(childrenIds).toContain(echart1.id);
       expect(childrenIds).toContain(echart2.id);
@@ -349,7 +350,7 @@ describe("useTree - 分组功能测试", () => {
       // Assert - 步骤1
       expect(componentList.value.length, "步骤1后：组件列表应该包含2个组件（分组+echart3）").toBe(4);
       expect(groupItem.children, "步骤1后：分组应该包含2个子组件").toHaveLength(2);
-      const sorted1 = groupItem.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sorted1 = groupItem.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const ids1 = sorted1.map((c) => c.id);
       expect(ids1).toContain(echart1.id);
       expect(ids1).toContain(echart2.id);
@@ -387,7 +388,7 @@ describe("useTree - 分组功能测试", () => {
       expect(componentList.value[1], "步骤3后：第二个组件应该是echart3").toEqual(echart3);
       expect(echart3.parent, "步骤3后：echart3的父组件应该是undefined").toBeUndefined();
       expect(groupItem.children, "步骤3后：分组应该只包含2个子组件").toHaveLength(2);
-      const sortedDragOut = groupItem.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedDragOut = groupItem.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsDragOut = sortedDragOut.map((c) => c.id);
       expect(idsDragOut).toContain(echart1.id);
       expect(idsDragOut).toContain(echart2.id);
@@ -417,7 +418,7 @@ describe("useTree - 分组功能测试", () => {
       // Assert - 步骤1
       expect(componentList.value.length, "步骤1后：组件列表应该只包含1个分组组件").toBe(3);
       expect(groupItem.children, "步骤1后：分组应该包含3个子组件").toHaveLength(3);
-      const sortedStep1 = groupItem.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedStep1 = groupItem.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsStep1 = sortedStep1.map((c) => c.id);
       expect(idsStep1).toContain(echart1.id);
       expect(idsStep1).toContain(echart2.id);
@@ -475,7 +476,7 @@ describe("useTree - 分组功能测试", () => {
       // Assert - 步骤1
       expect(componentList.value.length, "步骤1后：组件列表应该包含3个组件（组1+echart4+echart5）").toBe(3);
       expect(group1.children, "步骤1后：组1应该包含3个子组件").toHaveLength(3);
-      const sortedGroup1_1 = group1.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedGroup1_1 = group1.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsGroup1_1 = sortedGroup1_1.map((c) => c.id);
       expect(idsGroup1_1).toContain(echart1.id);
       expect(idsGroup1_1).toContain(echart2.id);
@@ -496,7 +497,7 @@ describe("useTree - 分组功能测试", () => {
       // Assert - 步骤2
       expect(componentList.value.length, "步骤2后：组件列表应该包含2个组件（组1+组2）").toBe(2);
       expect(group2.children, "步骤2后：组2应该包含2个子组件").toHaveLength(2);
-      const sortedGroup2_2 = group2.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedGroup2_2 = group2.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsGroup2_2 = sortedGroup2_2.map((c) => c.id);
       expect(idsGroup2_2).toContain(echart4.id);
       expect(idsGroup2_2).toContain(echart5.id);
@@ -513,7 +514,7 @@ describe("useTree - 分组功能测试", () => {
       // Assert - 步骤3
       expect(componentList.value.length, "步骤3后：组件列表应该包含2个组件（组1+组2）").toBe(2);
       expect(group1.children, "步骤3后：组1应该包含2个子组件").toHaveLength(2);
-      const sortedGroup1_3 = group1.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedGroup1_3 = group1.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsGroup1_3 = sortedGroup1_3.map((c) => c.id);
       expect(idsGroup1_3).toContain(echart1.id);
       expect(idsGroup1_3).toContain(echart2.id);
@@ -523,7 +524,7 @@ describe("useTree - 分组功能测试", () => {
       expect(group1.component.height, "步骤3后：组1的高度应该是900").toBe(900);
 
       expect(group2.children, "步骤3后：组2应该包含3个子组件").toHaveLength(3);
-      const sortedGroup2_3 = group2.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedGroup2_3 = group2.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsGroup2_3 = sortedGroup2_3.map((c) => c.id);
       expect(idsGroup2_3).toContain(echart4.id);
       expect(idsGroup2_3).toContain(echart5.id);
@@ -544,7 +545,7 @@ describe("useTree - 分组功能测试", () => {
       expect(componentList.value.length, "步骤4后：组件列表应该包含2个组件（组2+echart1）").toBe(2);
       expect(echart1.parent, "步骤4后：echart1应该是独立组件（组1被删除）").toBeUndefined();
       expect(group2.children, "步骤4后：组2应该包含4个子组件").toHaveLength(4);
-      const sortedGroup2_4 = group2.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedGroup2_4 = group2.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsGroup2_4 = sortedGroup2_4.map((c) => c.id);
       expect(idsGroup2_4).toContain(echart4.id);
       expect(idsGroup2_4).toContain(echart5.id);
@@ -572,7 +573,7 @@ describe("useTree - 分组功能测试", () => {
       expect(echart4.parent, "步骤5后：echart4的父组件应该是组2").toBe(group2.id);
       expect(echart5.parent, "步骤5后：echart5的父组件应该是组2").toBe(group2.id);
       expect(group2.children, "步骤5后：组2应该包含5个子组件").toHaveLength(5);
-      const sortedGroup2_5 = group2.children!.sort((a, b) => b.zIndex - a.zIndex);
+      const sortedGroup2_5 = group2.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       const idsGroup2_5 = sortedGroup2_5.map((c) => c.id);
       expect(idsGroup2_5).toContain(echart1.id);
       expect(idsGroup2_5).toContain(echart2.id);

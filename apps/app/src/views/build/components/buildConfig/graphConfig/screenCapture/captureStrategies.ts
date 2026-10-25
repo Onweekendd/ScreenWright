@@ -1,5 +1,6 @@
 // @ts-nocheck
 /** 策略：内容采集 / 模块分析 / 面板 / 合成（legacy DOM 遍历；公共类型见 types/captureInternal.ts） */
+import { compareZIndex } from "@screenwright/core";
 import { FolderEnum } from "@screenwright/types";
 
 import { CaptureNodeClassifier } from "./analysis/captureNodeClassifier";
@@ -403,7 +404,7 @@ const PanelCapture = {
     const children = ComponentTreeCapture.getActivePanelConfigs(panelItem)
       .flat()
       .filter((c) => c && c.display !== false)
-      .sort((a, b) => (Number(a.zIndex) || 0) - (Number(b.zIndex) || 0));
+      .sort((a, b) => compareZIndex(a.zIndex ?? 0, b.zIndex ?? 0));
 
     return buildRasterFromContainerData({
       designW,
@@ -845,7 +846,7 @@ const GroupCapture = {
     const isOuter = groupItem.isOuter === true;
     const children = [...groupItem.children]
       .filter((c) => c && c.display !== false)
-      .sort((a, b) => (Number(a.zIndex) || 0) - (Number(b.zIndex) || 0));
+      .sort((a, b) => compareZIndex(a.zIndex ?? 0, b.zIndex ?? 0));
 
     return buildRasterFromContainerData({
       designW,

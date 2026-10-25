@@ -24,12 +24,7 @@ interface ResolvedSuspend {
  * 下一轮生成的 nodeId 会被 addProcessedComponent 的幂等守卫当成「已经建过」整片跳过，
  * 表现成「第二次调就没反应了」。
  */
-const SCREEN_BUILD_WORKFLOW_NAMES = new Set([
-  "figmaToBIV2Workflow",
-  "figmaToBIMockWorkflow",
-  "codiaToBIWorkflow",
-  "requirementToBIWorkflow"
-]);
+const SCREEN_BUILD_WORKFLOW_NAMES = new Set(["figmaToBIV2Workflow", "figmaToBIMockWorkflow"]);
 
 /**
  * 管理流 chunk 副作用处理，可独立注入到任何消费 SSE 流的场景（主 agent、子 agent 等）。
@@ -186,7 +181,7 @@ export function useChunkSideEffects({
           return;
         }
 
-        // 建屏工作流收尾：statistics 字段是交付步（node-convert / assemble-screen）完成的标志，此时全部
+        // 建屏工作流收尾：statistics 字段是节点转换交付步完成的标志，此时全部
         // data-node-conversion chunk 都已入队。不吞这一帧——WorkflowMessage.vue 还要用它渲染统计信息，
         // 这里只是顺带把路由导航回大屏根级（finishConversion 内部走同一条画布互斥队列，排在最后）。
         const workflowChunk = chunk as { type?: string; data?: { name?: string; statistics?: unknown } };

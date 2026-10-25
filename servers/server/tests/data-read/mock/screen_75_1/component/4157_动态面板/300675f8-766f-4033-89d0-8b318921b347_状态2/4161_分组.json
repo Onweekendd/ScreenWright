@@ -42,7 +42,7 @@
     }
   },
   "id": 4161,
-  "zIndex": 1,
+  "zIndex": "a1",
   "parentDynamicPanelId": [
     4157
   ],

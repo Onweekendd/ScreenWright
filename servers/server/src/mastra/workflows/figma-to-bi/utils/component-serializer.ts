@@ -1,3 +1,4 @@
+import { legacyNumberToZIndex } from "@screenwright/core";
 import type { ComponentType, PanelState, SystemComponentProps } from "@screenwright/types";
 import { PanelEnum } from "@screenwright/types";
 
@@ -241,7 +242,7 @@ export function convertViewToPackageLargeScreen(
 
   // 重新赋值 zIndex（从 1 开始递增）
   flattedComponents.forEach((comp, index) => {
-    comp.zIndex = index + 1;
+    comp.zIndex = legacyNumberToZIndex(index + 1);
   });
 
   // 构建图层列表

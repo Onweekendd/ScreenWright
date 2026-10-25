@@ -9,6 +9,8 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/AiModel'
+export type * from './models/GeneratedImage'
+export type * from './models/GeneratedVideo'
 export type * from './models/FigmaKey'
 export type * from './models/Module'
 export type * from './models/FigmaNodeAsset'

@@ -2,6 +2,7 @@ import type { CSSProperties } from "vue";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { toRaw } from "vue";
 
+import { sortByZIndex } from "@screenwright/core";
 import type { LargeScreenDetailInfo } from "@screenwright/types";
 import { isArray } from "lodash-es";
 
@@ -146,7 +147,7 @@ export const useIframe = (props: { element: ComponentType<mediaEnum.SwIframe, FT
     };
   });
   const data = computed(() => {
-    return [...props.element.option.quoteInfo.component].sort((a, b) => b.zIndex - a.zIndex).reverse();
+    return sortByZIndex(props.element.option.quoteInfo.component);
   });
 
   // 方法

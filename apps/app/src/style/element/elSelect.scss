@@ -38,11 +38,18 @@
       display: none;
     }
 
-    .el-select-dropdown__list {
-      padding: 0;
+    &.agent-attachment-dropdown {
+      min-width: 156px !important;
     }
 
-    .el-select-dropdown__item {
+    .el-select-dropdown__list,
+    .el-dropdown-menu {
+      padding: 0;
+      background-color: transparent;
+    }
+
+    .el-select-dropdown__item,
+    .el-dropdown-menu__item {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -79,7 +86,8 @@
       }
 
       &.is-hovering,
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: color-mix(in srgb, var(--sw-theme-color) 18%, transparent) !important;
         color: #e0e6f0 !important;
 

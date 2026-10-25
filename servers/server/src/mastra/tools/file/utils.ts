@@ -1,7 +1,14 @@
 import fsp from "node:fs/promises";
 import path from "node:path";
 
-import { ComponentFlatSchema, type ComponentProp, componentPropSchemaMap } from "@screenwright/types/schemas";
+import { isValidZIndex } from "@screenwright/core";
+import {
+  ComponentFlatSchema,
+  type ComponentProp,
+  componentPropSchemaMap,
+  componentSuperRefineMap,
+  seriesAlignmentSuperRefine
+} from "@screenwright/types/schemas";
 import type { z } from "zod";
 
 // ── 组件文件名（id_name）──────────────────────────────────────────────────────
@@ -261,6 +268,23 @@ export function validateComponentContent(
 ):
   | { ok: true; data: ComponentFlatType; warnings?: string[] }
   | { ok: false; message: string; validationErrors?: string[] } {
+  const result = validateComponentContentLayers(content);
+  if (!result.ok || isValidZIndex(result.data.zIndex)) {
+    return result;
+  }
+  // zIndex 是 fractional-indexing 的排序键，不是数字：`a20` 看着像「层级 20」，其实小数部分以 0 结尾，是非法键。
+  // 它不进硬闸门（见上面「组件被历史脏数据永久锁死」），但要明说，否则 agent 不知道自己写坏了什么。
+  const warning =
+    `zIndex "${result.data.zIndex}" 不是合法的排序键，已放行但层级可能错乱：zIndex 是系统维护的排序键（如 "a0"、"a1"、"a1V"，` +
+    `小数部分不能以 0 结尾），不要手写、不要当数字用。新建的组件系统会自动放到最上层，别去改这个字段`;
+  return { ...result, warnings: [...(result.warnings ?? []), warning] };
+}
+
+function validateComponentContentLayers(
+  content: string
+):
+  | { ok: true; data: ComponentFlatType; warnings?: string[] }
+  | { ok: false; message: string; validationErrors?: string[] } {
   try {
     const parsed = JSON.parse(content) as Record<string, unknown>;
 
@@ -289,14 +313,22 @@ export function validateComponentContent(
     // ── 属性层：只诊断，不拦 ─────────────────────────────────────────────
     const prop = (parsed?.component as Record<string, unknown> | undefined)?.prop as ComponentProp | undefined;
     const propEntry = prop ? componentPropSchemaMap[prop] : undefined;
-    if (!propEntry) {
+    if (!prop || !propEntry) {
       return unknownKeyWarnings.length
         ? { ok: true, data: structural.data, warnings: unknownKeyWarnings }
         : { ok: true, data: structural.data };
     }
 
+    // 图表类的 data/option 系列匹配检查（跨字段，任何一个 per-prop schema 单独看都看不到）
+    // 和该组件专属的开关联动规则（componentSuperRefineMap，见其注释）都不揉进 schema 本体，
+    // 只在这条运行时校验路径上追加，避免真实历史数据被当成类型错误、拖累 schema 一致性测试。
+    const componentSuperRefine = componentSuperRefineMap[prop];
     const typed = ComponentFlatSchema.omit({ data: true, option: true })
       .extend({ data: propEntry.data, option: propEntry.option })
+      .superRefine((val, ctx) => {
+        seriesAlignmentSuperRefine(val, ctx);
+        componentSuperRefine?.(val, ctx);
+      })
       .safeParse(candidate);
     if (typed.success) {
       // 属性层也过了：用它的结果，zod 会按 prop schema 补上默认值
@@ -484,7 +516,7 @@ export type ComponentPlacement =
 /**
  * 从组件文件的绝对路径倒序推导最近父节点。
  *
- * workspace 路径规则（workspace-structure.md）：
+ * workspace 路径规则（workspace-guide.md）：
  *   component/{id}_{name}.json                                        → 根目录，无父级
  *   component/.../{groupId}_{groupName}/{id}_{name}.json              → 分组（最近目录可提取出数字 id）
  *   component/.../{panelId}_{panelName}/{stateId}_{stateName}/{id}_{name}.json → 动态面板（最近目录提取不出数字 id，上一级可提取出数字 id）

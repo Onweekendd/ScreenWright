@@ -3,15 +3,27 @@ import { setMinioUrl } from "@/utils/config";
 import type { SystemComponentProps } from "../../views/build/components/buildRender/core/SystemComponent/type";
 
 /**
- * 提取面板数据中的所有 Minio 资源 URL
+ * 对象存储资源 URL 形态：`http://host/blobs/<key>`（fs 存储绝对地址，原样使用）
+ * 键名可含中文/空格，故不用 `\S`，只以引号截断。
+ */
+const IMAGE_EXT = "png|jpg|jpeg";
+const VIDEO_EXT = "mp4|webm";
+const buildAssetPattern = (ext: string, flags: string) =>
+  new RegExp(String.raw`https?://[^"'\s]{1,120}/blobs/[^"']{1,80}\.(?:${ext})`, flags);
+
+/**
+ * 提取面板数据中的所有对象存储资源 URL
  */
 function getMinioList(panelDataStr: string): string[] {
-  if (!panelDataStr) return [];
+  if (!panelDataStr) {
+    return [];
+  }
 
   try {
-    // 匹配 version-test/ 开头的图片和视频 URL
-    const matches = panelDataStr.match(/version-test\/.{1,80}\.(png|jpg|jpeg|mp4|webm)/gi);
-    if (!matches) return [];
+    const matches = panelDataStr.match(buildAssetPattern(`${IMAGE_EXT}|${VIDEO_EXT}`, "gi"));
+    if (!matches) {
+      return [];
+    }
     return [...new Set(matches)];
   } catch (error) {
     console.error("解析面板数据失败:", error);
@@ -129,14 +141,14 @@ function preloadResources(urls: string[]): Promise<{ images: HTMLImageElement[];
  * 判断是否是图片 URL
  */
 function isImageUrl(url: string): boolean {
-  return /version-test\/.{1,80}\.(png|jpg|jpeg)/i.test(url);
+  return buildAssetPattern(IMAGE_EXT, "i").test(url);
 }
 
 /**
  * 判断是否是视频 URL
  */
 function isVideoUrl(url: string): boolean {
-  return /version-test\/.{1,80}\.(mp4|webm)/i.test(url);
+  return buildAssetPattern(VIDEO_EXT, "i").test(url);
 }
 
 /**
@@ -147,7 +159,9 @@ export function useMinioPreload() {
   const videoRefs: HTMLVideoElement[] = [];
 
   const startPreload = async (component: SystemComponentProps) => {
-    if (!component) return { images: [] as HTMLImageElement[], videos: [] as HTMLVideoElement[] };
+    if (!component) {
+      return { images: [] as HTMLImageElement[], videos: [] as HTMLVideoElement[] };
+    }
 
     try {
       // 提取所有 Minio URL

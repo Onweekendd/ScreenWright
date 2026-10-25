@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 
 import DataVVue3 from "@kjgl77/datav-vue3";
+import { setApiUnauthorizedHandler } from "@screenwright/server/rpc";
 import ElementPlus from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import { enableMapSet, setAutoFreeze } from "immer";
@@ -9,6 +10,7 @@ import materialRegistry from "@/components/MaterialRegistry";
 import { loadDirectives } from "@/directives";
 import { setupUsePorts } from "@/setup/usePorts";
 import { registerMitt } from "@/utils/registerMitt";
+import { handleUnauthorized } from "@/utils/session";
 
 import App from "./App.vue";
 import router from "./router";
@@ -24,6 +26,9 @@ import "@/style/index.scss";
 import "@/router/permission";
 
 registerMitt();
+
+// Hono RPC 客户端（/customApi/*，含对话 SSE）收到 401 时统一登出跳登录页
+setApiUnauthorizedHandler(handleUnauthorized);
 
 // @screenwright/composables / 物料包的端口注入统一收敛到 setupUsePorts（主入口与导出入口共用），
 // 必须在挂载前调用一次。

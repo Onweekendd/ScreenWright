@@ -2,11 +2,11 @@ import { ref } from "vue";
 
 import { defineStore } from "pinia";
 
-import { getCurrentUser, getRouteData } from "@/api/login";
-import type { TreeResult, User } from "@/model/Login";
-import { resetRouter } from "@/router/index";
+import { getCurrentUser, getRouteData, login as loginRequest } from "@/api/login";
+import type { LoginReq, TreeResult, User } from "@/model/Login";
 import store from "@/store";
-import { getActive, removeToken, setActive } from "@/utils/auth";
+import { getActive, setActive, setToken } from "@/utils/auth";
+import { clearSession, redirectToLogin } from "@/utils/session";
 
 const modules = import.meta.glob("@/views/**/index.vue");
 export interface MenuToRouteProps {
@@ -33,7 +33,27 @@ export const useUserStore = defineStore("User", () => {
     setActive("userInfo", userInfoData);
   };
 
-  /** 拉取当前用户信息（开源单机版恒为默认超管），用于展示用户名/角色及 createdBy 等字段取值 */
+  /** 用户名密码登录：成功后保存令牌与用户信息；失败抛出带后端提示语的 Error */
+  const login = async (form: Pick<LoginReq, "username" | "password">): Promise<User> => {
+    let res;
+    try {
+      res = await loginRequest(form);
+    } catch (err: unknown) {
+      const message = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      throw new Error(message || "登录失败，请检查网络或稍后重试");
+    }
+    if (!res.success) {
+      throw new Error(res.message || "登录失败");
+    }
+    // 换账号登录时旧账号的菜单缓存必须作废
+    localStorage.removeItem("routeData");
+    isRequestMenu.value = false;
+    setToken(res.result.token);
+    setUserInfo(res.result.userInfo);
+    return res.result.userInfo;
+  };
+
+  /** 拉取当前用户信息，用于展示用户名/角色及 createdBy 等字段取值 */
   const fetchCurrentUser = async (): Promise<User> => {
     const res = await getCurrentUser();
     if (res.success) {
@@ -80,15 +100,10 @@ export const useUserStore = defineStore("User", () => {
     return asyncRoute.value;
   };
 
-  const resetCache = () => {
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("routeData");
-  };
-
+  /** 退出登录：清令牌与用户缓存，整页跳转登录页（刷新同时重置内存里的动态路由 / 菜单状态） */
   const logout = () => {
-    removeToken();
-    resetRouter();
-    resetCache();
+    clearSession();
+    redirectToLogin();
   };
 
   return {
@@ -98,6 +113,7 @@ export const useUserStore = defineStore("User", () => {
     menuList,
     setUserInfo,
     getRouteList,
+    login,
     logout,
     fetchCurrentUser
   };

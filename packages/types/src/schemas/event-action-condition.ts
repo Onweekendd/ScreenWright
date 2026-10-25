@@ -8,10 +8,8 @@ import {
   ConditionLogicTypeEnum,
   ConditionTypeEnum,
   EncodeEventTypeEnum,
-  EventTypeEnum,
-  tcpudpDataTypeEnum
+  EventTypeEnum
 } from "../types";
-import { DataSourceTypeSchema } from "./data";
 
 // ============================================
 // Event Action & Condition Schemas
@@ -257,49 +255,14 @@ export const ActionSchema: z.ZodSchema<Action> = z.object({
     .describe("位移配置"),
   /** 加密密钥（可为空） */
   encodeKey: z.string().nullable().optional().describe("加密密钥"),
-  /** UE4引擎配置 */
-  ue4Config: z
-    .object({
-      /** 消息名称 */
-      messageName: z.string().describe("消息名称"),
-      /** 消息JSON */
-      messageJson: z.string().describe("消息JSON"),
-      /** 消息内容 */
-      messageContent: z.string().describe("消息内容"),
-      /** 消息类型 */
-      messageType: z.string().describe("消息类型")
-    })
-    .optional()
-    .describe("UE4引擎配置"),
   /** UE4 蓝图 key，用于切换蓝图 */
   blueprintKey: z.string().optional().describe("UE4 蓝图 key，用于切换蓝图"),
   /** 自定义动作类型标识 */
-  customActionType: z.enum(["component", "message", "statusAnimation"]).optional().describe("自定义动作类型标识"),
+  customActionType: z.enum(["component", "statusAnimation"]).optional().describe("自定义动作类型标识"),
   /** 面板状态动画ID */
   panelStatusAnimationId: z.string().optional().describe("面板状态动画ID"),
   /** 面板状态ID */
   panelStatusId: z.string().optional().describe("面板状态ID"),
-  /** TCP/UDP协议配置 */
-  tcpudpConfig: z
-    .object({
-      /** 数据类型 */
-      dataType: z.enum(tcpudpDataTypeEnum).describe("数据类型"),
-      /** 数据源ID */
-      dataSourceId: z.string().describe("数据源ID"),
-      /** 数据源对象 */
-      dataSourceObj: z
-        .lazy(() => DataSourceTypeSchema)
-        .nullable()
-        .describe("数据源对象"),
-      /** 发送数据 */
-      sendData: z.string().describe("发送数据"),
-      /** 发送类型 */
-      sendType: z.string().describe("发送类型"),
-      /** 数据延迟（毫秒） */
-      dataDelay: z.number().describe("数据延迟（毫秒）")
-    })
-    .optional()
-    .describe("TCP/UDP协议配置"),
   /** 项目函数名称 */
   projectFunName: z.string().optional().describe("项目函数名称"),
   /** 项目参数列表 */
@@ -312,8 +275,6 @@ export const ActionSchema: z.ZodSchema<Action> = z.object({
   projectParamCode: z.string().optional().describe("项目参数代码"),
   /** 轮播卡片标签名称 */
   swiperCardTabsName: z.string().optional().describe("轮播卡片标签名称"),
-  /** 数字人消息内容 */
-  aiManMsgContent: z.string().optional().describe("数字人消息内容"),
   /** 广播ID（可为空） */
   setBroadcastId: z.string().nullable().optional().describe("广播ID"),
   /** 视频开始时间（秒） */

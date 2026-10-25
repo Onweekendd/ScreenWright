@@ -31,7 +31,7 @@
 </selected-components>
 
 `<attached-images>` 用户附上的图片列表：
-当用户上传了图片时，消息中会包含 `<attached-images>` 标签：
+当用户上传了图片时，**图片本身已直接附在消息里，你能看到它**；同时消息末尾会带 `<attached-images>` 标签列出每张图的 URL：
 
 ```xml
 <attached-images>
@@ -41,7 +41,7 @@
 ```
 
 - `index`：图片序号，从 1 开始
-- `url`：MinIO presigned URL，有效期 24h，可直接传给 analyze_image 工具
+- `url`：MinIO presigned URL，有效期 24h。看图不需要它；只在工具/工作流要图片 URL 入参时使用（如 `createImageTool` 的 `seedImages`），不要传 base64
 - `filename`：用户上传时的原始文件名（可选）
 
 `<welcome>` 欢迎页示例标签：
@@ -53,7 +53,7 @@
 </user-message>
 ```
 
-这标志着用户是**从零创建大屏**的意图（而非修改已有大屏）。没有设计稿、只有 `<welcome>` 内的文字需求时，走 `requirement-to-BI` 工作流从零构建（入参是已与用户确认过的内容清单，需求收敛在对话层完成）。
+这标志着用户是**从零创建大屏**的意图（而非修改已有大屏）。没有设计稿、只有 `<welcome>` 内的文字需求时，先用 `createImageTool` 生成一张符合需求和画布尺寸的整屏概念图，再按「效果图 → 大屏工作流」用组件工具手动搭建并完成大屏。用户明确要应用已有模板时才走模板应用流程。
 
 `<user-message>` 中的组件引用格式：
 用户 @ 了某组件时，消息正文中会嵌入 `<component-rf>` 标签：
@@ -102,4 +102,4 @@
 3. 用户 @ 了组件时，解析 `<user-message>` 中的 `<component-rf>` 标签，取 `idPath` 最后一段作为组件 id。
 4. 需要完整组件数据时，才调用 getComponentDetail。
 5. 操作 Workspace 文件时，直接从 <screen-info> 读取目录名，无需调用任何工具查询。
-6. `<user-message>` 内出现 `<welcome>` 标签时，是从零创建意图，走 `requirement-to-BI` 工作流。
+6. `<user-message>` 内出现 `<welcome>` 标签时，是从零创建意图；没有现成设计稿就先生成概念图，再按图手动搭建组件，不在出图后停止。

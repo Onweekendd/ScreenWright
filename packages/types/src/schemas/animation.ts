@@ -200,7 +200,7 @@ export const ComponentAnimationConfigSchema: z.ZodSchema<ComponentAnimationConfi
   /** 字体大小 */
   fontSize: z.number().describe("字体大小").optional(),
   /** 层级 */
-  zIndex: z.number().describe("层级"),
+  zIndex: z.union([z.string(), z.number()]).describe("层级（字符串排序键；旧数据是数字）"),
   /** 视频 */
   video: z.string().describe("视频").optional()
 });

@@ -1,25 +1,58 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
+-- CreateTable
+CREATE TABLE "ai_model" (
+    "role" TEXT NOT NULL,
+    "base_url" TEXT NOT NULL DEFAULT '',
+    "api_key" TEXT NOT NULL DEFAULT '',
+    "model_id" TEXT NOT NULL DEFAULT '',
+    "context_length" INTEGER,
+    "dimensions" INTEGER,
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ai_model_pkey" PRIMARY KEY ("role")
+);
+
+-- CreateTable
+CREATE TABLE "generated_image" (
+    "id" TEXT NOT NULL,
+    "prompt_hash" TEXT NOT NULL,
+    "prompt" TEXT NOT NULL,
+    "model" TEXT NOT NULL,
+    "seed" INTEGER,
+    "width" INTEGER NOT NULL,
+    "height" INTEGER NOT NULL,
+    "url" TEXT NOT NULL,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "generated_image_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateTable
 CREATE TABLE "figma_keys" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "keyValue" TEXT NOT NULL,
     "name" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "isRateLimited" BOOLEAN NOT NULL DEFAULT false,
-    "rateLimitStart" DATETIME,
-    "rateLimitEnd" DATETIME,
+    "rateLimitStart" TIMESTAMP(3),
+    "rateLimitEnd" TIMESTAMP(3),
     "consecutive429Count" INTEGER NOT NULL DEFAULT 0,
     "totalRequests" INTEGER NOT NULL DEFAULT 0,
     "successRequests" INTEGER NOT NULL DEFAULT 0,
     "failedRequests" INTEGER NOT NULL DEFAULT 0,
-    "lastUsedAt" DATETIME,
-    "lastSuccessAt" DATETIME,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "lastUsedAt" TIMESTAMP(3),
+    "lastSuccessAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "figma_keys_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "modules" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "module_id" INTEGER,
     "user_id" INTEGER,
     "type" INTEGER DEFAULT 0,
@@ -30,16 +63,18 @@ CREATE TABLE "modules" (
     "name" TEXT,
     "thumbnail" TEXT,
     "created_by" TEXT,
-    "created_time" DATETIME,
+    "created_time" TIMESTAMP(3),
     "updated_by" TEXT,
-    "updated_time" DATETIME,
+    "updated_time" TIMESTAMP(3),
     "template" TEXT,
-    "status" INTEGER DEFAULT 0
+    "status" INTEGER DEFAULT 0,
+
+    CONSTRAINT "modules_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "figma_node_assets" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "file_key" TEXT NOT NULL,
     "node_id" TEXT NOT NULL,
     "node_name" TEXT,
@@ -48,24 +83,28 @@ CREATE TABLE "figma_node_assets" (
     "url" TEXT,
     "mime_type" TEXT,
     "file_size" INTEGER,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "figma_node_assets_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "compaction_records" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "thread_id" TEXT NOT NULL,
     "compacted_message_ids" JSONB NOT NULL,
     "summary_message_id" TEXT NOT NULL,
     "message_count_before" INTEGER,
     "message_count_after" INTEGER,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "compaction_records_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "figma_node_json" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "file_key" TEXT NOT NULL,
     "node_id" TEXT NOT NULL,
     "node_name" TEXT,
@@ -74,13 +113,15 @@ CREATE TABLE "figma_node_json" (
     "url" TEXT,
     "mime_type" TEXT,
     "file_size" INTEGER,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "figma_node_json_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "llm_exchange_records" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "thread_id" TEXT NOT NULL,
     "run_id" TEXT,
     "turn_index" INTEGER NOT NULL,
@@ -89,10 +130,10 @@ CREATE TABLE "llm_exchange_records" (
     "model" TEXT,
     "status" INTEGER,
     "ok" BOOLEAN,
-    "tool_names" JSONB NOT NULL DEFAULT [],
+    "tool_names" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "tool_call_count" INTEGER NOT NULL DEFAULT 0,
     "tool_failures" INTEGER,
-    "at" DATETIME,
+    "at" TIMESTAMP(3),
     "generation_time_ms" INTEGER,
     "prompt_tokens" INTEGER,
     "completion_tokens" INTEGER,
@@ -103,24 +144,28 @@ CREATE TABLE "llm_exchange_records" (
     "eval_run_id" TEXT,
     "bucket" TEXT NOT NULL,
     "object_key" TEXT NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "llm_exchange_records_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "eval_runs" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "started_at" DATETIME NOT NULL,
-    "finished_at" DATETIME NOT NULL,
+    "id" TEXT NOT NULL,
+    "started_at" TIMESTAMP(3) NOT NULL,
+    "finished_at" TIMESTAMP(3) NOT NULL,
     "total_cases" INTEGER NOT NULL,
     "passed_cases" INTEGER NOT NULL,
     "uploaded" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "eval_runs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "eval_cases" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "run_id" TEXT NOT NULL,
     "case_id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -137,13 +182,14 @@ CREATE TABLE "eval_cases" (
     "invariants" JSONB NOT NULL,
     "assertions" JSONB NOT NULL,
     "suspends" JSONB NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "eval_cases_run_id_fkey" FOREIGN KEY ("run_id") REFERENCES "eval_runs" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "eval_cases_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "bi_user" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_name" TEXT NOT NULL,
     "password_hash" TEXT NOT NULL,
     "type" INTEGER NOT NULL DEFAULT 0,
@@ -158,7 +204,7 @@ CREATE TABLE "bi_user" (
     "region" TEXT,
     "temporary_company_name" TEXT,
     "forbidden" BOOLEAN NOT NULL DEFAULT false,
-    "expiration_time" DATETIME,
+    "expiration_time" TIMESTAMP(3),
     "avatar" TEXT,
     "invited_by" TEXT,
     "create_large" JSONB,
@@ -168,14 +214,16 @@ CREATE TABLE "bi_user" (
     "create_city" JSONB,
     "export_city" JSONB,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "bi_user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "large_screen" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
     "module_id" INTEGER,
     "name" TEXT NOT NULL,
@@ -189,13 +237,12 @@ CREATE TABLE "large_screen" (
     "password" TEXT,
     "invitation_code" TEXT,
     "status" BOOLEAN NOT NULL DEFAULT false,
-    "expiration_time" DATETIME,
+    "expiration_time" TIMESTAMP(3),
     "sort" INTEGER NOT NULL DEFAULT 0,
     "version_code" TEXT,
     "version_desc" TEXT,
     "minio_ids" JSONB,
     "data_filter_arr" JSONB,
-    "filter_type" TEXT,
     "ani_frame_set" JSONB,
     "encoded_control" JSONB,
     "status_animation" JSONB,
@@ -203,27 +250,58 @@ CREATE TABLE "large_screen" (
     "path" TEXT,
     "new_application" BOOLEAN NOT NULL DEFAULT false,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "large_screen_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "large_screen_version" (
+    "id" SERIAL NOT NULL,
+    "large_id" INTEGER NOT NULL,
+    "version_code" TEXT NOT NULL,
+    "version_desc" TEXT,
+    "config" JSONB,
+    "detail" JSONB,
+    "background_url" TEXT,
+    "scene_info" TEXT,
+    "status_animation" JSONB,
+    "ani_frame_set" JSONB,
+    "data_filter_arr" JSONB,
+    "encoded_control" JSONB,
+    "minio_ids" JSONB,
+    "status" BOOLEAN NOT NULL DEFAULT false,
+    "password" TEXT,
+    "expiration_time" TIMESTAMP(3),
+    "publish_info" TEXT,
+    "created_by" TEXT,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_by" TEXT,
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "large_screen_version_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "large_group" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "type" INTEGER NOT NULL DEFAULT 0,
     "sort" INTEGER NOT NULL DEFAULT 0,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "large_group_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "layers" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER,
     "module_id" INTEGER,
     "large_id" INTEGER NOT NULL,
@@ -232,25 +310,29 @@ CREATE TABLE "layers" (
     "data_json" JSONB,
     "version_code" TEXT,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "layers_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "data_group" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER,
     "name" TEXT NOT NULL,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "data_group_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "data_source" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER,
     "type" INTEGER NOT NULL DEFAULT 1,
     "name" TEXT NOT NULL,
@@ -259,14 +341,16 @@ CREATE TABLE "data_source" (
     "data_group_id" INTEGER,
     "layer_ids" JSONB,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "data_source_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "data_local" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -279,14 +363,16 @@ CREATE TABLE "data_local" (
     "content" JSONB,
     "layer_ids" JSONB,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "data_local_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "minio_file" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER,
     "name" TEXT NOT NULL,
     "file_name" TEXT,
@@ -303,53 +389,29 @@ CREATE TABLE "minio_file" (
     "layer_ids" JSONB,
     "large_use_ids" JSONB,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "minio_file_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "minio_group" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "user_id" INTEGER,
     "name" TEXT NOT NULL,
     "type" INTEGER NOT NULL DEFAULT 0,
     "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
+    "updated_time" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "minio_group_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "group_layer" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "user_id" INTEGER,
-    "name" TEXT NOT NULL,
-    "status" BOOLEAN NOT NULL DEFAULT true,
-    "sort_id" INTEGER NOT NULL DEFAULT 0,
-    "type" INTEGER NOT NULL DEFAULT 1,
-    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
-    "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "group_layer_data" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "user_id" INTEGER,
-    "name" TEXT NOT NULL,
-    "cover_url" TEXT,
-    "cover_key" TEXT,
-    "group_id" INTEGER NOT NULL,
-    "content" JSONB,
-    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
-    "created_by" TEXT,
-    "created_time" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_by" TEXT,
-    "updated_time" DATETIME NOT NULL
-);
+-- CreateIndex
+CREATE UNIQUE INDEX "generated_image_prompt_hash_key" ON "generated_image"("prompt_hash");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "figma_keys_keyValue_key" ON "figma_keys"("keyValue");
@@ -430,6 +492,12 @@ CREATE INDEX "large_screen_user_id_idx" ON "large_screen"("user_id");
 CREATE INDEX "large_screen_group_id_idx" ON "large_screen"("group_id");
 
 -- CreateIndex
+CREATE INDEX "large_screen_version_large_id_idx" ON "large_screen_version"("large_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "large_screen_version_large_id_version_code_key" ON "large_screen_version"("large_id", "version_code");
+
+-- CreateIndex
 CREATE INDEX "large_group_user_id_idx" ON "large_group"("user_id");
 
 -- CreateIndex
@@ -459,8 +527,6 @@ CREATE INDEX "minio_file_group_id_idx" ON "minio_file"("group_id");
 -- CreateIndex
 CREATE INDEX "minio_group_user_id_idx" ON "minio_group"("user_id");
 
--- CreateIndex
-CREATE INDEX "group_layer_user_id_idx" ON "group_layer"("user_id");
+-- AddForeignKey
+ALTER TABLE "eval_cases" ADD CONSTRAINT "eval_cases_run_id_fkey" FOREIGN KEY ("run_id") REFERENCES "eval_runs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- CreateIndex
-CREATE INDEX "group_layer_data_group_id_idx" ON "group_layer_data"("group_id");

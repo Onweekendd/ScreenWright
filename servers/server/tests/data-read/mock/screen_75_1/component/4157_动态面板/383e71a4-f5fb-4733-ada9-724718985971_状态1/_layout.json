@@ -22,7 +22,7 @@
       "type": "条形图",
       "prop": "echartstripBar",
       "name": "条形图",
-      "zIndex": 1,
+      "zIndex": "a1",
       "rectPx": {
         "x": 0,
         "y": 0,

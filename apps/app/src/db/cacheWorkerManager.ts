@@ -2,6 +2,7 @@
  * 缓存Worker管理器
  * 负责管理缓存Worker的生命周期和消息通信
  */
+import { getToken } from "@/utils/auth";
 import { PanelType } from "@/views/build/components/buildRender/core/SystemComponent/type";
 import { FolderType } from "@/views/build/components/buildRender/type";
 
@@ -122,7 +123,8 @@ export class CacheWorkerManager {
     const message: WorkerMessage = {
       type,
       payload,
-      requestId
+      requestId,
+      authToken: getToken()
     };
 
     if (needResponse && requestId) {

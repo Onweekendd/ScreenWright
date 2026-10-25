@@ -8,15 +8,14 @@ import {
   validateDataFilterContent
 } from "@/mastra/services/bi-data-sync/screen-file-edit";
 
-import { SuspendType } from "../../../types/suspend";
 import { isDataFilterFilePath } from "../file-kind";
 import {
-  askOrPush,
   type EditContext,
   invalidateReadState,
   notWritten,
   type PreparedEdit,
-  type SyncHandler
+  type SyncHandler,
+  syncPayload
 } from "./contract";
 
 /**
@@ -85,23 +84,14 @@ export const dataFilterHandler: SyncHandler = {
         // 落盘的是整屏，成对的两个文件都被换过
         invalidateReadState(jsonPath, jsPath);
       },
-      payload: askOrPush(
-        ctx,
-        {
-          approvalType: SuspendType.AskApprovalSaveFilter,
-          autoType: SuspendType.SaveFilter,
-          purpose: "保存数据过滤器"
-        },
-        {
-          filterName,
-          // originalName 必须随协议下发：后端这条路是支持改名的（旧 key 删掉、旧文件被 pruneStaleFiles
-          // 清理），而前端的 handleSaveFilter 只按 name 做 upsert。不告诉它旧名字，画布上就会新旧两个
-          // 过滤器并存，下一次整屏同步过来又把旧的写回工作区——这次改名等于白改。
-          originalName,
-          filter: applied,
-          replacements: ctx.result.replacements
-        }
-      )
+      payload: syncPayload(ctx, "保存数据过滤器", {
+        op: "save_filter",
+        // originalName 必须随协议下发：后端这条路是支持改名的（旧 key 删掉、旧文件被 pruneStaleFiles
+        // 清理），而前端的 handleSaveFilter 只按 name 做 upsert。不告诉它旧名字，画布上就会新旧两个
+        // 过滤器并存，下一次整屏同步过来又把旧的写回工作区——这次改名等于白改。
+        originalName,
+        filter: applied
+      })
     };
   }
 };

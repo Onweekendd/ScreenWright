@@ -2,6 +2,52 @@
 // ─── @screenwright/types 内联类型定义 (由 scripts/bundle-sdk-types.mjs 自动生成) ───
 
 
+/**
+ * 原子组件（swtext / swimg）旧数据升级为当前 schema 的兼容层。
+ *
+ * 这不是维护"另一个组件类型"：swtext/swimg 的 schema 已经原地替换成新的 CSS 词汇版本，
+ * 这里的函数只是把历史上已经存进数据库/大屏 JSON 的旧形状数据，在读取时转换成当前 schema
+ * 能识别的形状。纯函数、幂等，不依赖 Vue/DOM，前后端可共用。
+ *
+ * 判断"是不是旧格式"用的是方案文档 §8.1 的方案 B：检测当前 schema 里已经不存在的旧字段名。
+ * 两边 schema 都是 `.strict()` 且基本不重叠字段名，误判风险低。
+ *
+ * 注：@screenwright/core 依赖 @screenwright/types（反向依赖），这里不能 import core 里的
+ * lineargradientHandle，渐变字符串拼接在本文件内自成一套最小实现。
+ */
+declare const isLegacySwTextOption: (option: Record<string, unknown> | null | undefined) => boolean;
+/**
+ * 把旧格式 swtext option 升级为当前 schema。对已经是当前格式（或空）的输入是恒等函数。
+ *
+ * 实现上以 `{...src}` 打底而不是从空对象重建：option 上完全可能同时混着"已经是新格式的字段"
+ * 和"一个孤立的旧字段"（比如状态动画系统往一个已迁移的组件上直接写了一个旧的 rotateX），
+ * 从空对象重建会把前者一起丢掉；打底之后只删掉已经被消费/改名的旧字段，其它字段原样保留。
+ *
+ * 未能明确映射的字段（跑马灯换算公式、clickFormatter、textAnimation*）按文档 TBD 处理：
+ * 不静默丢弃，原样透传到返回对象上。
+ */
+declare const upgradeSwTextOption: (option: Record<string, unknown> | null | undefined) => Record<string, unknown>;
+declare const isLegacySwimgOption: (option: Record<string, unknown> | null | undefined) => boolean;
+/**
+ * 把旧格式 swimg option 升级为当前 schema。对已经是当前格式（或空）的输入是恒等函数。
+ * 以 `{...src}` 打底而不是从空对象重建，原因同 upgradeSwTextOption：避免一个孤立的旧字段
+ * （如状态动画系统直接写入的 rotateX）把已经是新格式的其它字段一起冲掉。
+ */
+declare const upgradeSwimgOption: (option: Record<string, unknown> | null | undefined) => Record<string, unknown>;
+interface UpgradableComponent {
+    component: {
+        prop: string;
+    };
+    option?: Record<string, unknown> | null;
+}
+/**
+ * 按组件 prop 分发到对应的升级函数。当前只覆盖 swtext / swimg；
+ * swimgBorder 的合并已从本次范围移除，保持独立、不做处理。
+ */
+declare function upgradeComponentOption<T extends UpgradableComponent>(c: T): T;
+
+
+
 import { z } from 'zod';
 import { ActiveAnimationList, Animation, AnimationDirection, AnimationInfo, AnimationItem, AnimationType } from '../types';
 import { ComponentAnimationConfig, ComponentSettingItem, StatusAnimationMapping, StatusAnimationResponse, TimingFunctionType } from '../types/animation';
@@ -70,7 +116,6 @@ declare const ComponentFlatSchema: z.ZodObject<{
             echartbothWayStripBar: import("..").BarEchartEnum.echartbothWayStripBar;
             echartlineAndBar: import("..").BarEchartEnum.echartlineAndBar;
             echartpictorialbar: import("..").BarEchartEnum.echartpictorialbar;
-            echartrank: import("..").BarEchartEnum.echartrank;
             echartbar: import("..").BarEchartEnum.echartbar;
         }>, z.ZodEnum<{
             echartareaLine: import("..").LineEchartEnum.echartareaLine;
@@ -86,21 +131,7 @@ declare const ComponentFlatSchema: z.ZodObject<{
             echartloopRingPie: import("..").PieEchartEnum.echartloopRingPie;
             echartpluralRosePie: import("..").PieEchartEnum.echartpluralRosePie;
             echartthreePie: import("..").PieEchartEnum.echartthreePie;
-        }>, z.ZodEnum<{
-            echartzebra2: import("..").ProjectEchartEnum.echartzebra2;
-            echartdoubleValueLine: import("..").ProjectEchartEnum.echartdoubleValueLine;
-            echartgrowthRateBar: import("..").ProjectEchartEnum.echartgrowthRateBar;
-            echarteffectScatter: import("..").ProjectEchartEnum.echarteffectScatter;
-            echartoverlapBar: import("..").ProjectEchartEnum.echartoverlapBar;
-            echartzebraBarAndLine: import("..").ProjectEchartEnum.echartzebraBarAndLine;
-            echartthreedBarAndLine: import("..").ProjectEchartEnum.echartthreedBarAndLine;
-            echartzebra: import("..").ProjectEchartEnum.echartzebra;
-            echartthreedBar: import("..").ProjectEchartEnum.echartthreedBar;
-            echartscalePie: import("..").ProjectEchartEnum.echartscalePie;
-            echartmultiplyRankBar: import("..").ProjectEchartEnum.echartmultiplyRankBar;
-            echartrankBar: import("..").ProjectEchartEnum.echartrankBar;
-            echartthreeQuartersPie: import("..").ProjectEchartEnum.echartthreeQuartersPie;
-            echartthinBar: import("..").ProjectEchartEnum.echartthinBar;
+            echartthreeQuartersPie: import("..").PieEchartEnum.echartthreeQuartersPie;
         }>, z.ZodEnum<{
             echartring: import("..").RingEchartEnum.echartring;
         }>, z.ZodEnum<{
@@ -112,51 +143,48 @@ declare const ComponentFlatSchema: z.ZodObject<{
             echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
             echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
         }>, z.ZodEnum<{
-            swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-            "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-            swiframe: import("..").MediaEnum.FtIframe;
+            swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+            "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+            swiframe: import("..").MediaEnum.SwIframe;
             swimg: import("..").MediaEnum.SwImg;
-            "sw-open-video": import("..").MediaEnum.FtOpenVideo;
+            "sw-open-video": import("..").MediaEnum.SwOpenVideo;
             swimgBorder: import("..").MediaEnum.SwImgBorder;
-            swswiper: import("..").MediaEnum.FtSwiper;
-            swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-            swvideo: import("..").MediaEnum.FtVideo;
+            swBox: import("..").MediaEnum.SwBox;
+            swswiper: import("..").MediaEnum.SwSwiper;
+            swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+            swvideo: import("..").MediaEnum.SwVideo;
             ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
         }>, z.ZodEnum<{
             ringIndicator3d: import("..").ExhibitEnum.RingIndicator3d;
             ringIndicator3dNew: import("..").ExhibitEnum.ringIndicator3dNew;
             imagesList3d: import("..").ExhibitEnum.ImagesList3d;
-            "pdfjs-viewer": import("..").ExhibitEnum.PdfjsViewer;
-            "sw-particles": import("..").ExhibitEnum.FtParticles;
-            "sw-signaturePad": import("..").ExhibitEnum.FtSignaturePad;
-            "sw-filter": import("..").ExhibitEnum.FtFilter;
-            verticalCard: import("..").ExhibitEnum.verticalCard;
+            "sw-particles": import("..").ExhibitEnum.SwParticles;
+            "sw-filter": import("..").ExhibitEnum.SwFilter;
         }>, z.ZodEnum<{
             "sw-folder": import("..").FolderEnum.group;
         }>, z.ZodEnum<{
             "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
             "ue-vessel": import("..").ExtendsEnum.UeVessel;
-            "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+            "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
             "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-            "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+            "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
             simpleStar: import("..").ExtendsEnum.SimpleStar;
             fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
             pageReload: import("..").ExtendsEnum.PageReload;
             "simple-particle": import("..").ExtendsEnum.SimpleParticle;
-            "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-            "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-            "sw-weather": import("..").ExtendsEnum.FtWeather;
-            "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+            "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+            "sw-weather": import("..").ExtendsEnum.SwWeather;
+            "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
         }>, z.ZodEnum<{
             rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
             iconRatio: import("..").IndicatorEnum.IconRatio;
             sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-            swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-            swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+            swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+            swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
             echartring: import("..").IndicatorEnum.EchartRing;
             "rank-progress": import("..").IndicatorEnum.RankProgress;
         }>, z.ZodEnum<{
-            "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+            "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
             formCheckbox: import("..").InteractiveEnum.FormCheckbox;
             formNavMenu: import("..").InteractiveEnum.FormNavMenu;
             scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -165,30 +193,30 @@ declare const ComponentFlatSchema: z.ZodObject<{
             formSlider: import("..").InteractiveEnum.FormSlider;
             "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
             "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-            swCascader: import("..").InteractiveEnum.FtCascader;
-            swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-            swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-            swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-            swLegend: import("..").InteractiveEnum.FtLegend;
-            swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-            swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+            swCascader: import("..").InteractiveEnum.SwCascader;
+            swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+            swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+            swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+            swLegend: import("..").InteractiveEnum.SwLegend;
+            swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+            swPageTurning: import("..").InteractiveEnum.SwPageTurning;
             subtabs: import("..").InteractiveEnum.Subtabs;
-            "sw-mutual": import("..").InteractiveEnum.FtMutual;
-            "sw-search": import("..").InteractiveEnum.FtSearch;
-            swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+            "sw-mutual": import("..").InteractiveEnum.SwMutual;
+            "sw-search": import("..").InteractiveEnum.SwSearch;
+            swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
             videoProgress: import("..").InteractiveEnum.videoProgress;
         }>, z.ZodEnum<{
             customCollapse: import("..").TextEnum.CustomCollapse;
             swRichtext: import("..").TextEnum.SwRichtext;
-            swcollection: import("..").TextEnum.FtCollection;
+            swcollection: import("..").TextEnum.SwCollection;
             customTableList: import("..").TextEnum.CustomTableList;
             swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
-            swmultiLine: import("..").TextEnum.FtMultiLine;
-            swtext: import("..").TextEnum.FtText;
-            swProgress: import("..").TextEnum.FtProgress;
-            swdatetime: import("..").TextEnum.FtDatetime;
-            swText2: import("..").TextEnum.FtText2;
-            swScroll: import("..").TextEnum.FtScroll;
+            swmultiLine: import("..").TextEnum.SwMultiLine;
+            swtext: import("..").TextEnum.SwText;
+            swProgress: import("..").TextEnum.SwProgress;
+            swdatetime: import("..").TextEnum.SwDatetime;
+            swText2: import("..").TextEnum.SwText2;
+            swScroll: import("..").TextEnum.SwScroll;
         }>, z.ZodEnum<{
             "vue-part": import("..").ThirdPartEnum.VuePart;
             datav: import("..").ThirdPartEnum.DataV;
@@ -219,7 +247,7 @@ declare const ComponentFlatSchema: z.ZodObject<{
     left: z.ZodNumber;
     top: z.ZodNumber;
     isLock: z.ZodOptional<z.ZodBoolean>;
-    zIndex: z.ZodNumber;
+    zIndex: z.ZodString;
     display: z.ZodBoolean;
     option: z.ZodOptional<z.ZodAny>;
     data: z.ZodOptional<z.ZodAny>;
@@ -1184,156 +1212,6 @@ declare const echartbothWayStripBarOptionSchema: z.ZodObject<{
 type echartbothWayStripBarOption = z.infer<typeof echartbothWayStripBarOptionSchema>;
 
 import { z } from 'zod';
-declare const echartdoubleValueLineDataSchema: z.ZodArray<z.ZodObject<{
-    seriesName: z.ZodString;
-    value: z.ZodArray<z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>>;
-}, z.core.$strip>>;
-type echartdoubleValueLineData = z.infer<typeof echartdoubleValueLineDataSchema>;
-/**
- * 特殊型折线图配置选项 Schema
- */
-declare const echartdoubleValueLineOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodArray<z.ZodString>;
-    seriesLabelShow: z.ZodArray<z.ZodBoolean>;
-    seriesLabelColor: z.ZodArray<z.ZodString>;
-    seriesLabelFontFamily: z.ZodArray<z.ZodString>;
-    seriesLabelFontSize: z.ZodArray<z.ZodNumber>;
-    seriesLabelFontWeight: z.ZodArray<z.ZodString>;
-    seriesLabelFontStyle: z.ZodArray<z.ZodString>;
-    seriesLabelOffsetX: z.ZodArray<z.ZodNumber>;
-    seriesLabelOffsetY: z.ZodArray<z.ZodNumber>;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    xAxisLabelUtil: z.ZodString;
-    yAxisLabelUtil: z.ZodString;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodBoolean;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodBoolean;
-    yAxisMin: z.ZodString;
-    yAxisMax: z.ZodString;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodNumber;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodString;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodNumber;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodString;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodString;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodString;
-    yAxisNameShow: z.ZodBoolean;
-    yAxisName: z.ZodString;
-    yAxisNameFontFamily: z.ZodString;
-    yAxisNameFontSize: z.ZodNumber;
-    yAxisNameColor: z.ZodString;
-    yAxisNameFontStyle: z.ZodString;
-    yAxisNameFontWeight: z.ZodString;
-    yAxisNamePaddingTop: z.ZodNumber;
-    yAxisNamePaddingBottom: z.ZodNumber;
-    yAxisNamePaddingLeft: z.ZodNumber;
-    yAxisNamePaddingRight: z.ZodNumber;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodBoolean;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodString;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodNumber;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodNumber;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodBoolean;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodString;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodNumber;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodBoolean;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodString;
-}, z.core.$strip>;
-type echartdoubleValueLineOption = z.infer<typeof echartdoubleValueLineOptionSchema>;
-
-import { z } from 'zod';
-declare const echarteffectScatterDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echarteffectScatterData = z.infer<typeof echarteffectScatterDataSchema>;
-/**
- * Top10气泡图配置选项 Schema
- */
-declare const echarteffectScatterOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    borderWidth: z.ZodNumber;
-    borderColor: z.ZodString;
-    rippleEffectNumber: z.ZodNumber;
-    rippleEffectPeriod: z.ZodNumber;
-    rippleEffectScale: z.ZodNumber;
-    rippleEffectBrushType: z.ZodEnum<{
-        fill: "fill";
-        stroke: "stroke";
-    }>;
-    points: z.ZodArray<z.ZodString>;
-    seriesList: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        tabName: z.ZodString;
-        translateX: z.ZodNumber;
-        translateY: z.ZodNumber;
-        size: z.ZodNumber;
-        insideColor: z.ZodString;
-        outsideColor: z.ZodString;
-        showEffectOn: z.ZodEnum<{
-            render: "render";
-            emphasis: "emphasis";
-        }>;
-        seriesLabelTopShow: z.ZodBoolean;
-        seriesLabelTopFontFamily: z.ZodString;
-        seriesLabelTopFontSize: z.ZodNumber;
-        seriesLabelTopColor: z.ZodString;
-        seriesLabelTopFontStyle: z.ZodString;
-        seriesLabelTopFontWeight: z.ZodString;
-        seriesLabelNameShow: z.ZodBoolean;
-        seriesLabelNameFontFamily: z.ZodString;
-        seriesLabelNameFontSize: z.ZodNumber;
-        seriesLabelNameColor: z.ZodString;
-        seriesLabelNameFontStyle: z.ZodString;
-        seriesLabelNameFontWeight: z.ZodString;
-        seriesLabelValueShow: z.ZodBoolean;
-        seriesLabelValueFontFamily: z.ZodString;
-        seriesLabelValueFontSize: z.ZodNumber;
-        seriesLabelValueColor: z.ZodString;
-        seriesLabelValueFontStyle: z.ZodString;
-        seriesLabelValueFontWeight: z.ZodString;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-type echarteffectScatterOption = z.infer<typeof echarteffectScatterOptionSchema>;
-
-import { z } from 'zod';
 declare const echartfunnelDataSchema: z.ZodArray<z.ZodObject<{
     seriesName: z.ZodString;
     value: z.ZodNumber;
@@ -1485,113 +1363,6 @@ declare const echartgraphOptionSchema: z.ZodObject<{
     seriesLabelValueFontStyle: z.ZodArray<z.ZodString>;
 }, z.core.$strip>;
 type echartgraphOption = z.infer<typeof echartgraphOptionSchema>;
-
-import { z } from 'zod';
-declare const echartgrowthRateBarDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    seriesName: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartgrowthRateBarData = z.infer<typeof echartgrowthRateBarDataSchema>;
-/**
- * 增长率柱状图配置选项 Schema
- */
-declare const echartgrowthRateBarOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodString>;
-    seriesColor: z.ZodArray<z.ZodString>;
-    borderColor: z.ZodArray<z.ZodString>;
-    isSort: z.ZodBoolean;
-    isHover: z.ZodBoolean;
-    seriesWidth: z.ZodNumber;
-    seriesOpacity: z.ZodNumber;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    legendShow: z.ZodBoolean;
-    legendItemWidth: z.ZodNumber;
-    legendItemHeight: z.ZodNumber;
-    legendItemGap: z.ZodNumber;
-    legendFontFamily: z.ZodString;
-    legendFontSize: z.ZodNumber;
-    legendColor: z.ZodString;
-    legendFontStyle: z.ZodString;
-    legendFontWeight: z.ZodString;
-    yAxisLabelHover: z.ZodArray<z.ZodBoolean>;
-    yAxisLabelHoverColor: z.ZodArray<z.ZodString>;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodBoolean;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodBoolean;
-    yAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    yAxisInterval: z.ZodNumber;
-    yAxisRotate: z.ZodNumber;
-    xAxisMin: z.ZodString;
-    xAxisMax: z.ZodString;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodNumber;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodString;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodNumber;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodString;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodString;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodString;
-    xAxisNameShow: z.ZodBoolean;
-    xAxisName: z.ZodString;
-    xAxisNameFontFamily: z.ZodString;
-    xAxisNameFontSize: z.ZodNumber;
-    xAxisNameColor: z.ZodString;
-    xAxisNameFontStyle: z.ZodString;
-    xAxisNameFontWeight: z.ZodString;
-    xAxisNamePaddingTop: z.ZodNumber;
-    xAxisNamePaddingBottom: z.ZodNumber;
-    xAxisNamePaddingLeft: z.ZodNumber;
-    xAxisNamePaddingRight: z.ZodNumber;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodBoolean;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodString;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodNumber;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodNumber;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodBoolean;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodString;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodNumber;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodBoolean;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodString;
-    tooltipLoop: z.ZodBoolean;
-    tooltipLoopInterval: z.ZodNumber;
-    tooltipUnit: z.ZodString;
-    tooltipFixed: z.ZodNumber;
-}, z.core.$strip>;
-type echartgrowthRateBarOption = z.infer<typeof echartgrowthRateBarOptionSchema>;
 
 import { z } from 'zod';
 declare const echartlineDataSchema: z.ZodArray<z.ZodObject<{
@@ -2135,148 +1906,6 @@ declare const echartloopRingPieOptionSchema: z.ZodObject<{
     seriesEmphasisScaleSize: z.ZodNumber;
 }, z.core.$strip>;
 type echartloopRingPieOption = z.infer<typeof echartloopRingPieOptionSchema>;
-
-import { z } from 'zod';
-declare const echartmultiplyRankBarDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    seriesName: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartmultiplyRankBarData = z.infer<typeof echartmultiplyRankBarDataSchema>;
-/**
- * 总数排名图配置选项 Schema
- */
-declare const echartmultiplyRankBarOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodArray<z.ZodObject<{
-        type: z.ZodOptional<z.ZodString>;
-        angle: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-            per: z.ZodOptional<z.ZodNumber>;
-        }, z.core.$strip>>>;
-    }, z.core.$loose>>;
-    seriesWidth: z.ZodNumber;
-    intervalColor: z.ZodString;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    legendShow: z.ZodBoolean;
-    legendOrient: z.ZodEnum<{
-        horizontal: "horizontal";
-        vertical: "vertical";
-    }>;
-    legendWidth: z.ZodNumber;
-    legendHeight: z.ZodNumber;
-    legendItemWidth: z.ZodNumber;
-    legendItemHeight: z.ZodNumber;
-    legendItemGap: z.ZodNumber;
-    legendFontFamily: z.ZodString;
-    legendFontSize: z.ZodNumber;
-    legendColor: z.ZodString;
-    legendFontStyle: z.ZodString;
-    legendFontWeight: z.ZodString;
-    legendTextLeftPadding: z.ZodNumber;
-    legendSelectedMode: z.ZodBoolean;
-    legendGrid: z.ZodObject<{
-        top: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        left: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        bottom: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        right: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-    }, z.core.$strip>;
-    legendOffsetX: z.ZodNumber;
-    legendOffsetY: z.ZodNumber;
-    valueShow: z.ZodBoolean;
-    valueFontFamily: z.ZodString;
-    valueFontSize: z.ZodNumber;
-    valueColor: z.ZodString;
-    valueFontStyle: z.ZodString;
-    valueFontWeight: z.ZodString;
-    valueOffSetX: z.ZodNumber;
-    valueOffSetY: z.ZodNumber;
-    nameFontFamily: z.ZodString;
-    nameFontSize: z.ZodNumber;
-    nameColor: z.ZodString;
-    nameFontStyle: z.ZodString;
-    nameFontWeight: z.ZodString;
-    nameWidth: z.ZodNumber;
-    nameLeftPadding: z.ZodNumber;
-    dataLoop: z.ZodBoolean;
-    dataLoopInterval: z.ZodNumber;
-    dataLoopDisplayRows: z.ZodNumber;
-    dataLoopRollNum: z.ZodNumber;
-}, z.core.$strip>;
-type echartmultiplyRankBarOption = z.infer<typeof echartmultiplyRankBarOptionSchema>;
-
-import { z } from 'zod';
-declare const echartoverlapBarDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    seriesName: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartoverlapBarData = z.infer<typeof echartoverlapBarDataSchema>;
-/**
- * 堆叠占比图配置选项 Schema
- */
-declare const echartoverlapBarOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    seriesWidth: z.ZodArray<z.ZodNumber>;
-    seriesTabsName: z.ZodArray<z.ZodString>;
-    barBodyColor: z.ZodArray<z.ZodObject<{
-        type: z.ZodOptional<z.ZodString>;
-        angle: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-            per: z.ZodOptional<z.ZodNumber>;
-        }, z.core.$strip>>>;
-    }, z.core.$loose>>;
-    barBodyOpacity: z.ZodArray<z.ZodNumber>;
-    barBorderColor: z.ZodString;
-    borderWidth: z.ZodNumber;
-    valueShow: z.ZodArray<z.ZodBoolean>;
-    valueFontFamily: z.ZodArray<z.ZodString>;
-    valueFontSize: z.ZodArray<z.ZodNumber>;
-    valueColor: z.ZodArray<z.ZodString>;
-    valueFontStyle: z.ZodArray<z.ZodString>;
-    valueFontWeight: z.ZodArray<z.ZodString>;
-    valueOffSetX: z.ZodArray<z.ZodNumber>;
-    valueOffSetY: z.ZodArray<z.ZodNumber>;
-    splitLineFontSize: z.ZodNumber;
-    splitLineColor: z.ZodString;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    yAxisLabelShow: z.ZodOptional<z.ZodBoolean>;
-    yAxisFontFamily: z.ZodOptional<z.ZodString>;
-    yAxisFontSize: z.ZodOptional<z.ZodNumber>;
-    yAxisColor: z.ZodOptional<z.ZodString>;
-    yAxisFontStyle: z.ZodOptional<z.ZodString>;
-    yAxisFontWeight: z.ZodOptional<z.ZodString>;
-    nameFontFamily: z.ZodString;
-    nameFontSize: z.ZodNumber;
-    nameColor: z.ZodString;
-    nameFontStyle: z.ZodString;
-    nameFontWeight: z.ZodString;
-    nameWidth: z.ZodNumber;
-    nameLeftPadding: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    xAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    dataLoop: z.ZodBoolean;
-    dataLoopInterval: z.ZodNumber;
-    dataLoopDisplayRows: z.ZodNumber;
-    dataLoopRollNum: z.ZodNumber;
-    intervalColor: z.ZodString;
-}, z.core.$strip>;
-type echartoverlapBarOption = z.infer<typeof echartoverlapBarOptionSchema>;
 
 import { z } from 'zod';
 declare const echartpictorialbarDataSchema: z.ZodArray<z.ZodObject<{
@@ -2833,199 +2462,6 @@ declare const echartradarOptionSchema: z.ZodObject<{
 type echartradarOption = z.infer<typeof echartradarOptionSchema>;
 
 import { z } from 'zod';
-declare const echartrankDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartrankData = z.infer<typeof echartrankDataSchema>;
-/**
- * 排名图配置选项 Schema
- */
-declare const echartrankOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    stack: z.ZodBoolean;
-    seriesTabsName: z.ZodArray<z.ZodString>;
-    sortType: z.ZodEnum<{
-        none: "none";
-        asc: "asc";
-        desc: "desc";
-    }>;
-    defaultSeriesColor: z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>;
-    defaultSeriesOpacity: z.ZodNumber;
-    seriesColor: z.ZodArray<z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>>;
-    seriesColorpicker: z.ZodArray<z.ZodString>;
-    seriesOpacity: z.ZodArray<z.ZodNumber>;
-    barGap: z.ZodNumber;
-    barCategoryGap: z.ZodNumber;
-    barBorderRadius: z.ZodString;
-    barBackgroundColor: z.ZodString;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    legendShow: z.ZodBoolean;
-    legendWidth: z.ZodNumber;
-    legendHeight: z.ZodNumber;
-    legendItemWidth: z.ZodNumber;
-    legendItemHeight: z.ZodNumber;
-    legendItemGap: z.ZodNumber;
-    legendFontFamily: z.ZodString;
-    legendFontSize: z.ZodNumber;
-    legendColor: z.ZodString;
-    legendFontStyle: z.ZodString;
-    legendFontWeight: z.ZodString;
-    legendTextLeftPadding: z.ZodNumber;
-    legendSelectedMode: z.ZodBoolean;
-    legendGrid: z.ZodObject<{
-        top: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        left: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        bottom: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        right: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-    }, z.core.$strip>;
-    legendOffsetX: z.ZodNumber;
-    legendOffsetY: z.ZodNumber;
-    legendOrient: z.ZodEnum<{
-        horizontal: "horizontal";
-        vertical: "vertical";
-    }>;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    seriesLabelShow: z.ZodArray<z.ZodBoolean>;
-    seriesLabelColor: z.ZodArray<z.ZodString>;
-    seriesLabelFontFamily: z.ZodArray<z.ZodString>;
-    seriesLabelFontSize: z.ZodArray<z.ZodNumber>;
-    seriesLabelFontWeight: z.ZodArray<z.ZodString>;
-    seriesLabelFontStyle: z.ZodArray<z.ZodString>;
-    seriesLabelOffsetX: z.ZodArray<z.ZodNumber>;
-    seriesLabelOffsetY: z.ZodArray<z.ZodNumber>;
-    seriesLabelSuffix: z.ZodString;
-    defaultSeriesLabelBackground: z.ZodString;
-    seriesLabelBackground: z.ZodArray<z.ZodString>;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodBoolean;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodBoolean;
-    yAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    yAxisInterval: z.ZodNumber;
-    yAxisRotate: z.ZodNumber;
-    xAxisMin: z.ZodString;
-    xAxisMax: z.ZodString;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodNumber;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodString;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodNumber;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodString;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodString;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodString;
-    xAxisNameShow: z.ZodBoolean;
-    xAxisName: z.ZodString;
-    xAxisNameFontFamily: z.ZodString;
-    xAxisNameFontSize: z.ZodNumber;
-    xAxisNameColor: z.ZodString;
-    xAxisNameFontStyle: z.ZodString;
-    xAxisNameFontWeight: z.ZodString;
-    xAxisNameGap: z.ZodNumber;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodBoolean;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodString;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodNumber;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodNumber;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodBoolean;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodString;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodNumber;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodString;
-    dataLoop: z.ZodBoolean;
-    dataLoopInterval: z.ZodNumber;
-    dataLoopDisplayRows: z.ZodNumber;
-    dataLoopRollNum: z.ZodNumber;
-    dataZoomShow: z.ZodBoolean;
-    moveHandleSize: z.ZodNumber;
-    moveHandleColor: z.ZodString;
-    moveHandleEmphasisColor: z.ZodString;
-    dataZoomRight: z.ZodNumber;
-}, z.core.$strip>;
-type echartrankOption = z.infer<typeof echartrankOptionSchema>;
-
-import { z } from 'zod';
-declare const echartrankBarDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartrankBarData = z.infer<typeof echartrankBarDataSchema>;
-/**
- * 排名图配置选项 Schema
- */
-declare const echartrankBarOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    seriesWidth: z.ZodNumber;
-    intervalColor: z.ZodString;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    valueShow: z.ZodBoolean;
-    valueFontFamily: z.ZodString;
-    valueFontSize: z.ZodNumber;
-    valueColor: z.ZodString;
-    valueFontStyle: z.ZodString;
-    valueFontWeight: z.ZodString;
-    valueOffSetX: z.ZodNumber;
-    valueOffSetY: z.ZodNumber;
-    nameFontFamily: z.ZodString;
-    nameFontSize: z.ZodNumber;
-    nameColor: z.ZodString;
-    nameFontStyle: z.ZodString;
-    nameFontWeight: z.ZodString;
-    nameWidth: z.ZodNumber;
-    nameLeftPadding: z.ZodNumber;
-    dataLoop: z.ZodBoolean;
-    dataLoopInterval: z.ZodNumber;
-    dataLoopDisplayRows: z.ZodNumber;
-    dataLoopRollNum: z.ZodNumber;
-}, z.core.$strip>;
-type echartrankBarOption = z.infer<typeof echartrankBarOptionSchema>;
-
-import { z } from 'zod';
 declare const echartsankeyDataSchema: z.ZodArray<z.ZodObject<{
     source: z.ZodString;
     target: z.ZodString;
@@ -3110,94 +2546,6 @@ declare const echartsankeyOptionSchema: z.ZodObject<{
     }, z.core.$strip>;
 }, z.core.$strip>;
 type echartsankeyOption = z.infer<typeof echartsankeyOptionSchema>;
-
-import { z } from 'zod';
-declare const echartscalePieDataSchema: z.ZodArray<z.ZodObject<{
-    seriesName: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartscalePieData = z.infer<typeof echartscalePieDataSchema>;
-/**
- * 刻度饼图配置选项 Schema
- */
-declare const echartscalePieOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodArray<z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>>;
-    seriesOpacity: z.ZodArray<z.ZodNumber>;
-    pieCenterX: z.ZodNumber;
-    pieCenterY: z.ZodNumber;
-    pieRadiusMax: z.ZodNumber;
-    pieRadiusMin: z.ZodNumber;
-    gaugeShow: z.ZodBoolean;
-    gaugeRadius: z.ZodNumber;
-    gaugeLength: z.ZodNumber;
-    gaugeCenterX: z.ZodNumber;
-    gaugeCenterY: z.ZodNumber;
-    gaugeColor: z.ZodString;
-    seriesLabelShow: z.ZodBoolean;
-    seriesDistanceToLabelLine: z.ZodNumber;
-    seriesLabelLineLength: z.ZodNumber;
-    seriesLabelSeriesShow: z.ZodBoolean;
-    seriesLabelSeriesFontFamily: z.ZodString;
-    seriesLabelSeriesFontSize: z.ZodNumber;
-    seriesLabelSeriesColor: z.ZodString;
-    seriesLabelSeriesFontStyle: z.ZodString;
-    seriesLabelSeriesFontWeight: z.ZodString;
-    seriesLabelPercentShow: z.ZodBoolean;
-    seriesLabelPercentValue: z.ZodNumber;
-    seriesLabelPercentFontFamily: z.ZodString;
-    seriesLabelPercentFontSize: z.ZodNumber;
-    seriesLabelPercentColor: z.ZodString;
-    seriesLabelPercentFontStyle: z.ZodString;
-    seriesLabelPercentFontWeight: z.ZodString;
-    seriesLabelValueShow: z.ZodBoolean;
-    seriesLabelUnit: z.ZodString;
-    seriesLabelUnitFontSize: z.ZodNumber;
-    seriesLabelUnitLeftPadding: z.ZodNumber;
-    seriesLabelValueLeftPadding: z.ZodNumber;
-    seriesLabelValueFontFamily: z.ZodString;
-    seriesLabelValueFontSize: z.ZodNumber;
-    seriesLabelValueColor: z.ZodString;
-    seriesLabelValueFontStyle: z.ZodString;
-    seriesLabelValueFontWeight: z.ZodString;
-    legendShow: z.ZodBoolean;
-    legendItemWidthAndHeight: z.ZodNumber;
-    legendTextLeftPadding: z.ZodNumber;
-    legendFontFamily: z.ZodString;
-    legendFontSize: z.ZodNumber;
-    legendColor: z.ZodString;
-    legendFontStyle: z.ZodString;
-    legendFontWeight: z.ZodString;
-    legendOrient: z.ZodEnum<{
-        horizontal: "horizontal";
-        vertical: "vertical";
-    }>;
-    legendWidth: z.ZodNumber;
-    legendHeight: z.ZodNumber;
-    legendItemGap: z.ZodNumber;
-    legendGrid: z.ZodObject<{
-        top: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        left: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        bottom: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-        right: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-    }, z.core.$strip>;
-    legendOffsetX: z.ZodNumber;
-    legendOffsetY: z.ZodNumber;
-}, z.core.$strip>;
-type echartscalePieOption = z.infer<typeof echartscalePieOptionSchema>;
 
 import { z } from 'zod';
 declare const echartscatterDataSchema: z.ZodArray<z.ZodObject<{
@@ -3582,395 +2930,6 @@ declare const echartstripBarOptionSchema: z.ZodObject<{
 type echartstripBarOption = z.infer<typeof echartstripBarOptionSchema>;
 
 import { z } from 'zod';
-declare const echartthinBarDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartthinBarData = z.infer<typeof echartthinBarDataSchema>;
-/**
- * 细长柱状图配置选项 Schema
- */
-declare const echartthinBarOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>;
-    hoverColor: z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>;
-    isSort: z.ZodBoolean;
-    isHover: z.ZodBoolean;
-    seriesWidth: z.ZodNumber;
-    seriesOpacity: z.ZodNumber;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodBoolean;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodBoolean;
-    xAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    xAxisInterval: z.ZodNumber;
-    xAxisRotate: z.ZodNumber;
-    yAxisMin: z.ZodString;
-    yAxisMax: z.ZodString;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodNumber;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodString;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodNumber;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodString;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodString;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodString;
-    yAxisNameShow: z.ZodBoolean;
-    yAxisName: z.ZodString;
-    yAxisNameFontFamily: z.ZodString;
-    yAxisNameFontSize: z.ZodNumber;
-    yAxisNameColor: z.ZodString;
-    yAxisNameFontStyle: z.ZodString;
-    yAxisNameFontWeight: z.ZodString;
-    yAxisNamePaddingTop: z.ZodNumber;
-    yAxisNamePaddingBottom: z.ZodNumber;
-    yAxisNamePaddingLeft: z.ZodNumber;
-    yAxisNamePaddingRight: z.ZodNumber;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodBoolean;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodString;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodNumber;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodNumber;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodBoolean;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodString;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodNumber;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodBoolean;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodString;
-    tooltipLoop: z.ZodBoolean;
-    tooltipLoopInterval: z.ZodNumber;
-    tooltipUnit: z.ZodString;
-    tooltipFixed: z.ZodNumber;
-}, z.core.$strip>;
-type echartthinBarOption = z.infer<typeof echartthinBarOptionSchema>;
-
-import { z } from 'zod';
-declare const echartthreedBarDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartthreedBarData = z.infer<typeof echartthreedBarDataSchema>;
-/**
- * 3D柱状图配置选项 Schema
- */
-declare const echartthreedBarOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodUnion<readonly [z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>, z.ZodArray<z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>>]>;
-    seriesTopColor: z.ZodString;
-    seriesBottomColor: z.ZodString;
-    hoverColor: z.ZodUnion<readonly [z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>, z.ZodArray<z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>>]>;
-    isSort: z.ZodBoolean;
-    isHover: z.ZodBoolean;
-    seriesWidth: z.ZodNumber;
-    seriesOpacity: z.ZodNumber;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodBoolean;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodBoolean;
-    xAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    xAxisInterval: z.ZodNumber;
-    xAxisRotate: z.ZodNumber;
-    yAxisMin: z.ZodString;
-    yAxisMax: z.ZodString;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodNumber;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodString;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodNumber;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodString;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodString;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodString;
-    yAxisNameShow: z.ZodBoolean;
-    yAxisName: z.ZodString;
-    yAxisNameFontFamily: z.ZodString;
-    yAxisNameFontSize: z.ZodNumber;
-    yAxisNameColor: z.ZodString;
-    yAxisNameFontStyle: z.ZodString;
-    yAxisNameFontWeight: z.ZodString;
-    yAxisNamePaddingTop: z.ZodNumber;
-    yAxisNamePaddingBottom: z.ZodNumber;
-    yAxisNamePaddingLeft: z.ZodNumber;
-    yAxisNamePaddingRight: z.ZodNumber;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodBoolean;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodString;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodNumber;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodNumber;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodBoolean;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodString;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodNumber;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodBoolean;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodString;
-    tooltipLoop: z.ZodBoolean;
-    tooltipLoopInterval: z.ZodNumber;
-    tooltipUnit: z.ZodString;
-    tooltipFixed: z.ZodNumber;
-}, z.core.$strip>;
-type echartthreedBarOption = z.infer<typeof echartthreedBarOptionSchema>;
-
-import { z } from 'zod';
-declare const echartthreedBarAndLineDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    seriesName: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartthreedBarAndLineData = z.infer<typeof echartthreedBarAndLineDataSchema>;
-/**
- * 3D柱状折线图配置选项 Schema
- */
-declare const echartthreedBarAndLineOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>;
-    seriesTopColor: z.ZodString;
-    seriesBottomColor: z.ZodString;
-    seriesHoverColor: z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>;
-    seriesHoverOpacity: z.ZodNumber;
-    seriesHoverTopColor: z.ZodString;
-    seriesHoverBottomColor: z.ZodString;
-    isSort: z.ZodBoolean;
-    isHover: z.ZodBoolean;
-    seriesWidth: z.ZodNumber;
-    seriesOpacity: z.ZodNumber;
-    seriesLineColor: z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>, z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>]>>]>;
-    seriesLineOpacity: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    seriesLineWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    seriesSmoothShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-    seriesSmooth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    seriesConnectNulls: z.ZodOptional<z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>>;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    legendShow: z.ZodBoolean;
-    legendWidth: z.ZodNumber;
-    legendHeight: z.ZodNumber;
-    legendItemWidth: z.ZodNumber;
-    legendItemHeight: z.ZodNumber;
-    legendItemGap: z.ZodNumber;
-    legendFontFamily: z.ZodString;
-    legendFontSize: z.ZodNumber;
-    legendColor: z.ZodString;
-    legendFontStyle: z.ZodString;
-    legendFontWeight: z.ZodString;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-    xAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    xAxisInterval: z.ZodNumber;
-    xAxisRotate: z.ZodNumber;
-    yAxisMin: z.ZodOptional<z.ZodString>;
-    yAxisMax: z.ZodOptional<z.ZodString>;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    yAxisNameShow: z.ZodOptional<z.ZodBoolean>;
-    yAxisName: z.ZodOptional<z.ZodString>;
-    yAxisNameFontFamily: z.ZodOptional<z.ZodString>;
-    yAxisNameFontSize: z.ZodOptional<z.ZodNumber>;
-    yAxisNameColor: z.ZodOptional<z.ZodString>;
-    yAxisNameFontStyle: z.ZodOptional<z.ZodString>;
-    yAxisNameFontWeight: z.ZodOptional<z.ZodString>;
-    yAxisNamePaddingTop: z.ZodOptional<z.ZodNumber>;
-    yAxisNamePaddingBottom: z.ZodOptional<z.ZodNumber>;
-    yAxisNamePaddingLeft: z.ZodOptional<z.ZodNumber>;
-    yAxisNamePaddingRight: z.ZodOptional<z.ZodNumber>;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    tooltipLoop: z.ZodBoolean;
-    tooltipLoopInterval: z.ZodNumber;
-    tooltipUnit: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-    tooltipFixed: z.ZodNumber;
-}, z.core.$strip>;
-type echartthreedBarAndLineOption = z.infer<typeof echartthreedBarAndLineOptionSchema>;
-
-import { z } from 'zod';
 declare const echartthreePieDataSchema: z.ZodArray<z.ZodObject<{
     seriesName: z.ZodString;
     value: z.ZodNumber;
@@ -4229,422 +3188,30 @@ declare const echarttreemapOptionSchema: z.ZodObject<{
 type echarttreemapOption = z.infer<typeof echarttreemapOptionSchema>;
 
 import { z } from 'zod';
-declare const echartzebraDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartzebraData = z.infer<typeof echartzebraDataSchema>;
 /**
- * 斑马柱状图配置选项 Schema
+ * 图表类组件的系列匹配检查——跨 `data`/`option` 两个独立 schema，任何一个 per-prop schema
+ * 单独看都看不到，所以不写进某一个具体图表的 option schema 里，而是作为通用规则，在
+ * `data`/`option` 合并成同一个 schema 后用 `.superRefine(seriesAlignmentSuperRefine)` 挂上去。
+ *
+ * 20 余个 echart 组件（EchartlineAndBar/Echartbar/EchartRadar/Echartpie...）的渲染代码都是
+ * 同一套写法：先从 `data[].seriesName` 收集出实际存在的系列名，再用 `option.dataSeriesName[i]`
+ * 逐个去 `indexOf` 匹配、取到下标后才去读 `seriesType[i]`/`seriesBarColor[i]` 等一整批样式数组
+ * （`option.dataUnitName` 配 tooltip 单位是同一个模式）。
+ *
+ * 配不上（字符串不完全相等，大小写/多余空格都算不等）不会报错——`indexOf` 返回 -1 直接跳过，
+ * 那个系列的样式/单位悄悄留空；渲染时要么退回硬编码默认色，要么因为 `seriesType[idx]` 是
+ * undefined，既不等于 "bar" 也不等于 "line"，被 `list.filter(item => item)` 整个过滤掉——
+ * agent 对此毫无感知。`option.seriesType` 数组长度还会反过来截断 data 里的系列数
+ * （`optionData.splice(seriesType.length)`），数组短了，多出来的系列直接被砍掉不渲染。
+ *
+ * 字段名（`data[].seriesName` / `option.dataSeriesName` / `option.seriesType` /
+ * `option.dataUnitName`）是这批组件共享的约定，不属于任何一个组件独有，因此这里做纯运行时的
+ * 鸭子类型检查，而不依赖某个具体组件的 data/option 类型。
  */
-declare const echartzebraOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>;
-    hoverColor: z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>;
-    intervalColor: z.ZodString;
-    isSort: z.ZodBoolean;
-    isHover: z.ZodBoolean;
-    seriesWidth: z.ZodNumber;
-    seriesOpacity: z.ZodNumber;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodBoolean;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodBoolean;
-    xAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    xAxisLabelLimit: z.ZodBoolean;
-    xAxisLabelLimitNum: z.ZodNumber;
-    xAxisInterval: z.ZodNumber;
-    xAxisRotate: z.ZodNumber;
-    yAxisMin: z.ZodString;
-    yAxisMax: z.ZodString;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodNumber;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodString;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodNumber;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodString;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodString;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodString;
-    yAxisNameShow: z.ZodBoolean;
-    yAxisName: z.ZodString;
-    yAxisNameFontFamily: z.ZodString;
-    yAxisNameFontSize: z.ZodNumber;
-    yAxisNameColor: z.ZodString;
-    yAxisNameFontStyle: z.ZodString;
-    yAxisNameFontWeight: z.ZodString;
-    yAxisNamePaddingTop: z.ZodNumber;
-    yAxisNamePaddingBottom: z.ZodNumber;
-    yAxisNamePaddingLeft: z.ZodNumber;
-    yAxisNamePaddingRight: z.ZodNumber;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodBoolean;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodString;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodNumber;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodNumber;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodBoolean;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodString;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodNumber;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodBoolean;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodString;
-    tooltipLoop: z.ZodBoolean;
-    tooltipLoopInterval: z.ZodNumber;
-    tooltipUnit: z.ZodString;
-    tooltipFixed: z.ZodNumber;
-}, z.core.$strip>;
-type echartzebraOption = z.infer<typeof echartzebraOptionSchema>;
-
-import { z } from 'zod';
-declare const echartzebra2DataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    seriesName: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartzebra2Data = z.infer<typeof echartzebra2DataSchema>;
-/**
- * 斑马柱状图2配置选项 Schema
- */
-declare const echartzebra2OptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    stack: z.ZodBoolean;
-    barWidth: z.ZodNumber;
-    barCategoryGap: z.ZodNumber;
-    barBlockItemHeight: z.ZodNumber;
-    barBlockItemInterval: z.ZodNumber;
-    barBlockItemRadio: z.ZodNumber;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesColor: z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>]>>;
-    seriesColorpicker: z.ZodArray<z.ZodString>;
-    seriesOpacity: z.ZodArray<z.ZodNumber>;
-    extremeShow: z.ZodArray<z.ZodBoolean>;
-    extremeType: z.ZodArray<z.ZodEnum<{
-        max: "max";
-        min: "min";
-    }>>;
-    xAxisSplitLineType: z.ZodString;
-    yAxisSplitLineType: z.ZodString;
-    extremeColor: z.ZodArray<z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>>;
-    extremeOpacity: z.ZodArray<z.ZodNumber>;
-    extremeColorpicker: z.ZodArray<z.ZodString>;
-    markLineDataType: z.ZodArray<z.ZodString>;
-    markLineData: z.ZodArray<z.ZodAny>;
-    markLineSymbolStart: z.ZodArray<z.ZodString>;
-    markLineSymbolStartImage: z.ZodArray<z.ZodString>;
-    markLineSymbolEnd: z.ZodArray<z.ZodString>;
-    markLineSymbolEndImage: z.ZodArray<z.ZodString>;
-    markLineSymbolWidth: z.ZodArray<z.ZodNumber>;
-    markLineSymbolHeight: z.ZodArray<z.ZodNumber>;
-    markLineLabelShow: z.ZodArray<z.ZodBoolean>;
-    markLineLabelPosition: z.ZodArray<z.ZodString>;
-    markLineLabelDistance: z.ZodArray<z.ZodNumber>;
-    markLineLabelCustom: z.ZodArray<z.ZodString>;
-    markLineLabelFontFamily: z.ZodArray<z.ZodString>;
-    markLineLabelFontStyle: z.ZodArray<z.ZodString>;
-    markLineLabelFontSize: z.ZodArray<z.ZodNumber>;
-    markLineLabelColor: z.ZodArray<z.ZodString>;
-    markLineLabelFontWeight: z.ZodArray<z.ZodString>;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    legendShow: z.ZodBoolean;
-    legendWidth: z.ZodNumber;
-    legendHeight: z.ZodNumber;
-    legendItemWidth: z.ZodNumber;
-    legendItemHeight: z.ZodNumber;
-    legendItemGap: z.ZodNumber;
-    legendFontFamily: z.ZodString;
-    legendFontSize: z.ZodNumber;
-    legendColor: z.ZodString;
-    legendFontStyle: z.ZodString;
-    legendFontWeight: z.ZodString;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodBoolean;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodBoolean;
-    xAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    xAxisInterval: z.ZodNumber;
-    xAxisRotate: z.ZodNumber;
-    yAxisMin: z.ZodString;
-    yAxisMax: z.ZodString;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodNumber;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodString;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodNumber;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodString;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodString;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodString;
-    yAxisNameShow: z.ZodBoolean;
-    yAxisName: z.ZodString;
-    yAxisNameFontFamily: z.ZodString;
-    yAxisNameFontSize: z.ZodNumber;
-    yAxisNameColor: z.ZodString;
-    yAxisNameFontStyle: z.ZodString;
-    yAxisNameFontWeight: z.ZodString;
-    yAxisNamePaddingTop: z.ZodNumber;
-    yAxisNamePaddingBottom: z.ZodNumber;
-    yAxisNamePaddingLeft: z.ZodNumber;
-    yAxisNamePaddingRight: z.ZodNumber;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodBoolean;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodString;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodNumber;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodNumber;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodBoolean;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodString;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodNumber;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodNumber;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodBoolean;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodNumber;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodString;
-    dataLoop: z.ZodBoolean;
-    dataLoopInterval: z.ZodNumber;
-    dataLoopDisplayRows: z.ZodNumber;
-    dataLoopRollNum: z.ZodNumber;
-}, z.core.$strip>;
-type echartzebra2Option = z.infer<typeof echartzebra2OptionSchema>;
-
-import { z } from 'zod';
-declare const echartzebraBarAndLineDataSchema: z.ZodArray<z.ZodObject<{
-    name: z.ZodString;
-    seriesName: z.ZodString;
-    value: z.ZodNumber;
-}, z.core.$strip>>;
-type echartzebraBarAndLineData = z.infer<typeof echartzebraBarAndLineDataSchema>;
-/**
- * 斑马柱状折线图配置选项 Schema
- */
-declare const echartzebraBarAndLineOptionSchema: z.ZodObject<{
-    refresh: z.ZodBoolean;
-    dataSeriesName: z.ZodArray<z.ZodString>;
-    seriesName: z.ZodArray<z.ZodString>;
-    seriesTabsName: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        value: z.ZodString;
-    }, z.core.$strip>>;
-    seriesType: z.ZodArray<z.ZodEnum<{
-        bar: "bar";
-        line: "line";
-    }>>;
-    seriesWidth: z.ZodArray<z.ZodNumber>;
-    seriesBarColor: z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>]>>;
-    seriesBarOpacity: z.ZodArray<z.ZodNumber>;
-    intervalColor: z.ZodArray<z.ZodString>;
-    seriesLineColor: z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-        type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-        angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-        colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>>;
-    }, z.core.$strip>]>>;
-    seriesLineOpacity: z.ZodArray<z.ZodNumber>;
-    seriesLineWidth: z.ZodArray<z.ZodNumber>;
-    seriesSmoothShow: z.ZodArray<z.ZodBoolean>;
-    seriesSmooth: z.ZodArray<z.ZodNumber>;
-    seriesConnectNulls: z.ZodArray<z.ZodBoolean>;
-    seriesSymbolShow: z.ZodArray<z.ZodBoolean>;
-    seriesSymbol: z.ZodArray<z.ZodString>;
-    seriesSymbolImage: z.ZodArray<z.ZodString>;
-    seriesSymbolWidth: z.ZodArray<z.ZodNumber>;
-    seriesSymbolHeight: z.ZodArray<z.ZodNumber>;
-    seriesItemColor: z.ZodArray<z.ZodString>;
-    seriesItemBorderWidth: z.ZodArray<z.ZodNumber>;
-    seriesItemBorderColor: z.ZodArray<z.ZodString>;
-    seriesLabelShow: z.ZodArray<z.ZodBoolean>;
-    seriesLabelColor: z.ZodArray<z.ZodString>;
-    seriesLabelFontFamily: z.ZodArray<z.ZodString>;
-    seriesLabelFontSize: z.ZodArray<z.ZodNumber>;
-    seriesLabelFontWeight: z.ZodArray<z.ZodString>;
-    seriesLabelFontStyle: z.ZodArray<z.ZodString>;
-    seriesLabelOffsetX: z.ZodArray<z.ZodNumber>;
-    seriesLabelOffsetY: z.ZodArray<z.ZodNumber>;
-    seriesAreaOpacity: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
-    gridLeft: z.ZodNumber;
-    gridTop: z.ZodNumber;
-    gridRight: z.ZodNumber;
-    gridBottom: z.ZodNumber;
-    legendShow: z.ZodBoolean;
-    legendWidth: z.ZodNumber;
-    legendHeight: z.ZodNumber;
-    legendItemWidth: z.ZodNumber;
-    legendItemHeight: z.ZodNumber;
-    legendItemGap: z.ZodNumber;
-    legendFontFamily: z.ZodString;
-    legendFontSize: z.ZodNumber;
-    legendColor: z.ZodString;
-    legendFontStyle: z.ZodString;
-    legendFontWeight: z.ZodString;
-    xNameFontSize: z.ZodNumber;
-    yNameFontSize: z.ZodNumber;
-    yAxisInverse: z.ZodBoolean;
-    xAxisInverse: z.ZodBoolean;
-    xAxisShow: z.ZodBoolean;
-    yAxisShow: z.ZodOptional<z.ZodBoolean>;
-    xAxisLabelShow: z.ZodBoolean;
-    yAxisLabelShow: z.ZodOptional<z.ZodBoolean>;
-    xAxisType: z.ZodEnum<{
-        value: "value";
-        category: "category";
-        time: "time";
-        log: "log";
-    }>;
-    xAxisInterval: z.ZodNumber;
-    xAxisRotate: z.ZodNumber;
-    yAxisMin: z.ZodOptional<z.ZodString>;
-    yAxisMax: z.ZodOptional<z.ZodString>;
-    xAxisMargin: z.ZodNumber;
-    yAxisMargin: z.ZodOptional<z.ZodNumber>;
-    xAxisFontFamily: z.ZodString;
-    yAxisFontFamily: z.ZodOptional<z.ZodString>;
-    xAxisFontSize: z.ZodNumber;
-    yAxisFontSize: z.ZodOptional<z.ZodNumber>;
-    xAxisColor: z.ZodString;
-    yAxisColor: z.ZodOptional<z.ZodString>;
-    xAxisFontStyle: z.ZodString;
-    yAxisFontStyle: z.ZodOptional<z.ZodString>;
-    xAxisFontWeight: z.ZodString;
-    yAxisFontWeight: z.ZodOptional<z.ZodString>;
-    yAxisNameShow: z.ZodOptional<z.ZodBoolean>;
-    yAxisName: z.ZodOptional<z.ZodString>;
-    yAxisNameFontFamily: z.ZodOptional<z.ZodString>;
-    yAxisNameFontSize: z.ZodOptional<z.ZodNumber>;
-    yAxisNameColor: z.ZodOptional<z.ZodString>;
-    yAxisNameFontStyle: z.ZodOptional<z.ZodString>;
-    yAxisNameFontWeight: z.ZodOptional<z.ZodString>;
-    yAxisNamePaddingTop: z.ZodOptional<z.ZodNumber>;
-    yAxisNamePaddingBottom: z.ZodOptional<z.ZodNumber>;
-    yAxisNamePaddingLeft: z.ZodOptional<z.ZodNumber>;
-    yAxisNamePaddingRight: z.ZodOptional<z.ZodNumber>;
-    xAxisLineShow: z.ZodBoolean;
-    yAxisLineShow: z.ZodOptional<z.ZodBoolean>;
-    xAxisLineColor: z.ZodString;
-    yAxisLineColor: z.ZodOptional<z.ZodString>;
-    xAxisLineWidth: z.ZodNumber;
-    yAxisLineWidth: z.ZodOptional<z.ZodNumber>;
-    xAxisLineOpacity: z.ZodNumber;
-    yAxisLineOpacity: z.ZodOptional<z.ZodNumber>;
-    xAxisTickShow: z.ZodBoolean;
-    yAxisTickShow: z.ZodOptional<z.ZodBoolean>;
-    xAxisTickColor: z.ZodString;
-    yAxisTickColor: z.ZodOptional<z.ZodString>;
-    xAxisTickWidth: z.ZodNumber;
-    yAxisTickWidth: z.ZodOptional<z.ZodNumber>;
-    xAxisTickLength: z.ZodNumber;
-    yAxisTickLength: z.ZodOptional<z.ZodNumber>;
-    xAxisSplitLineShow: z.ZodBoolean;
-    yAxisSplitLineShow: z.ZodOptional<z.ZodBoolean>;
-    xAxisSplitLineInterval: z.ZodNumber;
-    xAxisSplitLineWidth: z.ZodNumber;
-    yAxisSplitLineWidth: z.ZodOptional<z.ZodNumber>;
-    xAxisSplitLineColor: z.ZodString;
-    yAxisSplitLineColor: z.ZodOptional<z.ZodString>;
-    tooltipLoop: z.ZodBoolean;
-    tooltipLoopInterval: z.ZodNumber;
-    tooltipUnit: z.ZodString;
-    tooltipFixed: z.ZodNumber;
-}, z.core.$strip>;
-type echartzebraBarAndLineOption = z.infer<typeof echartzebraBarAndLineOptionSchema>;
+declare function seriesAlignmentSuperRefine(val: {
+    data?: unknown;
+    option?: Record<string, unknown>;
+}, ctx: z.RefinementCtx): void;
 
 import { z } from 'zod';
 /**
@@ -4681,49 +3248,6 @@ declare const pageReloadOptionSchema: z.ZodObject<{
     pageReloadTypeClick: z.ZodString;
 }, z.core.$strip>;
 type pageReloadOption = z.infer<typeof pageReloadOptionSchema>;
-
-import { z } from 'zod';
-declare const simpleBarrageDataSchema: z.ZodArray<z.ZodObject<{
-    text: z.ZodString;
-}, z.core.$strip>>;
-type simpleBarrageData = z.infer<typeof simpleBarrageDataSchema>;
-declare const simpleBarrageOptionSchema: z.ZodObject<{
-    imageWidth: z.ZodNumber;
-    imageHeight: z.ZodNumber;
-    imageMinHeight: z.ZodNumber;
-    imageMaxHeight: z.ZodNumber;
-    imageObjectFit: z.ZodString;
-    scale: z.ZodNumber;
-    importType: z.ZodString;
-    importConfig: z.ZodObject<{
-        apiUrl: z.ZodString;
-        method: z.ZodString;
-        body: z.ZodArray<z.ZodUnknown>;
-        headers: z.ZodArray<z.ZodUnknown>;
-    }, z.core.$strip>;
-    loop: z.ZodBoolean;
-    lineNum: z.ZodNumber;
-    isHover: z.ZodBoolean;
-    speed: z.ZodNumber;
-    stylesList: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        fontSize: z.ZodNumber;
-        fontWeight: z.ZodBoolean;
-        fontStyle: z.ZodBoolean;
-        letterSpacing: z.ZodNumber;
-        fontFamily: z.ZodString;
-        fontColor: z.ZodString;
-        isTextShadow: z.ZodBoolean;
-        textShadow: z.ZodObject<{
-            x: z.ZodNumber;
-            y: z.ZodNumber;
-            blur: z.ZodNumber;
-            color: z.ZodString;
-            extend: z.ZodNumber;
-        }, z.core.$strip>;
-    }, z.core.$strip>>;
-}, z.core.$strip>;
-type simpleBarrageOption = z.infer<typeof simpleBarrageOptionSchema>;
 
 import { z } from 'zod';
 /**
@@ -5735,8 +4259,32 @@ declare const swFlopPerformanceOptionSchema: z.ZodObject<{
     autoIncrement: z.ZodBoolean;
     incrementFrequency: z.ZodNumber;
     randomRange: z.ZodNumber;
+    setFontLinear: z.ZodOptional<z.ZodBoolean>;
+    suffixSetFontLinear: z.ZodOptional<z.ZodBoolean>;
+    suffixFontLinearColor: z.ZodOptional<z.ZodString>;
+    duration: z.ZodOptional<z.ZodNumber>;
+    shadowShow: z.ZodOptional<z.ZodBoolean>;
+    shadowColor: z.ZodOptional<z.ZodString>;
+    shadowX: z.ZodOptional<z.ZodNumber>;
+    shadowY: z.ZodOptional<z.ZodNumber>;
+    shadowFuzzy: z.ZodOptional<z.ZodNumber>;
+    padding: z.ZodOptional<z.ZodNumber>;
+    delayLoading: z.ZodOptional<z.ZodBoolean>;
+    delayTime: z.ZodOptional<z.ZodNumber>;
 }, z.core.$strip>;
 type ftFlopPerformanceOption = z.infer<typeof swFlopPerformanceOptionSchema>;
+/**
+ * 开关字段联动检查——不揉进 `swFlopPerformanceOptionSchema` 本体，只在运行时校验入口（见
+ * `componentSuperRefineMap`）挂上，避免真实历史数据（比如只填了 fontLinearColor、
+ * setFontLinear 干脆没这个键的旧组件）被当成"类型不对"而拖累 schema 一致性测试。
+ *
+ * 每条规则对应 useSwFlop.ts 里"值存在但对应开关未开，视觉上不生效"的情况：
+ * fontLinearColor / setFontLinear、suffixFontLinearColor / suffixSetFontLinear、
+ * shadowColor 等阴影字段 / shadowShow、delayTime / delayLoading。
+ */
+declare function swFlopPerformanceSuperRefine(val: {
+    option?: Partial<ftFlopPerformanceOption>;
+}, ctx: z.RefinementCtx): void;
 
 import { z } from 'zod';
 declare const formCheckboxDataSchema: z.ZodArray<z.ZodObject<{
@@ -7471,6 +6019,29 @@ declare const swOpenVideoOptionSchema: z.ZodObject<{
 type FtOpenVideoOption = z.infer<typeof swOpenVideoOptionSchema>;
 
 import { z } from 'zod';
+/**
+ * 矩形 (swBox)
+ * 媒体
+ *
+ * 纯 CSS 盒子，用于蒙层、渐变块、分隔区、发光边框、毛玻璃底板。无数据。
+ */
+declare const swBoxDataSchema: z.ZodArray<z.ZodUnknown>;
+type SwBoxData = z.infer<typeof swBoxDataSchema>;
+declare const swBoxOptionSchema: z.ZodObject<{
+    background: z.ZodOptional<z.ZodString>;
+    border: z.ZodOptional<z.ZodString>;
+    borderRadius: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    boxShadow: z.ZodOptional<z.ZodString>;
+    backdropFilter: z.ZodOptional<z.ZodString>;
+    opacity: z.ZodOptional<z.ZodNumber>;
+    clipPath: z.ZodOptional<z.ZodString>;
+    transform: z.ZodOptional<z.ZodString>;
+    animation: z.ZodOptional<z.ZodString>;
+    pointerEvents: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strict>;
+type SwBoxOption = z.infer<typeof swBoxOptionSchema>;
+
+import { z } from 'zod';
 declare const ftiframeDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodString;
 }, z.core.$strip>>;
@@ -7519,66 +6090,22 @@ type SwimgData = z.infer<typeof swimgDataSchema>;
  * 图片配置选项 Schema
  */
 declare const swimgOptionSchema: z.ZodObject<{
-    cover: z.ZodString;
-    url: z.ZodString;
-    duration: z.ZodString;
-    pointerEvents: z.ZodBoolean;
-    opacity: z.ZodNumber;
-    mixBlendMode: z.ZodString;
-    rotateShow: z.ZodBoolean;
-    rotateX: z.ZodNumber;
-    rotateY: z.ZodNumber;
-    rotateZ: z.ZodNumber;
-    animationShow: z.ZodBoolean;
-    animationLoop: z.ZodBoolean;
-    animationSpeed: z.ZodEnum<{
-        constant: "constant";
-        "slow-fast-slow": "slow-fast-slow";
-        "start-slow": "start-slow";
-        "end-slow": "end-slow";
-    }>;
-    animationSpeedNum: z.ZodNumber;
-    animationTime: z.ZodNumber;
-    animationDelayed: z.ZodNumber;
-    animationInterval: z.ZodNumber;
-    animationType: z.ZodEnum<{
-        opacity: "opacity";
-        default: "default";
-        zoom: "zoom";
-        clockwise: "clockwise";
-        counterclockwise: "counterclockwise";
-        backAndForth: "backAndForth";
-        upOrDown: "upOrDown";
-        customize: "customize";
-    }>;
-    gaussianBlurShow: z.ZodBoolean;
-    gaussianBlur: z.ZodNumber;
-    brightnessShow: z.ZodBoolean;
-    brightness: z.ZodNumber;
-    contrastShow: z.ZodBoolean;
-    contrast: z.ZodNumber;
-    grayscaleShow: z.ZodBoolean;
-    grayscale: z.ZodNumber;
-    hueShow: z.ZodBoolean;
-    hue: z.ZodNumber;
-    invertShow: z.ZodBoolean;
-    invert: z.ZodNumber;
-    saturateShow: z.ZodBoolean;
-    saturate: z.ZodNumber;
-    sepiaShow: z.ZodBoolean;
-    sepia: z.ZodNumber;
-    shadowShow: z.ZodBoolean;
-    shadowColor: z.ZodString;
-    shadowX: z.ZodNumber;
-    shadowY: z.ZodNumber;
-    shadowFuzzy: z.ZodNumber;
-    shadowExtension: z.ZodNumber;
-    openReview: z.ZodBoolean;
-    reviewImageWidth: z.ZodNumber;
-    backdropFilter: z.ZodBoolean;
-    backdropFilterBlur: z.ZodNumber;
-    backdropFilterSaturate: z.ZodNumber;
-}, z.core.$strip>;
+    objectFit: z.ZodOptional<z.ZodEnum<{
+        fill: "fill";
+        cover: "cover";
+        contain: "contain";
+    }>>;
+    background: z.ZodOptional<z.ZodString>;
+    opacity: z.ZodOptional<z.ZodNumber>;
+    borderRadius: z.ZodOptional<z.ZodNumber>;
+    filter: z.ZodOptional<z.ZodString>;
+    mixBlendMode: z.ZodOptional<z.ZodString>;
+    transform: z.ZodOptional<z.ZodString>;
+    animation: z.ZodOptional<z.ZodString>;
+    keyframes: z.ZodOptional<z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>>;
+    transition: z.ZodOptional<z.ZodString>;
+    pointerEvents: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strict>;
 type SwimgOption = z.infer<typeof swimgOptionSchema>;
 
 import { z } from 'zod';
@@ -8194,7 +6721,7 @@ declare const componentPropSchemaMap: {
             columns: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftcollection: {
+    readonly swcollection: {
         readonly data: z.ZodArray<z.ZodObject<{
             src: z.ZodString;
             title: z.ZodString;
@@ -8236,7 +6763,7 @@ declare const componentPropSchemaMap: {
             titleBackgroundImage: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftdatetime: {
+    readonly swdatetime: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             format: z.ZodString;
@@ -8251,7 +6778,7 @@ declare const componentPropSchemaMap: {
             backgroundColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftmultiLine: {
+    readonly swmultiLine: {
         readonly data: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             src: z.ZodString;
@@ -8292,7 +6819,7 @@ declare const componentPropSchemaMap: {
             iconMargin: z.ZodArray<z.ZodNumber>;
         }, z.core.$strip>;
     };
-    readonly ftProgress: {
+    readonly swProgress: {
         readonly data: z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>;
         readonly option: z.ZodObject<{
             refresh: z.ZodBoolean;
@@ -8439,7 +6966,7 @@ declare const componentPropSchemaMap: {
             styleAssignBgLeft: z.ZodOptional<z.ZodArray<z.ZodArray<z.ZodNumber>>>;
         }, z.core.$strip>;
     };
-    readonly ftRichtext: {
+    readonly swRichtext: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8453,183 +6980,63 @@ declare const componentPropSchemaMap: {
             scrollInterval: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftScroll: {
+    readonly swScroll: {
         readonly data: z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean]>>>;
         readonly option: z.ZodObject<{
             refresh: z.ZodBoolean;
-            columnShow: z.ZodBoolean;
-            columnViews: z.ZodBoolean;
-            animationShow: z.ZodBoolean;
-            cursorShow: z.ZodBoolean;
-            textStyleShow: z.ZodBoolean;
-            align: z.ZodString;
-            header: z.ZodBoolean;
-            scroll: z.ZodBoolean;
-            scrollTime: z.ZodNumber;
-            scrollTimeType: z.ZodOptional<z.ZodBoolean>;
-            scrollSingleTime: z.ZodOptional<z.ZodNumber>;
-            fontSize: z.ZodNumber;
-            count: z.ZodNumber;
-            lineMarginBottom: z.ZodNumber;
-            index: z.ZodBoolean;
-            scrollCount: z.ZodNumber;
-            headerHeight: z.ZodNumber;
-            headerFontSize: z.ZodNumber;
-            headerFontFamily: z.ZodString;
-            headerlineHeight: z.ZodNumber;
-            borderShow: z.ZodBoolean;
-            backgroundType: z.ZodString;
-            backgroundImage: z.ZodString;
-            headerletterSpacing: z.ZodNumber;
-            headerFontStyle: z.ZodString;
-            headerFontWeight: z.ZodString;
-            headerBackground: z.ZodString;
-            headerColor: z.ZodString;
-            activeKeys: z.ZodOptional<z.ZodString>;
-            headerShow: z.ZodBoolean;
-            headerTextAlign: z.ZodString;
-            column: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                alias: z.ZodString;
-                icon: z.ZodOptional<z.ZodString>;
+            columns: z.ZodArray<z.ZodObject<{
+                key: z.ZodString;
+                title: z.ZodString;
+                width: z.ZodOptional<z.ZodNumber>;
+                align: z.ZodOptional<z.ZodEnum<{
+                    left: "left";
+                    right: "right";
+                    center: "center";
+                }>>;
             }, z.core.$strip>>;
-            selectedShow: z.ZodBoolean;
-            selectedFontSize: z.ZodNumber;
-            selectedFontFamily: z.ZodString;
-            selectedletterSpacing: z.ZodNumber;
-            selectedFontStyle: z.ZodString;
-            selectedFontWeight: z.ZodString;
-            selectedColor: z.ZodString;
-            selectedlineHeight: z.ZodNumber;
-            selectedMode: z.ZodString;
-            selectedBgType: z.ZodString;
-            selectedBgColor: z.ZodString;
-            selectedBgOpacity: z.ZodNumber;
-            selectedBgImage: z.ZodString;
-            shadowShow: z.ZodBoolean;
-            shadowColor: z.ZodString;
-            shadowX: z.ZodNumber;
-            shadowY: z.ZodNumber;
-            shadowFuzzy: z.ZodNumber;
-            shadowExtension: z.ZodNumber;
-            rowName: z.ZodArray<z.ZodString>;
-            rowTitle: z.ZodString;
-            initialValue: z.ZodNumber;
-            rowWidth: z.ZodNumber;
-            rowSpace: z.ZodNumber;
-            rowAlign: z.ZodString;
-            rowKey: z.ZodArray<z.ZodString>;
-            rowOffsetX: z.ZodArray<z.ZodNumber>;
-            rowOffsetY: z.ZodArray<z.ZodNumber>;
-            rowBgWidth: z.ZodArray<z.ZodNumber>;
-            rowBgHeight: z.ZodArray<z.ZodNumber>;
-            rowBgType: z.ZodArray<z.ZodString>;
-            rowBgColor: z.ZodArray<z.ZodString>;
-            rowBgOpacity: z.ZodArray<z.ZodNumber>;
-            rowBgImage: z.ZodArray<z.ZodString>;
-            rowFontSize: z.ZodArray<z.ZodNumber>;
-            rowFontFamily: z.ZodArray<z.ZodString>;
-            rowletterSpacing: z.ZodArray<z.ZodNumber>;
-            rowFontStyle: z.ZodArray<z.ZodString>;
-            rowFontWeight: z.ZodArray<z.ZodString>;
-            rowColor: z.ZodArray<z.ZodString>;
-            rowlineHeight: z.ZodArray<z.ZodNumber>;
-            rowShow: z.ZodBoolean;
-            bodyBackground: z.ZodString;
-            bodyColor: z.ZodString;
-            borderColor: z.ZodString;
-            bodyTextAlign: z.ZodString;
-            nthColor: z.ZodString;
-            othColor: z.ZodString;
-            seriesXTabsName: z.ZodArray<z.ZodString>;
-            seriesXbackgroundType: z.ZodArray<z.ZodString>;
-            seriesXbackgroundImage: z.ZodArray<z.ZodString>;
-            seriesXBackground: z.ZodArray<z.ZodString>;
-            seriesXBorderColor: z.ZodArray<z.ZodString>;
-            seriesXBorderWidth: z.ZodArray<z.ZodNumber>;
-            seriesXRadius: z.ZodArray<z.ZodNumber>;
-            seriesXOffsetX: z.ZodArray<z.ZodNumber>;
-            seriesYWidth: z.ZodArray<z.ZodNumber>;
-            seriesYMarginLeft: z.ZodArray<z.ZodNumber>;
-            seriesYbackgroundImage: z.ZodArray<z.ZodString>;
-            seriesYBackground: z.ZodArray<z.ZodString>;
-            seriesYBorderColor: z.ZodArray<z.ZodString>;
-            seriesYBorderWidth: z.ZodArray<z.ZodNumber>;
-            seriesYFontSize: z.ZodArray<z.ZodNumber>;
-            seriesYFontFamily: z.ZodArray<z.ZodString>;
-            seriesYletterSpacing: z.ZodArray<z.ZodNumber>;
-            seriesYFontStyle: z.ZodArray<z.ZodString>;
-            seriesYFontWeight: z.ZodArray<z.ZodString>;
-            seriesYColor: z.ZodArray<z.ZodString>;
-            seriesYContentType: z.ZodArray<z.ZodString>;
-            seriesYTextAlign: z.ZodArray<z.ZodString>;
-            seriesYOverFlow: z.ZodArray<z.ZodString>;
-            seriesYlineHeight: z.ZodArray<z.ZodNumber>;
-            seriesYOffsetX: z.ZodArray<z.ZodNumber>;
-            seriesYOffsetY: z.ZodArray<z.ZodNumber>;
-            seriesYTabsName: z.ZodArray<z.ZodString>;
-            maskImage: z.ZodArray<z.ZodString>;
-            imageWidth: z.ZodArray<z.ZodNumber>;
-            imageHeight: z.ZodArray<z.ZodNumber>;
-            suffixShow: z.ZodArray<z.ZodBoolean>;
-            thousandSplit: z.ZodArray<z.ZodBoolean>;
-            suffixFontSize: z.ZodArray<z.ZodNumber>;
-            suffixFontFamily: z.ZodArray<z.ZodString>;
-            suffixletterSpacing: z.ZodArray<z.ZodNumber>;
-            suffixFontStyle: z.ZodArray<z.ZodString>;
-            suffixFontWeight: z.ZodArray<z.ZodString>;
-            suffixColor: z.ZodArray<z.ZodString>;
-            suffixlineHeight: z.ZodArray<z.ZodNumber>;
-            suffixOffsetX: z.ZodArray<z.ZodNumber>;
-            suffixOffsetY: z.ZodArray<z.ZodNumber>;
-            suffixContent: z.ZodArray<z.ZodString>;
-            statusConfigValue: z.ZodArray<z.ZodArray<z.ZodString>>;
-            statusConfigImg: z.ZodArray<z.ZodArray<z.ZodString>>;
-            statusConfigWidth: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            statusConfigHeight: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            statusConfigName: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignKeyValue: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignFontFamily: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignFontSize: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            styleAssignHeight: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            styleAssignletterSpacing: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            styleAssignColor: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignFontStyle: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignFontWeight: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignName: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignBgImg: z.ZodArray<z.ZodArray<z.ZodString>>;
-            styleAssignBgWdith: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            styleAssignBgHeight: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            styleAssignBgLeft: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-            globalScrollYTrackWidth: z.ZodOptional<z.ZodNumber>;
-            globalScrollYTrackBackground: z.ZodOptional<z.ZodString>;
-            globalScrollYTrackBorderRadius: z.ZodOptional<z.ZodNumber>;
-            globalScrollYThumbWidth: z.ZodOptional<z.ZodNumber>;
-            globalScrollYThumbBackground: z.ZodOptional<z.ZodString>;
-            globalScrollYThumbBorderRadius: z.ZodOptional<z.ZodNumber>;
-            progressYConfig: z.ZodArray<z.ZodObject<{
-                type: z.ZodString;
-                "text-inside": z.ZodBoolean;
-                status: z.ZodString;
-                indeterminate: z.ZodBoolean;
-                duration: z.ZodNumber;
-                showText: z.ZodBoolean;
-                "stroke-linecap": z.ZodString;
-                striped: z.ZodBoolean;
-                color: z.ZodString;
-                outerBgColor: z.ZodString;
-                linearGradientColor: z.ZodString;
-                fontFamily: z.ZodString;
-                fontSize: z.ZodNumber;
-                fontColor: z.ZodString;
-                fontStyle: z.ZodString;
-                fontWeight: z.ZodString;
-                borderRadius: z.ZodNumber;
-                commonColor: z.ZodString;
+            header: z.ZodObject<{
+                show: z.ZodDefault<z.ZodBoolean>;
+                height: z.ZodDefault<z.ZodNumber>;
+                background: z.ZodDefault<z.ZodString>;
+                color: z.ZodDefault<z.ZodString>;
+                fontSize: z.ZodDefault<z.ZodNumber>;
+            }, z.core.$strip>;
+            rowStyle: z.ZodObject<{
+                height: z.ZodDefault<z.ZodNumber>;
+                fontSize: z.ZodDefault<z.ZodNumber>;
+                color: z.ZodDefault<z.ZodString>;
+                background: z.ZodDefault<z.ZodString>;
+                stripeBackground: z.ZodOptional<z.ZodString>;
+                align: z.ZodDefault<z.ZodEnum<{
+                    left: "left";
+                    right: "right";
+                    center: "center";
+                }>>;
+            }, z.core.$strip>;
+            columnStyleOverrides: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+                color: z.ZodOptional<z.ZodString>;
+                background: z.ZodOptional<z.ZodString>;
+                fontSize: z.ZodOptional<z.ZodNumber>;
+                align: z.ZodOptional<z.ZodEnum<{
+                    left: "left";
+                    right: "right";
+                    center: "center";
+                }>>;
+            }, z.core.$strip>>>;
+            rowIndex: z.ZodOptional<z.ZodObject<{
+                show: z.ZodDefault<z.ZodBoolean>;
+                title: z.ZodDefault<z.ZodString>;
+                width: z.ZodDefault<z.ZodNumber>;
+                startFrom: z.ZodDefault<z.ZodNumber>;
+            }, z.core.$strip>>;
+            scroll: z.ZodOptional<z.ZodObject<{
+                enabled: z.ZodDefault<z.ZodBoolean>;
+                visibleRows: z.ZodDefault<z.ZodNumber>;
+                speed: z.ZodDefault<z.ZodNumber>;
             }, z.core.$strip>>;
         }, z.core.$strip>;
     };
-    readonly ftText2: {
+    readonly swText2: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -8671,66 +7078,73 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>>;
         }, z.core.$strip>;
     };
-    readonly fttext: {
+    readonly swtext: {
         readonly data: z.ZodArray<z.ZodObject<{
-            value: z.ZodString;
+            value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
         }, z.core.$strip>>;
         readonly option: z.ZodObject<{
-            type: z.ZodOptional<z.ZodEnum<{
-                link: "link";
-                text: "text";
-                marquee: "marquee";
-            }>>;
-            link: z.ZodOptional<z.ZodBoolean>;
-            linkHref: z.ZodOptional<z.ZodString>;
-            linkTarget: z.ZodOptional<z.ZodString>;
-            pointerEvents: z.ZodOptional<z.ZodBoolean>;
-            writingMode: z.ZodOptional<z.ZodString>;
-            textOrientation: z.ZodOptional<z.ZodString>;
-            iswrap: z.ZodOptional<z.ZodBoolean>;
             fontFamily: z.ZodOptional<z.ZodString>;
             fontSize: z.ZodOptional<z.ZodNumber>;
-            color: z.ZodOptional<z.ZodString>;
-            fontWeight: z.ZodOptional<z.ZodCoercedString<unknown>>;
-            fontStyle: z.ZodOptional<z.ZodString>;
-            lineHeight: z.ZodOptional<z.ZodNumber>;
-            selectedTextType: z.ZodOptional<z.ZodEnum<{
+            fontWeight: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+            fontStyle: z.ZodOptional<z.ZodEnum<{
                 normal: "normal";
-                gradient: "gradient";
-                multiGradient: "multiGradient";
+                italic: "italic";
             }>>;
-            selectedTextColor: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-                type: z.ZodString;
-                angle: z.ZodString;
-                colors: z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>;
-            }, z.core.$strip>]>>;
-            selectedTextOpacity: z.ZodOptional<z.ZodNumber>;
-            multiGradientColors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                id: z.ZodString;
-                color: z.ZodString;
-                opacity: z.ZodNumber;
-                isShowColor: z.ZodBoolean;
-            }, z.core.$strip>>>;
-            textAlign: z.ZodOptional<z.ZodString>;
-            textAlignVertical: z.ZodOptional<z.ZodString>;
-            split: z.ZodOptional<z.ZodNumber>;
-            backgroundColor: z.ZodOptional<z.ZodString>;
-            shadowShow: z.ZodOptional<z.ZodBoolean>;
-            shadowColor: z.ZodOptional<z.ZodString>;
-            shadowX: z.ZodOptional<z.ZodNumber>;
-            shadowY: z.ZodOptional<z.ZodNumber>;
-            shadowFuzzy: z.ZodOptional<z.ZodNumber>;
-            shadowExtension: z.ZodOptional<z.ZodNumber>;
+            letterSpacing: z.ZodOptional<z.ZodNumber>;
+            lineHeight: z.ZodOptional<z.ZodNumber>;
+            color: z.ZodOptional<z.ZodString>;
+            textShadow: z.ZodOptional<z.ZodString>;
+            background: z.ZodOptional<z.ZodString>;
             opacity: z.ZodOptional<z.ZodNumber>;
-            rotateX: z.ZodOptional<z.ZodNumber>;
-            rotateY: z.ZodOptional<z.ZodNumber>;
-            rotateZ: z.ZodOptional<z.ZodNumber>;
+            textAlign: z.ZodOptional<z.ZodEnum<{
+                left: "left";
+                right: "right";
+                center: "center";
+            }>>;
+            verticalAlign: z.ZodOptional<z.ZodEnum<{
+                top: "top";
+                bottom: "bottom";
+                middle: "middle";
+            }>>;
+            whiteSpace: z.ZodOptional<z.ZodEnum<{
+                normal: "normal";
+                nowrap: "nowrap";
+                "pre-line": "pre-line";
+            }>>;
+            textOverflow: z.ZodOptional<z.ZodEnum<{
+                clip: "clip";
+                ellipsis: "ellipsis";
+            }>>;
+            writingMode: z.ZodOptional<z.ZodEnum<{
+                "horizontal-tb": "horizontal-tb";
+                "vertical-rl": "vertical-rl";
+                "vertical-lr": "vertical-lr";
+            }>>;
+            textOrientation: z.ZodOptional<z.ZodEnum<{
+                mixed: "mixed";
+                upright: "upright";
+            }>>;
+            transform: z.ZodOptional<z.ZodString>;
+            animation: z.ZodOptional<z.ZodString>;
+            template: z.ZodOptional<z.ZodString>;
+            decimals: z.ZodOptional<z.ZodNumber>;
+            thousands: z.ZodOptional<z.ZodBoolean>;
+            marquee: z.ZodOptional<z.ZodObject<{
+                speed: z.ZodNumber;
+                direction: z.ZodOptional<z.ZodEnum<{
+                    left: "left";
+                    right: "right";
+                }>>;
+            }, z.core.$strip>>;
+            href: z.ZodOptional<z.ZodString>;
+            target: z.ZodOptional<z.ZodEnum<{
+                _self: "_self";
+                _blank: "_blank";
+            }>>;
+            pointerEvents: z.ZodOptional<z.ZodBoolean>;
         }, z.core.$strict>;
     };
-    readonly ftTextWordCloud: {
+    readonly swTextWordCloud: {
         readonly data: z.ZodArray<z.ZodObject<{
             text: z.ZodString;
             value: z.ZodNumber;
@@ -9385,146 +7799,6 @@ declare const componentPropSchemaMap: {
             dataLoopRollNum: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly echartdoubleValueLine: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            seriesName: z.ZodString;
-            value: z.ZodArray<z.ZodTuple<[z.ZodNumber, z.ZodNumber], null>>;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodArray<z.ZodString>;
-            seriesLabelShow: z.ZodArray<z.ZodBoolean>;
-            seriesLabelColor: z.ZodArray<z.ZodString>;
-            seriesLabelFontFamily: z.ZodArray<z.ZodString>;
-            seriesLabelFontSize: z.ZodArray<z.ZodNumber>;
-            seriesLabelFontWeight: z.ZodArray<z.ZodString>;
-            seriesLabelFontStyle: z.ZodArray<z.ZodString>;
-            seriesLabelOffsetX: z.ZodArray<z.ZodNumber>;
-            seriesLabelOffsetY: z.ZodArray<z.ZodNumber>;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            xAxisLabelUtil: z.ZodString;
-            yAxisLabelUtil: z.ZodString;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodBoolean;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodBoolean;
-            yAxisMin: z.ZodString;
-            yAxisMax: z.ZodString;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodNumber;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodString;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodNumber;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodString;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodString;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodString;
-            yAxisNameShow: z.ZodBoolean;
-            yAxisName: z.ZodString;
-            yAxisNameFontFamily: z.ZodString;
-            yAxisNameFontSize: z.ZodNumber;
-            yAxisNameColor: z.ZodString;
-            yAxisNameFontStyle: z.ZodString;
-            yAxisNameFontWeight: z.ZodString;
-            yAxisNamePaddingTop: z.ZodNumber;
-            yAxisNamePaddingBottom: z.ZodNumber;
-            yAxisNamePaddingLeft: z.ZodNumber;
-            yAxisNamePaddingRight: z.ZodNumber;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodBoolean;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodString;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodNumber;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodNumber;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodBoolean;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodString;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodNumber;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodBoolean;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodString;
-        }, z.core.$strip>;
-    };
-    readonly echarteffectScatter: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            borderWidth: z.ZodNumber;
-            borderColor: z.ZodString;
-            rippleEffectNumber: z.ZodNumber;
-            rippleEffectPeriod: z.ZodNumber;
-            rippleEffectScale: z.ZodNumber;
-            rippleEffectBrushType: z.ZodEnum<{
-                fill: "fill";
-                stroke: "stroke";
-            }>;
-            points: z.ZodArray<z.ZodString>;
-            seriesList: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                tabName: z.ZodString;
-                translateX: z.ZodNumber;
-                translateY: z.ZodNumber;
-                size: z.ZodNumber;
-                insideColor: z.ZodString;
-                outsideColor: z.ZodString;
-                showEffectOn: z.ZodEnum<{
-                    render: "render";
-                    emphasis: "emphasis";
-                }>;
-                seriesLabelTopShow: z.ZodBoolean;
-                seriesLabelTopFontFamily: z.ZodString;
-                seriesLabelTopFontSize: z.ZodNumber;
-                seriesLabelTopColor: z.ZodString;
-                seriesLabelTopFontStyle: z.ZodString;
-                seriesLabelTopFontWeight: z.ZodString;
-                seriesLabelNameShow: z.ZodBoolean;
-                seriesLabelNameFontFamily: z.ZodString;
-                seriesLabelNameFontSize: z.ZodNumber;
-                seriesLabelNameColor: z.ZodString;
-                seriesLabelNameFontStyle: z.ZodString;
-                seriesLabelNameFontWeight: z.ZodString;
-                seriesLabelValueShow: z.ZodBoolean;
-                seriesLabelValueFontFamily: z.ZodString;
-                seriesLabelValueFontSize: z.ZodNumber;
-                seriesLabelValueColor: z.ZodString;
-                seriesLabelValueFontStyle: z.ZodString;
-                seriesLabelValueFontWeight: z.ZodString;
-            }, z.core.$strip>>;
-        }, z.core.$strip>;
-    };
     readonly echartfunnel: {
         readonly data: z.ZodArray<z.ZodObject<{
             seriesName: z.ZodString;
@@ -9666,108 +7940,6 @@ declare const componentPropSchemaMap: {
             seriesLabelValueFontSize: z.ZodArray<z.ZodNumber>;
             seriesLabelValueFontWeight: z.ZodArray<z.ZodString>;
             seriesLabelValueFontStyle: z.ZodArray<z.ZodString>;
-        }, z.core.$strip>;
-    };
-    readonly echartgrowthRateBar: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            seriesName: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodString>;
-            seriesColor: z.ZodArray<z.ZodString>;
-            borderColor: z.ZodArray<z.ZodString>;
-            isSort: z.ZodBoolean;
-            isHover: z.ZodBoolean;
-            seriesWidth: z.ZodNumber;
-            seriesOpacity: z.ZodNumber;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            legendShow: z.ZodBoolean;
-            legendItemWidth: z.ZodNumber;
-            legendItemHeight: z.ZodNumber;
-            legendItemGap: z.ZodNumber;
-            legendFontFamily: z.ZodString;
-            legendFontSize: z.ZodNumber;
-            legendColor: z.ZodString;
-            legendFontStyle: z.ZodString;
-            legendFontWeight: z.ZodString;
-            yAxisLabelHover: z.ZodArray<z.ZodBoolean>;
-            yAxisLabelHoverColor: z.ZodArray<z.ZodString>;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodBoolean;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodBoolean;
-            yAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            yAxisInterval: z.ZodNumber;
-            yAxisRotate: z.ZodNumber;
-            xAxisMin: z.ZodString;
-            xAxisMax: z.ZodString;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodNumber;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodString;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodNumber;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodString;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodString;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodString;
-            xAxisNameShow: z.ZodBoolean;
-            xAxisName: z.ZodString;
-            xAxisNameFontFamily: z.ZodString;
-            xAxisNameFontSize: z.ZodNumber;
-            xAxisNameColor: z.ZodString;
-            xAxisNameFontStyle: z.ZodString;
-            xAxisNameFontWeight: z.ZodString;
-            xAxisNamePaddingTop: z.ZodNumber;
-            xAxisNamePaddingBottom: z.ZodNumber;
-            xAxisNamePaddingLeft: z.ZodNumber;
-            xAxisNamePaddingRight: z.ZodNumber;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodBoolean;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodString;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodNumber;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodNumber;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodBoolean;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodString;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodNumber;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodBoolean;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodString;
-            tooltipLoop: z.ZodBoolean;
-            tooltipLoopInterval: z.ZodNumber;
-            tooltipUnit: z.ZodString;
-            tooltipFixed: z.ZodNumber;
         }, z.core.$strip>;
     };
     readonly echartline: {
@@ -10296,138 +8468,6 @@ declare const componentPropSchemaMap: {
             tooltipTriggerOn: z.ZodBoolean;
             seriesEmphasisScale: z.ZodBoolean;
             seriesEmphasisScaleSize: z.ZodNumber;
-        }, z.core.$strip>;
-    };
-    readonly echartmultiplyRankBar: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            seriesName: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodArray<z.ZodObject<{
-                type: z.ZodOptional<z.ZodString>;
-                angle: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-                    per: z.ZodOptional<z.ZodNumber>;
-                }, z.core.$strip>>>;
-            }, z.core.$loose>>;
-            seriesWidth: z.ZodNumber;
-            intervalColor: z.ZodString;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            legendShow: z.ZodBoolean;
-            legendOrient: z.ZodEnum<{
-                horizontal: "horizontal";
-                vertical: "vertical";
-            }>;
-            legendWidth: z.ZodNumber;
-            legendHeight: z.ZodNumber;
-            legendItemWidth: z.ZodNumber;
-            legendItemHeight: z.ZodNumber;
-            legendItemGap: z.ZodNumber;
-            legendFontFamily: z.ZodString;
-            legendFontSize: z.ZodNumber;
-            legendColor: z.ZodString;
-            legendFontStyle: z.ZodString;
-            legendFontWeight: z.ZodString;
-            legendTextLeftPadding: z.ZodNumber;
-            legendSelectedMode: z.ZodBoolean;
-            legendGrid: z.ZodObject<{
-                top: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                left: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                bottom: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                right: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-            }, z.core.$strip>;
-            legendOffsetX: z.ZodNumber;
-            legendOffsetY: z.ZodNumber;
-            valueShow: z.ZodBoolean;
-            valueFontFamily: z.ZodString;
-            valueFontSize: z.ZodNumber;
-            valueColor: z.ZodString;
-            valueFontStyle: z.ZodString;
-            valueFontWeight: z.ZodString;
-            valueOffSetX: z.ZodNumber;
-            valueOffSetY: z.ZodNumber;
-            nameFontFamily: z.ZodString;
-            nameFontSize: z.ZodNumber;
-            nameColor: z.ZodString;
-            nameFontStyle: z.ZodString;
-            nameFontWeight: z.ZodString;
-            nameWidth: z.ZodNumber;
-            nameLeftPadding: z.ZodNumber;
-            dataLoop: z.ZodBoolean;
-            dataLoopInterval: z.ZodNumber;
-            dataLoopDisplayRows: z.ZodNumber;
-            dataLoopRollNum: z.ZodNumber;
-        }, z.core.$strip>;
-    };
-    readonly echartoverlapBar: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            seriesName: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            seriesWidth: z.ZodArray<z.ZodNumber>;
-            seriesTabsName: z.ZodArray<z.ZodString>;
-            barBodyColor: z.ZodArray<z.ZodObject<{
-                type: z.ZodOptional<z.ZodString>;
-                angle: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-                    per: z.ZodOptional<z.ZodNumber>;
-                }, z.core.$strip>>>;
-            }, z.core.$loose>>;
-            barBodyOpacity: z.ZodArray<z.ZodNumber>;
-            barBorderColor: z.ZodString;
-            borderWidth: z.ZodNumber;
-            valueShow: z.ZodArray<z.ZodBoolean>;
-            valueFontFamily: z.ZodArray<z.ZodString>;
-            valueFontSize: z.ZodArray<z.ZodNumber>;
-            valueColor: z.ZodArray<z.ZodString>;
-            valueFontStyle: z.ZodArray<z.ZodString>;
-            valueFontWeight: z.ZodArray<z.ZodString>;
-            valueOffSetX: z.ZodArray<z.ZodNumber>;
-            valueOffSetY: z.ZodArray<z.ZodNumber>;
-            splitLineFontSize: z.ZodNumber;
-            splitLineColor: z.ZodString;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            yAxisLabelShow: z.ZodOptional<z.ZodBoolean>;
-            yAxisFontFamily: z.ZodOptional<z.ZodString>;
-            yAxisFontSize: z.ZodOptional<z.ZodNumber>;
-            yAxisColor: z.ZodOptional<z.ZodString>;
-            yAxisFontStyle: z.ZodOptional<z.ZodString>;
-            yAxisFontWeight: z.ZodOptional<z.ZodString>;
-            nameFontFamily: z.ZodString;
-            nameFontSize: z.ZodNumber;
-            nameColor: z.ZodString;
-            nameFontStyle: z.ZodString;
-            nameFontWeight: z.ZodString;
-            nameWidth: z.ZodNumber;
-            nameLeftPadding: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            xAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            dataLoop: z.ZodBoolean;
-            dataLoopInterval: z.ZodNumber;
-            dataLoopDisplayRows: z.ZodNumber;
-            dataLoopRollNum: z.ZodNumber;
-            intervalColor: z.ZodString;
         }, z.core.$strip>;
     };
     readonly echartpictorialbar: {
@@ -10964,189 +9004,6 @@ declare const componentPropSchemaMap: {
             seriesAreaColor: z.ZodArray<z.ZodString>;
         }, z.core.$strip>;
     };
-    readonly echartrank: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            stack: z.ZodBoolean;
-            seriesTabsName: z.ZodArray<z.ZodString>;
-            sortType: z.ZodEnum<{
-                none: "none";
-                asc: "asc";
-                desc: "desc";
-            }>;
-            defaultSeriesColor: z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>;
-            defaultSeriesOpacity: z.ZodNumber;
-            seriesColor: z.ZodArray<z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>>;
-            seriesColorpicker: z.ZodArray<z.ZodString>;
-            seriesOpacity: z.ZodArray<z.ZodNumber>;
-            barGap: z.ZodNumber;
-            barCategoryGap: z.ZodNumber;
-            barBorderRadius: z.ZodString;
-            barBackgroundColor: z.ZodString;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            legendShow: z.ZodBoolean;
-            legendWidth: z.ZodNumber;
-            legendHeight: z.ZodNumber;
-            legendItemWidth: z.ZodNumber;
-            legendItemHeight: z.ZodNumber;
-            legendItemGap: z.ZodNumber;
-            legendFontFamily: z.ZodString;
-            legendFontSize: z.ZodNumber;
-            legendColor: z.ZodString;
-            legendFontStyle: z.ZodString;
-            legendFontWeight: z.ZodString;
-            legendTextLeftPadding: z.ZodNumber;
-            legendSelectedMode: z.ZodBoolean;
-            legendGrid: z.ZodObject<{
-                top: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                left: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                bottom: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                right: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-            }, z.core.$strip>;
-            legendOffsetX: z.ZodNumber;
-            legendOffsetY: z.ZodNumber;
-            legendOrient: z.ZodEnum<{
-                horizontal: "horizontal";
-                vertical: "vertical";
-            }>;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            seriesLabelShow: z.ZodArray<z.ZodBoolean>;
-            seriesLabelColor: z.ZodArray<z.ZodString>;
-            seriesLabelFontFamily: z.ZodArray<z.ZodString>;
-            seriesLabelFontSize: z.ZodArray<z.ZodNumber>;
-            seriesLabelFontWeight: z.ZodArray<z.ZodString>;
-            seriesLabelFontStyle: z.ZodArray<z.ZodString>;
-            seriesLabelOffsetX: z.ZodArray<z.ZodNumber>;
-            seriesLabelOffsetY: z.ZodArray<z.ZodNumber>;
-            seriesLabelSuffix: z.ZodString;
-            defaultSeriesLabelBackground: z.ZodString;
-            seriesLabelBackground: z.ZodArray<z.ZodString>;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodBoolean;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodBoolean;
-            yAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            yAxisInterval: z.ZodNumber;
-            yAxisRotate: z.ZodNumber;
-            xAxisMin: z.ZodString;
-            xAxisMax: z.ZodString;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodNumber;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodString;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodNumber;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodString;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodString;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodString;
-            xAxisNameShow: z.ZodBoolean;
-            xAxisName: z.ZodString;
-            xAxisNameFontFamily: z.ZodString;
-            xAxisNameFontSize: z.ZodNumber;
-            xAxisNameColor: z.ZodString;
-            xAxisNameFontStyle: z.ZodString;
-            xAxisNameFontWeight: z.ZodString;
-            xAxisNameGap: z.ZodNumber;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodBoolean;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodString;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodNumber;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodNumber;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodBoolean;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodString;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodNumber;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodString;
-            dataLoop: z.ZodBoolean;
-            dataLoopInterval: z.ZodNumber;
-            dataLoopDisplayRows: z.ZodNumber;
-            dataLoopRollNum: z.ZodNumber;
-            dataZoomShow: z.ZodBoolean;
-            moveHandleSize: z.ZodNumber;
-            moveHandleColor: z.ZodString;
-            moveHandleEmphasisColor: z.ZodString;
-            dataZoomRight: z.ZodNumber;
-        }, z.core.$strip>;
-    };
-    readonly echartrankBar: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            seriesWidth: z.ZodNumber;
-            intervalColor: z.ZodString;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            valueShow: z.ZodBoolean;
-            valueFontFamily: z.ZodString;
-            valueFontSize: z.ZodNumber;
-            valueColor: z.ZodString;
-            valueFontStyle: z.ZodString;
-            valueFontWeight: z.ZodString;
-            valueOffSetX: z.ZodNumber;
-            valueOffSetY: z.ZodNumber;
-            nameFontFamily: z.ZodString;
-            nameFontSize: z.ZodNumber;
-            nameColor: z.ZodString;
-            nameFontStyle: z.ZodString;
-            nameFontWeight: z.ZodString;
-            nameWidth: z.ZodNumber;
-            nameLeftPadding: z.ZodNumber;
-            dataLoop: z.ZodBoolean;
-            dataLoopInterval: z.ZodNumber;
-            dataLoopDisplayRows: z.ZodNumber;
-            dataLoopRollNum: z.ZodNumber;
-        }, z.core.$strip>;
-    };
     readonly echartsankey: {
         readonly data: z.ZodArray<z.ZodObject<{
             source: z.ZodString;
@@ -11226,89 +9083,6 @@ declare const componentPropSchemaMap: {
                     middle: "middle";
                 }>;
             }, z.core.$strip>;
-        }, z.core.$strip>;
-    };
-    readonly echartscalePie: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            seriesName: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodArray<z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>>;
-            seriesOpacity: z.ZodArray<z.ZodNumber>;
-            pieCenterX: z.ZodNumber;
-            pieCenterY: z.ZodNumber;
-            pieRadiusMax: z.ZodNumber;
-            pieRadiusMin: z.ZodNumber;
-            gaugeShow: z.ZodBoolean;
-            gaugeRadius: z.ZodNumber;
-            gaugeLength: z.ZodNumber;
-            gaugeCenterX: z.ZodNumber;
-            gaugeCenterY: z.ZodNumber;
-            gaugeColor: z.ZodString;
-            seriesLabelShow: z.ZodBoolean;
-            seriesDistanceToLabelLine: z.ZodNumber;
-            seriesLabelLineLength: z.ZodNumber;
-            seriesLabelSeriesShow: z.ZodBoolean;
-            seriesLabelSeriesFontFamily: z.ZodString;
-            seriesLabelSeriesFontSize: z.ZodNumber;
-            seriesLabelSeriesColor: z.ZodString;
-            seriesLabelSeriesFontStyle: z.ZodString;
-            seriesLabelSeriesFontWeight: z.ZodString;
-            seriesLabelPercentShow: z.ZodBoolean;
-            seriesLabelPercentValue: z.ZodNumber;
-            seriesLabelPercentFontFamily: z.ZodString;
-            seriesLabelPercentFontSize: z.ZodNumber;
-            seriesLabelPercentColor: z.ZodString;
-            seriesLabelPercentFontStyle: z.ZodString;
-            seriesLabelPercentFontWeight: z.ZodString;
-            seriesLabelValueShow: z.ZodBoolean;
-            seriesLabelUnit: z.ZodString;
-            seriesLabelUnitFontSize: z.ZodNumber;
-            seriesLabelUnitLeftPadding: z.ZodNumber;
-            seriesLabelValueLeftPadding: z.ZodNumber;
-            seriesLabelValueFontFamily: z.ZodString;
-            seriesLabelValueFontSize: z.ZodNumber;
-            seriesLabelValueColor: z.ZodString;
-            seriesLabelValueFontStyle: z.ZodString;
-            seriesLabelValueFontWeight: z.ZodString;
-            legendShow: z.ZodBoolean;
-            legendItemWidthAndHeight: z.ZodNumber;
-            legendTextLeftPadding: z.ZodNumber;
-            legendFontFamily: z.ZodString;
-            legendFontSize: z.ZodNumber;
-            legendColor: z.ZodString;
-            legendFontStyle: z.ZodString;
-            legendFontWeight: z.ZodString;
-            legendOrient: z.ZodEnum<{
-                horizontal: "horizontal";
-                vertical: "vertical";
-            }>;
-            legendWidth: z.ZodNumber;
-            legendHeight: z.ZodNumber;
-            legendItemGap: z.ZodNumber;
-            legendGrid: z.ZodObject<{
-                top: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                left: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                bottom: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-                right: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
-            }, z.core.$strip>;
-            legendOffsetX: z.ZodNumber;
-            legendOffsetY: z.ZodNumber;
         }, z.core.$strip>;
     };
     readonly echartscatter: {
@@ -11683,380 +9457,6 @@ declare const componentPropSchemaMap: {
             tooltipLabelGapSapce: z.ZodOptional<z.ZodNumber>;
         }, z.core.$strip>;
     };
-    readonly echartthinBar: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>;
-            hoverColor: z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>;
-            isSort: z.ZodBoolean;
-            isHover: z.ZodBoolean;
-            seriesWidth: z.ZodNumber;
-            seriesOpacity: z.ZodNumber;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodBoolean;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodBoolean;
-            xAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            xAxisInterval: z.ZodNumber;
-            xAxisRotate: z.ZodNumber;
-            yAxisMin: z.ZodString;
-            yAxisMax: z.ZodString;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodNumber;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodString;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodNumber;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodString;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodString;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodString;
-            yAxisNameShow: z.ZodBoolean;
-            yAxisName: z.ZodString;
-            yAxisNameFontFamily: z.ZodString;
-            yAxisNameFontSize: z.ZodNumber;
-            yAxisNameColor: z.ZodString;
-            yAxisNameFontStyle: z.ZodString;
-            yAxisNameFontWeight: z.ZodString;
-            yAxisNamePaddingTop: z.ZodNumber;
-            yAxisNamePaddingBottom: z.ZodNumber;
-            yAxisNamePaddingLeft: z.ZodNumber;
-            yAxisNamePaddingRight: z.ZodNumber;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodBoolean;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodString;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodNumber;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodNumber;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodBoolean;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodString;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodNumber;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodBoolean;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodString;
-            tooltipLoop: z.ZodBoolean;
-            tooltipLoopInterval: z.ZodNumber;
-            tooltipUnit: z.ZodString;
-            tooltipFixed: z.ZodNumber;
-        }, z.core.$strip>;
-    };
-    readonly echartthreedBar: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodUnion<readonly [z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>, z.ZodArray<z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>>]>;
-            seriesTopColor: z.ZodString;
-            seriesBottomColor: z.ZodString;
-            hoverColor: z.ZodUnion<readonly [z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>, z.ZodArray<z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>>]>;
-            isSort: z.ZodBoolean;
-            isHover: z.ZodBoolean;
-            seriesWidth: z.ZodNumber;
-            seriesOpacity: z.ZodNumber;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodBoolean;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodBoolean;
-            xAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            xAxisInterval: z.ZodNumber;
-            xAxisRotate: z.ZodNumber;
-            yAxisMin: z.ZodString;
-            yAxisMax: z.ZodString;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodNumber;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodString;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodNumber;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodString;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodString;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodString;
-            yAxisNameShow: z.ZodBoolean;
-            yAxisName: z.ZodString;
-            yAxisNameFontFamily: z.ZodString;
-            yAxisNameFontSize: z.ZodNumber;
-            yAxisNameColor: z.ZodString;
-            yAxisNameFontStyle: z.ZodString;
-            yAxisNameFontWeight: z.ZodString;
-            yAxisNamePaddingTop: z.ZodNumber;
-            yAxisNamePaddingBottom: z.ZodNumber;
-            yAxisNamePaddingLeft: z.ZodNumber;
-            yAxisNamePaddingRight: z.ZodNumber;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodBoolean;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodString;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodNumber;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodNumber;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodBoolean;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodString;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodNumber;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodBoolean;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodString;
-            tooltipLoop: z.ZodBoolean;
-            tooltipLoopInterval: z.ZodNumber;
-            tooltipUnit: z.ZodString;
-            tooltipFixed: z.ZodNumber;
-        }, z.core.$strip>;
-    };
-    readonly echartthreedBarAndLine: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            seriesName: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>;
-            seriesTopColor: z.ZodString;
-            seriesBottomColor: z.ZodString;
-            seriesHoverColor: z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>;
-            seriesHoverOpacity: z.ZodNumber;
-            seriesHoverTopColor: z.ZodString;
-            seriesHoverBottomColor: z.ZodString;
-            isSort: z.ZodBoolean;
-            isHover: z.ZodBoolean;
-            seriesWidth: z.ZodNumber;
-            seriesOpacity: z.ZodNumber;
-            seriesLineColor: z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>, z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>]>>]>;
-            seriesLineOpacity: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            seriesLineWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            seriesSmoothShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-            seriesSmooth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            seriesConnectNulls: z.ZodOptional<z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>>;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            legendShow: z.ZodBoolean;
-            legendWidth: z.ZodNumber;
-            legendHeight: z.ZodNumber;
-            legendItemWidth: z.ZodNumber;
-            legendItemHeight: z.ZodNumber;
-            legendItemGap: z.ZodNumber;
-            legendFontFamily: z.ZodString;
-            legendFontSize: z.ZodNumber;
-            legendColor: z.ZodString;
-            legendFontStyle: z.ZodString;
-            legendFontWeight: z.ZodString;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-            xAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            xAxisInterval: z.ZodNumber;
-            xAxisRotate: z.ZodNumber;
-            yAxisMin: z.ZodOptional<z.ZodString>;
-            yAxisMax: z.ZodOptional<z.ZodString>;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            yAxisNameShow: z.ZodOptional<z.ZodBoolean>;
-            yAxisName: z.ZodOptional<z.ZodString>;
-            yAxisNameFontFamily: z.ZodOptional<z.ZodString>;
-            yAxisNameFontSize: z.ZodOptional<z.ZodNumber>;
-            yAxisNameColor: z.ZodOptional<z.ZodString>;
-            yAxisNameFontStyle: z.ZodOptional<z.ZodString>;
-            yAxisNameFontWeight: z.ZodOptional<z.ZodString>;
-            yAxisNamePaddingTop: z.ZodOptional<z.ZodNumber>;
-            yAxisNamePaddingBottom: z.ZodOptional<z.ZodNumber>;
-            yAxisNamePaddingLeft: z.ZodOptional<z.ZodNumber>;
-            yAxisNamePaddingRight: z.ZodOptional<z.ZodNumber>;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodUnion<readonly [z.ZodBoolean, z.ZodArray<z.ZodBoolean>]>;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodUnion<readonly [z.ZodNumber, z.ZodArray<z.ZodNumber>]>;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            tooltipLoop: z.ZodBoolean;
-            tooltipLoopInterval: z.ZodNumber;
-            tooltipUnit: z.ZodUnion<readonly [z.ZodString, z.ZodArray<z.ZodString>]>;
-            tooltipFixed: z.ZodNumber;
-        }, z.core.$strip>;
-    };
     readonly echartthreePie: {
         readonly data: z.ZodArray<z.ZodObject<{
             seriesName: z.ZodString;
@@ -12300,409 +9700,6 @@ declare const componentPropSchemaMap: {
             seriesChildBorderWidth: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly echartzebra: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>;
-            hoverColor: z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>;
-            intervalColor: z.ZodString;
-            isSort: z.ZodBoolean;
-            isHover: z.ZodBoolean;
-            seriesWidth: z.ZodNumber;
-            seriesOpacity: z.ZodNumber;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodBoolean;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodBoolean;
-            xAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            xAxisLabelLimit: z.ZodBoolean;
-            xAxisLabelLimitNum: z.ZodNumber;
-            xAxisInterval: z.ZodNumber;
-            xAxisRotate: z.ZodNumber;
-            yAxisMin: z.ZodString;
-            yAxisMax: z.ZodString;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodNumber;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodString;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodNumber;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodString;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodString;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodString;
-            yAxisNameShow: z.ZodBoolean;
-            yAxisName: z.ZodString;
-            yAxisNameFontFamily: z.ZodString;
-            yAxisNameFontSize: z.ZodNumber;
-            yAxisNameColor: z.ZodString;
-            yAxisNameFontStyle: z.ZodString;
-            yAxisNameFontWeight: z.ZodString;
-            yAxisNamePaddingTop: z.ZodNumber;
-            yAxisNamePaddingBottom: z.ZodNumber;
-            yAxisNamePaddingLeft: z.ZodNumber;
-            yAxisNamePaddingRight: z.ZodNumber;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodBoolean;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodString;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodNumber;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodNumber;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodBoolean;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodString;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodNumber;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodBoolean;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodString;
-            tooltipLoop: z.ZodBoolean;
-            tooltipLoopInterval: z.ZodNumber;
-            tooltipUnit: z.ZodString;
-            tooltipFixed: z.ZodNumber;
-        }, z.core.$strip>;
-    };
-    readonly echartzebra2: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            seriesName: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            stack: z.ZodBoolean;
-            barWidth: z.ZodNumber;
-            barCategoryGap: z.ZodNumber;
-            barBlockItemHeight: z.ZodNumber;
-            barBlockItemInterval: z.ZodNumber;
-            barBlockItemRadio: z.ZodNumber;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesColor: z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>]>>;
-            seriesColorpicker: z.ZodArray<z.ZodString>;
-            seriesOpacity: z.ZodArray<z.ZodNumber>;
-            extremeShow: z.ZodArray<z.ZodBoolean>;
-            extremeType: z.ZodArray<z.ZodEnum<{
-                max: "max";
-                min: "min";
-            }>>;
-            xAxisSplitLineType: z.ZodString;
-            yAxisSplitLineType: z.ZodString;
-            extremeColor: z.ZodArray<z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>>;
-            extremeOpacity: z.ZodArray<z.ZodNumber>;
-            extremeColorpicker: z.ZodArray<z.ZodString>;
-            markLineDataType: z.ZodArray<z.ZodString>;
-            markLineData: z.ZodArray<z.ZodAny>;
-            markLineSymbolStart: z.ZodArray<z.ZodString>;
-            markLineSymbolStartImage: z.ZodArray<z.ZodString>;
-            markLineSymbolEnd: z.ZodArray<z.ZodString>;
-            markLineSymbolEndImage: z.ZodArray<z.ZodString>;
-            markLineSymbolWidth: z.ZodArray<z.ZodNumber>;
-            markLineSymbolHeight: z.ZodArray<z.ZodNumber>;
-            markLineLabelShow: z.ZodArray<z.ZodBoolean>;
-            markLineLabelPosition: z.ZodArray<z.ZodString>;
-            markLineLabelDistance: z.ZodArray<z.ZodNumber>;
-            markLineLabelCustom: z.ZodArray<z.ZodString>;
-            markLineLabelFontFamily: z.ZodArray<z.ZodString>;
-            markLineLabelFontStyle: z.ZodArray<z.ZodString>;
-            markLineLabelFontSize: z.ZodArray<z.ZodNumber>;
-            markLineLabelColor: z.ZodArray<z.ZodString>;
-            markLineLabelFontWeight: z.ZodArray<z.ZodString>;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            legendShow: z.ZodBoolean;
-            legendWidth: z.ZodNumber;
-            legendHeight: z.ZodNumber;
-            legendItemWidth: z.ZodNumber;
-            legendItemHeight: z.ZodNumber;
-            legendItemGap: z.ZodNumber;
-            legendFontFamily: z.ZodString;
-            legendFontSize: z.ZodNumber;
-            legendColor: z.ZodString;
-            legendFontStyle: z.ZodString;
-            legendFontWeight: z.ZodString;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodBoolean;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodBoolean;
-            xAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            xAxisInterval: z.ZodNumber;
-            xAxisRotate: z.ZodNumber;
-            yAxisMin: z.ZodString;
-            yAxisMax: z.ZodString;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodNumber;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodString;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodNumber;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodString;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodString;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodString;
-            yAxisNameShow: z.ZodBoolean;
-            yAxisName: z.ZodString;
-            yAxisNameFontFamily: z.ZodString;
-            yAxisNameFontSize: z.ZodNumber;
-            yAxisNameColor: z.ZodString;
-            yAxisNameFontStyle: z.ZodString;
-            yAxisNameFontWeight: z.ZodString;
-            yAxisNamePaddingTop: z.ZodNumber;
-            yAxisNamePaddingBottom: z.ZodNumber;
-            yAxisNamePaddingLeft: z.ZodNumber;
-            yAxisNamePaddingRight: z.ZodNumber;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodBoolean;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodString;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodNumber;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodNumber;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodBoolean;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodString;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodNumber;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodNumber;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodBoolean;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodNumber;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodString;
-            dataLoop: z.ZodBoolean;
-            dataLoopInterval: z.ZodNumber;
-            dataLoopDisplayRows: z.ZodNumber;
-            dataLoopRollNum: z.ZodNumber;
-        }, z.core.$strip>;
-    };
-    readonly echartzebraBarAndLine: {
-        readonly data: z.ZodArray<z.ZodObject<{
-            name: z.ZodString;
-            seriesName: z.ZodString;
-            value: z.ZodNumber;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            refresh: z.ZodBoolean;
-            dataSeriesName: z.ZodArray<z.ZodString>;
-            seriesName: z.ZodArray<z.ZodString>;
-            seriesTabsName: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                value: z.ZodString;
-            }, z.core.$strip>>;
-            seriesType: z.ZodArray<z.ZodEnum<{
-                bar: "bar";
-                line: "line";
-            }>>;
-            seriesWidth: z.ZodArray<z.ZodNumber>;
-            seriesBarColor: z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>]>>;
-            seriesBarOpacity: z.ZodArray<z.ZodNumber>;
-            intervalColor: z.ZodArray<z.ZodString>;
-            seriesLineColor: z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-                type: z.ZodOptional<z.ZodLiteral<"linear-gradient">>;
-                angle: z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>;
-                colors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-                    color: z.ZodString;
-                    per: z.ZodNumber;
-                }, z.core.$strip>>>;
-            }, z.core.$strip>]>>;
-            seriesLineOpacity: z.ZodArray<z.ZodNumber>;
-            seriesLineWidth: z.ZodArray<z.ZodNumber>;
-            seriesSmoothShow: z.ZodArray<z.ZodBoolean>;
-            seriesSmooth: z.ZodArray<z.ZodNumber>;
-            seriesConnectNulls: z.ZodArray<z.ZodBoolean>;
-            seriesSymbolShow: z.ZodArray<z.ZodBoolean>;
-            seriesSymbol: z.ZodArray<z.ZodString>;
-            seriesSymbolImage: z.ZodArray<z.ZodString>;
-            seriesSymbolWidth: z.ZodArray<z.ZodNumber>;
-            seriesSymbolHeight: z.ZodArray<z.ZodNumber>;
-            seriesItemColor: z.ZodArray<z.ZodString>;
-            seriesItemBorderWidth: z.ZodArray<z.ZodNumber>;
-            seriesItemBorderColor: z.ZodArray<z.ZodString>;
-            seriesLabelShow: z.ZodArray<z.ZodBoolean>;
-            seriesLabelColor: z.ZodArray<z.ZodString>;
-            seriesLabelFontFamily: z.ZodArray<z.ZodString>;
-            seriesLabelFontSize: z.ZodArray<z.ZodNumber>;
-            seriesLabelFontWeight: z.ZodArray<z.ZodString>;
-            seriesLabelFontStyle: z.ZodArray<z.ZodString>;
-            seriesLabelOffsetX: z.ZodArray<z.ZodNumber>;
-            seriesLabelOffsetY: z.ZodArray<z.ZodNumber>;
-            seriesAreaOpacity: z.ZodOptional<z.ZodArray<z.ZodNumber>>;
-            gridLeft: z.ZodNumber;
-            gridTop: z.ZodNumber;
-            gridRight: z.ZodNumber;
-            gridBottom: z.ZodNumber;
-            legendShow: z.ZodBoolean;
-            legendWidth: z.ZodNumber;
-            legendHeight: z.ZodNumber;
-            legendItemWidth: z.ZodNumber;
-            legendItemHeight: z.ZodNumber;
-            legendItemGap: z.ZodNumber;
-            legendFontFamily: z.ZodString;
-            legendFontSize: z.ZodNumber;
-            legendColor: z.ZodString;
-            legendFontStyle: z.ZodString;
-            legendFontWeight: z.ZodString;
-            xNameFontSize: z.ZodNumber;
-            yNameFontSize: z.ZodNumber;
-            yAxisInverse: z.ZodBoolean;
-            xAxisInverse: z.ZodBoolean;
-            xAxisShow: z.ZodBoolean;
-            yAxisShow: z.ZodOptional<z.ZodBoolean>;
-            xAxisLabelShow: z.ZodBoolean;
-            yAxisLabelShow: z.ZodOptional<z.ZodBoolean>;
-            xAxisType: z.ZodEnum<{
-                value: "value";
-                category: "category";
-                time: "time";
-                log: "log";
-            }>;
-            xAxisInterval: z.ZodNumber;
-            xAxisRotate: z.ZodNumber;
-            yAxisMin: z.ZodOptional<z.ZodString>;
-            yAxisMax: z.ZodOptional<z.ZodString>;
-            xAxisMargin: z.ZodNumber;
-            yAxisMargin: z.ZodOptional<z.ZodNumber>;
-            xAxisFontFamily: z.ZodString;
-            yAxisFontFamily: z.ZodOptional<z.ZodString>;
-            xAxisFontSize: z.ZodNumber;
-            yAxisFontSize: z.ZodOptional<z.ZodNumber>;
-            xAxisColor: z.ZodString;
-            yAxisColor: z.ZodOptional<z.ZodString>;
-            xAxisFontStyle: z.ZodString;
-            yAxisFontStyle: z.ZodOptional<z.ZodString>;
-            xAxisFontWeight: z.ZodString;
-            yAxisFontWeight: z.ZodOptional<z.ZodString>;
-            yAxisNameShow: z.ZodOptional<z.ZodBoolean>;
-            yAxisName: z.ZodOptional<z.ZodString>;
-            yAxisNameFontFamily: z.ZodOptional<z.ZodString>;
-            yAxisNameFontSize: z.ZodOptional<z.ZodNumber>;
-            yAxisNameColor: z.ZodOptional<z.ZodString>;
-            yAxisNameFontStyle: z.ZodOptional<z.ZodString>;
-            yAxisNameFontWeight: z.ZodOptional<z.ZodString>;
-            yAxisNamePaddingTop: z.ZodOptional<z.ZodNumber>;
-            yAxisNamePaddingBottom: z.ZodOptional<z.ZodNumber>;
-            yAxisNamePaddingLeft: z.ZodOptional<z.ZodNumber>;
-            yAxisNamePaddingRight: z.ZodOptional<z.ZodNumber>;
-            xAxisLineShow: z.ZodBoolean;
-            yAxisLineShow: z.ZodOptional<z.ZodBoolean>;
-            xAxisLineColor: z.ZodString;
-            yAxisLineColor: z.ZodOptional<z.ZodString>;
-            xAxisLineWidth: z.ZodNumber;
-            yAxisLineWidth: z.ZodOptional<z.ZodNumber>;
-            xAxisLineOpacity: z.ZodNumber;
-            yAxisLineOpacity: z.ZodOptional<z.ZodNumber>;
-            xAxisTickShow: z.ZodBoolean;
-            yAxisTickShow: z.ZodOptional<z.ZodBoolean>;
-            xAxisTickColor: z.ZodString;
-            yAxisTickColor: z.ZodOptional<z.ZodString>;
-            xAxisTickWidth: z.ZodNumber;
-            yAxisTickWidth: z.ZodOptional<z.ZodNumber>;
-            xAxisTickLength: z.ZodNumber;
-            yAxisTickLength: z.ZodOptional<z.ZodNumber>;
-            xAxisSplitLineShow: z.ZodBoolean;
-            yAxisSplitLineShow: z.ZodOptional<z.ZodBoolean>;
-            xAxisSplitLineInterval: z.ZodNumber;
-            xAxisSplitLineWidth: z.ZodNumber;
-            yAxisSplitLineWidth: z.ZodOptional<z.ZodNumber>;
-            xAxisSplitLineColor: z.ZodString;
-            yAxisSplitLineColor: z.ZodOptional<z.ZodString>;
-            tooltipLoop: z.ZodBoolean;
-            tooltipLoopInterval: z.ZodNumber;
-            tooltipUnit: z.ZodString;
-            tooltipFixed: z.ZodNumber;
-        }, z.core.$strip>;
-    };
     readonly "rank-progress": {
         readonly data: z.ZodArray<z.ZodObject<{
             name: z.ZodString;
@@ -12880,7 +9877,7 @@ declare const componentPropSchemaMap: {
             autoHidden: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftiframe: {
+    readonly swiframe: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
@@ -12915,73 +9912,44 @@ declare const componentPropSchemaMap: {
             isQuoteReload: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftimg: {
+    readonly swimg: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodString;
         }, z.core.$strip>>;
         readonly option: z.ZodObject<{
-            cover: z.ZodString;
-            url: z.ZodString;
-            duration: z.ZodString;
-            pointerEvents: z.ZodBoolean;
-            opacity: z.ZodNumber;
-            mixBlendMode: z.ZodString;
-            rotateShow: z.ZodBoolean;
-            rotateX: z.ZodNumber;
-            rotateY: z.ZodNumber;
-            rotateZ: z.ZodNumber;
-            animationShow: z.ZodBoolean;
-            animationLoop: z.ZodBoolean;
-            animationSpeed: z.ZodEnum<{
-                constant: "constant";
-                "slow-fast-slow": "slow-fast-slow";
-                "start-slow": "start-slow";
-                "end-slow": "end-slow";
-            }>;
-            animationSpeedNum: z.ZodNumber;
-            animationTime: z.ZodNumber;
-            animationDelayed: z.ZodNumber;
-            animationInterval: z.ZodNumber;
-            animationType: z.ZodEnum<{
-                opacity: "opacity";
-                default: "default";
-                zoom: "zoom";
-                clockwise: "clockwise";
-                counterclockwise: "counterclockwise";
-                backAndForth: "backAndForth";
-                upOrDown: "upOrDown";
-                customize: "customize";
-            }>;
-            gaussianBlurShow: z.ZodBoolean;
-            gaussianBlur: z.ZodNumber;
-            brightnessShow: z.ZodBoolean;
-            brightness: z.ZodNumber;
-            contrastShow: z.ZodBoolean;
-            contrast: z.ZodNumber;
-            grayscaleShow: z.ZodBoolean;
-            grayscale: z.ZodNumber;
-            hueShow: z.ZodBoolean;
-            hue: z.ZodNumber;
-            invertShow: z.ZodBoolean;
-            invert: z.ZodNumber;
-            saturateShow: z.ZodBoolean;
-            saturate: z.ZodNumber;
-            sepiaShow: z.ZodBoolean;
-            sepia: z.ZodNumber;
-            shadowShow: z.ZodBoolean;
-            shadowColor: z.ZodString;
-            shadowX: z.ZodNumber;
-            shadowY: z.ZodNumber;
-            shadowFuzzy: z.ZodNumber;
-            shadowExtension: z.ZodNumber;
-            openReview: z.ZodBoolean;
-            reviewImageWidth: z.ZodNumber;
-            backdropFilter: z.ZodBoolean;
-            backdropFilterBlur: z.ZodNumber;
-            backdropFilterSaturate: z.ZodNumber;
-        }, z.core.$strip>;
+            objectFit: z.ZodOptional<z.ZodEnum<{
+                fill: "fill";
+                cover: "cover";
+                contain: "contain";
+            }>>;
+            background: z.ZodOptional<z.ZodString>;
+            opacity: z.ZodOptional<z.ZodNumber>;
+            borderRadius: z.ZodOptional<z.ZodNumber>;
+            filter: z.ZodOptional<z.ZodString>;
+            mixBlendMode: z.ZodOptional<z.ZodString>;
+            transform: z.ZodOptional<z.ZodString>;
+            animation: z.ZodOptional<z.ZodString>;
+            keyframes: z.ZodOptional<z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>>;
+            transition: z.ZodOptional<z.ZodString>;
+            pointerEvents: z.ZodOptional<z.ZodBoolean>;
+        }, z.core.$strict>;
     };
-    readonly ftOpenVideo: {
+    readonly swBox: {
+        readonly data: z.ZodArray<z.ZodUnknown>;
+        readonly option: z.ZodObject<{
+            background: z.ZodOptional<z.ZodString>;
+            border: z.ZodOptional<z.ZodString>;
+            borderRadius: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+            boxShadow: z.ZodOptional<z.ZodString>;
+            backdropFilter: z.ZodOptional<z.ZodString>;
+            opacity: z.ZodOptional<z.ZodNumber>;
+            clipPath: z.ZodOptional<z.ZodString>;
+            transform: z.ZodOptional<z.ZodString>;
+            animation: z.ZodOptional<z.ZodString>;
+            pointerEvents: z.ZodOptional<z.ZodBoolean>;
+        }, z.core.$strict>;
+    };
+    readonly "sw-open-video": {
         readonly data: z.ZodArray<z.ZodObject<{
             cover: z.ZodString;
             value: z.ZodString;
@@ -13056,7 +10024,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>;
         }, z.core.$strip>;
     };
-    readonly ftSwiperCard: {
+    readonly swSwiperCard: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             globalConfig: z.ZodObject<{
@@ -13149,7 +10117,7 @@ declare const componentPropSchemaMap: {
             refresh: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly ftswiper: {
+    readonly swswiper: {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
             type: z.ZodString;
@@ -13221,7 +10189,7 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>;
         }, z.core.$strip>;
     };
-    readonly ftvideo: {
+    readonly swvideo: {
         readonly data: z.ZodArray<z.ZodObject<{
             cover: z.ZodString;
             value: z.ZodString;
@@ -13658,7 +10626,7 @@ declare const componentPropSchemaMap: {
             xAxisSplitLineColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftFlopPerformance: {
+    readonly swFlopPerformance: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodNumber;
         }, z.core.$strip>>;
@@ -13713,9 +10681,21 @@ declare const componentPropSchemaMap: {
             autoIncrement: z.ZodBoolean;
             incrementFrequency: z.ZodNumber;
             randomRange: z.ZodNumber;
+            setFontLinear: z.ZodOptional<z.ZodBoolean>;
+            suffixSetFontLinear: z.ZodOptional<z.ZodBoolean>;
+            suffixFontLinearColor: z.ZodOptional<z.ZodString>;
+            duration: z.ZodOptional<z.ZodNumber>;
+            shadowShow: z.ZodOptional<z.ZodBoolean>;
+            shadowColor: z.ZodOptional<z.ZodString>;
+            shadowX: z.ZodOptional<z.ZodNumber>;
+            shadowY: z.ZodOptional<z.ZodNumber>;
+            shadowFuzzy: z.ZodOptional<z.ZodNumber>;
+            padding: z.ZodOptional<z.ZodNumber>;
+            delayLoading: z.ZodOptional<z.ZodBoolean>;
+            delayTime: z.ZodOptional<z.ZodNumber>;
         }, z.core.$strip>;
     };
-    readonly ftdynamicratio: {
+    readonly swdynamicratio: {
         readonly data: z.ZodArray<z.ZodObject<{
             value: z.ZodNumber;
         }, z.core.$strip>>;
@@ -13786,7 +10766,8 @@ declare const componentPropSchemaMap: {
             }, z.core.$strip>>;
         }, z.core.$strip>>;
         readonly option: z.ZodObject<{
-            echartFormatter: z.ZodString;
+            echartsOption: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
+            echartFormatter: z.ZodOptional<z.ZodString>;
         }, z.core.$strip>;
     };
     readonly "vue-part": {
@@ -14072,7 +11053,7 @@ declare const componentPropSchemaMap: {
             fontPaddingLeft: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftCascader: {
+    readonly swCascader: {
         readonly data: z.ZodArray<z.ZodType<import('.').CascaderItem, unknown, z.core.$ZodTypeInternals<import('.').CascaderItem, unknown>>>;
         readonly option: z.ZodObject<{
             defaultIndex: z.ZodNumber;
@@ -14124,7 +11105,7 @@ declare const componentPropSchemaMap: {
             menuHoverBackgroundImage: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftCustomSelect: {
+    readonly swCustomSelect: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14197,7 +11178,7 @@ declare const componentPropSchemaMap: {
             hoverHeight: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftDateTimePicker: {
+    readonly swDateTimePicker: {
         readonly data: z.ZodArray<z.ZodObject<{
             startTime: z.ZodString;
             endTime: z.ZodString;
@@ -14243,7 +11224,7 @@ declare const componentPropSchemaMap: {
             buttonFontWeight: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftLegend: {
+    readonly swLegend: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14335,7 +11316,7 @@ declare const componentPropSchemaMap: {
             opacity: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftPageQuery: {
+    readonly swPageQuery: {
         readonly data: z.ZodArray<z.ZodObject<{
             pageIndex: z.ZodNumber;
             pageTotal: z.ZodNumber;
@@ -14393,7 +11374,7 @@ declare const componentPropSchemaMap: {
             checkedBorderColor: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly ftPageTurning: {
+    readonly swPageTurning: {
         readonly data: z.ZodArray<z.ZodObject<{
             pageIndex: z.ZodNumber;
             pageTotal: z.ZodNumber;
@@ -14474,7 +11455,7 @@ declare const componentPropSchemaMap: {
             buttonIconHeight: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftSingleSelectedLegend: {
+    readonly swSingleSelectedLegend: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodString;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -14513,7 +11494,7 @@ declare const componentPropSchemaMap: {
             backgroundBorderRadius: z.ZodNumber;
         }, z.core.$strip>;
     };
-    readonly ftTimerShaft: {
+    readonly swTimerShaft: {
         readonly data: z.ZodArray<z.ZodObject<{
             label: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
             value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
@@ -15441,47 +12422,6 @@ declare const componentPropSchemaMap: {
             pageReloadTypeClick: z.ZodString;
         }, z.core.$strip>;
     };
-    readonly "simple-barrage": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            text: z.ZodString;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            imageWidth: z.ZodNumber;
-            imageHeight: z.ZodNumber;
-            imageMinHeight: z.ZodNumber;
-            imageMaxHeight: z.ZodNumber;
-            imageObjectFit: z.ZodString;
-            scale: z.ZodNumber;
-            importType: z.ZodString;
-            importConfig: z.ZodObject<{
-                apiUrl: z.ZodString;
-                method: z.ZodString;
-                body: z.ZodArray<z.ZodUnknown>;
-                headers: z.ZodArray<z.ZodUnknown>;
-            }, z.core.$strip>;
-            loop: z.ZodBoolean;
-            lineNum: z.ZodNumber;
-            isHover: z.ZodBoolean;
-            speed: z.ZodNumber;
-            stylesList: z.ZodArray<z.ZodObject<{
-                name: z.ZodString;
-                fontSize: z.ZodNumber;
-                fontWeight: z.ZodBoolean;
-                fontStyle: z.ZodBoolean;
-                letterSpacing: z.ZodNumber;
-                fontFamily: z.ZodString;
-                fontColor: z.ZodString;
-                isTextShadow: z.ZodBoolean;
-                textShadow: z.ZodObject<{
-                    x: z.ZodNumber;
-                    y: z.ZodNumber;
-                    blur: z.ZodNumber;
-                    color: z.ZodString;
-                    extend: z.ZodNumber;
-                }, z.core.$strip>;
-            }, z.core.$strip>>;
-        }, z.core.$strip>;
-    };
     readonly "simple-particle": {
         readonly data: z.ZodArray<z.ZodNever>;
         readonly option: z.ZodObject<{
@@ -15547,6 +12487,29 @@ type ComponentPropSchemas = {
         option: z.ZodType;
     };
 };
+
+import { z } from 'zod';
+import { ComponentProp } from './propSchemaMap';
+type SuperRefineFn = (val: {
+    data?: unknown;
+    option?: Record<string, unknown>;
+    component?: {
+        width?: number;
+        height?: number;
+    };
+}, ctx: z.RefinementCtx) => void;
+/**
+ * 组件专属的跨字段业务规则（开关联动、数组长度一致性……），按 prop 注册。
+ *
+ * 这些规则刻意不写进各自的 `xxxOptionSchema` 本体——写进去会导致
+ * `component-schema.test.ts` 那类"真实 fixture 必须零错误通过 schema"的回归测试失败，
+ * 因为真实历史数据经常不满足这些业务约束（比如只填了 fontLinearColor、setFontLinear
+ * 干脆没这个键），但那仍是合法的、已经渲染过的组件，不该被当成类型错误。
+ *
+ * 只有 `validateComponentContent`（运行时对 agent 编辑结果的校验）这条路径会用到这个
+ * registry，走的是"只警告不阻断"的 warnings 通道，见该函数注释。
+ */
+declare const componentSuperRefineMap: Partial<Record<ComponentProp, SuperRefineFn>>;
 
 import { z } from 'zod';
 /** Artifact 应用预览模式。 */
@@ -16102,7 +13065,7 @@ import { z } from 'zod';
 declare const swRichtextDataSchema: z.ZodArray<z.ZodObject<{
     value: z.ZodString;
 }, z.core.$strip>>;
-type FtRichtextData = z.infer<typeof swRichtextDataSchema>;
+type SwRichtextData = z.infer<typeof swRichtextDataSchema>;
 /**
  * 富文本配置选项 Schema
  */
@@ -16115,7 +13078,7 @@ declare const swRichtextOptionSchema: z.ZodObject<{
     scrollLoop: z.ZodBoolean;
     scrollInterval: z.ZodNumber;
 }, z.core.$strip>;
-type FtRichtextOption = z.infer<typeof swRichtextOptionSchema>;
+type SwRichtextOption = z.infer<typeof swRichtextOptionSchema>;
 
 import { z } from 'zod';
 declare const swScrollDataSchema: z.ZodArray<z.ZodRecord<z.ZodString, z.ZodUnion<readonly [z.ZodString, z.ZodNumber, z.ZodBoolean]>>>;
@@ -16125,240 +13088,139 @@ type FtScrollData = z.infer<typeof swScrollDataSchema>;
  */
 declare const swScrollOptionSchema: z.ZodObject<{
     refresh: z.ZodBoolean;
-    columnShow: z.ZodBoolean;
-    columnViews: z.ZodBoolean;
-    animationShow: z.ZodBoolean;
-    cursorShow: z.ZodBoolean;
-    textStyleShow: z.ZodBoolean;
-    align: z.ZodString;
-    header: z.ZodBoolean;
-    scroll: z.ZodBoolean;
-    scrollTime: z.ZodNumber;
-    scrollTimeType: z.ZodOptional<z.ZodBoolean>;
-    scrollSingleTime: z.ZodOptional<z.ZodNumber>;
-    fontSize: z.ZodNumber;
-    count: z.ZodNumber;
-    lineMarginBottom: z.ZodNumber;
-    index: z.ZodBoolean;
-    scrollCount: z.ZodNumber;
-    headerHeight: z.ZodNumber;
-    headerFontSize: z.ZodNumber;
-    headerFontFamily: z.ZodString;
-    headerlineHeight: z.ZodNumber;
-    borderShow: z.ZodBoolean;
-    backgroundType: z.ZodString;
-    backgroundImage: z.ZodString;
-    headerletterSpacing: z.ZodNumber;
-    headerFontStyle: z.ZodString;
-    headerFontWeight: z.ZodString;
-    headerBackground: z.ZodString;
-    headerColor: z.ZodString;
-    activeKeys: z.ZodOptional<z.ZodString>;
-    headerShow: z.ZodBoolean;
-    headerTextAlign: z.ZodString;
-    column: z.ZodArray<z.ZodObject<{
-        name: z.ZodString;
-        alias: z.ZodString;
-        icon: z.ZodOptional<z.ZodString>;
+    columns: z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        title: z.ZodString;
+        width: z.ZodOptional<z.ZodNumber>;
+        align: z.ZodOptional<z.ZodEnum<{
+            left: "left";
+            right: "right";
+            center: "center";
+        }>>;
     }, z.core.$strip>>;
-    selectedShow: z.ZodBoolean;
-    selectedFontSize: z.ZodNumber;
-    selectedFontFamily: z.ZodString;
-    selectedletterSpacing: z.ZodNumber;
-    selectedFontStyle: z.ZodString;
-    selectedFontWeight: z.ZodString;
-    selectedColor: z.ZodString;
-    selectedlineHeight: z.ZodNumber;
-    selectedMode: z.ZodString;
-    selectedBgType: z.ZodString;
-    selectedBgColor: z.ZodString;
-    selectedBgOpacity: z.ZodNumber;
-    selectedBgImage: z.ZodString;
-    shadowShow: z.ZodBoolean;
-    shadowColor: z.ZodString;
-    shadowX: z.ZodNumber;
-    shadowY: z.ZodNumber;
-    shadowFuzzy: z.ZodNumber;
-    shadowExtension: z.ZodNumber;
-    rowName: z.ZodArray<z.ZodString>;
-    rowTitle: z.ZodString;
-    initialValue: z.ZodNumber;
-    rowWidth: z.ZodNumber;
-    rowSpace: z.ZodNumber;
-    rowAlign: z.ZodString;
-    rowKey: z.ZodArray<z.ZodString>;
-    rowOffsetX: z.ZodArray<z.ZodNumber>;
-    rowOffsetY: z.ZodArray<z.ZodNumber>;
-    rowBgWidth: z.ZodArray<z.ZodNumber>;
-    rowBgHeight: z.ZodArray<z.ZodNumber>;
-    rowBgType: z.ZodArray<z.ZodString>;
-    rowBgColor: z.ZodArray<z.ZodString>;
-    rowBgOpacity: z.ZodArray<z.ZodNumber>;
-    rowBgImage: z.ZodArray<z.ZodString>;
-    rowFontSize: z.ZodArray<z.ZodNumber>;
-    rowFontFamily: z.ZodArray<z.ZodString>;
-    rowletterSpacing: z.ZodArray<z.ZodNumber>;
-    rowFontStyle: z.ZodArray<z.ZodString>;
-    rowFontWeight: z.ZodArray<z.ZodString>;
-    rowColor: z.ZodArray<z.ZodString>;
-    rowlineHeight: z.ZodArray<z.ZodNumber>;
-    rowShow: z.ZodBoolean;
-    bodyBackground: z.ZodString;
-    bodyColor: z.ZodString;
-    borderColor: z.ZodString;
-    bodyTextAlign: z.ZodString;
-    nthColor: z.ZodString;
-    othColor: z.ZodString;
-    seriesXTabsName: z.ZodArray<z.ZodString>;
-    seriesXbackgroundType: z.ZodArray<z.ZodString>;
-    seriesXbackgroundImage: z.ZodArray<z.ZodString>;
-    seriesXBackground: z.ZodArray<z.ZodString>;
-    seriesXBorderColor: z.ZodArray<z.ZodString>;
-    seriesXBorderWidth: z.ZodArray<z.ZodNumber>;
-    seriesXRadius: z.ZodArray<z.ZodNumber>;
-    seriesXOffsetX: z.ZodArray<z.ZodNumber>;
-    seriesYWidth: z.ZodArray<z.ZodNumber>;
-    seriesYMarginLeft: z.ZodArray<z.ZodNumber>;
-    seriesYbackgroundImage: z.ZodArray<z.ZodString>;
-    seriesYBackground: z.ZodArray<z.ZodString>;
-    seriesYBorderColor: z.ZodArray<z.ZodString>;
-    seriesYBorderWidth: z.ZodArray<z.ZodNumber>;
-    seriesYFontSize: z.ZodArray<z.ZodNumber>;
-    seriesYFontFamily: z.ZodArray<z.ZodString>;
-    seriesYletterSpacing: z.ZodArray<z.ZodNumber>;
-    seriesYFontStyle: z.ZodArray<z.ZodString>;
-    seriesYFontWeight: z.ZodArray<z.ZodString>;
-    seriesYColor: z.ZodArray<z.ZodString>;
-    seriesYContentType: z.ZodArray<z.ZodString>;
-    seriesYTextAlign: z.ZodArray<z.ZodString>;
-    seriesYOverFlow: z.ZodArray<z.ZodString>;
-    seriesYlineHeight: z.ZodArray<z.ZodNumber>;
-    seriesYOffsetX: z.ZodArray<z.ZodNumber>;
-    seriesYOffsetY: z.ZodArray<z.ZodNumber>;
-    seriesYTabsName: z.ZodArray<z.ZodString>;
-    maskImage: z.ZodArray<z.ZodString>;
-    imageWidth: z.ZodArray<z.ZodNumber>;
-    imageHeight: z.ZodArray<z.ZodNumber>;
-    suffixShow: z.ZodArray<z.ZodBoolean>;
-    thousandSplit: z.ZodArray<z.ZodBoolean>;
-    suffixFontSize: z.ZodArray<z.ZodNumber>;
-    suffixFontFamily: z.ZodArray<z.ZodString>;
-    suffixletterSpacing: z.ZodArray<z.ZodNumber>;
-    suffixFontStyle: z.ZodArray<z.ZodString>;
-    suffixFontWeight: z.ZodArray<z.ZodString>;
-    suffixColor: z.ZodArray<z.ZodString>;
-    suffixlineHeight: z.ZodArray<z.ZodNumber>;
-    suffixOffsetX: z.ZodArray<z.ZodNumber>;
-    suffixOffsetY: z.ZodArray<z.ZodNumber>;
-    suffixContent: z.ZodArray<z.ZodString>;
-    statusConfigValue: z.ZodArray<z.ZodArray<z.ZodString>>;
-    statusConfigImg: z.ZodArray<z.ZodArray<z.ZodString>>;
-    statusConfigWidth: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    statusConfigHeight: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    statusConfigName: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignKeyValue: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignFontFamily: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignFontSize: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    styleAssignHeight: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    styleAssignletterSpacing: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    styleAssignColor: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignFontStyle: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignFontWeight: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignName: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignBgImg: z.ZodArray<z.ZodArray<z.ZodString>>;
-    styleAssignBgWdith: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    styleAssignBgHeight: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    styleAssignBgLeft: z.ZodArray<z.ZodArray<z.ZodNumber>>;
-    globalScrollYTrackWidth: z.ZodOptional<z.ZodNumber>;
-    globalScrollYTrackBackground: z.ZodOptional<z.ZodString>;
-    globalScrollYTrackBorderRadius: z.ZodOptional<z.ZodNumber>;
-    globalScrollYThumbWidth: z.ZodOptional<z.ZodNumber>;
-    globalScrollYThumbBackground: z.ZodOptional<z.ZodString>;
-    globalScrollYThumbBorderRadius: z.ZodOptional<z.ZodNumber>;
-    progressYConfig: z.ZodArray<z.ZodObject<{
-        type: z.ZodString;
-        "text-inside": z.ZodBoolean;
-        status: z.ZodString;
-        indeterminate: z.ZodBoolean;
-        duration: z.ZodNumber;
-        showText: z.ZodBoolean;
-        "stroke-linecap": z.ZodString;
-        striped: z.ZodBoolean;
-        color: z.ZodString;
-        outerBgColor: z.ZodString;
-        linearGradientColor: z.ZodString;
-        fontFamily: z.ZodString;
-        fontSize: z.ZodNumber;
-        fontColor: z.ZodString;
-        fontStyle: z.ZodString;
-        fontWeight: z.ZodString;
-        borderRadius: z.ZodNumber;
-        commonColor: z.ZodString;
+    header: z.ZodObject<{
+        show: z.ZodDefault<z.ZodBoolean>;
+        height: z.ZodDefault<z.ZodNumber>;
+        background: z.ZodDefault<z.ZodString>;
+        color: z.ZodDefault<z.ZodString>;
+        fontSize: z.ZodDefault<z.ZodNumber>;
+    }, z.core.$strip>;
+    rowStyle: z.ZodObject<{
+        height: z.ZodDefault<z.ZodNumber>;
+        fontSize: z.ZodDefault<z.ZodNumber>;
+        color: z.ZodDefault<z.ZodString>;
+        background: z.ZodDefault<z.ZodString>;
+        stripeBackground: z.ZodOptional<z.ZodString>;
+        align: z.ZodDefault<z.ZodEnum<{
+            left: "left";
+            right: "right";
+            center: "center";
+        }>>;
+    }, z.core.$strip>;
+    columnStyleOverrides: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
+        color: z.ZodOptional<z.ZodString>;
+        background: z.ZodOptional<z.ZodString>;
+        fontSize: z.ZodOptional<z.ZodNumber>;
+        align: z.ZodOptional<z.ZodEnum<{
+            left: "left";
+            right: "right";
+            center: "center";
+        }>>;
+    }, z.core.$strip>>>;
+    rowIndex: z.ZodOptional<z.ZodObject<{
+        show: z.ZodDefault<z.ZodBoolean>;
+        title: z.ZodDefault<z.ZodString>;
+        width: z.ZodDefault<z.ZodNumber>;
+        startFrom: z.ZodDefault<z.ZodNumber>;
+    }, z.core.$strip>>;
+    scroll: z.ZodOptional<z.ZodObject<{
+        enabled: z.ZodDefault<z.ZodBoolean>;
+        visibleRows: z.ZodDefault<z.ZodNumber>;
+        speed: z.ZodDefault<z.ZodNumber>;
     }, z.core.$strip>>;
 }, z.core.$strip>;
 type FtScrollOption = z.infer<typeof swScrollOptionSchema>;
+/**
+ * 联动检查——不揉进 `swScrollOptionSchema` 本体（原因见 swFlopPerformanceSuperRefine 的注释：
+ * 真实历史数据可能不满足这些业务约束，但仍是合法的、已渲染过的组件，不该被 schema 一致性
+ * 测试当成类型错误），只在运行时校验入口（`componentSuperRefineMap`）挂上。
+ *
+ * 新结构里列宽默认自动分配、样式按 key 覆盖，原来"数组长度要对齐""像素总和要精确匹配容器
+ * 宽度"这类结构性 bug 已经不可能出现，只保留一条业务提示：可视行数应明显小于数据行数。
+ */
+declare function swScrollSuperRefine(val: {
+    data?: unknown;
+    option?: Partial<FtScrollOption>;
+}, ctx: z.RefinementCtx): void;
 
 import { z } from 'zod';
 declare const swTextDataSchema: z.ZodArray<z.ZodObject<{
-    value: z.ZodString;
+    value: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
 }, z.core.$strip>>;
 type FtTextData = z.infer<typeof swTextDataSchema>;
 /**
  * 文本框/跑马灯/超链接配置选项 Schema
  */
 declare const swTextOptionSchema: z.ZodObject<{
-    type: z.ZodOptional<z.ZodEnum<{
-        link: "link";
-        text: "text";
-        marquee: "marquee";
-    }>>;
-    link: z.ZodOptional<z.ZodBoolean>;
-    linkHref: z.ZodOptional<z.ZodString>;
-    linkTarget: z.ZodOptional<z.ZodString>;
-    pointerEvents: z.ZodOptional<z.ZodBoolean>;
-    writingMode: z.ZodOptional<z.ZodString>;
-    textOrientation: z.ZodOptional<z.ZodString>;
-    iswrap: z.ZodOptional<z.ZodBoolean>;
     fontFamily: z.ZodOptional<z.ZodString>;
     fontSize: z.ZodOptional<z.ZodNumber>;
-    color: z.ZodOptional<z.ZodString>;
-    fontWeight: z.ZodOptional<z.ZodCoercedString<unknown>>;
-    fontStyle: z.ZodOptional<z.ZodString>;
-    lineHeight: z.ZodOptional<z.ZodNumber>;
-    selectedTextType: z.ZodOptional<z.ZodEnum<{
+    fontWeight: z.ZodOptional<z.ZodUnion<readonly [z.ZodNumber, z.ZodString]>>;
+    fontStyle: z.ZodOptional<z.ZodEnum<{
         normal: "normal";
-        gradient: "gradient";
-        multiGradient: "multiGradient";
+        italic: "italic";
     }>>;
-    selectedTextColor: z.ZodOptional<z.ZodUnion<readonly [z.ZodString, z.ZodObject<{
-        type: z.ZodString;
-        angle: z.ZodString;
-        colors: z.ZodArray<z.ZodObject<{
-            color: z.ZodString;
-            per: z.ZodNumber;
-        }, z.core.$strip>>;
-    }, z.core.$strip>]>>;
-    selectedTextOpacity: z.ZodOptional<z.ZodNumber>;
-    multiGradientColors: z.ZodOptional<z.ZodArray<z.ZodObject<{
-        id: z.ZodString;
-        color: z.ZodString;
-        opacity: z.ZodNumber;
-        isShowColor: z.ZodBoolean;
-    }, z.core.$strip>>>;
-    textAlign: z.ZodOptional<z.ZodString>;
-    textAlignVertical: z.ZodOptional<z.ZodString>;
-    split: z.ZodOptional<z.ZodNumber>;
-    backgroundColor: z.ZodOptional<z.ZodString>;
-    shadowShow: z.ZodOptional<z.ZodBoolean>;
-    shadowColor: z.ZodOptional<z.ZodString>;
-    shadowX: z.ZodOptional<z.ZodNumber>;
-    shadowY: z.ZodOptional<z.ZodNumber>;
-    shadowFuzzy: z.ZodOptional<z.ZodNumber>;
-    shadowExtension: z.ZodOptional<z.ZodNumber>;
+    letterSpacing: z.ZodOptional<z.ZodNumber>;
+    lineHeight: z.ZodOptional<z.ZodNumber>;
+    color: z.ZodOptional<z.ZodString>;
+    textShadow: z.ZodOptional<z.ZodString>;
+    background: z.ZodOptional<z.ZodString>;
     opacity: z.ZodOptional<z.ZodNumber>;
-    rotateX: z.ZodOptional<z.ZodNumber>;
-    rotateY: z.ZodOptional<z.ZodNumber>;
-    rotateZ: z.ZodOptional<z.ZodNumber>;
+    textAlign: z.ZodOptional<z.ZodEnum<{
+        left: "left";
+        right: "right";
+        center: "center";
+    }>>;
+    verticalAlign: z.ZodOptional<z.ZodEnum<{
+        top: "top";
+        bottom: "bottom";
+        middle: "middle";
+    }>>;
+    whiteSpace: z.ZodOptional<z.ZodEnum<{
+        normal: "normal";
+        nowrap: "nowrap";
+        "pre-line": "pre-line";
+    }>>;
+    textOverflow: z.ZodOptional<z.ZodEnum<{
+        clip: "clip";
+        ellipsis: "ellipsis";
+    }>>;
+    writingMode: z.ZodOptional<z.ZodEnum<{
+        "horizontal-tb": "horizontal-tb";
+        "vertical-rl": "vertical-rl";
+        "vertical-lr": "vertical-lr";
+    }>>;
+    textOrientation: z.ZodOptional<z.ZodEnum<{
+        mixed: "mixed";
+        upright: "upright";
+    }>>;
+    transform: z.ZodOptional<z.ZodString>;
+    animation: z.ZodOptional<z.ZodString>;
+    template: z.ZodOptional<z.ZodString>;
+    decimals: z.ZodOptional<z.ZodNumber>;
+    thousands: z.ZodOptional<z.ZodBoolean>;
+    marquee: z.ZodOptional<z.ZodObject<{
+        speed: z.ZodNumber;
+        direction: z.ZodOptional<z.ZodEnum<{
+            left: "left";
+            right: "right";
+        }>>;
+    }, z.core.$strip>>;
+    href: z.ZodOptional<z.ZodString>;
+    target: z.ZodOptional<z.ZodEnum<{
+        _self: "_self";
+        _blank: "_blank";
+    }>>;
+    pointerEvents: z.ZodOptional<z.ZodBoolean>;
 }, z.core.$strict>;
 type FtTextOption = z.infer<typeof swTextOptionSchema>;
 
@@ -16488,7 +13350,8 @@ type EchartcommonData = z.infer<typeof echartcommonDataSchema>;
  * Echarts通用型配置选项 Schema
  */
 declare const echartcommonOptionSchema: z.ZodObject<{
-    echartFormatter: z.ZodString;
+    echartsOption: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
+    echartFormatter: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 type EchartcommonOption = z.infer<typeof echartcommonOptionSchema>;
 
@@ -16535,7 +13398,6 @@ declare const BarEchartEnumSchema: z.ZodEnum<{
     echartbothWayStripBar: BarEchartEnum.echartbothWayStripBar;
     echartlineAndBar: BarEchartEnum.echartlineAndBar;
     echartpictorialbar: BarEchartEnum.echartpictorialbar;
-    echartrank: BarEchartEnum.echartrank;
     echartbar: BarEchartEnum.echartbar;
 }>;
 declare const lineEchartEnumSchema: z.ZodEnum<{
@@ -16554,22 +13416,7 @@ declare const pieEchartEnumSchema: z.ZodEnum<{
     echartloopRingPie: import("..").PieEchartEnum.echartloopRingPie;
     echartpluralRosePie: import("..").PieEchartEnum.echartpluralRosePie;
     echartthreePie: import("..").PieEchartEnum.echartthreePie;
-}>;
-declare const projectEchartEnumSchema: z.ZodEnum<{
-    echartzebra2: import("..").ProjectEchartEnum.echartzebra2;
-    echartdoubleValueLine: import("..").ProjectEchartEnum.echartdoubleValueLine;
-    echartgrowthRateBar: import("..").ProjectEchartEnum.echartgrowthRateBar;
-    echarteffectScatter: import("..").ProjectEchartEnum.echarteffectScatter;
-    echartoverlapBar: import("..").ProjectEchartEnum.echartoverlapBar;
-    echartzebraBarAndLine: import("..").ProjectEchartEnum.echartzebraBarAndLine;
-    echartthreedBarAndLine: import("..").ProjectEchartEnum.echartthreedBarAndLine;
-    echartzebra: import("..").ProjectEchartEnum.echartzebra;
-    echartthreedBar: import("..").ProjectEchartEnum.echartthreedBar;
-    echartscalePie: import("..").ProjectEchartEnum.echartscalePie;
-    echartmultiplyRankBar: import("..").ProjectEchartEnum.echartmultiplyRankBar;
-    echartrankBar: import("..").ProjectEchartEnum.echartrankBar;
-    echartthreeQuartersPie: import("..").ProjectEchartEnum.echartthreeQuartersPie;
-    echartthinBar: import("..").ProjectEchartEnum.echartthinBar;
+    echartthreeQuartersPie: import("..").PieEchartEnum.echartthreeQuartersPie;
 }>;
 declare const ringEchartEnumSchema: z.ZodEnum<{
     echartring: import("..").RingEchartEnum.echartring;
@@ -16586,15 +13433,16 @@ declare const indicatorEchartEnumSchema: z.ZodEnum<{
 }>;
 /** 媒体类型枚举 Schema */
 declare const mediaEnumSchema: z.ZodEnum<{
-    swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-    "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-    swiframe: import("..").MediaEnum.FtIframe;
+    swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+    "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+    swiframe: import("..").MediaEnum.SwIframe;
     swimg: import("..").MediaEnum.SwImg;
-    "sw-open-video": import("..").MediaEnum.FtOpenVideo;
+    "sw-open-video": import("..").MediaEnum.SwOpenVideo;
     swimgBorder: import("..").MediaEnum.SwImgBorder;
-    swswiper: import("..").MediaEnum.FtSwiper;
-    swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-    swvideo: import("..").MediaEnum.FtVideo;
+    swBox: import("..").MediaEnum.SwBox;
+    swswiper: import("..").MediaEnum.SwSwiper;
+    swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+    swvideo: import("..").MediaEnum.SwVideo;
     ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
 }>;
 /** 展品类型枚举 Schema */
@@ -16602,11 +13450,8 @@ declare const ExhibitEnumTypeSchema: z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
-    "sw-particles": ExhibitEnum.FtParticles;
-    "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    "sw-filter": ExhibitEnum.FtFilter;
-    verticalCard: ExhibitEnum.verticalCard;
+    "sw-particles": ExhibitEnum.SwParticles;
+    "sw-filter": ExhibitEnum.SwFilter;
 }>;
 /** 文件夹类型枚举 Schema */
 declare const FolderTypeSchema: z.ZodEnum<{
@@ -16617,14 +13462,14 @@ declare const indicatorEnumSchema: z.ZodEnum<{
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-    swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+    swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+    swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
 }>;
 /** 交互类型枚举 Schema */
 declare const interactiveEnumSchema: z.ZodEnum<{
-    "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+    "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
     formCheckbox: import("..").InteractiveEnum.FormCheckbox;
     formNavMenu: import("..").InteractiveEnum.FormNavMenu;
     scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -16633,32 +13478,32 @@ declare const interactiveEnumSchema: z.ZodEnum<{
     formSlider: import("..").InteractiveEnum.FormSlider;
     "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
     "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-    swCascader: import("..").InteractiveEnum.FtCascader;
-    swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-    swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-    swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-    swLegend: import("..").InteractiveEnum.FtLegend;
-    swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-    swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+    swCascader: import("..").InteractiveEnum.SwCascader;
+    swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+    swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+    swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+    swLegend: import("..").InteractiveEnum.SwLegend;
+    swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+    swPageTurning: import("..").InteractiveEnum.SwPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
-    "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-search": import("..").InteractiveEnum.FtSearch;
-    swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+    "sw-mutual": import("..").InteractiveEnum.SwMutual;
+    "sw-search": import("..").InteractiveEnum.SwSearch;
+    swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
 }>;
 /** 文本类型枚举 Schema */
 declare const textEnumSchema: z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
     swRichtext: import("..").TextEnum.SwRichtext;
-    swcollection: import("..").TextEnum.FtCollection;
+    swcollection: import("..").TextEnum.SwCollection;
     customTableList: import("..").TextEnum.CustomTableList;
     swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
-    swmultiLine: import("..").TextEnum.FtMultiLine;
-    swtext: import("..").TextEnum.FtText;
-    swProgress: import("..").TextEnum.FtProgress;
-    swdatetime: import("..").TextEnum.FtDatetime;
-    swText2: import("..").TextEnum.FtText2;
-    swScroll: import("..").TextEnum.FtScroll;
+    swmultiLine: import("..").TextEnum.SwMultiLine;
+    swtext: import("..").TextEnum.SwText;
+    swProgress: import("..").TextEnum.SwProgress;
+    swdatetime: import("..").TextEnum.SwDatetime;
+    swText2: import("..").TextEnum.SwText2;
+    swScroll: import("..").TextEnum.SwScroll;
 }>;
 /** 第三方类型枚举 Schema */
 declare const thirdPartyEnumSchema: z.ZodEnum<{
@@ -16682,17 +13527,16 @@ declare const threeComponentEnumSchema: z.ZodEnum<{
 declare const extendsEnumTypeSchema: z.ZodEnum<{
     "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
     "ue-vessel": import("..").ExtendsEnum.UeVessel;
-    "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+    "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
     "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-    "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+    "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
     simpleStar: import("..").ExtendsEnum.SimpleStar;
     fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
     pageReload: import("..").ExtendsEnum.PageReload;
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
-    "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-    "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-    "sw-weather": import("..").ExtendsEnum.FtWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+    "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+    "sw-weather": import("..").ExtendsEnum.SwWeather;
+    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>;
 /** 面板类型枚举 Schema */
 declare const PanelEnumSchema: z.ZodEnum<{
@@ -16707,7 +13551,6 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     echartbothWayStripBar: BarEchartEnum.echartbothWayStripBar;
     echartlineAndBar: BarEchartEnum.echartlineAndBar;
     echartpictorialbar: BarEchartEnum.echartpictorialbar;
-    echartrank: BarEchartEnum.echartrank;
     echartbar: BarEchartEnum.echartbar;
 }>, z.ZodEnum<{
     echartareaLine: import("..").LineEchartEnum.echartareaLine;
@@ -16723,21 +13566,7 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     echartloopRingPie: import("..").PieEchartEnum.echartloopRingPie;
     echartpluralRosePie: import("..").PieEchartEnum.echartpluralRosePie;
     echartthreePie: import("..").PieEchartEnum.echartthreePie;
-}>, z.ZodEnum<{
-    echartzebra2: import("..").ProjectEchartEnum.echartzebra2;
-    echartdoubleValueLine: import("..").ProjectEchartEnum.echartdoubleValueLine;
-    echartgrowthRateBar: import("..").ProjectEchartEnum.echartgrowthRateBar;
-    echarteffectScatter: import("..").ProjectEchartEnum.echarteffectScatter;
-    echartoverlapBar: import("..").ProjectEchartEnum.echartoverlapBar;
-    echartzebraBarAndLine: import("..").ProjectEchartEnum.echartzebraBarAndLine;
-    echartthreedBarAndLine: import("..").ProjectEchartEnum.echartthreedBarAndLine;
-    echartzebra: import("..").ProjectEchartEnum.echartzebra;
-    echartthreedBar: import("..").ProjectEchartEnum.echartthreedBar;
-    echartscalePie: import("..").ProjectEchartEnum.echartscalePie;
-    echartmultiplyRankBar: import("..").ProjectEchartEnum.echartmultiplyRankBar;
-    echartrankBar: import("..").ProjectEchartEnum.echartrankBar;
-    echartthreeQuartersPie: import("..").ProjectEchartEnum.echartthreeQuartersPie;
-    echartthinBar: import("..").ProjectEchartEnum.echartthinBar;
+    echartthreeQuartersPie: import("..").PieEchartEnum.echartthreeQuartersPie;
 }>, z.ZodEnum<{
     echartring: import("..").RingEchartEnum.echartring;
 }>, z.ZodEnum<{
@@ -16749,51 +13578,48 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     echartliquidFill: import("..").IndicatorEchartEnum.echartliquidFill;
     echartwordcloud: import("..").IndicatorEchartEnum.echartwordcloud;
 }>, z.ZodEnum<{
-    swSwiperCard: import("..").MediaEnum.FtSwiperCard;
-    "sw-embed-audio": import("..").MediaEnum.FtEmbedAudio;
-    swiframe: import("..").MediaEnum.FtIframe;
+    swSwiperCard: import("..").MediaEnum.SwSwiperCard;
+    "sw-embed-audio": import("..").MediaEnum.SwEmbedAudio;
+    swiframe: import("..").MediaEnum.SwIframe;
     swimg: import("..").MediaEnum.SwImg;
-    "sw-open-video": import("..").MediaEnum.FtOpenVideo;
+    "sw-open-video": import("..").MediaEnum.SwOpenVideo;
     swimgBorder: import("..").MediaEnum.SwImgBorder;
-    swswiper: import("..").MediaEnum.FtSwiper;
-    swSwiperV3: import("..").MediaEnum.FtSwiperV3;
-    swvideo: import("..").MediaEnum.FtVideo;
+    swBox: import("..").MediaEnum.SwBox;
+    swswiper: import("..").MediaEnum.SwSwiper;
+    swSwiperV3: import("..").MediaEnum.SwSwiperV3;
+    swvideo: import("..").MediaEnum.SwVideo;
     ctVideoPanel: import("..").MediaEnum.CtVideoPanel;
 }>, z.ZodEnum<{
     ringIndicator3d: ExhibitEnum.RingIndicator3d;
     ringIndicator3dNew: ExhibitEnum.ringIndicator3dNew;
     imagesList3d: ExhibitEnum.ImagesList3d;
-    "pdfjs-viewer": ExhibitEnum.PdfjsViewer;
-    "sw-particles": ExhibitEnum.FtParticles;
-    "sw-signaturePad": ExhibitEnum.FtSignaturePad;
-    "sw-filter": ExhibitEnum.FtFilter;
-    verticalCard: ExhibitEnum.verticalCard;
+    "sw-particles": ExhibitEnum.SwParticles;
+    "sw-filter": ExhibitEnum.SwFilter;
 }>, z.ZodEnum<{
     "sw-folder": FolderEnum.group;
 }>, z.ZodEnum<{
     "ue-peer-streaming": import("..").ExtendsEnum.UePeerStreaming;
     "ue-vessel": import("..").ExtendsEnum.UeVessel;
-    "sw-unreal-engine": import("..").ExtendsEnum.FtUnrealEngine;
+    "sw-unreal-engine": import("..").ExtendsEnum.SwUnrealEngine;
     "ue-pixel-streaming": import("..").ExtendsEnum.UePixelStreaming;
-    "sw-digital-human": import("..").ExtendsEnum.FtDigitalHuman;
+    "sw-digital-human": import("..").ExtendsEnum.SwDigitalHuman;
     simpleStar: import("..").ExtendsEnum.SimpleStar;
     fullScreenSwitch: import("..").ExtendsEnum.FullScreenSwitch;
     pageReload: import("..").ExtendsEnum.PageReload;
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
-    "simple-barrage": import("..").ExtendsEnum.SimpleBarrage;
-    "sw-dataContainer": import("..").ExtendsEnum.FtDataContainer;
-    "sw-weather": import("..").ExtendsEnum.FtWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.FtMaskLayer;
+    "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
+    "sw-weather": import("..").ExtendsEnum.SwWeather;
+    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>, z.ZodEnum<{
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
     sortRatioBar: import("..").IndicatorEnum.SortRatioBar;
-    swdynamicratio: import("..").IndicatorEnum.FtDynamicRatio;
-    swFlopPerformance: import("..").IndicatorEnum.FtFlopPerformance;
+    swdynamicratio: import("..").IndicatorEnum.SwDynamicRatio;
+    swFlopPerformance: import("..").IndicatorEnum.SwFlopPerformance;
     echartring: import("..").IndicatorEnum.EchartRing;
     "rank-progress": import("..").IndicatorEnum.RankProgress;
 }>, z.ZodEnum<{
-    "sw-voice-control": import("..").InteractiveEnum.FtVoiceControl;
+    "sw-voice-control": import("..").InteractiveEnum.SwVoiceControl;
     formCheckbox: import("..").InteractiveEnum.FormCheckbox;
     formNavMenu: import("..").InteractiveEnum.FormNavMenu;
     scrollPicker: import("..").InteractiveEnum.ScrollPicker;
@@ -16802,30 +13628,30 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     formSlider: import("..").InteractiveEnum.FormSlider;
     "multi-subtabs": import("..").InteractiveEnum.MultiSubtabs;
     "roll-subtabs": import("..").InteractiveEnum.RollSubtabs;
-    swCascader: import("..").InteractiveEnum.FtCascader;
-    swSingleSelectedLegend: import("..").InteractiveEnum.FtSingleSelectedLegend;
-    swDateTimePicker: import("..").InteractiveEnum.FtDateTimePicker;
-    swCustomSelect: import("..").InteractiveEnum.FtCustomSelect;
-    swLegend: import("..").InteractiveEnum.FtLegend;
-    swPageQuery: import("..").InteractiveEnum.FtPageQuery;
-    swPageTurning: import("..").InteractiveEnum.FtPageTurning;
+    swCascader: import("..").InteractiveEnum.SwCascader;
+    swSingleSelectedLegend: import("..").InteractiveEnum.SwSingleSelectedLegend;
+    swDateTimePicker: import("..").InteractiveEnum.SwDateTimePicker;
+    swCustomSelect: import("..").InteractiveEnum.SwCustomSelect;
+    swLegend: import("..").InteractiveEnum.SwLegend;
+    swPageQuery: import("..").InteractiveEnum.SwPageQuery;
+    swPageTurning: import("..").InteractiveEnum.SwPageTurning;
     subtabs: import("..").InteractiveEnum.Subtabs;
-    "sw-mutual": import("..").InteractiveEnum.FtMutual;
-    "sw-search": import("..").InteractiveEnum.FtSearch;
-    swTimerShaft: import("..").InteractiveEnum.FtTimerShaft;
+    "sw-mutual": import("..").InteractiveEnum.SwMutual;
+    "sw-search": import("..").InteractiveEnum.SwSearch;
+    swTimerShaft: import("..").InteractiveEnum.SwTimerShaft;
     videoProgress: import("..").InteractiveEnum.videoProgress;
 }>, z.ZodEnum<{
     customCollapse: import("..").TextEnum.CustomCollapse;
     swRichtext: import("..").TextEnum.SwRichtext;
-    swcollection: import("..").TextEnum.FtCollection;
+    swcollection: import("..").TextEnum.SwCollection;
     customTableList: import("..").TextEnum.CustomTableList;
     swTextWordCloud: import("..").TextEnum.SwTextWordCloud;
-    swmultiLine: import("..").TextEnum.FtMultiLine;
-    swtext: import("..").TextEnum.FtText;
-    swProgress: import("..").TextEnum.FtProgress;
-    swdatetime: import("..").TextEnum.FtDatetime;
-    swText2: import("..").TextEnum.FtText2;
-    swScroll: import("..").TextEnum.FtScroll;
+    swmultiLine: import("..").TextEnum.SwMultiLine;
+    swtext: import("..").TextEnum.SwText;
+    swProgress: import("..").TextEnum.SwProgress;
+    swdatetime: import("..").TextEnum.SwDatetime;
+    swText2: import("..").TextEnum.SwText2;
+    swScroll: import("..").TextEnum.SwScroll;
 }>, z.ZodEnum<{
     "vue-part": ThirdPartEnum.VuePart;
     datav: ThirdPartEnum.DataV;
@@ -16889,8 +13715,8 @@ export { BindComponentSchema, ChildComponentSchema, ComponentFlatSchema, Compone
 
 export { AdaptationTypeSchema } from './config';
 export { CallbackSchema, DataRemarkSchema, DataSourceTypeSchema, DataTypeSchema, ListenArgSchema } from './data';
-export { allComponentTypeSchema, BarEchartEnumSchema, ExhibitEnumTypeSchema, extendsEnumTypeSchema, FolderTypeSchema, indicatorEchartEnumSchema, indicatorEnumSchema, interactiveEnumSchema, lineEchartEnumSchema, mediaEnumSchema, otherEchartEnumSchema, PanelEnumSchema, pieEchartEnumSchema, projectEchartEnumSchema, ringEchartEnumSchema, scatterEchartEnumSchema, textEnumSchema, threeComponentEnumSchema } from './enums';
-export { ActionAnimationSchema, ActionSchema, ConditionCompareEnumSchema, ConditionSchema, ConditionTypeEnumSchema, EncodeActionSchema, EncodeEventSchema, EventSchema } from './event-action-condition';
+export { allComponentTypeSchema, BarEchartEnumSchema, ExhibitEnumTypeSchema, extendsEnumTypeSchema, FolderTypeSchema, indicatorEchartEnumSchema, indicatorEnumSchema, interactiveEnumSchema, lineEchartEnumSchema, mediaEnumSchema, otherEchartEnumSchema, PanelEnumSchema, pieEchartEnumSchema, ringEchartEnumSchema, scatterEchartEnumSchema, textEnumSchema, threeComponentEnumSchema } from './enums';
+export { ActionAnimationSchema, ActionSchema, ConditionCompareEnumSchema, ConditionSchema, ConditionTypeEnumSchema, EventSchema } from './event-action-condition';
 export { LargeScreenDetailInfoSchema, parsedLargeScreenInfoObject, ParsedLargeScreenInfoSchema } from './large-screen';
 export { ComponentMinioAssetSchema, MinioResourceSchema } from './minio';
 export { ProhibitionSchema, ScreenFilterInfoSchema, TerminalEnableArrSchema, WaterMarkSchema } from './screen';
@@ -17032,7 +13858,9 @@ declare const templateEvents: (obj: Partial<Event> & Record<string, unknown>) =>
  * 每个用例相互独立，一个失败不影响其他用例继续运行。
  */
 
-import { AllComponentType, ComponentType, DataSourceType } from './component';
+
+
+import { AllComponentType, ComponentType } from './component';
 /**
  * @description 动作类型枚举
  */
@@ -17081,10 +13909,6 @@ declare enum ActionTypeEnum {
      * @description 切换状态
      */
     SwitchState = "switchState",
-    /**
-     * @description 切换终端控制状态
-     */
-    SwitchTCState = "switchTCState",
     /**
      * @description 切换场景状态
      */
@@ -17158,14 +13982,6 @@ declare enum ActionTypeEnum {
      */
     MouseLeave = "mouseLeave",
     /**
-     * @description 发送UE4消息
-     */
-    SendUe4Msg = "sendUe4Msg",
-    /**
-     * @description 发送UE4静态消息
-     */
-    SendUe4MsgStatic = "sendUe4MsgStatic",
-    /**
      * @description 视频全屏
      */
     VideoToFullscreen = "videoToFullscreen",
@@ -17173,10 +13989,6 @@ declare enum ActionTypeEnum {
      * @description 视频切换
      */
     VideoToSwitch = "videoToSwitch",
-    /**
-     * @description 发送AI消息
-     */
-    SendAIManMsgStatic = "sendAIManMsgStatic",
     /**
      * @description 轮播卡切换索引
      */
@@ -17245,34 +14057,6 @@ declare enum ActionTypeEnum {
      * @description 下一页
      */
     nextPage = "nextPage",
-    /**
-     * @description 导出
-     */
-    OnExport = "onExport",
-    /**
-     * @description 清除
-     */
-    OnClear = "onClear",
-    /**
-     * @description 重做
-     */
-    OnRedo = "onRedo",
-    /**
-     * @description 撤销
-     */
-    OnUndo = "onUndo",
-    /**
-     * @description 转换图像
-     */
-    OnTranslateImage = "onTranslateImage",
-    /**
-     * @description 签名
-     */
-    Signature = "signature",
-    /**
-     * @description 跳转页码
-     */
-    JumpPage = "jumpPage",
     /**
      * @description 轮巡开启
      */
@@ -17367,35 +14151,11 @@ declare enum ActionAnimationTypeEnum {
     SlideDown = "slideDown"
 }
 /**
- * TCP/UDP数据类型枚举
- * @description 定义TCP/UDP通信的数据类型
- */
-declare enum tcpudpDataTypeEnum {
-    None = "",
-    TCP = "1",
-    UDP = "2",
-    WebSocket = "3"
-}
-/**
  * 可见性类型枚举
  */
 declare enum VisibleTypeEnum {
     Show = "show",
     Hide = "hide"
-}
-/**
- * UE4消息类型枚举
- */
-declare enum MessageTypeEnum {
-    String = "string",
-    Json = "json"
-}
-/**
- * UDP发送类型枚举
- */
-declare enum UDPSendtypeEnum {
-    Unicast = "unicast",
-    Broadcasting = "broadcasting"
 }
 /**
  * 参数类型枚举
@@ -17646,38 +14406,6 @@ interface GlMapIconActive {
     clearWhenMiss: boolean;
 }
 /**
- * UE4引擎配置
- * @description 定义与UE4引擎的通信配置
- */
-interface Ue4Config {
-    /** 消息名称 */
-    messageName: string;
-    /** 消息JSON */
-    messageJson: string;
-    /** 消息内容 */
-    messageContent: string;
-    /** 消息类型 */
-    messageType: string;
-}
-/**
- * TCP/UDP协议配置
- * @description 定义TCP/UDP数据传输配置
- */
-interface TcpudpConfig {
-    /** 数据类型 */
-    dataType: tcpudpDataTypeEnum;
-    /** 数据源ID */
-    dataSourceId: string;
-    /** 数据源对象 */
-    dataSourceObj: DataSourceType | null;
-    /** 发送数据 */
-    sendData: string;
-    /** 发送类型 */
-    sendType: string;
-    /** 数据延迟（毫秒） */
-    dataDelay: number;
-}
-/**
  * 动作接口
  * @description 定义事件的具体执行动作，包含所有可能的动作配置
  */
@@ -17752,18 +14480,14 @@ interface Action {
     translate?: Translate;
     /** @description 加密密钥（可为空） */
     encodeKey?: string | null;
-    /** @description UE4引擎配置 */
-    ue4Config?: Ue4Config;
     /** @description UE4 蓝图 key，用于切换蓝图 */
     blueprintKey?: string;
     /** @description 自定义动作类型标识 */
-    customActionType?: "component" | "message" | "statusAnimation";
+    customActionType?: "component" | "statusAnimation";
     /** @description 面板状态动画ID */
     panelStatusAnimationId?: string;
     /** @description 面板状态ID */
     panelStatusId?: string;
-    /** @description TCP/UDP协议配置 */
-    tcpudpConfig?: TcpudpConfig;
     /** @description 项目函数名称 */
     projectFunName?: string;
     /** @description 项目参数列表 */
@@ -17776,8 +14500,6 @@ interface Action {
     projectParamCode?: string;
     /** @description 轮播卡片标签名称 */
     swiperCardTabsName?: string;
-    /** @description 数字人消息内容 */
-    aiManMsgContent?: string;
     /** @description 广播ID（可为空） */
     setBroadcastId?: string | null;
     /** @description 视频开始时间（秒，可为空） */
@@ -17786,8 +14508,6 @@ interface Action {
     videoEndTime?: number;
     /** @description 事件选择模型集合 */
     option?: Record<string, any>;
-    /** @description 当前页码 */
-    currentpage?: number;
     /** @description 译文转换 */
     translation?: string;
 }
@@ -18032,8 +14752,8 @@ interface ComponentAnimationConfig {
     image?: string;
     /** @description 字体大小 */
     fontSize?: number;
-    /** @description 层级 */
-    zIndex: number;
+    /** @description 层级（字符串排序键；旧数据是数字） */
+    zIndex: string | number;
     /** @description 视频 */
     video?: string;
 }
@@ -18197,7 +14917,9 @@ declare enum FileTypeEnum {
     /** 个人场景资产 */
     personalSceneAssets = 3,
     /** 城市编辑器资产 */
-    cityEditorAssets = 4
+    cityEditorAssets = 4,
+    /** 系统内置素材（全局只读） */
+    systemMaterial = 5
 }
 /** UI 渲染单项类型（素材选择器菜单项） */
 interface MenuItemForRender {
@@ -18248,7 +14970,7 @@ interface Animation {
 }
 
 import { LayerInfo, SceneObjectExplosion } from './action';
-import { BarEchartEnum, ExhibitEnum, ExtendsEnum, InteractiveEnum, LineEchartEnum, MediaEnum, PanelEnum, PieEchartEnum, ProjectEchartEnum, ScatterEchartEnum, SceneEnum, TextEnum, ThirdPartEnum } from './componentProp';
+import { BarEchartEnum, ExhibitEnum, ExtendsEnum, InteractiveEnum, LineEchartEnum, MediaEnum, PanelEnum, PieEchartEnum, ScatterEchartEnum, SceneEnum, TextEnum, ThirdPartEnum } from './componentProp';
 import { EventTypeEnum } from './event';
 /**
  * 组件属性映射事件
@@ -18353,7 +15075,7 @@ interface RollSubtabsEvents {
     };
 }
 interface FtMutualEvents {
-    [key: `${InteractiveEnum.FtMutual}-${string}`]: {
+    [key: `${InteractiveEnum.SwMutual}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18361,7 +15083,7 @@ interface FtMutualEvents {
     };
 }
 interface FtLegendEvents {
-    [key: `${InteractiveEnum.FtLegend}-${string}`]: {
+    [key: `${InteractiveEnum.SwLegend}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18369,7 +15091,7 @@ interface FtLegendEvents {
     };
 }
 interface FtSearchEvents {
-    [key: `${InteractiveEnum.FtSearch}-${string}`]: {
+    [key: `${InteractiveEnum.SwSearch}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18377,7 +15099,7 @@ interface FtSearchEvents {
     };
 }
 interface FtCustomSelectEvents {
-    [key: `${InteractiveEnum.FtCustomSelect}-${string}`]: {
+    [key: `${InteractiveEnum.SwCustomSelect}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18385,7 +15107,7 @@ interface FtCustomSelectEvents {
     };
 }
 interface FtVoiveControlEvents {
-    [key: `${InteractiveEnum.FtVoiceControl}-${string}`]: {
+    [key: `${InteractiveEnum.SwVoiceControl}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18393,7 +15115,7 @@ interface FtVoiveControlEvents {
     };
 }
 interface FtPageQueryEvents {
-    [key: `${InteractiveEnum.FtPageQuery}-${string}`]: {
+    [key: `${InteractiveEnum.SwPageQuery}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18402,7 +15124,7 @@ interface FtPageQueryEvents {
     };
 }
 interface FtCascaderEvents {
-    [key: `${InteractiveEnum.FtCascader}-${string}`]: {
+    [key: `${InteractiveEnum.SwCascader}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18410,7 +15132,7 @@ interface FtCascaderEvents {
     };
 }
 interface FtSingleSelectedLegendEvents {
-    [key: `${InteractiveEnum.FtSingleSelectedLegend}-${string}`]: {
+    [key: `${InteractiveEnum.SwSingleSelectedLegend}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18426,7 +15148,7 @@ interface FormNavMenuEvents {
     };
 }
 interface FtTimerShaftEvents {
-    [key: `${InteractiveEnum.FtTimerShaft}-${string}`]: {
+    [key: `${InteractiveEnum.SwTimerShaft}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18452,7 +15174,7 @@ interface PointTimelineEvents {
     };
 }
 interface FtPageTurningEvents {
-    [key: `${InteractiveEnum.FtPageTurning}-${string}`]: {
+    [key: `${InteractiveEnum.SwPageTurning}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18460,7 +15182,7 @@ interface FtPageTurningEvents {
     };
 }
 interface FtDateTimePickerEvents {
-    [key: `${InteractiveEnum.FtDateTimePicker}-${string}`]: {
+    [key: `${InteractiveEnum.SwDateTimePicker}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18468,7 +15190,7 @@ interface FtDateTimePickerEvents {
     };
 }
 interface FtProgressEvents {
-    [key: `${TextEnum.FtProgress}-${string}`]: {
+    [key: `${TextEnum.SwProgress}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18494,7 +15216,7 @@ interface CtVideoPanelEvents {
     };
 }
 interface FtScrollEvents {
-    [key: `${TextEnum.FtScroll}-${string}`]: {
+    [key: `${TextEnum.SwScroll}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18502,7 +15224,7 @@ interface FtScrollEvents {
     };
 }
 interface FtSwiperCardEvents {
-    [key: `${MediaEnum.FtSwiperCard}-${string}`]: {
+    [key: `${MediaEnum.SwSwiperCard}-${string}`]: {
         /**
          * @description 点击事件
          */
@@ -18572,7 +15294,7 @@ interface ftParticlesEvents {
     /**
      * 空间粒子init方法
      */
-    [key: `${ExhibitEnum.FtParticles}-${number}`]: {
+    [key: `${ExhibitEnum.SwParticles}-${number}`]: {
         particlesReStart: () => void;
     };
 }
@@ -18601,11 +15323,6 @@ interface EchartlineAndBarEvents {
 }
 interface EchartpictorialbarEvents {
     [key: `${BarEchartEnum.echartpictorialbar}-${string}`]: {
-        handleClick: (throwValue: any) => void;
-    };
-}
-interface EchartrankEvents {
-    [key: `${BarEchartEnum.echartrank}-${string}`]: {
         handleClick: (throwValue: any) => void;
     };
 }
@@ -18656,45 +15373,15 @@ interface EchartscatterEvents {
 /**
  * ECharts 项目图表组件事件接口
  */
-interface EchartzebraEvents {
-    [key: `${ProjectEchartEnum.echartzebra}-${string}`]: {
-        handleClick: (throwValue: any) => void;
-    };
-}
-interface Echartzebra2Events {
-    [key: `${ProjectEchartEnum.echartzebra2}-${string}`]: {
-        handleClick: (throwValue: any) => void;
-    };
-}
-interface EchartrankBarEvents {
-    [key: `${ProjectEchartEnum.echartrankBar}-${string}`]: {
-        handleClick: (throwValue: any) => void;
-    };
-}
-interface EchartthreeQuartersPieEvents {
-    [key: `${ProjectEchartEnum.echartthreeQuartersPie}-${string}`]: {
-        handleClick: (throwValue: any) => void;
-    };
-}
-interface EchartthinBarEvents {
-    [key: `${ProjectEchartEnum.echartthinBar}-${string}`]: {
-        handleClick: (throwValue: any) => void;
-    };
-}
-interface EchartscalePieEvents {
-    [key: `${ProjectEchartEnum.echartscalePie}-${string}`]: {
-        handleClick: (throwValue: any) => void;
-    };
-}
 interface FtUnrealEngineEvents {
-    [key: `${ExtendsEnum.FtUnrealEngine}-${string}`]: {
+    [key: `${ExtendsEnum.SwUnrealEngine}-${string}`]: {
         setupBlueprintData: (throwValue: any) => void;
         sendMessageToUe: (funName: string, data: any) => void;
         switchBlueprintTab: (key: string, info: any) => void;
     };
 }
 interface FtVideoEvents {
-    [key: `${MediaEnum.FtVideo}-${string}`]: {
+    [key: `${MediaEnum.SwVideo}-${string}`]: {
         handleClick: (throwValue: any) => void;
         /**
          * 视频播放
@@ -18749,7 +15436,7 @@ interface FtVideoEvents {
     };
 }
 interface ftDigitalHumanEvents {
-    [key: `${ExtendsEnum.FtDigitalHuman}-${number}`]: {
+    [key: `${ExtendsEnum.SwDigitalHuman}-${number}`]: {
         sendMsgToHuman: (message: string, type: "chat" | "echo") => void;
         startWebRTC: (toStart: boolean) => void;
     };
@@ -18759,24 +15446,9 @@ interface ftVuePartEvents {
         handleClick: (info: any) => void;
     };
 }
-interface FtSimpleBarrageEvents {
-    [key: `${ExtendsEnum.SimpleBarrage}-${number}`]: {
-        onSignaturePadSave: ({ imageUrl }: {
-            imageUrl: string;
-        }) => void;
-        handleClick: () => void;
-    };
-}
 interface PageReloadEvents {
     [key: `${ExtendsEnum.PageReload}-${number}`]: {
         handleClick: () => void;
-    };
-}
-interface pdfEvents {
-    [key: `${ExhibitEnum.PdfjsViewer}-${number}`]: {
-        handlePrevClick: (type: string) => void;
-        handleNextClick: (type: string) => void;
-        handlePageChange: (currentPage: number) => void;
     };
 }
 interface scrollPickerEvents {
@@ -18793,17 +15465,8 @@ interface ImagesList3dEvents {
         handleEvensChangeActiveSpinnerIndex: (actionSelect: string) => void;
     };
 }
-interface FtSignaturePad {
-    [key: `${ExhibitEnum.FtSignaturePad}-${number}`]: {
-        onExport: () => void;
-        onClear: () => void;
-        onRedo: () => void;
-        onUndo: () => void;
-        onTranslateImage: () => void;
-    };
-}
-type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartrankEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & EchartzebraEvents & Echartzebra2Events & EchartrankBarEvents & EchartthreeQuartersPieEvents & EchartthinBarEvents & EchartscalePieEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & FtSimpleBarrageEvents & PageReloadEvents & FtUnrealEngineEvents & videoProgressEvents;
-type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartrankEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | EchartzebraEvents | Echartzebra2Events | EchartrankBarEvents | EchartthreeQuartersPieEvents | EchartthinBarEvents | EchartscalePieEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | FtSimpleBarrageEvents | PageReloadEvents | pdfEvents | scrollPickerEvents | ImagesList3dEvents | FtSignaturePad | FtUnrealEngineEvents | videoProgressEvents;
+type TotalPanelEventMap = DynamicPanelEvents & ThreeSceneEvents & IndustrySceneEvents & CitySceneEvents & SubtabsEvents & MultiSubtabsEvents & RollSubtabsEvents & FtMutualEvents & FtLegendEvents & FtSearchEvents & FtCustomSelectEvents & FtVoiveControlEvents & FtPageQueryEvents & FtCascaderEvents & FtSingleSelectedLegendEvents & FormNavMenuEvents & FtTimerShaftEvents & PointTimelineEvents & FtPageTurningEvents & FtDateTimePickerEvents & FtProgressEvents & FtTextWordCloudEvents & CtVideoPanelEvents & FtScrollEvents & FtSwiperCardEvents & CustomTableListEvents & EchartcommonMapEvents & EchartGlMapEvents & ftParticlesEvents & EchartbarEvents & EchartstripBarEvents & EchartbothWayStripBarEvents & EchartlineAndBarEvents & EchartpictorialbarEvents & EchartlineEvents & EchartareaLineEvents & EchartpieEvents & EchartloopRingPieEvents & EchartpluralRosePieEvents & EchartthreePieEvents & EchartscatterEvents & FtVideoEvents & ftDigitalHumanEvents & ftVuePartEvents & PageReloadEvents & FtUnrealEngineEvents & videoProgressEvents;
+type toAddEvent = DynamicPanelEvents | ThreeSceneEvents | IndustrySceneEvents | CitySceneEvents | SubtabsEvents | MultiSubtabsEvents | RollSubtabsEvents | FtMutualEvents | FtLegendEvents | FtSearchEvents | FtCustomSelectEvents | FtVoiveControlEvents | FtPageQueryEvents | FtCascaderEvents | FtSingleSelectedLegendEvents | FormNavMenuEvents | FtTimerShaftEvents | PointTimelineEvents | FtPageTurningEvents | FtDateTimePickerEvents | FtProgressEvents | FtTextWordCloudEvents | CtVideoPanelEvents | FtScrollEvents | FtSwiperCardEvents | CustomTableListEvents | EchartcommonMapEvents | EchartGlMapEvents | ftParticlesEvents | EchartbarEvents | EchartstripBarEvents | EchartbothWayStripBarEvents | EchartlineAndBarEvents | EchartpictorialbarEvents | EchartlineEvents | EchartareaLineEvents | EchartpieEvents | EchartloopRingPieEvents | EchartpluralRosePieEvents | EchartthreePieEvents | EchartscatterEvents | FtVideoEvents | ftDigitalHumanEvents | ftVuePartEvents | PageReloadEvents | scrollPickerEvents | ImagesList3dEvents | FtUnrealEngineEvents | videoProgressEvents;
 
 import { Animation } from './component-animation';
 import { AllComponentType, ExtendsChildComponentEnum, FolderEnum } from './componentProp';
@@ -18881,8 +15544,8 @@ interface StandardComponentType<ComponentProp extends AllComponentType = AllComp
     top: number;
     /** 是否锁定 */
     isLock?: boolean;
-    /** Z轴层级 */
-    zIndex: number;
+    /** Z轴层级：字符串排序键（fractional indexing），越大越靠上，只能按字符串比较 */
+    zIndex: string;
     /** 是否显示 */
     display: boolean;
     /** 组件选项配置 */
@@ -18964,8 +15627,6 @@ declare enum BarEchartEnum {
     echartlineAndBar = "echartlineAndBar",
     /** 象形柱状图 */
     echartpictorialbar = "echartpictorialbar",
-    /** 排名柱状图 */
-    echartrank = "echartrank",
     /** 基础柱状图 */
     echartbar = "echartbar"
 }
@@ -18981,7 +15642,9 @@ declare enum PieEchartEnum {
     /** 玫瑰饼图 */
     echartpluralRosePie = "echartpluralRosePie",
     /** 三维饼图 */
-    echartthreePie = "echartthreePie"
+    echartthreePie = "echartthreePie",
+    /** 环形饼图 */
+    echartthreeQuartersPie = "echartthreeQuartersPie"
 }
 /**
  * 散点图枚举
@@ -18990,40 +15653,6 @@ declare enum PieEchartEnum {
 declare enum ScatterEchartEnum {
     /** 基础散点图 */
     echartscatter = "echartscatter"
-}
-/**
- * 项目图表枚举
- * @description 项目专用图表组件的类型标识
- */
-declare enum ProjectEchartEnum {
-    /** 斑马图2 */
-    echartzebra2 = "echartzebra2",
-    /** 双轴折线图 */
-    echartdoubleValueLine = "echartdoubleValueLine",
-    /** 增长率柱状图 */
-    echartgrowthRateBar = "echartgrowthRateBar",
-    /** 效果散点图 */
-    echarteffectScatter = "echarteffectScatter",
-    /** 重叠柱状图 */
-    echartoverlapBar = "echartoverlapBar",
-    /** 斑马线柱混合图 */
-    echartzebraBarAndLine = "echartzebraBarAndLine",
-    /** 三维线柱混合图 */
-    echartthreedBarAndLine = "echartthreedBarAndLine",
-    /** 斑马图 */
-    echartzebra = "echartzebra",
-    /** 三维柱状图 */
-    echartthreedBar = "echartthreedBar",
-    /** 刻度饼图 */
-    echartscalePie = "echartscalePie",
-    /** 多维排名柱状图 */
-    echartmultiplyRankBar = "echartmultiplyRankBar",
-    /** 排名柱状图 */
-    echartrankBar = "echartrankBar",
-    /** 三四分饼图 */
-    echartthreeQuartersPie = "echartthreeQuartersPie",
-    /** 细柱状图 */
-    echartthinBar = "echartthinBar"
 }
 /**
  * 折线图枚举
@@ -19084,27 +15713,13 @@ declare enum AllEchartEnum {
     echartbothWayStripBar = "echartbothWayStripBar",
     echartlineAndBar = "echartlineAndBar",
     echartpictorialbar = "echartpictorialbar",
-    echartrank = "echartrank",
     echartbar = "echartbar",
     echartpie = "echartpie",
     echartloopRingPie = "echartloopRingPie",
     echartpluralRosePie = "echartpluralRosePie",
     echartthreePie = "echartthreePie",
-    echartscatter = "echartscatter",
-    echartzebra2 = "echartzebra2",
-    echartdoubleValueLine = "echartdoubleValueLine",
-    echartgrowthRateBar = "echartgrowthRateBar",
-    echarteffectScatter = "echarteffectScatter",
-    echartoverlapBar = "echartoverlapBar",
-    echartzebraBarAndLine = "echartzebraBarAndLine",
-    echartthreedBarAndLine = "echartthreedBarAndLine",
-    echartzebra = "echartzebra",
-    echartthreedBar = "echartthreedBar",
-    echartscalePie = "echartscalePie",
-    echartmultiplyRankBar = "echartmultiplyRankBar",
-    echartrankBar = "echartrankBar",
     echartthreeQuartersPie = "echartthreeQuartersPie",
-    echartthinBar = "echartthinBar",
+    echartscatter = "echartscatter",
     echartareaLine = "echartareaLine",
     echartline = "echartline",
     echarttreemap = "echarttreemap",
@@ -19122,13 +15737,11 @@ declare enum AllEchartEnum {
  * Echart 组件类型联合
  * @description 所有图表组件类型的联合类型
  */
-type EchartComponentType = BarEchartEnum | PieEchartEnum | LineEchartEnum | ScatterEchartEnum | OtherEchartEnum | ProjectEchartEnum | RingEchartEnum | IndicatorEchartEnum;
+type EchartComponentType = BarEchartEnum | PieEchartEnum | LineEchartEnum | ScatterEchartEnum | OtherEchartEnum | RingEchartEnum | IndicatorEchartEnum;
 /** @deprecated 使用 PieEchartEnum 代替 */
 declare const pieEchartEnum: typeof PieEchartEnum;
 /** @deprecated 使用 ScatterEchartEnum 代替 */
 declare const scatterEchartEnum: typeof ScatterEchartEnum;
-/** @deprecated 使用 ProjectEchartEnum 代替 */
-declare const projectEchartEnum: typeof ProjectEchartEnum;
 /** @deprecated 使用 LineEchartEnum 代替 */
 declare const lineEchartEnum: typeof LineEchartEnum;
 /** @deprecated 使用 OtherEchartEnum 代替 */
@@ -19143,8 +15756,6 @@ type BarEchartType = BarEchartEnum;
 type pieEchartType = PieEchartEnum;
 /** @deprecated 使用 ScatterEchartEnum 代替 */
 type scatterEchartType = ScatterEchartEnum;
-/** @deprecated 使用 ProjectEchartEnum 代替 */
-type projectEchartType = ProjectEchartEnum;
 /** @deprecated 使用 LineEchartEnum 代替 */
 type lineEchartsType = LineEchartEnum;
 /** @deprecated 使用 OtherEchartEnum 代替 */
@@ -19171,16 +15782,10 @@ declare enum ExhibitEnum {
     ringIndicator3dNew = "ringIndicator3dNew",
     /** 3D图片列表 */
     ImagesList3d = "imagesList3d",
-    /** PDF查看器 */
-    PdfjsViewer = "pdfjs-viewer",
     /** 空间粒子 */
-    FtParticles = "sw-particles",
-    /** 签名板 */
-    FtSignaturePad = "sw-signaturePad",
+    SwParticles = "sw-particles",
     /** 滤镜组件 */
-    FtFilter = "sw-filter",
-    /** 垂直卡片 */
-    verticalCard = "verticalCard"
+    SwFilter = "sw-filter"
 }
 /** @deprecated 使用 ExhibitEnum 代替 */
 type ExhibitEnumType = ExhibitEnum;
@@ -19199,11 +15804,11 @@ declare enum ExtendsEnum {
     /** UE容器 */
     UeVessel = "ue-vessel",
     /** 虚幻引擎 */
-    FtUnrealEngine = "sw-unreal-engine",
+    SwUnrealEngine = "sw-unreal-engine",
     /** UE像素流 */
     UePixelStreaming = "ue-pixel-streaming",
     /** 数字人 */
-    FtDigitalHuman = "sw-digital-human",
+    SwDigitalHuman = "sw-digital-human",
     /** 闪点组件 */
     SimpleStar = "simpleStar",
     /** 全屏切换 */
@@ -19212,14 +15817,12 @@ declare enum ExtendsEnum {
     PageReload = "pageReload",
     /** 上升粒子 */
     SimpleParticle = "simple-particle",
-    /** 弹幕 */
-    SimpleBarrage = "simple-barrage",
     /** 数据容器 */
-    FtDataContainer = "sw-dataContainer",
+    SwDataContainer = "sw-dataContainer",
     /** 天气 */
-    FtWeather = "sw-weather",
+    SwWeather = "sw-weather",
     /** 遮罩层 */
-    FtMaskLayer = "sw-mask-layer"
+    SwMaskLayer = "sw-mask-layer"
 }
 /**
  * 扩展子组件枚举
@@ -19228,7 +15831,7 @@ declare enum ExtendsEnum {
 declare enum ExtendsChildComponentEnum {
     /** UE子组件 */
     UeVessel_UeMessageReceiver = "ue-vessel-child",
-    FtUnrealEngine_UeMessageReceiver = "sw-unreal-engine-child",
+    SwUnrealEngine_UeMessageReceiver = "sw-unreal-engine-child",
     UePixelStreaming_UeMessageReceiver = "ue-pixel-streaming-child",
     UePeerStreaming_UeMessageReceiver = "ue-peer-streaming-child"
 }
@@ -19241,7 +15844,7 @@ declare const extendsChildComponentEnum: typeof ExtendsChildComponentEnum;
 /** @deprecated 使用 ExtendsChildComponentEnum 代替 */
 type extendsChildComponentEnumType = ExtendsChildComponentEnum;
 
-import { AllEchartEnum, BarEchartEnum, IndicatorEchartEnum, indicatorEchartEnum, LineEchartEnum, lineEchartEnum, OtherEchartEnum, otherEchartEnum, PieEchartEnum, pieEchartEnum, ProjectEchartEnum, projectEchartEnum, RingEchartEnum, ringEchartEnum, ScatterEchartEnum, scatterEchartEnum, EchartComponentType } from './echart';
+import { AllEchartEnum, BarEchartEnum, IndicatorEchartEnum, indicatorEchartEnum, LineEchartEnum, lineEchartEnum, OtherEchartEnum, otherEchartEnum, PieEchartEnum, pieEchartEnum, RingEchartEnum, ringEchartEnum, ScatterEchartEnum, scatterEchartEnum, EchartComponentType } from './echart';
 import { ExhibitEnum } from './exhibit';
 import { ExtendsChildComponentEnum, ExtendsEnum } from './extends';
 import { IndicatorEnum } from './indicator';
@@ -19253,7 +15856,7 @@ import { TextEnum } from './text';
 import { ThirdPartEnum } from './third-party';
 import { ThreeComponentEnum } from './three-component';
 
-type { AllEchartType, BarEchartType, EchartComponentType, indicatorEchartType, lineEchartsType, otherEchartType, pieEchartType, projectEchartType, ringEchartType, scatterEchartType } from './echart';
+type { AllEchartType, BarEchartType, EchartComponentType, indicatorEchartType, lineEchartsType, otherEchartType, pieEchartType, ringEchartType, scatterEchartType } from './echart';
 type { PanelType } from './panel';
 export { PanelEnum } from './panel';
 export { TextEnum, textEnum } from './text';
@@ -19302,9 +15905,9 @@ declare enum IndicatorEnum {
     /** 排序比例条 */
     SortRatioBar = "sortRatioBar",
     /** 动态占比 */
-    FtDynamicRatio = "swdynamicratio",
+    SwDynamicRatio = "swdynamicratio",
     /** 翻牌器 */
-    FtFlopPerformance = "swFlopPerformance",
+    SwFlopPerformance = "swFlopPerformance",
     /** 环形图 */
     EchartRing = "echartring",
     /** 排名进度条 */
@@ -19323,7 +15926,7 @@ declare const indicatorEnum: typeof IndicatorEnum;
  */
 declare enum InteractiveEnum {
     /** 语音控制 */
-    FtVoiceControl = "sw-voice-control",
+    SwVoiceControl = "sw-voice-control",
     /** 复选框 */
     FormCheckbox = "formCheckbox",
     /** 导航菜单 */
@@ -19341,27 +15944,27 @@ declare enum InteractiveEnum {
     /** 滚动子标签 */
     RollSubtabs = "roll-subtabs",
     /** 级联选择器 */
-    FtCascader = "swCascader",
+    SwCascader = "swCascader",
     /** 单选图例 */
-    FtSingleSelectedLegend = "swSingleSelectedLegend",
+    SwSingleSelectedLegend = "swSingleSelectedLegend",
     /** 日期时间选择器 */
-    FtDateTimePicker = "swDateTimePicker",
+    SwDateTimePicker = "swDateTimePicker",
     /** 自定义选择器 */
-    FtCustomSelect = "swCustomSelect",
+    SwCustomSelect = "swCustomSelect",
     /** 图例 */
-    FtLegend = "swLegend",
+    SwLegend = "swLegend",
     /** 分页查询 */
-    FtPageQuery = "swPageQuery",
+    SwPageQuery = "swPageQuery",
     /** 翻页 */
-    FtPageTurning = "swPageTurning",
+    SwPageTurning = "swPageTurning",
     /** 子标签页 */
     Subtabs = "subtabs",
     /** 互斥组件 */
-    FtMutual = "sw-mutual",
+    SwMutual = "sw-mutual",
     /** 搜索 */
-    FtSearch = "sw-search",
+    SwSearch = "sw-search",
     /** 时间轴 */
-    FtTimerShaft = "swTimerShaft",
+    SwTimerShaft = "swTimerShaft",
     /** 视频进度条 */
     videoProgress = "videoProgress"
 }
@@ -19378,23 +15981,25 @@ declare const interactiveEnum: typeof InteractiveEnum;
  */
 declare enum MediaEnum {
     /** 轮播卡片 */
-    FtSwiperCard = "swSwiperCard",
+    SwSwiperCard = "swSwiperCard",
     /** 嵌入音频 */
-    FtEmbedAudio = "sw-embed-audio",
+    SwEmbedAudio = "sw-embed-audio",
     /** iframe */
-    FtIframe = "swiframe",
+    SwIframe = "swiframe",
     /** 图片 */
     SwImg = "swimg",
     /** 视频播放器 */
-    FtOpenVideo = "sw-open-video",
+    SwOpenVideo = "sw-open-video",
     /** 图片边框 */
-    FtImgBorder = "swimgBorder",
+    SwImgBorder = "swimgBorder",
+    /** 矩形 */
+    SwBox = "swBox",
     /** 轮播图 */
-    FtSwiper = "swswiper",
+    SwSwiper = "swswiper",
     /** 轮播图V3 */
-    FtSwiperV3 = "swSwiperV3",
+    SwSwiperV3 = "swSwiperV3",
     /** 视频 */
-    FtVideo = "swvideo",
+    SwVideo = "swvideo",
     /** 视频面板 */
     CtVideoPanel = "ctVideoPanel"
 }
@@ -19465,23 +16070,23 @@ declare enum TextEnum {
     /** 富文本 */
     SwRichtext = "swRichtext",
     /** 集合组件 */
-    FtCollection = "swcollection",
+    SwCollection = "swcollection",
     /** 自定义表格列表 */
     CustomTableList = "customTableList",
     /** 文本词云 */
     SwTextWordCloud = "swTextWordCloud",
     /** 多行文本 */
-    FtMultiLine = "swmultiLine",
+    SwMultiLine = "swmultiLine",
     /** 基础文本 */
-    FtText = "swtext",
+    SwText = "swtext",
     /** 进度条 */
-    FtProgress = "swProgress",
+    SwProgress = "swProgress",
     /** 日期时间 */
-    FtDatetime = "swdatetime",
+    SwDatetime = "swdatetime",
     /** 文本2 */
-    FtText2 = "swText2",
+    SwText2 = "swText2",
     /** 滚动文本 */
-    FtScroll = "swScroll"
+    SwScroll = "swScroll"
 }
 /** @deprecated 使用 TextEnum 代替 */
 declare const textEnum: typeof TextEnum;
@@ -19769,10 +16374,6 @@ declare enum EventTypeEnum {
      */
     Controls = "controls",
     /**
-     * @description 签名提交
-     */
-    SignatureSubmit = "signatureSubmit",
-    /**
      * @description 视频控制
      */
     VideoControls = "videocontrols",
@@ -19780,26 +16381,6 @@ declare enum EventTypeEnum {
      * @description 无事件
      */
     None = "",
-    /**
-     * @description 卡片下落结束
-     */
-    CardDropEnd = "cardDropEnd",
-    /**
-     * @description 卡片开始展开前
-     */
-    CardBeforeExpand = "cardBeforeExpand",
-    /**
-     * @description 卡片开始展开结束
-     */
-    CardEndExpand = "cardEndExpand",
-    /**
-     * @description 卡片开始收缩
-     */
-    CardStartCollapse = "cardStartCollapse",
-    /**
-     * @description 卡片收缩结束
-     */
-    CardEndCollapse = "cardEndCollapse",
     /**
      * @description 滚动结束
      */
@@ -19817,11 +16398,7 @@ declare enum EncodeEventTypeEnum {
     /**
      * @description 视频控制
      */
-    VideoControls = "videocontrols",
-    /**
-     * @description 签名提交
-     */
-    SignatureSubmit = "signatureSubmit"
+    VideoControls = "videocontrols"
 }
 /**
  * @description 事件类型对应组件的映射表
@@ -20212,16 +16789,16 @@ type { LargeScreeInfo, LargeScreenDetailInfo, ParsedLargeScreenInfo, Prohibition
 export { AdaptationType, adaptationType } from './large-screen';
 type { ArtifactAppPreviewData, ArtifactAppPreviewMode, ArtifactAppPreviewOption } from './artifact-app-preview';
 type { AllComponentType, EchartComponentType } from './componentProp';
-export { AllEchartEnum, BarEchartEnum, ExhibitEnum, ExtendsChildComponentEnum, extendsChildComponentEnum, ExtendsEnum, extendsEnum, FolderEnum, IndicatorEchartEnum, indicatorEchartEnum, IndicatorEnum, InteractiveEnum, LineEchartEnum, lineEchartEnum, MediaEnum, OtherEchartEnum, otherEchartEnum, PanelEnum, PieEchartEnum, pieEchartEnum, ProjectEchartEnum, projectEchartEnum, RingEchartEnum, ringEchartEnum, ScatterEchartEnum, scatterEchartEnum, SceneEnum, sceneEnum, TextEnum, ThirdPartEnum, ThreeComponentEnum } from './componentProp';
+export { AllEchartEnum, BarEchartEnum, ExhibitEnum, ExtendsChildComponentEnum, extendsChildComponentEnum, ExtendsEnum, extendsEnum, FolderEnum, IndicatorEchartEnum, indicatorEchartEnum, IndicatorEnum, InteractiveEnum, LineEchartEnum, lineEchartEnum, MediaEnum, OtherEchartEnum, otherEchartEnum, PanelEnum, PieEchartEnum, pieEchartEnum, RingEchartEnum, ringEchartEnum, ScatterEchartEnum, scatterEchartEnum, SceneEnum, sceneEnum, TextEnum, ThirdPartEnum, ThreeComponentEnum } from './componentProp';
 export { indicatorEnum, interactiveEnum, mediaEnum, textEnum, threeComponentEnum } from './componentProp';
-type { AllEchartType, BarEchartType, ExhibitEnumType, extendsChildComponentEnumType, extendsEnumType, FolderType, indicatorEchartType, lineEchartsType, otherEchartType, PanelType, pieEchartType, projectEchartType, ringEchartType, scatterEchartType, sceneEnumType, ThirdPartEnumType } from './componentProp';
+type { AllEchartType, BarEchartType, ExhibitEnumType, extendsChildComponentEnumType, extendsEnumType, FolderType, indicatorEchartType, lineEchartsType, otherEchartType, PanelType, pieEchartType, ringEchartType, scatterEchartType, sceneEnumType, ThirdPartEnumType } from './componentProp';
 type { Animation, BindComponent, Callback, CallbackManager, CallbackRelation, CallbackSource, CallbackTarget, ChildComponent, ComponentMinioAsset, ComponentType, DataRemark, DataSourceType, DbItem, Filter, IotAddress, ListenArg, MinioResource, PanelState, StandardComponentType, SystemComponentProps, WebSocketDataSource } from './component';
 export { DataType } from './component';
 type { EncodeEvent, Event, eventToTriggerFunction } from './event';
 export { allowEventComponentList, EncodeEvent2ComponentType, EncodeEventList, EncodeEventTypeEnum, Event2ComponentType, EventList, EventTypeEnum } from './event';
 type { toAddEvent, TotalPanelEventMap } from './component-event';
-type { Action, ActionAnimation, Condition, EncodeAction, LayerInfo, MapBox, OriginGrid, Scale, SceneChildComponent, SceneObject, TcpudpConfig, TempPool, timingFunctionType, Translate, Ue4Config } from './action';
-export { Action2ComponentType, ActionAnimationTypeEnum, ActionList, ActionTypeEnum, ComponentScopeEnum, ConditionCompareEnum, ConditionLogicTypeEnum, ConditionTypeEnum, MessageTypeEnum, ParameterTypeEnum, SceneObjectExplosionType, tcpudpDataTypeEnum, UDPSendtypeEnum, VisibleTypeEnum } from './action';
+type { Action, ActionAnimation, Condition, EncodeAction, LayerInfo, MapBox, OriginGrid, Scale, SceneChildComponent, SceneObject, TempPool, timingFunctionType, Translate } from './action';
+export { Action2ComponentType, ActionAnimationTypeEnum, ActionList, ActionTypeEnum, ComponentScopeEnum, ConditionCompareEnum, ConditionLogicTypeEnum, ConditionTypeEnum, ParameterTypeEnum, SceneObjectExplosionType, VisibleTypeEnum } from './action';
 type { ActionType, ActiveAnimationList, AnimationDirection, AnimationInfo, AnimationItem, AnimationProperty, AnimationResponseItem, AnimationType, ComponentAnimationConfig, ComponentNode, ComponentResponseSetting, ComponentSettingItem, CustomAnimationState, GroupNode, OnAnimationPropertyChangePayload, PropertyGroup, PropertyNode, PropertyState, StatusAnimationMapping, StatusAnimationResponse, TimingFunctionType } from './animation';
 type { CityConfig, FontFile, GeoFile, HtmlGenerateOptions, ResourceFile, SceneConfig } from './export';
 export { echartsTabEnum } from './ui-tabs';
@@ -20621,7 +17198,9 @@ declare enum FileTypeEnum {
     /** 个人场景资产 */
     personalSceneAssets = 3,
     /** 城市编辑器资产 */
-    cityEditorAssets = 4
+    cityEditorAssets = 4,
+    /** 系统内置素材（全局只读） */
+    systemMaterial = 5
 }
 
 /** UI渲染单项类型 */
@@ -20633,6 +17212,8 @@ interface MenuItemForRender {
     isVideo?: boolean | undefined | null;
     moduleId?: number;
     url?: string;
+    /** 卡片缩略图；实际添加到画布仍使用 url/img */
+    cover?: string;
     fileType?: string;
     type?: string;
     assetType?: FileTypeEnum;
@@ -20719,10 +17300,6 @@ interface TargetChartType {
 declare enum EditCanvasTypeEnum {
     EDIT_LAYOUT_DOM = "editLayoutDom",
     EDIT_CONTENT_DOM = "editContentDom",
-    OFFSET = "offset",
-    SCALE = "scale",
-    USER_SCALE = "userScale",
-    LOCK_SCALE = "lockScale",
     IS_CREATE = "isCreate",
     IS_DRAG = "isDrag",
     IS_SELECT = "isSelect",
@@ -20735,9 +17312,6 @@ declare enum MouseEventButton {
 interface EditCanvasType {
     editLayoutDom: HTMLElement | null;
     editContentDom: HTMLElement | null;
-    offset: number;
-    userScale: number;
-    lockScale: boolean;
     isCreate: boolean;
     isDrag: boolean;
     isSelect: boolean;
@@ -20782,12 +17356,6 @@ interface OriginGrid {
 interface Translate {
     toX: number;
     toY: number;
-}
-interface Ue4Config {
-    messageName: string;
-    messageJson: string;
-    messageContent: string;
-    messageType: string;
 }
 interface SceneObjectExplosion {
     index: string;
@@ -20838,13 +17406,12 @@ declare const CoreType_StandardComponentType: typeof StandardComponentType;
 type CoreType_TargetChartType = TargetChartType;
 declare const CoreType_TempPool: typeof TempPool;
 type CoreType_Translate = Translate;
-type CoreType_Ue4Config = Ue4Config;
 declare const CoreType_WebSocketDataSource: typeof WebSocketDataSource;
 type CoreType_direction = direction;
 declare const CoreType_direction: typeof direction;
 declare const CoreType_renderFolderType: typeof renderFolderType;
 declare namespace CoreType {
-  export { type CoreType_Action as Action, CoreType_ActionAnimation as ActionAnimation, CoreType_AllComponentType as AllComponentType, CoreType_Animation as Animation, CoreType_BindComponent as BindComponent, CoreType_Callback as Callback, CoreType_CallbackManager as CallbackManager, CoreType_CallbackSource as CallbackSource, CoreType_CallbackTarget as CallbackTarget, CoreType_ChildComponent as ChildComponent, CoreType_ComponentMinioAsset as ComponentMinioAsset, CoreType_ComponentType as ComponentType, CoreType_Condition as Condition, CoreType_ContextMenuType as ContextMenuType, CoreType_DataRemark as DataRemark, CoreType_DataSourceType as DataSourceType, CoreType_DataType as DataType, CoreType_DbItem as DbItem, CoreType_DragKeyEnum as DragKeyEnum, AllEchartEnum as EchartEnum, type CoreType_EditCanvasType as EditCanvasType, CoreType_EditCanvasTypeEnum as EditCanvasTypeEnum, CoreType_EncodeAction as EncodeAction, CoreType_EncodeEvent as EncodeEvent, Event$1 as Event, ExhibitEnum as ExhibitEnumType, CoreType_Filter as Filter, FolderEnum as FolderType, type CoreType_IComponent as IComponent, CoreType_IotAddress as IotAddress, type CoreType_LayerInfo as LayerInfo, CoreType_ListenArg as ListenArg, type CoreType_MenuOptionsItemType as MenuOptionsItemType, CoreType_MinioResource as MinioResource, CoreType_MouseEventButton as MouseEventButton, CoreType_PanelEnum as PanelEnum, type CoreType_Scale as Scale, type CoreType_SceneObjectExplosion as SceneObjectExplosion, CoreType_StandardComponentType as StandardComponentType, type CoreType_TargetChartType as TargetChartType, CoreType_TempPool as TempPool, ThirdPartEnum as ThirdPartEnumType, type CoreType_Translate as Translate, type CoreType_Ue4Config as Ue4Config, CoreType_WebSocketDataSource as WebSocketDataSource, CoreType_direction as direction, ExtendsChildComponentEnum as extendsChildComponentEnumType, ExtendsEnum as extendsEnumType, IndicatorEnum as indicatorEnum, InteractiveEnum as interactiveEnum, MediaEnum as mediaEnum, CoreType_renderFolderType as renderFolderType, SceneEnum as sceneEnumType, TextEnum as textEnum, ThreeComponentEnum as threeComponentEnum };
+  export { type CoreType_Action as Action, CoreType_ActionAnimation as ActionAnimation, CoreType_AllComponentType as AllComponentType, CoreType_Animation as Animation, CoreType_BindComponent as BindComponent, CoreType_Callback as Callback, CoreType_CallbackManager as CallbackManager, CoreType_CallbackSource as CallbackSource, CoreType_CallbackTarget as CallbackTarget, CoreType_ChildComponent as ChildComponent, CoreType_ComponentMinioAsset as ComponentMinioAsset, CoreType_ComponentType as ComponentType, CoreType_Condition as Condition, CoreType_ContextMenuType as ContextMenuType, CoreType_DataRemark as DataRemark, CoreType_DataSourceType as DataSourceType, CoreType_DataType as DataType, CoreType_DbItem as DbItem, CoreType_DragKeyEnum as DragKeyEnum, AllEchartEnum as EchartEnum, type CoreType_EditCanvasType as EditCanvasType, CoreType_EditCanvasTypeEnum as EditCanvasTypeEnum, CoreType_EncodeAction as EncodeAction, CoreType_EncodeEvent as EncodeEvent, Event$1 as Event, ExhibitEnum as ExhibitEnumType, CoreType_Filter as Filter, FolderEnum as FolderType, type CoreType_IComponent as IComponent, CoreType_IotAddress as IotAddress, type CoreType_LayerInfo as LayerInfo, CoreType_ListenArg as ListenArg, type CoreType_MenuOptionsItemType as MenuOptionsItemType, CoreType_MinioResource as MinioResource, CoreType_MouseEventButton as MouseEventButton, CoreType_PanelEnum as PanelEnum, type CoreType_Scale as Scale, type CoreType_SceneObjectExplosion as SceneObjectExplosion, CoreType_StandardComponentType as StandardComponentType, type CoreType_TargetChartType as TargetChartType, CoreType_TempPool as TempPool, ThirdPartEnum as ThirdPartEnumType, type CoreType_Translate as Translate, CoreType_WebSocketDataSource as WebSocketDataSource, CoreType_direction as direction, ExtendsChildComponentEnum as extendsChildComponentEnumType, ExtendsEnum as extendsEnumType, IndicatorEnum as indicatorEnum, InteractiveEnum as interactiveEnum, MediaEnum as mediaEnum, CoreType_renderFolderType as renderFolderType, SceneEnum as sceneEnumType, TextEnum as textEnum, ThreeComponentEnum as threeComponentEnum };
 }
 
 declare const sdk: {
@@ -20877,7 +17444,7 @@ declare const sdk: {
                     left: number;
                     top: number;
                     isLock?: boolean | undefined;
-                    zIndex: number;
+                    zIndex: string;
                     display: boolean;
                     option: any;
                     data: any;
@@ -21096,83 +17663,20 @@ declare const sdk: {
                                 toY: number;
                             } | undefined;
                             encodeKey?: string | null | undefined;
-                            ue4Config?: {
-                                messageName: string;
-                                messageJson: string;
-                                messageContent: string;
-                                messageType: string;
-                            } | undefined;
                             blueprintKey?: string | undefined;
-                            customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                            customActionType?: "component" | "statusAnimation" | undefined;
                             panelStatusAnimationId?: string | undefined;
                             panelStatusId?: string | undefined;
-                            tcpudpConfig?: {
-                                dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                dataSourceId: string;
-                                dataSourceObj: Record<string, any> | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    url: string;
-                                    dataGroupId: number | null;
-                                    fileName: string;
-                                    size: number;
-                                    charsetName: string;
-                                    layerIds: string;
-                                    config?: string | undefined;
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    dataGroupId: number | null;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    desIp: string;
-                                    desPort: number;
-                                    localPort: number;
-                                    charsetName: string;
-                                    layerIds: number[];
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    type: string;
-                                    name: string;
-                                    description: string;
-                                    config: string;
-                                    dataGroupId: number | null;
-                                    layerIds: string;
-                                    baseUrl: string;
-                                } | null;
-                                sendData: string;
-                                sendType: string;
-                                dataDelay: number;
-                            } | undefined;
                             projectFunName?: string | undefined;
                             projectParamList?: any[] | undefined;
                             projectParamType?: string | undefined;
                             projectParamValue?: Record<string, any> | undefined;
                             projectParamCode?: string | undefined;
                             swiperCardTabsName?: string | undefined;
-                            aiManMsgContent?: string | undefined;
                             setBroadcastId?: string | null | undefined;
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -21272,7 +17776,7 @@ declare const sdk: {
                         children?: /*elided*/ any[] | undefined;
                         left: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         listenArgs: {
                             filterName: string;
@@ -21486,83 +17990,20 @@ declare const sdk: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -21647,7 +18088,7 @@ declare const sdk: {
                 left: number;
                 top: number;
                 isLock?: boolean | undefined;
-                zIndex: number;
+                zIndex: string;
                 display: boolean;
                 option: any;
                 data: any;
@@ -21866,83 +18307,20 @@ declare const sdk: {
                             toY: number;
                         } | undefined;
                         encodeKey?: string | null | undefined;
-                        ue4Config?: {
-                            messageName: string;
-                            messageJson: string;
-                            messageContent: string;
-                            messageType: string;
-                        } | undefined;
                         blueprintKey?: string | undefined;
-                        customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                        customActionType?: "component" | "statusAnimation" | undefined;
                         panelStatusAnimationId?: string | undefined;
                         panelStatusId?: string | undefined;
-                        tcpudpConfig?: {
-                            dataType: _screenwright_types.tcpudpDataTypeEnum;
-                            dataSourceId: string;
-                            dataSourceObj: Record<string, any> | {
-                                createdBy: string;
-                                createdTime: string;
-                                updatedBy: string;
-                                updatedTime: string;
-                                id: number;
-                                userId: number;
-                                name: string;
-                                description: string;
-                                type: string;
-                                url: string;
-                                dataGroupId: number | null;
-                                fileName: string;
-                                size: number;
-                                charsetName: string;
-                                layerIds: string;
-                                config?: string | undefined;
-                            } | {
-                                createdBy: string;
-                                createdTime: string;
-                                updatedBy: string;
-                                updatedTime: string;
-                                id: number;
-                                userId: number;
-                                dataGroupId: number | null;
-                                name: string;
-                                description: string;
-                                type: string;
-                                desIp: string;
-                                desPort: number;
-                                localPort: number;
-                                charsetName: string;
-                                layerIds: number[];
-                            } | {
-                                createdBy: string;
-                                createdTime: string;
-                                updatedBy: string;
-                                updatedTime: string;
-                                id: number;
-                                userId: number;
-                                type: string;
-                                name: string;
-                                description: string;
-                                config: string;
-                                dataGroupId: number | null;
-                                layerIds: string;
-                                baseUrl: string;
-                            } | null;
-                            sendData: string;
-                            sendType: string;
-                            dataDelay: number;
-                        } | undefined;
                         projectFunName?: string | undefined;
                         projectParamList?: any[] | undefined;
                         projectParamType?: string | undefined;
                         projectParamValue?: Record<string, any> | undefined;
                         projectParamCode?: string | undefined;
                         swiperCardTabsName?: string | undefined;
-                        aiManMsgContent?: string | undefined;
                         setBroadcastId?: string | null | undefined;
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -22055,7 +18433,7 @@ declare const sdk: {
                         left: number;
                         top: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         option: any;
                         data: any;
@@ -22274,83 +18652,20 @@ declare const sdk: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -22429,7 +18744,7 @@ declare const sdk: {
                     }[] | undefined;
                     left: number;
                     isLock?: boolean | undefined;
-                    zIndex: number;
+                    zIndex: string;
                     display: boolean;
                     listenArgs: {
                         filterName: string;
@@ -22643,83 +18958,20 @@ declare const sdk: {
                                 toY: number;
                             } | undefined;
                             encodeKey?: string | null | undefined;
-                            ue4Config?: {
-                                messageName: string;
-                                messageJson: string;
-                                messageContent: string;
-                                messageType: string;
-                            } | undefined;
                             blueprintKey?: string | undefined;
-                            customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                            customActionType?: "component" | "statusAnimation" | undefined;
                             panelStatusAnimationId?: string | undefined;
                             panelStatusId?: string | undefined;
-                            tcpudpConfig?: {
-                                dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                dataSourceId: string;
-                                dataSourceObj: Record<string, any> | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    url: string;
-                                    dataGroupId: number | null;
-                                    fileName: string;
-                                    size: number;
-                                    charsetName: string;
-                                    layerIds: string;
-                                    config?: string | undefined;
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    dataGroupId: number | null;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    desIp: string;
-                                    desPort: number;
-                                    localPort: number;
-                                    charsetName: string;
-                                    layerIds: number[];
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    type: string;
-                                    name: string;
-                                    description: string;
-                                    config: string;
-                                    dataGroupId: number | null;
-                                    layerIds: string;
-                                    baseUrl: string;
-                                } | null;
-                                sendData: string;
-                                sendType: string;
-                                dataDelay: number;
-                            } | undefined;
                             projectFunName?: string | undefined;
                             projectParamList?: any[] | undefined;
                             projectParamType?: string | undefined;
                             projectParamValue?: Record<string, any> | undefined;
                             projectParamCode?: string | undefined;
                             swiperCardTabsName?: string | undefined;
-                            aiManMsgContent?: string | undefined;
                             setBroadcastId?: string | null | undefined;
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -22933,7 +19185,7 @@ declare const sdk: {
                     left: number;
                     top: number;
                     isLock?: boolean | undefined;
-                    zIndex: number;
+                    zIndex: string;
                     display: boolean;
                     option: any;
                     data: any;
@@ -23152,83 +19404,20 @@ declare const sdk: {
                                 toY: number;
                             } | undefined;
                             encodeKey?: string | null | undefined;
-                            ue4Config?: {
-                                messageName: string;
-                                messageJson: string;
-                                messageContent: string;
-                                messageType: string;
-                            } | undefined;
                             blueprintKey?: string | undefined;
-                            customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                            customActionType?: "component" | "statusAnimation" | undefined;
                             panelStatusAnimationId?: string | undefined;
                             panelStatusId?: string | undefined;
-                            tcpudpConfig?: {
-                                dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                dataSourceId: string;
-                                dataSourceObj: Record<string, any> | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    url: string;
-                                    dataGroupId: number | null;
-                                    fileName: string;
-                                    size: number;
-                                    charsetName: string;
-                                    layerIds: string;
-                                    config?: string | undefined;
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    dataGroupId: number | null;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    desIp: string;
-                                    desPort: number;
-                                    localPort: number;
-                                    charsetName: string;
-                                    layerIds: number[];
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    type: string;
-                                    name: string;
-                                    description: string;
-                                    config: string;
-                                    dataGroupId: number | null;
-                                    layerIds: string;
-                                    baseUrl: string;
-                                } | null;
-                                sendData: string;
-                                sendType: string;
-                                dataDelay: number;
-                            } | undefined;
                             projectFunName?: string | undefined;
                             projectParamList?: any[] | undefined;
                             projectParamType?: string | undefined;
                             projectParamValue?: Record<string, any> | undefined;
                             projectParamCode?: string | undefined;
                             swiperCardTabsName?: string | undefined;
-                            aiManMsgContent?: string | undefined;
                             setBroadcastId?: string | null | undefined;
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -23328,7 +19517,7 @@ declare const sdk: {
                         children?: /*elided*/ any[] | undefined;
                         left: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         listenArgs: {
                             filterName: string;
@@ -23542,83 +19731,20 @@ declare const sdk: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -23703,7 +19829,7 @@ declare const sdk: {
                 left: number;
                 top: number;
                 isLock?: boolean | undefined;
-                zIndex: number;
+                zIndex: string;
                 display: boolean;
                 option: any;
                 data: any;
@@ -23922,83 +20048,20 @@ declare const sdk: {
                             toY: number;
                         } | undefined;
                         encodeKey?: string | null | undefined;
-                        ue4Config?: {
-                            messageName: string;
-                            messageJson: string;
-                            messageContent: string;
-                            messageType: string;
-                        } | undefined;
                         blueprintKey?: string | undefined;
-                        customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                        customActionType?: "component" | "statusAnimation" | undefined;
                         panelStatusAnimationId?: string | undefined;
                         panelStatusId?: string | undefined;
-                        tcpudpConfig?: {
-                            dataType: _screenwright_types.tcpudpDataTypeEnum;
-                            dataSourceId: string;
-                            dataSourceObj: Record<string, any> | {
-                                createdBy: string;
-                                createdTime: string;
-                                updatedBy: string;
-                                updatedTime: string;
-                                id: number;
-                                userId: number;
-                                name: string;
-                                description: string;
-                                type: string;
-                                url: string;
-                                dataGroupId: number | null;
-                                fileName: string;
-                                size: number;
-                                charsetName: string;
-                                layerIds: string;
-                                config?: string | undefined;
-                            } | {
-                                createdBy: string;
-                                createdTime: string;
-                                updatedBy: string;
-                                updatedTime: string;
-                                id: number;
-                                userId: number;
-                                dataGroupId: number | null;
-                                name: string;
-                                description: string;
-                                type: string;
-                                desIp: string;
-                                desPort: number;
-                                localPort: number;
-                                charsetName: string;
-                                layerIds: number[];
-                            } | {
-                                createdBy: string;
-                                createdTime: string;
-                                updatedBy: string;
-                                updatedTime: string;
-                                id: number;
-                                userId: number;
-                                type: string;
-                                name: string;
-                                description: string;
-                                config: string;
-                                dataGroupId: number | null;
-                                layerIds: string;
-                                baseUrl: string;
-                            } | null;
-                            sendData: string;
-                            sendType: string;
-                            dataDelay: number;
-                        } | undefined;
                         projectFunName?: string | undefined;
                         projectParamList?: any[] | undefined;
                         projectParamType?: string | undefined;
                         projectParamValue?: Record<string, any> | undefined;
                         projectParamCode?: string | undefined;
                         swiperCardTabsName?: string | undefined;
-                        aiManMsgContent?: string | undefined;
                         setBroadcastId?: string | null | undefined;
                         videoStartTime?: number | undefined;
                         videoEndTime?: number | undefined;
                         option?: Record<string, any> | undefined;
-                        currentpage?: number | undefined;
                         translation?: string | undefined;
                     }[];
                     btnObjs: any[];
@@ -24111,7 +20174,7 @@ declare const sdk: {
                         left: number;
                         top: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         option: any;
                         data: any;
@@ -24330,83 +20393,20 @@ declare const sdk: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -24485,7 +20485,7 @@ declare const sdk: {
                     }[] | undefined;
                     left: number;
                     isLock?: boolean | undefined;
-                    zIndex: number;
+                    zIndex: string;
                     display: boolean;
                     listenArgs: {
                         filterName: string;
@@ -24699,83 +20699,20 @@ declare const sdk: {
                                 toY: number;
                             } | undefined;
                             encodeKey?: string | null | undefined;
-                            ue4Config?: {
-                                messageName: string;
-                                messageJson: string;
-                                messageContent: string;
-                                messageType: string;
-                            } | undefined;
                             blueprintKey?: string | undefined;
-                            customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                            customActionType?: "component" | "statusAnimation" | undefined;
                             panelStatusAnimationId?: string | undefined;
                             panelStatusId?: string | undefined;
-                            tcpudpConfig?: {
-                                dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                dataSourceId: string;
-                                dataSourceObj: Record<string, any> | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    url: string;
-                                    dataGroupId: number | null;
-                                    fileName: string;
-                                    size: number;
-                                    charsetName: string;
-                                    layerIds: string;
-                                    config?: string | undefined;
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    dataGroupId: number | null;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    desIp: string;
-                                    desPort: number;
-                                    localPort: number;
-                                    charsetName: string;
-                                    layerIds: number[];
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    type: string;
-                                    name: string;
-                                    description: string;
-                                    config: string;
-                                    dataGroupId: number | null;
-                                    layerIds: string;
-                                    baseUrl: string;
-                                } | null;
-                                sendData: string;
-                                sendType: string;
-                                dataDelay: number;
-                            } | undefined;
                             projectFunName?: string | undefined;
                             projectParamList?: any[] | undefined;
                             projectParamType?: string | undefined;
                             projectParamValue?: Record<string, any> | undefined;
                             projectParamCode?: string | undefined;
                             swiperCardTabsName?: string | undefined;
-                            aiManMsgContent?: string | undefined;
                             setBroadcastId?: string | null | undefined;
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -24974,9 +20911,6 @@ declare const sdk: {
         editCanvas: vue.Ref<{
             editLayoutDom: HTMLElement | null;
             editContentDom: HTMLElement | null;
-            offset: number;
-            userScale: number;
-            lockScale: boolean;
             isCreate: boolean;
             isDrag: boolean;
             isSelect: boolean;
@@ -24984,9 +20918,6 @@ declare const sdk: {
         }, EditCanvasType | {
             editLayoutDom: HTMLElement | null;
             editContentDom: HTMLElement | null;
-            offset: number;
-            userScale: number;
-            lockScale: boolean;
             isCreate: boolean;
             isDrag: boolean;
             isSelect: boolean;
@@ -25611,7 +21542,7 @@ declare const screenwright: {
                         left: number;
                         top: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         option: any;
                         data: any;
@@ -25830,83 +21761,20 @@ declare const screenwright: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -26006,7 +21874,7 @@ declare const screenwright: {
                             children?: /*elided*/ any[] | undefined;
                             left: number;
                             isLock?: boolean | undefined;
-                            zIndex: number;
+                            zIndex: string;
                             display: boolean;
                             listenArgs: {
                                 filterName: string;
@@ -26220,83 +22088,20 @@ declare const screenwright: {
                                         toY: number;
                                     } | undefined;
                                     encodeKey?: string | null | undefined;
-                                    ue4Config?: {
-                                        messageName: string;
-                                        messageJson: string;
-                                        messageContent: string;
-                                        messageType: string;
-                                    } | undefined;
                                     blueprintKey?: string | undefined;
-                                    customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                    customActionType?: "component" | "statusAnimation" | undefined;
                                     panelStatusAnimationId?: string | undefined;
                                     panelStatusId?: string | undefined;
-                                    tcpudpConfig?: {
-                                        dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                        dataSourceId: string;
-                                        dataSourceObj: Record<string, any> | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            url: string;
-                                            dataGroupId: number | null;
-                                            fileName: string;
-                                            size: number;
-                                            charsetName: string;
-                                            layerIds: string;
-                                            config?: string | undefined;
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            dataGroupId: number | null;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            desIp: string;
-                                            desPort: number;
-                                            localPort: number;
-                                            charsetName: string;
-                                            layerIds: number[];
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            type: string;
-                                            name: string;
-                                            description: string;
-                                            config: string;
-                                            dataGroupId: number | null;
-                                            layerIds: string;
-                                            baseUrl: string;
-                                        } | null;
-                                        sendData: string;
-                                        sendType: string;
-                                        dataDelay: number;
-                                    } | undefined;
                                     projectFunName?: string | undefined;
                                     projectParamList?: any[] | undefined;
                                     projectParamType?: string | undefined;
                                     projectParamValue?: Record<string, any> | undefined;
                                     projectParamCode?: string | undefined;
                                     swiperCardTabsName?: string | undefined;
-                                    aiManMsgContent?: string | undefined;
                                     setBroadcastId?: string | null | undefined;
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -26381,7 +22186,7 @@ declare const screenwright: {
                     left: number;
                     top: number;
                     isLock?: boolean | undefined;
-                    zIndex: number;
+                    zIndex: string;
                     display: boolean;
                     option: any;
                     data: any;
@@ -26600,83 +22405,20 @@ declare const screenwright: {
                                 toY: number;
                             } | undefined;
                             encodeKey?: string | null | undefined;
-                            ue4Config?: {
-                                messageName: string;
-                                messageJson: string;
-                                messageContent: string;
-                                messageType: string;
-                            } | undefined;
                             blueprintKey?: string | undefined;
-                            customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                            customActionType?: "component" | "statusAnimation" | undefined;
                             panelStatusAnimationId?: string | undefined;
                             panelStatusId?: string | undefined;
-                            tcpudpConfig?: {
-                                dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                dataSourceId: string;
-                                dataSourceObj: Record<string, any> | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    url: string;
-                                    dataGroupId: number | null;
-                                    fileName: string;
-                                    size: number;
-                                    charsetName: string;
-                                    layerIds: string;
-                                    config?: string | undefined;
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    dataGroupId: number | null;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    desIp: string;
-                                    desPort: number;
-                                    localPort: number;
-                                    charsetName: string;
-                                    layerIds: number[];
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    type: string;
-                                    name: string;
-                                    description: string;
-                                    config: string;
-                                    dataGroupId: number | null;
-                                    layerIds: string;
-                                    baseUrl: string;
-                                } | null;
-                                sendData: string;
-                                sendType: string;
-                                dataDelay: number;
-                            } | undefined;
                             projectFunName?: string | undefined;
                             projectParamList?: any[] | undefined;
                             projectParamType?: string | undefined;
                             projectParamValue?: Record<string, any> | undefined;
                             projectParamCode?: string | undefined;
                             swiperCardTabsName?: string | undefined;
-                            aiManMsgContent?: string | undefined;
                             setBroadcastId?: string | null | undefined;
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -26789,7 +22531,7 @@ declare const screenwright: {
                             left: number;
                             top: number;
                             isLock?: boolean | undefined;
-                            zIndex: number;
+                            zIndex: string;
                             display: boolean;
                             option: any;
                             data: any;
@@ -27008,83 +22750,20 @@ declare const screenwright: {
                                         toY: number;
                                     } | undefined;
                                     encodeKey?: string | null | undefined;
-                                    ue4Config?: {
-                                        messageName: string;
-                                        messageJson: string;
-                                        messageContent: string;
-                                        messageType: string;
-                                    } | undefined;
                                     blueprintKey?: string | undefined;
-                                    customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                    customActionType?: "component" | "statusAnimation" | undefined;
                                     panelStatusAnimationId?: string | undefined;
                                     panelStatusId?: string | undefined;
-                                    tcpudpConfig?: {
-                                        dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                        dataSourceId: string;
-                                        dataSourceObj: Record<string, any> | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            url: string;
-                                            dataGroupId: number | null;
-                                            fileName: string;
-                                            size: number;
-                                            charsetName: string;
-                                            layerIds: string;
-                                            config?: string | undefined;
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            dataGroupId: number | null;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            desIp: string;
-                                            desPort: number;
-                                            localPort: number;
-                                            charsetName: string;
-                                            layerIds: number[];
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            type: string;
-                                            name: string;
-                                            description: string;
-                                            config: string;
-                                            dataGroupId: number | null;
-                                            layerIds: string;
-                                            baseUrl: string;
-                                        } | null;
-                                        sendData: string;
-                                        sendType: string;
-                                        dataDelay: number;
-                                    } | undefined;
                                     projectFunName?: string | undefined;
                                     projectParamList?: any[] | undefined;
                                     projectParamType?: string | undefined;
                                     projectParamValue?: Record<string, any> | undefined;
                                     projectParamCode?: string | undefined;
                                     swiperCardTabsName?: string | undefined;
-                                    aiManMsgContent?: string | undefined;
                                     setBroadcastId?: string | null | undefined;
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -27163,7 +22842,7 @@ declare const screenwright: {
                         }[] | undefined;
                         left: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         listenArgs: {
                             filterName: string;
@@ -27377,83 +23056,20 @@ declare const screenwright: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -27667,7 +23283,7 @@ declare const screenwright: {
                         left: number;
                         top: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         option: any;
                         data: any;
@@ -27886,83 +23502,20 @@ declare const screenwright: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -28062,7 +23615,7 @@ declare const screenwright: {
                             children?: /*elided*/ any[] | undefined;
                             left: number;
                             isLock?: boolean | undefined;
-                            zIndex: number;
+                            zIndex: string;
                             display: boolean;
                             listenArgs: {
                                 filterName: string;
@@ -28276,83 +23829,20 @@ declare const screenwright: {
                                         toY: number;
                                     } | undefined;
                                     encodeKey?: string | null | undefined;
-                                    ue4Config?: {
-                                        messageName: string;
-                                        messageJson: string;
-                                        messageContent: string;
-                                        messageType: string;
-                                    } | undefined;
                                     blueprintKey?: string | undefined;
-                                    customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                    customActionType?: "component" | "statusAnimation" | undefined;
                                     panelStatusAnimationId?: string | undefined;
                                     panelStatusId?: string | undefined;
-                                    tcpudpConfig?: {
-                                        dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                        dataSourceId: string;
-                                        dataSourceObj: Record<string, any> | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            url: string;
-                                            dataGroupId: number | null;
-                                            fileName: string;
-                                            size: number;
-                                            charsetName: string;
-                                            layerIds: string;
-                                            config?: string | undefined;
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            dataGroupId: number | null;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            desIp: string;
-                                            desPort: number;
-                                            localPort: number;
-                                            charsetName: string;
-                                            layerIds: number[];
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            type: string;
-                                            name: string;
-                                            description: string;
-                                            config: string;
-                                            dataGroupId: number | null;
-                                            layerIds: string;
-                                            baseUrl: string;
-                                        } | null;
-                                        sendData: string;
-                                        sendType: string;
-                                        dataDelay: number;
-                                    } | undefined;
                                     projectFunName?: string | undefined;
                                     projectParamList?: any[] | undefined;
                                     projectParamType?: string | undefined;
                                     projectParamValue?: Record<string, any> | undefined;
                                     projectParamCode?: string | undefined;
                                     swiperCardTabsName?: string | undefined;
-                                    aiManMsgContent?: string | undefined;
                                     setBroadcastId?: string | null | undefined;
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -28437,7 +23927,7 @@ declare const screenwright: {
                     left: number;
                     top: number;
                     isLock?: boolean | undefined;
-                    zIndex: number;
+                    zIndex: string;
                     display: boolean;
                     option: any;
                     data: any;
@@ -28656,83 +24146,20 @@ declare const screenwright: {
                                 toY: number;
                             } | undefined;
                             encodeKey?: string | null | undefined;
-                            ue4Config?: {
-                                messageName: string;
-                                messageJson: string;
-                                messageContent: string;
-                                messageType: string;
-                            } | undefined;
                             blueprintKey?: string | undefined;
-                            customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                            customActionType?: "component" | "statusAnimation" | undefined;
                             panelStatusAnimationId?: string | undefined;
                             panelStatusId?: string | undefined;
-                            tcpudpConfig?: {
-                                dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                dataSourceId: string;
-                                dataSourceObj: Record<string, any> | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    url: string;
-                                    dataGroupId: number | null;
-                                    fileName: string;
-                                    size: number;
-                                    charsetName: string;
-                                    layerIds: string;
-                                    config?: string | undefined;
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    dataGroupId: number | null;
-                                    name: string;
-                                    description: string;
-                                    type: string;
-                                    desIp: string;
-                                    desPort: number;
-                                    localPort: number;
-                                    charsetName: string;
-                                    layerIds: number[];
-                                } | {
-                                    createdBy: string;
-                                    createdTime: string;
-                                    updatedBy: string;
-                                    updatedTime: string;
-                                    id: number;
-                                    userId: number;
-                                    type: string;
-                                    name: string;
-                                    description: string;
-                                    config: string;
-                                    dataGroupId: number | null;
-                                    layerIds: string;
-                                    baseUrl: string;
-                                } | null;
-                                sendData: string;
-                                sendType: string;
-                                dataDelay: number;
-                            } | undefined;
                             projectFunName?: string | undefined;
                             projectParamList?: any[] | undefined;
                             projectParamType?: string | undefined;
                             projectParamValue?: Record<string, any> | undefined;
                             projectParamCode?: string | undefined;
                             swiperCardTabsName?: string | undefined;
-                            aiManMsgContent?: string | undefined;
                             setBroadcastId?: string | null | undefined;
                             videoStartTime?: number | undefined;
                             videoEndTime?: number | undefined;
                             option?: Record<string, any> | undefined;
-                            currentpage?: number | undefined;
                             translation?: string | undefined;
                         }[];
                         btnObjs: any[];
@@ -28845,7 +24272,7 @@ declare const screenwright: {
                             left: number;
                             top: number;
                             isLock?: boolean | undefined;
-                            zIndex: number;
+                            zIndex: string;
                             display: boolean;
                             option: any;
                             data: any;
@@ -29064,83 +24491,20 @@ declare const screenwright: {
                                         toY: number;
                                     } | undefined;
                                     encodeKey?: string | null | undefined;
-                                    ue4Config?: {
-                                        messageName: string;
-                                        messageJson: string;
-                                        messageContent: string;
-                                        messageType: string;
-                                    } | undefined;
                                     blueprintKey?: string | undefined;
-                                    customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                    customActionType?: "component" | "statusAnimation" | undefined;
                                     panelStatusAnimationId?: string | undefined;
                                     panelStatusId?: string | undefined;
-                                    tcpudpConfig?: {
-                                        dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                        dataSourceId: string;
-                                        dataSourceObj: Record<string, any> | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            url: string;
-                                            dataGroupId: number | null;
-                                            fileName: string;
-                                            size: number;
-                                            charsetName: string;
-                                            layerIds: string;
-                                            config?: string | undefined;
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            dataGroupId: number | null;
-                                            name: string;
-                                            description: string;
-                                            type: string;
-                                            desIp: string;
-                                            desPort: number;
-                                            localPort: number;
-                                            charsetName: string;
-                                            layerIds: number[];
-                                        } | {
-                                            createdBy: string;
-                                            createdTime: string;
-                                            updatedBy: string;
-                                            updatedTime: string;
-                                            id: number;
-                                            userId: number;
-                                            type: string;
-                                            name: string;
-                                            description: string;
-                                            config: string;
-                                            dataGroupId: number | null;
-                                            layerIds: string;
-                                            baseUrl: string;
-                                        } | null;
-                                        sendData: string;
-                                        sendType: string;
-                                        dataDelay: number;
-                                    } | undefined;
                                     projectFunName?: string | undefined;
                                     projectParamList?: any[] | undefined;
                                     projectParamType?: string | undefined;
                                     projectParamValue?: Record<string, any> | undefined;
                                     projectParamCode?: string | undefined;
                                     swiperCardTabsName?: string | undefined;
-                                    aiManMsgContent?: string | undefined;
                                     setBroadcastId?: string | null | undefined;
                                     videoStartTime?: number | undefined;
                                     videoEndTime?: number | undefined;
                                     option?: Record<string, any> | undefined;
-                                    currentpage?: number | undefined;
                                     translation?: string | undefined;
                                 }[];
                                 btnObjs: any[];
@@ -29219,7 +24583,7 @@ declare const screenwright: {
                         }[] | undefined;
                         left: number;
                         isLock?: boolean | undefined;
-                        zIndex: number;
+                        zIndex: string;
                         display: boolean;
                         listenArgs: {
                             filterName: string;
@@ -29433,83 +24797,20 @@ declare const screenwright: {
                                     toY: number;
                                 } | undefined;
                                 encodeKey?: string | null | undefined;
-                                ue4Config?: {
-                                    messageName: string;
-                                    messageJson: string;
-                                    messageContent: string;
-                                    messageType: string;
-                                } | undefined;
                                 blueprintKey?: string | undefined;
-                                customActionType?: "component" | "message" | "statusAnimation" | undefined;
+                                customActionType?: "component" | "statusAnimation" | undefined;
                                 panelStatusAnimationId?: string | undefined;
                                 panelStatusId?: string | undefined;
-                                tcpudpConfig?: {
-                                    dataType: _screenwright_types.tcpudpDataTypeEnum;
-                                    dataSourceId: string;
-                                    dataSourceObj: Record<string, any> | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        url: string;
-                                        dataGroupId: number | null;
-                                        fileName: string;
-                                        size: number;
-                                        charsetName: string;
-                                        layerIds: string;
-                                        config?: string | undefined;
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        dataGroupId: number | null;
-                                        name: string;
-                                        description: string;
-                                        type: string;
-                                        desIp: string;
-                                        desPort: number;
-                                        localPort: number;
-                                        charsetName: string;
-                                        layerIds: number[];
-                                    } | {
-                                        createdBy: string;
-                                        createdTime: string;
-                                        updatedBy: string;
-                                        updatedTime: string;
-                                        id: number;
-                                        userId: number;
-                                        type: string;
-                                        name: string;
-                                        description: string;
-                                        config: string;
-                                        dataGroupId: number | null;
-                                        layerIds: string;
-                                        baseUrl: string;
-                                    } | null;
-                                    sendData: string;
-                                    sendType: string;
-                                    dataDelay: number;
-                                } | undefined;
                                 projectFunName?: string | undefined;
                                 projectParamList?: any[] | undefined;
                                 projectParamType?: string | undefined;
                                 projectParamValue?: Record<string, any> | undefined;
                                 projectParamCode?: string | undefined;
                                 swiperCardTabsName?: string | undefined;
-                                aiManMsgContent?: string | undefined;
                                 setBroadcastId?: string | null | undefined;
                                 videoStartTime?: number | undefined;
                                 videoEndTime?: number | undefined;
                                 option?: Record<string, any> | undefined;
-                                currentpage?: number | undefined;
                                 translation?: string | undefined;
                             }[];
                             btnObjs: any[];
@@ -29708,9 +25009,6 @@ declare const screenwright: {
             editCanvas: vue.Ref<{
                 editLayoutDom: HTMLElement | null;
                 editContentDom: HTMLElement | null;
-                offset: number;
-                userScale: number;
-                lockScale: boolean;
                 isCreate: boolean;
                 isDrag: boolean;
                 isSelect: boolean;
@@ -29718,9 +25016,6 @@ declare const screenwright: {
             }, EditCanvasType | {
                 editLayoutDom: HTMLElement | null;
                 editContentDom: HTMLElement | null;
-                offset: number;
-                userScale: number;
-                lockScale: boolean;
                 isCreate: boolean;
                 isDrag: boolean;
                 isSelect: boolean;

@@ -212,7 +212,7 @@ function CaseRow({ result, runId }: { result: EvalCaseResult; runId: string }) {
           <span>{formatTokenCount(result.totalTokens)} tok</span>
           {result.threadId && (
             <Link
-              href={`/sessions?thread=${result.threadId}&evalRun=${encodeURIComponent(runId)}`}
+              href={`/?thread=${result.threadId}&evalRun=${encodeURIComponent(runId)}`}
               className="text-primary inline-flex items-center gap-1 hover:underline"
             >
               看对话 <ExternalLink className="size-3" />

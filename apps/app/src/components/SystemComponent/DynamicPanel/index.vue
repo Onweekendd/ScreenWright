@@ -62,10 +62,7 @@
           }"
           @click.stop="($event) => handleSwitch({ event: $event })"
         >
-          <template
-            v-for="(item, childIndex) in status.config.sort((a, b) => a.zIndex - b.zIndex)"
-            v-bind:key="item.id"
-          >
+          <template v-for="(item, childIndex) in sortByZIndex(status.config)" v-bind:key="item.id">
             <edit-group
               :disabled="!isBuild.value"
               v-if="item.children && item.children.length > 0"
@@ -115,6 +112,7 @@
 import type { Ref } from "vue";
 import { computed, onMounted, ref, watch } from "vue";
 
+import { sortByZIndex } from "@screenwright/core";
 import { isUndefined } from "lodash-es";
 
 import { useFrostedStyle } from "@/views/build/components/buildConfig/components/frostedGlassConfig/useFrostedStyle";

@@ -6,7 +6,7 @@ vi.mock("@/mastra/services/chat/bi-chat-turn-stream", () => ({
   createBIChatTurnStream: vi.fn(),
   renameBackgroundChunk: vi.fn()
 }));
-vi.mock("@/mastra/services/version-history", () => ({
+vi.mock("@/mastra/services/version/version-history", () => ({
   commitScreenSnapshot: vi.fn().mockResolvedValue(undefined)
 }));
 

@@ -1,10 +1,10 @@
 import { FolderEnum, InteractiveEnum, mediaEnum, PanelEnum, textEnum } from "@screenwright/types";
 
-import { SwImgStrategy } from "./SwImgStrategy";
 import { FtPanelStrategy } from "./FtPanelStrategy";
-import { SwRichtextStrategy } from "./SwRichtextStrategy";
 import { FtSubtabStrategy } from "./FtSubtabStrategy";
 import { GroupStrategy } from "./GroupStrategy";
+import { SwImgStrategy } from "./SwImgStrategy";
+import { SwRichtextStrategy } from "./SwRichtextStrategy";
 import type { ConvertStrategy } from "./types";
 
 /**

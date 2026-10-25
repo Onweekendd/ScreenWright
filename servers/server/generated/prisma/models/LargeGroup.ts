@@ -1154,6 +1154,7 @@ export type LargeGroupCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many LargeGroups.
    */
   data: Prisma.LargeGroupCreateManyInput | Prisma.LargeGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1172,6 +1173,7 @@ export type LargeGroupCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many LargeGroups.
    */
   data: Prisma.LargeGroupCreateManyInput | Prisma.LargeGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

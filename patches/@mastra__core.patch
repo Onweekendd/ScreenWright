@@ -1,0 +1,226 @@
+diff --git a/dist/agent-BMi0F5ou.cjs b/dist/agent-BMi0F5ou.cjs
+index fadfaa7621f4f5bcdd6bed34f974b8d1bdf7e246..b523e9d523c97497adee0d1e35d4ad83a7b06a73 100644
+--- a/dist/agent-BMi0F5ou.cjs
++++ b/dist/agent-BMi0F5ou.cjs
+@@ -31393,10 +31393,15 @@ var SaveQueueManager = class SaveQueueManager {
+ 	debounceMs;
+ 	memory;
+ 	static MAX_STALENESS_MS = 1e3;
++	static memorySaveQueues = new WeakMap();
+ 	constructor({ logger, debounceMs, memory }) {
+ 		this.logger = logger;
+ 		this.debounceMs = debounceMs || 100;
+ 		this.memory = memory;
++		if (memory) {
++			if (!SaveQueueManager.memorySaveQueues.has(memory)) SaveQueueManager.memorySaveQueues.set(memory, new Map());
++			this.saveQueues = SaveQueueManager.memorySaveQueues.get(memory);
++		}
+ 	}
+ 	saveQueues = /* @__PURE__ */ new Map();
+ 	saveDebounceTimers = /* @__PURE__ */ new Map();
+@@ -31465,6 +31470,39 @@ var SaveQueueManager = class SaveQueueManager {
+ 	*/
+ 	async persistUnsavedMessages(messageList, memoryConfig) {
+ 		const newMessages = messageList.drainUnsavedMessages();
++		// A background callback retains an older MessageList across foreground resumes.
++		// Never let that snapshot roll a settled tool back to call/placeholder.
++		const backgroundMessages = newMessages.filter((m) => m.content?.metadata?.backgroundTasks);
++		if (backgroundMessages.length > 0 && this.memory) {
++			const store = await this.memory.storage.getStore("memory");
++			const existing = await store?.listMessagesById({ messageIds: backgroundMessages.map((m) => m.id) });
++			const byId = new Map((existing?.messages ?? []).map((m) => [m.id, m]));
++			const settled = (p) => {
++				const t = p?.type === "tool-invocation" ? p.toolInvocation : void 0;
++				return t && (t.state === "output-error" || t.state === "output-denied" || t.state === "result" && !(typeof t.result === "string" && /^Background task (started|resumed)\./.test(t.result)));
++			};
++			for (const message of backgroundMessages) {
++				const current = byId.get(message.id);
++				if (!current?.content?.parts) continue;
++				const incoming = new Map((message.content.parts ?? []).filter(settled).map((p) => [p.toolInvocation.toolCallId, p]));
++				if (!current.content.parts.some((p) => settled(p) && !incoming.has(p.toolInvocation.toolCallId))) continue;
++				const parts = current.content.parts.map((p) => {
++					const id = p.type === "tool-invocation" ? p.toolInvocation.toolCallId : void 0;
++					const next = id ? incoming.get(id) : void 0;
++					if (id) incoming.delete(id);
++					return !settled(p) && next ? next : p;
++				});
++				parts.push(...incoming.values());
++				message.content = {
++					...current.content,
++					parts,
++					metadata: {
++						...current.content.metadata,
++						backgroundTasks: { ...current.content.metadata?.backgroundTasks, ...message.content.metadata.backgroundTasks }
++					}
++				};
++			}
++		}
+ 		if (newMessages.length > 0 && this.memory) await this.memory.saveMessages({
+ 			messages: newMessages,
+ 			memoryConfig
+@@ -31625,6 +31663,8 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 		_skipBgTaskWait: true
+ 	};
+ 	const runningTaskIds = /* @__PURE__ */ new Set();
++	const backgroundToolCallIds = /* @__PURE__ */ new Set();
++	let foregroundSuspended = false;
+ 	const pendingCompletions = [];
+ 	const processedTerminalKeys = /* @__PURE__ */ new Set();
+ 	let isProcessing = false;
+@@ -31649,6 +31689,12 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 	const tryClose = () => {
+ 		if (closed) return;
+ 		if (isProcessing) return;
++		// A foreground suspend must release the caller's turn queue for resume.
++		// Background workers remain alive; only this idle-loop subscription closes.
++		if (foregroundSuspended) {
++			forceClose();
++			return;
++		}
+ 		if (runningTaskIds.size > 0) return;
+ 		if (pendingCompletions.length > 0) return;
+ 		forceClose();
+@@ -31684,6 +31730,11 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 					const taskId = value.payload?.taskId;
+ 					if (taskId) runningTaskIds.add(taskId);
+ 				}
++				if (value && typeof value === "object") {
++					const toolCallId = value.payload?.toolCallId;
++					if (value.type?.startsWith("background-task-") && toolCallId) backgroundToolCallIds.add(toolCallId);
++					if (value.type === "tool-call-suspended" && !backgroundToolCallIds.has(toolCallId)) foregroundSuspended = true;
++				}
+ 			}
+ 		} finally {
+ 			reader.releaseLock();
+@@ -31691,6 +31742,10 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 	};
+ 	const processIfIdle = async () => {
+ 		if (isProcessing || closed || pendingCompletions.length === 0) return;
++		if (foregroundSuspended) {
++			forceClose();
++			return;
++		}
+ 		isProcessing = true;
+ 		try {
+ 			const batch = pendingCompletions.splice(0, pendingCompletions.length);
+@@ -31742,6 +31797,7 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 				const chunk = value;
+ 				if (!chunk || typeof chunk !== "object" || typeof chunk.type !== "string") continue;
+ 				const taskId = chunk.payload?.taskId;
++				if (chunk.payload?.toolCallId) backgroundToolCallIds.add(chunk.payload.toolCallId);
+ 				const terminalKey = taskId && TERMINAL_BG_CHUNKS.has(chunk.type) ? `${taskId}:${chunk.type}` : void 0;
+ 				if (terminalKey && processedTerminalKeys.has(terminalKey)) continue;
+ 				updateIdleTimer();
+diff --git a/dist/agent-CEHR0Wd8.js b/dist/agent-CEHR0Wd8.js
+index 3a27f1c85b2639362979195cb0ca6fd81f5ce227..69126aa9c04946774241c0060671709d8075b35f 100644
+--- a/dist/agent-CEHR0Wd8.js
++++ b/dist/agent-CEHR0Wd8.js
+@@ -31391,10 +31391,15 @@ var SaveQueueManager = class SaveQueueManager {
+ 	debounceMs;
+ 	memory;
+ 	static MAX_STALENESS_MS = 1e3;
++	static memorySaveQueues = new WeakMap();
+ 	constructor({ logger, debounceMs, memory }) {
+ 		this.logger = logger;
+ 		this.debounceMs = debounceMs || 100;
+ 		this.memory = memory;
++		if (memory) {
++			if (!SaveQueueManager.memorySaveQueues.has(memory)) SaveQueueManager.memorySaveQueues.set(memory, new Map());
++			this.saveQueues = SaveQueueManager.memorySaveQueues.get(memory);
++		}
+ 	}
+ 	saveQueues = /* @__PURE__ */ new Map();
+ 	saveDebounceTimers = /* @__PURE__ */ new Map();
+@@ -31463,6 +31468,39 @@ var SaveQueueManager = class SaveQueueManager {
+ 	*/
+ 	async persistUnsavedMessages(messageList, memoryConfig) {
+ 		const newMessages = messageList.drainUnsavedMessages();
++		// A background callback retains an older MessageList across foreground resumes.
++		// Never let that snapshot roll a settled tool back to call/placeholder.
++		const backgroundMessages = newMessages.filter((m) => m.content?.metadata?.backgroundTasks);
++		if (backgroundMessages.length > 0 && this.memory) {
++			const store = await this.memory.storage.getStore("memory");
++			const existing = await store?.listMessagesById({ messageIds: backgroundMessages.map((m) => m.id) });
++			const byId = new Map((existing?.messages ?? []).map((m) => [m.id, m]));
++			const settled = (p) => {
++				const t = p?.type === "tool-invocation" ? p.toolInvocation : void 0;
++				return t && (t.state === "output-error" || t.state === "output-denied" || t.state === "result" && !(typeof t.result === "string" && /^Background task (started|resumed)\./.test(t.result)));
++			};
++			for (const message of backgroundMessages) {
++				const current = byId.get(message.id);
++				if (!current?.content?.parts) continue;
++				const incoming = new Map((message.content.parts ?? []).filter(settled).map((p) => [p.toolInvocation.toolCallId, p]));
++				if (!current.content.parts.some((p) => settled(p) && !incoming.has(p.toolInvocation.toolCallId))) continue;
++				const parts = current.content.parts.map((p) => {
++					const id = p.type === "tool-invocation" ? p.toolInvocation.toolCallId : void 0;
++					const next = id ? incoming.get(id) : void 0;
++					if (id) incoming.delete(id);
++					return !settled(p) && next ? next : p;
++				});
++				parts.push(...incoming.values());
++				message.content = {
++					...current.content,
++					parts,
++					metadata: {
++						...current.content.metadata,
++						backgroundTasks: { ...current.content.metadata?.backgroundTasks, ...message.content.metadata.backgroundTasks }
++					}
++				};
++			}
++		}
+ 		if (newMessages.length > 0 && this.memory) await this.memory.saveMessages({
+ 			messages: newMessages,
+ 			memoryConfig
+@@ -31623,6 +31661,8 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 		_skipBgTaskWait: true
+ 	};
+ 	const runningTaskIds = /* @__PURE__ */ new Set();
++	const backgroundToolCallIds = /* @__PURE__ */ new Set();
++	let foregroundSuspended = false;
+ 	const pendingCompletions = [];
+ 	const processedTerminalKeys = /* @__PURE__ */ new Set();
+ 	let isProcessing = false;
+@@ -31647,6 +31687,12 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 	const tryClose = () => {
+ 		if (closed) return;
+ 		if (isProcessing) return;
++		// A foreground suspend must release the caller's turn queue for resume.
++		// Background workers remain alive; only this idle-loop subscription closes.
++		if (foregroundSuspended) {
++			forceClose();
++			return;
++		}
+ 		if (runningTaskIds.size > 0) return;
+ 		if (pendingCompletions.length > 0) return;
+ 		forceClose();
+@@ -31682,6 +31728,11 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 					const taskId = value.payload?.taskId;
+ 					if (taskId) runningTaskIds.add(taskId);
+ 				}
++				if (value && typeof value === "object") {
++					const toolCallId = value.payload?.toolCallId;
++					if (value.type?.startsWith("background-task-") && toolCallId) backgroundToolCallIds.add(toolCallId);
++					if (value.type === "tool-call-suspended" && !backgroundToolCallIds.has(toolCallId)) foregroundSuspended = true;
++				}
+ 			}
+ 		} finally {
+ 			reader.releaseLock();
+@@ -31689,6 +31740,10 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 	};
+ 	const processIfIdle = async () => {
+ 		if (isProcessing || closed || pendingCompletions.length === 0) return;
++		if (foregroundSuspended) {
++			forceClose();
++			return;
++		}
+ 		isProcessing = true;
+ 		try {
+ 			const batch = pendingCompletions.splice(0, pendingCompletions.length);
+@@ -31740,6 +31795,7 @@ async function runIdleLoop(agent, streamOptions, deps, firstTurn, streamForConti
+ 				const chunk = value;
+ 				if (!chunk || typeof chunk !== "object" || typeof chunk.type !== "string") continue;
+ 				const taskId = chunk.payload?.taskId;
++				if (chunk.payload?.toolCallId) backgroundToolCallIds.add(chunk.payload.toolCallId);
+ 				const terminalKey = taskId && TERMINAL_BG_CHUNKS.has(chunk.type) ? `${taskId}:${chunk.type}` : void 0;
+ 				if (terminalKey && processedTerminalKeys.has(terminalKey)) continue;
+ 				updateIdleTimer();

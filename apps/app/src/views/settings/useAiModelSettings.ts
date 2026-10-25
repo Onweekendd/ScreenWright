@@ -16,6 +16,7 @@ export interface RoleMeta {
   title: string;
   desc: string;
   modelPlaceholder: string;
+  baseUrlPlaceholder?: string;
 }
 
 export const ROLE_META: RoleMeta[] = [
@@ -36,6 +37,19 @@ export const ROLE_META: RoleMeta[] = [
     title: "嵌入模型",
     desc: "组件检索（RAG）向量化。改动后需「重建索引」才生效。",
     modelPlaceholder: "BAAI/bge-large-zh-v1.5"
+  },
+  {
+    role: "image",
+    title: "生图模型",
+    desc: "效果图、装饰素材生成。需支持 images.generations 接口的 OpenAI 兼容端点。",
+    modelPlaceholder: "留空需先联系模型服务商确认可用的生图模型 id"
+  },
+  {
+    role: "video",
+    title: "生视频模型",
+    desc: "MiniMax V2 文生视频、图生视频。支持填写接口前缀或完整提交地址。测试提交会生成一次 5 秒视频，可能产生费用。",
+    modelPlaceholder: "MiniMax-H3 或 MiniMax-H3-Max",
+    baseUrlPlaceholder: "https://llm-api.net/minimax/v2"
   }
 ];
 
@@ -63,7 +77,9 @@ export function useAiModelSettings() {
   const states = reactive<Record<ModelRole, RoleState | null>>({
     reasoning: null,
     vision: null,
-    embedding: null
+    embedding: null,
+    image: null,
+    video: null
   });
 
   const toForm = (vo: AiModelVo): RoleForm => ({
@@ -133,7 +149,8 @@ export function useAiModelSettings() {
       const r = await testAiModel(role, {
         baseUrl: st.form.baseUrl.trim(),
         apiKey: st.form.apiKey.trim() || undefined,
-        modelId: st.form.modelId.trim()
+        modelId: st.form.modelId.trim(),
+        ...(role === "embedding" ? { dimensions: st.form.dimensions ?? null } : {})
       });
       st.testResult = r.ok
         ? { ok: true, text: `连接正常（${r.latencyMs}ms）` }

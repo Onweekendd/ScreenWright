@@ -35,6 +35,7 @@ export const renderMediaComponentType: MediaEnum[] = [
   MediaEnum.SwEmbedAudio,
   MediaEnum.SwIframe,
   MediaEnum.SwImg,
+  MediaEnum.SwBox,
   MediaEnum.SwOpenVideo,
   MediaEnum.SwImgBorder,
   MediaEnum.SwSwiper,

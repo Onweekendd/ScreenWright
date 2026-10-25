@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { importSystemMaterials } from "@/mastra/services/system-material-import";
+import { importSystemMaterials } from "@/mastra/services/ai-assets/system-material-import";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 const sourceArg = process.argv.slice(2).find((arg) => !arg.startsWith("--"));

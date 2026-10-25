@@ -15,7 +15,7 @@ vi.mock("@/mastra/tools/utils", async () => {
   };
 });
 
-vi.mock("@/mastra/services/figma-node-asset.server", () => ({
+vi.mock("@/mastra/services/ai-assets/figma-node-asset.server", () => ({
   batchByNodeIds: vi.fn().mockResolvedValue({ data: [] })
 }));
 

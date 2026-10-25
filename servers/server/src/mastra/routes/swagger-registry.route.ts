@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { z } from "zod";
 
-import { registerSwagger } from "../services/swagger-registry";
+import { registerSwagger } from "../services/integrations/swagger-registry";
 
 const RegisterSwaggerSchema = z.object({
   datasourceId: z.number().int().positive(),

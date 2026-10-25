@@ -16,8 +16,6 @@ export enum BarEchartEnum {
   echartlineAndBar = "echartlineAndBar",
   /** 象形柱状图 */
   echartpictorialbar = "echartpictorialbar",
-  /** 排名柱状图 */
-  echartrank = "echartrank",
   /** 基础柱状图 */
   echartbar = "echartbar"
 }
@@ -34,7 +32,9 @@ export enum PieEchartEnum {
   /** 玫瑰饼图 */
   echartpluralRosePie = "echartpluralRosePie",
   /** 三维饼图 */
-  echartthreePie = "echartthreePie"
+  echartthreePie = "echartthreePie",
+  /** 环形饼图 */
+  echartthreeQuartersPie = "echartthreeQuartersPie"
 }
 
 /**
@@ -44,41 +44,6 @@ export enum PieEchartEnum {
 export enum ScatterEchartEnum {
   /** 基础散点图 */
   echartscatter = "echartscatter"
-}
-
-/**
- * 项目图表枚举
- * @description 项目专用图表组件的类型标识
- */
-export enum ProjectEchartEnum {
-  /** 斑马图2 */
-  echartzebra2 = "echartzebra2",
-  /** 双轴折线图 */
-  echartdoubleValueLine = "echartdoubleValueLine",
-  /** 增长率柱状图 */
-  echartgrowthRateBar = "echartgrowthRateBar",
-  /** 效果散点图 */
-  echarteffectScatter = "echarteffectScatter",
-  /** 重叠柱状图 */
-  echartoverlapBar = "echartoverlapBar",
-  /** 斑马线柱混合图 */
-  echartzebraBarAndLine = "echartzebraBarAndLine",
-  /** 三维线柱混合图 */
-  echartthreedBarAndLine = "echartthreedBarAndLine",
-  /** 斑马图 */
-  echartzebra = "echartzebra",
-  /** 三维柱状图 */
-  echartthreedBar = "echartthreedBar",
-  /** 刻度饼图 */
-  echartscalePie = "echartscalePie",
-  /** 多维排名柱状图 */
-  echartmultiplyRankBar = "echartmultiplyRankBar",
-  /** 排名柱状图 */
-  echartrankBar = "echartrankBar",
-  /** 三四分饼图 */
-  echartthreeQuartersPie = "echartthreeQuartersPie",
-  /** 细柱状图 */
-  echartthinBar = "echartthinBar"
 }
 
 /**
@@ -145,30 +110,15 @@ export enum AllEchartEnum {
   echartbothWayStripBar = "echartbothWayStripBar",
   echartlineAndBar = "echartlineAndBar",
   echartpictorialbar = "echartpictorialbar",
-  echartrank = "echartrank",
   echartbar = "echartbar",
   // 饼图类型
   echartpie = "echartpie",
   echartloopRingPie = "echartloopRingPie",
   echartpluralRosePie = "echartpluralRosePie",
   echartthreePie = "echartthreePie",
+  echartthreeQuartersPie = "echartthreeQuartersPie",
   // 散点图类型
   echartscatter = "echartscatter",
-  // 项目图表类型
-  echartzebra2 = "echartzebra2",
-  echartdoubleValueLine = "echartdoubleValueLine",
-  echartgrowthRateBar = "echartgrowthRateBar",
-  echarteffectScatter = "echarteffectScatter",
-  echartoverlapBar = "echartoverlapBar",
-  echartzebraBarAndLine = "echartzebraBarAndLine",
-  echartthreedBarAndLine = "echartthreedBarAndLine",
-  echartzebra = "echartzebra",
-  echartthreedBar = "echartthreedBar",
-  echartscalePie = "echartscalePie",
-  echartmultiplyRankBar = "echartmultiplyRankBar",
-  echartrankBar = "echartrankBar",
-  echartthreeQuartersPie = "echartthreeQuartersPie",
-  echartthinBar = "echartthinBar",
   // 折线图类型
   echartareaLine = "echartareaLine",
   echartline = "echartline",
@@ -197,7 +147,6 @@ export type EchartComponentType =
   | LineEchartEnum
   | ScatterEchartEnum
   | OtherEchartEnum
-  | ProjectEchartEnum
   | RingEchartEnum
   | IndicatorEchartEnum;
 
@@ -206,9 +155,6 @@ export const pieEchartEnum = PieEchartEnum;
 
 /** @deprecated 使用 ScatterEchartEnum 代替 */
 export const scatterEchartEnum = ScatterEchartEnum;
-
-/** @deprecated 使用 ProjectEchartEnum 代替 */
-export const projectEchartEnum = ProjectEchartEnum;
 
 /** @deprecated 使用 LineEchartEnum 代替 */
 export const lineEchartEnum = LineEchartEnum;
@@ -230,9 +176,6 @@ export type pieEchartType = PieEchartEnum;
 
 /** @deprecated 使用 ScatterEchartEnum 代替 */
 export type scatterEchartType = ScatterEchartEnum;
-
-/** @deprecated 使用 ProjectEchartEnum 代替 */
-export type projectEchartType = ProjectEchartEnum;
 
 /** @deprecated 使用 LineEchartEnum 代替 */
 export type lineEchartsType = LineEchartEnum;

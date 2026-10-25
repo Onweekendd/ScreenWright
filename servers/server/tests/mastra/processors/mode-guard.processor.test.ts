@@ -27,6 +27,21 @@ describe("ModeGuardProcessor", () => {
     expect(result.tools).not.toHaveProperty("delegateAppCodeTool");
   });
 
+  it("processInputStep：处于 PLAN 模式时，应移除会往素材库新增素材的上传工具，拉取工具保留", async () => {
+    const processor = new ModeGuardProcessor();
+    const requestContext = new RequestContext<CommonRunTimeType>();
+    requestContext.set("mode", AgentMode.PLAN);
+    const input = {
+      requestContext,
+      tools: { pullAssetsTool: { id: "pull" }, pushAssetsTool: { id: "push" } }
+    } as unknown as ProcessInputStepArgs;
+
+    const result = await processor.processInputStep(input);
+
+    expect(result.tools).toHaveProperty("pullAssetsTool");
+    expect(result.tools).not.toHaveProperty("pushAssetsTool");
+  });
+
   it("processInputStep：处于自动编辑模式时，应保持原有工具集合不变", async () => {
     // Arrange
     const processor = new ModeGuardProcessor();

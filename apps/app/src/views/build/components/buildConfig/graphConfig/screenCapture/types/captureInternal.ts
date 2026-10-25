@@ -12,7 +12,8 @@ export interface PanelStatusEntry {
 /** 大屏组件树节点（构建页 componentList 项） */
 export interface CaptureComponentItem {
   id?: number | string;
-  zIndex?: number;
+  /** 字符串排序键，只能比大小；要数值用 ComponentTreeCapture.rankByZIndex 在同级里取名次 */
+  zIndex?: string | number;
   left?: number;
   top?: number;
   status?: number;

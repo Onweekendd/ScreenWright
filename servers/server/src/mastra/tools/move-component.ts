@@ -7,10 +7,10 @@ import { FolderEnum, PanelEnum } from "@screenwright/types";
 import { z } from "zod";
 
 import { applyComponentMove } from "@/mastra/services/bi-data-sync/screen-mutation";
-import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen-workspace";
+import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen/screen-workspace";
 
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { ChangeSchema, movedChanges } from "./change-report";
 import { describeAmbiguity, extractIdFromIdName, findComponentFileInWorkspace, isAmbiguousMatch } from "./file/utils";
 
@@ -175,12 +175,9 @@ export const moveComponentTool = createTool({
       .describe("不传、传 null 或不传 parentId 都表示移动到大屏根级")
   }),
 
-  suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.AskApprovalMoveComponent].suspend,
-    SuspendDefs[SuspendType.MoveComponent].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: SuspendDefs[SuspendType.AskApprovalMoveComponent].resume,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   outputSchema: z.object({
     success: z.boolean(),
@@ -193,17 +190,17 @@ export const moveComponentTool = createTool({
   }),
 
   execute: async ({ componentIds, target }, context) => {
-    const { suspend, resumeData } = context?.agent ?? {};
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
 
-    // ── 恢复阶段：用户拒绝 ────────────────────────────────────────────
-    if (resumeData?.approved === false) {
+    // ── 恢复阶段：用户拒绝 / 回执不合法 / 前端返回错误 ───────────────────
+    if (reply.status === "rejected") {
       return { success: false, message: "用户取消了移动操作" };
     }
-
-    // ── 恢复阶段：前端返回错误 ──────────────────────────────────────────
-    if (resumeData?.error) {
-      return { success: false, message: `前端移动失败: ${resumeData.error}` };
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
+    }
+    if (reply.status === "done" && !reply.results[0].ok) {
+      return { success: false, message: `前端移动失败: ${reply.results[0].error}` };
     }
 
     // 挂起前后都要用它：挂起时告诉前端往哪挪，恢复时告诉 core 往哪挪。
@@ -218,7 +215,7 @@ export const moveComponentTool = createTool({
     // ── 恢复阶段：前端画布已挪好，这时才由后端过 core 落盘 ────────────────
     // 移动不产生新 id，前端没有任何后端算不出来的东西，回执只是一句「干完了」；
     // 摘挂与包围盒重算两边跑的是 core 里同一个 move，新路径由后端改完自己的树再扫盘推。
-    if (resumeData?.moved) {
+    if (reply.status === "done") {
       const screenKey = resolved.screenKey;
       if (!screenKey) {
         return { success: false, message: `组件已在前端移动，但无法确定它属于哪个大屏: ${componentIds[0]}` };
@@ -240,21 +237,11 @@ export const moveComponentTool = createTool({
       }
     }
 
-    if (!suspend) {
-      return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
-    }
-
-    // ── ASK_BEFORE_EDIT：先弹审批框，用户接受后再交前端移动 ──────────────
-    if (mode === AgentMode.ASK_BEFORE_EDIT) {
-      return suspend({
-        type: SuspendType.AskApprovalMoveComponent,
-        purpose: "移动选中的组件",
-        componentIds,
-        target: resolved.target
-      }) as never;
-    }
-
-    // 自动模式：直接 suspend 交给前端移动
-    return suspend({ type: SuspendType.MoveComponent, componentIds, target: resolved.target }) as never;
+    // 交给前端的是从文件名解析出的纯数字 id，不是入参原样：入参是 "5_1/114" 这种带大屏前缀的形态，
+    // 前端 Number() 一下就成了 NaN（「找不到组件 NaN」）
+    return suspendCanvasOps(context, {
+      purpose: "移动选中的组件",
+      ops: [{ op: "move_components", componentIds: resolved.componentIds, target: resolved.target }]
+    });
   }
 });

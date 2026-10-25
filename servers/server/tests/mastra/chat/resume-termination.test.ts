@@ -4,7 +4,7 @@ import { isRejectedResume } from "@/mastra/services/chat/resume-termination";
 import { SuspendType } from "@/mastra/types/bi-chat";
 
 describe("isRejectedResume", () => {
-  it.each([SuspendType.AskApproval, SuspendType.AskApprovalCreateComponent, SuspendType.EnterPlanMode])(
+  it.each([SuspendType.AskApproval, SuspendType.CanvasOps, SuspendType.EnterPlanMode])(
     "%s 收到 approved:false 时应终止当前对话",
     (suspendType) => {
       expect(isRejectedResume(suspendType, { approved: false })).toBe(true);
@@ -21,7 +21,7 @@ describe("isRejectedResume", () => {
 
   it("用户批准但前端应用失败时不应被误判为拒绝", () => {
     expect(
-      isRejectedResume(SuspendType.CreateComponent, {
+      isRejectedResume(SuspendType.CanvasOps, {
         approved: true,
         error: "前端创建组件失败（eval 模拟）"
       })

@@ -9,10 +9,11 @@ import { ForceCacheStrategy } from "./ForceCacheStrategy";
 self.__WB_DISABLE_DEV_LOGS = true;
 
 /**
- * 匹配 MinIO 资源请求（仅图片、视频，不包含字体）
+ * 匹配对象存储资源请求（仅图片、视频，不包含字体）
+ * MinIO 形态：`/assets/...`；fs 存储形态：`/blobs/<key>`
  */
 registerRoute(({ url }) => {
-  const isMinioPath = url.pathname.includes("/version-test/") || url.pathname.includes("/assets/");
+  const isMinioPath = ["/assets/", "/blobs/"].some((seg) => url.pathname.includes(seg));
   const isMediaFile = /\.(png|jpg|jpeg|gif|mp4|webm)$/i.test(url.pathname);
   return isMinioPath && isMediaFile;
 }, new ForceCacheStrategy());
@@ -26,5 +27,5 @@ registerRoute(({ url }) => {
   return isFontPath && isFontFile;
 }, new ForceCacheStrategy());
 
-console.log("[SW] MinIO 媒体资源缓存策略已激活（仅图片和视频）");
+console.log("[SW] 对象存储媒体资源缓存策略已激活（仅图片和视频）");
 console.log("[SW] 本地字体文件缓存策略已激活（/lib/fonts/）");

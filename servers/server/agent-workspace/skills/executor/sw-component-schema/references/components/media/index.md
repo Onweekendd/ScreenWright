@@ -12,3 +12,4 @@
 | 视频面板 | 视频面板 | ctVideoPanel   | [ctVideoPanel.md](ctVideoPanel.md)      |
 | iframe   | iframe   | swiframe       | [swiframe.md](swiframe.md)              |
 | 图片     | 图片     | swimg          | [swimg.md](swimg.md)                    |
+| 矩形     | 矩形     | swBox          | [swBox.md](swBox.md)                    |

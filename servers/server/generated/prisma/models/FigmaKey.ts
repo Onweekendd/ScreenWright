@@ -587,24 +587,12 @@ export type FigmaKeySumOrderByAggregateInput = {
   failedRequests?: Prisma.SortOrder
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 
@@ -1345,6 +1333,7 @@ export type FigmaKeyCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many FigmaKeys.
    */
   data: Prisma.FigmaKeyCreateManyInput | Prisma.FigmaKeyCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1363,6 +1352,7 @@ export type FigmaKeyCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many FigmaKeys.
    */
   data: Prisma.FigmaKeyCreateManyInput | Prisma.FigmaKeyCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

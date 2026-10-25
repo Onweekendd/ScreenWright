@@ -7,7 +7,7 @@ import { z } from "zod";
  * 均引用此枚举，避免裸字符串漂移。
  */
 export enum SuspendType {
-  /** 通用审批：弹确认框，后端按 approved 自行处理后续（edit_files、createEventTemplate） */
+  /** 通用审批：弹确认框，后端按 approved 自行处理后续（edit_files 普通文件在 ASK 模式下那一轮纯审批） */
   AskApproval = "ask_approval",
   /** 向用户提出结构化多选题，等待回答后继续执行 */
   AskUserQuestion = "ask_user_question",
@@ -15,102 +15,135 @@ export enum SuspendType {
   EnterPlanMode = "enter_plan_mode",
   /** 提交计划，等待用户选择执行策略（auto_edit / ask_before_edit / keep_plan / reject） */
   SubmitPlan = "submit_plan",
-  /** AUTO 模式：直接将后端推送的组件增量合并到前端 */
-  PushComponentUpdate = "push_component_update",
-  /** ASK 模式：审批通过后再推送组件更新 */
-  AskApprovalPushComponentUpdate = "ask_approval_push_component_update",
-  /** AUTO 模式：直接创建组件 */
-  CreateComponent = "create_component",
-  /** ASK 模式：审批通过后创建组件 */
-  AskApprovalCreateComponent = "ask_approval_create_component",
-  /** AUTO 模式：直接删除组件 */
-  DeleteComponent = "delete_component",
-  /** ASK 模式：审批通过后删除组件 */
-  AskApprovalDeleteComponent = "ask_approval_delete_component",
-  /** AUTO 模式：从已有配置复制创建组件 */
-  CopyComponent = "copy_component",
-  /** ASK 模式：审批通过后从已有配置复制创建组件 */
-  AskApprovalCopyComponent = "ask_approval_copy_component",
-  /** AUTO 模式：直接保存过滤器 */
-  SaveFilter = "save_filter",
-  /** ASK 模式：审批通过后保存过滤器 */
-  AskApprovalSaveFilter = "ask_approval_save_filter",
-  /** AUTO 模式：直接删除过滤器 */
-  DeleteFilter = "delete_filter",
-  /** ASK 模式：审批通过后删除过滤器 */
-  AskApprovalDeleteFilter = "ask_approval_delete_filter",
   /** AUTO 模式：直接在浏览器执行脚本 */
   ExecuteInBrowser = "execute_in_browser",
   /** ASK 模式：审批通过后在浏览器执行脚本 */
   AskApprovalExecuteInBrowser = "ask_approval_execute_in_browser",
-  /** AUTO 模式：直接更新大屏配置并持久化 */
-  UpdateScreenInfo = "update_screen_info",
-  /** ASK 模式：审批通过后更新大屏配置 */
-  AskApprovalUpdateScreenInfo = "ask_approval_update_screen_info",
+  /** 截取当前编辑器画布，上传后回传图片 URL（只读，任何模式都不审批） */
+  CaptureCanvas = "capture_canvas",
   /** 模板提取后：把解析出的模板字段交前端预填弹窗，由用户确认/修改后保存为 AI 模板 */
   SaveAiTemplate = "save_ai_template",
   /** 模板检索后：把候选模板 id 列表交前端弹窗（封面+适用场景），由用户选择并应用到当前大屏 */
   ApplyAiTemplate = "apply_ai_template",
-  /** AUTO 模式：直接把已有组件组合成一个新分组 */
-  GroupComponent = "group_component",
-  /** ASK 模式：审批通过后把已有组件组合成一个新分组 */
-  AskApprovalGroupComponent = "ask_approval_group_component",
-  /** AUTO 模式：直接解散分组，子组件提升到上一级 */
-  UngroupComponent = "ungroup_component",
-  /** ASK 模式：审批通过后解散分组 */
-  AskApprovalUngroupComponent = "ask_approval_ungroup_component",
-  /** AUTO 模式：直接把组件移动到另一个容器（分组/动态面板状态/根级） */
-  MoveComponent = "move_component",
-  /** ASK 模式：审批通过后移动组件 */
-  AskApprovalMoveComponent = "ask_approval_move_component",
-  /** AUTO 模式：直接给动态面板新增一个状态 */
-  AddPanelState = "add_panel_state",
-  /** ASK 模式：审批通过后给动态面板新增一个状态 */
-  AskApprovalAddPanelState = "ask_approval_add_panel_state"
+  /**
+   * 画布写操作的统一挂起：一批 `ops` 交前端依次执行，回执按下标一一对应。
+   * 审批只在一处判断（可选的 `approval`），不再一种操作两个类型。
+   */
+  CanvasOps = "canvas_ops"
 }
 
 export const SuspendTypeSchema = z.enum(SuspendType);
 
-const placementSchema = z
-  .object({
-    parentId: z.number(),
-    parentType: z.enum(["group", "dynamicPanel"]),
-    stateId: z.string().optional()
+/** 画布写操作里「挂到某个容器下」的目标：分组，或动态面板的某个状态 */
+const containerTargetSchema = z.object({
+  parentId: z.number(),
+  parentType: z.enum(["group", "dynamicPanel"]),
+  stateId: z.string().optional()
+});
+
+/** 新建 / 复制 / 删除时组件所在的容器；不传就是大屏根级 */
+const placementSchema = containerTargetSchema.optional();
+
+/**
+ * `canvas_ops` 能向前端提出的全部画布写操作。
+ *
+ * **组件 id 在协议里一律是 `number`**：后端在组装 ops 时就把 `"5_1/114"` 这类带大屏前缀的入参解析成
+ * 纯数字 id，没解析好编译不过——此前 move_component 把入参原样交给前端、`Number()` 成了 NaN。
+ */
+const CanvasOpSchema = z.discriminatedUnion("op", [
+  z.object({
+    op: z.literal("create_component"),
+    component: z.record(z.string(), z.unknown()).describe("校验过的新组件模板；真实 id 由前端的业务接口分配"),
+    placement: placementSchema
+  }),
+  z.object({
+    op: z.literal("copy_component"),
+    component: z.record(z.string(), z.unknown()).describe("源组件的完整配置（分组 / 动态面板带整棵子树）"),
+    placement: placementSchema
+  }),
+  z.object({
+    op: z.literal("delete_component"),
+    componentId: z.number().describe("待删除的组件 id"),
+    placement: placementSchema
+  }),
+  z.object({
+    op: z.literal("update_component"),
+    component: ComponentSchema.describe("后端过 core 之后那一份组件；前端按 merge 策略合并到画布上的同 id 实例"),
+    capture: z.boolean().optional().describe("更新成功后回传该组件截图，供模型检查编辑效果")
+  }),
+  z.object({
+    op: z.literal("save_filter"),
+    filter: FilterSchema,
+    originalName: z
+      .string()
+      .optional()
+      .describe("编辑前的过滤器名；与 filter.name 不同即为改名，前端需先删旧名再保存，否则新旧并存")
+  }),
+  z.object({ op: z.literal("delete_filter"), filterName: z.string() }),
+  z.object({
+    op: z.literal("update_screen_info"),
+    screenId: z.number(),
+    detail: LargeScreenDetailInfoSchema,
+    minioIds: z.array(z.union([z.number(), z.null()])).optional()
+  }),
+  z.object({
+    op: z.literal("group_components"),
+    componentIds: z.array(z.number()).min(2).describe("要组合成一个分组的组件 id（需当前处于同一父级下）")
+  }),
+  z.object({
+    op: z.literal("ungroup"),
+    groupIds: z.array(z.number()).min(1).describe("要解散的分组组件 id")
+  }),
+  z.object({
+    op: z.literal("move_components"),
+    componentIds: z.array(z.number()).min(1).describe("要移动的组件 id"),
+    target: containerTargetSchema.optional().describe("不传表示移动到大屏根级")
+  }),
+  z.object({
+    op: z.literal("add_panel_state"),
+    panelId: z.number().describe("动态面板组件 id"),
+    stateName: z.string().describe("新状态的名称")
   })
-  .optional();
+]);
+
+export type CanvasOp = z.infer<typeof CanvasOpSchema>;
+
+/** capture_canvas 与组件编辑回执共用同一份截图协议。截图失败不代表编辑失败。 */
+export const CanvasCaptureResultSchema = z.object({
+  ok: z.boolean(),
+  url: z.string().optional().describe("截图上传后的访问 URL"),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  region: z.object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() }).optional(),
+  scale: z.number().optional().describe("每 1 设计稿像素对应的图片像素数"),
+  gridStep: z.number().optional(),
+  snapped: z.object({ left: z.boolean(), top: z.boolean(), right: z.boolean(), bottom: z.boolean() }).optional(),
+  missingIds: z.array(z.number()).optional(),
+  error: z.string().optional()
+});
 
 /**
- * 前端建好并回传的组件（新建 / 复制 / 新分组容器共用）。
+ * 单个画布操作的回执。成功时带上**只有前端拿得到的产物**：
+ * - `component`：前端建好的组件（含业务接口分配的真实 id）。真实 id 只有业务接口能分配，实例还要套组件菜单的
+ *   默认值、跑一遍位置尺寸分配，落在画布上的那份跟后端发过去的不是同一个东西——后端拿着这一份过 core
+ *   放进树、整屏落盘，路径由后端从自己的树推，工作区因此只有一个写入者；
+ * - `state`：前端建好的动态面板状态。状态 id 是本地 uuid、后端自己也造得出来，但**画布上已经用这个 id 建好了**，
+ *   后端再造一个就跟画布对不上。
  *
- * 回的是**整个组件**而不是一个 id 或 filePath：真实 id 只有业务接口能分配，实例还要套组件菜单的
- * 默认值、跑一遍位置尺寸分配，落在画布上的那份跟后端发过去的 template 不是同一个东西。后端拿着
- * 这一份过 core 放进树、整屏落盘，路径由后端从自己的树推——工作区因此只有一个写入者，
- * 前端不必再 syncWorkspace，也不会出现「resume 回来了但文件还在 debounce 里没写」的竞态。
+ * 不产生新 id 的操作（移动 / 解组）只回 `{ ok: true }`：摘挂与包围盒重算两边跑的是 core 里同一个函数，
+ * 新路径由后端改完自己的树再扫盘推，不由前端拼。
  */
-const componentCreatedFromFrontend = z
-  .record(z.string(), z.unknown())
-  .optional()
-  .describe("前端建好的组件（含业务接口分配的真实 id）；后端据此过 core 放进树并整屏回写");
+const OpResultSchema = z.union([
+  z.object({
+    ok: z.literal(true),
+    component: z.record(z.string(), z.unknown()).optional(),
+    state: z.record(z.string(), z.unknown()).optional(),
+    screenshot: CanvasCaptureResultSchema.optional()
+  }),
+  z.object({ ok: z.literal(false), error: z.string() })
+]);
 
-/**
- * 不产生新 id 的那类操作（移动 / 解组 / 删除）的回执：**只回一个「干完了」**。
- *
- * 这些操作前端没有任何后端算不出来的东西——没有新 id、没有新实例，摘挂与包围盒重算两边跑的
- * 是 core 里同一个函数。所以路径不由前端拼了：它一手写就得跟落盘侧的文件名净化规则逐字对齐，
- * 对不上也不报错，只是 agent 拿到一个不存在的路径。后端改完自己的树，扫盘推真实路径。
- */
-const frontendApplied = (label: string) => z.boolean().optional().describe(`前端已${label}；后端据此过 core 落盘`);
-
-/**
- * 前端建好并回传的动态面板状态。
- *
- * 与组件不同，状态 id 是本地 uuid、不经业务接口，后端自己也造得出来——但**画布上已经用这个 id
- * 建好了**，后端再造一个就跟画布对不上。前后端造状态跑的是 core 里同一个 createPanelState。
- */
-const panelStateCreatedFromFrontend = z
-  .record(z.string(), z.unknown())
-  .optional()
-  .describe("前端建好的状态（含它在画布上用的 id）；后端据此过 core 追加进 panelData 并整屏回写");
+export type OpResult = z.infer<typeof OpResultSchema>;
 
 /** edit_files 批次中的单项标识。普通单文件工具调用不传，保持既有协议兼容。 */
 const batchOperationFields = {
@@ -183,176 +216,6 @@ export const SuspendDefs = {
     })
   },
 
-  [SuspendType.PushComponentUpdate]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.PushComponentUpdate),
-      component: ComponentSchema,
-      replacements: z.number(),
-      ...batchOperationFields
-    }),
-    resume: z.object({
-      componentUpdated: z.boolean(),
-      replacements: z.number().optional(),
-      error: z.string().optional(),
-      ...batchOperationFields
-    })
-  },
-  [SuspendType.AskApprovalPushComponentUpdate]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalPushComponentUpdate),
-      purpose: z.string(),
-      component: ComponentSchema,
-      replacements: z.number(),
-      ...batchOperationFields
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false), ...batchOperationFields }),
-      z.object({
-        componentUpdated: z.boolean(),
-        replacements: z.number().optional(),
-        error: z.string().optional(),
-        ...batchOperationFields
-      })
-    ])
-  },
-
-  [SuspendType.CreateComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.CreateComponent),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalCreateComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalCreateComponent),
-      purpose: z.string(),
-      /** 组件创建后才由前端分配真实路径，创建请求本身无路径可带；保留为可选仅为兼容既有 payload */
-      filePath: z.string().optional(),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
-  },
-
-  [SuspendType.DeleteComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.DeleteComponent),
-      componentId: z.string(),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准删除操作"),
-      componentId: z.number().optional().describe("前端为新组件分配的真实 ID"),
-      error: z.string().optional().describe("前端删除组件失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalDeleteComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalDeleteComponent),
-      purpose: z.string(),
-      componentId: z.string(),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准删除操作"),
-      componentId: z.number().optional().describe("前端为新组件分配的真实 ID"),
-      error: z.string().optional().describe("前端删除组件失败时的错误信息")
-    })
-  },
-
-  [SuspendType.CopyComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.CopyComponent),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalCopyComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalCopyComponent),
-      purpose: z.string(),
-      component: z.record(z.string(), z.unknown()),
-      placement: placementSchema
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准复制操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端创建组件失败时的错误信息")
-    })
-  },
-
-  [SuspendType.SaveFilter]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.SaveFilter),
-      filterName: z.string(),
-      originalName: z
-        .string()
-        .optional()
-        .describe("编辑前的过滤器名；与 filterName 不同即为改名，前端需先删旧名再保存，否则新旧并存"),
-      filter: FilterSchema,
-      replacements: z.number().optional(),
-      ...batchOperationFields
-    }),
-    resume: z.object({
-      filterSaved: z.boolean(),
-      replacements: z.number().optional(),
-      error: z.string().optional(),
-      ...batchOperationFields
-    })
-  },
-  [SuspendType.AskApprovalSaveFilter]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalSaveFilter),
-      purpose: z.string(),
-      filterName: z.string(),
-      originalName: z
-        .string()
-        .optional()
-        .describe("编辑前的过滤器名；与 filterName 不同即为改名，前端需先删旧名再保存，否则新旧并存"),
-      filter: FilterSchema,
-      replacements: z.number().optional(),
-      ...batchOperationFields
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false), ...batchOperationFields }),
-      z.object({
-        filterSaved: z.boolean(),
-        replacements: z.number().optional(),
-        error: z.string().optional(),
-        ...batchOperationFields
-      })
-    ])
-  },
-  [SuspendType.DeleteFilter]: {
-    suspend: z.object({ type: z.literal(SuspendType.DeleteFilter), filterName: z.string() }),
-    resume: z.object({ filterDeleted: z.boolean(), error: z.string().optional() })
-  },
-  [SuspendType.AskApprovalDeleteFilter]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalDeleteFilter),
-      purpose: z.string(),
-      filterName: z.string()
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false) }),
-      z.object({ filterDeleted: z.boolean(), error: z.string().optional() })
-    ])
-  },
-
   [SuspendType.ExecuteInBrowser]: {
     suspend: z.object({ type: z.literal(SuspendType.ExecuteInBrowser), script: z.string() }),
     resume: z.object({ ok: z.boolean(), result: z.string().optional(), error: z.string().optional() })
@@ -369,41 +232,21 @@ export const SuspendDefs = {
     ])
   },
 
-  [SuspendType.UpdateScreenInfo]: {
+  [SuspendType.CaptureCanvas]: {
     suspend: z.object({
-      type: z.literal(SuspendType.UpdateScreenInfo),
-      screenId: z.number(),
-      detail: LargeScreenDetailInfoSchema,
-      minioIds: z.array(z.union([z.number(), z.null()])).optional(),
-      replacements: z.number(),
-      ...batchOperationFields
+      type: z.literal(SuspendType.CaptureCanvas),
+      componentIds: z.array(z.number()).optional().describe("只截这些组件的并集外框；不传截整个画布"),
+      region: z
+        .object({ x: z.number(), y: z.number(), width: z.number().positive(), height: z.number().positive() })
+        .optional()
+        .describe(
+          "只截画布上的这块矩形（设计稿像素，原点在画布左上角）；与 componentIds 二选一，超出画布的部分会被裁掉"
+        ),
+      grid: z.boolean().optional().describe("在截图上叠一层标了画布坐标的网格"),
+      gridStep: z.number().positive().optional().describe("网格间距（设计稿像素），不传自动"),
+      snap: z.boolean().optional().describe("只对 region 生效：四条边吸附到附近的边框线上")
     }),
-    resume: z.object({
-      screenInfoUpdated: z.boolean(),
-      replacements: z.number().optional(),
-      error: z.string().optional(),
-      ...batchOperationFields
-    })
-  },
-  [SuspendType.AskApprovalUpdateScreenInfo]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalUpdateScreenInfo),
-      purpose: z.string(),
-      screenId: z.number(),
-      detail: LargeScreenDetailInfoSchema,
-      minioIds: z.array(z.union([z.number(), z.null()])).optional(),
-      replacements: z.number(),
-      ...batchOperationFields
-    }),
-    resume: z.union([
-      z.object({ approved: z.literal(false), ...batchOperationFields }),
-      z.object({
-        screenInfoUpdated: z.boolean(),
-        replacements: z.number().optional(),
-        error: z.string().optional(),
-        ...batchOperationFields
-      })
-    ])
+    resume: CanvasCaptureResultSchema
   },
 
   [SuspendType.SaveAiTemplate]: {
@@ -442,118 +285,23 @@ export const SuspendDefs = {
     })
   },
 
-  [SuspendType.GroupComponent]: {
+  [SuspendType.CanvasOps]: {
     suspend: z.object({
-      type: z.literal(SuspendType.GroupComponent),
-      componentIds: z.array(z.string()).min(2).describe("要组合成一个分组的组件 id 数组（需当前处于同一父级下）")
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准组合操作"),
-      /** 分组容器和普通组件一样要业务接口分配真实 id，所以只能由前端建好回传 */
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端组合失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalGroupComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalGroupComponent),
-      purpose: z.string(),
-      componentIds: z.array(z.string()).min(2)
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准组合操作"),
-      component: componentCreatedFromFrontend,
-      error: z.string().optional().describe("前端组合失败时的错误信息")
-    })
-  },
-
-  [SuspendType.UngroupComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.UngroupComponent),
-      groupIds: z.array(z.string()).min(1).describe("要解散的分组组件 id 数组")
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准解散操作"),
-      ungrouped: frontendApplied("解散分组"),
-      error: z.string().optional().describe("前端解散失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalUngroupComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalUngroupComponent),
-      purpose: z.string(),
-      groupIds: z.array(z.string()).min(1)
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准解散操作"),
-      ungrouped: frontendApplied("解散分组"),
-      error: z.string().optional().describe("前端解散失败时的错误信息")
-    })
-  },
-
-  [SuspendType.MoveComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.MoveComponent),
-      componentIds: z.array(z.string()).min(1).describe("要移动的组件 id 数组"),
-      target: z
-        .object({
-          parentId: z.number(),
-          parentType: z.enum(["group", "dynamicPanel"]),
-          stateId: z.string().optional()
-        })
+      type: z.literal(SuspendType.CanvasOps),
+      approval: z
+        .object({ purpose: z.string() })
         .optional()
-        .describe("不传表示移动到大屏根级")
+        .describe("有它：前端先弹一次确认，整批一次；没有就直接执行"),
+      ops: z.array(CanvasOpSchema).min(1).describe("按顺序执行的画布操作；回执 results[i] 对应 ops[i]"),
+      ...batchOperationFields
     }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准移动操作"),
-      moved: frontendApplied("移动组件"),
-      error: z.string().optional().describe("前端移动失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalMoveComponent]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalMoveComponent),
-      purpose: z.string(),
-      componentIds: z.array(z.string()).min(1),
-      target: z
-        .object({
-          parentId: z.number(),
-          parentType: z.enum(["group", "dynamicPanel"]),
-          stateId: z.string().optional()
-        })
-        .optional()
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准移动操作"),
-      moved: frontendApplied("移动组件"),
-      error: z.string().optional().describe("前端移动失败时的错误信息")
-    })
-  },
-
-  [SuspendType.AddPanelState]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AddPanelState),
-      panelId: z.string().describe("动态面板组件 id"),
-      stateName: z.string().describe("新状态的名称")
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准新增状态操作"),
-      state: panelStateCreatedFromFrontend,
-      error: z.string().optional().describe("前端新增状态失败时的错误信息")
-    })
-  },
-  [SuspendType.AskApprovalAddPanelState]: {
-    suspend: z.object({
-      type: z.literal(SuspendType.AskApprovalAddPanelState),
-      purpose: z.string(),
-      panelId: z.string(),
-      stateName: z.string()
-    }),
-    resume: z.object({
-      approved: z.boolean().optional().describe("用户是否批准新增状态操作"),
-      state: panelStateCreatedFromFrontend,
-      error: z.string().optional().describe("前端新增状态失败时的错误信息")
-    })
+    resume: z.union([
+      z.object({ approved: z.literal(false), ...batchOperationFields }),
+      z.object({
+        results: z.array(OpResultSchema).describe("与 ops 等长，按下标一一对应；单项失败只记在自己那一项"),
+        ...batchOperationFields
+      })
+    ])
   }
 } as const;
 

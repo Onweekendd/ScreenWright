@@ -13,7 +13,7 @@ export interface CompOpts {
   top?: number;
   width?: number;
   height?: number;
-  zIndex?: number;
+  zIndex?: string;
   option?: Record<string, unknown>;
   unitPavenType?: string;
   children?: ComponentType[];
@@ -34,7 +34,7 @@ export const comp = (o: CompOpts): ComponentType => {
     top = 0,
     width = 100,
     height = 100,
-    zIndex = 0,
+    zIndex = "a0",
     ...rest
   } = o;
   return {

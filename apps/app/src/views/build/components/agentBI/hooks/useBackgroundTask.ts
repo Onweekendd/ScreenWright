@@ -19,6 +19,28 @@ interface BgSplitContext {
   activeThreadId?: Ref<string | undefined>;
 }
 
+/** 这些后台工具的结果直接展示在原工具卡片中，不走子 agent 消息流。 */
+const MEDIA_ASSET_TOOLS = new Set(["searchMediaAssetsTool", "importMediaAssetsTool"]);
+
+interface BackgroundTaskResultData {
+  toolCallId: string;
+  toolName: string;
+  result?: unknown;
+  isError?: boolean;
+  error?: { message?: string } | string;
+}
+
+const parseTaskResult = (result: unknown): unknown => {
+  if (typeof result !== "string") {
+    return result;
+  }
+  try {
+    return JSON.parse(result);
+  } catch {
+    return result;
+  }
+};
+
 /** 后台任务运行状态 */
 type BackgroundTaskStatus = "running" | "completed" | "failed";
 
@@ -269,6 +291,30 @@ function useBackgroundTask(sessionId: string) {
 
           if (chunk.type === "data-background-task-failed" || chunk.type === "data-background-task-cancelled") {
             onBackgroundTaskFinalized(chunk, "failed");
+          }
+
+          // 普通后台工具没有子 agent 输出；把终态结果转成主流工具回执，替换「任务已启动」占位。
+          const data = (chunk as { data: BackgroundTaskResultData }).data;
+          if (MEDIA_ASSET_TOOLS.has(data.toolName)) {
+            if (chunk.type === "data-background-task-completed" && !data.isError && data.result !== undefined) {
+              controller.enqueue({
+                type: "tool-output-available",
+                toolCallId: data.toolCallId,
+                output: parseTaskResult(data.result)
+              });
+            } else if (
+              chunk.type === "data-background-task-failed" ||
+              chunk.type === "data-background-task-cancelled" ||
+              (chunk.type === "data-background-task-completed" && data.isError)
+            ) {
+              controller.enqueue({
+                type: "tool-output-error",
+                toolCallId: data.toolCallId,
+                errorText:
+                  (typeof data.error === "string" ? data.error : data.error?.message) ||
+                  (typeof data.result === "string" ? data.result : "素材任务未完成，请重试")
+              });
+            }
           }
 
           // 后台任务 chunk 到此已分流给各自子流渲染，主流不再需要它们：直接吞掉、不透传回主流。

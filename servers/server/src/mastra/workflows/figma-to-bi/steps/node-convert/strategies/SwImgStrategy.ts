@@ -1,14 +1,15 @@
+import { legacyNumberToZIndex } from "@screenwright/core";
 import type { MediaEnum } from "@screenwright/types";
 
 import {
   clampLayoutToMergeParent,
   extractLayout,
-  SW_IMG_MODULE_ID,
   getComponentDefaultConfigByModuleId,
   localPathToResourcePath,
   parseBackdropFilter,
   parseBoxShadow,
-  setComponentBaseProps
+  setComponentBaseProps,
+  SW_IMG_MODULE_ID
 } from "@/mastra/tools/utils";
 import type { ComponentType } from "@/mastra/types";
 import type { NormalizedNode } from "@/mastra/types/normalized-node-types";
@@ -133,7 +134,7 @@ export class SwImgStrategy implements ConvertStrategy {
       ...convertedOption,
       url: imageUrl
     };
-    component.zIndex = zIndex ?? depth;
+    component.zIndex = legacyNumberToZIndex(zIndex ?? depth);
 
     return { component, message: "成功转换为 swImg (默认)" };
   }

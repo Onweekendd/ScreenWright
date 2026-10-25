@@ -29,7 +29,8 @@ export function useDrawerResize({
     e.preventDefault();
     isResizing.value = true;
     const startX = e.clientX;
-    const startWidth = ((e.currentTarget as HTMLElement).closest(".el-drawer") as HTMLElement)?.offsetWidth ?? window.innerWidth * 0.3;
+    const startWidth =
+      ((e.currentTarget as HTMLElement).closest(".el-drawer") as HTMLElement)?.offsetWidth ?? window.innerWidth * 0.3;
 
     const onMouseMove = (ev: MouseEvent) => {
       const newWidth = Math.min(window.innerWidth * maxRatio, startWidth + (startX - ev.clientX));

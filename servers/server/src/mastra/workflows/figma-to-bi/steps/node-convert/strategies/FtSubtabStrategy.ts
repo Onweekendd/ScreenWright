@@ -1,4 +1,4 @@
-import { batchByNodeIds } from "@/mastra/services/figma-node-asset.server";
+import { batchByNodeIds } from "@/mastra/services/ai-assets/figma-node-asset.server";
 import {
   extractLayout,
   FT_SUBTABS_MODULE_ID,

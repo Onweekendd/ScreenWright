@@ -27,7 +27,7 @@ class QuotePanel extends SystemBase<{}> {
       listenArgs: [],
       openFilter: false,
       isLock: false,
-      zIndex: 0,
+      zIndex: "a0",
       display: true,
       title: "",
       dataSource: {},

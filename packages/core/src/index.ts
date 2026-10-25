@@ -78,6 +78,20 @@ export {
   setActionExecutor
 } from "./events/eventPorts";
 
+// 无限画布相机（纯视图状态：平移 / 锚点缩放 / 坐标换算 / 可视区）
+export { parseCamera, serializeCamera } from "./viewport/cameraStorage";
+export { expandRect, isRectVisible, rectsIntersect } from "./viewport/culling";
+export {
+  type CameraListener,
+  type CameraState,
+  type FitOptions,
+  type Point,
+  type Rect,
+  type Size,
+  Viewport,
+  type ViewportOptions
+} from "./viewport/Viewport";
+
 // 选择器（组件树纯函数）
 export {
   childLists,
@@ -94,7 +108,29 @@ export {
   type FlatComponentMap,
   transformGroupData
 } from "./selectors/componentTree";
-export { assignComponentAttrs, calculateGroupDimensions, getMaxIndex } from "./selectors/geometry";
+export { assignComponentAttrs, calculateGroupDimensions } from "./selectors/geometry";
+
+// 叠放层级：字符串排序键（fractional indexing，参考 tldraw 的 IndexKey）
+export { generateKeyBetween, generateNKeysBetween } from "./zindex/fractionalIndex";
+export {
+  assignOrderedZIndexes,
+  compareZIndex,
+  getBottomIndex,
+  getIndexAbove,
+  getIndexBelow,
+  getIndexBetween,
+  getIndicesBetween,
+  getTopIndex,
+  INDEX_ZERO,
+  isValidZIndex,
+  legacyNumberToZIndex,
+  maxZIndex,
+  migrateLegacyZIndex,
+  minZIndex,
+  normalizeZIndex,
+  sortByZIndex,
+  type ZIndex
+} from "./zindex/zIndex";
 
 // 选择器（条件检查 / 事件策略）
 export {

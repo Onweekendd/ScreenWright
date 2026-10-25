@@ -8,7 +8,6 @@
 
 **与其他饼图的区别**：
 - 区别于3D饼图（echartthreePie）：本组件为2D标准饼图，3D饼图为立体效果
-- 区别于环形饼图（echartthreeQuartersPie）：本组件为完整圆形，环形饼图为圆环形状
 - 区别于轮播环形饼图（echartloopRingPie）：本组件静态展示，轮播版支持数据循环切换
 - 区别于层叠玫瑰图（echartpluralRosePie）：本组件简单占比，玫瑰图用花瓣长度表示数值
 

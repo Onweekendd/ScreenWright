@@ -20,7 +20,7 @@ import {
   simplifyFigmaNodeData,
   updateById,
   uploadImage
-} from "../services/figma-node-asset.server";
+} from "../services/ai-assets/figma-node-asset.server";
 
 export const figmaNodeAssetRouter = new Hono()
   .post("/upload", zValidator("json", UploadImageRequestSchema), async (c) => {

@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
  * eval 结果页。
  *
  * 数据源是 Screenwright 的 `eval_runs` / `eval_cases`，由 `evals/harness/persist.ts` 在每场 eval 收尾时
- * 写入。点某个 case 的「看对话」跳到 /sessions——那边读的是同一批录制的 llm_exchange_records，
+ * 写入。点某个 case 的「看对话」跳到会话记录首页（/）——那边读的是同一批录制的 llm_exchange_records，
  * 靠 threadId 串起来。
  */
 export default async function EvalsPage({ searchParams }: { searchParams: Promise<{ run?: string }> }) {

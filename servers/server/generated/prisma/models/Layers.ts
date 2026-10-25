@@ -1220,6 +1220,7 @@ export type LayersCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many Layers.
    */
   data: Prisma.LayersCreateManyInput | Prisma.LayersCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1238,6 +1239,7 @@ export type LayersCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Layers.
    */
   data: Prisma.LayersCreateManyInput | Prisma.LayersCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

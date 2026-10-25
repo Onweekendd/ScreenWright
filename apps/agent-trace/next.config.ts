@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname, "../.."),
   turbopack: {
     root: path.join(__dirname, "../..")
+  },
+  // 会话记录已经是首页：保留旧地址的跳转，老书签 / 外部链接（带 ?thread=... 等参数）仍然可用
+  async redirects() {
+    return [{ source: "/sessions", destination: "/", permanent: false }];
   }
 };
 

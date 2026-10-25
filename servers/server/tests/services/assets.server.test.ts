@@ -33,7 +33,7 @@ import {
   pageSystemMaterials,
   uploadFile,
   usedSize
-} from "@/mastra/services/assets.server";
+} from "@/mastra/services/ai-assets/assets.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 const now = new Date("2025-01-01T00:00:00.000Z");

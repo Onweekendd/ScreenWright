@@ -325,9 +325,10 @@ const PROPERTY_GROUP_CONFIG: Record<string, Omit<PropertyGroup, "properties">> =
     name: "显示",
     type: "boolean"
   },
+  // 层级是字符串排序键（越大越靠上），没有数值含义
   zIndex: {
     name: "层级",
-    type: "number"
+    type: "string"
   },
   // 图片组
   image: {

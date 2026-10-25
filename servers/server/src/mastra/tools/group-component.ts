@@ -6,10 +6,10 @@ import type { ComponentType } from "@screenwright/types";
 import { z } from "zod";
 
 import { applyComponentGroup } from "@/mastra/services/bi-data-sync/screen-mutation";
-import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen-workspace";
+import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen/screen-workspace";
 
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { ChangeSchema, readCreatedChange } from "./change-report";
 import {
   describeAmbiguity,
@@ -42,12 +42,9 @@ export const groupComponentTool = createTool({
       )
   }),
 
-  suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.AskApprovalGroupComponent].suspend,
-    SuspendDefs[SuspendType.GroupComponent].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: SuspendDefs[SuspendType.AskApprovalGroupComponent].resume,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   outputSchema: z.object({
     success: z.boolean(),
@@ -57,17 +54,17 @@ export const groupComponentTool = createTool({
   }),
 
   execute: async ({ componentIds }, context) => {
-    const { suspend, resumeData } = context?.agent ?? {};
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
 
-    // ── 恢复阶段：用户拒绝 ────────────────────────────────────────────
-    if (resumeData?.approved === false) {
+    // ── 恢复阶段：用户拒绝 / 回执不合法 / 前端返回错误 ───────────────────
+    if (reply.status === "rejected") {
       return { success: false, message: "用户取消了分组操作" };
     }
-
-    // ── 恢复阶段：前端已分组或返回错误 ──────────────────────────────────
-    if (resumeData?.error) {
-      return { success: false, message: `前端分组失败: ${resumeData.error}` };
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
+    }
+    if (reply.status === "done" && !reply.results[0].ok) {
+      return { success: false, message: `前端分组失败: ${reply.results[0].error}` };
     }
 
     // ── 首次执行 / 恢复阶段共用：定位每个组件文件，校验同处一个父级 ────────
@@ -78,7 +75,7 @@ export const groupComponentTool = createTool({
     let screenKey: string | null = null;
 
     // 交给 core 与前端的都是**裸 id**：前端在当前打开的那块屏的内存树上操作，屏前缀对它没有意义
-    const bareIds: string[] = [];
+    const numericIds: number[] = [];
 
     for (const ref of componentIds) {
       const found = await findComponentFileInWorkspace(workspaceBase, ref);
@@ -90,8 +87,13 @@ export const groupComponentTool = createTool({
       }
       placements.push(parsePlacementFromPath(found.file));
       screenKey ??= getScreenVersionKeyFromPath(found.file);
-      bareIds.push(String(extractIdFromIdName(found.base)));
+      const numericId = extractIdFromIdName(found.base);
+      if (numericId === null) {
+        return { success: false, message: `组件 id 不合法: ${ref}` };
+      }
+      numericIds.push(numericId);
     }
+    const bareIds = numericIds.map(String);
 
     const first = placements[0];
     const allSame = placements.every((p) => JSON.stringify(p) === JSON.stringify(first));
@@ -105,12 +107,16 @@ export const groupComponentTool = createTool({
     // ── 恢复阶段：前端建好了分组容器，这时才由后端过 core 落盘 ──────────────
     // 分组容器和普通组件一样要业务接口分配真实 id，所以只能前端建；成员的摘挂、parent 记账、
     // 包围盒重算跑的是 core 里同一个 group，路径由后端改完自己的树再扫盘推。
-    if (resumeData?.component) {
+    if (reply.status === "done") {
+      const component = reply.results[0].ok ? reply.results[0].component : undefined;
+      if (!component) {
+        return { success: false, message: "前端没有回传新建的分组，未写入工作区" };
+      }
       if (!screenKey) {
         return { success: false, message: `分组已在前端创建，但无法确定它属于哪个大屏: ${componentIds[0]}` };
       }
 
-      const validation = validateComponentContent(JSON.stringify(resumeData.component));
+      const validation = validateComponentContent(JSON.stringify(component));
       if (!validation.ok) {
         return {
           success: false,
@@ -122,7 +128,7 @@ export const groupComponentTool = createTool({
         // 用原始对象而不是 validation.data：zod 会补默认值并重排 key，那些值会一路写进工作区
         const created = await applyComponentGroup(
           screenKey,
-          resumeData.component as unknown as ComponentType,
+          component as unknown as ComponentType,
           bareIds,
           (first ?? undefined) as ComponentPlacement | undefined
         );
@@ -144,20 +150,9 @@ export const groupComponentTool = createTool({
       }
     }
 
-    if (!suspend) {
-      return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
-    }
-
-    // ── ASK_BEFORE_EDIT：先弹审批框，用户接受后再交前端分组 ──────────────
-    if (mode === AgentMode.ASK_BEFORE_EDIT) {
-      return suspend({
-        type: SuspendType.AskApprovalGroupComponent,
-        purpose: "组合选中的组件为一个分组",
-        componentIds: bareIds
-      }) as never;
-    }
-
-    // 自动模式：直接 suspend 交给前端分组
-    return suspend({ type: SuspendType.GroupComponent, componentIds: bareIds }) as never;
+    return suspendCanvasOps(context, {
+      purpose: "组合选中的组件为一个分组",
+      ops: [{ op: "group_components", componentIds: numericIds }]
+    });
   }
 });

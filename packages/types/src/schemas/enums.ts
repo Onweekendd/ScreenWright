@@ -14,7 +14,6 @@ import {
   otherEchartEnum,
   PanelEnum,
   pieEchartEnum,
-  projectEchartEnum,
   ringEchartEnum,
   scatterEchartEnum,
   textEnum,
@@ -31,7 +30,6 @@ export const BarEchartEnumSchema = z.enum(Object.values(BarEchartEnum));
 export const lineEchartEnumSchema = z.enum(Object.values(lineEchartEnum));
 export const otherEchartEnumSchema = z.enum(Object.values(otherEchartEnum));
 export const pieEchartEnumSchema = z.enum(Object.values(pieEchartEnum));
-export const projectEchartEnumSchema = z.enum(Object.values(projectEchartEnum));
 export const ringEchartEnumSchema = z.enum(Object.values(ringEchartEnum));
 export const scatterEchartEnumSchema = z.enum(Object.values(scatterEchartEnum));
 export const indicatorEchartEnumSchema = z.enum(Object.values(indicatorEchartEnum));
@@ -72,7 +70,6 @@ export const allComponentTypeSchema = z.union([
   lineEchartEnumSchema,
   otherEchartEnumSchema,
   pieEchartEnumSchema,
-  projectEchartEnumSchema,
   ringEchartEnumSchema,
   scatterEchartEnumSchema,
   indicatorEchartEnumSchema,

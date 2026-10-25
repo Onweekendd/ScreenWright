@@ -36,8 +36,6 @@ export {
   PanelEnum,
   PieEchartEnum,
   pieEchartEnum,
-  ProjectEchartEnum,
-  projectEchartEnum,
   RingEchartEnum,
   ringEchartEnum,
   ScatterEchartEnum,
@@ -65,7 +63,6 @@ export type {
   otherEchartType,
   PanelType,
   pieEchartType,
-  projectEchartType,
   ringEchartType,
   scatterEchartType,
   sceneEnumType,
@@ -125,11 +122,9 @@ export type {
   Scale,
   SceneChildComponent,
   SceneObject,
-  TcpudpConfig,
   TempPool,
   timingFunctionType,
-  Translate,
-  Ue4Config
+  Translate
 } from "./action";
 export {
   Action2ComponentType,
@@ -140,11 +135,8 @@ export {
   ConditionCompareEnum,
   ConditionLogicTypeEnum,
   ConditionTypeEnum,
-  MessageTypeEnum,
   ParameterTypeEnum,
   SceneObjectExplosionType,
-  tcpudpDataTypeEnum,
-  UDPSendtypeEnum,
   VisibleTypeEnum
 } from "./action";
 

@@ -20,6 +20,8 @@ export enum MediaEnum {
   SwOpenVideo = "sw-open-video",
   /** 图片边框 */
   SwImgBorder = "swimgBorder",
+  /** 矩形 */
+  SwBox = "swBox",
   /** 轮播图 */
   SwSwiper = "swswiper",
   /** 轮播图V3 */

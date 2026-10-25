@@ -34,9 +34,28 @@ const run = (
   });
 };
 
+/** 首次执行：收下工具挂起时发给前端的载荷。mode 不传就是自动模式 */
+const payloadOf = async (
+  tool: { execute?: unknown },
+  input: Record<string, unknown>,
+  mode?: string
+): Promise<Record<string, unknown>> => {
+  const execute = tool.execute as (i: Record<string, unknown>, c: Record<string, unknown>) => Promise<unknown>;
+  let payload: Record<string, unknown> | undefined;
+  await execute(input, {
+    requestContext: { get: (key: string) => (key === "mode" ? mode : undefined) },
+    agent: {
+      suspend: async (p: Record<string, unknown>) => {
+        payload = p;
+      }
+    }
+  });
+  return payload!;
+};
+
 /** 先建好一条真实的过滤器：过 create_data_filter 的 resume 分支，两个文件与组件绑定都是真的 */
 const seedFilter = (name: string, bindComponent: Array<{ label: string; id: number }> = []) =>
-  run(createDataFilterTool, { screenId: SCREEN_ID, name, bindComponent }, { filterSaved: true });
+  run(createDataFilterTool, { screenId: SCREEN_ID, name, bindComponent }, { results: [{ ok: true }] });
 
 /**
  * 「落盘推迟到前端确认之后」。
@@ -67,8 +86,17 @@ describe("前端确认之前不动工作区", () => {
       expect(existsSync(path.join(filterDir, "销售额.js"))).toBe(false);
     });
 
+    it("挂起为 save_filter op；ASK 模式同一个类型带 approval", async () => {
+      const auto = await payloadOf(createDataFilterTool, input);
+      const ask = await payloadOf(createDataFilterTool, input, "ask_before_edit");
+
+      expect(auto).toMatchObject({ type: "canvas_ops", ops: [{ op: "save_filter", filter: { name: "销售额" } }] });
+      expect(auto.approval).toBeUndefined();
+      expect(ask.approval).toEqual({ purpose: "创建数据过滤器" });
+    });
+
     it("前端保存成功后才写出 {name}.json 与 {name}.js，并同步绑定", async () => {
-      const result = await run(createDataFilterTool, input, { filterSaved: true });
+      const result = await run(createDataFilterTool, input, { results: [{ ok: true }] });
 
       expect(result.success).toBe(true);
       expect(existsSync(path.join(filterDir, "销售额.json"))).toBe(true);
@@ -80,7 +108,7 @@ describe("前端确认之前不动工作区", () => {
     });
 
     it("前端保存失败时一个文件都不留", async () => {
-      const result = await run(createDataFilterTool, input, { filterSaved: false, error: "画布上没有这个组件" });
+      const result = await run(createDataFilterTool, input, { results: [{ ok: false, error: "画布上没有这个组件" }] });
 
       expect(result.success).toBe(false);
       expect(result.message).toBe("画布上没有这个组件");
@@ -119,10 +147,21 @@ describe("前端确认之前不动工作区", () => {
       expect(existsSync(path.join(filterDir, "销售额.js"))).toBe(true);
     });
 
+    it("挂起为 delete_filter op；ASK 模式同一个类型带 approval", async () => {
+      await seedFilter("销售额");
+
+      const auto = await payloadOf(deleteFileTool, { path: filterPath() });
+      const ask = await payloadOf(deleteFileTool, { path: filterPath() }, "ask_before_edit");
+
+      expect(auto).toEqual({ type: "canvas_ops", ops: [{ op: "delete_filter", filterName: "销售额" }] });
+      // 确认框里带上过滤器名，用户才知道要删的是哪个
+      expect(ask.approval).toEqual({ purpose: "删除数据过滤器「销售额」" });
+    });
+
     it("前端解绑成功后两个文件才消失，组件上的 listenArgs 也被摘干净", async () => {
       await seedFilter("销售额", [{ label: "条形图", id: 4152 }]);
 
-      const result = await run(deleteFileTool, { path: filterPath() }, { filterDeleted: true });
+      const result = await run(deleteFileTool, { path: filterPath() }, { results: [{ ok: true }] });
 
       expect(result.success).toBe(true);
       expect(existsSync(filterPath())).toBe(false);
@@ -136,7 +175,7 @@ describe("前端确认之前不动工作区", () => {
     it("前端删除失败时文件原样保留", async () => {
       await seedFilter("销售额");
 
-      const result = await run(deleteFileTool, { path: filterPath() }, { filterDeleted: false, error: "解绑失败" });
+      const result = await run(deleteFileTool, { path: filterPath() }, { results: [{ ok: false, error: "解绑失败" }] });
 
       expect(result.success).toBe(false);
       expect(existsSync(filterPath())).toBe(true);
@@ -145,7 +184,7 @@ describe("前端确认之前不动工作区", () => {
     it("用户拒绝时文件原样保留", async () => {
       await seedFilter("销售额");
 
-      const result = await run(deleteFileTool, { path: filterPath() }, { approved: false, filterDeleted: false });
+      const result = await run(deleteFileTool, { path: filterPath() }, { approved: false });
 
       expect(result.success).toBe(false);
       expect(result.message).toContain("用户取消");
@@ -172,7 +211,7 @@ describe("前端确认之前不动工作区", () => {
       const result = await run(
         deleteFileTool,
         { path: path.join(filterDir, "获取18占比.json") },
-        { filterDeleted: true }
+        { results: [{ ok: true }] }
       );
 
       expect(result.success).toBe(true);
@@ -190,8 +229,40 @@ describe("前端确认之前不动工作区", () => {
       expect(existsSync(path.join(screenDir, "component", "4156_分组"))).toBe(true);
     });
 
+    const suspendedPayload = async (mode?: string): Promise<Record<string, unknown>> => {
+      const execute = deleteFileTool.execute as unknown as (
+        i: Record<string, unknown>,
+        c: Record<string, unknown>
+      ) => Promise<unknown>;
+      let payload: Record<string, unknown> | undefined;
+      await execute(
+        { path: componentPath },
+        {
+          requestContext: { get: (key: string) => (key === "mode" ? mode : undefined) },
+          agent: {
+            suspend: async (p: Record<string, unknown>) => {
+              payload = p;
+            }
+          }
+        }
+      );
+      return payload!;
+    };
+
+    it("挂起载荷里的组件 id 是纯数字（路径是 4156_分组.json，不是字符串 id）", async () => {
+      const payload = await suspendedPayload();
+
+      expect(payload).toEqual({ type: "canvas_ops", ops: [{ op: "delete_component", componentId: 4156 }] });
+    });
+
+    it("ASK 模式：审批文案带上组件名，让用户看清删的是谁", async () => {
+      const payload = await suspendedPayload("ask_before_edit");
+
+      expect(payload.approval).toEqual({ purpose: "删除组件「分组」" });
+    });
+
     it("前端删除成功后，组件文件与它整棵子树才消失", async () => {
-      const result = await run(deleteFileTool, { path: componentPath }, { componentId: 4156 });
+      const result = await run(deleteFileTool, { path: componentPath }, { results: [{ ok: true }] });
 
       expect(result.success).toBe(true);
       expect(existsSync(componentPath)).toBe(false);
@@ -200,7 +271,11 @@ describe("前端确认之前不动工作区", () => {
     });
 
     it("前端删除失败时组件原样保留", async () => {
-      const result = await run(deleteFileTool, { path: componentPath }, { error: "组件被锁定" });
+      const result = await run(
+        deleteFileTool,
+        { path: componentPath },
+        { results: [{ ok: false, error: "组件被锁定" }] }
+      );
 
       expect(result.success).toBe(false);
       expect(existsSync(componentPath)).toBe(true);

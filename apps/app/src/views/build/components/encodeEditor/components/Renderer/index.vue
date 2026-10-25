@@ -1,5 +1,5 @@
 <template>
-  <buildEditRule ref="buildEditRuleRef" :edit-width="editConfig.width" :edit-height="editConfig.height">
+  <buildInfiniteCanvas :edit-width="editConfig.width" :edit-height="editConfig.height">
     <div
       id="go-chart-edit-content"
       :style="cEditContent"
@@ -16,16 +16,15 @@
       <!-- 选择框 -->
       <EditSelect />
     </div>
-  </buildEditRule>
+  </buildInfiniteCanvas>
 </template>
 <script setup lang="ts">
-import type { ComponentPublicInstance, PropType } from "vue";
-import { computed, nextTick, ref, watch } from "vue";
-import { onMounted } from "vue";
+import type { PropType } from "vue";
+import { computed, onMounted } from "vue";
 
 import type { LargeScreenDetailInfo } from "@screenwright/types";
 
-import buildEditRule from "@/views/build/components/buildEditRule/index.vue";
+import buildInfiniteCanvas from "@/views/build/components/buildInfiniteCanvas/index.vue";
 import AlignmentLines from "@/views/build/components/buildRender/components/AlignmentLines.vue";
 import EditSelect from "@/views/build/components/buildRender/EditSelect.vue";
 import GridRect from "@/views/build/components/buildRender/GridRect.vue";
@@ -52,16 +51,6 @@ const props = defineProps({
 const isDrag = computed(() => editCanvas.value[EditCanvasTypeEnum.IS_DRAG]);
 const isShowGridRect = computed(() => targetChart.value.selectId.length > 0 && isDrag.value);
 
-const buildEditRuleRef = ref<ComponentPublicInstance<InstanceType<typeof buildEditRule>> | null>(null);
-
-watch([() => props.editConfig.width, () => props.editConfig.height], ([newWidth, newHeight]) => {
-  nextTick(() => {
-    if (buildEditRuleRef.value) {
-      buildEditRuleRef.value.resizeCanvasAndRuler(Number(newWidth), Number(newHeight));
-    }
-  });
-});
-
 /**
  * @description 渲染的组件数据
  * 在面板未初始化完成前为空
@@ -74,19 +63,11 @@ const cEditContent = computed(() => {
   return {
     width: `${Number(props.editConfig.width)}px`,
     height: `${Number(props.editConfig.height)}px`,
-    overflow: "visible",
-    boxShadow: "0 8px 10px rgb(30 30 30 / 12%)",
-    transform: `scale(${props.editConfig.scale})`,
-    flexShrink: 0
+    overflow: "visible"
   };
 });
 
-onMounted(async () => {
+onMounted(() => {
   componentList.value = activeStatus.value?.config ?? [];
-
-  await nextTick();
-  if (buildEditRuleRef.value) {
-    buildEditRuleRef.value.resizeCanvasAndRuler(Number(props.editConfig.width), Number(props.editConfig.height));
-  }
 });
 </script>

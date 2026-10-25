@@ -71,8 +71,8 @@ export interface ComponentAnimationConfig {
   /** @description 字体大小 */
   fontSize?: number;
 
-  /** @description 层级 */
-  zIndex: number;
+  /** @description 层级（字符串排序键；旧数据是数字） */
+  zIndex: string | number;
 
   /** @description 视频 */
   video?: string;

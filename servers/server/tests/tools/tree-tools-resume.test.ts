@@ -46,6 +46,29 @@ const run = (
   });
 };
 
+/** 首次执行：收下工具挂起时发给前端的载荷。mode 不传就是自动模式 */
+const suspendedPayload = async (
+  tool: { execute?: unknown },
+  input: Record<string, unknown>,
+  mode?: string
+): Promise<Record<string, unknown>> => {
+  const execute = tool.execute as (i: Record<string, unknown>, c: Record<string, unknown>) => Promise<unknown>;
+  let payload: Record<string, unknown> | undefined;
+  await execute(input, {
+    requestContext: { get: (key: string) => (key === "mode" ? mode : undefined) },
+    agent: {
+      suspend: async (p: Record<string, unknown>) => {
+        payload = p;
+      }
+    }
+  });
+  return payload!;
+};
+
+/** 前端对 ops 的回执（canvas_ops 的 resume 形状：results 与 ops 按下标对应） */
+const replied = (...results: Array<Record<string, unknown>>) => ({ results });
+const done = (extra: Record<string, unknown> = {}) => ({ ok: true, ...extra });
+
 /** 前端建好的分组容器：真实 id 来自业务接口，children 已装配 */
 const builtGroup = (id: number, memberIds: number[]) => ({
   ...readJson(componentFile("4156_分组.json")),
@@ -53,7 +76,7 @@ const builtGroup = (id: number, memberIds: number[]) => ({
   name: "新分组",
   title: "新分组",
   children: memberIds.map((memberId) => readJson(componentFile(`${memberId}_条形图.json`))),
-  zIndex: 99
+  zIndex: "b2f"
 });
 
 /**
@@ -84,7 +107,7 @@ describe("树操作工具的 resume", () => {
     });
 
     it("前端挪完之后由后端落盘，返回的新路径真实存在", async () => {
-      const result = await run(moveComponentTool, input, { moved: true });
+      const result = await run(moveComponentTool, input, replied(done()));
 
       expect(result.success).toBe(true);
       expect(result.movedComponents).toEqual([
@@ -92,6 +115,41 @@ describe("树操作工具的 resume", () => {
       ]);
       expect(existsSync(componentFile("4156_分组", "4152_条形图.json"))).toBe(true);
       expect(existsSync(componentFile("4152_条形图.json"))).toBe(false);
+    });
+
+    it("入参带大屏前缀（75_1/4152）时，交给前端的是纯数字 id，不是原样的字符串", async () => {
+      const payload = await suspendedPayload(moveComponentTool, {
+        componentIds: [`${SCREEN_ID}/4152`],
+        target: { parentId: `${SCREEN_ID}/${GROUP_ID}` }
+      });
+
+      expect(payload).toEqual({
+        type: "canvas_ops",
+        ops: [{ op: "move_components", componentIds: [4152], target: { parentId: GROUP_ID, parentType: "group" } }]
+      });
+    });
+
+    it("ASK 模式：同一个 canvas_ops 带上 approval，前端先问用户", async () => {
+      const payload = await suspendedPayload(moveComponentTool, input, "ask_before_edit");
+
+      expect(payload.type).toBe("canvas_ops");
+      expect(payload.approval).toEqual({ purpose: "移动选中的组件" });
+    });
+
+    it("前端回执 ok:false 时报前端的错误，不落盘", async () => {
+      const result = await run(moveComponentTool, input, replied({ ok: false, error: "找不到组件 4152" }));
+
+      expect(result.success).toBe(false);
+      expect(result.message).toContain("找不到组件 4152");
+      expect(existsSync(componentFile("4152_条形图.json"))).toBe(true);
+    });
+
+    it("回执数量和发出去的 op 数对不上时拒绝，不落盘", async () => {
+      const result = await run(moveComponentTool, input, replied(done(), done()));
+
+      expect(result.success).toBe(false);
+      expect(result.message).toContain("回执数量");
+      expect(existsSync(componentFile("4152_条形图.json"))).toBe(true);
     });
 
     it("parentType 由磁盘反推：目标是动态面板却没给 stateId 时当场报错", async () => {
@@ -118,8 +176,22 @@ describe("树操作工具的 resume", () => {
       expect(existsSync(componentFile("4152_条形图.json"))).toBe(true);
     });
 
+    it("入参带大屏前缀（75_1/4152）时，交给前端的是纯数字 id", async () => {
+      const payload = await suspendedPayload(groupComponentTool, {
+        componentIds: [`${SCREEN_ID}/4152`, `${SCREEN_ID}/4153`]
+      });
+
+      expect(payload).toEqual({ type: "canvas_ops", ops: [{ op: "group_components", componentIds: [4152, 4153] }] });
+    });
+
+    it("ASK 模式：带 approval", async () => {
+      const payload = await suspendedPayload(groupComponentTool, input, "ask_before_edit");
+
+      expect(payload.approval).toEqual({ purpose: "组合选中的组件为一个分组" });
+    });
+
     it("前端回传分组后由后端落盘，成员被收进分组目录", async () => {
-      const result = await run(groupComponentTool, input, { component: builtGroup(9300, [4152, 4153]) });
+      const result = await run(groupComponentTool, input, replied(done({ component: builtGroup(9300, [4152, 4153]) })));
 
       expect(result.success).toBe(true);
       expect(result.filePath).toBe(`screen_${SCREEN_ID}/component/9300_新分组.json`);
@@ -140,7 +212,11 @@ describe("树操作工具的 resume", () => {
         ]
       };
 
-      const result = await run(groupComponentTool, { componentIds: ["4154", "4155"] }, { component: nested });
+      const result = await run(
+        groupComponentTool,
+        { componentIds: ["4154", "4155"] },
+        replied(done({ component: nested }))
+      );
 
       expect(result.filePath).toBe(`screen_${SCREEN_ID}/component/4156_分组/9302_内层分组.json`);
       expect(existsSync(componentFile("4156_分组", "9302_内层分组", "4154_条形图.json"))).toBe(true);
@@ -155,9 +231,9 @@ describe("树操作工具的 resume", () => {
     });
 
     it("回传的分组结构过不了校验时不落盘", async () => {
-      const broken = { ...builtGroup(9301, [4152]), zIndex: "not-a-number" };
+      const broken = { ...builtGroup(9301, [4152]), zIndex: 5 };
 
-      const result = await run(groupComponentTool, input, { component: broken });
+      const result = await run(groupComponentTool, input, replied(done({ component: broken })));
 
       expect(result.success).toBe(false);
       expect(result.message).toContain("校验");
@@ -175,8 +251,20 @@ describe("树操作工具的 resume", () => {
       expect(existsSync(componentFile("4156_分组.json"))).toBe(true);
     });
 
+    it("入参带大屏前缀（75_1/4156）时，交给前端的是纯数字 id", async () => {
+      const payload = await suspendedPayload(ungroupComponentTool, { groupIds: [`${SCREEN_ID}/${GROUP_ID}`] });
+
+      expect(payload).toEqual({ type: "canvas_ops", ops: [{ op: "ungroup", groupIds: [GROUP_ID] }] });
+    });
+
+    it("ASK 模式：带 approval", async () => {
+      const payload = await suspendedPayload(ungroupComponentTool, input, "ask_before_edit");
+
+      expect(payload.approval).toEqual({ purpose: "解散选中的分组" });
+    });
+
     it("前端解散后由后端落盘，返回子组件提升后的新路径", async () => {
-      const result = await run(ungroupComponentTool, input, { ungrouped: true });
+      const result = await run(ungroupComponentTool, input, replied(done()));
 
       expect(result.success).toBe(true);
       expect(result.movedComponents?.map((item) => item.componentId).sort()).toEqual([4154, 4155]);
@@ -204,8 +292,26 @@ describe("树操作工具的 resume", () => {
       expect(panelStates()).toHaveLength(before);
     });
 
+    it("入参带大屏前缀（75_1/4157）时，交给前端的是纯数字 id", async () => {
+      const payload = await suspendedPayload(addPanelStateTool, {
+        panelId: `${SCREEN_ID}/${PANEL_ID}`,
+        stateName: "状态4"
+      });
+
+      expect(payload).toEqual({
+        type: "canvas_ops",
+        ops: [{ op: "add_panel_state", panelId: PANEL_ID, stateName: "状态4" }]
+      });
+    });
+
+    it("ASK 模式：带 approval", async () => {
+      const payload = await suspendedPayload(addPanelStateTool, input, "ask_before_edit");
+
+      expect(payload.approval).toEqual({ purpose: "给动态面板新增一个状态" });
+    });
+
     it("前端回传状态后由后端落盘，id 用前端那一个", async () => {
-      const result = await run(addPanelStateTool, input, { state: builtState });
+      const result = await run(addPanelStateTool, input, replied(done({ state: builtState })));
 
       expect(result.success).toBe(true);
       expect(result.stateId).toBe("state-from-frontend");
@@ -233,8 +339,20 @@ describe("树操作工具的 resume", () => {
       expect(existsSync(componentFile("4156_分组", "9400_副本.json"))).toBe(false);
     });
 
+    it("挂起载荷：copy_component op 带源组件和目标容器；ASK 模式带 approval", async () => {
+      const auto = await suspendedPayload(copyComponentTool, input);
+      const ask = await suspendedPayload(copyComponentTool, input, "ask_before_edit");
+
+      expect(auto).toMatchObject({
+        type: "canvas_ops",
+        ops: [{ op: "copy_component", component: { id: 4152 }, placement: { parentId: GROUP_ID, parentType: "group" } }]
+      });
+      expect(auto.approval).toBeUndefined();
+      expect(ask.approval).toEqual({ purpose: "复制组件到前端" });
+    });
+
     it("前端回传副本后由后端落盘，落在 to 指定的容器里", async () => {
-      const result = await run(copyComponentTool, input, { component: builtCopy() });
+      const result = await run(copyComponentTool, input, replied(done({ component: builtCopy() })));
 
       expect(result.success).toBe(true);
       expect(result.filePath).toBe(`screen_${SCREEN_ID}/component/4156_分组/9400_副本.json`);
@@ -259,7 +377,7 @@ describe("树操作工具的 resume", () => {
       const result = await run(
         copyComponentTool,
         { from: input.from, to: `screen_${SCREEN_ID}/component/` },
-        { component: copiedGroup }
+        replied(done({ component: copiedGroup }))
       );
 
       expect(result.success).toBe(true);
@@ -268,7 +386,7 @@ describe("树操作工具的 resume", () => {
     });
 
     it("回传的副本过不了校验时不落盘", async () => {
-      const result = await run(copyComponentTool, input, { component: { ...builtCopy(), zIndex: "not-a-number" } });
+      const result = await run(copyComponentTool, input, replied(done({ component: { ...builtCopy(), zIndex: 5 } })));
 
       expect(result.success).toBe(false);
       expect(existsSync(componentFile("4156_分组", "9400_副本.json"))).toBe(false);

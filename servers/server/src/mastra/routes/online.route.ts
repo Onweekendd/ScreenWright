@@ -2,9 +2,9 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
 
-import { copyFile, updateFile, uploadFile, usedSize } from "@/mastra/services/assets.server";
-import { createScreen, openCheck, openScreen } from "@/mastra/services/large-screen.server";
-import { saveLayer } from "@/mastra/services/layers.server";
+import { copyFile, updateFile, uploadFile, usedSize } from "@/mastra/services/ai-assets/assets.server";
+import { createScreen, openCheck, openScreen } from "@/mastra/services/screen/large-screen.server";
+import { saveLayer } from "@/mastra/services/screen/layers.server";
 import { ScreenSaveSchema } from "@/mastra/types/large-screen";
 import type { AuthVariables } from "@/middleware/auth";
 import { authMiddleware } from "@/middleware/auth";

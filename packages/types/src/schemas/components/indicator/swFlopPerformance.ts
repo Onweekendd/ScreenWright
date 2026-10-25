@@ -91,7 +91,70 @@ export const swFlopPerformanceOptionSchema = z.object({
   // ============ 自增配置 ============
   autoIncrement: z.boolean().describe("是否启用自动递增"),
   incrementFrequency: z.number().describe("递增频率"),
-  randomRange: z.number().describe("随机波动范围")
+  randomRange: z.number().describe("随机波动范围"),
+
+  // ============ 渐变色开关（渲染代码实际读取，此前 schema 缺失） ============
+  setFontLinear: z.boolean().optional().describe("是否启用数字渐变色，不开启则 fontLinearColor 不生效"),
+  suffixSetFontLinear: z.boolean().optional().describe("是否启用后缀渐变色，不开启则 suffixFontLinearColor 不生效"),
+  suffixFontLinearColor: z.string().optional().describe("后缀渐变颜色"),
+
+  // ============ 整页翻牌 / 阴影 / 间距 / 延迟加载（渲染代码实际读取，此前 schema 缺失） ============
+  duration: z.number().optional().describe("整页翻牌（whole=true）时的动画时长"),
+  shadowShow: z.boolean().optional().describe("是否显示阴影，不开启则 shadowColor 等字段不生效"),
+  shadowColor: z.string().optional().describe("阴影颜色"),
+  shadowX: z.number().optional().describe("阴影水平偏移"),
+  shadowY: z.number().optional().describe("阴影垂直偏移"),
+  shadowFuzzy: z.number().optional().describe("阴影模糊度"),
+  padding: z.number().optional().describe("内边距"),
+  delayLoading: z.boolean().optional().describe("是否启用延迟加载，不开启则 delayTime 不生效"),
+  delayTime: z.number().optional().describe("延迟加载秒数")
 });
 
 export type ftFlopPerformanceOption = z.infer<typeof swFlopPerformanceOptionSchema>;
+
+/**
+ * 开关字段联动检查——不揉进 `swFlopPerformanceOptionSchema` 本体，只在运行时校验入口（见
+ * `componentSuperRefineMap`）挂上，避免真实历史数据（比如只填了 fontLinearColor、
+ * setFontLinear 干脆没这个键的旧组件）被当成"类型不对"而拖累 schema 一致性测试。
+ *
+ * 每条规则对应 useSwFlop.ts 里"值存在但对应开关未开，视觉上不生效"的情况：
+ * fontLinearColor / setFontLinear、suffixFontLinearColor / suffixSetFontLinear、
+ * shadowColor 等阴影字段 / shadowShow、delayTime / delayLoading。
+ */
+export function swFlopPerformanceSuperRefine(
+  val: { option?: Partial<ftFlopPerformanceOption> },
+  ctx: z.RefinementCtx
+): void {
+  const option = val.option;
+  if (!option) {
+    return;
+  }
+  if (option.fontLinearColor && !option.setFontLinear) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["option", "setFontLinear"],
+      message: "配置了 fontLinearColor 但 setFontLinear 未开启，数字渐变色不会生效"
+    });
+  }
+  if (option.suffixFontLinearColor && !option.suffixSetFontLinear) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["option", "suffixSetFontLinear"],
+      message: "配置了 suffixFontLinearColor 但 suffixSetFontLinear 未开启，后缀渐变色不会生效"
+    });
+  }
+  if (option.shadowColor && !option.shadowShow) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["option", "shadowShow"],
+      message: "配置了阴影相关字段但 shadowShow 未开启，阴影不会生效"
+    });
+  }
+  if (option.delayTime && !option.delayLoading) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["option", "delayLoading"],
+      message: "配置了 delayTime 但 delayLoading 未开启，延迟加载不会生效"
+    });
+  }
+}

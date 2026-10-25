@@ -63,6 +63,7 @@ export type MinioFileMinAggregateOutputType = {
   cover: string | null
   coverName: string | null
   resourceSize: number | null
+  generatedImageId: string | null
   createdBy: string | null
   createdTime: Date | null
   updatedBy: string | null
@@ -84,6 +85,7 @@ export type MinioFileMaxAggregateOutputType = {
   cover: string | null
   coverName: string | null
   resourceSize: number | null
+  generatedImageId: string | null
   createdBy: string | null
   createdTime: Date | null
   updatedBy: string | null
@@ -107,6 +109,8 @@ export type MinioFileCountAggregateOutputType = {
   resourceSize: number
   layerIds: number
   largeUseIds: number
+  generatedImageId: number
+  referenceFileIds: number
   createdBy: number
   createdTime: number
   updatedBy: number
@@ -152,6 +156,7 @@ export type MinioFileMinAggregateInputType = {
   cover?: true
   coverName?: true
   resourceSize?: true
+  generatedImageId?: true
   createdBy?: true
   createdTime?: true
   updatedBy?: true
@@ -173,6 +178,7 @@ export type MinioFileMaxAggregateInputType = {
   cover?: true
   coverName?: true
   resourceSize?: true
+  generatedImageId?: true
   createdBy?: true
   createdTime?: true
   updatedBy?: true
@@ -196,6 +202,8 @@ export type MinioFileCountAggregateInputType = {
   resourceSize?: true
   layerIds?: true
   largeUseIds?: true
+  generatedImageId?: true
+  referenceFileIds?: true
   createdBy?: true
   createdTime?: true
   updatedBy?: true
@@ -306,6 +314,8 @@ export type MinioFileGroupByOutputType = {
   resourceSize: number | null
   layerIds: runtime.JsonValue | null
   largeUseIds: runtime.JsonValue | null
+  generatedImageId: string | null
+  referenceFileIds: runtime.JsonValue | null
   createdBy: string | null
   createdTime: Date
   updatedBy: string | null
@@ -352,6 +362,8 @@ export type MinioFileWhereInput = {
   resourceSize?: Prisma.IntNullableFilter<"MinioFile"> | number | null
   layerIds?: Prisma.JsonNullableFilter<"MinioFile">
   largeUseIds?: Prisma.JsonNullableFilter<"MinioFile">
+  generatedImageId?: Prisma.StringNullableFilter<"MinioFile"> | string | null
+  referenceFileIds?: Prisma.JsonNullableFilter<"MinioFile">
   createdBy?: Prisma.StringNullableFilter<"MinioFile"> | string | null
   createdTime?: Prisma.DateTimeFilter<"MinioFile"> | Date | string
   updatedBy?: Prisma.StringNullableFilter<"MinioFile"> | string | null
@@ -375,6 +387,8 @@ export type MinioFileOrderByWithRelationInput = {
   resourceSize?: Prisma.SortOrderInput | Prisma.SortOrder
   layerIds?: Prisma.SortOrderInput | Prisma.SortOrder
   largeUseIds?: Prisma.SortOrderInput | Prisma.SortOrder
+  generatedImageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  referenceFileIds?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdTime?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -401,6 +415,8 @@ export type MinioFileWhereUniqueInput = Prisma.AtLeast<{
   resourceSize?: Prisma.IntNullableFilter<"MinioFile"> | number | null
   layerIds?: Prisma.JsonNullableFilter<"MinioFile">
   largeUseIds?: Prisma.JsonNullableFilter<"MinioFile">
+  generatedImageId?: Prisma.StringNullableFilter<"MinioFile"> | string | null
+  referenceFileIds?: Prisma.JsonNullableFilter<"MinioFile">
   createdBy?: Prisma.StringNullableFilter<"MinioFile"> | string | null
   createdTime?: Prisma.DateTimeFilter<"MinioFile"> | Date | string
   updatedBy?: Prisma.StringNullableFilter<"MinioFile"> | string | null
@@ -424,6 +440,8 @@ export type MinioFileOrderByWithAggregationInput = {
   resourceSize?: Prisma.SortOrderInput | Prisma.SortOrder
   layerIds?: Prisma.SortOrderInput | Prisma.SortOrder
   largeUseIds?: Prisma.SortOrderInput | Prisma.SortOrder
+  generatedImageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  referenceFileIds?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdTime?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -455,6 +473,8 @@ export type MinioFileScalarWhereWithAggregatesInput = {
   resourceSize?: Prisma.IntNullableWithAggregatesFilter<"MinioFile"> | number | null
   layerIds?: Prisma.JsonNullableWithAggregatesFilter<"MinioFile">
   largeUseIds?: Prisma.JsonNullableWithAggregatesFilter<"MinioFile">
+  generatedImageId?: Prisma.StringNullableWithAggregatesFilter<"MinioFile"> | string | null
+  referenceFileIds?: Prisma.JsonNullableWithAggregatesFilter<"MinioFile">
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"MinioFile"> | string | null
   createdTime?: Prisma.DateTimeWithAggregatesFilter<"MinioFile"> | Date | string
   updatedBy?: Prisma.StringNullableWithAggregatesFilter<"MinioFile"> | string | null
@@ -477,6 +497,8 @@ export type MinioFileCreateInput = {
   resourceSize?: number | null
   layerIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   largeUseIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  generatedImageId?: string | null
+  referenceFileIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdTime?: Date | string
   updatedBy?: string | null
@@ -500,6 +522,8 @@ export type MinioFileUncheckedCreateInput = {
   resourceSize?: number | null
   layerIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   largeUseIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  generatedImageId?: string | null
+  referenceFileIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdTime?: Date | string
   updatedBy?: string | null
@@ -522,6 +546,8 @@ export type MinioFileUpdateInput = {
   resourceSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   layerIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   largeUseIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  generatedImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceFileIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -545,6 +571,8 @@ export type MinioFileUncheckedUpdateInput = {
   resourceSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   layerIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   largeUseIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  generatedImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceFileIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -568,6 +596,8 @@ export type MinioFileCreateManyInput = {
   resourceSize?: number | null
   layerIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   largeUseIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  generatedImageId?: string | null
+  referenceFileIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: string | null
   createdTime?: Date | string
   updatedBy?: string | null
@@ -590,6 +620,8 @@ export type MinioFileUpdateManyMutationInput = {
   resourceSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   layerIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   largeUseIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  generatedImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceFileIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -613,6 +645,8 @@ export type MinioFileUncheckedUpdateManyInput = {
   resourceSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   layerIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   largeUseIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  generatedImageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceFileIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -636,6 +670,8 @@ export type MinioFileCountOrderByAggregateInput = {
   resourceSize?: Prisma.SortOrder
   layerIds?: Prisma.SortOrder
   largeUseIds?: Prisma.SortOrder
+  generatedImageId?: Prisma.SortOrder
+  referenceFileIds?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   createdTime?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -668,6 +704,7 @@ export type MinioFileMaxOrderByAggregateInput = {
   cover?: Prisma.SortOrder
   coverName?: Prisma.SortOrder
   resourceSize?: Prisma.SortOrder
+  generatedImageId?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   createdTime?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -689,6 +726,7 @@ export type MinioFileMinOrderByAggregateInput = {
   cover?: Prisma.SortOrder
   coverName?: Prisma.SortOrder
   resourceSize?: Prisma.SortOrder
+  generatedImageId?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   createdTime?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -725,6 +763,8 @@ export type MinioFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   resourceSize?: boolean
   layerIds?: boolean
   largeUseIds?: boolean
+  generatedImageId?: boolean
+  referenceFileIds?: boolean
   createdBy?: boolean
   createdTime?: boolean
   updatedBy?: boolean
@@ -748,6 +788,8 @@ export type MinioFileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   resourceSize?: boolean
   layerIds?: boolean
   largeUseIds?: boolean
+  generatedImageId?: boolean
+  referenceFileIds?: boolean
   createdBy?: boolean
   createdTime?: boolean
   updatedBy?: boolean
@@ -771,6 +813,8 @@ export type MinioFileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   resourceSize?: boolean
   layerIds?: boolean
   largeUseIds?: boolean
+  generatedImageId?: boolean
+  referenceFileIds?: boolean
   createdBy?: boolean
   createdTime?: boolean
   updatedBy?: boolean
@@ -794,13 +838,15 @@ export type MinioFileSelectScalar = {
   resourceSize?: boolean
   layerIds?: boolean
   largeUseIds?: boolean
+  generatedImageId?: boolean
+  referenceFileIds?: boolean
   createdBy?: boolean
   createdTime?: boolean
   updatedBy?: boolean
   updatedTime?: boolean
 }
 
-export type MinioFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "fileName" | "url" | "blobKey" | "resourceType" | "fileType" | "auth" | "largeId" | "groupId" | "cover" | "coverName" | "resourceSize" | "layerIds" | "largeUseIds" | "createdBy" | "createdTime" | "updatedBy" | "updatedTime", ExtArgs["result"]["minioFile"]>
+export type MinioFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "name" | "fileName" | "url" | "blobKey" | "resourceType" | "fileType" | "auth" | "largeId" | "groupId" | "cover" | "coverName" | "resourceSize" | "layerIds" | "largeUseIds" | "generatedImageId" | "referenceFileIds" | "createdBy" | "createdTime" | "updatedBy" | "updatedTime", ExtArgs["result"]["minioFile"]>
 
 export type $MinioFilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "MinioFile"
@@ -822,6 +868,14 @@ export type $MinioFilePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     resourceSize: number | null
     layerIds: runtime.JsonValue | null
     largeUseIds: runtime.JsonValue | null
+    /**
+     * AI 生成的素材：对应的生图记录（提示词 / seed / 模型在那边）；裁切、上传的素材为空
+     */
+    generatedImageId: string | null
+    /**
+     * AI 生成的素材：生成时参考了哪些素材（素材 id 数组），画布上的血缘连线从这里来
+     */
+    referenceFileIds: runtime.JsonValue | null
     createdBy: string | null
     createdTime: Date
     updatedBy: string | null
@@ -1265,6 +1319,8 @@ export interface MinioFileFieldRefs {
   readonly resourceSize: Prisma.FieldRef<"MinioFile", 'Int'>
   readonly layerIds: Prisma.FieldRef<"MinioFile", 'Json'>
   readonly largeUseIds: Prisma.FieldRef<"MinioFile", 'Json'>
+  readonly generatedImageId: Prisma.FieldRef<"MinioFile", 'String'>
+  readonly referenceFileIds: Prisma.FieldRef<"MinioFile", 'Json'>
   readonly createdBy: Prisma.FieldRef<"MinioFile", 'String'>
   readonly createdTime: Prisma.FieldRef<"MinioFile", 'DateTime'>
   readonly updatedBy: Prisma.FieldRef<"MinioFile", 'String'>
@@ -1474,6 +1530,7 @@ export type MinioFileCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many MinioFiles.
    */
   data: Prisma.MinioFileCreateManyInput | Prisma.MinioFileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1492,6 +1549,7 @@ export type MinioFileCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many MinioFiles.
    */
   data: Prisma.MinioFileCreateManyInput | Prisma.MinioFileCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

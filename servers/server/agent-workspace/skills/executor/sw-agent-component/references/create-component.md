@@ -79,6 +79,26 @@ create_component({
 
 返回 `{ filePath, schemaDoc }`。`filePath` 是前端创建后的真实路径，后续 `read_file` / `edit_files` 都用它。
 
+### 一次创建多个：用 `components`
+
+**要建两个及以上组件时，不要连续调用多次，改传 `components` 数组一次建完**——只和前端往返一次，快得多（最多 30 个）。
+
+```
+create_component({
+  screenId: "29445_1",
+  components: [
+    { componentName: "柱状图", overrides: { title: "各分数段人数", left: 100, top: 50 } },
+    { componentName: "折线图", overrides: { left: 700, top: 50 } },
+    { componentName: "文本框", placement: { parentId: 3303567, parentType: "group" } }
+  ]
+})
+```
+
+- 顶层不要再传 `componentName` / `placement` / `overrides`，每项各带各的
+- 各项互相独立，按数组顺序依次创建；某一项出错不影响其它项
+- 返回 `results`：每项一条，`index` 是它在 `components` 里的下标（从 0 起），成功的带 `filePath`，失败的带原因。**只重试失败的那几项**，不要整批重来
+- 同一批里的组件**不能互相嵌套**：分组 / 动态面板要先单独建出来拿到真实 id，才能在下一次调用里作为 `placement.parentId`
+
 ### overrides 规则
 
 **核心原则：只写用户明确要求的字段。模板已包含全部默认值，用户没提的字段一律不要写。**

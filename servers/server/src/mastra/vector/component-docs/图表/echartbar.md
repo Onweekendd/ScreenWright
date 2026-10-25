@@ -9,7 +9,6 @@
 **与其他柱图的区别**：
 - 区别于条形图（echartstripBar）：本组件为竖向，条形图为横向
 - 区别于双向条形图（echartbothWayStripBar）：本组件单向，双向条形图两侧分别展示两个系列
-- 区别于排名图（echartrank）：本组件标准对比，排名图带排序样式
 - 区别于折线柱形图（echartlineAndBar）：本组件纯柱状，不含折线
 
 ## 别名/同义词

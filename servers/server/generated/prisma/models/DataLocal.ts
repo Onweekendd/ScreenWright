@@ -1338,6 +1338,7 @@ export type DataLocalCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many DataLocals.
    */
   data: Prisma.DataLocalCreateManyInput | Prisma.DataLocalCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1356,6 +1357,7 @@ export type DataLocalCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many DataLocals.
    */
   data: Prisma.DataLocalCreateManyInput | Prisma.DataLocalCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

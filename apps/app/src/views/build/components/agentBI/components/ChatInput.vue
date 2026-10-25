@@ -2,10 +2,20 @@
   <div class="box-footer">
     <div v-if="attachments.length > 0" class="attachment-strip">
       <div v-for="item in attachments" :key="item.id" class="attachment-thumb">
-        <img :src="item.previewUrl" class="thumb-img" />
+        <MediaAttachmentPreview
+          :media="{ filename: item.filename, mediaType: item.mediaType, url: item.previewUrl || item.remoteUrl || '' }"
+          :preview-media="previewMedia"
+        />
         <div v-if="item.status === 'uploading'" class="thumb-overlay thumb-uploading" />
         <div v-if="item.status === 'error'" class="thumb-overlay thumb-error">!</div>
-        <button class="thumb-remove" @mousedown.prevent="removeAttachment(item.id)">×</button>
+        <button
+          type="button"
+          class="thumb-remove"
+          :aria-label="`移除：${item.filename}`"
+          @click.stop="removeAttachment(item.id)"
+        >
+          ×
+        </button>
       </div>
     </div>
 
@@ -26,7 +36,14 @@
         <span class="mention-item-id">#{{ item.component.id }}</span>
       </li>
     </ul>
-    <input ref="fileInputRef" type="file" accept="image/*" multiple style="display: none" @change="handleFileChange" />
+    <input
+      ref="fileInputRef"
+      type="file"
+      accept="image/*,video/*,.mkv,.m4v,.avi,.mov,.wmv,.flv,.mpg,.mpeg,.ts"
+      multiple
+      style="display: none"
+      @change="handleFileChange"
+    />
 
     <div class="footer-input">
       <!-- contenteditable 编辑区，替代 el-input textarea -->
@@ -34,7 +51,7 @@
         ref="editorRef"
         class="editor"
         contenteditable="true"
-        data-placeholder="请输入您的问题，输入 @ 引用组件..."
+        data-placeholder="请输入您的问题，可粘贴图片，输入 @ 引用组件..."
         @input="handleInput"
         @keydown="handleKeydown"
         @keyup="handleKeyup"
@@ -65,9 +82,29 @@
           </el-tooltip>
           <div v-if="contextPercentage > 50" class="context-btn-split" />
 
-          <el-tooltip content="上传图片" placement="top" :show-arrow="true" popper-class="context-tooltip">
-            <Icon type="iconfont-exportPic" class="upload-image-btn" @click="openFilePicker" />
-          </el-tooltip>
+          <el-dropdown
+            trigger="click"
+            placement="top-start"
+            popper-class="agent-select-dropdown agent-attachment-dropdown"
+            @command="handleAttachmentCommand"
+            @visible-change="attachmentMenuVisible = $event"
+          >
+            <button
+              type="button"
+              class="upload-image-btn"
+              :class="{ 'is-active': attachmentMenuVisible }"
+              aria-label="添加图片或视频"
+              title="添加图片或视频"
+            >
+              <Icon type="iconfont-exportPic" />
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="assets">从素材库选择</el-dropdown-item>
+                <el-dropdown-item command="local">本地上传</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
 
         <div class="send-group">
@@ -96,15 +133,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import { AgentMode } from "@screenwright/server/rpc";
 import type { ComponentType } from "@screenwright/types";
 import { ElMessage } from "element-plus";
 
 import Icon from "@/components/Icon/index.vue";
+import { useDialog } from "@/hooks/useDialog";
+import { setMinioUrl } from "@/utils/config";
+import type { MenuItemForRender } from "@/views/build/components/buildTabs/selectAssets/assetsMenuType";
+import SelectAssets from "@/views/build/components/buildTabs/selectAssets/index.vue";
 
 import { useActiveAgentBISession } from "../agentBISessionContext";
+import { getAttachmentMediaType } from "../hooks/attachmentMedia";
+import MediaAttachmentPreview from "./MediaAttachmentPreview.vue";
 import SelectedComponentsList from "./SelectedComponentsList.vue";
 import { useChatInput } from "./useChatInput";
 
@@ -117,6 +160,7 @@ const MODE_LABELS: Record<AgentMode, string> = {
 const {
   activeThreadId,
   addFiles,
+  addMedia,
   attachments,
   compacting,
   contextColor,
@@ -132,8 +176,54 @@ const {
 } = useActiveAgentBISession();
 
 const fileInputRef = ref<HTMLInputElement>();
+const attachmentMenuVisible = ref(false);
+const previewMedia = computed(() =>
+  attachments.value.map((item) => ({
+    filename: item.filename,
+    mediaType: item.mediaType,
+    url: item.previewUrl || item.remoteUrl || ""
+  }))
+);
 
 const openFilePicker = () => fileInputRef.value?.click();
+
+const { dialog } = useDialog();
+const openAssetPicker = () => {
+  dialog({
+    DialogProps: { title: "选择图片或视频素材", width: "980px", modalClass: "build-render-ignore" },
+    component: SelectAssets,
+    componentProps: {},
+    closeBefore: (componentData, done) => {
+      const asset = componentData.validate() as MenuItemForRender | null;
+      if (!asset) {
+        return;
+      }
+      const url = setMinioUrl(asset.url || asset.img);
+      const urlExtension = url.split(/[?#]/)[0].split(".").pop()?.toLowerCase() ?? "";
+      const extension = getAttachmentMediaType(url) ? urlExtension : (asset.fileType?.toLowerCase() ?? "");
+      const mediaType = getAttachmentMediaType(`asset.${extension}`);
+      if (!url || !mediaType) {
+        ElMessage.warning("请选择图片或视频素材");
+        return;
+      }
+      const name = asset.name || asset.title || "素材";
+      addMedia({
+        filename: getAttachmentMediaType(name) ? name : `${name}.${extension}`,
+        mediaType,
+        url: new URL(url, window.location.href).href
+      });
+      done();
+    }
+  });
+};
+
+const handleAttachmentCommand = (command: string) => {
+  if (command === "assets") {
+    openAssetPicker();
+  } else if (command === "local") {
+    openFilePicker();
+  }
+};
 
 const handleFileChange = (e: Event) => {
   const input = e.target as HTMLInputElement;
@@ -247,23 +337,16 @@ const {
 
     .attachment-thumb {
       position: relative;
-      width: 56px;
-      height: 56px;
+      width: 64px;
+      height: 64px;
       border-radius: 6px;
       overflow: hidden;
       flex-shrink: 0;
-      border: 1px solid $color-lp-25;
-
-      .thumb-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
 
       .thumb-overlay {
         position: absolute;
         inset: 0;
+        pointer-events: none;
 
         &.thumb-uploading {
           background: rgba(0, 0, 0, 0.45);
@@ -305,6 +388,10 @@ const {
       }
 
       &:hover .thumb-remove {
+        display: flex;
+      }
+
+      &:focus-within .thumb-remove {
         display: flex;
       }
     }
@@ -473,14 +560,33 @@ const {
     }
 
     .upload-image-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      padding: 2px;
+      border: 1px solid transparent;
+      background: transparent;
       cursor: pointer;
       color: $color-primary;
       font-size: 20px;
       border-radius: 5px;
-      transition: color $transition-fast;
+      transition:
+        color $transition-fast,
+        background-color $transition-fast,
+        border-color $transition-fast;
 
-      &:hover {
-        color: $color-primary-dark;
+      &:hover,
+      &.is-active {
+        color: $color-text-primary;
+        background-color: $color-primary-18;
+        border-color: $color-primary-40;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $color-primary-60;
+        outline-offset: 2px;
       }
     }
 

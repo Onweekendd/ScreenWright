@@ -7,6 +7,7 @@ const {
   mockBiChatPost,
   mockEnsureActiveThread,
   mockStartNewChat,
+  mockUploadAllAndGetParts,
   mockToolExecute
 } = vi.hoisted(() => ({
   mockConsumeSSEResponse: vi.fn(),
@@ -14,6 +15,7 @@ const {
   mockBiChatPost: vi.fn().mockResolvedValue({}),
   mockEnsureActiveThread: vi.fn().mockResolvedValue(undefined),
   mockStartNewChat: vi.fn(),
+  mockUploadAllAndGetParts: vi.fn().mockResolvedValue([]),
   mockToolExecute: vi.fn().mockResolvedValue({ success: true })
 }));
 
@@ -69,10 +71,11 @@ vi.mock("@/views/build/components/agentBI/hooks/useAgentBIThreadList", () => ({
 vi.mock("@/views/build/components/agentBI/hooks/useAgentAttachment", () => ({
   useAgentAttachment: () => ({
     addFiles: vi.fn(),
+    addMedia: vi.fn(),
     attachments: { value: [] },
     clearAttachments: vi.fn(),
     removeAttachment: vi.fn(),
-    uploadAllAndGetParts: vi.fn().mockResolvedValue([])
+    uploadAllAndGetParts: mockUploadAllAndGetParts
   })
 }));
 
@@ -141,6 +144,8 @@ const resetState = () => {
   agent.messages.value = [];
   agent.isStreaming.value = false;
   agent.inputText.value = "";
+  agent.attachments.value = [];
+  mockUploadAllAndGetParts.mockReset().mockResolvedValue([]);
 };
 
 // ---------------------------------------------------------------------------
@@ -199,6 +204,75 @@ describe("sendMessage 基础流程", () => {
     // callGenerateTitle 在流结束后被调用
     expect(mockCallGenerateTitle).toHaveBeenCalledTimes(1);
     expect(agent.isStreaming.value).toBe(false);
+  });
+
+  it("没有文字时也能上传并发送图片附件", async () => {
+    agent.attachments.value = [
+      {
+        id: "image-1",
+        file: new File(["image"], "paste.png", { type: "image/png" }),
+        filename: "paste.png",
+        mediaType: "image/png",
+        previewUrl: "blob:preview",
+        status: "pending"
+      }
+    ];
+    const filePart = {
+      type: "file",
+      mediaType: "image/png",
+      url: "https://example.com/paste.png",
+      filename: "paste.png"
+    };
+    mockUploadAllAndGetParts.mockResolvedValue([filePart]);
+    mockConsumeSSEResponse.mockResolvedValue({ finalMessage: null, currentMessageId: "msg-image" });
+
+    await agent.sendMessage();
+
+    expect(mockUploadAllAndGetParts).toHaveBeenCalledWith("thread-1");
+    expect(mockBiChatPost).toHaveBeenCalledTimes(1);
+    expect(agent.messages.value[0].parts).toContainEqual(filePart);
+  });
+
+  it("纯图片上传全部失败时不发送空消息", async () => {
+    agent.attachments.value = [
+      {
+        id: "image-1",
+        file: new File(["image"], "paste.png", { type: "image/png" }),
+        filename: "paste.png",
+        mediaType: "image/png",
+        previewUrl: "blob:preview",
+        status: "pending"
+      }
+    ];
+
+    await agent.sendMessage();
+
+    expect(mockUploadAllAndGetParts).toHaveBeenCalledTimes(1);
+    expect(mockBiChatPost).not.toHaveBeenCalled();
+    expect(agent.messages.value).toHaveLength(0);
+  });
+
+  it("没有文字时可以发送视频 URL，消息中不包含视频文件 part", async () => {
+    agent.attachments.value = [
+      {
+        id: "video-1",
+        filename: "clip.mp4",
+        mediaType: "video/mp4",
+        previewUrl: "",
+        remoteUrl: "https://example.com/clip.mp4",
+        status: "pending"
+      }
+    ];
+    const part = {
+      type: "text",
+      text: '<attached-videos>\n  <video filename="clip.mp4" media-type="video/mp4" url="https://example.com/clip.mp4" />\n</attached-videos>'
+    };
+    mockUploadAllAndGetParts.mockResolvedValue([part]);
+    mockConsumeSSEResponse.mockResolvedValue({ finalMessage: null, currentMessageId: "msg-video" });
+    await agent.sendMessage();
+    expect(mockBiChatPost).toHaveBeenCalledTimes(1);
+    expect(agent.messages.value[0].parts).toContainEqual(part);
+    expect(agent.messages.value[0].parts.some((item) => item.type === "file")).toBe(false);
   });
 
   it("sendMessage，isStreaming 为 true 时调用，直接返回不发送", async () => {

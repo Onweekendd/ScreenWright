@@ -11,13 +11,13 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
-/// AI 模型配置：只 3 行，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
+/// AI 模型配置：5 个角色，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
 /// 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
 model AiModel {
-  role          String   @id // "reasoning" | "vision" | "embedding"
+  role          String   @id // "reasoning" | "vision" | "embedding" | "image" | "video"
   baseUrl       String   @default("") @map("base_url")
   apiKey        String   @default("") @map("api_key")
   modelId       String   @default("") @map("model_id")
@@ -26,6 +26,54 @@ model AiModel {
   updatedTime   DateTime @updatedAt @map("updated_time")
 
   @@map("ai_model")
+}
+
+/// 生图产物。`promptHash` 是幂等键：同一份结构化 prompt + seed + model 命中直接返回，
+/// 不重新计费重新生成——生图慢且贵，用户改一个字重新提交时不该重新烧一遍配额。
+///
+/// 只存 url（本地磁盘或对象存储路径），不存像素——像素交给现有的 `src/lib/storage/`
+/// 那套 fs/minio 抽象，这张表只管「有没有生成过、生成的是哪张」。
+model GeneratedImage {
+  id           String   @id @default(cuid())
+  /// sha256(结构化 prompt + seed + model)，同一份输入不用重新生成
+  promptHash   String   @unique @map("prompt_hash")
+  /// 结构化 prompt 原文，便于事后排查「为什么生出这张」
+  prompt       String
+  model        String
+  seed         Int?
+  width        Int
+  height       Int
+  url          String
+  /// 发给生图服务的参考图 url（按顺序），没有参考图为空
+  referenceUrls Json?   @map("reference_urls")
+  createdTime  DateTime @default(now()) @map("created_time")
+
+  @@map("generated_image")
+}
+
+/// AI 生成的视频。和 GeneratedImage 同一个思路：只存 url（视频文件在 `src/lib/storage/`），
+/// 这张表管「这份输入生成过没有」——视频慢且贵，同一份输入不重新生成。
+model GeneratedVideo {
+  id            String   @id @default(cuid())
+  /// sha256(prompt + model + 输出参数 + 所有输入素材)，同一份输入不用重新生成
+  promptHash    String   @unique @map("prompt_hash")
+  prompt        String
+  model         String
+  durationSec   Int      @map("duration_sec")
+  resolution    String
+  ratio         String
+  url           String
+  /// 首帧图 url（图生视频），文生视频为空
+  firstFrameUrl String?  @map("first_frame_url")
+  lastFrameUrl  String?  @map("last_frame_url")
+  referenceImageUrls String[] @default([]) @map("reference_image_urls")
+  referenceVideoUrls String[] @default([]) @map("reference_video_urls")
+  referenceAudioUrls String[] @default([]) @map("reference_audio_urls")
+  /// 服务商侧的任务 id，事后查账、排查用
+  taskId        String?  @map("task_id")
+  createdTime   DateTime @default(now()) @map("created_time")
+
+  @@map("generated_video")
 }
 
 // Figma API Key Pool Management
@@ -164,7 +212,7 @@ model LlmExchangeRecord {
   model              String?
   status             Int?
   ok                 Boolean?
-  toolNames          Json      @default("[]") @map("tool_names") // 本步调用的工具名列表（SQLite 无原生数组，存 JSON string[]）
+  toolNames          String[]  @default([]) @map("tool_names") // 本步调用的工具名列表
   toolCallCount      Int       @default(0) @map("tool_call_count")
   toolFailures       Int?      @map("tool_failures") // 到本步为止,请求历史里可见的失败工具结果数(累计,按分支取最大值即该分支总数)
   at                 DateTime? // LLM 往返时间戳
@@ -469,6 +517,10 @@ model MinioFile {
   resourceSize Int?     @map("resource_size")
   layerIds     Json?    @map("layer_ids")
   largeUseIds  Json?    @map("large_use_ids")
+  /// AI 生成的素材：对应的生图记录（提示词 / seed / 模型在那边）；裁切、上传的素材为空
+  generatedImageId String? @map("generated_image_id")
+  /// AI 生成的素材：生成时参考了哪些素材（素材 id 数组），画布上的血缘连线从这里来
+  referenceFileIds Json?   @map("reference_file_ids")
   createdBy    String?  @map("created_by")
   createdTime  DateTime @default(now()) @map("created_time")
   updatedBy    String?  @map("updated_by")
@@ -476,6 +528,7 @@ model MinioFile {
 
   @@index([userId])
   @@index([groupId])
+  @@index([userId, url])
   @@map("minio_file")
 }
 

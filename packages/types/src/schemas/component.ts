@@ -111,8 +111,8 @@ export const ComponentFlatSchema = z
     top: z.number().describe("顶边距"),
     /** 是否锁定（可选，部分组件未设置） */
     isLock: z.boolean().describe("是否锁定").optional(),
-    /** Z轴层级 */
-    zIndex: z.number().describe("Z轴层级"),
+    /** Z轴层级：字符串排序键（fractional indexing），越大越靠上，只能按字符串比较 */
+    zIndex: z.string().describe("Z轴层级：字符串排序键，越大越靠上，按字符串比较，不是数字"),
     /** 是否显示 */
     display: z.boolean().describe("是否显示"),
     /** 组件选项配置 */
@@ -232,8 +232,8 @@ export const ChildComponentSchema = z.lazy(() =>
       top: z.number().describe("顶边距"),
       /** 是否锁定 */
       isLock: z.boolean().describe("是否锁定"),
-      /** Z轴层级 */
-      zIndex: z.number().describe("Z轴层级"),
+      /** Z轴层级：字符串排序键（fractional indexing），越大越靠上，只能按字符串比较 */
+      zIndex: z.string().describe("Z轴层级：字符串排序键，越大越靠上，按字符串比较，不是数字"),
       /** 是否显示 */
       display: z.boolean().describe("是否显示"),
       /** 组件数据 */

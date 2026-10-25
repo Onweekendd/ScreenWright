@@ -4,7 +4,7 @@
 
 AI 原生的数据大屏 / BI 可视化编辑器。跟 Agent 描述需求，或者给一个 Figma 链接，它会直接在画布上创建组件、接上数据、配好联动，产出一个可以继续在编辑器里改的大屏。
 
-> Monorepo：`apps/app`（Vue 3 编辑器）+ `servers/server`（Hono + Mastra Agent 服务）+ `packages/*`（框架无关的核心与物料）+ `apps/desktop`（Tauri 桌面端）。
+> Monorepo：`apps/app`（Vue 3 编辑器）+ `servers/server`（Hono + Mastra Agent 服务）+ `packages/*`（框架无关的核心与物料）。B/S 架构：浏览器访问编辑器，后端用 PostgreSQL 存储，需要登录。
 
 ![ScreenWright 对话生成大屏效果图](artifact.png)
 
@@ -16,7 +16,7 @@ AI 原生的数据大屏 / BI 可视化编辑器。跟 Agent 描述需求，或�
 
 组件能力覆盖不到的效果，内置的 Artifact App 子系统可以在沙箱里直接写 Vue 代码并实时预览。数据接好之后 Agent 会自己跑一遍数据流做校验。做好的大屏可以存成模板，之后复用。
 
-编辑器本身带了 76+ 物料组件（图表、文本、指标、媒体、交互、地图下钻等），可以导出成脱离编辑器运行的静态包。桌面端用 Tauri 打包，SQLite 本地跑，不需要登录。
+编辑器本身带了 76+ 物料组件（图表、文本、指标、媒体、交互、地图下钻等），可以导出成脱离编辑器运行的静态包。
 
 ---
 
@@ -27,8 +27,6 @@ AI 原生的数据大屏 / BI 可视化编辑器。跟 Agent 描述需求，或�
 编辑器内部按"核心逻辑 / 框架适配"分层：`packages/core` 是不依赖任何 UI 框架的编辑器核心（画布状态、组件树、事件系统），`packages/composables` 把它包装成 Vue 的 composable 给 `apps/app` 用。这样拆是为了以后核心逻辑要迁移到别的框架，或者做无头（headless）场景时，不用把这部分逻辑重写一遍。
 
 物料组件（`packages/material`）和类型 / Zod Schema（`packages/types`）各自独立成包——编辑器和 Agent 服务都要用同一套组件定义和数据结构，独立出来两边引用同一份；物料也因此可以单独打包发布，不用绑着整个编辑器一起发。
-
-桌面端（`apps/desktop`）是 Tauri 壳，把编辑器和 Agent 服务一起打进安装包，用内置的 Node sidecar 跑 Agent 服务，数据库换成本地 SQLite。
 
 ### 大屏怎么保持最新
 
@@ -50,8 +48,7 @@ flowchart LR
 | 目录 | 说明 |
 |---|---|
 | `apps/app` | 主编辑器（Vue 3 + Vite + ECharts + Three.js） |
-| `apps/desktop` | Tauri 2 桌面壳 |
-| `servers/server` | Agent 服务（Hono + Mastra + Prisma/SQLite） |
+| `servers/server` | Agent 服务（Hono + Mastra + Prisma/PostgreSQL） |
 | `packages/core` | 编辑器核心（不依赖任何 UI 框架） |
 | `packages/composables` | core 的 Vue composable 封装 |
 | `packages/material` | 物料组件包 |
@@ -61,7 +58,7 @@ flowchart LR
 
 ## 快速开始
 
-**环境要求**：Node ≥ 22.13，pnpm 10（`corepack enable` 即可）。
+**环境要求**：Node ≥ 22.13，pnpm 10（`corepack enable` 即可），Docker（用来起带 pgvector 的 PostgreSQL）。
 
 ```bash
 git clone https://github.com/Onweekendd/ScreenWright.git
@@ -72,17 +69,18 @@ pnpm install
 ### 1. 配置 Agent 服务
 
 ```bash
+docker compose -f docker-compose.dev.yml up -d   # PostgreSQL + pgvector → localhost:5432
 cp servers/server/.env.example servers/server/.env
 ```
 
-按角色填模型配置：`REASONING_MODEL_*`（推理）、`VISION_MODEL_*`（视觉）、`EMBEDDING_MODEL_*`（嵌入），均按 OpenAI 兼容端点处理；也可以全部留空，启动后在「设置」页填。其余保持默认即走本地 SQLite + 本地文件存储。
+按角色填模型配置：`REASONING_MODEL_*`（推理）、`VISION_MODEL_*`（视觉）、`EMBEDDING_MODEL_*`（嵌入），均按 OpenAI 兼容端点处理；也可以全部留空，启动后在「设置」页填。其余保持默认即走本地 PostgreSQL + 本地文件存储。生产环境必须设置 `JWT_SECRET`（见 `.env.example`）。
 
 初始化数据库：
 
 ```bash
 pnpm --dir servers/server exec dotenvx run -- prisma migrate deploy   # 建表
 pnpm --dir servers/server run seed-modules                            # 组件库
-pnpm --dir servers/server run seed-bi-user                            # 默认账号 admin / admin123
+pnpm --dir servers/server run seed-bi-user                            # 初始超管 admin（开发环境口令 admin123；生产用 SEED_ADMIN_PASSWORD 指定）
 pnpm --dir servers/server run seed-embeddings -- --reset              # 组件 RAG 向量（可选）
 ```
 
@@ -93,31 +91,55 @@ pnpm server:dev   # Agent 服务 → http://localhost:4111
 pnpm dev          # 编辑器   → http://localhost:5173
 ```
 
-打开编辑器，进入任意大屏，右侧 **AgentBI** 面板即可开始对话。
+打开编辑器并登录，进入任意大屏，右侧 **AgentBI** 面板即可开始对话。
 
-### 3. 桌面端（可选）
+### 进程角色与任务队列
+
+后端同一份代码、同一个镜像，用环境变量 `ROLE` 决定进程职责：
+
+| ROLE | 职责 | 备注 |
+|---|---|---|
+| `all`（默认） | 以下全部跑在一个进程里 | 本地开发用，`pnpm server:dev` |
+| `api` | 登录鉴权、大屏 / 图层 / 数据源等业务接口、素材 blob、终端控制 WebSocket | 不加载 Mastra |
+| `ai` | 对话（bi-chat SSE）、Mastra agent / workflow、artifact 沙箱预览 | 单副本，按 threadId 粘性路由 |
+| `worker` | 消费 BullMQ 队列里的长任务（目前是生图），不监听 HTTP | 必须配 `REDIS_URL` |
+
+配了 `REDIS_URL`（本地：`docker compose -f docker-compose.dev.yml up -d redis`，端口 6380）后，生图等长任务走队列、由 worker 进程执行；没配则在当前进程内直接执行。分开部署时，由网关 / ingress 把 `/customApi/*`、`/api/*`、`/artifact-apps/*` 转给 ai，其余转给 api；api、ai、worker 共用同一个 PostgreSQL、同一个 `JWT_SECRET`，多进程使用 fs 存储时还需共享 `BLOB_STORAGE_DIR`（或改用 MinIO）。
+
+### 3. 容器部署（docker compose）
 
 ```bash
-pnpm desktop            # 开发模式（Tauri 拉起前端 + 后端）
-pnpm desktop:package    # 构建 sidecar 并打包安装程序
+cp .env.compose.example .env      # 至少填 POSTGRES_PASSWORD、JWT_SECRET、MINIO_ROOT_PASSWORD
+docker compose up -d --build      # 首次构建需要几分钟
+docker compose logs migrate       # 没设 SEED_ADMIN_PASSWORD 时，随机生成的管理员口令在这里
 ```
 
-详见 [apps/desktop/README.md](apps/desktop/README.md)。
+打开 `http://localhost:8080`（`HTTP_PORT` 可改），用 `admin` 和上面的口令登录。国内网络构建慢的话，在 `.env` 里设 `NPM_REGISTRY=https://registry.npmmirror.com`。
+
+编排里有 7 个服务：
+
+| 服务 | 说明 |
+|---|---|
+| `web` | nginx：托管编辑器静态文件，并按路径分流——`/customApi`、`/api`、`/artifact-apps` → ai；`/user`、`/bi-system`、`/online`、`/blobs` → api；`/screenwright/` → MinIO |
+| `api` / `ai` / `worker` | 同一个后端镜像，按 `ROLE` 起三种进程（见上一节）。ai 单副本 |
+| `migrate` | 一次性任务：建表、导入组件库、创建超管；跑完 api / ai / worker 才启动，可重复执行 |
+| `postgres` / `redis` / `minio` | 数据库（pgvector）、任务队列、素材库；`minio-init` 负责建桶并设为公开读 |
+
+数据都在命名卷里（`pg_data`、`redis_data`、`minio_data`、`ai_workspace`），`docker compose down` 不会删，`down -v` 才会。对外用域名 / HTTPS 时把 `PUBLIC_ORIGIN` 改成对应地址（素材直链用它拼接），TLS 在 web 前面再加一层反向代理终结即可。
 
 ---
 
 ## 技术栈
 
-Vue 3 · TypeScript · Vite · Mastra Agent · Hono · Prisma · SQLite · Tauri 2 · pnpm workspace / Turborepo
+Vue 3 · TypeScript · Vite · Mastra Agent · Hono · Prisma · PostgreSQL · pnpm workspace / Turborepo
 
 ---
 
 ## Roadmap
 
-- **图片转大屏**（自研，替代目前对 Codia 的依赖）
+- **图片转大屏**（自研：主模型看效果图写设计蓝图 → 批量准备素材 → 组装）
   - 截图 / 参考图 → 版面区域切分与层级识别
   - 区域内容 → 组件类型与配置的还原（图表类型、文本、指标卡等）
-  - 和现有 Figma 链路共用同一套语义布局 Agent，而不是另起一条路径
 
 - **文档 / 图片 / 视频向量化**
   - 先覆盖 PDF、常见图片格式，视频先从关键帧和字幕入手

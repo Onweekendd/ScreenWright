@@ -16,7 +16,7 @@
 
 import { AgentMode } from "@/mastra/types/bi-chat";
 
-import { type Assertion, type EvalCase, isWriteSuspend, newComponents } from "../../harness/case";
+import { type Assertion, describeSuspend, type EvalCase, isWriteSuspend, newComponents } from "../../harness/case";
 
 export const c4PlanMode: EvalCase = {
   id: "c4-plan-mode",
@@ -29,7 +29,7 @@ export const c4PlanMode: EvalCase = {
 
   assert: (ctx): Assertion[] => {
     const created = newComponents(ctx.before, ctx.screen);
-    const writes = ctx.suspends.filter((s) => isWriteSuspend(s.type));
+    const writes = ctx.suspends.filter((s) => isWriteSuspend(s));
 
     return [
       {
@@ -48,8 +48,8 @@ export const c4PlanMode: EvalCase = {
         passed: writes.length === 0,
         detail:
           writes.length === 0
-            ? `挂起 ${ctx.suspends.length} 次，全是非写类：${ctx.suspends.map((s) => s.type).join(", ") || "无"}`
-            : `${writes.length} 次写类挂起：${writes.map((s) => s.type).join(", ")}`
+            ? `挂起 ${ctx.suspends.length} 次，全是非写类：${ctx.suspends.map((s) => describeSuspend(s)).join(", ") || "无"}`
+            : `${writes.length} 次写类挂起：${writes.map((s) => describeSuspend(s)).join(", ")}`
       },
       // 防空过：进程崩在第一轮时上面三条也会全绿。这条不看 agent 干了什么，只确认它确实跑起来了。
       {

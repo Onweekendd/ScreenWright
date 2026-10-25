@@ -9,7 +9,7 @@ vi.mock("@/mastra/storage/prisma", () => ({
   }
 }));
 
-import { getCurrentUser, getMenuTree, isSuperAdmin } from "@/mastra/services/user.server";
+import { getCurrentUser, getMenuTree, isSuperAdmin } from "@/mastra/services/admin/user.server";
 import { prismaClient } from "@/mastra/storage/prisma";
 
 /** 构造一个完整的 BiUser 行（用 as never 绕过 Prisma 精确类型） */

@@ -40,6 +40,7 @@ apps/agentTrace/.next/
 # Scratch / debugging artifacts
 temp*.json
 agentbi-architecture.html
+funbi-release.tar*
 
 # 个人 / 开源改造工作笔记（不进开源仓库）
 开源改造TODO.md

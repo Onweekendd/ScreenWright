@@ -6,10 +6,10 @@ import { FolderEnum } from "@screenwright/types";
 import { z } from "zod";
 
 import { applyComponentUngroup } from "@/mastra/services/bi-data-sync/screen-mutation";
-import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen-workspace";
+import { getScreenVersionKeyFromPath, getWorkspaceBase } from "@/mastra/services/screen/screen-workspace";
 
-import { AgentMode } from "../types/bi-chat";
 import { SuspendDefs, SuspendType } from "../types/suspend";
+import { readCanvasOpResults, suspendCanvasOps } from "./canvas-ops";
 import { ChangeSchema, movedChanges } from "./change-report";
 import { describeAmbiguity, extractIdFromIdName, findComponentFileInWorkspace, isAmbiguousMatch } from "./file/utils";
 
@@ -33,12 +33,9 @@ export const ungroupComponentTool = createTool({
       )
   }),
 
-  suspendSchema: z.discriminatedUnion("type", [
-    SuspendDefs[SuspendType.AskApprovalUngroupComponent].suspend,
-    SuspendDefs[SuspendType.UngroupComponent].suspend
-  ]),
+  suspendSchema: SuspendDefs[SuspendType.CanvasOps].suspend,
 
-  resumeSchema: SuspendDefs[SuspendType.AskApprovalUngroupComponent].resume,
+  resumeSchema: SuspendDefs[SuspendType.CanvasOps].resume,
 
   outputSchema: z.object({
     success: z.boolean(),
@@ -51,17 +48,17 @@ export const ungroupComponentTool = createTool({
   }),
 
   execute: async ({ groupIds }, context) => {
-    const { suspend, resumeData } = context?.agent ?? {};
-    const mode = context?.requestContext?.get("mode") as AgentMode | undefined;
+    const reply = readCanvasOpResults(context?.agent?.resumeData, 1);
 
-    // ── 恢复阶段：用户拒绝 ────────────────────────────────────────────
-    if (resumeData?.approved === false) {
+    // ── 恢复阶段：用户拒绝 / 回执不合法 / 前端返回错误 ───────────────────
+    if (reply.status === "rejected") {
       return { success: false, message: "用户取消了解散分组操作" };
     }
-
-    // ── 恢复阶段：前端已解散或返回错误 ──────────────────────────────────
-    if (resumeData?.error) {
-      return { success: false, message: `前端解散分组失败: ${resumeData.error}` };
+    if (reply.status === "invalid") {
+      return { success: false, message: reply.message };
+    }
+    if (reply.status === "done" && !reply.results[0].ok) {
+      return { success: false, message: `前端解散分组失败: ${reply.results[0].error}` };
     }
 
     // ── 首次执行 / 恢复阶段共用：定位每个分组文件，校验是分组组件 ──────────
@@ -70,7 +67,7 @@ export const ungroupComponentTool = createTool({
     let screenKey: string | null = null;
     // 交给 core 与前端的都是**裸 id**：前端在「当前打开的那块屏」的内存树上操作，屏前缀对它没有意义，
     // 带过去只会让它在自己的树里找不到组件。
-    const bareIds: string[] = [];
+    const numericIds: number[] = [];
 
     for (const ref of groupIds) {
       const found = await findComponentFileInWorkspace(workspaceBase, ref);
@@ -81,7 +78,11 @@ export const ungroupComponentTool = createTool({
         return { success: false, message: describeAmbiguity(ref, found.ambiguous) };
       }
       screenKey ??= getScreenVersionKeyFromPath(found.file);
-      bareIds.push(String(extractIdFromIdName(found.base)));
+      const numericId = extractIdFromIdName(found.base);
+      if (numericId === null) {
+        return { success: false, message: `组件 id 不合法: ${ref}` };
+      }
+      numericIds.push(numericId);
       let content: Record<string, unknown>;
       try {
         content = JSON.parse(await fsp.readFile(found.file, "utf-8"));
@@ -97,12 +98,12 @@ export const ungroupComponentTool = createTool({
     // ── 恢复阶段：前端画布已解散，这时才由后端过 core 落盘 ──────────────────
     // 解散不产生新 id，回执只是一句「干完了」；子组件提升到哪一层由 core 的 ungroup 决定，
     // 提升后的新路径由后端改完自己的树再扫盘推。
-    if (resumeData?.ungrouped) {
+    if (reply.status === "done") {
       if (!screenKey) {
         return { success: false, message: `分组已在前端解散，但无法确定它属于哪个大屏: ${groupIds[0]}` };
       }
       try {
-        const movedComponents = await applyComponentUngroup(screenKey, bareIds);
+        const movedComponents = await applyComponentUngroup(screenKey, numericIds.map(String));
         const list = movedComponents.map((item) => `${item.componentId} -> ${item.filePath}`).join("; ");
         return {
           success: true,
@@ -118,20 +119,9 @@ export const ungroupComponentTool = createTool({
       }
     }
 
-    if (!suspend) {
-      return { success: false, message: "当前上下文不支持 suspend（非 agent 流式调用）" };
-    }
-
-    // ── ASK_BEFORE_EDIT：先弹审批框，用户接受后再交前端解散 ──────────────
-    if (mode === AgentMode.ASK_BEFORE_EDIT) {
-      return suspend({
-        type: SuspendType.AskApprovalUngroupComponent,
-        purpose: "解散选中的分组",
-        groupIds: bareIds
-      }) as never;
-    }
-
-    // 自动模式：直接 suspend 交给前端解散
-    return suspend({ type: SuspendType.UngroupComponent, groupIds: bareIds }) as never;
+    return suspendCanvasOps(context, {
+      purpose: "解散选中的分组",
+      ops: [{ op: "ungroup", groupIds: numericIds }]
+    });
   }
 });

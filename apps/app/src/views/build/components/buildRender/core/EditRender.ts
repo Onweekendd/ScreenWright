@@ -52,7 +52,6 @@ class EditRender {
     el.style.width = `${Number(this.editConfig.width) * scale}px`;
     el.style.height = `${Number(this.editConfig.height) * scale}px`;
     el.style.overflow = `hidden`;
-    el.style.boxShadow = "0 8px 10px rgb(30 30 30 / 12%)";
   }
 
   async createEditByElement() {

@@ -1,5 +1,5 @@
 <template>
-  <ftimg-global-option />
+  <swimgGlobalOption />
 </template>
 <script setup lang="ts">
 import swimgGlobalOption from "../ItemComponent/swImg/globalOption.vue";

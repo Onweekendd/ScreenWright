@@ -2,6 +2,8 @@ import type { CSSProperties } from "vue";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 
+import { getTopIndex } from "@screenwright/core";
+
 import { mediaEnum } from "@/components/componentEntry/type";
 import { useGlobalLoading } from "@/hooks/useGlobalLoading";
 import { useScreenScale } from "@/hooks/useScreenScale";
@@ -192,7 +194,7 @@ export function useView() {
         componentList.value = [
           {
             ...openVideo,
-            zIndex: groupData.value.length + 1
+            zIndex: getTopIndex(groupData.value)
           }
         ];
 

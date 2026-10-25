@@ -51,7 +51,7 @@ describe("状态动画生成器系统测试", () => {
       left: 100,
       top: 200,
       display: true,
-      zIndex: 10
+      zIndex: "aA"
     } as Partial<ComponentAnimationConfig>;
 
     const result = buildComponent(config, imageComponent);
@@ -59,7 +59,7 @@ describe("状态动画生成器系统测试", () => {
     expect(result.config.left, "left应该直接映射").toBe(100);
     expect(result.config.top, "top应该直接映射").toBe(200);
     expect(result.config.display, "display应该直接映射").toBe(true);
-    expect(result.config.zIndex, "zIndex应该直接映射").toBe(10);
+    expect(result.config.zIndex, "zIndex应该直接映射").toBe("aA");
 
     expect(result.appliedMappings.length, "应用了4个映射").toBe(4);
     expect(result.skippedMappings.length, "跳过的映射数量").toBe(0);
@@ -133,7 +133,7 @@ describe("状态动画生成器系统测试", () => {
       opacity: 0.8, // 嵌套映射
       rotateX: 30, // 嵌套映射
       display: true, // 直接映射
-      zIndex: 5 // 直接映射
+      zIndex: "a5" // 直接映射
     } as Partial<ComponentAnimationConfig>;
 
     const result = buildComponent(config, imageComponent);
@@ -142,7 +142,7 @@ describe("状态动画生成器系统测试", () => {
     expect(result.config.left).toBe(100);
     expect(result.config.top).toBe(200);
     expect(result.config.display).toBe(true);
-    expect(result.config.zIndex).toBe(5);
+    expect(result.config.zIndex).toBe("a5");
 
     // 验证嵌套映射
     expect(result.config.component?.width).toBe(300);
@@ -313,7 +313,7 @@ describe("状态动画生成器系统测试", () => {
       top: null,
       width: 0, // 边界值
       opacity: 0, // 边界值
-      zIndex: 999 // 有效值
+      zIndex: "bF7" // 有效值
     } as any;
 
     const result = buildComponent(config, imageComponent);
@@ -332,7 +332,7 @@ describe("状态动画生成器系统测试", () => {
     expect(result.config.option?.opacity).toBe(0);
 
     // 有效值应该通过
-    expect(result.config.zIndex).toBe(999);
+    expect(result.config.zIndex).toBe("bF7");
 
     // 验证跳过的映射
     const skippedSources = result.skippedMappings.map((s: any) => s.mapping.source);

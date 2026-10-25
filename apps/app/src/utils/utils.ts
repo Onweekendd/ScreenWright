@@ -11,6 +11,7 @@ import html2canvas from "html2canvas";
 import { cloneDeep, isArray, isBoolean, isDate, isEmpty, isNil, isNumber, isObject, isString } from "lodash-es";
 
 import IconModal from "@/assets/icon/assets-icon-modal.png";
+import { getApiBaseUrl } from "@/utils/apiBase";
 import { setMinioUrl } from "@/utils/config";
 import { BaseName } from "@/utils/config";
 
@@ -316,7 +317,7 @@ export const blobUrlToFile = async (blobUrl: string, fileName: string) => {
 // 终端交互中继已内建进 Screenwright 后端（servers/server 的 encoded-control-relay），
 // 因此这里指向 funAI base 而非旧的 Java 网关（VITE_API_BASE_URL）。
 export const getWebsocketUrl = (id: string, type = "bi") => {
-  const baseURL = import.meta.env.VITE_FUNAI_API_URL || "http://localhost:4111";
+  const baseURL = getApiBaseUrl();
   const doubleSlash = baseURL.indexOf("//");
   const hostAndPath = doubleSlash === -1 ? `//${baseURL}` : baseURL.slice(doubleSlash);
   const protocol = baseURL.startsWith("https:") ? "wss:" : "ws:";

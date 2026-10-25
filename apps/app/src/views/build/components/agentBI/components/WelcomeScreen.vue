@@ -2,58 +2,67 @@
   <Transition name="welcome">
     <div v-if="isVisible" class="welcome-screen">
       <div class="welcome-content">
-        <div class="welcome-glow" />
+        <header class="welcome-header">
+          <span class="welcome-eyebrow"><span class="welcome-spark" aria-hidden="true">✦</span> 从一个想法开始</span>
+          <h2 class="welcome-title">把灵感，变成一块大屏</h2>
+          <p class="welcome-subtitle">找真实素材、生成新画面，一起搭出可以编辑的大屏。</p>
+        </header>
 
-        <div class="welcome-header animate-item" style="--i: 0">
-          <span class="header-emoji">🎉</span>
-          <h2 class="welcome-title">欢迎使用 Screenwright AI 创作智能体！</h2>
-        </div>
+        <ul class="capability-list" aria-label="可以帮你做什么">
+          <li v-for="item in capabilities" :key="item.title" class="capability-item">
+            <span class="capability-icon" aria-hidden="true">{{ item.icon }}</span>
+            <span class="capability-title">{{ item.title }}</span>
+            <span class="capability-desc">{{ item.desc }}</span>
+          </li>
+        </ul>
 
-        <p class="welcome-desc animate-item" style="--i: 1">
-          您可以直接用自然语言描述大屏创作需求，例如说明行业场景、布局样式、视觉风格、所需组件、使用用途。
-        </p>
-
-        <div class="welcome-guide animate-item" style="--i: 2">
-          <div class="guide-title">
-            <span class="guide-emoji">📝</span>
-            <span>操作流程指引如下：</span>
+        <section class="welcome-section" aria-labelledby="welcome-examples-label">
+          <div class="section-heading">
+            <h3 id="welcome-examples-label" class="section-label">选一个灵感试试</h3>
+            <span class="section-hint">点击开始创建</span>
           </div>
-          <ul class="guide-steps">
-            <li v-for="(step, idx) in steps" :key="idx" class="guide-step">
-              <span class="step-bullet">▪</span>
-              <span>{{ step }}</span>
-            </li>
-          </ul>
-        </div>
+          <div class="welcome-examples">
+            <button
+              v-for="(ex, idx) in examples"
+              :key="ex.label"
+              type="button"
+              class="example-btn"
+              @click="$emit('select', ex.prompt)"
+            >
+              <span class="example-index" aria-hidden="true">{{ String(idx + 1).padStart(2, "0") }}</span>
+              <span class="example-body">
+                <span class="example-label">{{ ex.label }}</span>
+                <span class="example-desc">{{ ex.desc }}</span>
+                <span class="example-tags">
+                  <span v-for="tag in ex.tags" :key="tag" class="example-tag" :data-tag="tag">{{ tag }}</span>
+                </span>
+              </span>
+              <svg class="example-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path
+                  d="M4 10h12m-5-5 5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </section>
 
-        <p class="welcome-cta animate-item" style="--i: 3">
-          <span class="cta-emoji">💡</span>
-          请说出您的大屏创作需求，开始创作吧！
-        </p>
-
-        <div class="welcome-examples animate-item" style="--i: 4">
-          <button
-            v-for="(ex, idx) in examples"
-            :key="idx"
-            class="example-btn"
-            :style="{ '--btn-delay': `${idx * 0.06}s` }"
-            @click="$emit('select', ex.prompt)"
-          >
-            {{ ex.label }}
-          </button>
-        </div>
+        <p class="welcome-hint">也可以直接输入需求，或添加图片、视频作为参考。</p>
       </div>
     </div>
   </Transition>
 </template>
 
 <script setup lang="ts">
-import type { WelcomeExample } from "../hooks/useWelcomeScreen";
+import type { WelcomeCapability, WelcomeExample } from "../hooks/useWelcomeScreen";
 
 defineProps<{
   isVisible: boolean;
   examples: WelcomeExample[];
-  steps: string[];
+  capabilities: WelcomeCapability[];
 }>();
 
 defineEmits<{
@@ -66,215 +75,281 @@ defineEmits<{
 
 .welcome-screen {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 4px;
   min-height: 100%;
+  box-sizing: border-box;
+  padding: 28px 8px;
+  container-type: inline-size;
 }
 
 .welcome-content {
+  position: relative;
+  isolation: isolate;
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  position: relative;
-}
-
-.welcome-glow {
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 280px;
-  height: 180px;
-  background: radial-gradient(ellipse at center, $color-primary-18 0%, transparent 70%);
-  pointer-events: none;
-  animation: glow-pulse 3s ease-in-out infinite alternate;
-}
-
-@keyframes glow-pulse {
-  from {
-    opacity: 0.6;
-    transform: translateX(-50%) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) scale(1.05);
-  }
-}
-
-.animate-item {
-  animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: calc(var(--i) * 0.07s);
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  gap: 24px;
 }
 
 .welcome-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  position: relative;
 
-  .header-emoji {
-    font-size: 20px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .welcome-title {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-    color: $color-primary-name;
-    line-height: 1.4;
-    background: linear-gradient(135deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -40px -8px -20px;
+    background: radial-gradient(ellipse at 25% 25%, $color-primary-10, transparent 70%);
+    pointer-events: none;
   }
 }
 
-.welcome-desc {
-  margin: 0;
-  font-size: 12px;
-  color: $color-text-muted;
-  line-height: 1.7;
-  padding: 10px 14px;
-  background: $color-primary-5;
-  border: 1px solid $color-primary-18;
-  border-radius: 8px;
-}
-
-.welcome-guide {
-  padding: 12px 14px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid $color-lp-20;
-  border-radius: 8px;
-
-  .guide-title {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 500;
-    color: $color-text-secondary;
-    margin-bottom: 8px;
-
-    .guide-emoji {
-      font-size: 14px;
-      line-height: 1;
-    }
-  }
-
-  .guide-steps {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .guide-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    font-size: 12px;
-    color: $color-text-dim;
-    line-height: 1.6;
-
-    .step-bullet {
-      color: $color-primary-60;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-  }
-}
-
-.welcome-cta {
-  margin: 0;
-  display: flex;
+.welcome-eyebrow {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-size: 11px;
+  color: $color-text-muted;
+  letter-spacing: 0.05em;
+}
+
+.welcome-spark {
+  font-size: 16px;
+  color: $color-primary;
+}
+
+.welcome-title {
+  margin: 12px 0 8px;
+  font-size: clamp(20px, 5.5cqi, 25px);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: $color-text-primary;
+  text-wrap: balance;
+}
+
+.welcome-subtitle {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.8;
+  color: $color-text-muted;
+}
+
+.capability-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0 0 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  list-style: none;
+}
+
+.capability-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.capability-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: 2px;
+  border: 1px solid $color-primary-18;
+  border-radius: 8px;
+  background: $color-primary-10;
+  color: $color-primary;
+  font-size: 16px;
+}
+
+.capability-title {
+  color: $color-text-secondary;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.capability-desc {
+  color: $color-text-dim;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.welcome-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.section-label {
+  margin: 0;
+  color: $color-text-secondary;
   font-size: 12px;
   font-weight: 500;
-  color: $color-text-secondary;
+}
 
-  .cta-emoji {
-    font-size: 14px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
+.section-hint {
+  font-size: 11px;
+  color: $color-text-dim;
 }
 
 .welcome-examples {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 8px;
 }
 
 .example-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   width: 100%;
-  padding: 9px 14px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
   text-align: left;
-  font-size: 12px;
-  color: $color-primary-name;
-  background: $color-lp-15;
-  border: 1px solid $color-lp-30;
-  border-radius: 8px;
+  font: inherit;
   cursor: pointer;
   transition:
     background $transition-fast,
-    border-color $transition-fast,
-    box-shadow $transition-fast,
-    transform $transition-fast;
-  animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: calc(0.28s + var(--btn-delay));
-  line-height: 1.5;
+    border-color $transition-fast;
 
   &:hover {
-    background: $color-lp-25;
-    border-color: $color-lp-55;
-    box-shadow: 0 0 12px $color-primary-20;
-    transform: translateX(3px);
+    border-color: $color-primary-35;
+    background: $color-primary-10;
+
+    .example-arrow {
+      color: $color-text-primary;
+      transform: translateX(2px);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 3px;
   }
 
   &:active {
-    transform: translateX(1px);
-    background: $color-lp-35;
+    background: $color-primary-18;
   }
 }
 
-// Transition
-.welcome-enter-active {
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+.example-index {
+  padding-top: 2px;
+  color: $color-text-dim;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 20px;
 }
 
+.example-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.example-label {
+  color: $color-text-primary;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.example-desc {
+  color: $color-text-muted;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.example-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 3px;
+}
+
+.example-tag {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: $color-primary-10;
+  color: $color-text-muted;
+  font-size: 10px;
+  line-height: 17px;
+
+  &[data-tag^="联网"] {
+    background: rgba(108, 195, 190, 0.09);
+    color: #91c8c4;
+  }
+}
+
+.example-arrow {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  color: $color-text-dim;
+  transition:
+    color $transition-fast,
+    transform $transition-fast;
+}
+
+.welcome-hint {
+  margin: -6px 0 0;
+  color: $color-text-dim;
+  font-size: 11px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+@container (max-width: 300px) {
+  .capability-list {
+    gap: 8px;
+  }
+
+  .capability-desc {
+    display: none;
+  }
+
+  .example-btn {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .section-hint {
+    display: none;
+  }
+}
+
+.welcome-enter-active,
 .welcome-leave-active {
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity $transition-base;
 }
 
-.welcome-enter-from {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
+.welcome-enter-from,
 .welcome-leave-to {
   opacity: 0;
-  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-screen,
+  .example-btn,
+  .example-arrow {
+    transition: none;
+  }
 }
 </style>

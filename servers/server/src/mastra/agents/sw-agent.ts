@@ -1,11 +1,5 @@
-import type { MastraDBMessage } from "@mastra/core/agent";
 import { Agent, type SubAgent } from "@mastra/core/agent";
-import {
-  type Processor,
-  type ProcessorMessageContext,
-  TokenLimiter,
-  ToolSearchProcessor
-} from "@mastra/core/processors";
+import { TokenLimiter, ToolSearchProcessor } from "@mastra/core/processors";
 import type { RequestContext } from "@mastra/core/request-context";
 import type { Tool } from "@mastra/core/tools";
 import type { DynamicArgument } from "@mastra/core/types";
@@ -14,17 +8,17 @@ import { loadPrompt } from "@/agent-resources/prompts";
 
 import { CompactionProcessor } from "../lib/compaction/processors/compaction";
 import { ToolResultCleanupProcessor } from "../lib/compaction/processors/toolResultCleanup";
+import { InlineBackgroundTaskResults } from "../processors/inlineBackgroundTaskResults";
 import { keepBgDelegationsVisible } from "../processors/keepBgDelegationsVisible";
 import { ModeGuardProcessor } from "../processors/mode-guard.processor";
-import { rewriteSuspendedContinuationDirective } from "../processors/rewriteSuspendedContinuationDirective";
 import { ToolCallArgsSanitizer } from "../processors/tool-call-args-sanitizer.processor";
 import { resolveReasoningModel } from "../provider/model-registry";
 import { memory } from "../storage/storage";
 import { addPanelStateTool } from "../tools/add-panel-state";
-import { analyzeImageTool } from "../tools/analyze-image";
 import { applyAiTemplateTool } from "../tools/apply-ai-template";
 import type { createDelegateAppCodeTool } from "../tools/artifact-app";
 import { askUserQuestionTool } from "../tools/ask-user-question";
+import { captureCanvasTool } from "../tools/capture-canvas";
 import { configureCallbackArgs } from "../tools/configure-callback-args";
 import { configureComponentData } from "../tools/configure-component-data";
 import { copyComponentTool } from "../tools/copy-component";
@@ -32,6 +26,8 @@ import { createActionTemplate } from "../tools/create-action-template";
 import { createConditionTemplate } from "../tools/create-condition-template";
 import { createEchartOptionTool } from "../tools/create-echart-option";
 import { createEventTemplate } from "../tools/create-event-template";
+import { createImageTool } from "../tools/create-image";
+import { createVideoTool } from "../tools/create-video";
 import { executeInBrowserTool } from "../tools/execute-in-browser";
 import { createComponentTool, createDataFilterTool, deleteFileTool, editFilesTool, readFileTool } from "../tools/file";
 import { groupComponentTool } from "../tools/group-component";
@@ -39,16 +35,17 @@ import { listAvailableActions } from "../tools/list-available-actions";
 import { listAvailableEvents } from "../tools/list-available-events";
 import { moveComponentTool } from "../tools/move-component";
 import { enterPlanModeTool, submitPlanTool } from "../tools/plan";
+import { pullAssetsTool } from "../tools/pull-assets";
+import { pushAssetsTool } from "../tools/push-assets";
 import { saveAiTemplateTool } from "../tools/save-ai-template";
 import { searchComponentTool } from "../tools/search-component-tool";
+import { importMediaAssetsTool, searchMediaAssetsTool } from "../tools/search-media-assets";
 import { simulateEvent } from "../tools/simulate-event";
 import { claimTask, createTask, deleteTask, getTask, listTasks, resetTaskList, updateTask } from "../tools/task";
 import { todoWrite } from "../tools/todo";
 import { ungroupComponentTool } from "../tools/ungroup-component";
 import { AgentMode, type CommonRunTimeType } from "../types/bi-chat";
-import { codiaToBIWorkflow } from "../workflows/figma-to-bi/codia-to-bi-workflow";
 import { figmaToBIV2Workflow } from "../workflows/figma-to-bi/figma-to-bi-v2-workflow";
-import { requirementToBIWorkflow } from "../workflows/requirement-to-bi/requirement-to-bi-workflow";
 import { fullWorkspace } from "../workspace";
 import { dataFlowVerificationAgent } from "./data-flow-verification-agent";
 import { swExecutorAgent } from "./sw-executor-agent";
@@ -59,26 +56,29 @@ const baselineInstructions = [
   // BI 领域基本功。主 agent 此前一份领域提示词都没有，全靠开场几次 skill 检索现学——
   // 实测一条数据联动任务读进 39KB skill 内容（比整个系统提示词还大）、花掉 9 个纯检索
   // step / 95s，而其中绝大部分是每条任务都一样的固定流程。固定的进提示词，
-  // 查询性的（组件 schema、排错细则）留在 skill 里按需读。
+  // 通用组件结构常驻；各类型专属 option/data schema、排错细则留在 skill 里按需读。
   loadPrompt("mastra/sw-domain-core.md"),
+  loadPrompt("mastra/component-schema-core.md"),
   loadPrompt("mastra/tool-registry.md"),
   loadPrompt("mastra/editor-context.md"),
-  loadPrompt("mastra/file-tools.md"),
-  loadPrompt("mastra/workspace-structure.md"),
-  loadPrompt("mastra/task-prompts.md"),
+  loadPrompt("mastra/workspace-guide.md"),
+  loadPrompt("mastra/task-management-core.md"),
   loadPrompt("mastra/artifact-app-workflow.md"),
-  loadPrompt("mastra/todo-prompts.md"),
   loadPrompt("mastra/screen-build-workflow.md"),
   loadPrompt("mastra/image-to-component-workflow.md"),
-  loadPrompt("mastra/data-states.md"),
-  loadPrompt("mastra/browser-sdk.md")
+  loadPrompt("mastra/effect-image-workflow.md"),
+  loadPrompt("mastra/runtime-query.md")
 ].join("\n\n");
 
 // 压缩实验只替换主提示词，工具、模型和模式约束保持一致，便于与基线对照。
 // 默认保留基线；BI_PROMPT_VARIANT=compact 时合并重复规则并统一换行。
 const baseInstructions =
   process.env.BI_PROMPT_VARIANT === "compact"
-    ? [loadPrompt("mastra/sw-agent-compact.md"), loadPrompt("mastra/sw-domain-core.md")]
+    ? [
+        loadPrompt("mastra/sw-agent-compact.md"),
+        loadPrompt("mastra/sw-domain-core.md"),
+        loadPrompt("mastra/component-schema-core.md")
+      ]
         .join("\n\n")
         .replace(/\r\n/g, "\n")
     : baselineInstructions;
@@ -88,150 +88,6 @@ const planModePrompt = loadPrompt("mastra/mode-plan.md");
 export interface CreateSwAgentOptions {
   /** 已由启动层注入 ArtifactAppService 的前端编码任务委派工具。 */
   readonly delegateAppCodeTool: ReturnType<typeof createDelegateAppCodeTool>;
-}
-
-// ============ ImagePartSanitizer 辅助类型与纯函数 ============
-
-const IMAGE_MIME_PREFIX = "image/";
-
-interface FilePartShape {
-  type: string;
-  mimeType?: string;
-  mediaType?: string;
-  data?: string;
-  url?: string;
-  filename?: string;
-  name?: string;
-}
-
-interface ExperimentalAttachment {
-  url?: string;
-  contentType?: string;
-  name?: string;
-}
-
-interface UserMessageContent {
-  parts?: unknown[];
-  experimental_attachments?: ExperimentalAttachment[];
-}
-
-interface TextOrOtherPart {
-  type: string;
-  text?: string;
-}
-
-interface ImageEntry {
-  url: string;
-  filename?: string;
-}
-
-const hasImageMime = (mime: string | undefined): boolean =>
-  typeof mime === "string" && mime.startsWith(IMAGE_MIME_PREFIX);
-
-const isImagePart = (p: unknown): p is FilePartShape => {
-  const x = p as FilePartShape | null | undefined;
-  return x?.type === "file" && hasImageMime(x.mimeType ?? x.mediaType);
-};
-
-const isImageAttachment = (a: ExperimentalAttachment | null | undefined): boolean => hasImageMime(a?.contentType);
-
-/**
- * 收集图片条目并按 URL 去重——Mastra 会把同一张图同时写进 parts 和 experimental_attachments，
- * 不去重的话生成的 hint 文本会出现重复 <image>，导致模型误以为收到了多张图。
- */
-const collectImageEntries = (content: UserMessageContent | undefined): ImageEntry[] => {
-  const parts = Array.isArray(content?.parts) ? content.parts : [];
-  const attachments = Array.isArray(content?.experimental_attachments) ? content.experimental_attachments : [];
-
-  const fromParts: ImageEntry[] = parts
-    .filter(isImagePart)
-    .map((p) => ({ url: p.url ?? p.data ?? "", filename: p.filename ?? p.name }));
-  const fromAttachments: ImageEntry[] = attachments
-    .filter(isImageAttachment)
-    .map((a) => ({ url: a.url ?? "", filename: a.name }));
-
-  const seen = new Set<string>();
-  const deduped: ImageEntry[] = [];
-  for (const entry of [...fromParts, ...fromAttachments]) {
-    if (!entry.url || seen.has(entry.url)) {
-      continue;
-    }
-    seen.add(entry.url);
-    deduped.push(entry);
-  }
-  return deduped;
-};
-
-const buildImageHint = (entries: ImageEntry[]): string => {
-  if (entries.length === 0) {
-    return "";
-  }
-  const items = entries
-    .map((e, i) => `  <image index="${i + 1}" url="${e.url}"${e.filename ? ` filename="${e.filename}"` : ""} />`)
-    .join("\n");
-  return `\n\n<attached-images>\n${items}\n</attached-images>`;
-};
-
-/** 剥除 file part 并把 hint 文本合并进首个 text part；若无 text part 则前插一个。 */
-const stripFilePartsAndAttachHint = (parts: unknown[] | undefined, hint: string): TextOrOtherPart[] => {
-  const baseParts = (Array.isArray(parts) ? (parts as TextOrOtherPart[]) : []).filter((p) => p.type !== "file");
-  const merged = baseParts.map((p, i) => (i === 0 && p.type === "text" ? { ...p, text: (p.text ?? "") + hint } : p));
-  if (hint && !merged.some((p) => p.type === "text")) {
-    merged.unshift({ type: "text", text: hint.trim() });
-  }
-  return merged;
-};
-
-/** 返回 undefined 表示该字段应整体删除（原数组里只有图片）。 */
-const stripImageAttachments = (
-  attachments: ExperimentalAttachment[] | undefined
-): ExperimentalAttachment[] | undefined => {
-  if (!Array.isArray(attachments)) {
-    return attachments;
-  }
-  const remaining = attachments.filter((a) => !isImageAttachment(a));
-  return remaining.length === 0 ? undefined : remaining;
-};
-
-/**
- * 将用户消息中的图片 file part 转换为文本提示，移除 file part 本身。
- * DeepSeek 不具备视觉能力，收到 image content part 时 aihubmix 会挂起。
- * 图片 URL 以文本形式保留，供 agent 决策是否调用 analyze_image 工具。
- *
- * 注意：MastraDBMessage 把图片同时存在 content.parts 和 content.experimental_attachments
- * 两处。只清 parts 不行——Mastra DB→UI 还原时会从 experimental_attachments 把 file part
- * 再加回来（见 @mastra/core chunk-JGZLU7MM.js:828-838），所以这里两个字段都要清。
- * 字段命名 mimeType/data 兼容 mediaType/url，以应对适配层未来变动。
- */
-class ImagePartSanitizer implements Processor {
-  id = "image-part-sanitizer";
-
-  async processInput({ messages }: ProcessorMessageContext): Promise<MastraDBMessage[]> {
-    return messages.map((msg) => {
-      if (msg.role !== "user") {
-        return msg;
-      }
-
-      const content = msg.content as UserMessageContent | undefined;
-      const entries = collectImageEntries(content);
-      if (entries.length === 0) {
-        return msg;
-      }
-
-      const hint = buildImageHint(entries);
-      const newParts = stripFilePartsAndAttachHint(content?.parts, hint);
-      const newAttachments = stripImageAttachments(content?.experimental_attachments);
-
-      const newContent: Record<string, unknown> = { ...content, parts: newParts };
-      if (newAttachments === undefined) {
-        delete newContent.experimental_attachments;
-      } else {
-        newContent.experimental_attachments = newAttachments;
-      }
-
-      return { ...msg, content: newContent } as MastraDBMessage;
-    });
-  }
 }
 
 /**
@@ -301,14 +157,23 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       // 自检：配完事件/数据流后干跑一遍。曾是命令行脚本，agent 调一次要 7 步（摸 shell、读源码、
       // 跟 cmd.exe 的引号转义搏斗）；常驻成工具后一次调用
       simulateEvent,
-
+      createImageTool,
+      createVideoTool,
+      searchMediaAssetsTool,
+      importMediaAssetsTool,
+      // 本地处理素材的两头：拉到工作区 assets/ 才能用 execute_command 处理，处理完传回素材库。
+      // 单个调用带多个文件、内部并行；agent 一想「本地处理图片」就要用到，跟生图工具一起常驻
+      pullAssetsTool,
+      pushAssetsTool,
       // 任务管理：委派通信的核心通道，必须每轮规划都可用，不走动态搜索
       createTask,
       updateTask,
       getTask,
       listTasks,
       delegateAppCodeTool,
-      analyzeImageTool,
+      // 视觉自检：主模型自己能看图后，搭完/改完截一张画布对照用户给的参考图，
+      // 跟 simulateEvent 一样属于收尾必走的一步，常驻
+      captureCanvasTool,
       todoWrite,
       enterPlanModeTool,
       submitPlanTool
@@ -345,6 +210,9 @@ export function createSwAgent(options: CreateSwAgentOptions) {
           // 模板存取：模板提取收尾 / 模板检索命中后应用，都是明确的收尾动作
           saveAiTemplateTool,
           applyAiTemplateTool
+          // 生图：低频（一次会话顶多用到几次装饰素材/效果图），且本身开了 background，
+          // 常驻只会白占每轮的 schema token。工具内部已经幂等（promptHash），检索没命中
+          // 漏用一次的代价也就是让 agent 退回文字描述，不影响正确性
           // ToolSearchProcessor 的 tools 签名是 `Record<string, Tool<any, any>>`——只给了两个
           // 类型参数，第 3/4 个（suspendSchema / resumeSchema）默认成 unknown，于是所有带 suspend
           // 的工具都不兼容。这是签名太窄而非运行时限制（挂起发生在 execute 内部，与工具怎么进入
@@ -360,10 +228,10 @@ export function createSwAgent(options: CreateSwAgentOptions) {
           autoLoad: true
         }
       }),
-      new ImagePartSanitizer(),
       new ToolCallArgsSanitizer(),
       new keepBgDelegationsVisible(),
-      new rewriteSuspendedContinuationDirective(),
+      // 后台任务完成后的续接提示只有任务 id，没有结果：在这里把结果写进提示里
+      new InlineBackgroundTaskResults(),
       // 必须放在 ToolSearchProcessor 之后,以便剥离 Search 动态注入的写工具(如 createConditionTemplate)
       new ModeGuardProcessor(),
       new ToolResultCleanupProcessor(),
@@ -410,12 +278,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
     } as unknown as DynamicArgument<Record<string, SubAgent<string, CommonRunTimeType>>, CommonRunTimeType>,
 
     workflows: {
-      figmaToBIV2Workflow,
-      // 图片转大屏正式路：入参图片 MinIO URL → Codia image_to_design → 同一转换 pipeline。
-      codiaToBIWorkflow,
-      // 从零构建：没有设计稿、纯文字需求时走它。入参是**已与用户确认过的内容清单**，
-      // 需求收敛与确认留在对话层做（见该工作流的头注释）。
-      requirementToBIWorkflow
+      figmaToBIV2Workflow
     },
 
     // 后台任务 opt-in：最小可用版本只把大屏并发施工子 agent 放后台。

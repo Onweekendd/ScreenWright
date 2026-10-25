@@ -11,7 +11,6 @@
 - 区别于折线图（echartline）：本组件默认包含柱形，折线图为纯折线
 - 区别于条形图（echartstripBar）：本组件可混合折线，条形图纯条形
 - 区别于面积折线图（echartareaLine）：本组件柱形+折线组合，面积图为折线+面积填充
-- 区别于3D折线柱形图（echartthreedBarAndLine）：本组件2D平面，3D图为立体效果
 
 ## 别名/同义词
 

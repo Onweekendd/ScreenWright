@@ -29,7 +29,7 @@ interface Emit {
  */
 export function useChatInput(emit: Emit) {
   const { selectTargetData, componentList } = useEditStore();
-  const { mentionedComponents } = useActiveAgentBISession();
+  const { addFiles, attachments, mentionedComponents } = useActiveAgentBISession();
   const { allComponentMap } = useGlobalComponentData();
 
   // ─── DOM refs ────────────────────────────────────────────────
@@ -255,14 +255,33 @@ export function useChatInput(emit: Emit) {
   }
 
   /**
-   * 处理粘贴事件，过滤富文本，仅插入纯文本内容
+   * 图片进入附件列表，文字按纯文本插入，避免把富文本或内联图片写进编辑区。
    *
    * @param e - 剪贴板事件对象
    */
   function handlePaste(e: ClipboardEvent) {
     e.preventDefault();
-    const text = e.clipboardData?.getData("text/plain") ?? "";
-    document.execCommand("insertText", false, text);
+    const clipboard = e.clipboardData;
+    if (!clipboard) {
+      return;
+    }
+
+    let images = Array.from(clipboard.files).filter((file) => file.type.startsWith("image/"));
+    // 部分剪贴板只通过 items 暴露图片；两种入口择一读取，避免同一张图片添加两次。
+    if (images.length === 0) {
+      images = Array.from(clipboard.items).flatMap((item) => {
+        const file = item.kind === "file" && item.type.startsWith("image/") ? item.getAsFile() : null;
+        return file ? [file] : [];
+      });
+    }
+    if (images.length > 0) {
+      addFiles(images);
+    }
+
+    const text = clipboard.getData("text/plain");
+    if (text) {
+      document.execCommand("insertText", false, text);
+    }
   }
 
   /**
@@ -358,7 +377,7 @@ export function useChatInput(emit: Emit) {
 
   /**
    * 处理发送操作
-   * 提取编辑器纯文本，非空时触发 send 事件并清空编辑器
+   * 有文本或待上传图片时发送，并在发送前同步尚未完成防抖的文本。
    */
   function handleSend() {
     const editor = editorRef.value;
@@ -366,9 +385,10 @@ export function useChatInput(emit: Emit) {
       return;
     }
     const text = getPlainText(editor).trim();
-    if (!text) {
+    if (!text && !attachments.value.some((item) => item.status === "pending")) {
       return;
     }
+    syncTextImmediately(editor);
     emit("send");
     editor.innerHTML = "";
     emit("update:modelValue", "");

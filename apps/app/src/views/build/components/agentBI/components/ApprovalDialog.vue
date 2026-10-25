@@ -1,5 +1,5 @@
 <template>
-  <!-- 审批/提问/计划弹层：提升到 process-area 级别，浮于对话页/后台任务页底部，不遮罩、不阻断其余交互 -->
+  <!-- 审批/提问/计划弹层：提升到 process-area 级别，占住对话页/后台任务页底部（顶替输入框），不遮挡上面的消息 -->
   <Transition name="ask-popup">
     <div v-if="pendingDialog" class="ask-popup-layer">
       <div
@@ -76,14 +76,11 @@ const pendingDialog = computed(() => dialogs.value.get(sessionId));
 <style lang="scss" scoped>
 @use "../styles/variables" as *;
 
-/* 定位容器：贴底浮层。不设背景、不拦截指针，让弹窗之外的区域保持正常交互 */
+/* 贴底占位、不浮在上面：排在对话页/后台任务页下方，把它们往上挤短，
+   上面的消息照常可见可滚；对话页的输入框在弹窗期间隐藏，弹窗正好顶替它的位置 */
 .ask-popup-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  align-items: flex-end;
-  pointer-events: none;
+  flex-shrink: 0;
+  background-color: $color-primary-5;
 }
 
 .ask-popup-panel {
@@ -91,8 +88,6 @@ const pendingDialog = computed(() => dialogs.value.get(sessionId));
   padding: 12px;
   max-height: 60vh;
   overflow-y: auto;
-  /* 仅面板本身可交互 */
-  pointer-events: auto;
 
   &--plan {
     max-height: 85vh;

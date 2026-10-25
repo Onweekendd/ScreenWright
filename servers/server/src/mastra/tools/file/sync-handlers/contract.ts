@@ -1,31 +1,25 @@
 import { z } from "zod";
 
-import { SuspendDefs, SuspendType } from "../../../types/suspend";
+import { type CanvasOp, SuspendDefs, SuspendType } from "../../../types/suspend";
+import { canvasOpsPayload } from "../../canvas-ops";
 import type { ReplaceResult } from "../apply-edits";
 import { type ReadFileRecord, readFileState } from "../state";
 import { formatSuccessMessage } from "../utils";
 
 // ── 挂起协议 ─────────────────────────────────────────────────────────────────
 
-/** edit_files 能向前端提出的全部请求。新增一种同步类型时，这里与 resume 那份要成对加。 */
+/**
+ * edit_files 能向前端提出的全部请求：普通文件在 ASK 模式下那一轮纯审批，加上组件 / 过滤器 / 屏幕配置
+ * 三类同步——后者统一走 `canvas_ops`（审批与否由载荷里的 `approval` 决定）。
+ */
 export const editFilesSuspendSchema = z.union([
   SuspendDefs[SuspendType.AskApproval].suspend,
-  SuspendDefs[SuspendType.PushComponentUpdate].suspend,
-  SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].suspend,
-  SuspendDefs[SuspendType.SaveFilter].suspend,
-  SuspendDefs[SuspendType.AskApprovalSaveFilter].suspend,
-  SuspendDefs[SuspendType.UpdateScreenInfo].suspend,
-  SuspendDefs[SuspendType.AskApprovalUpdateScreenInfo].suspend
+  SuspendDefs[SuspendType.CanvasOps].suspend
 ]);
 
 export const editFilesResumeSchema = z.union([
   SuspendDefs[SuspendType.AskApproval].resume,
-  SuspendDefs[SuspendType.PushComponentUpdate].resume,
-  SuspendDefs[SuspendType.AskApprovalPushComponentUpdate].resume,
-  SuspendDefs[SuspendType.SaveFilter].resume,
-  SuspendDefs[SuspendType.AskApprovalSaveFilter].resume,
-  SuspendDefs[SuspendType.UpdateScreenInfo].resume,
-  SuspendDefs[SuspendType.AskApprovalUpdateScreenInfo].resume
+  SuspendDefs[SuspendType.CanvasOps].resume
 ]);
 
 export type EditFilesSuspendPayload = z.infer<typeof editFilesSuspendSchema>;
@@ -55,6 +49,8 @@ export interface EditContext {
   /** 编辑开始时读到的原文；判断改名之类「改之前是什么」的问题只能问它 */
   readRecord: ReadFileRecord;
   needsApproval: boolean;
+  /** 编辑完成后是否截图；不传时默认开启。 */
+  capture?: boolean;
 }
 
 /**
@@ -99,17 +95,11 @@ export const notWritten = (ctx: EditContext, reason: string): PreparedEdit => ({
 });
 
 /**
- * 同一件事的两种挂起形态：ASK 模式先弹审批框、AUTO 模式直接推。
- * 除了 type 与多出来的 purpose，载荷字段完全一样——分开写两遍迟早漏掉一边的字段。
+ * 一次同步对应一个 `canvas_ops` 的 op；ASK 模式下载荷带 `approval`（前端先弹审批框），AUTO 模式直接推。
+ * 审批与否只在这里判断一次——处理器只管产出 op。
  */
-export const askOrPush = <F extends Record<string, unknown>>(
-  ctx: EditContext,
-  { approvalType, autoType, purpose }: { approvalType: SuspendType; autoType: SuspendType; purpose: string },
-  fields: F
-): EditFilesSuspendPayload =>
-  (ctx.needsApproval
-    ? { type: approvalType, purpose, ...fields }
-    : { type: autoType, ...fields }) as unknown as EditFilesSuspendPayload;
+export const syncPayload = (ctx: EditContext, purpose: string, op: CanvasOp): EditFilesSuspendPayload =>
+  canvasOpsPayload({ needsApproval: ctx.needsApproval, purpose, ops: [op] });
 
 /** 整屏回写换掉了磁盘内容，之前读到的快照全部失效，下次编辑必须重读。 */
 export const invalidateReadState = (...absPaths: string[]): void => {

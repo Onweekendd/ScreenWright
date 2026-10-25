@@ -2,7 +2,7 @@ import { type ComponentPlacement, extractComponentId, ScreenEditor } from "@scre
 import type { ComponentType, Filter, PanelState, ParsedLargeScreenInfo } from "@screenwright/types";
 import path from "path";
 
-import { getScreenDirPath, getWorkspaceBase } from "../screen-workspace";
+import { getScreenDirPath, getWorkspaceBase } from "../screen/screen-workspace";
 import { findJsonFile } from "./fs-utils";
 import { ScreenReader } from "./screen-read";
 import { syncScreenData } from "./screen-sync";
@@ -24,9 +24,9 @@ import { syncScreenData } from "./screen-sync";
 export const runScreenMutation = async <T>(
   screenKey: string,
   mutate: (editor: ScreenEditor, reader: ScreenReader) => T | Promise<T>,
-  { write = true }: { write?: boolean } = {}
+  { write = true, info }: { write?: boolean; info?: ConstructorParameters<typeof ScreenReader>[0]["info"] } = {}
 ): Promise<T> => {
-  const reader = new ScreenReader({ id: screenKey });
+  const reader = new ScreenReader({ id: screenKey, info });
   const value = await mutate(ScreenEditor.create(reader), reader);
 
   if (write) {

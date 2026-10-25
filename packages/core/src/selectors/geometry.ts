@@ -11,20 +11,6 @@ import type { ComponentType } from "@screenwright/types";
  */
 
 /**
- * 取一组组件里最高的层级。
- *
- * 与 app 侧 getMaxIndex 逐字一致（含 Math.max 展开写法）：这是"把组件顶到最上层"的依据，
- * 前端移动 / 粘贴组件时用它算新 zIndex，改写法等于改行为。
- */
-export const getMaxIndex = (arr: ComponentType[]): number => {
-  if (arr.length === 0) {
-    return 0;
-  }
-  const indexArr = arr.map((v) => v.zIndex);
-  return Math.max(...indexArr);
-};
-
-/**
  * 求一组组件的包围盒。
  *
  * 与 app 侧 calculateGroupDimensions 逐字一致：分组的 left/top/宽高就是这个值，

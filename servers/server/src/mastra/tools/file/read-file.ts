@@ -1,12 +1,58 @@
+import { createHash } from "node:crypto";
 import { readdirSync } from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 
 import { createTool } from "@mastra/core/tools";
+import sharp from "sharp";
 import { z } from "zod";
+
+import { assetStore } from "@/lib/storage";
+import { TOOL_IMAGES_FIELD } from "@/mastra/provider/image-middleware";
 
 import { readFileState, resolveFilePath, WORKSPACE_BASE } from "./state";
 import { readFileWithMeta } from "./utils";
+
+const IMAGE_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif", ".tif", ".tiff"]);
+const MAX_IMAGE_BYTES = 50 * 1024 * 1024;
+const MODEL_IMAGE_FORMATS: Record<string, { extension: string; mime: string }> = {
+  png: { extension: "png", mime: "image/png" },
+  jpeg: { extension: "jpg", mime: "image/jpeg" },
+  webp: { extension: "webp", mime: "image/webp" },
+  gif: { extension: "gif", mime: "image/gif" }
+};
+
+async function readImage(absPath: string, filePath: string) {
+  const stat = await fsp.stat(absPath);
+  if (stat.size > MAX_IMAGE_BYTES) {
+    throw new Error(`Image is too large: ${filePath}. Maximum supported size is 50 MB.`);
+  }
+  const bytes = await fsp.readFile(absPath);
+  const image = sharp(bytes);
+  const { width, height, format } = await image.metadata().catch(() => {
+    throw new Error(`Cannot decode image: ${filePath}`);
+  });
+  if (!width || !height || !format) {
+    throw new Error(`Cannot decode image: ${filePath}`);
+  }
+  // 中间件按存储 key 推断 MIME；AVIF / TIFF 转成它已有支持的 PNG，原文件保持不变。
+  const knownFormat = MODEL_IMAGE_FORMATS[format];
+  const preview = knownFormat ? bytes : await image.png().toBuffer();
+  const { extension, mime } = knownFormat ?? MODEL_IMAGE_FORMATS.png;
+  const hash = createHash("sha256").update(preview).digest("hex");
+  const { url } = await assetStore().put(`read-file-images/${hash}.${extension}`, preview, { contentType: mime });
+  readFileState.delete(absPath);
+  return {
+    type: "image" as const,
+    content: `Image ${filePath} (${width}×${height}). The image is attached for visual inspection.`,
+    url,
+    mimeType: mime,
+    width,
+    height,
+    size: bytes.length,
+    [TOOL_IMAGES_FIELD]: [{ url, label: `read_file：${filePath} ${width}×${height}` }]
+  };
+}
 
 function findComponentDoc(dir: string, prop: string): string | null {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -34,12 +80,13 @@ function isUnderSkillsDir(absPath: string): boolean {
 
 export const readFileTool = createTool({
   id: "read_file",
-  description: `Read a file's content. Use it to obtain exact content before structural edits with edit_files.
+  description: `Read a text file or view an image. Use text reads to obtain exact content before structural edits with edit_files.
 
 Usage:
 - Provide a path relative to the workspace root (e.g. "screen_123/component/456.json").
-- Returns the file content as a string.
-- Tracks the file state to allow subsequent edits.`,
+- Text files return their content as a string and track file state for subsequent edits.
+- PNG, JPEG, WebP, GIF, AVIF and TIFF images are attached for you to see through the image middleware; the result also includes URL, dimensions and size. Images are not decoded as text or tracked for text edits.
+- Images are read in full (up to 50 MB); offset and limit apply only to text files. SVG files remain readable as text.`,
 
   inputSchema: z.object({
     path: z.string().describe('Workspace-relative path to the file (e.g. "screen_123/component/456.json")'),
@@ -57,15 +104,27 @@ Usage:
       .describe("Maximum number of lines to read; 0 or omitted reads the whole file")
   }),
 
-  outputSchema: z.object({
-    content: z.string(),
-    totalLines: z.number(),
-    encoding: z.enum(["utf8", "utf16le"]),
-    lineEnding: z.enum(["LF", "CRLF"]),
-    isPartialView: z.boolean(),
-    schemaDoc: z.string().optional().describe("组件 schema 文档路径（相对 workspace），修改前必须先读取"),
-    notice: z.string().optional().describe("读的是 skill 文件时的提示：下次该用哪个工具")
-  }),
+  outputSchema: z.union([
+    z.object({
+      content: z.string(),
+      totalLines: z.number(),
+      encoding: z.enum(["utf8", "utf16le"]),
+      lineEnding: z.enum(["LF", "CRLF"]),
+      isPartialView: z.boolean(),
+      schemaDoc: z.string().optional().describe("组件 schema 文档路径（相对 workspace），修改前必须先读取"),
+      notice: z.string().optional().describe("读的是 skill 文件时的提示：下次该用哪个工具")
+    }),
+    z.object({
+      type: z.literal("image"),
+      content: z.string(),
+      url: z.string(),
+      mimeType: z.string(),
+      width: z.number(),
+      height: z.number(),
+      size: z.number(),
+      [TOOL_IMAGES_FIELD]: z.array(z.object({ url: z.string(), label: z.string() }))
+    })
+  ]),
 
   execute: async ({ path: filePath, offset, limit }) => {
     // LLM 偶尔用 offset:0 / limit:0 表达「从头读全部」；0 在分页语义里没有意义，
@@ -85,6 +144,10 @@ Usage:
       await fsp.access(absPath);
     } catch {
       throw new Error(`File not found: ${filePath}`);
+    }
+
+    if (IMAGE_EXTENSIONS.has(path.extname(absPath).toLowerCase())) {
+      return readImage(absPath, filePath);
     }
 
     const { content, mtimeMs, encoding, lineEnding } = await readFileWithMeta(absPath);

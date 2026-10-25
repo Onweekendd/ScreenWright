@@ -20,17 +20,22 @@ describe("批次标识回传", () => {
     const fe = createFakeFrontend();
 
     const resume = fe.reply(
-      { type: "push_component_update", batchId: "batch-1", operationId: "0", component: {} },
+      {
+        type: "canvas_ops",
+        batchId: "batch-1",
+        operationId: "0",
+        ops: [{ op: "update_component", component: {} }]
+      },
       meta
     );
 
-    expect(resume).toMatchObject({ componentUpdated: true, batchId: "batch-1", operationId: "0" });
+    expect(resume).toMatchObject({ results: [{ ok: true }], batchId: "batch-1", operationId: "0" });
   });
 
   it("载荷里没有批次标识时不凭空造", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply({ type: "push_component_update", component: {} }, meta);
+    const resume = fe.reply({ type: "canvas_ops", ops: [{ op: "update_component", component: {} }] }, meta);
 
     expect(resume).not.toHaveProperty("batchId");
     expect(resume).not.toHaveProperty("operationId");
@@ -39,11 +44,15 @@ describe("批次标识回传", () => {
   it("拒绝路径也要带批次标识——否则工具同样认领不了这一帧", () => {
     const fe = createFakeFrontend({ approve: false });
 
-    const resume = fe.reply({ type: "create_component", batchId: "b", operationId: "2", component: {} }, meta);
+    const resume = fe.reply({ type: "canvas_ops", batchId: "b", operationId: "2", ops: [] }, meta);
 
     expect(resume).toMatchObject({ approved: false, batchId: "b", operationId: "2" });
   });
 });
+
+/** 取 canvas_ops 回执里第一个 op 回传的组件 */
+const copyOf = (resume: Record<string, unknown>): unknown =>
+  (resume.results as Array<{ component?: unknown }>)[0]!.component;
 
 describe("复制组件时整棵子树都换新 id", () => {
   // 只换顶层的话，core 的 upsert 会按「先摘再放」把原件的子组件搬到副本下面：
@@ -60,8 +69,10 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("父子都拿到新 id，且子组件的 parent 指向新父", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply({ type: "copy_component", component: group }, meta);
-    const copy = resume.component as { id: number; children: Array<{ id: number; parent: number }> };
+    const copy = copyOf(fe.reply({ type: "canvas_ops", ops: [{ op: "copy_component", component: group }] }, meta)) as {
+      id: number;
+      children: Array<{ id: number; parent: number }>;
+    };
 
     expect(copy.id).not.toBe(4177);
     expect(copy.children.map((c) => c.id)).not.toContain(4175);
@@ -72,7 +83,7 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("原载荷不被就地改动——工具后面还要用它算 placement", () => {
     const fe = createFakeFrontend();
 
-    fe.reply({ type: "copy_component", component: group }, meta);
+    fe.reply({ type: "canvas_ops", ops: [{ op: "copy_component", component: group }] }, meta);
 
     expect(group.id).toBe(4177);
     expect(group.children[0]!.id).toBe(4175);
@@ -81,14 +92,20 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("动态面板各状态 config 里的子组件同样换新 id", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply(
-      {
-        type: "copy_component",
-        component: { id: 4178, name: "动态面板", panelData: [{ id: "s1", config: [{ id: 4190, name: "文本" }] }] }
-      },
-      meta
-    );
-    const copy = resume.component as { panelData: Array<{ config: Array<{ id: number }> }> };
+    const copy = copyOf(
+      fe.reply(
+        {
+          type: "canvas_ops",
+          ops: [
+            {
+              op: "copy_component",
+              component: { id: 4178, name: "动态面板", panelData: [{ id: "s1", config: [{ id: 4190, name: "文本" }] }] }
+            }
+          ]
+        },
+        meta
+      )
+    ) as { panelData: Array<{ config: Array<{ id: number }> }> };
 
     expect(copy.panelData[0]!.config[0]!.id).not.toBe(4190);
   });
@@ -96,9 +113,14 @@ describe("复制组件时整棵子树都换新 id", () => {
   it("磁盘形态的字符串 children 原样放过（那是文件引用，不是这条路的形态）", () => {
     const fe = createFakeFrontend();
 
-    const resume = fe.reply({ type: "copy_component", component: { id: 1, children: ["4175_条形图"] } }, meta);
+    const copy = copyOf(
+      fe.reply(
+        { type: "canvas_ops", ops: [{ op: "copy_component", component: { id: 1, children: ["4175_条形图"] } }] },
+        meta
+      )
+    ) as { children: unknown[] };
 
-    expect((resume.component as { children: unknown[] }).children).toEqual(["4175_条形图"]);
+    expect(copy.children).toEqual(["4175_条形图"]);
   });
 });
 
@@ -220,24 +242,36 @@ describe("ask_user_question 的应答策略", () => {
 });
 
 describe("前端应用失败的原因", () => {
-  const createSuspend = () => ({ type: "create_component", component: { id: 1, component: { prop: "swtext" } } });
+  const createSuspend = () => ({
+    type: "canvas_ops",
+    ops: [{ op: "create_component", component: { id: 1, component: { prop: "swtext" } } }]
+  });
+
+  // type 而不是 interface：要从 Record<string, unknown> 断言过来，interface 没有索引签名过不了
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  type CreateResume = {
+    approved?: boolean;
+    results: Array<{ ok: boolean; component?: unknown; error?: string }>;
+  };
 
   it("不给 applyFailure 就是应用成功 —— 缺省本身是语义，不该被补成某种默认失败", () => {
-    const resume = createFakeFrontend({}).reply(createSuspend(), meta) as { approved?: boolean; error?: string };
+    const resume = createFakeFrontend({}).reply(createSuspend(), meta) as CreateResume;
 
-    expect(resume.approved).toBe(true);
-    expect(resume.error).toBeUndefined();
+    expect(resume.results[0]!.ok).toBe(true);
+    expect(resume.results[0]!.error).toBeUndefined();
+    expect(resume.results[0]!.component).toBeDefined();
   });
 
   it("channelDown 要点明重试和换工具都没用 —— 否则 agent 只能靠猜，会去委派子 agent", () => {
     const frontend = createFakeFrontend({ applyFailure: applyFailures.channelDown });
 
-    const resume = frontend.reply(createSuspend(), meta) as { approved?: boolean; error?: string };
+    const resume = frontend.reply(createSuspend(), meta) as CreateResume;
+    const error = resume.results[0]!.error;
 
-    expect(resume.approved).toBe(true);
-    expect(resume.error).toContain("添加组件");
-    expect(resume.error).toContain("重试");
-    expect(resume.error).toContain("换工具");
+    expect(resume.results[0]!.ok).toBe(false);
+    expect(error).toContain("添加组件");
+    expect(error).toContain("重试");
+    expect(error).toContain("换工具");
   });
 
   it("payloadRejected 要带上具体字段 —— 这类失败是改得对的，不能说成通道不通", () => {
@@ -245,17 +279,86 @@ describe("前端应用失败的原因", () => {
       applyFailure: applyFailures.payloadRejected('width 必须为正整数，收到 "很宽"')
     });
 
-    const resume = frontend.reply(createSuspend(), meta) as { error?: string };
+    const resume = frontend.reply(createSuspend(), meta) as CreateResume;
+    const error = resume.results[0]!.error;
 
-    expect(resume.error).toContain("width 必须为正整数");
-    expect(resume.error).not.toContain("重试");
+    expect(error).toContain("width 必须为正整数");
+    expect(error).not.toContain("重试");
+  });
+
+  it("批量创建：每个 op 各回一条，按下标对应，且各拿到不同的真实 id", () => {
+    const resume = createFakeFrontend({}).reply(
+      {
+        type: "canvas_ops",
+        ops: [
+          { op: "create_component", component: { id: 1 } },
+          { op: "create_component", component: { id: 2 } }
+        ]
+      },
+      meta
+    ) as CreateResume;
+
+    expect(resume.results).toHaveLength(2);
+    const ids = resume.results.map((r) => (r.component as { id: number }).id);
+    expect(new Set(ids).size).toBe(2);
   });
 
   it("同一个 policy 对不同操作要报出对应的操作名", () => {
     const frontend = createFakeFrontend({ applyFailure: applyFailures.channelDown });
 
-    const del = frontend.reply({ type: "delete_component" }, meta) as { error?: string };
+    const del = frontend.reply(
+      { type: "canvas_ops", ops: [{ op: "delete_component", componentId: 1 }] },
+      meta
+    ) as CreateResume;
 
-    expect(del.error).toContain("删除组件");
+    expect(del.results[0]!.error).toContain("删除组件");
+  });
+});
+
+describe("canvas_ops 应答", () => {
+  // type 而不是 interface：要从 Record<string, unknown> 断言过来，interface 没有索引签名过不了
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  type OpsResume = {
+    approved?: boolean;
+    results: Array<{ ok: boolean; component?: { id: number }; state?: { name: string }; error?: string }>;
+  };
+  const ops = [
+    { op: "group_components", componentIds: [1, 2] },
+    { op: "add_panel_state", panelId: 3, stateName: "状态9" },
+    { op: "move_components", componentIds: [4] },
+    { op: "ungroup", groupIds: [5] }
+  ];
+
+  it("results 与 ops 等长、按下标对应：分组回容器、面板回状态、移动/解组只回 ok", () => {
+    const resume = createFakeFrontend().reply({ type: "canvas_ops", ops }, meta) as OpsResume;
+
+    expect(resume.results).toHaveLength(ops.length);
+    expect(resume.results[0]).toMatchObject({ ok: true, component: { id: expect.any(Number) } });
+    expect(resume.results[1]).toMatchObject({ ok: true, state: { name: "状态9" } });
+    expect(resume.results[2]).toEqual({ ok: true });
+    expect(resume.results[3]).toEqual({ ok: true });
+  });
+
+  it("拒绝是整批的事", () => {
+    const resume = createFakeFrontend({ approve: false }).reply({ type: "canvas_ops", ops }, meta);
+
+    expect(resume).toEqual({ approved: false });
+  });
+
+  it("应用失败时每项各记一条 error，仍然等长", () => {
+    const resume = createFakeFrontend({ applyFailure: applyFailures.channelDown }).reply(
+      { type: "canvas_ops", ops },
+      meta
+    ) as OpsResume;
+
+    expect(resume.results).toHaveLength(ops.length);
+    expect(resume.results.every((r) => !r.ok && r.error)).toBe(true);
+    expect(resume.results[0]!.error).toContain("组合分组");
+  });
+
+  it("批次标识原样带回", () => {
+    const resume = createFakeFrontend().reply({ type: "canvas_ops", ops, batchId: "b", operationId: "1" }, meta);
+
+    expect(resume).toMatchObject({ batchId: "b", operationId: "1" });
   });
 });

@@ -122,10 +122,6 @@
                 <div v-if="currentAction.customActionType === 'component'" key="component">
                   <ComponentActionConfigs />
                 </div>
-
-                <div v-else-if="currentAction.customActionType === 'message'" key="message" style="width: 100%">
-                  <MessageActionConfigs />
-                </div>
               </div>
             </div>
             <div v-else style="padding: 0 0.2rem; font-size: 12px">{{ defaultMgs }}</div>
@@ -151,7 +147,6 @@ import configCustom from "@/views/build/components/buildConfig/attrsRender/compo
 import configSelect from "@/views/build/components/buildConfig/attrsRender/components/interactiveConfig/components/configSelect.vue";
 import ConfigTabsItem from "@/views/build/components/buildConfig/attrsRender/components/interactiveConfig/components/configTabsItem.vue";
 import conditionView from "@/views/build/components/buildConfig/attrsRender/components/interactiveConfig/conditionView.vue";
-import MessageActionConfigs from "@/views/build/components/buildConfig/attrsRender/components/interactiveConfig/messageActionConfigs/index.vue";
 import {
   templateActions,
   templateConditions,

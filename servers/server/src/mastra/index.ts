@@ -1,12 +1,9 @@
 import { Mastra } from "@mastra/core";
 import { PinoLogger } from "@mastra/loggers";
-import { CloudExporter, DefaultExporter, Observability, SensitiveDataFilter } from "@mastra/observability";
 
 import { swAgent } from "./runtime";
 import { storage } from "./storage/storage";
-import { codiaToBIWorkflow } from "./workflows/figma-to-bi/codia-to-bi-workflow";
 import { figmaToBIV2Workflow } from "./workflows/figma-to-bi/figma-to-bi-v2-workflow";
-import { requirementToBIWorkflow } from "./workflows/requirement-to-bi/requirement-to-bi-workflow";
 import { workspace } from "./workspace";
 
 export const mastra = new Mastra({
@@ -17,7 +14,7 @@ export const mastra = new Mastra({
     name: "Mastra",
     level: "info"
   }),
-  workflows: { figmaToBIV2Workflow, codiaToBIWorkflow, requirementToBIWorkflow },
+  workflows: { figmaToBIV2Workflow },
   storage,
   // 后台任务：让耗时的子 agent 委派(swExecutorAgent)不阻塞 agentic loop。
   // 需要 storage(已配置)。具体哪些工具走后台在 swAgent.backgroundTasks.tools 里 opt-in。
@@ -49,14 +46,6 @@ export const mastra = new Mastra({
       // 如需 agent 向用户说明失败，等 Issue-1（bg task resume 失败）修复后再评估是否要续接 turn。
     }
   },
-  observability: new Observability({
-    configs: {
-      default: {
-        serviceName: "mastra",
-        exporters: [new DefaultExporter(), new CloudExporter()],
-        spanOutputProcessors: [new SensitiveDataFilter()]
-      }
-    }
-  }),
+  // 不配置 observability，使用 Mastra 默认的 NoOpObservability，关闭追踪及导出。
   workspace
 });

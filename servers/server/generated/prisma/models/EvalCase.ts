@@ -755,6 +755,7 @@ export type EvalCaseCreateOrConnectWithoutRunInput = {
 
 export type EvalCaseCreateManyRunInputEnvelope = {
   data: Prisma.EvalCaseCreateManyRunInput | Prisma.EvalCaseCreateManyRunInput[]
+  skipDuplicates?: boolean
 }
 
 export type EvalCaseUpsertWithWhereUniqueWithoutRunInput = {
@@ -1684,6 +1685,7 @@ export type EvalCaseCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many EvalCases.
    */
   data: Prisma.EvalCaseCreateManyInput | Prisma.EvalCaseCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1702,6 +1704,7 @@ export type EvalCaseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many EvalCases.
    */
   data: Prisma.EvalCaseCreateManyInput | Prisma.EvalCaseCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

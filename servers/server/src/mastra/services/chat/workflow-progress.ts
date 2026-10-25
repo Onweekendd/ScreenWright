@@ -15,13 +15,10 @@ import { StepEnum } from "../../types";
 /**
  * 工作流 → 「交付完成」的那个 step id。
  *
- * 判据统一是「该 step 有 output」，但各工作流的交付步不同名：figma/codia 共用
- * nodeConvertToBIStep，requirementToBI 的是 assembleScreenStep。
+ * 判据是 Figma 的 nodeConvertToBIStep 有 output。
  */
 const DELIVERY_STEP: Record<string, string> = {
-  figmaToBIV2Workflow: StepEnum.NODE_CONVERT_TO_BI,
-  codiaToBIWorkflow: StepEnum.NODE_CONVERT_TO_BI,
-  requirementToBIWorkflow: "assemble-screen"
+  figmaToBIV2Workflow: StepEnum.NODE_CONVERT_TO_BI
 };
 
 export const isDeliveryWorkflow = (name: string | undefined): boolean => !!name && name in DELIVERY_STEP;
@@ -35,7 +32,7 @@ interface Statistics {
   details: string[];
 }
 
-/** figma / codia：交付步的 output 是逐节点结果数组 */
+/** figma：交付步的 output 是逐节点结果数组 */
 const fromNodeConvertOutput = (output: unknown): Statistics => {
   const results = Array.isArray(output) ? (output as Array<{ success?: boolean; skipped?: boolean }>) : [];
   const success = results.filter((r) => r.success).length;
@@ -53,22 +50,6 @@ const fromNodeConvertOutput = (output: unknown): Statistics => {
       failed > 0 ? `❌ 失败: ${failed} 个` : null,
       skipped > 0 ? `⏭️ 跳过: ${skipped} 个 (merge 类型)` : null
     ].filter((d): d is string => d !== null)
-  };
-};
-
-/** requirementToBI：交付步的 output 是一个汇总对象，`skipped` 是逐条原因说明 */
-const fromAssembleOutput = (output: unknown): Statistics => {
-  const data = (output ?? {}) as { zoneCount?: number; componentCount?: number; skipped?: string[] };
-  const skipped = data.skipped ?? [];
-  const componentCount = data.componentCount ?? 0;
-
-  return {
-    total: componentCount,
-    success: componentCount,
-    failed: 0,
-    skipped: skipped.length,
-    message: "大屏搭建完成",
-    details: [`✅ ${data.zoneCount ?? 0} 个分区、${componentCount} 个组件`, ...skipped.map((s) => `⏭️ ${s}`)]
   };
 };
 
@@ -96,8 +77,7 @@ export const buildWorkflowProgressChunk = (chunk: unknown) => {
     return filteredChunk;
   }
 
-  const statistics =
-    deliveryStepId === StepEnum.NODE_CONVERT_TO_BI ? fromNodeConvertOutput(output) : fromAssembleOutput(output);
+  const statistics = fromNodeConvertOutput(output);
 
   return { ...filteredChunk, data: { ...filteredChunk.data, statistics } };
 };

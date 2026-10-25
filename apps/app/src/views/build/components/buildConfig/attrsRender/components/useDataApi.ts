@@ -6,7 +6,6 @@ import type { dbModelReq } from "@/model/DataModel";
 import { DataSourceType } from "@/views/source/type";
 
 import type { ComponentType } from "../../../buildRender/type";
-import { tcpudpDataTypeEnum } from "../../constants";
 
 export type ApiFunction = (params: dbModelReq) => Promise<any>;
 export interface DataSource {
@@ -23,13 +22,6 @@ const apiMap = new Map<DataSourceType, ApiFunction>([
   [DataSourceType.WEBSOCKET, getDataApiList],
   [DataSourceType.TCPUDP, getDataSocketList]
 ]);
-
-const dataTypeMapDataSourceType = {
-  [tcpudpDataTypeEnum.None]: DataSourceType.LOCAL,
-  [tcpudpDataTypeEnum.TCP]: DataSourceType.TCPUDP,
-  [tcpudpDataTypeEnum.UDP]: DataSourceType.TCPUDP,
-  [tcpudpDataTypeEnum.WebSocket]: DataSourceType.WEBSOCKET
-};
 
 const useDataApi = createGlobalState((type?: DataSourceType) => {
   const options = ref<
@@ -79,4 +71,4 @@ const useDataApi = createGlobalState((type?: DataSourceType) => {
   return { options, getMenuApi, getOptionData, setOptions };
 });
 
-export { dataTypeMapDataSourceType, useDataApi };
+export { useDataApi };

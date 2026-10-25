@@ -114,6 +114,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 
+import { sortByZIndex } from "@screenwright/core";
+
 import { useEvent } from "@/hooks/useEvent";
 import { EventTypeEnum } from "@/views/build/components/buildConfig/constants";
 import type { PanelState } from "@/views/build/components/buildRender/core/SystemComponent/type";
@@ -182,7 +184,7 @@ const statusId = computed(() => {
  * 按 zIndex 排序的组件列表
  */
 const sortedComponents = computed(() => {
-  return [...props.statusData.config].sort((a, b) => b.zIndex - a.zIndex).reverse();
+  return sortByZIndex(props.statusData.config);
 });
 
 type ScrollComponent = (typeof sortedComponents.value)[number] & {

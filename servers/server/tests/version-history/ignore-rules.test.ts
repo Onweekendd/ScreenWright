@@ -10,7 +10,13 @@ const execFileAsync = promisify(execFile);
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 process.env.MASTRA_WORKSPACE_PATH = OUTPUT_DIR;
 
-import { commitScreenSnapshot, ensureRepo, getRollbackPreview, listNodes } from "@/mastra/services/version-history";
+import {
+  commitScreenSnapshot,
+  ensureRepo,
+  getRollbackPreview,
+  listNodes,
+  rollback
+} from "@/mastra/services/version/version-history";
 
 const SCREEN_ID = "900";
 const DIR_KEY = `${SCREEN_ID}_1`;
@@ -70,6 +76,7 @@ describe("版本历史：派生索引不进 git", () => {
     for (const pattern of [
       "node_modules/",
       ".mastra/",
+      "assets/",
       "_meta.json",
       "_layout.json",
       "_callback_flows/",
@@ -154,5 +161,64 @@ describe("版本历史：派生索引不进 git", () => {
 
     const preview = await getRollbackPreview(DIR_KEY, base.commit);
     expect(preview.map((f) => f.file)).toEqual(["component/4001_条形图.json"]);
+  });
+});
+
+describe("版本历史：本地素材区 assets/ 不进快照", () => {
+  beforeEach(() => {
+    cleanOutput();
+    mkdirSync(screenRoot, { recursive: true });
+    seedScreen();
+  });
+
+  afterEach(cleanOutput);
+
+  it("提交只收用户内容，assets/ 里的图片不进索引，磁盘文件保留", async () => {
+    write("assets/card.png", "binary-bytes");
+    write("assets/refs/ref.png", "more-bytes");
+
+    await commitScreenSnapshot(SCREEN_ID, "带素材的提交");
+
+    expect((await trackedFiles()).filter((file) => file.startsWith("assets/"))).toEqual([]);
+    expect(existsSync(path.join(screenRoot, "assets/card.png"))).toBe(true);
+  });
+
+  it("只动 assets/ 不产生新提交", async () => {
+    await commitScreenSnapshot(SCREEN_ID, "初始");
+    const before = await listNodes(DIR_KEY);
+
+    write("assets/new.png", "x");
+    await commitScreenSnapshot(SCREEN_ID, "只加了素材");
+
+    expect(await listNodes(DIR_KEY)).toHaveLength(before.length);
+  });
+
+  it("回退（git reset --hard）不会删 assets/ 里的文件：处理到一半的素材不会被冲掉", async () => {
+    await commitScreenSnapshot(SCREEN_ID, "初始");
+    const [first] = await listNodes(DIR_KEY);
+    write("component/4001_条形图.json", JSON.stringify({ id: 4001, title: "改过" }, null, 2));
+    write("assets/work-in-progress.png", "unsaved-work");
+    await commitScreenSnapshot(SCREEN_ID, "改了组件");
+
+    await rollback(DIR_KEY, first.commit);
+
+    expect(readFileSync(path.join(screenRoot, "assets/work-in-progress.png"), "utf-8")).toBe("unsaved-work");
+    expect(readFileSync(path.join(screenRoot, "component/4001_条形图.json"), "utf-8")).toContain("条形图");
+  });
+
+  it("老仓库迁移：已经被跟踪的 assets/ 文件会被摘出索引，磁盘文件保留", async () => {
+    await git(["init"]);
+    await git(["config", "user.email", "ai@screenwright.local"]);
+    await git(["config", "user.name", "Screenwright AI"]);
+    writeFileSync(path.join(screenRoot, ".gitignore"), "node_modules/\n", "utf-8");
+    write("assets/old.png", "tracked-before");
+    await git(["add", "-A"]);
+    await git(["commit", "-m", "旧版本：素材也提交了"]);
+    expect(await trackedFiles()).toContain("assets/old.png");
+
+    await commitScreenSnapshot(SCREEN_ID, "迁移后第一次提交");
+
+    expect(await trackedFiles()).not.toContain("assets/old.png");
+    expect(existsSync(path.join(screenRoot, "assets/old.png"))).toBe(true);
   });
 });

@@ -26,7 +26,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { registerSwaggerSpec, type SwaggerIndex } from "@/mastra/services/swagger-registry";
+import { registerSwaggerSpec, type SwaggerIndex } from "@/mastra/services/integrations/swagger-registry";
 
 /**
  * 数据源 id。真实环境里它来自平台的数据源表，eval 里取一个固定值即可——

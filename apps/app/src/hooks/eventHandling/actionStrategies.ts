@@ -26,14 +26,6 @@ const delay = (ms: number): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-const getValueByPath = (data: unknown, field: string) => {
-  const source = Array.isArray(data) ? data[0] : data;
-  if (!field || source == null || typeof source !== "object") {
-    return undefined;
-  }
-  return field.split(".").reduce((target: any, key) => (target == null ? undefined : target[key]), source as any);
-};
-
 /**
  * 动作处理策略接口
  */
@@ -638,119 +630,6 @@ export class SwitchSceneChildComponentVisibleStrategy implements ActionStrategy<
 /**
  * 切换地图模板组件地图子组件显隐状态动作策略
  */
-export class SwitchMapChildComponentVisibleStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    mapChildComponent,
-    componentIds,
-    isConditionSatisfied,
-    eventList
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!mapChildComponent) {
-      return;
-    }
-    const { childComponentInfoList, visible } = mapChildComponent;
-    const isVisible = visible === "show";
-    // 符合条件则显示/隐藏，否则反选
-    const visibleRes = isConditionSatisfied ? isVisible : !isVisible;
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    event?.updateMapChildComponentVisible(childComponentInfoList, visibleRes);
-  }
-}
-
-export class GlMapRegionLiftStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    glMapRegionLift,
-    componentIds,
-    isConditionSatisfied,
-    eventList
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!isConditionSatisfied) {
-      return;
-    }
-
-    const adcode = String(glMapRegionLift?.adcode || glMapRegionLift?.regionId || "");
-    const height = Number(glMapRegionLift?.height ?? 1);
-    const duration = Number(glMapRegionLift?.duration ?? 300);
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    event?.liftRegionByAdcode?.(adcode, {
-      height: Number.isFinite(height) ? height : 1,
-      duration: Number.isFinite(duration) ? duration : 300
-    });
-  }
-}
-
-export class GlMapSceneRoamStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    glMapSceneRoam,
-    componentIds,
-    isConditionSatisfied,
-    eventList
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!isConditionSatisfied) {
-      return;
-    }
-
-    const sceneId = String(glMapSceneRoam?.sceneId || "");
-    if (!sceneId) {
-      return;
-    }
-
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    void event?.playSceneRoam?.(sceneId);
-  }
-}
-
-export class GlMapIconActiveStrategy implements ActionStrategy<ActionExecutionParams> {
-  execute({
-    componentRootDoms,
-    glMapIconActive,
-    componentIds,
-    isConditionSatisfied,
-    eventList,
-    info
-  }: ActionExecutionParams): void {
-    if (componentRootDoms.length === 0) {
-      return;
-    }
-    if (!isConditionSatisfied) {
-      return;
-    }
-    if (!glMapIconActive) {
-      return;
-    }
-
-    const action = ["select", "unselect", "toggle"].includes(glMapIconActive.action)
-      ? glMapIconActive.action
-      : "select";
-    const value =
-      glMapIconActive.matchValueSource === "event"
-        ? getValueByPath(info, glMapIconActive.eventField || "name")
-        : glMapIconActive.matchValue;
-
-    const event = eventList[`${sceneEnumType.EchartGlmap}-${componentIds[0]}`];
-    event?.setMapGlIconActive?.({
-      childId: String(glMapIconActive.childId || ""),
-      field: String(glMapIconActive.matchField || "name"),
-      value,
-      action,
-      exclusive: glMapIconActive.exclusive !== false,
-      clearWhenMiss: Boolean(glMapIconActive.clearWhenMiss)
-    });
-  }
-}
-
 export class SetAnimationPlayStrategy implements ActionStrategy<ActionExecutionParams> {
   execute({
     componentRootDoms,
@@ -862,9 +741,7 @@ export class FollowIconStrategy
       return;
     }
 
-    const componentType = componentProp === "echart-glmap" ? sceneEnumType.EchartGlmap : sceneEnumType.ThreeScene;
-
-    const event = eventList[`${componentType}-${sourceComponentId || componentIds[0]}`];
+    const event = eventList[`${sceneEnumType.ThreeScene}-${sourceComponentId || componentIds[0]}`];
     const { boxOffsetX, boxOffsetY } = mapBox;
 
     event?.setMapBoxBom(componentRootDoms[0], info.id || info.componentId, boxOffsetX, boxOffsetY);
@@ -1088,127 +965,6 @@ export class SwitchVideoStrategy extends ActionStrategy<ActionExecutionParams> {
   }
 }
 
-export class sendUE4MessageStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    ue4Config,
-    info,
-    animation,
-    action,
-    eventList
-  }: ActionExecutionParams & {
-    info: Record<string, any> | null;
-  }): Promise<void> {
-    if (!isConditionSatisfied || action === undefined) {
-      return;
-    }
-
-    const ue4Info = action === ActionTypeEnum.SendUe4Msg ? info : null;
-
-    const targetComponentId = componentIds[0];
-
-    /**
-     * @description 获取组件类型
-     * @returns "PixelStreaming" | "PeerStreaming" | "" | null
-     */
-    const getComponentType = () => {
-      const targetComponent = globalComponentMap.get(String(targetComponentId));
-      if (!targetComponent) {
-        return null;
-      }
-
-      const propMap: Record<string, "PixelStreaming" | "PeerStreaming" | "ue-vessel" | "sw-unreal-engine"> = {
-        [extendsEnumType.UePixelStreaming]: "PixelStreaming",
-        [extendsEnumType.UePeerStreaming]: "PeerStreaming",
-        [extendsEnumType.UeVessel]: "ue-vessel",
-        [extendsEnumType.SwUnrealEngine]: "sw-unreal-engine"
-      };
-
-      if (!propMap[targetComponent.component.prop]) {
-        return "";
-      }
-
-      return propMap[targetComponent.component.prop];
-    };
-
-    /**
-     * @description 处理消息数据
-     */
-    const processMessageData = (messageContent: any, messageType: string, info?: any) => {
-      if (info) {
-        return messageType === "string" ? JSON.stringify(info) : { ...info };
-      }
-
-      switch (messageType) {
-        case "string":
-          return messageContent;
-        case "json":
-          return typeof messageContent === "string" ? JSON.parse(messageContent) : { data: messageContent };
-        default:
-          return messageContent;
-      }
-    };
-
-    /**
-     * @description 发送UE消息
-     */
-    const sendUEMessage = () => {
-      console.log("sendUEMessage", window, (window as any).pixelStreaming, window.ue4);
-      if (!window.ue4 || !ue4Config) {
-        return;
-      }
-
-      const { messageName, messageContent, messageType } = ue4Config;
-
-      if (!messageName) {
-        return;
-      }
-
-      const componentType = getComponentType();
-      console.log("sendUEMessage22", componentType);
-      if (!componentType) {
-        return;
-      }
-
-      const data = processMessageData(messageContent, messageType, ue4Info);
-
-      // 根据组件类型发送消息
-      switch (componentType) {
-        case "PeerStreaming":
-          if (window.funPS) {
-            window.funPS.emitMessage({ name: messageName, data });
-          }
-          return;
-
-        case "PixelStreaming":
-          console.log("PixelStreaming", { name: messageName, data }, (window as any).pixelStreaming);
-          if (window.playerStream) {
-            (window as any).playerStream.emitUIInteraction({ name: messageName, data });
-          }
-          return;
-
-        case "ue-vessel":
-          console.log("window.ue4.v2", messageName, data);
-          window.ue4?.v2?.(messageName, data);
-          return;
-        case "sw-unreal-engine":
-          componentIds.forEach((componentId) => {
-            const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
-            event.sendMessageToUe(messageName, data);
-          });
-          break;
-        default:
-          return;
-      }
-    };
-
-    await delay(animation?.delay || 0);
-    sendUEMessage();
-  }
-}
-
 export class SwitchBlueprintTab extends ActionStrategy<ActionExecutionParams> {
   execute({ componentIds, blueprintKey, eventList, info }: ActionExecutionParams): void {
     if (!blueprintKey) {
@@ -1218,37 +974,6 @@ export class SwitchBlueprintTab extends ActionStrategy<ActionExecutionParams> {
     componentIds.forEach((componentId) => {
       const event = eventList[`${extendsEnumType.SwUnrealEngine}-${componentId}`];
       event.switchBlueprintTab(blueprintKey, info);
-    });
-  }
-}
-
-export class sendAIManMsgStaticStrategy extends ActionStrategy<ActionExecutionParams> {
-  async execute({
-    componentIds,
-    isConditionSatisfied,
-    globalComponentMap,
-    eventList,
-    animation,
-    info
-  }: ActionExecutionParams & {
-    info: Record<string, any> | null;
-  }): Promise<void> {
-    console.log("receiveWSMessage 触发数字人方法", info, isConditionSatisfied);
-    if (!isConditionSatisfied) {
-      return;
-    }
-    await delay(animation?.delay || 0);
-    componentIds.forEach((id) => {
-      const component = globalComponentMap.get(`${id}`);
-      if (!component) {
-        return;
-      }
-
-      const event = (eventList as Record<string, any>)[`${component.component.prop}-${id}`];
-      if (!event.sendMsgToHuman) {
-        return;
-      }
-      event.sendMsgToHuman(info);
     });
   }
 }
@@ -1608,10 +1333,6 @@ export class ActionStrategyFactory {
     [ActionTypeEnum.SetIndex]: new SetIndexStrategy(),
     [ActionTypeEnum.HandleApiInstruction]: new HandleApiInstructionStrategy(),
     [ActionTypeEnum.SwitchSceneChildComponentVisible]: new SwitchSceneChildComponentVisibleStrategy(),
-    [ActionTypeEnum.SwitchMapChildComponentVisible]: new SwitchMapChildComponentVisibleStrategy(),
-    [ActionTypeEnum.GlMapRegionLift]: new GlMapRegionLiftStrategy(),
-    [ActionTypeEnum.GlMapSceneRoam]: new GlMapSceneRoamStrategy(),
-    [ActionTypeEnum.GlMapIconActive]: new GlMapIconActiveStrategy(),
     [ActionTypeEnum.SetAnimationPlay]: new SetAnimationPlayStrategy(),
     [ActionTypeEnum.SetAnimationPause]: new SetAnimationPauseStrategy(),
     [ActionTypeEnum.SetStateAnimationPlay]: new SetStateAnimationPlayStrategy(),
@@ -1632,9 +1353,6 @@ export class ActionStrategyFactory {
     [ActionTypeEnum.VideoToFastin]: new VideoToFastinStrategy(),
     [ActionTypeEnum.VideoToRewind]: new VideoToRewindStrategy(),
     [ActionTypeEnum.SwitchVideoProgress]: new SwitchVideoStrategy(),
-    [ActionTypeEnum.SendUe4Msg]: new sendUE4MessageStrategy(),
-    [ActionTypeEnum.SendUe4MsgStatic]: new sendUE4MessageStrategy(),
-    [ActionTypeEnum.SendAIManMsgStatic]: new sendAIManMsgStaticStrategy(),
     [ActionTypeEnum.SwitchBlueprintTab]: new SwitchBlueprintTab(),
     [ActionTypeEnum.nextPage]: new nextPageStrategy(),
     [ActionTypeEnum.prevPage]: new prevPageStrategy(),

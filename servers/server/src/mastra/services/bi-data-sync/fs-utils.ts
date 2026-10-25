@@ -3,7 +3,7 @@ import path from "path";
 
 import { readFileState } from "../../tools/file/state";
 import { extractIdFromIdName } from "../../tools/file/utils";
-import { getScreenDirPath } from "../screen-workspace";
+import { getScreenDirPath } from "../screen/screen-workspace";
 import type { ScreenMeta } from "./types";
 
 /**

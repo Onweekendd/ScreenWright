@@ -44,7 +44,7 @@ class ArtifactAppPreview extends SystemBase<ArtifactAppPreviewOption> {
       title: "",
       top: 0,
       type: "artifactAppPreview",
-      zIndex: 0
+      zIndex: "a0"
     };
     super(defaultProps);
     this.options = defaultProps.option;

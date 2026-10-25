@@ -1201,6 +1201,7 @@ export type FigmaNodeAssetCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many FigmaNodeAssets.
    */
   data: Prisma.FigmaNodeAssetCreateManyInput | Prisma.FigmaNodeAssetCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1219,6 +1220,7 @@ export type FigmaNodeAssetCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * The data used to create many FigmaNodeAssets.
    */
   data: Prisma.FigmaNodeAssetCreateManyInput | Prisma.FigmaNodeAssetCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

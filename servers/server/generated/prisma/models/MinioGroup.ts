@@ -1120,6 +1120,7 @@ export type MinioGroupCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many MinioGroups.
    */
   data: Prisma.MinioGroupCreateManyInput | Prisma.MinioGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1138,6 +1139,7 @@ export type MinioGroupCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many MinioGroups.
    */
   data: Prisma.MinioGroupCreateManyInput | Prisma.MinioGroupCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

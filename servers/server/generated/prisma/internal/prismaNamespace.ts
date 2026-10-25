@@ -385,6 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   AiModel: 'AiModel',
+  GeneratedImage: 'GeneratedImage',
+  GeneratedVideo: 'GeneratedVideo',
   FigmaKey: 'FigmaKey',
   Module: 'Module',
   FigmaNodeAsset: 'FigmaNodeAsset',
@@ -418,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "aiModel" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
+    modelProps: "aiModel" | "generatedImage" | "generatedVideo" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -493,6 +495,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AiModelCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AiModelCountAggregateOutputType> | number
+        }
+      }
+    }
+    GeneratedImage: {
+      payload: Prisma.$GeneratedImagePayload<ExtArgs>
+      fields: Prisma.GeneratedImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GeneratedImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GeneratedImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        findFirst: {
+          args: Prisma.GeneratedImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GeneratedImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        findMany: {
+          args: Prisma.GeneratedImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>[]
+        }
+        create: {
+          args: Prisma.GeneratedImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        createMany: {
+          args: Prisma.GeneratedImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GeneratedImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>[]
+        }
+        delete: {
+          args: Prisma.GeneratedImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        update: {
+          args: Prisma.GeneratedImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.GeneratedImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GeneratedImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GeneratedImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.GeneratedImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedImagePayload>
+        }
+        aggregate: {
+          args: Prisma.GeneratedImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGeneratedImage>
+        }
+        groupBy: {
+          args: Prisma.GeneratedImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeneratedImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GeneratedImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeneratedImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    GeneratedVideo: {
+      payload: Prisma.$GeneratedVideoPayload<ExtArgs>
+      fields: Prisma.GeneratedVideoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GeneratedVideoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GeneratedVideoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>
+        }
+        findFirst: {
+          args: Prisma.GeneratedVideoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GeneratedVideoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>
+        }
+        findMany: {
+          args: Prisma.GeneratedVideoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>[]
+        }
+        create: {
+          args: Prisma.GeneratedVideoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>
+        }
+        createMany: {
+          args: Prisma.GeneratedVideoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GeneratedVideoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>[]
+        }
+        delete: {
+          args: Prisma.GeneratedVideoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>
+        }
+        update: {
+          args: Prisma.GeneratedVideoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>
+        }
+        deleteMany: {
+          args: Prisma.GeneratedVideoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GeneratedVideoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GeneratedVideoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>[]
+        }
+        upsert: {
+          args: Prisma.GeneratedVideoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GeneratedVideoPayload>
+        }
+        aggregate: {
+          args: Prisma.GeneratedVideoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGeneratedVideo>
+        }
+        groupBy: {
+          args: Prisma.GeneratedVideoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeneratedVideoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GeneratedVideoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GeneratedVideoCountAggregateOutputType> | number
         }
       }
     }
@@ -1858,6 +2008,9 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
  */
 
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const)
 
@@ -1875,6 +2028,43 @@ export const AiModelScalarFieldEnum = {
 } as const
 
 export type AiModelScalarFieldEnum = (typeof AiModelScalarFieldEnum)[keyof typeof AiModelScalarFieldEnum]
+
+
+export const GeneratedImageScalarFieldEnum = {
+  id: 'id',
+  promptHash: 'promptHash',
+  prompt: 'prompt',
+  model: 'model',
+  seed: 'seed',
+  width: 'width',
+  height: 'height',
+  url: 'url',
+  referenceUrls: 'referenceUrls',
+  createdTime: 'createdTime'
+} as const
+
+export type GeneratedImageScalarFieldEnum = (typeof GeneratedImageScalarFieldEnum)[keyof typeof GeneratedImageScalarFieldEnum]
+
+
+export const GeneratedVideoScalarFieldEnum = {
+  id: 'id',
+  promptHash: 'promptHash',
+  prompt: 'prompt',
+  model: 'model',
+  durationSec: 'durationSec',
+  resolution: 'resolution',
+  ratio: 'ratio',
+  url: 'url',
+  firstFrameUrl: 'firstFrameUrl',
+  lastFrameUrl: 'lastFrameUrl',
+  referenceImageUrls: 'referenceImageUrls',
+  referenceVideoUrls: 'referenceVideoUrls',
+  referenceAudioUrls: 'referenceAudioUrls',
+  taskId: 'taskId',
+  createdTime: 'createdTime'
+} as const
+
+export type GeneratedVideoScalarFieldEnum = (typeof GeneratedVideoScalarFieldEnum)[keyof typeof GeneratedVideoScalarFieldEnum]
 
 
 export const FigmaKeyScalarFieldEnum = {
@@ -2235,6 +2425,8 @@ export const MinioFileScalarFieldEnum = {
   resourceSize: 'resourceSize',
   layerIds: 'layerIds',
   largeUseIds: 'largeUseIds',
+  generatedImageId: 'generatedImageId',
+  referenceFileIds: 'referenceFileIds',
   createdBy: 'createdBy',
   createdTime: 'createdTime',
   updatedBy: 'updatedBy',
@@ -2266,6 +2458,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const JsonNullValueInput = {
   JsonNull: JsonNull
 } as const
@@ -2273,12 +2473,12 @@ export const JsonNullValueInput = {
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
-export const NullableJsonNullValueInput = {
-  DbNull: DbNull,
-  JsonNull: JsonNull
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 } as const
 
-export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const NullsOrder = {
@@ -2298,14 +2498,6 @@ export const JsonNullValueFilter = {
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
 
 /**
  * Field references
@@ -2320,9 +2512,23 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
+ * Reference to a field of type 'String[]'
+ */
+export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2334,9 +2540,9 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'DateTime[]'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -2355,9 +2561,23 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -2456,6 +2676,8 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   aiModel?: Prisma.AiModelOmit
+  generatedImage?: Prisma.GeneratedImageOmit
+  generatedVideo?: Prisma.GeneratedVideoOmit
   figmaKey?: Prisma.FigmaKeyOmit
   module?: Prisma.ModuleOmit
   figmaNodeAsset?: Prisma.FigmaNodeAssetOmit

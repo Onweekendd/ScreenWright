@@ -18,6 +18,7 @@
         :groupData="component"
         :groupIndex="index"
         :isBuild="isBuild"
+        :culled="culledIds.has(`${component.id}`)"
         :panel-id="panelId"
         :status-id="statusId"
       />
@@ -43,6 +44,8 @@
         :unitPavenType="component.unitPavenType"
         :enterActiveAnimation="component.loadAnimation"
         :isSelect="targetChart.selectId.includes(`${component.id}`)"
+        :isEditing="editingComponentIds.has(`${component.id}`)"
+        :culled="culledIds.has(`${component.id}`)"
         :renderWidth="Number(editConfig.width)"
         :renderHeight="Number(editConfig.height)"
         @click.stop="!disabled && mouseClickHandle($event, component)"
@@ -75,10 +78,13 @@
 <script setup lang="ts">
 import type { LargeScreenDetailInfo } from "@screenwright/types";
 
+import { editingComponentIds } from "@/hooks/useEditingComponents";
+
 import { renderComponent } from "./core/utils";
 import EditShapeBox from "./EditShapeBox.vue";
 import GridWaterMark from "./GridWaterMark.vue";
 import EditGroup from "./Group.vue";
+import { useCanvasCulling } from "./hooks/useCanvasCulling";
 // import EditAlignLine from "./EditAlignLine.vue"
 import SelectionTransformer from "./SelectionTransformer.vue";
 import type { ComponentType } from "./type";
@@ -113,6 +119,13 @@ const {
   mousedownHandle,
   handleDbClick
 } = useBuildRender(props);
+
+// 移出可视窗口的顶层组件隐藏；只读预览（disabled）不裁剪
+const { culledIds } = useCanvasCulling(
+  () => data.value,
+  () => !props.disabled,
+  () => ({ width: Number(props.editConfig.width) || 0, height: Number(props.editConfig.height) || 0 })
+);
 </script>
 <style lang="scss" scoped>
 .es-editor {
@@ -120,7 +133,6 @@ const {
   position: relative;
   width: 100%;
   height: 100%;
-  box-shadow: var(--el-box-shadow);
   background-size: 100% 100%;
 }
 .es-component {

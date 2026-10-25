@@ -7,11 +7,8 @@ import {
   ConditionCompareEnum,
   ConditionLogicTypeEnum,
   ConditionTypeEnum,
-  MessageTypeEnum,
   ParameterTypeEnum,
   SceneObjectExplosionType,
-  tcpudpDataTypeEnum,
-  UDPSendtypeEnum,
   VisibleTypeEnum
 } from "../types/action";
 import { PanelEnum } from "../types/componentProp/panel";
@@ -282,22 +279,6 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
     case ActionTypeEnum.VideoToPlayRange:
       return { ...base, videoStartTime: 0, videoEndTime: 0 };
 
-    // UE4 / AI 类
-    case ActionTypeEnum.SendUe4Msg:
-    case ActionTypeEnum.SendUe4MsgStatic:
-      return {
-        ...base,
-        ue4Config: {
-          messageName: "",
-          messageJson: "",
-          messageContent: "",
-          messageType: MessageTypeEnum.String
-        }
-      };
-
-    case ActionTypeEnum.SendAIManMsgStatic:
-      return { ...base, aiManMsgContent: "" };
-
     // 项目特有
     case ActionTypeEnum.ProjectSpecificFun:
       return {
@@ -307,20 +288,6 @@ export const createTemplateAction = (actionType: ActionTypeEnum): Partial<Action
         projectParamType: ParameterTypeEnum.Default,
         projectParamValue: {},
         projectParamCode: ""
-      };
-
-    // TCP/UDP (SwitchTCState)
-    case ActionTypeEnum.SwitchTCState:
-      return {
-        ...base,
-        tcpudpConfig: {
-          dataType: tcpudpDataTypeEnum.None,
-          dataSourceId: "",
-          dataSourceObj: null,
-          sendData: "",
-          sendType: UDPSendtypeEnum.Unicast,
-          dataDelay: 0
-        }
       };
 
     // 仅需 animation.delay 的动作（视频控制、分页、轮巡等）
@@ -437,30 +404,15 @@ export const templateActions = (): Action => {
       toY: 0
     },
     encodeKey: null,
-    ue4Config: {
-      messageName: "",
-      messageJson: "",
-      messageContent: "",
-      messageType: MessageTypeEnum.String
-    },
     customActionType: "component",
     panelStatusAnimationId: "",
     panelStatusId: "",
-    tcpudpConfig: {
-      dataType: tcpudpDataTypeEnum.None,
-      dataSourceId: "",
-      dataSourceObj: null,
-      sendData: "",
-      sendType: UDPSendtypeEnum.Unicast,
-      dataDelay: 0
-    },
     projectFunName: "",
     projectParamList: [],
     projectParamType: ParameterTypeEnum.Default,
     projectParamValue: {},
     projectParamCode: "",
     swiperCardTabsName: "",
-    aiManMsgContent: "",
     setBroadcastId: null,
     videoStartTime: 0,
     videoEndTime: 0,

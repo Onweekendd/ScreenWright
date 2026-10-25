@@ -1,7 +1,7 @@
 import { ScreenEditor } from "@screenwright/core";
 import type { ComponentType } from "@screenwright/types";
 
-import { getScreenVersionKeyFromPath } from "../screen-workspace";
+import { getScreenVersionKeyFromPath } from "../screen/screen-workspace";
 import { type DiskComponent, ScreenReader } from "./screen-read";
 import { syncScreenData } from "./screen-sync";
 

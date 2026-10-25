@@ -3,35 +3,21 @@ import type { z } from "zod";
 import { echartareaLineDataSchema, echartareaLineOptionSchema } from "./echart/echartareaLine";
 import { echartbarDataSchema, echartbarOptionSchema } from "./echart/echartbar";
 import { echartbothWayStripBarDataSchema, echartbothWayStripBarOptionSchema } from "./echart/echartbothWayStripBar";
-import { echartdoubleValueLineDataSchema, echartdoubleValueLineOptionSchema } from "./echart/echartdoubleValueLine";
-import { echarteffectScatterDataSchema, echarteffectScatterOptionSchema } from "./echart/echarteffectScatter";
 import { echartfunnelDataSchema, echartfunnelOptionSchema } from "./echart/echartfunnel";
 import { echartgraphDataSchema, echartgraphOptionSchema } from "./echart/echartgraph";
-import { echartgrowthRateBarDataSchema, echartgrowthRateBarOptionSchema } from "./echart/echartgrowthRateBar";
 import { echartlineDataSchema, echartlineOptionSchema } from "./echart/echartline";
 import { echartlineAndBarDataSchema, echartlineAndBarOptionSchema } from "./echart/echartlineAndBar";
 import { echartloopRingPieDataSchema, echartloopRingPieOptionSchema } from "./echart/echartloopRingPie";
-import { echartmultiplyRankBarDataSchema, echartmultiplyRankBarOptionSchema } from "./echart/echartmultiplyRankBar";
-import { echartoverlapBarDataSchema, echartoverlapBarOptionSchema } from "./echart/echartoverlapBar";
 import { echartpictorialbarDataSchema, echartpictorialbarOptionSchema } from "./echart/echartpictorialbar";
 import { echartpieDataSchema, echartpieOptionSchema } from "./echart/echartpie";
 import { echartpluralRosePieDataSchema, echartpluralRosePieOptionSchema } from "./echart/echartpluralRosePie";
 import { echartradarDataSchema, echartradarOptionSchema } from "./echart/echartradar";
-import { echartrankDataSchema, echartrankOptionSchema } from "./echart/echartrank";
-import { echartrankBarDataSchema, echartrankBarOptionSchema } from "./echart/echartrankBar";
 import { echartsankeyDataSchema, echartsankeyOptionSchema } from "./echart/echartsankey";
-import { echartscalePieDataSchema, echartscalePieOptionSchema } from "./echart/echartscalePie";
 import { echartscatterDataSchema, echartscatterOptionSchema } from "./echart/echartscatter";
 import { echartstripBarDataSchema, echartstripBarOptionSchema } from "./echart/echartstripBar";
-import { echartthinBarDataSchema, echartthinBarOptionSchema } from "./echart/echartthinBar";
-import { echartthreedBarDataSchema, echartthreedBarOptionSchema } from "./echart/echartthreedBar";
-import { echartthreedBarAndLineDataSchema, echartthreedBarAndLineOptionSchema } from "./echart/echartthreedBarAndLine";
 import { echartthreePieDataSchema, echartthreePieOptionSchema } from "./echart/echartthreePie";
 import { echartthreeQuartersPieDataSchema, echartthreeQuartersPieOptionSchema } from "./echart/echartthreeQuartersPie";
 import { echarttreemapDataSchema, echarttreemapOptionSchema } from "./echart/echarttreemap";
-import { echartzebraDataSchema, echartzebraOptionSchema } from "./echart/echartzebra";
-import { echartzebra2DataSchema, echartzebra2OptionSchema } from "./echart/echartzebra2";
-import { echartzebraBarAndLineDataSchema, echartzebraBarAndLineOptionSchema } from "./echart/echartzebraBarAndLine";
 import { fullScreenSwitchDataSchema, fullScreenSwitchOptionSchema } from "./extends/fullScreenSwitch";
 import { pageReloadDataSchema, pageReloadOptionSchema } from "./extends/pageReload";
 import { simpleParticleDataSchema, simpleParticleOptionSchema } from "./extends/simple-particle";
@@ -82,6 +68,7 @@ import { ctVideoPanelDataSchema, ctVideoPanelOptionSchema } from "./media/ctVide
 import { swEmbedAudioDataSchema, swEmbedAudioOptionSchema } from "./media/sw-embed-audio";
 import { swOpenVideoDataSchema, swOpenVideoOptionSchema } from "./media/sw-open-video";
 import { ftiframeDataSchema, ftiframeOptionSchema } from "./media/swiframe";
+import { swBoxDataSchema, swBoxOptionSchema } from "./media/swBox";
 import { swimgDataSchema, swimgOptionSchema } from "./media/swimg";
 import { ftswiperDataSchema, ftswiperOptionSchema } from "./media/swswiper";
 import { swSwiperCardDataSchema, swSwiperCardOptionSchema } from "./media/swSwiperCard";
@@ -123,40 +110,27 @@ export const componentPropSchemaMap = {
   echartareaLine: { data: echartareaLineDataSchema, option: echartareaLineOptionSchema },
   echartbar: { data: echartbarDataSchema, option: echartbarOptionSchema },
   echartbothWayStripBar: { data: echartbothWayStripBarDataSchema, option: echartbothWayStripBarOptionSchema },
-  echartdoubleValueLine: { data: echartdoubleValueLineDataSchema, option: echartdoubleValueLineOptionSchema },
-  echarteffectScatter: { data: echarteffectScatterDataSchema, option: echarteffectScatterOptionSchema },
   echartfunnel: { data: echartfunnelDataSchema, option: echartfunnelOptionSchema },
   echartgraph: { data: echartgraphDataSchema, option: echartgraphOptionSchema },
-  echartgrowthRateBar: { data: echartgrowthRateBarDataSchema, option: echartgrowthRateBarOptionSchema },
   echartline: { data: echartlineDataSchema, option: echartlineOptionSchema },
   echartlineAndBar: { data: echartlineAndBarDataSchema, option: echartlineAndBarOptionSchema },
   echartloopRingPie: { data: echartloopRingPieDataSchema, option: echartloopRingPieOptionSchema },
-  echartmultiplyRankBar: { data: echartmultiplyRankBarDataSchema, option: echartmultiplyRankBarOptionSchema },
-  echartoverlapBar: { data: echartoverlapBarDataSchema, option: echartoverlapBarOptionSchema },
   echartpictorialbar: { data: echartpictorialbarDataSchema, option: echartpictorialbarOptionSchema },
   echartpie: { data: echartpieDataSchema, option: echartpieOptionSchema },
   echartpluralRosePie: { data: echartpluralRosePieDataSchema, option: echartpluralRosePieOptionSchema },
   echartradar: { data: echartradarDataSchema, option: echartradarOptionSchema },
-  echartrank: { data: echartrankDataSchema, option: echartrankOptionSchema },
-  echartrankBar: { data: echartrankBarDataSchema, option: echartrankBarOptionSchema },
   echartsankey: { data: echartsankeyDataSchema, option: echartsankeyOptionSchema },
-  echartscalePie: { data: echartscalePieDataSchema, option: echartscalePieOptionSchema },
   echartscatter: { data: echartscatterDataSchema, option: echartscatterOptionSchema },
   echartstripBar: { data: echartstripBarDataSchema, option: echartstripBarOptionSchema },
-  echartthinBar: { data: echartthinBarDataSchema, option: echartthinBarOptionSchema },
-  echartthreedBar: { data: echartthreedBarDataSchema, option: echartthreedBarOptionSchema },
-  echartthreedBarAndLine: { data: echartthreedBarAndLineDataSchema, option: echartthreedBarAndLineOptionSchema },
   echartthreePie: { data: echartthreePieDataSchema, option: echartthreePieOptionSchema },
   echartthreeQuartersPie: { data: echartthreeQuartersPieDataSchema, option: echartthreeQuartersPieOptionSchema },
   echarttreemap: { data: echarttreemapDataSchema, option: echarttreemapOptionSchema },
-  echartzebra: { data: echartzebraDataSchema, option: echartzebraOptionSchema },
-  echartzebra2: { data: echartzebra2DataSchema, option: echartzebra2OptionSchema },
-  echartzebraBarAndLine: { data: echartzebraBarAndLineDataSchema, option: echartzebraBarAndLineOptionSchema },
   "rank-progress": { data: rankProgressDataSchema, option: rankProgressOptionSchema },
   rasterProgressBar: { data: rasterProgressBarDataSchema, option: rasterProgressBarOptionSchema },
   "sw-embed-audio": { data: swEmbedAudioDataSchema, option: swEmbedAudioOptionSchema },
   swiframe: { data: ftiframeDataSchema, option: ftiframeOptionSchema },
   swimg: { data: swimgDataSchema, option: swimgOptionSchema },
+  swBox: { data: swBoxDataSchema, option: swBoxOptionSchema },
   "sw-open-video": { data: swOpenVideoDataSchema, option: swOpenVideoOptionSchema },
   swSwiperCard: { data: swSwiperCardDataSchema, option: swSwiperCardOptionSchema },
   swswiper: { data: ftswiperDataSchema, option: ftswiperOptionSchema },

@@ -1,12 +1,12 @@
-import { throttle } from "lodash-es";
-
 import type { LargeScreenDetailInfo } from "@screenwright/types";
+import { throttle } from "lodash-es";
 
 import { useScreenEditor } from "@/core-adapter/useScreenEditor";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
 import type { ComponentType, direction } from "../type";
 import { handleGroupByParent, saveParentGroupData } from "../utils";
+import { getAlignmentReferenceBounds } from "./alignmentReferenceBounds";
 import { getComponentElement } from "./mouseHandleUtils";
 import { DualAxisSnapManager } from "./snapState";
 import { useAction } from "./useAction";
@@ -373,10 +373,7 @@ export const useMousePointHandle = (
   // 拖拽开始时缓存参考形状：将画布内除当前组件外的所有组件作为对齐参考线来源
   if (biAlignmentInstance.value) {
     biAlignmentInstance.value.cache_reference_shapes(
-      0,
-      0,
-      Number(editConfig.width),
-      Number(editConfig.height),
+      ...getAlignmentReferenceBounds(e, editConfig),
       selectTargetDataId.value
     );
   }

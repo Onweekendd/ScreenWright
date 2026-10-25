@@ -47,8 +47,18 @@ export type EchartcommonData = z.infer<typeof echartcommonDataSchema>;
  * Echarts通用型配置选项 Schema
  */
 export const echartcommonOptionSchema = z.object({
-  // ============ 配置代码 ============
-  echartFormatter: z.string().describe("Echarts配置替换代码，用于输出完整的Echarts option配置对象")
+  // ============ JSON 主通道 ============
+  echartsOption: z
+    .record(z.string(), z.unknown())
+    .describe("原生 ECharts option，不含数据；数据由 dataset.source 注入，series 用 encode 引用列")
+    .optional(),
+  // ============ 配置代码（兜底） ============
+  echartFormatter: z
+    .string()
+    .describe(
+      "可选。在 echartsOption 基础上再加工，仅在 JSON 表达不了时使用；无 echartsOption 时按 (dataChart) => option 调用，有则按 (dataChart, option) => option 调用"
+    )
+    .optional()
 });
 
 export type EchartcommonOption = z.infer<typeof echartcommonOptionSchema>;

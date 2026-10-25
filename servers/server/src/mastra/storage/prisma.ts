@@ -1,15 +1,10 @@
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "~/generated/prisma/client";
 
-import { sqliteUrl } from "@/lib/db/sqlite-url";
-
 import "dotenv/config";
 
-// 单机版落 SQLite；URL 由 PRISMA_DATABASE_URL 提供（如 file:./.data/screenwright.db），
-// 相对路径以 servers/server 工作目录为基准。
-const adapter = new PrismaBetterSqlite3({
-  url: sqliteUrl("PRISMA_DATABASE_URL", "file:./.data/screenwright.db")
-});
+// 业务表 / eval 表 / figma 表落 PostgreSQL；连接串由 PRISMA_DATABASE_URL 提供。
+const adapter = new PrismaPg({ connectionString: process.env.PRISMA_DATABASE_URL });
 
 export const prismaClient = new PrismaClient({ adapter });

@@ -29,6 +29,8 @@ export enum AgentMode {
 
 export {
   type AskUserQuestion,
+  type CanvasOp,
+  type OpResult,
   type QuestionOption,
   type ResumeData,
   SuspendDefs,
@@ -148,7 +150,7 @@ export interface BackgroundTaskOutputRawPayload {
 
 /**
  * data-background-task-suspended 的 data：子 agent 在后台运行中挂起，等待审批/用户输入。
- * suspendPayload 形态随挂起工具而变（如 ask_approval_create_component 带 component，
+ * suspendPayload 形态随挂起工具而变（如 canvas_ops 带 ops，
  * askUserQuestionTool 带 questions），故宽松建模，前端按 type（或工具名）分发，
  * 与主流的 data-tool-call-suspended 处理方式一致。
  */

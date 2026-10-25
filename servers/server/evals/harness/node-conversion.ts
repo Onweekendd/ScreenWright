@@ -10,10 +10,10 @@ import { allocateComponentId } from "./fake-frontend";
  * `data-node-conversion` 帧的接收端——假前端的另一半。
  *
  * `fake-frontend.ts` 应答的是 suspend（工具主动问前端），这里接的是工作流**单向推**的组件帧：
- * figmaToBI / codiaToBI / requirementToBI 三条工作流都走这条路，前端侧对应
+ * Figma 工作流走这条路，前端侧对应
  * `useFigmaToBI.addProcessedComponent` + 随后的工作区回写（`syncWorkspace` 默认为 true）。
  *
- * **不接这一层的话，断言看到的是一块空屏。**这三条工作流不写工作区、也不 suspend，
+ * **不接这一层的话，断言看到的是一块空屏。**这类转换不写工作区、也不 suspend，
  * 组件全在流里；驱动只处理 suspend 帧就等于把交付路径整段跳过了。
  *
  * 两处刻意与真前端保持一致，因为它们各自对应一类真实缺陷：
@@ -30,7 +30,7 @@ import { allocateComponentId } from "./fake-frontend";
  * 本模块只镜像 `addProcessedComponent` 的**分发逻辑**（按 parentNodeId 挑一条路），
  * 不镜像各条路**函数体内部**的前置条件。真出过事：`addToGroup` 开头有一句
  * `if (!isDynamicPanel()) return null`——它只支持「动态面板里的分组」，而
- * requirementToBIWorkflow 的 ft-folder 建在大屏根级，于是真前端把 7 个叶子组件
+ * 某条历史建屏路径把 ft-folder 建在大屏根级，于是真前端把 7 个叶子组件
  * 全部静默丢弃，画布上只剩 6 个 0×0 的空分组。而 eval 这一侧照样把它们挂进了
  * `parent.children`，d1/d2 一路全绿。
  *

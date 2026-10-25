@@ -1,3 +1,5 @@
+import { sortByZIndex } from "@screenwright/core";
+
 import type { PanelState } from "@/views/build/components/buildRender/core/SystemComponent/type";
 import type { ComponentType } from "@/views/build/components/buildRender/type";
 
@@ -21,13 +23,7 @@ export function sortComponentsByZIndex(components: ComponentType[]): ComponentTy
     return [];
   }
 
-  return [...components]
-    .sort((a: ComponentType, b: ComponentType) => {
-      const aZIndex = typeof a.zIndex === "number" ? a.zIndex : 0;
-      const bZIndex = typeof b.zIndex === "number" ? b.zIndex : 0;
-      return bZIndex - aZIndex;
-    })
-    .reverse();
+  return sortByZIndex(components);
 }
 
 /**

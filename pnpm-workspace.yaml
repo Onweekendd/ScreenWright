@@ -6,11 +6,12 @@ packages:
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@prisma/engines'
-  - better-sqlite3
   - canvas
   - esbuild
   - prisma
   - sharp
   - simple-git-hooks
   - vue-demi
-  - vue3-sketch-ruler
+
+patchedDependencies:
+  '@mastra/core': patches/@mastra__core.patch

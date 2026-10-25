@@ -1083,6 +1083,7 @@ export type CompactionRecordCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many CompactionRecords.
    */
   data: Prisma.CompactionRecordCreateManyInput | Prisma.CompactionRecordCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1101,6 +1102,7 @@ export type CompactionRecordCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many CompactionRecords.
    */
   data: Prisma.CompactionRecordCreateManyInput | Prisma.CompactionRecordCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

@@ -1,12 +1,13 @@
+import { legacyNumberToZIndex } from "@screenwright/core";
 import { type TextEnum } from "@screenwright/types";
 
 import type { ComponentFlatSchemaType } from "@/mastra/tools/utils";
 import {
   extractLayout,
-  SW_RICHTEXT_MODULE_ID,
   getComponentDefaultConfigByModuleId,
   rgbaToCss,
-  setComponentBaseProps
+  setComponentBaseProps,
+  SW_RICHTEXT_MODULE_ID
 } from "@/mastra/tools/utils";
 import type { NormalizedNode } from "@/mastra/types/normalized-node-types";
 import { isTextNode } from "@/mastra/workflows/figma-to-bi/utils/node-type-guards";
@@ -322,7 +323,7 @@ export class SwRichtextStrategy implements ConvertStrategy {
       ...component.option,
       ...convertedOption
     };
-    component.zIndex = zIndex ?? depth;
+    component.zIndex = legacyNumberToZIndex(zIndex ?? depth);
 
     return { component, message: "成功转换为 swRichtext" };
   }

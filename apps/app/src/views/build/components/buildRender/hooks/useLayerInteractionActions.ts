@@ -1,3 +1,4 @@
+import { sortByZIndex } from "@screenwright/core";
 import { cloneDeep } from "lodash-es";
 
 import buildAsyncTree from "../../buildAsyncTree/index.vue";
@@ -5,6 +6,7 @@ import type { componentType } from "../core/BaseComponent/type";
 import type { PanelType } from "../core/SystemComponent/type";
 import type { ComponentType } from "../type";
 import { saveParentGroupData } from "../utils";
+import { type LayerMoveOptions, moveComponentInList } from "./layerOrder";
 import type { ActionContext } from "./useActionContext";
 import type { LayerPersistence } from "./useLayerPersistence";
 
@@ -12,42 +14,6 @@ interface PanelDataItem {
   config?: Array<{ component?: { prop?: componentType | PanelType }; id?: number | string }>;
   [key: string]: unknown;
 }
-
-interface LayerMoveOptions {
-  direction: -1 | 1;
-  moveToBoundary?: boolean;
-  persistTopLevelTargetAfterMove?: boolean;
-}
-
-const swapComponentZIndexes = (target: ComponentType, sibling: ComponentType) => {
-  [target.zIndex, sibling.zIndex] = [sibling.zIndex, target.zIndex];
-};
-
-const moveComponentInList = (
-  target: ComponentType,
-  components: ComponentType[],
-  { direction, moveToBoundary = false }: LayerMoveOptions,
-  onSwap: (target: ComponentType, sibling: ComponentType) => void
-) => {
-  const currentIndex = components.findIndex((component) => `${component.id}` === `${target.id}`);
-  if (currentIndex === -1) {
-    return false;
-  }
-
-  const boundaryIndex = direction === -1 ? 0 : components.length - 1;
-  const destinationIndex = moveToBoundary ? boundaryIndex : currentIndex + direction;
-  if (destinationIndex < 0 || destinationIndex >= components.length || destinationIndex === currentIndex) {
-    return false;
-  }
-
-  let movingIndex = currentIndex;
-  while (movingIndex !== destinationIndex) {
-    const siblingIndex = movingIndex + direction;
-    onSwap(target, components[siblingIndex]);
-    movingIndex = siblingIndex;
-  }
-  return true;
-};
 
 export const useLayerInteractionActions = (
   { allComponentMap, cIsDynamicPanel, componentList, dialog, selectTargetData, setTargetSelectChart }: ActionContext,
@@ -96,12 +62,6 @@ export const useLayerInteractionActions = (
     }
   };
 
-  const swapAndPersistComponentZIndexes = (target: ComponentType, sibling: ComponentType) => {
-    swapComponentZIndexes(target, sibling);
-    updateComponentLayers(target);
-    updateComponentLayers(sibling);
-  };
-
   const moveSelectedComponent = (options: LayerMoveOptions) => {
     const target = selectTargetData.value[0];
     if (!target) {
@@ -109,11 +69,8 @@ export const useLayerInteractionActions = (
     }
 
     if (!target.parent) {
-      const sortedComponents = componentList.value.sort((a, b) => b.zIndex - a.zIndex);
-      const hasMoved = moveComponentInList(target, sortedComponents, options, swapAndPersistComponentZIndexes);
-      if (hasMoved && options.persistTopLevelTargetAfterMove) {
-        updateComponentLayers(target);
-      }
+      const changed = moveComponentInList(target, sortByZIndex(componentList.value, "desc"), options);
+      changed?.forEach((component) => updateComponentLayers(component));
       return;
     }
 
@@ -122,17 +79,16 @@ export const useLayerInteractionActions = (
       return;
     }
 
-    const hasMoved = moveComponentInList(target, parent.children, options, swapComponentZIndexes);
-    if (!hasMoved) {
+    const changed = moveComponentInList(target, sortByZIndex(parent.children, "desc"), options);
+    if (!changed) {
       return;
     }
 
-    parent.children = parent.children.sort((a, b) => b.zIndex - a.zIndex);
+    parent.children = sortByZIndex(parent.children, "desc");
     saveParentGroupData(parent, { isDynamicPanel: cIsDynamicPanel.value });
   };
 
-  const handleTop = () =>
-    moveSelectedComponent({ direction: -1, moveToBoundary: true, persistTopLevelTargetAfterMove: true });
+  const handleTop = () => moveSelectedComponent({ direction: -1, moveToBoundary: true });
 
   const handleBottom = () => moveSelectedComponent({ direction: 1, moveToBoundary: true });
 

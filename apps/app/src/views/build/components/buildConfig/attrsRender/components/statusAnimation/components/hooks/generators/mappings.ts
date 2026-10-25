@@ -1,3 +1,5 @@
+import { normalizeZIndex } from "@screenwright/core";
+
 import { interactiveEnum, mediaEnum, textEnum } from "@/components/componentEntry/type";
 
 import type { PropertyMapping } from "./types";
@@ -57,14 +59,16 @@ export const DEFAULT_PROPERTY_MAPPINGS: PropertyMapping[] = [
     source: "zIndex",
     target: "zIndex",
     type: PropertyMappingType.DIRECT,
-    validator: (value) => typeof value === "number",
+    // 层级是字符串排序键；旧的状态动画数据里存的是数字，应用到组件上时换成键
+    validator: (value) => typeof value === "string" || typeof value === "number",
+    transformer: (value) => normalizeZIndex(value),
     description: "层级",
     group: "zIndex"
   }
 ];
 
-const advanceMappings: PropertyMapping[] = [
-  // 外观组属性
+// 外观组属性：opacity 字段名在原子组件迁移前后都叫 option.opacity，所有组件通用
+const opacityMapping: PropertyMapping[] = [
   {
     source: "opacity",
     target: "option.opacity",
@@ -72,9 +76,14 @@ const advanceMappings: PropertyMapping[] = [
     validator: (value) => typeof value === "number" && value >= 0 && value <= 1,
     description: "透明度",
     group: "appearance"
-  },
+  }
+];
 
-  // 旋转组属性
+// 旋转组属性：仅适用于仍然使用离散 rotateX/Y/Z 字段的组件（如 SwVideo/SwMutual）。
+// swimg/swtext 迁移到新 schema 后旋转已经并入通用的 option.transform 字符串，
+// 不再有离散的 rotateX/Y/Z 字段，所以这两个组件不再拼进这组映射（否则状态动画面板
+// 会显示一个写了也不生效的"旋转"属性组）。
+const rotationMappings: PropertyMapping[] = [
   {
     source: "rotateX",
     target: "option.rotateX",
@@ -100,6 +109,9 @@ const advanceMappings: PropertyMapping[] = [
     group: "rotation"
   }
 ];
+
+// 保留原名/原组合，供其他未在 COMPONENT_TYPE_MAPPINGS 里单独列出的组件类型兜底使用（见文件末尾 fallback）
+const advanceMappings: PropertyMapping[] = [...opacityMapping, ...rotationMappings];
 
 const ftImgMappings: PropertyMapping[] = [
   {

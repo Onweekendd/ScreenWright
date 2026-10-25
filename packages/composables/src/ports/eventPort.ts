@@ -1,4 +1,4 @@
-import type { Action, ActionTypeEnum, ComponentType, TotalPanelEventMap, Ue4Config } from "@screenwright/types";
+import type { Action, ActionTypeEnum, ComponentType, TotalPanelEventMap } from "@screenwright/types";
 import type { Router } from "vue-router";
 
 import type { AnimationTrigger } from "../useGlobalAnimation";
@@ -40,8 +40,6 @@ export type ActionStrategyExecutorFn = (
   params: ActionExecutionParams
 ) => void | Promise<void>;
 
-export type SendUE4MessageParams = ActionExecutionParams & { ue4Config: Ue4Config };
-
 /** 替代 useStatusAnimation().triggerStatusAnimationByAction（状态动画留在 app，编辑器状态） */
 export type StatusAnimationTriggerFn = (panelStatusAnimationId: string, panelStatusId: string) => Promise<void>;
 
@@ -79,11 +77,6 @@ function createPort<T>(name: string) {
 const actionStrategyExecutorPort = createPort<ActionStrategyExecutorFn>("actionStrategyExecutor");
 export const initActionStrategyExecutor = actionStrategyExecutorPort.init;
 export const getActionStrategyExecutor = actionStrategyExecutorPort.get;
-
-const sendUE4MessagePort = createPort<(params: SendUE4MessageParams) => void | Promise<void>>(
-  "sendUE4Message"
-);
-export const getSendUE4Message = sendUE4MessagePort.get;
 
 const statusAnimationTriggerPort = createPort<StatusAnimationTriggerFn>("statusAnimationTrigger");
 export const initStatusAnimationTrigger = statusAnimationTriggerPort.init;

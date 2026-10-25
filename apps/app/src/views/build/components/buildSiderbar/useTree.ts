@@ -1,5 +1,6 @@
 import { computed, ref } from "vue";
 
+import { compareZIndex } from "@screenwright/core";
 import { FolderEnum } from "@screenwright/types";
 import { debounce } from "lodash-es";
 
@@ -35,11 +36,11 @@ export const useTree = ({ isDynamicPanel = false }: { isDynamicPanel?: boolean }
   const buildTreeData = (components: ComponentType[]): ComponentType[] => {
     const withSortedChildren = components.map((component) => {
       if (component.component.prop === FolderEnum.group) {
-        component.children!.sort((a, b) => b.zIndex - a.zIndex);
+        component.children!.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
       }
       return component;
     });
-    return withSortedChildren.sort((a, b) => b.zIndex - a.zIndex);
+    return withSortedChildren.sort((a, b) => compareZIndex(b.zIndex, a.zIndex));
   };
 
   // 树形数据，按 zIndex 排序。**只读**：写入树一律走 updateLocalData → core 的 reorder，

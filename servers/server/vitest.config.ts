@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    maxWorkers: process.env.CI ? 2 : undefined,
     include: ['**/tests/**/*.test.ts', '**/tests/**/*.test.tsx'],
     coverage: {
       provider: 'v8',

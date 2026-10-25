@@ -37,6 +37,7 @@ export const CaptureTreeWalker = {
   /** 构建 editor 捕获计划（分类 + 面板入口，供 panelStitch 使用） */
   buildEditorCapturePlan(editor: HTMLElement, componentList: ComponentList, viewWrapper: HTMLElement) {
     const tops = this.listEditorTopLevelItems(componentList);
+    const topRanks = ComponentTreeCapture.rankByZIndex(tops);
     const plan: CapturePlanNode[] = [];
 
     for (const item of tops) {
@@ -53,7 +54,7 @@ export const CaptureTreeWalker = {
         id: String(item.id),
         kind,
         prop: item.component?.prop,
-        zIndex: Number(item.zIndex) || 0
+        zIndex: topRanks.get(item) ?? 0
       };
 
       if (CaptureNodeClassifier.isPanelKind(kind)) {

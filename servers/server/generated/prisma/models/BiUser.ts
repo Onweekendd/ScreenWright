@@ -1668,6 +1668,7 @@ export type BiUserCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many BiUsers.
    */
   data: Prisma.BiUserCreateManyInput | Prisma.BiUserCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1686,6 +1687,7 @@ export type BiUserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many BiUsers.
    */
   data: Prisma.BiUserCreateManyInput | Prisma.BiUserCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

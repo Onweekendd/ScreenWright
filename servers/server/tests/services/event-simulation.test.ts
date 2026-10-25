@@ -25,7 +25,7 @@ import { EventSchema } from "@screenwright/types/schemas";
 import { buildActionFromTemplate, templateEvents } from "@screenwright/types/templates";
 
 import { syncScreenData } from "@/mastra/services/bi-data-sync";
-import { simulateEvent } from "@/mastra/services/event-simulation";
+import { simulateEvent } from "@/mastra/services/events/event-simulation";
 import { buildCallbackEntry } from "@/mastra/tools/configure-callback-args";
 
 const SCREEN_ID = 9901;

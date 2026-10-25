@@ -17,5 +17,5 @@ register();
 
 // 动态导入实际的 TypeScript worker
 // 使用 file:// URL 确保正确加载
-const workerPath = pathToFileURL(resolve(__dirname, "./static-server.worker.ts")).href;
+const workerPath = pathToFileURL(resolve(__dirname, "./static-server.worker")).href;
 await import(workerPath);

@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { legacyNumberToZIndex } from "@screenwright/core";
+
 import { useCreateComponent } from "@/views/build/components/agentBI/hooks/useCreateComponent";
 import { useEditStore } from "@/views/build/components/buildRender/hooks/useEditStore";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
@@ -50,7 +52,8 @@ const leaf = (id: number, left: number, top: number, zIndex: number) => ({
   component: { prop: "echartstripBar", width: 100, height: 50 },
   left,
   top,
-  zIndex,
+  // 用例里用小整数表示相对层级，换成字符串键（与旧数据迁移用同一个映射）
+  zIndex: legacyNumberToZIndex(zIndex),
   display: true,
   option: {},
   data: [],
@@ -164,10 +167,10 @@ describe("moveComponents", () => {
     const { allComponentMap } = setup();
     const { moveComponents } = useCreateComponent();
 
-    // 分组内现有 zIndex 为 3 / 7
+    // 分组内现有 zIndex 为 3 / 7（"a3" / "a7"）
     await moveComponents([9], { parentId: 100, parentType: "group" });
 
-    expect(allComponentMap.value.get("9")!.zIndex).toBe(8);
+    expect(allComponentMap.value.get("9")!.zIndex > "a7").toBe(true);
   });
 
   it("移动后重算分组包围盒", async () => {

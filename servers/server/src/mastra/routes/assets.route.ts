@@ -12,7 +12,7 @@ import {
   pageFiles,
   pageSystemMaterials,
   uploadFile
-} from "@/mastra/services/assets.server";
+} from "@/mastra/services/ai-assets/assets.server";
 import type { AuthVariables } from "@/middleware/auth";
 import { authMiddleware } from "@/middleware/auth";
 

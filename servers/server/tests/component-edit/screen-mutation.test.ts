@@ -45,7 +45,7 @@ const builtGroup = (id: number, memberIds: number[]): ComponentType =>
     name: "新分组",
     title: "新分组",
     children: memberIds.map((memberId) => readJson(componentFile(`${memberId}_条形图.json`))),
-    zIndex: 99
+    zIndex: "b2f"
   }) as unknown as ComponentType;
 
 const filterOf = (name: string, bindComponent: Array<{ label: string; id: number }>): Filter =>

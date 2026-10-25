@@ -1,11 +1,12 @@
-import { LibSQLVector } from "@mastra/libsql";
+import { PgVector } from "@mastra/pg";
 
-import { sqliteUrl } from "@/lib/db/sqlite-url";
+import { mastraDatabaseSchema } from "../storage/database-schema";
 
 import "dotenv/config";
 
-// 单机版：组件 RAG 向量落 SQLite（libsql），与 Mastra 记忆同库同文件。
-export const vector = new LibSQLVector({
-  id: "libsql-vector",
-  url: sqliteUrl("MASTRA_DATABASE_URL", "file:./.data/mastra.db")
+// 组件 RAG 向量落 pgvector，与 Mastra 记忆同库（独立 schema）。
+export const vector = new PgVector({
+  id: "pg-vector",
+  connectionString: process.env.MASTRA_DATABASE_URL!,
+  schemaName: mastraDatabaseSchema
 });

@@ -9,19 +9,13 @@ import AnimationPlayback from "./actions/AnimationPlayback.vue";
 import ApiInstruction from "./actions/ApiInstruction.vue";
 import FocusLayer from "./actions/FocusLayer.vue";
 import FollowIcon from "./actions/FollowIcon.vue";
-import GlMapIconActive from "./actions/GlMapIconActive.vue";
-import GlMapRegionLift from "./actions/GlMapRegionLift.vue";
-import GlMapSceneRoam from "./actions/GlMapSceneRoam.vue";
 import HandleSceneObjExplosion from "./actions/HandleSceneObjExplosion.vue";
 import ProjectFunction from "./actions/ProjectFunction.vue";
-import SendAIManMsg from "./actions/SendAIManMsg.vue";
-import SendUE4Msg from "./actions/SendUE4Msg.vue";
 import SetDelay from "./actions/SetDelay.vue";
 import SetIndex from "./actions/SetIndex.vue";
 import SetStateAnimation from "./actions/SetStateAnimation.vue";
 import ShowHide from "./actions/Show&Hide.vue";
 import SwiperCardChangeIndexPage from "./actions/SwiperCardChangeIndexPage.vue";
-import SwitchMapChildComponent from "./actions/SwitchMapChildComponent.vue";
 import SwitchSceneChildComponent from "./actions/SwitchSceneChildComponent.vue";
 import SwitchSceneLevel from "./actions/SwitchSceneLevel.vue";
 import SwitchSceneObject from "./actions/SwitchSceneObject.vue";
@@ -40,9 +34,6 @@ export const actionComponentMap: Record<string, Component> = {
   [ActionTypeEnum.Show]: ShowHide,
   [ActionTypeEnum.Hide]: ShowHide,
   [ActionTypeEnum.ShowHide]: ShowHide,
-  [ActionTypeEnum.SendUe4Msg]: SendUE4Msg,
-  [ActionTypeEnum.SendUe4MsgStatic]: SendUE4Msg,
-  [ActionTypeEnum.SendAIManMsgStatic]: SendAIManMsg,
   [ActionTypeEnum.SwitchSceneStatus]: SwitchSceneStatus,
   [ActionTypeEnum.SwitchSceneRoam]: SwitchSceneRoam,
   [ActionTypeEnum.SwitchSceneLevel]: SwitchSceneLevel,
@@ -71,10 +62,6 @@ export const actionComponentMap: Record<string, Component> = {
   [ActionTypeEnum.VideoToRewind]: VideoToRewind,
 
   [ActionTypeEnum.SwitchSceneChildComponentVisible]: SwitchSceneChildComponent,
-  [ActionTypeEnum.SwitchMapChildComponentVisible]: SwitchMapChildComponent,
-  [ActionTypeEnum.GlMapRegionLift]: GlMapRegionLift,
-  [ActionTypeEnum.GlMapSceneRoam]: GlMapSceneRoam,
-  [ActionTypeEnum.GlMapIconActive]: GlMapIconActive,
   [ActionTypeEnum.Moving]: ActionMoving,
   [ActionTypeEnum.Scaling]: ActionScaling,
   [ActionTypeEnum.ScalingHide]: ActionScaling,

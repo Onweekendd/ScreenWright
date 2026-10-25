@@ -1,18 +1,23 @@
 <template>
   <div class="main-area">
     <div class="box-content" ref="msgLayout" @scroll.passive="handleScroll">
-      <WelcomeScreen :is-visible="showWelcome" :examples="examples" :steps="steps" @select="handleExampleSelect" />
+      <WelcomeScreen
+        :is-visible="showWelcome"
+        :examples="examples"
+        :capabilities="capabilities"
+        @select="handleExampleSelect"
+      />
       <div v-if="isLoadingMoreMessages" class="load-more-indicator">
         <span>加载更多...</span>
       </div>
-      <template v-for="item in messages" :key="item.id">
+      <template v-for="(item, index) in displayMessages" :key="item.id">
         <UserMessage
           v-if="item.role === 'user'"
           :parts="item.parts"
           :can-undo="canUndoMessage(item.id)"
           @undo="handleUndo(item.id)"
         />
-        <AssistantMessage v-else :message="item" :is-loading="isStreaming && item === messages[messages.length - 1]" />
+        <AssistantMessage v-else :message="item" :is-loading="isStreaming && index === displayMessages.length - 1" />
       </template>
       <!-- 已发送消息但首个 chunk 还未到达时，显示 loading 占位行 -->
       <AssistantMessage
@@ -21,17 +26,21 @@
         :is-loading="true"
       />
     </div>
-    <ChatInput v-model="inputText" @send="sendMessage()" />
+    <!-- 有审批/提问弹窗时弹窗顶替输入框（v-show 保留草稿），弹窗由 index.vue 排在本区域下方 -->
+    <ChatInput v-show="!hasPendingDialog" v-model="inputText" @send="sendMessage()" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 
 import type { UIMessage } from "ai";
 import { ElMessage, ElMessageBox } from "element-plus";
 
+import { useActiveAgentBISession } from "../agentBISessionContext";
+import { createAssistantMessageGrouper } from "../hooks/groupAssistantMessages";
 import { useAgentBIVersionHistory } from "../hooks/useAgentBIVersionHistory";
+import { useConfirm } from "../hooks/useConfirm";
 import { useRollbackExecutor } from "../hooks/useRollbackExecutor";
 import { useWelcomeScreen } from "../hooks/useWelcomeScreen";
 import { useAgentBISessions } from "../useAgentBISessions";
@@ -50,6 +59,9 @@ if (!session) {
 const { messages, inputText, isStreaming, hasMoreMessages, isLoadingMoreMessages, loadOlderMessages, sendMessage } =
   session;
 
+const groupMessages = createAssistantMessageGrouper();
+const displayMessages = computed(() => groupMessages(messages.value));
+
 // 回退是「当前大屏」级操作，不属于某个会话：版本历史是全局单例，执行器直接操作画布，
 // 故直接消费全局 hook，而非经 session 转发。
 const { canUndoMessage, fetchRollbackPlan } = useAgentBIVersionHistory();
@@ -59,7 +71,7 @@ const { executeRollbackPlan, describeRollbackOps } = useRollbackExecutor();
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const { isVisible: showWelcome, examples, steps } = useWelcomeScreen(messages);
+const { isVisible: showWelcome, examples, capabilities } = useWelcomeScreen(messages);
 
 // 欢迎页示例点击发出的消息包一层 <welcome> 标签，供 agent 识别为
 // “从零创建大屏”意图，UserMessage.vue 展示时会提炼出标签内的纯文本
@@ -121,6 +133,20 @@ const placeholderMessage = {
   content: "",
   parts: [] as UIMessage["parts"]
 };
+
+// 弹窗出现时消息区被挤短，滚到底让引出这次提问/审批的那条消息露出来
+const { dialogs } = useConfirm();
+const { sessionId } = useActiveAgentBISession();
+const hasPendingDialog = computed(() => dialogs.value.has(sessionId));
+watch(hasPendingDialog, async (pending) => {
+  if (!pending) {
+    return;
+  }
+  await nextTick();
+  if (msgLayout.value) {
+    msgLayout.value.scrollTop = msgLayout.value.scrollHeight;
+  }
+});
 
 const handleScroll = async () => {
   if (!msgLayout.value || !hasMoreMessages.value || isLoadingMoreMessages.value) {

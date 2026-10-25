@@ -14,6 +14,7 @@ import { UpdateHistoryTypeEnum, useAction } from "../../buildRender/hooks/useAct
 import { useEditStore } from "../../buildRender/hooks/useEditStore";
 import type { MenuItemForRender, ModuleGroupForRender } from "../../buildTabs/selectAssets/assetsMenuType";
 import { useEncodeTabsMenuGroup } from "../../encodeEditor/components/Tabs/useEncodeTabsMenuGroup";
+import { containerMenuItem } from "./containerMenuItem";
 
 export type ComponentPlacement =
   | { parentId: number; parentType: "group" }
@@ -173,6 +174,10 @@ export function useCreateComponent() {
   }
 
   function findComponentMenuItem(title: string) {
+    const container = containerMenuItem(title);
+    if (container) {
+      return container;
+    }
     const lowerTitle = title.toLowerCase();
     return tabsGroupMenu.value
       .flatMap((item) => (item.children as ModuleGroupForRender[]).flatMap((group) => group.children ?? group))
@@ -181,20 +186,9 @@ export function useCreateComponent() {
   }
 
   function findMenuItemByName(name: string): MenuItemForRender | undefined {
-    if (name === "动态面板") {
-      return {
-        id: 69,
-        moduleId: 69,
-        title: "动态面板"
-      } as MenuItemForRender;
-    }
-
-    if (name === "分组") {
-      return {
-        id: 75,
-        moduleId: 75,
-        title: "分组"
-      } as MenuItemForRender;
+    const container = containerMenuItem(name);
+    if (container) {
+      return container;
     }
 
     const lowerName = name.toLowerCase();

@@ -1,3 +1,4 @@
+import { legacyNumberToZIndex } from "@screenwright/core";
 import type { FolderEnum } from "@screenwright/types";
 
 import {
@@ -92,7 +93,7 @@ export class GroupStrategy implements ConvertStrategy {
     };
     component.children = [];
     component.isExpand = true;
-    component.zIndex = zIndex ?? depth;
+    component.zIndex = legacyNumberToZIndex(zIndex ?? depth);
     component.isOuter = true;
 
     return { component, message: "成功转换为 Group" };

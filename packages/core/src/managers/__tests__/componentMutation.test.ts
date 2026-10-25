@@ -19,7 +19,7 @@ const leaf = (id: number, extra: Record<string, unknown> = {}) =>
     name: `c${id}`,
     left: 0,
     top: 0,
-    zIndex: 0,
+    zIndex: "a0",
     ...extra
   }) as unknown as ComponentType;
 
@@ -31,7 +31,7 @@ const group = (id: number, children: ComponentType[]) =>
     name: `g${id}`,
     left: 999,
     top: 999,
-    zIndex: 0,
+    zIndex: "a0",
     children
   }) as unknown as ComponentType;
 
@@ -42,7 +42,7 @@ const panel = (id: number, states: Array<{ id: string; config: ComponentType[] }
     name: `p${id}`,
     left: 0,
     top: 0,
-    zIndex: 0,
+    zIndex: "a0",
     panelData: states
   }) as unknown as ComponentType;
 
@@ -276,26 +276,28 @@ describe("ComponentManager 写入 API", () => {
     });
 
     it("搬迁时把组件顶到目标容器最上层（与前端 moveComponents 同口径）", () => {
-      const layers = [group(1, [leaf(11, { zIndex: 3 }), leaf(12, { zIndex: 7 })]), leaf(9, { zIndex: 0 })];
+      const layers = [group(1, [leaf(11, { zIndex: "a3" }), leaf(12, { zIndex: "a7" })]), leaf(9, { zIndex: "a0" })];
       const { manager } = makeManager(layers);
 
       manager.move([9], { parentId: 1, parentType: "group" });
 
-      expect(manager.find(9)?.zIndex).toBe(8);
+      expect(manager.find(9)!.zIndex > "a7").toBe(true);
     });
 
     it("多个组件依次置顶，保持传入次序", () => {
-      const layers = [group(1, [leaf(11, { zIndex: 5 })]), leaf(8, { zIndex: 0 }), leaf(9, { zIndex: 0 })];
+      const layers = [group(1, [leaf(11, { zIndex: "a5" })]), leaf(8, { zIndex: "a0" }), leaf(9, { zIndex: "a0" })];
       const { manager } = makeManager(layers);
 
       manager.move([8, 9], { parentId: 1, parentType: "group" });
 
       expect(ids(layers[0].children)).toEqual([11, 8, 9]);
-      expect((layers[0].children ?? []).map((item) => item.zIndex)).toEqual([5, 6, 7]);
+      const keys = (layers[0].children ?? []).map((item) => item.zIndex);
+      expect(keys[0]).toBe("a5");
+      expect(keys[0] < keys[1] && keys[1] < keys[2]).toBe(true);
     });
 
     it("已在目标容器时不重算 zIndex——否则重复 resume 会让它一路涨", () => {
-      const layers = [group(1, [leaf(11, { zIndex: 3 })]), leaf(9, { zIndex: 0 })];
+      const layers = [group(1, [leaf(11, { zIndex: "a3" })]), leaf(9, { zIndex: "a0" })];
       const { manager } = makeManager(layers);
       const target = { parentId: 1, parentType: "group" as const };
 
@@ -307,12 +309,12 @@ describe("ComponentManager 写入 API", () => {
     });
 
     it("upsert 不重算 zIndex：回执里的值就是画布上的真实值", () => {
-      const layers = [group(1, [leaf(11, { zIndex: 9 })]), leaf(9, { zIndex: 2 })];
+      const layers = [group(1, [leaf(11, { zIndex: "a9" })]), leaf(9, { zIndex: "a2" })];
       const { manager } = makeManager(layers);
 
       manager.upsert(manager.find(9)!, { parentId: 1, parentType: "group" });
 
-      expect(manager.find(9)?.zIndex).toBe(2);
+      expect(manager.find(9)?.zIndex).toBe("a2");
     });
   });
 
@@ -630,15 +632,17 @@ describe("分组包围盒（reflowGroup）", () => {
 
 describe("reorder / dissolveIfUnderfilled", () => {
   const zOf = (list: ComponentType[] | undefined) => (list ?? []).map((item) => item.zIndex);
+  /** 数组第 0 项在最上层：zIndex 必须严格递减，且按字符串比较 */
+  const isStrictlyDescending = (keys: string[]) => keys.every((key, i) => i === 0 || keys[i - 1] > key);
 
   it("reorder：按数组次序重排 zIndex，第 0 项在最上层", () => {
-    const layers = [leaf(1, { zIndex: 5 }), leaf(2, { zIndex: 9 }), leaf(3, { zIndex: 1 })];
+    const layers = [leaf(1, { zIndex: "a5" }), leaf(2, { zIndex: "a9" }), leaf(3, { zIndex: "a1" })];
     const { manager } = makeManager(layers);
 
     manager.reorder([layers[2], layers[0], layers[1]]);
 
     expect(ids(manager.getLayers())).toEqual([3, 1, 2]);
-    expect(zOf(manager.getLayers())).toEqual([3, 2, 1]);
+    expect(isStrictlyDescending(zOf(manager.getLayers()))).toBe(true);
   });
 
   it("reorder：就地换内容，不替换容器数组引用", () => {
@@ -659,7 +663,7 @@ describe("reorder / dissolveIfUnderfilled", () => {
 
     const g = manager.find(1)!;
     expect(ids(g.children)).toEqual([12, 11]);
-    expect(zOf(g.children)).toEqual([2, 1]);
+    expect(isStrictlyDescending(zOf(g.children))).toBe(true);
     expect(g.children!.map((c) => c.parent)).toEqual([1, 1]);
     expect({ left: g.left, top: g.top, width: g.component.width, height: g.component.height }).toEqual({
       left: 0,
@@ -689,15 +693,15 @@ describe("reorder / dissolveIfUnderfilled", () => {
   });
 
   it("dissolveIfUnderfilled：只剩一个成员时解散，成员塞回分组原来的位置并继承其层级", () => {
-    const { manager } = makeManager([leaf(8), group(5, [leaf(51, { parent: 5, zIndex: 1 })]), leaf(9)]);
-    manager.find(5)!.zIndex = 7;
+    const { manager } = makeManager([leaf(8), group(5, [leaf(51, { parent: 5, zIndex: "a1" })]), leaf(9)]);
+    manager.find(5)!.zIndex = "a7";
 
     const promoted = manager.dissolveIfUnderfilled(5);
 
     expect(ids(promoted ?? [])).toEqual([51]);
     // 下标：分组原来在中间，成员就落在中间
     expect(ids(manager.getLayers())).toEqual([8, 51, 9]);
-    expect(manager.find(51)!.zIndex).toBe(7);
+    expect(manager.find(51)!.zIndex).toBe("a7");
     expect(manager.find(51)!.parent).toBeUndefined();
     expect(manager.find(5)).toBeNull();
   });

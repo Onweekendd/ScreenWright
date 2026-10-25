@@ -2,17 +2,16 @@ import type { ComponentType } from "@screenwright/types";
 
 import { applyComponentEdit, previewComponentEdit } from "@/mastra/services/bi-data-sync/component-edit";
 
-import { SuspendType } from "../../../types/suspend";
 import { isComponentFilePath } from "../file-kind";
 import { formatValidationWarnings, validateComponentContent } from "../utils";
 import {
-  askOrPush,
   type EditContext,
   type EditFilesSuspendPayload,
   invalidateReadState,
   notWritten,
   type PreparedEdit,
-  type SyncHandler
+  type SyncHandler,
+  syncPayload
 } from "./contract";
 
 /**
@@ -24,15 +23,23 @@ export const pushComponentUpdate = (
   purpose: string,
   component: ComponentType
 ): EditFilesSuspendPayload =>
-  askOrPush(
-    ctx,
-    {
-      approvalType: SuspendType.AskApprovalPushComponentUpdate,
-      autoType: SuspendType.PushComponentUpdate,
-      purpose
-    },
-    { component, replacements: ctx.result.replacements }
-  );
+  syncPayload(ctx, purpose, { op: "update_component", component, capture: ctx.capture ?? true });
+
+/**
+ * title 是组件类型标识（「条形图」「图片」），前端靠它在组件菜单里找类型，不能改；组件名是 name。
+ * 原文解析不了时不拦，交给后面的校验。
+ */
+const titleChangeError = (original: string, title: unknown): string | undefined => {
+  let before: unknown;
+  try {
+    before = (JSON.parse(original) as { title?: unknown }).title;
+  } catch {
+    return undefined;
+  }
+  return before !== undefined && title !== before
+    ? `title 是组件类型标识（"${String(before)}"），不能改；要改组件名请改 name`
+    : undefined;
+};
 
 /**
  * 组件 json：component/ 下的 {id}_{name}.json。
@@ -48,6 +55,11 @@ export const componentHandler: SyncHandler = {
     const validation = validateComponentContent(ctx.result.content);
     if (!validation.ok) {
       return { ok: false, message: validation.message, validationErrors: validation.validationErrors };
+    }
+
+    const titleError = titleChangeError(ctx.readRecord.content, (validation.data as ComponentType).title);
+    if (titleError) {
+      return { ok: false, message: titleError };
     }
 
     const editedId = (validation.data as ComponentType).id;

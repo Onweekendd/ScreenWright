@@ -4,7 +4,7 @@ import type { ChunkType } from "@mastra/core/stream";
 import { withRecordingTurn } from "@/recording/recording-scope";
 
 import { memory } from "../../storage/storage";
-import { commitScreenSnapshot } from "../version-history";
+import { commitScreenSnapshot } from "../version/version-history";
 import { renameBackgroundChunk } from "./background-chunk";
 import type { BgEventChunk } from "./bg-event-dedup";
 import { BgEventDedup } from "./bg-event-dedup";
@@ -451,6 +451,7 @@ class BIChatStreamSession {
         messages: args.messages ?? [],
         clientTools: args.clientTools ?? {},
         runId: args.runId,
+        toolCallId: args.toolCallId,
         suspendType: args.suspendType,
         resumeData: args.resumeData,
         threadId: this.threadId,

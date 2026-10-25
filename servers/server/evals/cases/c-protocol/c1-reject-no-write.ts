@@ -15,7 +15,7 @@
 
 import { AgentMode } from "@/mastra/types/bi-chat";
 
-import { type Assertion, type EvalCase, isWriteSuspend, newComponents } from "../../harness/case";
+import { type Assertion, describeSuspend, type EvalCase, isWriteSuspend, newComponents } from "../../harness/case";
 
 export const c1RejectNoWrite: EvalCase = {
   id: "c1-reject-no-write",
@@ -32,7 +32,7 @@ export const c1RejectNoWrite: EvalCase = {
 
   assert: (ctx): Assertion[] => {
     const created = newComponents(ctx.before, ctx.screen);
-    const writes = ctx.suspends.filter((s) => isWriteSuspend(s.type));
+    const writes = ctx.suspends.filter((s) => isWriteSuspend(s));
     const notRejected = writes.filter((s) => s.resumeData.approved !== false);
 
     return [
@@ -52,7 +52,7 @@ export const c1RejectNoWrite: EvalCase = {
       {
         name: "确实走到了落盘那一步（至少一次写类挂起）",
         passed: writes.length > 0,
-        detail: `写类挂起 ${writes.length} 次${ctx.suspends.length > 0 ? `，全部挂起 ${ctx.suspends.map((s) => s.type).join(", ")}` : "，一次挂起都没有"}`
+        detail: `写类挂起 ${writes.length} 次${ctx.suspends.length > 0 ? `，全部挂起 ${ctx.suspends.map((s) => describeSuspend(s)).join(", ")}` : "，一次挂起都没有"}`
       },
       {
         name: "每一次写类挂起都被回了拒绝",
@@ -60,7 +60,7 @@ export const c1RejectNoWrite: EvalCase = {
         detail:
           notRejected.length === 0
             ? undefined
-            : `${notRejected.length} 次没走拒绝分支：${notRejected.map((s) => s.type).join(", ")}`
+            : `${notRejected.length} 次没走拒绝分支：${notRejected.map((s) => describeSuspend(s)).join(", ")}`
       }
     ];
   }

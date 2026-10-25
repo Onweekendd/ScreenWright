@@ -1,8 +1,8 @@
 import type { BaseEntity } from "@/model/BaseEntity";
 import { serverRequest } from "@/utils/serverService";
 
-/** 3 个模型角色 */
-export type ModelRole = "reasoning" | "vision" | "embedding";
+/** 5 个模型角色 */
+export type ModelRole = "reasoning" | "vision" | "embedding" | "image" | "video";
 
 export interface AiModelVo {
   role: ModelRole;
@@ -33,7 +33,7 @@ export interface TestAiModelResult {
 
 const base = "/customApi/ai-models";
 
-/** 拉 3 个角色配置（key 已脱敏） */
+/** 拉所有角色配置（key 已脱敏） */
 export const getAiModels = () =>
   serverRequest<BaseEntity<AiModelVo[]>>({ url: base, method: "get" }).then((r) => r.result);
 
@@ -42,7 +42,10 @@ export const updateAiModel = (role: ModelRole, body: UpdateAiModelBody) =>
   serverRequest<BaseEntity<AiModelVo>>({ url: `${base}/${role}`, method: "put", data: body }).then((r) => r.result);
 
 /** 用表单里的临时配置验证连通性（不落库；未重填的字段回退库里已存值） */
-export const testAiModel = (role: ModelRole, body: Pick<UpdateAiModelBody, "baseUrl" | "apiKey" | "modelId">) =>
+export const testAiModel = (
+  role: ModelRole,
+  body: Pick<UpdateAiModelBody, "baseUrl" | "apiKey" | "modelId" | "dimensions">
+) =>
   serverRequest<BaseEntity<TestAiModelResult>>({
     url: `${base}/${role}/test`,
     method: "post",

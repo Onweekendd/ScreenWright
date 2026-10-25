@@ -1226,6 +1226,7 @@ export type DataSourceCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many DataSources.
    */
   data: Prisma.DataSourceCreateManyInput | Prisma.DataSourceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1244,6 +1245,7 @@ export type DataSourceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many DataSources.
    */
   data: Prisma.DataSourceCreateManyInput | Prisma.DataSourceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

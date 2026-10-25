@@ -25,11 +25,9 @@ import { fullWorkspace } from "../workspace";
  * - sandbox（随 fullWorkspace 自动挂载）：跑 create-template.ts。
  * - skill_read（随 workspace）：按需查组件字段定义。
  */
-const instructions = [
-  loadPrompt("mastra/template-extractor-core.md"),
-  loadPrompt("mastra/workspace-structure.md"),
-  loadPrompt("mastra/file-tools.md")
-].join("\n\n");
+const instructions = [loadPrompt("mastra/template-extractor-core.md"), loadPrompt("mastra/workspace-guide.md")].join(
+  "\n\n"
+);
 
 export const templateExtractorAgent = new Agent({
   id: "template-extractor-agent",

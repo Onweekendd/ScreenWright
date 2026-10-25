@@ -1,6 +1,8 @@
+import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
+import { HTTPException } from "hono/http-exception";
 
-import { prismaClient } from "@/mastra/storage/prisma";
+import { verifyToken } from "@/lib/auth/token";
 
 /** 鉴权后注入到上下文的变量 */
 export interface AuthVariables {
@@ -9,38 +11,56 @@ export interface AuthVariables {
   role: number;
 }
 
-type Identity = { userId: number; userName: string; role: number };
-
-const FALLBACK: Identity = { userId: 1, userName: "admin", role: 0 };
-let cached: Identity | null = null;
+/** 匿名访问时注入的身份：role=-1 不对应任何真实角色 */
+const ANONYMOUS = { userId: 0, userName: "anonymous", role: -1 } as const;
 
 /**
- * 开源单机版没有登录：解析出「默认用户」——库里第一个超管（role=0），
- * 没有就退回任意一个用户，再没有就用内置兜底。结果缓存一次。
+ * 无需登录即可访问的接口：已发布大屏的分享预览（/view/:id 页面会调用）。
+ * 只放行「读」，且这些 service 都不依赖 userId。
  */
-async function resolveDefaultIdentity(): Promise<Identity> {
-  if (cached) {
-    return cached;
+const PUBLIC_PATHS = [
+  /^\/online\/largeScreenAgg\/(open|openCheck|openCheckEquities)$/,
+  /^\/bi-system\/largeScreen\/openQuote$/
+];
+
+/** 令牌来源：优先 X-Access-Token（前端既有约定），其次 Authorization: Bearer。 */
+export function extractToken(c: Context): string | null {
+  const direct = c.req.header("X-Access-Token");
+  if (direct) {
+    return direct;
   }
-  try {
-    const user =
-      (await prismaClient.biUser.findFirst({ where: { role: 0 }, orderBy: { id: "asc" } })) ??
-      (await prismaClient.biUser.findFirst({ orderBy: { id: "asc" } }));
-    cached = user ? { userId: user.id, userName: user.userName, role: user.role } : FALLBACK;
-  } catch {
-    cached = FALLBACK;
-  }
-  return cached;
+  const auth = c.req.header("Authorization");
+  const m = auth?.match(/^Bearer\s+(.+)$/i);
+  return m ? m[1] : null;
 }
 
 /**
- * 单机版鉴权中间件：不校验 token，直接把默认用户的 userId/userName/role 注入上下文，
- * 保持下游 service 拿 `c.get("userId")` 的用法不变。
+ * 鉴权中间件：校验 JWT，把 userId/userName/role 注入上下文，下游 service 拿 `c.get("userId")` 的用法不变。
+ * - 令牌有效 → 放行；
+ * - 无/无效令牌且命中 PUBLIC_PATHS → 以匿名身份放行；
+ * - 其余 → 401。
+ * 多个 router 会各自 `use("*", authMiddleware)` 叠在同一请求上，已鉴权则直接跳过，避免重复验签。
  */
 export const authMiddleware = createMiddleware<{ Variables: AuthVariables }>(async (c, next) => {
-  const identity = await resolveDefaultIdentity();
-  c.set("userId", identity.userId);
-  c.set("userName", identity.userName);
-  c.set("role", identity.role);
-  await next();
+  if (c.get("userId") !== undefined) {
+    await next();
+    return;
+  }
+  const token = extractToken(c);
+  const identity = token ? await verifyToken(token) : null;
+  if (identity) {
+    c.set("userId", identity.userId);
+    c.set("userName", identity.userName);
+    c.set("role", identity.role);
+    await next();
+    return;
+  }
+  if (PUBLIC_PATHS.some((re) => re.test(c.req.path))) {
+    c.set("userId", ANONYMOUS.userId);
+    c.set("userName", ANONYMOUS.userName);
+    c.set("role", ANONYMOUS.role);
+    await next();
+    return;
+  }
+  throw new HTTPException(401, { message: token ? "登录已过期，请重新登录" : "未登录" });
 });

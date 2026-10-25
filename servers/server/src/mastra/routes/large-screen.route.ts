@@ -15,7 +15,7 @@ import {
   quoteInfo,
   updateGroup,
   updateScreen
-} from "@/mastra/services/large-screen.server";
+} from "@/mastra/services/screen/large-screen.server";
 import {
   IdParamSchema,
   LargeGroupSaveSchema,

@@ -1,15 +1,11 @@
 <template>
-  <div class="table-head" :style="tableHeadStyle" v-if="headerShow">
-    <div :class="`list-item ${borderShow ? 'border-show' : 'border-hide'}`">
-      <span
-        v-for="(field, index) in listLabel"
-        :key="field.value"
-        :style="listItemStyle(index)"
-        :data-translate="field.name"
-      >
-        {{ field.name }}
-      </span>
-    </div>
+  <div v-if="option.header?.show !== false" class="table-head" :style="headerContainerStyle">
+    <span v-if="option.rowIndex?.show" class="table-head-cell" :style="rowIndexCellStyle">
+      {{ option.rowIndex.title }}
+    </span>
+    <span v-for="column in option.columns" :key="column.key" class="table-head-cell" :style="cellStyle(column)">
+      {{ column.title }}
+    </span>
   </div>
 </template>
 
@@ -17,51 +13,37 @@
 import type { CSSProperties } from "vue";
 import { computed } from "vue";
 
-import { setMinioUrl } from "@material/minioUrl";
+const props = defineProps<{ option: any }>();
 
-import type { Option } from "../types";
-
-const props = defineProps<{ option: Option; listLabel: { name: string; value: string }[] }>();
-
-const headerShow = computed(() => props.option.headerShow);
-const borderShow = computed(() => props.option.borderShow);
-
-const tableHeadStyle = computed(() => ({
-  background:
-    props.option.backgroundType === "custom"
-      ? `url(${setMinioUrl(props.option.backgroundImage)}) no-repeat center/cover`
-      : props.option.headerBackground,
-  backgroundRepeat: "no-repeat",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  height: props.option.headerlineHeight + "px",
-  lineHeight: props.option.headerlineHeight + "px",
-  fontSize: props.option.headerFontSize + "px",
-  textAlign: props.option.headerTextAlign,
-  fontFamily: props.option.headerFontFamily,
-  letterSpacing: props.option.headerletterSpacing + "px",
-  fontStyle: props.option.headerFontStyle,
-  fontWeight: props.option.headerFontWeight,
-  color: props.option.headerColor
+const headerContainerStyle = computed<CSSProperties>(() => ({
+  display: "flex",
+  height: `${props.option.header?.height ?? 40}px`,
+  lineHeight: `${props.option.header?.height ?? 40}px`,
+  background: props.option.header?.background,
+  color: props.option.header?.color,
+  fontSize: `${props.option.header?.fontSize ?? 14}px`
 }));
 
-const listItemStyle = (index: number): CSSProperties => {
-  return {
-    pointerEvents: "none",
-    display: "inline-block",
-    width: `${
-      props.option.rowShow && index === 0
-        ? props.option.rowWidth
-        : props.option.seriesYWidth[`${props.option.rowShow ? index - 1 : index}`]
-    }px`,
-    marginLeft: `${
-      props.option.rowShow && index === 0
-        ? props.option.rowSpace
-        : props.option.seriesYMarginLeft[`${props.option.rowShow ? index - 1 : index}`]
-    }px`,
-    lineHeight: props.option.headerHeight
-  };
-};
+const rowIndexCellStyle = computed<CSSProperties>(() => ({
+  flex: "none",
+  width: `${props.option.rowIndex?.width ?? 50}px`,
+  textAlign: "center"
+}));
+
+const cellStyle = (column: { width?: number; align?: CSSProperties["textAlign"] }): CSSProperties => ({
+  flex: column.width ? `0 0 ${column.width}px` : "1 1 0",
+  width: column.width ? `${column.width}px` : undefined,
+  textAlign: column.align ?? "center",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  padding: "0 4px"
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.table-head {
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>

@@ -82,7 +82,7 @@
     "width": 600,
     "height": 300,
     "name": "echart-rank",
-    "prop": "echartrank"
+    "prop": "echartstripBar"
   },
   "option": {
     "refresh": true,
@@ -381,7 +381,7 @@
   "id": 4159,
   "left": 0,
   "top": 300,
-  "zIndex": 1,
+  "zIndex": "a1",
   "verticalConst": "Top",
   "horizontalConst": "Left",
   "parent": 4161,

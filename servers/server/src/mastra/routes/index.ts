@@ -6,6 +6,7 @@ import { biDataSyncRouter } from "./bi-data-sync.route";
 import { chatImageRouter } from "./chat-image.route";
 import { evalRouter } from "./eval.route";
 import { figmaNodeAssetRouter } from "./figma-node-asset.route";
+import { jobRouter } from "./job.route";
 import { llmExchangeRouter } from "./llm-exchange.route";
 import { modelCapabilityRouter } from "./model-capability.route";
 import { swaggerRegistryRouter } from "./swagger-registry.route";
@@ -16,6 +17,7 @@ export const customRoutes = new Hono()
   .route("/customApi", biDataSyncRouter)
   .route("/customApi/figma-node-assets", figmaNodeAssetRouter)
   .route("/customApi/llm-exchanges", llmExchangeRouter)
+  .route("/customApi/jobs", jobRouter)
   .route("/customApi/evals", evalRouter)
   .route("/customApi", modelCapabilityRouter)
   .route("/customApi", aiModelRouter)

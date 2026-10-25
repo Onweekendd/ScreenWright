@@ -13,7 +13,12 @@ import { PanelManager } from "../PanelManager";
  */
 
 const leaf = (id: number) =>
-  ({ id, component: { prop: "text", width: 100, height: 50 }, name: `c${id}`, zIndex: 0 }) as unknown as ComponentType;
+  ({
+    id,
+    component: { prop: "text", width: 100, height: 50 },
+    name: `c${id}`,
+    zIndex: "a0"
+  }) as unknown as ComponentType;
 
 const state = (id: string, config: ComponentType[] = []): PanelState =>
   ({
@@ -34,7 +39,7 @@ const panel = (id: number, states: PanelState[]) =>
     id,
     component: { prop: "sw-panel", width: 300, height: 200 },
     name: `p${id}`,
-    zIndex: 0,
+    zIndex: "a0",
     panelData: states
   }) as unknown as ComponentType;
 
@@ -193,7 +198,7 @@ describe("PanelManager", () => {
         id: 1,
         component: { prop: "sw-folder" },
         name: "g1",
-        zIndex: 0,
+        zIndex: "a0",
         children: [nested]
       } as unknown as ComponentType;
       const { panel: manager } = makeManagers([wrapper]);

@@ -52,6 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   AiModel: 'AiModel',
+  GeneratedImage: 'GeneratedImage',
+  GeneratedVideo: 'GeneratedVideo',
   FigmaKey: 'FigmaKey',
   Module: 'Module',
   FigmaNodeAsset: 'FigmaNodeAsset',
@@ -79,6 +81,9 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  */
 
 export const TransactionIsolationLevel = {
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const
 
@@ -96,6 +101,43 @@ export const AiModelScalarFieldEnum = {
 } as const
 
 export type AiModelScalarFieldEnum = (typeof AiModelScalarFieldEnum)[keyof typeof AiModelScalarFieldEnum]
+
+
+export const GeneratedImageScalarFieldEnum = {
+  id: 'id',
+  promptHash: 'promptHash',
+  prompt: 'prompt',
+  model: 'model',
+  seed: 'seed',
+  width: 'width',
+  height: 'height',
+  url: 'url',
+  referenceUrls: 'referenceUrls',
+  createdTime: 'createdTime'
+} as const
+
+export type GeneratedImageScalarFieldEnum = (typeof GeneratedImageScalarFieldEnum)[keyof typeof GeneratedImageScalarFieldEnum]
+
+
+export const GeneratedVideoScalarFieldEnum = {
+  id: 'id',
+  promptHash: 'promptHash',
+  prompt: 'prompt',
+  model: 'model',
+  durationSec: 'durationSec',
+  resolution: 'resolution',
+  ratio: 'ratio',
+  url: 'url',
+  firstFrameUrl: 'firstFrameUrl',
+  lastFrameUrl: 'lastFrameUrl',
+  referenceImageUrls: 'referenceImageUrls',
+  referenceVideoUrls: 'referenceVideoUrls',
+  referenceAudioUrls: 'referenceAudioUrls',
+  taskId: 'taskId',
+  createdTime: 'createdTime'
+} as const
+
+export type GeneratedVideoScalarFieldEnum = (typeof GeneratedVideoScalarFieldEnum)[keyof typeof GeneratedVideoScalarFieldEnum]
 
 
 export const FigmaKeyScalarFieldEnum = {
@@ -456,6 +498,8 @@ export const MinioFileScalarFieldEnum = {
   resourceSize: 'resourceSize',
   layerIds: 'layerIds',
   largeUseIds: 'largeUseIds',
+  generatedImageId: 'generatedImageId',
+  referenceFileIds: 'referenceFileIds',
   createdBy: 'createdBy',
   createdTime: 'createdTime',
   updatedBy: 'updatedBy',
@@ -487,6 +531,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: 'DbNull',
+  JsonNull: 'JsonNull'
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const JsonNullValueInput = {
   JsonNull: 'JsonNull'
 } as const
@@ -494,12 +546,12 @@ export const JsonNullValueInput = {
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
-export const NullableJsonNullValueInput = {
-  DbNull: 'DbNull',
-  JsonNull: 'JsonNull'
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 } as const
 
-export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const NullsOrder = {
@@ -517,12 +569,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 

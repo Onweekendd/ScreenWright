@@ -70,6 +70,23 @@ describe("ComponentManager", () => {
     expect(manager.getLayers().map((c) => c.id)).toEqual([1, 2, 3]);
   });
 
+  it("setLayers 把旧数据里的数字 zIndex（含分组子组件、面板状态里的组件）换成字符串键", () => {
+    const manager = new ComponentManager(new MemoryEditorState(), new CallbackArguments());
+    const layers = makeLayers() as unknown as Array<Record<string, any>>;
+    layers[0].zIndex = 2;
+    layers[0].children[0].zIndex = 1;
+    layers[1].zIndex = 0;
+    layers[1].panelData[0].config[0].zIndex = 5;
+
+    manager.setLayers(makeRaw(layers));
+
+    const all = manager.getAllComponentMap();
+    expect(all.get("1")?.zIndex).toBe("a2");
+    expect(all.get("11")?.zIndex).toBe("a1");
+    expect(all.get("2")?.zIndex).toBe("a0");
+    expect(all.get("21")?.zIndex).toBe("a5");
+  });
+
   it("getAllComponentMap 含分组子组件与面板子组件", () => {
     const manager = new ComponentManager(new MemoryEditorState(), new CallbackArguments());
     manager.setLayers(makeRaw(makeLayers()));

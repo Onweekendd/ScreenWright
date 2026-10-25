@@ -6,7 +6,8 @@ import { baseAttrsRender } from "./baseAttrsRender";
 
 export const useAttrsRender = () => {
   const { selectTargetData } = useTargetData();
-  const attrsRender = ref<baseAttrsRender | null>(null);
+  // 用 shallowRef：实例的 options 里存着配置面板组件对象，deep ref 会把它们变成响应式代理
+  const attrsRender = shallowRef<baseAttrsRender | null>(null);
   const activeTab = ref<string | undefined>("");
   const renderComponent = shallowRef<null | any>(null);
   const options = computed(() => {

@@ -1,46 +1,48 @@
 <template>
   <div class="content-msg">
     <el-timeline :class="['msg-timeline', { 'is-generating': isLoading }]">
-      <template
-        v-for="(part, i) in normalizedParts as any[]"
-        :key="i"
-        v-memo="[part, isLoading && i === normalizedParts.length - 1]"
+      <Transition
+        v-for="(row, i) in displayRows as any[]"
+        :key="row.key"
+        v-memo="[row.part, row.visible, row.expanded, isLoading && i === displayRows.length - 1]"
+        :css="false"
+        appear
+        @enter="(element, done) => expandStep(element, done, row.key)"
+        @leave="(element, done) => collapseStep(element, done, row.key)"
+        @after-enter="finishStepAnimation(row.key)"
+        @after-leave="finishStepAnimation(row.key)"
+        @enter-cancelled="cancelStepAnimation"
+        @leave-cancelled="cancelStepAnimation"
       >
-        <el-timeline-item v-if="part.type === 'reasoning'" hide-timestamp class="timeline-item--text">
-          <ReasoningPart :part="part" />
-        </el-timeline-item>
-        <el-timeline-item v-else-if="part.type === 'text'" hide-timestamp class="timeline-item--text">
-          <MarkdownContent :content="(part as TextUIPart).text" />
-        </el-timeline-item>
-        <el-timeline-item v-else-if="part.type === 'data-tool-workflow'" hide-timestamp class="timeline-item--tool">
-          <WorkflowMessage :part="part" />
-        </el-timeline-item>
-        <el-timeline-item v-else-if="part.type === 'data-tool-agent'" hide-timestamp class="timeline-item--tool">
-          <SubAgentPart :part="part as any" />
-        </el-timeline-item>
-        <el-timeline-item
-          v-else-if="isToolPart(part)"
-          hide-timestamp
-          :class="isToolError(part) ? 'timeline-item--tool-error' : 'timeline-item--tool'"
-        >
-          <WorkflowMessage v-if="isWorkflowTool(getToolName(part))" :part="part" />
-          <LayoutTemplateResult v-else-if="isLayoutTool(getToolName(part))" :part="part" />
-          <TodoWritePart v-else-if="getToolName(part) === 'todoWrite'" :part="part" />
-          <SubAgentPart v-else-if="isAgentTool(getToolName(part))" :part="part as any" />
-          <ToolCallPartUI v-else :part="part" />
-        </el-timeline-item>
-        <el-timeline-item v-else-if="part.type === 'error'" hide-timestamp class="timeline-item--error">
-          <span class="error-text">{{ extractErrorMessage(part) }}</span>
-        </el-timeline-item>
-        <!-- OM 记忆压缩：每个 cycleId 只渲染一次（start 作为锚点，end/failed 通过 map 传入） -->
-        <el-timeline-item v-else-if="part.type === 'data-om-buffering-start'" hide-timestamp class="timeline-item--om">
+        <el-timeline-item v-if="row.visible" hide-timestamp :class="row.className">
+          <ExecutionProcessBlock
+            v-if="row.part.type === 'data-execution-process'"
+            :tool-count="row.part.toolCount"
+            :running="row.part.running"
+            :activity="row.part.activity"
+            :expanded="row.expanded"
+            @toggle="toggleProcess(row.part.id)"
+          />
+          <ReasoningPart v-else-if="row.part.type === 'reasoning'" :part="row.part" />
+          <MarkdownContent v-else-if="row.part.type === 'text'" :content="(row.part as TextUIPart).text" />
+          <WorkflowMessage v-else-if="row.part.type === 'data-tool-workflow'" :part="row.part" />
+          <SubAgentPart v-else-if="row.part.type === 'data-tool-agent'" :part="row.part" />
+          <template v-else-if="isToolPart(row.part)">
+            <WorkflowMessage v-if="isWorkflowTool(getToolName(row.part))" :part="row.part" />
+            <LayoutTemplateResult v-else-if="isLayoutTool(getToolName(row.part))" :part="row.part" />
+            <TodoWritePart v-else-if="getToolName(row.part) === 'todoWrite'" :part="row.part" />
+            <SubAgentPart v-else-if="isAgentTool(getToolName(row.part))" :part="row.part" />
+            <ToolCallPartUI v-else :part="row.part" />
+          </template>
+          <span v-else-if="row.part.type === 'error'" class="error-text">{{ extractErrorMessage(row.part) }}</span>
           <OMBufferingPart
-            :start-data="(part as RawPart).data as unknown as OmStartData"
-            :end-data="omEndMap.get((part as RawPart).data.cycleId as string)"
-            :failed-data="omFailedMap.get((part as RawPart).data.cycleId as string)"
+            v-else-if="row.part.type === 'data-om-buffering-start'"
+            :start-data="(row.part as RawPart).data as unknown as OmStartData"
+            :end-data="omEndMap.get((row.part as RawPart).data.cycleId as string)"
+            :failed-data="omFailedMap.get((row.part as RawPart).data.cycleId as string)"
           />
         </el-timeline-item>
-      </template>
+      </Transition>
       <!-- 尚无可渲染的 parts 但正在加载时，显示一个占位节点 -->
       <el-timeline-item v-if="isLoading && !hasVisibleParts" hide-timestamp class="timeline-item--placeholder" />
     </el-timeline>
@@ -48,10 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onUnmounted, ref } from "vue";
 
 import type { TextUIPart, UIMessage } from "ai";
 
+import { type AssistantDisplayPart, groupAssistantParts, isProcessPart } from "../hooks/groupAssistantParts";
+import { useEditingToolParts } from "../hooks/useEditingToolParts";
+import ExecutionProcessBlock from "./ExecutionProcessBlock.vue";
 import WorkflowMessage from "./figmaToBIMessage/WorkflowMessage.vue";
 import LayoutTemplateResult from "./LayoutTemplateResult.vue";
 import MarkdownContent from "./MarkdownContent.vue";
@@ -124,6 +129,138 @@ const normalizedParts = computed(() => {
 
   return parts;
 });
+
+useEditingToolParts(() => normalizedParts.value);
+
+const expandedProcessIds = ref(new Set<string>());
+const visitedProcessIds = ref(new Set<string>());
+const animatedStepKeys = new Set<string>();
+const toggleProcess = (id: string) => {
+  // 只为这次手动切换的既有步骤播放动画，流式追加不做布局测量。
+  for (const row of timelineRows.value) {
+    if (row.ownerId === id) {
+      animatedStepKeys.add(row.key);
+    }
+  }
+  if (!visitedProcessIds.value.has(id)) {
+    visitedProcessIds.value = new Set([...visitedProcessIds.value, id]);
+  }
+  const next = new Set(expandedProcessIds.value);
+  if (next.has(id)) {
+    next.delete(id);
+  } else {
+    next.add(id);
+  }
+  expandedProcessIds.value = next;
+};
+const displayParts = computed(() => groupAssistantParts(normalizedParts.value, props.isLoading, true));
+
+// 使用原始 part 序号作 key，收起过程时正文不会被当成工具节点替换。
+const timelineRows = computed(() => {
+  const indices = new Map<AssistantDisplayPart, number[]>();
+  normalizedParts.value.forEach((part, index) => {
+    const occurrences = indices.get(part) ?? [];
+    occurrences.push(index);
+    indices.set(part, occurrences);
+  });
+  let ownerId: string | undefined;
+  return displayParts.value.flatMap((part) => {
+    const originalIndex = indices.get(part)?.shift();
+    // 流中还会透传 SDK 标准 part 联合之外的 error 帧。
+    const type = String(part.type);
+    const className =
+      type === "data-execution-process"
+        ? "timeline-item--process"
+        : type === "text" || type === "reasoning"
+          ? "timeline-item--text"
+          : isToolPart(part)
+            ? isToolError(part)
+              ? "timeline-item--tool-error"
+              : "timeline-item--tool"
+            : type === "data-tool-workflow" || type === "data-tool-agent"
+              ? "timeline-item--tool"
+              : type === "error"
+                ? "timeline-item--error"
+                : type === "data-om-buffering-start"
+                  ? "timeline-item--om"
+                  : "";
+    if (!className) {
+      return [];
+    }
+    const groupId = type === "data-execution-process" && "id" in part ? String(part.id) : undefined;
+    if (groupId) {
+      ownerId = groupId;
+    } else if (type === "text") {
+      ownerId = undefined;
+    }
+    const processOwner = !groupId && isProcessPart(part) ? ownerId : undefined;
+    return [
+      {
+        part,
+        className,
+        key: groupId ?? `part-${originalIndex}`,
+        expanded: Boolean(groupId && expandedProcessIds.value.has(groupId)),
+        ownerId: processOwner,
+        visible: !processOwner || expandedProcessIds.value.has(processOwner)
+      }
+    ];
+  });
+});
+// 从未展开的过程不挂载空 Transition；展开过的步骤保留轻量外壳以完成离场动画。
+const displayRows = computed(() =>
+  timelineRows.value.filter((row) => row.visible || (row.ownerId && visitedProcessIds.value.has(row.ownerId)))
+);
+const finishStepAnimation = (key: string) => animatedStepKeys.delete(key);
+
+const stepAnimations = new Map<HTMLElement, { cancel: () => void }>();
+const cancelStepAnimation = (element: Element) => stepAnimations.get(element as HTMLElement)?.cancel();
+const animateStep = (element: Element, done: () => void, expanding: boolean) => {
+  const node = element as HTMLElement;
+  cancelStepAnimation(node);
+  if (typeof node.animate !== "function" || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    done();
+    return;
+  }
+  const previousBoxSizing = node.style.boxSizing;
+  const height = node.getBoundingClientRect().height;
+  const padding = getComputedStyle(node).paddingBottom;
+  node.style.boxSizing = "border-box";
+  const closed = { height: "0px", paddingBottom: "0px", opacity: 0 };
+  const opened = { height: `${height}px`, paddingBottom: padding, opacity: 1 };
+  const options = {
+    duration: 240,
+    easing: "cubic-bezier(0.22, 1, 0.36, 1)"
+  };
+  const animation = node.animate(expanding ? [closed, opened] : [opened, closed], options);
+  // 只裁剪正文，连线位于 wrapper 外，必须能跨越节点底部连接下一个圆点。
+  const wrapper = node.querySelector<HTMLElement>(".el-timeline-item__wrapper");
+  const clipFrames = [{ clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0)" }];
+  const contentAnimation = wrapper?.animate(expanding ? clipFrames : [...clipFrames].reverse(), options);
+  let finished = false;
+  const finish = () => {
+    if (finished) {
+      return;
+    }
+    finished = true;
+    contentAnimation?.cancel();
+    node.style.boxSizing = previousBoxSizing;
+    stepAnimations.delete(node);
+    done();
+  };
+  animation.onfinish = finish;
+  animation.oncancel = finish;
+  stepAnimations.set(node, {
+    cancel: () => {
+      animation.cancel();
+      finish();
+    }
+  });
+};
+const expandStep = (element: Element, done: () => void, key: string) =>
+  animatedStepKeys.has(key) ? animateStep(element, done, true) : done();
+const collapseStep = (element: Element, done: () => void, key: string) =>
+  animatedStepKeys.has(key) ? animateStep(element, done, false) : done();
+onUnmounted(() => stepAnimations.forEach((animation) => animation.cancel()));
 
 type RawPart = { type: string; data: Record<string, unknown> };
 

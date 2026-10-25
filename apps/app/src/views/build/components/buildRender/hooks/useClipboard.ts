@@ -14,7 +14,7 @@ import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
 import { usePanelData } from "../../panelEditor/usePanelData";
 import type { ComponentType } from "../type";
-import { getMaxIndex } from "../utils";
+import { getTopIndex } from "../utils";
 import { validateComponentForPaste } from "../utils";
 import { UpdateHistoryTypeEnum, useAction } from "./useAction";
 import { useEditStore } from "./useEditStore";
@@ -54,7 +54,7 @@ const useClipboard = createGlobalState(() => {
    * @param pastedComponent 粘贴的组件
    */
   const addPastedComponent = async (pastedComponent: ComponentType) => {
-    pastedComponent.zIndex = getMaxIndex(componentList.value) + 1;
+    pastedComponent.zIndex = getTopIndex(componentList.value);
     if (pastedComponent.parent) {
       delete pastedComponent.parent;
     }

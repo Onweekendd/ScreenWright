@@ -76,7 +76,9 @@ async function cleanExpiredCache() {
 
   for (const request of requests) {
     const response = await cache.match(request);
-    if (!response) continue;
+    if (!response) {
+      continue;
+    }
 
     const dateHeader = response.headers.get("date");
     if (dateHeader) {

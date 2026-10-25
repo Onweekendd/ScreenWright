@@ -12,7 +12,6 @@ import type { AllComponentType } from "@screenwright/types";
 import { ScreenwrightExtendsChildComponentMap, ScreenwrightExtendsComponentMap } from "@/components/ScreenwrightExtendsComponent/index";
 // FtIframe 未物料化，ScreenwrightMediaMap 在本地合并了 @screenwright/material 的其余媒体组件与本地 ftiframe
 import { ScreenwrightMediaMap } from "@/components/ScreenwrightMedia/index";
-import { ScreenwrightSceneComponentMap } from "@/components/ScreenwrightSceneComponent/index";
 import { ScreenwrightThirdPartComponentMap } from "@/components/ScreenwrightThirdPartComponent/index";
 import { SystemComponentMap } from "@/components/SystemComponent/index";
 
@@ -64,7 +63,6 @@ class MaterialRegistry {
       ...ScreenwrightIndicatorMap,
       ...ScreenwrightInteractiveMap,
       ...ScreenwrightMediaMap,
-      ...ScreenwrightSceneComponentMap,
       ...ScreenwrightThirdPartComponentMap,
       ...SystemComponentMap
     };

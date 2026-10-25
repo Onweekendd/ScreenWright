@@ -3,7 +3,7 @@ import type { Filter, ParsedLargeScreenInfo } from "@screenwright/types";
 import { FilterSchema } from "@screenwright/types/schemas";
 import type { ZodType } from "zod";
 
-import { getScreenVersionKeyFromPath } from "../screen-workspace";
+import { getScreenVersionKeyFromPath } from "../screen/screen-workspace";
 import { applyFilterSave, runScreenMutation } from "./screen-mutation";
 import { ScreenInfoSchema, type ScreenReader } from "./screen-read";
 
@@ -66,13 +66,13 @@ export const validateDataFilterContent = (filter: unknown): ContentValidation<Fi
 const runScreenEdit = async <T>(
   absPath: string,
   update: (editor: ScreenEditor, reader: ScreenReader) => T | Promise<T>,
-  write: boolean
+  options: { write: boolean; info?: ScreenInfo }
 ): Promise<T | null> => {
   const screenKey = getScreenVersionKeyFromPath(absPath);
   if (!screenKey) {
     return null;
   }
-  return runScreenMutation(screenKey, update, { write });
+  return runScreenMutation(screenKey, update, options);
 };
 
 const runScreenInfoEdit = (absPath: string, editedContent: string, write: boolean): Promise<ScreenInfo | null> => {
@@ -85,7 +85,9 @@ const runScreenInfoEdit = (absPath: string, editedContent: string, write: boolea
       editor.screen.replaceNavInfo(screenInfo);
       return screenInfo;
     },
-    write
+    // 编辑后的 info.json 已经过 validateScreenInfoContent，拿它建树而不是去读磁盘上的旧版：
+    // 旧版要是本身就不合 schema（历史脏数据），照常读会在动手之前就抛错，这次修复永远落不了地
+    { write, info: screenInfo }
   );
 };
 

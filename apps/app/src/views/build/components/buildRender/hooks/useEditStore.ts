@@ -31,12 +31,6 @@ export const useEditStore = createGlobalState(() => {
     // 编辑区域 Dom
     editLayoutDom: null,
     editContentDom: null,
-    // 偏移量
-    offset: 20,
-    // 用户控制的缩放
-    userScale: 1,
-    // 锁定缩放
-    lockScale: false,
     // 初始化
     isCreate: false,
     // 拖拽中

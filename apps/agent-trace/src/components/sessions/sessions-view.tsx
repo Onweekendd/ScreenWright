@@ -161,7 +161,7 @@ export function SessionsView({
                   <span>评估批次的会话</span>
                 </div>
                 <span className="font-mono text-[11px] break-all">{evalRunId}</span>
-                <Link href="/sessions" className="text-primary hover:underline">
+                <Link href="/" className="text-primary hover:underline">
                   ← 回到真实用户会话
                 </Link>
               </div>

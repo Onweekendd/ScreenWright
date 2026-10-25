@@ -27,11 +27,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="大屏版本" :label-width="firstLabelWidth">
-        <el-select
-          popper-class="sw-select-dropdown"
-          v-model="selectTargetData[0].option.quoteVersion"
-          @change="update"
-        >
+        <el-select popper-class="sw-select-dropdown" v-model="selectTargetData[0].option.quoteVersion" @change="update">
           <el-option v-for="item in versionList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -56,6 +52,7 @@
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
+import { compareZIndex } from "@screenwright/core";
 import { ElMessage } from "element-plus";
 import { cloneDeep } from "lodash-es";
 
@@ -141,7 +138,9 @@ const getQuoteDetail = async () => {
   let isHasQuoteId = displayList.value.some((item: any) => item.value === quoteId);
   console.log(isHasQuoteId, "isHasQuoteId");
 
-  if (!selectTargetData.value[0] || !quoteId || !quoteVersion) return;
+  if (!selectTargetData.value[0] || !quoteId || !quoteVersion) {
+    return;
+  }
   if (!isHasQuoteId) {
     ElMessage.error("当前选择的大屏不存在，请重新选择");
     // selectTargetData.value[0].option.quoteId = null;
@@ -199,16 +198,20 @@ const setQuoteDetail = (result: any) => {
   if (layers.length) {
     layers.forEach((item: any) => {
       const isControl = item.includes(`"title":"终端交互"`);
-      if (isControl) component.push(JSON.parse(item));
+      if (isControl) {
+        component.push(JSON.parse(item));
+      }
     });
     component = component.sort((a, b) => {
       const aZ = zIndexMap[a.id] || a.zIndex || 0;
       const bZ = zIndexMap[b.id] || b.zIndex || 0;
-      return bZ - aZ;
+      return compareZIndex(bZ, aZ);
     });
   }
   // 若不存在终端交互图层，则不做任何操作
-  if (!component || !component.length) return;
+  if (!component || !component.length) {
+    return;
+  }
   console.log(component[0], '"title":"终端交互');
   // const cPanel_obj = cloneDeep(component[0])
   let quoteId = selectTargetData.value[0].option.quoteId;
@@ -229,7 +232,7 @@ const setQuoteDetail = (result: any) => {
   component = config.sort((a: any, b: any) => {
     const aZ = zIndexMap[a.id] || a.zIndex || 0;
     const bZ = zIndexMap[b.id] || b.zIndex || 0;
-    return bZ - aZ;
+    return compareZIndex(bZ, aZ);
   });
   return {
     detail,
@@ -240,7 +243,9 @@ const setQuoteDetail = (result: any) => {
 };
 
 const selectVersion = async (id: number, reopen: boolean) => {
-  if (!id) return;
+  if (!id) {
+    return;
+  }
   if (typeof id === "string") {
     id = parseInt(id);
   }

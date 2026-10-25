@@ -42,10 +42,10 @@ docker compose logs --tail 100 api ai worker
 
 ### 联网图片 / 视频素材搜索 MCP
 
-素材 MCP 由 `ai` 容器按需连接，使用 Streamable HTTP 和 Bearer Token。将以下两项写入服务器 `/root/funbi/.env`：
+素材 MCP 由 `ai` 容器按需连接，使用 SSE 和 Bearer Token。当前服务器的 Answer SSE 路由是 `http://127.0.0.1:8080/answer/api/v1/mcp/sse`。在 AI 容器中应通过 Docker 主机网关访问，因此写入服务器 `/root/funbi/.env` 的 URL 为：
 
 ```dotenv
-MEDIA_ASSETS_MCP_URL=http://<服务器可访问的MCP主机>:8766/mcp
+MEDIA_ASSETS_MCP_URL=http://host.docker.internal:8080/answer/api/v1/mcp/sse
 MEDIA_ASSETS_MCP_TOKEN=<该MCP服务签发的Token>
 ```
 
@@ -58,7 +58,7 @@ docker compose up -d --no-deps --force-recreate ai
 docker compose logs --tail 50 ai
 ```
 
-`127.0.0.1` 指向当前容器自身。若 MCP 仍只运行在你的 Windows 电脑上，云服务器无法访问电脑的 `127.0.0.1:8766`；请将 MCP 服务部署到服务器可达的主机 / 私有网络，并确保 AI 容器能访问该地址。不要为了连接而将带 Token 的 MCP 端口直接公开到公网。
+Compose 会将 `host.docker.internal` 映射到 Linux 宿主机，避免 `127.0.0.1` 指向 AI 容器自身。不要为了连接而将另一个带 Token 的 MCP 端口直接公开到公网。
 
 # GitHub CI/CD
 

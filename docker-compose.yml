@@ -148,6 +148,8 @@ services:
       PORT: "4112"
       MEDIA_ASSETS_MCP_URL: ${MEDIA_ASSETS_MCP_URL:-}
       MEDIA_ASSETS_MCP_TOKEN: ${MEDIA_ASSETS_MCP_TOKEN:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ai_workspace:/data/agent-workspace
     depends_on:

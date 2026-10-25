@@ -55,7 +55,7 @@ model GeneratedImage {
 /// 这张表管「这份输入生成过没有」——视频慢且贵，同一份输入不重新生成。
 model GeneratedVideo {
   id            String   @id @default(cuid())
-  /// sha256(prompt + model + 时长/分辨率/比例 + 首帧)，同一份输入不用重新生成
+  /// sha256(prompt + model + 输出参数 + 所有输入素材)，同一份输入不用重新生成
   promptHash    String   @unique @map("prompt_hash")
   prompt        String
   model         String
@@ -65,6 +65,10 @@ model GeneratedVideo {
   url           String
   /// 首帧图 url（图生视频），文生视频为空
   firstFrameUrl String?  @map("first_frame_url")
+  lastFrameUrl  String?  @map("last_frame_url")
+  referenceImageUrls String[] @default([]) @map("reference_image_urls")
+  referenceVideoUrls String[] @default([]) @map("reference_video_urls")
+  referenceAudioUrls String[] @default([]) @map("reference_audio_urls")
   /// 服务商侧的任务 id，事后查账、排查用
   taskId        String?  @map("task_id")
   createdTime   DateTime @default(now()) @map("created_time")

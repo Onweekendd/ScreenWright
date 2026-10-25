@@ -2056,6 +2056,10 @@ export const GeneratedVideoScalarFieldEnum = {
   ratio: 'ratio',
   url: 'url',
   firstFrameUrl: 'firstFrameUrl',
+  lastFrameUrl: 'lastFrameUrl',
+  referenceImageUrls: 'referenceImageUrls',
+  referenceVideoUrls: 'referenceVideoUrls',
+  referenceAudioUrls: 'referenceAudioUrls',
   taskId: 'taskId',
   createdTime: 'createdTime'
 } as const

@@ -45,6 +45,7 @@ export type GeneratedVideoMinAggregateOutputType = {
   ratio: string | null
   url: string | null
   firstFrameUrl: string | null
+  lastFrameUrl: string | null
   taskId: string | null
   createdTime: Date | null
 }
@@ -59,6 +60,7 @@ export type GeneratedVideoMaxAggregateOutputType = {
   ratio: string | null
   url: string | null
   firstFrameUrl: string | null
+  lastFrameUrl: string | null
   taskId: string | null
   createdTime: Date | null
 }
@@ -73,6 +75,10 @@ export type GeneratedVideoCountAggregateOutputType = {
   ratio: number
   url: number
   firstFrameUrl: number
+  lastFrameUrl: number
+  referenceImageUrls: number
+  referenceVideoUrls: number
+  referenceAudioUrls: number
   taskId: number
   createdTime: number
   _all: number
@@ -97,6 +103,7 @@ export type GeneratedVideoMinAggregateInputType = {
   ratio?: true
   url?: true
   firstFrameUrl?: true
+  lastFrameUrl?: true
   taskId?: true
   createdTime?: true
 }
@@ -111,6 +118,7 @@ export type GeneratedVideoMaxAggregateInputType = {
   ratio?: true
   url?: true
   firstFrameUrl?: true
+  lastFrameUrl?: true
   taskId?: true
   createdTime?: true
 }
@@ -125,6 +133,10 @@ export type GeneratedVideoCountAggregateInputType = {
   ratio?: true
   url?: true
   firstFrameUrl?: true
+  lastFrameUrl?: true
+  referenceImageUrls?: true
+  referenceVideoUrls?: true
+  referenceAudioUrls?: true
   taskId?: true
   createdTime?: true
   _all?: true
@@ -226,6 +238,10 @@ export type GeneratedVideoGroupByOutputType = {
   ratio: string
   url: string
   firstFrameUrl: string | null
+  lastFrameUrl: string | null
+  referenceImageUrls: string[]
+  referenceVideoUrls: string[]
+  referenceAudioUrls: string[]
   taskId: string | null
   createdTime: Date
   _count: GeneratedVideoCountAggregateOutputType | null
@@ -263,6 +279,10 @@ export type GeneratedVideoWhereInput = {
   ratio?: Prisma.StringFilter<"GeneratedVideo"> | string
   url?: Prisma.StringFilter<"GeneratedVideo"> | string
   firstFrameUrl?: Prisma.StringNullableFilter<"GeneratedVideo"> | string | null
+  lastFrameUrl?: Prisma.StringNullableFilter<"GeneratedVideo"> | string | null
+  referenceImageUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
+  referenceVideoUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
+  referenceAudioUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
   taskId?: Prisma.StringNullableFilter<"GeneratedVideo"> | string | null
   createdTime?: Prisma.DateTimeFilter<"GeneratedVideo"> | Date | string
 }
@@ -277,6 +297,10 @@ export type GeneratedVideoOrderByWithRelationInput = {
   ratio?: Prisma.SortOrder
   url?: Prisma.SortOrder
   firstFrameUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastFrameUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  referenceImageUrls?: Prisma.SortOrder
+  referenceVideoUrls?: Prisma.SortOrder
+  referenceAudioUrls?: Prisma.SortOrder
   taskId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdTime?: Prisma.SortOrder
 }
@@ -294,6 +318,10 @@ export type GeneratedVideoWhereUniqueInput = Prisma.AtLeast<{
   ratio?: Prisma.StringFilter<"GeneratedVideo"> | string
   url?: Prisma.StringFilter<"GeneratedVideo"> | string
   firstFrameUrl?: Prisma.StringNullableFilter<"GeneratedVideo"> | string | null
+  lastFrameUrl?: Prisma.StringNullableFilter<"GeneratedVideo"> | string | null
+  referenceImageUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
+  referenceVideoUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
+  referenceAudioUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
   taskId?: Prisma.StringNullableFilter<"GeneratedVideo"> | string | null
   createdTime?: Prisma.DateTimeFilter<"GeneratedVideo"> | Date | string
 }, "id" | "promptHash">
@@ -308,6 +336,10 @@ export type GeneratedVideoOrderByWithAggregationInput = {
   ratio?: Prisma.SortOrder
   url?: Prisma.SortOrder
   firstFrameUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastFrameUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  referenceImageUrls?: Prisma.SortOrder
+  referenceVideoUrls?: Prisma.SortOrder
+  referenceAudioUrls?: Prisma.SortOrder
   taskId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdTime?: Prisma.SortOrder
   _count?: Prisma.GeneratedVideoCountOrderByAggregateInput
@@ -330,6 +362,10 @@ export type GeneratedVideoScalarWhereWithAggregatesInput = {
   ratio?: Prisma.StringWithAggregatesFilter<"GeneratedVideo"> | string
   url?: Prisma.StringWithAggregatesFilter<"GeneratedVideo"> | string
   firstFrameUrl?: Prisma.StringNullableWithAggregatesFilter<"GeneratedVideo"> | string | null
+  lastFrameUrl?: Prisma.StringNullableWithAggregatesFilter<"GeneratedVideo"> | string | null
+  referenceImageUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
+  referenceVideoUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
+  referenceAudioUrls?: Prisma.StringNullableListFilter<"GeneratedVideo">
   taskId?: Prisma.StringNullableWithAggregatesFilter<"GeneratedVideo"> | string | null
   createdTime?: Prisma.DateTimeWithAggregatesFilter<"GeneratedVideo"> | Date | string
 }
@@ -344,6 +380,10 @@ export type GeneratedVideoCreateInput = {
   ratio: string
   url: string
   firstFrameUrl?: string | null
+  lastFrameUrl?: string | null
+  referenceImageUrls?: Prisma.GeneratedVideoCreatereferenceImageUrlsInput | string[]
+  referenceVideoUrls?: Prisma.GeneratedVideoCreatereferenceVideoUrlsInput | string[]
+  referenceAudioUrls?: Prisma.GeneratedVideoCreatereferenceAudioUrlsInput | string[]
   taskId?: string | null
   createdTime?: Date | string
 }
@@ -358,6 +398,10 @@ export type GeneratedVideoUncheckedCreateInput = {
   ratio: string
   url: string
   firstFrameUrl?: string | null
+  lastFrameUrl?: string | null
+  referenceImageUrls?: Prisma.GeneratedVideoCreatereferenceImageUrlsInput | string[]
+  referenceVideoUrls?: Prisma.GeneratedVideoCreatereferenceVideoUrlsInput | string[]
+  referenceAudioUrls?: Prisma.GeneratedVideoCreatereferenceAudioUrlsInput | string[]
   taskId?: string | null
   createdTime?: Date | string
 }
@@ -372,6 +416,10 @@ export type GeneratedVideoUpdateInput = {
   ratio?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   firstFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceImageUrls?: Prisma.GeneratedVideoUpdatereferenceImageUrlsInput | string[]
+  referenceVideoUrls?: Prisma.GeneratedVideoUpdatereferenceVideoUrlsInput | string[]
+  referenceAudioUrls?: Prisma.GeneratedVideoUpdatereferenceAudioUrlsInput | string[]
   taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -386,6 +434,10 @@ export type GeneratedVideoUncheckedUpdateInput = {
   ratio?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   firstFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceImageUrls?: Prisma.GeneratedVideoUpdatereferenceImageUrlsInput | string[]
+  referenceVideoUrls?: Prisma.GeneratedVideoUpdatereferenceVideoUrlsInput | string[]
+  referenceAudioUrls?: Prisma.GeneratedVideoUpdatereferenceAudioUrlsInput | string[]
   taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -400,6 +452,10 @@ export type GeneratedVideoCreateManyInput = {
   ratio: string
   url: string
   firstFrameUrl?: string | null
+  lastFrameUrl?: string | null
+  referenceImageUrls?: Prisma.GeneratedVideoCreatereferenceImageUrlsInput | string[]
+  referenceVideoUrls?: Prisma.GeneratedVideoCreatereferenceVideoUrlsInput | string[]
+  referenceAudioUrls?: Prisma.GeneratedVideoCreatereferenceAudioUrlsInput | string[]
   taskId?: string | null
   createdTime?: Date | string
 }
@@ -414,6 +470,10 @@ export type GeneratedVideoUpdateManyMutationInput = {
   ratio?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   firstFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceImageUrls?: Prisma.GeneratedVideoUpdatereferenceImageUrlsInput | string[]
+  referenceVideoUrls?: Prisma.GeneratedVideoUpdatereferenceVideoUrlsInput | string[]
+  referenceAudioUrls?: Prisma.GeneratedVideoUpdatereferenceAudioUrlsInput | string[]
   taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -428,8 +488,20 @@ export type GeneratedVideoUncheckedUpdateManyInput = {
   ratio?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   firstFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastFrameUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referenceImageUrls?: Prisma.GeneratedVideoUpdatereferenceImageUrlsInput | string[]
+  referenceVideoUrls?: Prisma.GeneratedVideoUpdatereferenceVideoUrlsInput | string[]
+  referenceAudioUrls?: Prisma.GeneratedVideoUpdatereferenceAudioUrlsInput | string[]
   taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type GeneratedVideoCountOrderByAggregateInput = {
@@ -442,6 +514,10 @@ export type GeneratedVideoCountOrderByAggregateInput = {
   ratio?: Prisma.SortOrder
   url?: Prisma.SortOrder
   firstFrameUrl?: Prisma.SortOrder
+  lastFrameUrl?: Prisma.SortOrder
+  referenceImageUrls?: Prisma.SortOrder
+  referenceVideoUrls?: Prisma.SortOrder
+  referenceAudioUrls?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdTime?: Prisma.SortOrder
 }
@@ -460,6 +536,7 @@ export type GeneratedVideoMaxOrderByAggregateInput = {
   ratio?: Prisma.SortOrder
   url?: Prisma.SortOrder
   firstFrameUrl?: Prisma.SortOrder
+  lastFrameUrl?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdTime?: Prisma.SortOrder
 }
@@ -474,6 +551,7 @@ export type GeneratedVideoMinOrderByAggregateInput = {
   ratio?: Prisma.SortOrder
   url?: Prisma.SortOrder
   firstFrameUrl?: Prisma.SortOrder
+  lastFrameUrl?: Prisma.SortOrder
   taskId?: Prisma.SortOrder
   createdTime?: Prisma.SortOrder
 }
@@ -482,8 +560,35 @@ export type GeneratedVideoSumOrderByAggregateInput = {
   durationSec?: Prisma.SortOrder
 }
 
+export type GeneratedVideoCreatereferenceImageUrlsInput = {
+  set: string[]
+}
+
+export type GeneratedVideoCreatereferenceVideoUrlsInput = {
+  set: string[]
+}
+
+export type GeneratedVideoCreatereferenceAudioUrlsInput = {
+  set: string[]
+}
+
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type GeneratedVideoUpdatereferenceImageUrlsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type GeneratedVideoUpdatereferenceVideoUrlsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type GeneratedVideoUpdatereferenceAudioUrlsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 
@@ -498,6 +603,10 @@ export type GeneratedVideoSelect<ExtArgs extends runtime.Types.Extensions.Intern
   ratio?: boolean
   url?: boolean
   firstFrameUrl?: boolean
+  lastFrameUrl?: boolean
+  referenceImageUrls?: boolean
+  referenceVideoUrls?: boolean
+  referenceAudioUrls?: boolean
   taskId?: boolean
   createdTime?: boolean
 }, ExtArgs["result"]["generatedVideo"]>
@@ -512,6 +621,10 @@ export type GeneratedVideoSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   ratio?: boolean
   url?: boolean
   firstFrameUrl?: boolean
+  lastFrameUrl?: boolean
+  referenceImageUrls?: boolean
+  referenceVideoUrls?: boolean
+  referenceAudioUrls?: boolean
   taskId?: boolean
   createdTime?: boolean
 }, ExtArgs["result"]["generatedVideo"]>
@@ -526,6 +639,10 @@ export type GeneratedVideoSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   ratio?: boolean
   url?: boolean
   firstFrameUrl?: boolean
+  lastFrameUrl?: boolean
+  referenceImageUrls?: boolean
+  referenceVideoUrls?: boolean
+  referenceAudioUrls?: boolean
   taskId?: boolean
   createdTime?: boolean
 }, ExtArgs["result"]["generatedVideo"]>
@@ -540,11 +657,15 @@ export type GeneratedVideoSelectScalar = {
   ratio?: boolean
   url?: boolean
   firstFrameUrl?: boolean
+  lastFrameUrl?: boolean
+  referenceImageUrls?: boolean
+  referenceVideoUrls?: boolean
+  referenceAudioUrls?: boolean
   taskId?: boolean
   createdTime?: boolean
 }
 
-export type GeneratedVideoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "promptHash" | "prompt" | "model" | "durationSec" | "resolution" | "ratio" | "url" | "firstFrameUrl" | "taskId" | "createdTime", ExtArgs["result"]["generatedVideo"]>
+export type GeneratedVideoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "promptHash" | "prompt" | "model" | "durationSec" | "resolution" | "ratio" | "url" | "firstFrameUrl" | "lastFrameUrl" | "referenceImageUrls" | "referenceVideoUrls" | "referenceAudioUrls" | "taskId" | "createdTime", ExtArgs["result"]["generatedVideo"]>
 
 export type $GeneratedVideoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "GeneratedVideo"
@@ -552,7 +673,7 @@ export type $GeneratedVideoPayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     /**
-     * sha256(prompt + model + 时长/分辨率/比例 + 首帧)，同一份输入不用重新生成
+     * sha256(prompt + model + 输出参数 + 所有输入素材)，同一份输入不用重新生成
      */
     promptHash: string
     prompt: string
@@ -565,6 +686,10 @@ export type $GeneratedVideoPayload<ExtArgs extends runtime.Types.Extensions.Inte
      * 首帧图 url（图生视频），文生视频为空
      */
     firstFrameUrl: string | null
+    lastFrameUrl: string | null
+    referenceImageUrls: string[]
+    referenceVideoUrls: string[]
+    referenceAudioUrls: string[]
     /**
      * 服务商侧的任务 id，事后查账、排查用
      */
@@ -1002,6 +1127,10 @@ export interface GeneratedVideoFieldRefs {
   readonly ratio: Prisma.FieldRef<"GeneratedVideo", 'String'>
   readonly url: Prisma.FieldRef<"GeneratedVideo", 'String'>
   readonly firstFrameUrl: Prisma.FieldRef<"GeneratedVideo", 'String'>
+  readonly lastFrameUrl: Prisma.FieldRef<"GeneratedVideo", 'String'>
+  readonly referenceImageUrls: Prisma.FieldRef<"GeneratedVideo", 'String[]'>
+  readonly referenceVideoUrls: Prisma.FieldRef<"GeneratedVideo", 'String[]'>
+  readonly referenceAudioUrls: Prisma.FieldRef<"GeneratedVideo", 'String[]'>
   readonly taskId: Prisma.FieldRef<"GeneratedVideo", 'String'>
   readonly createdTime: Prisma.FieldRef<"GeneratedVideo", 'DateTime'>
 }

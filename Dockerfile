@@ -76,10 +76,15 @@ RUN apt-get update \
 
 # WORKSPACE_SEED_DIR：镜像里自带的 agent-workspace 模板（skills 等），启动时同步进持久化的工作区卷
 ENV NODE_ENV=production \
+    COREPACK_HOME=/opt/corepack \
     GIT_AUTHOR_NAME=funbi GIT_AUTHOR_EMAIL=funbi@localhost \
     GIT_COMMITTER_NAME=funbi GIT_COMMITTER_EMAIL=funbi@localhost \
     WORKSPACE_SEED_DIR=/app/servers/server/agent-workspace \
     MASTRA_WORKSPACE_PATH=/data/agent-workspace
+
+# Artifact 应用初始化和预览进程会直接执行 pnpm；预装到非 root 用户可读的共享缓存。
+RUN corepack enable && corepack prepare pnpm@10.15.0 --activate \
+    && chmod -R a+rX /opt/corepack
 
 WORKDIR /app/servers/server
 COPY --from=server-build --chown=node:node /prod/server ./

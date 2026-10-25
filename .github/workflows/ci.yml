@@ -78,5 +78,12 @@ jobs:
           target: ${{ matrix.target }}
           platforms: linux/amd64
           push: false
+          load: true
+          tags: funbi-ci:${{ matrix.target }}
           cache-from: type=gha,scope=funbi-${{ matrix.target }}
           cache-to: type=gha,mode=max,scope=funbi-${{ matrix.target }}
+      - name: Check server runtime tools
+        if: matrix.target == 'server'
+        run: |
+          docker run --rm --entrypoint /bin/sh funbi-ci:server -c \
+            'pnpm --version && ffmpeg -version >/dev/null && ffprobe -version >/dev/null'

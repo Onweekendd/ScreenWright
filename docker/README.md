@@ -44,7 +44,7 @@ docker compose logs --tail 100 api ai worker
 
 | 操作 | 工作流行为 |
 | --- | --- |
-| 创建或更新 PR | 检查数据库迁移、类型、测试和两个 Linux 镜像构建；不发布镜像 |
+| 创建或更新 PR | 检查数据库迁移、类型、测试、两个 Linux 镜像构建及 server 运行工具；不发布镜像 |
 | 合并到 main | 检查通过后，将 server / web 镜像推送到 GHCR；不更新服务器 |
 | 手动运行 Release，deploy 不勾选 | 检查并发布镜像 |
 | 手动运行 Release，选择 main 并勾选 deploy | 检查、发布镜像、备份数据库、迁移并更新服务器 |

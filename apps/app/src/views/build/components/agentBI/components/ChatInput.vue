@@ -62,7 +62,6 @@
       <div class="footer-actions">
         <div class="context-wrapper">
           <el-tooltip
-            v-if="contextPercentage > 50"
             :content="contextTooltip"
             placement="top"
             :show-arrow="true"
@@ -80,7 +79,7 @@
               />
             </div>
           </el-tooltip>
-          <div v-if="contextPercentage > 50" class="context-btn-split" />
+          <div class="context-btn-split" />
 
           <el-dropdown
             trigger="click"

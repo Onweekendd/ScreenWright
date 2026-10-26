@@ -1,12 +1,13 @@
 <template>
   <div class="main-area">
-    <div class="box-content" ref="msgLayout" @scroll.passive="handleScroll">
-      <WelcomeScreen
-        :is-visible="showWelcome"
-        :examples="examples"
-        :capabilities="capabilities"
-        @select="handleExampleSelect"
-      />
+    <div
+      v-show="showMessages"
+      class="box-content"
+      :class="{ 'is-transitioning': welcomeTransitioning }"
+      :aria-hidden="welcomeTransitioning || undefined"
+      ref="msgLayout"
+      @scroll.passive="handleScroll"
+    >
       <div v-if="isLoadingMoreMessages" class="load-more-indicator">
         <span>加载更多...</span>
       </div>
@@ -27,7 +28,17 @@
       />
     </div>
     <!-- 有审批/提问弹窗时弹窗顶替输入框（v-show 保留草稿），弹窗由 index.vue 排在本区域下方 -->
-    <ChatInput v-show="!hasPendingDialog" v-model="inputText" @send="sendMessage()" />
+    <WelcomeScreen
+      :is-visible="showWelcome"
+      :examples="examples"
+      :capabilities="capabilities"
+      @select="handleExampleSelect"
+      @transition-start="welcomeTransitioning = true"
+      @layout-change="showMessages = !$event"
+      @transition-end="welcomeTransitioning = false"
+    >
+      <ChatInput v-show="!hasPendingDialog" v-model="inputText" @send="sendMessage()" />
+    </WelcomeScreen>
   </div>
 </template>
 
@@ -72,6 +83,8 @@ const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 const { isVisible: showWelcome, examples, capabilities } = useWelcomeScreen(messages);
+const showMessages = ref(!showWelcome.value);
+const welcomeTransitioning = ref(false);
 
 // 欢迎页示例点击发出的消息包一层 <welcome> 标签，供 agent 识别为
 // “从零创建大屏”意图，UserMessage.vue 展示时会提炼出标签内的纯文本
@@ -192,6 +205,15 @@ const handleScroll = async () => {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  transition:
+    opacity 0.24s ease,
+    transform 0.24s ease;
+
+  &.is-transitioning {
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+  }
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -208,6 +230,12 @@ const handleScroll = async () => {
     &:hover {
       background: $color-primary-35;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box-content {
+    transition: none;
   }
 }
 </style>

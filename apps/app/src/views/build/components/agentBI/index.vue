@@ -108,7 +108,9 @@ defineExpose({ drawerWidth, visible });
 .agent-bi-drawer.el-drawer {
   --el-drawer-bg-color: #{$color-bg-drawer};
   background: $color-bg-drawer;
-  background-image: $gradient-drawer-bg;
+  background-image:
+    radial-gradient(ellipse at 95% 95%, $color-primary-10, transparent 60%),
+    radial-gradient(ellipse at 0% 30%, $color-primary-5, transparent 55%);
   background-repeat: no-repeat;
   background-position: bottom;
   font-size: 13px;
@@ -166,7 +168,7 @@ defineExpose({ drawerWidth, visible });
   height: 100%;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(45deg, $color-primary-10, rgba(0, 0, 0, 0.01));
+  background: linear-gradient(135deg, $color-primary-5, transparent 65%);
 }
 
 /* ---- 主对话区 ---- */

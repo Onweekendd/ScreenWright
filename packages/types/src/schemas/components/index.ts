@@ -38,7 +38,6 @@ export * from "./extends/simple-particle";
 export * from "./extends/simpleStar";
 export * from "./extends/sw-dataContainer";
 export * from "./extends/sw-digital-human";
-export * from "./extends/sw-mask-layer";
 export * from "./extends/sw-unreal-engine";
 export * from "./extends/sw-weather";
 export * from "./extends/ue-peer-streaming";

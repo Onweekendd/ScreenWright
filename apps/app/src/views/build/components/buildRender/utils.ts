@@ -467,11 +467,7 @@ export const pointerEventStyle = (item: ComponentType, isBuild: boolean) => {
     mediaEnum.SwImg,
     mediaEnum.SwOpenVideo,
     textEnum.SwText2,
-    extendsEnumType.SwMaskLayer
   ];
-  if (item.component.prop === extendsEnumType.SwMaskLayer) {
-    return { pointerEvents: item.option.pointerEvents ? "none" : "auto" };
-  }
   if (pointerEventsComponent.includes(item.component.prop as textEnum)) {
     return { pointerEvents: item.option.pointerEvents ? "auto" : "none" };
   }

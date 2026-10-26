@@ -6,7 +6,6 @@
 | -------------- | -------------- | ------------------- | ----------------------------------------------------- |
 | 数据容器       | 数据容器       | ft-dataContainer    | [ft-dataContainer.md](ft-dataContainer.md)            |
 | 数字人beta     | 数字人beta     | ft-digital-human    | [ft-digital-human.md](ft-digital-human.md)            |
-| 线性渐变遮罩层 | 线性渐变遮罩层 | ft-mask-layer       | [ft-mask-layer.md](ft-mask-layer.md)                  |
 | UE模板         | UE模板         | ft-unreal-engine    | [ft-unreal-engine.md](ft-unreal-engine.md)            |
 | 天气           | 天气           | ft-weather          | [ft-weather.md](ft-weather.md)                        |
 | 全屏切换       | 全屏切换       | fullScreenSwitch    | [fullScreenSwitch.md](fullScreenSwitch.md)            |

@@ -30,8 +30,6 @@ export enum ExtendsEnum {
   SwDataContainer = "sw-dataContainer",
   /** 天气 */
   SwWeather = "sw-weather",
-  /** 遮罩层 */
-  SwMaskLayer = "sw-mask-layer"
 }
 
 /**

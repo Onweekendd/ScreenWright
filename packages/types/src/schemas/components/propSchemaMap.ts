@@ -24,7 +24,6 @@ import { simpleParticleDataSchema, simpleParticleOptionSchema } from "./extends/
 import { simpleStarDataSchema, simpleStarOptionSchema } from "./extends/simpleStar";
 import { swDataContainerDataSchema, swDataContainerOptionSchema } from "./extends/sw-dataContainer";
 import { swDigitalHumanDataSchema, swDigitalHumanOptionSchema } from "./extends/sw-digital-human";
-import { swMaskLayerDataSchema, swMaskLayerOptionSchema } from "./extends/sw-mask-layer";
 import { swUnrealEngineDataSchema, swUnrealEngineOptionSchema } from "./extends/sw-unreal-engine";
 import { swWeatherDataSchema, swWeatherOptionSchema } from "./extends/sw-weather";
 import { uePeerStreamingDataSchema, uePeerStreamingOptionSchema } from "./extends/ue-peer-streaming";
@@ -172,7 +171,6 @@ export const componentPropSchemaMap = {
   // 扩展组件
   "sw-dataContainer": { data: swDataContainerDataSchema, option: swDataContainerOptionSchema },
   "sw-digital-human": { data: swDigitalHumanDataSchema, option: swDigitalHumanOptionSchema },
-  "sw-mask-layer": { data: swMaskLayerDataSchema, option: swMaskLayerOptionSchema },
   "sw-unreal-engine": { data: swUnrealEngineDataSchema, option: swUnrealEngineOptionSchema },
   "sw-weather": { data: swWeatherDataSchema, option: swWeatherOptionSchema },
   fullScreenSwitch: { data: fullScreenSwitchDataSchema, option: fullScreenSwitchOptionSchema },

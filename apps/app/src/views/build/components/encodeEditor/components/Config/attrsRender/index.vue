@@ -57,7 +57,6 @@ const excludeDataConfig = [
   sceneEnumType.ThreeScene,
   sceneEnumType.IndustryScene,
   extendsEnumType.PageReload,
-  extendsEnumType.SwMaskLayer,
   extendsEnumType.SimpleParticle,
   extendsEnumType.SimpleStar,
   extendsEnumType.FullScreenSwitch,

@@ -174,7 +174,6 @@ declare const ComponentFlatSchema: z.ZodObject<{
             "simple-particle": import("..").ExtendsEnum.SimpleParticle;
             "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
             "sw-weather": import("..").ExtendsEnum.SwWeather;
-            "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
         }>, z.ZodEnum<{
             rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
             iconRatio: import("..").IndicatorEnum.IconRatio;
@@ -3421,35 +3420,6 @@ declare const swDigitalHumanOptionSchema: z.ZodObject<{
     showAnalysis: z.ZodBoolean;
 }, z.core.$strip>;
 type ftDigitalHumanOption = z.infer<typeof swDigitalHumanOptionSchema>;
-
-import { z } from 'zod';
-declare const swMaskLayerDataSchema: z.ZodArray<z.ZodObject<{
-    text: z.ZodString;
-}, z.core.$strip>>;
-type ftMaskLayerData = z.infer<typeof swMaskLayerDataSchema>;
-declare const swMaskLayerOptionSchema: z.ZodObject<{
-    linearGradient: z.ZodObject<{
-        markColor: z.ZodString;
-        markPosition: z.ZodNumber;
-        markRadius: z.ZodNumber;
-        markOpacity: z.ZodNumber;
-    }, z.core.$strip>;
-    radioactiveGradation: z.ZodObject<{
-        markColor: z.ZodString;
-        markOpacityRadius: z.ZodNumber;
-        markOpacity: z.ZodNumber;
-        markUnOpacityRadius: z.ZodNumber;
-        showLengthWidthRatio: z.ZodBoolean;
-        lengthWidthRatio: z.ZodNumber;
-    }, z.core.$strip>;
-    markType: z.ZodString;
-    pointerEvents: z.ZodBoolean;
-    refresh: z.ZodBoolean;
-    backdropFilter: z.ZodBoolean;
-    backdropFilterBlur: z.ZodNumber;
-    backdropFilterSaturate: z.ZodNumber;
-}, z.core.$strip>;
-type ftMaskLayerOption = z.infer<typeof swMaskLayerOptionSchema>;
 
 import { z } from 'zod';
 declare const swUnrealEngineDataSchema: z.ZodArray<z.ZodObject<{
@@ -12321,33 +12291,6 @@ declare const componentPropSchemaMap: {
             showAnalysis: z.ZodBoolean;
         }, z.core.$strip>;
     };
-    readonly "sw-mask-layer": {
-        readonly data: z.ZodArray<z.ZodObject<{
-            text: z.ZodString;
-        }, z.core.$strip>>;
-        readonly option: z.ZodObject<{
-            linearGradient: z.ZodObject<{
-                markColor: z.ZodString;
-                markPosition: z.ZodNumber;
-                markRadius: z.ZodNumber;
-                markOpacity: z.ZodNumber;
-            }, z.core.$strip>;
-            radioactiveGradation: z.ZodObject<{
-                markColor: z.ZodString;
-                markOpacityRadius: z.ZodNumber;
-                markOpacity: z.ZodNumber;
-                markUnOpacityRadius: z.ZodNumber;
-                showLengthWidthRatio: z.ZodBoolean;
-                lengthWidthRatio: z.ZodNumber;
-            }, z.core.$strip>;
-            markType: z.ZodString;
-            pointerEvents: z.ZodBoolean;
-            refresh: z.ZodBoolean;
-            backdropFilter: z.ZodBoolean;
-            backdropFilterBlur: z.ZodNumber;
-            backdropFilterSaturate: z.ZodNumber;
-        }, z.core.$strip>;
-    };
     readonly "sw-unreal-engine": {
         readonly data: z.ZodArray<z.ZodObject<{
             text: z.ZodString;
@@ -13536,7 +13479,6 @@ declare const extendsEnumTypeSchema: z.ZodEnum<{
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
     "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
     "sw-weather": import("..").ExtendsEnum.SwWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>;
 /** 面板类型枚举 Schema */
 declare const PanelEnumSchema: z.ZodEnum<{
@@ -13609,7 +13551,6 @@ declare const allComponentTypeSchema: z.ZodUnion<readonly [z.ZodEnum<{
     "simple-particle": import("..").ExtendsEnum.SimpleParticle;
     "sw-dataContainer": import("..").ExtendsEnum.SwDataContainer;
     "sw-weather": import("..").ExtendsEnum.SwWeather;
-    "sw-mask-layer": import("..").ExtendsEnum.SwMaskLayer;
 }>, z.ZodEnum<{
     rasterProgressBar: import("..").IndicatorEnum.RasterProgressBar;
     iconRatio: import("..").IndicatorEnum.IconRatio;
@@ -15821,8 +15762,6 @@ declare enum ExtendsEnum {
     SwDataContainer = "sw-dataContainer",
     /** 天气 */
     SwWeather = "sw-weather",
-    /** 遮罩层 */
-    SwMaskLayer = "sw-mask-layer"
 }
 /**
  * 扩展子组件枚举

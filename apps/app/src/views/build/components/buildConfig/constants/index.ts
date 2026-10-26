@@ -642,7 +642,6 @@ export const excludeDataConfig = [
   PanelType.dynamicPanel,
   PanelType.encodePanel,
   extendsEnumType.PageReload,
-  extendsEnumType.SwMaskLayer,
   extendsEnumType.SimpleParticle,
   extendsEnumType.SimpleStar,
   extendsEnumType.FullScreenSwitch,

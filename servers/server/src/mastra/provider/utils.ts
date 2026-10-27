@@ -118,7 +118,7 @@ export const inlineReasoningMiddleware: LanguageModelMiddleware = {
 /**
  * 构造一个通用的 OpenAI 兼容 fetch。所有模型角色共用：
  * - `thinking` 非 null 时往 chat body 注入 `thinking:{type}`（DeepSeek 风格；非 DeepSeek 端点
- *   一般忽略未知字段，个别端点报错则该模型改用 vision 那套 thinking:null）
+ *   一般忽略未知字段，个别端点报错则传 thinking:null 跳过注入）
  * - 把 `<think>…</think>` 前缀（由 inlineReasoningMiddleware 塞的）抽回 `reasoning_content` 字段
  * - 回填空的后台委派 tool 结果
  * - 响应侧：录制 + SSE reasoning_content → `<think>` 改写（`finalizeReasoningResponse`）

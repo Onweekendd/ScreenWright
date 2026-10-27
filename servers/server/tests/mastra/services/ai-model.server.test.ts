@@ -88,7 +88,7 @@ describe("ai-model.server", () => {
 
   it("listAiModels：不回传 key 明文/片段，只给 hasApiKey", async () => {
     const list = await listAiModels();
-    expect(list).toHaveLength(5);
+    expect(list.map((model) => model.role)).toEqual(["reasoning", "embedding", "image", "video"]);
     expect(list.find((model) => model.role === "video")?.hasApiKey).toBe(true);
     expect(list[0].hasApiKey).toBe(true);
     const leaked = list[0] as unknown as Record<string, unknown>;
@@ -108,8 +108,8 @@ describe("ai-model.server", () => {
   });
 
   it("updateAiModel：传了 apiKey 则覆盖", async () => {
-    prismaMocks.upsert.mockResolvedValue(row("vision"));
-    await updateAiModel("vision", { apiKey: "sk-new" });
+    prismaMocks.upsert.mockResolvedValue(row("reasoning"));
+    await updateAiModel("reasoning", { apiKey: "sk-new" });
     expect(prismaMocks.upsert.mock.calls[0][0].update.apiKey).toBe("sk-new");
   });
 

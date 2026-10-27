@@ -14,10 +14,10 @@ datasource db {
   provider = "postgresql"
 }
 
-/// AI 模型配置：5 个角色，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
+/// AI 模型配置：4 个角色，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
 /// 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
 model AiModel {
-  role          String   @id // "reasoning" | "vision" | "embedding" | "image" | "video"
+  role          String   @id // "reasoning" | "embedding" | "image" | "video"
   baseUrl       String   @default("") @map("base_url")
   apiKey        String   @default("") @map("api_key")
   modelId       String   @default("") @map("model_id")

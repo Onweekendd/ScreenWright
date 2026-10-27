@@ -2,6 +2,11 @@ import { onMounted, reactive, ref } from "vue";
 
 import { ElMessage } from "element-plus";
 
+import embeddingImage from "@/assets/image/models/embedding.png";
+import imageImage from "@/assets/image/models/image.png";
+import reasoningImage from "@/assets/image/models/reasoning.png";
+import videoImage from "@/assets/image/models/video.png";
+
 import {
   type AiModelVo,
   getAiModels,
@@ -14,6 +19,7 @@ import {
 export interface RoleMeta {
   role: ModelRole;
   title: string;
+  image: string;
   desc: string;
   modelPlaceholder: string;
   baseUrlPlaceholder?: string;
@@ -23,30 +29,28 @@ export const ROLE_META: RoleMeta[] = [
   {
     role: "reasoning",
     title: "推理模型",
+    image: reasoningImage,
     desc: "主 Agent、子 Agent、标题、摘要压缩、编排、截图分析等一切文本推理。OpenAI 兼容端点。",
     modelPlaceholder: "deepseek-v4-flash"
   },
   {
-    role: "vision",
-    title: "视觉模型",
-    desc: "识图：视觉分析 Agent、语义布局 Agent。需支持图片输入的多模态模型。",
-    modelPlaceholder: "gemini-3.1-flash-lite"
-  },
-  {
     role: "embedding",
     title: "嵌入模型",
+    image: embeddingImage,
     desc: "组件检索（RAG）向量化。改动后需「重建索引」才生效。",
     modelPlaceholder: "BAAI/bge-large-zh-v1.5"
   },
   {
     role: "image",
     title: "生图模型",
+    image: imageImage,
     desc: "效果图、装饰素材生成。需支持 images.generations 接口的 OpenAI 兼容端点。",
     modelPlaceholder: "留空需先联系模型服务商确认可用的生图模型 id"
   },
   {
     role: "video",
     title: "生视频模型",
+    image: videoImage,
     desc: "MiniMax V2 文生视频、图生视频。支持填写接口前缀或完整提交地址。测试提交会生成一次 5 秒视频，可能产生费用。",
     modelPlaceholder: "MiniMax-H3 或 MiniMax-H3-Max",
     baseUrlPlaceholder: "https://llm-api.net/minimax/v2"
@@ -76,7 +80,6 @@ export function useAiModelSettings() {
   const reindexing = ref(false);
   const states = reactive<Record<ModelRole, RoleState | null>>({
     reasoning: null,
-    vision: null,
     embedding: null,
     image: null,
     video: null

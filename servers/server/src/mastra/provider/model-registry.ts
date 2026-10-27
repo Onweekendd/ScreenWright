@@ -9,10 +9,9 @@ import { inlineImagesMiddleware } from "./image-middleware";
 import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from "./utils";
 
 /**
- * 模型配置化：5 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
+ * 模型配置化：4 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
  *
  * - **reasoning**：主 agent + 所有子 agent + 标题 + 摘要压缩 + 编排 + 截图 + subtab + artifact-app Pi
- * - **vision**：识图。主 agent 自己能看图后已没有使用方，角色先保留
  * - **embedding**：组件 RAG 向量
  * - **image**：生图（效果图、装饰素材重画）。走 `images.generations` 接口，不是 chat 补全，
  *   所以 `resolveImageModel` 返回 `ImageModel` 而不是 `WrapLMModel`，见下方单独的 warm/resolve。
@@ -24,9 +23,9 @@ import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from 
  * 每次 run 重新解析，无需重启。
  */
 
-export type ModelRole = "reasoning" | "vision" | "embedding" | "image" | "video";
+export type ModelRole = "reasoning" | "embedding" | "image" | "video";
 
-export const MODEL_ROLES: readonly ModelRole[] = ["reasoning", "vision", "embedding", "image", "video"] as const;
+export const MODEL_ROLES: readonly ModelRole[] = ["reasoning", "embedding", "image", "video"] as const;
 
 export const DEFAULT_VIDEO_MODEL = "MiniMax-H3";
 
@@ -49,14 +48,6 @@ function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig,
         apiKey: e.REASONING_MODEL_API_KEY ?? "",
         modelId: e.REASONING_MODEL_ID ?? (e.REASONING_MODEL_API_KEY ? "deepseek-v4-flash" : ""),
         contextLength: 1_000_000,
-        dimensions: null
-      };
-    case "vision":
-      return {
-        baseUrl: e.VISION_MODEL_BASE_URL ?? "",
-        apiKey: e.VISION_MODEL_API_KEY ?? "",
-        modelId: e.VISION_MODEL_ID ?? (e.VISION_MODEL_API_KEY ? "gemini-3.1-flash-lite" : ""),
-        contextLength: null,
         dimensions: null
       };
     case "embedding":
@@ -183,16 +174,6 @@ export function resolveReasoningModelNoRecord(): WrapLMModel {
   return wrapLanguageModel({
     model: provider.chat(cfg.modelId) as unknown as WrapLMModel,
     middleware: [inlineImagesMiddleware]
-  });
-}
-
-/** 视觉模型：识图。不注入 deepseek 的 thinking 字段（视觉模型多为 gemini 类）。 */
-export function resolveVisionModel(): WrapLMModel {
-  const cfg = getModelConfigSync("vision");
-  const provider = openaiFor(cfg, createGenericFetch({ record: true, thinking: null }));
-  return wrapLanguageModel({
-    model: provider.chat(cfg.modelId) as unknown as WrapLMModel,
-    middleware: [inlineReasoningMiddleware, extractReasoningMiddleware({ tagName: "think", startWithReasoning: false })]
   });
 }
 

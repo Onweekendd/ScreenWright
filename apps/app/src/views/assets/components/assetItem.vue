@@ -28,7 +28,7 @@
       </template>
       <template v-else-if="`${item.resourceType}`">
         <template v-if="item.cover">
-          <img :src="`${setMinioUrl(item.cover)}?t=${new Date().getTime()}`" />
+          <img :src="setMinioUrl(item.cover)" loading="lazy" decoding="async" />
         </template>
         <template v-else>
           <video
@@ -43,11 +43,9 @@
           />
           <img
             v-else-if="isShowImg"
-            :src="
-              isShowImg
-                ? `${setMinioUrl(item.url)}?t=${new Date().getTime()}`
-                : `${setMinioUrl(item.cover)}?t=${new Date().getTime()}`
-            "
+            :src="isShowImg ? setMinioUrl(item.url) : setMinioUrl(item.cover)"
+            loading="lazy"
+            decoding="async"
           />
           <SwItemEmpty v-else />
         </template>

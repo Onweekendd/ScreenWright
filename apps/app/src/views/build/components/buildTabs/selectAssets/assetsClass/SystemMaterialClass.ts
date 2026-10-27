@@ -69,7 +69,13 @@ export default class SystemMaterialClass extends AssetsBaseClass<AssetItem, Grou
   }
 
   getCardView(item: MenuItemForRender): AssetCardView {
-    return { ...super.getCardView(item), cover: item.cover || item.img, showUpdate: false };
+    const view = super.getCardView(item);
+    return {
+      ...view,
+      cover: item.cover || item.img,
+      preview: item.cover && !this.getFileTypeInfo(item.cover).isVideo ? "image" : view.preview,
+      showUpdate: false
+    };
   }
 
   async getAssetsGroup(): Promise<GroupItem[]> {

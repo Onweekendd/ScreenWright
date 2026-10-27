@@ -22,6 +22,7 @@
     "seed-modules": "dotenvx run --  tsx scripts/seed-modules.ts",
     "seed-bi-user": "dotenvx run --  tsx scripts/seed-bi-user.ts",
     "import-system-materials": "dotenvx run -- tsx scripts/import-system-materials.ts",
+    "optimize-system-materials": "dotenvx run -- tsx scripts/optimize-system-materials.ts",
     "docker:seed-embeddings": "tsx scripts/seed-component-embeddings.ts",
     "docker:seed-modules": "tsx scripts/seed-modules.ts",
     "mastra:test": "dotenvx run --  vitest run",

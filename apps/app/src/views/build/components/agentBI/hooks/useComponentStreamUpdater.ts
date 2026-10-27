@@ -15,6 +15,7 @@ import { useEditStore } from "../../buildRender/hooks/useEditStore";
 import { createCanvasOpsHandler, getBatchOperationFields } from "./canvasOps";
 import { captureAndUploadCanvas } from "./captureAndUploadCanvas";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
+import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import { useConfirm } from "./useConfirm";
 import type { ComponentPlacement } from "./useCreateComponent";
 import { useCreateComponent } from "./useCreateComponent";
@@ -186,7 +187,10 @@ export function useComponentStreamUpdater(
    * @field componentIds - 只截这些组件；不传截整个画布
    */
   const handleCaptureCanvas: SuspendHandlerFn<SuspendType.CaptureCanvas> = async (info) => {
-    return captureAndUploadCanvas(sessionId, info.suspendPayload);
+    const batch = getBatchOperationFields(info.suspendPayload);
+    const capture = () => captureAndUploadCanvas(sessionId, info.suspendPayload);
+    const result = await (batch.batchId ? enqueueCanvasMutation(capture) : capture());
+    return { ...result, ...batch };
   };
 
   /**

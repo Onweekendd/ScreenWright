@@ -68,6 +68,8 @@ defineEmits<{ accept: []; reject: []; close: [] }>();
 }
 
 .confirm-message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   padding: 0 16px;
   font-size: 13px;
   color: $color-text-msg;

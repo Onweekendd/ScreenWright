@@ -61,7 +61,8 @@ async function executeEditFiles(
   ) => Promise<unknown>;
 
   return execute(
-    { files, capture: options.capture },
+    // 与截图无关的同步用例显式关闭截图，截图用例单独覆盖默认值与开关。
+    { files, capture: "capture" in options ? options.capture : false },
     {
       requestContext: {
         get: (key: string) => (key === "mode" ? (options.mode ?? AgentMode.AUTO_EDIT) : undefined)
@@ -285,25 +286,39 @@ describe("edit_files 前端同步路径", () => {
     await expect(fsp.readFile(path.join(screenRoot, "statusAnimation.json"), "utf8")).resolves.not.toBe("");
   });
 
-  it.each([undefined, true, false])("组件截图开关传给前端，默认开启（capture=%s）", async (capture) => {
+  it.each([undefined, true, false])("单文件同步不截图，批次末尾按开关截图（capture=%s）", async (capture) => {
     const filePath = await componentTree();
     const payloads: Array<Record<string, unknown>> = [];
 
-    await executeEditFiles(
-      [{ path: filePath, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' }] }],
-      {
-        toolCallId: `component-capture-${String(capture)}`,
-        capture,
-        onSuspend: (payload) => payloads.push(payload)
-      }
-    );
+    const files = [{ path: filePath, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' }] }];
+    const options = {
+      toolCallId: `component-capture-${String(capture)}`,
+      capture,
+      onSuspend: (payload: Record<string, unknown>) => payloads.push(payload)
+    };
+    await executeEditFiles(files, options);
 
     expect(payloads).toHaveLength(1);
     expect(payloads[0]).toMatchObject({
       type: SuspendType.CanvasOps,
-      ops: [{ op: "update_component", component: { id: FIXTURE_COMPONENT_ID, zIndex: "a9" }, capture: capture ?? true }]
+      ops: [{ op: "update_component", component: { id: FIXTURE_COMPONENT_ID, zIndex: "a9" }, capture: false }]
     });
     expect(payloads[0].approval).toBeUndefined();
+    await executeEditFiles(files, { ...options, resumeData: opReply(payloads[0]) });
+    expect(payloads).toHaveLength(capture === false ? 1 : 2);
+    if (capture !== false) {
+      expect(payloads[1]).toMatchObject({ type: SuspendType.CaptureCanvas });
+      await executeEditFiles(files, {
+        ...options,
+        resumeData: {
+          ok: true,
+          url: "http://platform/batch.jpg",
+          batchId: payloads[1].batchId,
+          operationId: payloads[1].operationId
+        }
+      });
+      expect(payloads).toHaveLength(2);
+    }
   });
 
   it("组件校验失败时不挂起，直接返回 validationErrors 且不落盘", async () => {
@@ -359,12 +374,14 @@ describe("edit_files resume 结算", () => {
     filePath: string,
     edit: { old_string: string; new_string: string },
     toolCallId: string,
-    mode: AgentMode = AgentMode.AUTO_EDIT
+    mode: AgentMode = AgentMode.AUTO_EDIT,
+    capture = false
   ) {
     const payloads: Array<Record<string, unknown>> = [];
     const files: EditInput[] = [{ path: filePath, edits: [edit] }];
     const initialResult = await executeEditFiles(files, {
       mode,
+      capture,
       toolCallId,
       onSuspend: (payload) => payloads.push(payload)
     });
@@ -421,7 +438,9 @@ describe("edit_files resume 结算", () => {
     const { payload, files } = await suspendOnce(
       filePath,
       { old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' },
-      toolCallId
+      toolCallId,
+      AgentMode.AUTO_EDIT,
+      true
     );
     const screenshot = captured
       ? {
@@ -434,8 +453,22 @@ describe("edit_files resume 结算", () => {
         }
       : { ok: false, error: "组件当前不可见" };
     // 经过真实的协议 schema，防止 Zod 将截图字段静默丢掉。
-    const resumeData = SuspendDefs[SuspendType.CanvasOps].resume.parse(opReply(payload, { ok: true, screenshot }));
-    const raw = await executeEditFiles(files, { toolCallId, resumeData });
+    let capturePayload: Record<string, unknown> = {};
+    await executeEditFiles(files, {
+      toolCallId,
+      capture: true,
+      resumeData: opReply(payload),
+      onSuspend: (value) => {
+        capturePayload = value;
+      }
+    });
+    expect(capturePayload.type).toBe(SuspendType.CaptureCanvas);
+    const resumeData = SuspendDefs[SuspendType.CaptureCanvas].resume.parse({
+      ...screenshot,
+      batchId: capturePayload.batchId,
+      operationId: capturePayload.operationId
+    });
+    const raw = await executeEditFiles(files, { toolCallId, capture: true, resumeData });
     const validated = await editFilesTool.outputSchema!["~standard"].validate(raw);
     expect(validated.issues).toBeUndefined();
     if (validated.issues) {
@@ -444,42 +477,111 @@ describe("edit_files resume 结算", () => {
     const result = validated.value as {
       success: boolean;
       results: Array<{ screenshot?: unknown }>;
+      screenshot?: unknown;
       imagesForModel?: Array<{ url: string; label: string }>;
     };
     expect(result.success).toBe(true);
-    expect(result.results[0].screenshot).toEqual(screenshot);
+    expect(result.screenshot).toEqual(screenshot);
+    expect(result.results[0].screenshot).toBeUndefined();
     expect(result.imagesForModel).toEqual(
-      captured ? [{ url: screenshot.url, label: `组件编辑后截图：${filePath}` }] : undefined
+      captured ? [{ url: screenshot.url, label: "本批文件编辑完成后的画布截图" }] : undefined
     );
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": "a9"');
   });
 
-  it("批次中多个组件截图全部保留，按各文件的回执对应", async () => {
-    const filePath = await componentTree();
-    const toolCallId = "resume-component-shots-batch";
-    const files = ["a8", "a9"].map((value, index) => ({
-      path: filePath,
-      edits: [{ old_string: `"zIndex": "${index ? "a8" : "a0"}"`, new_string: `"zIndex": "${value}"` }]
-    }));
-    let payload: Record<string, unknown> = {};
-    const onSuspend = (value: Record<string, unknown>) => {
-      payload = value;
+  it.each([AgentMode.AUTO_EDIT, AgentMode.ASK_BEFORE_EDIT])(
+    "%s 批次只审批一次，全部修改落盘后只截图一次",
+    async (mode) => {
+      const filePath = await componentTree();
+      const toolCallId = "resume-component-shots-batch";
+      const files = ["a8", "a9"].map((value, index) => ({
+        path: filePath,
+        edits: [{ old_string: `"zIndex": "${index ? "a8" : "a0"}"`, new_string: `"zIndex": "${value}"` }]
+      }));
+      let payload: Record<string, unknown> = {};
+      const onSuspend = (value: Record<string, unknown>) => {
+        payload = value;
+      };
+      await executeEditFiles(files, { mode, toolCallId, onSuspend, capture: true });
+      expect(firstOp(payload).capture).toBe(false);
+      expect(payload.approval !== undefined).toBe(mode === AgentMode.ASK_BEFORE_EDIT);
+      await executeEditFiles(files, {
+        mode,
+        capture: true,
+        toolCallId,
+        onSuspend,
+        resumeData: opReply(payload, { ok: true, screenshot: { ok: true, url: "http://platform/first.jpg" } })
+      });
+      expect(payload.approval).toBeUndefined();
+      expect(firstOp(payload).capture).toBe(false);
+      await executeEditFiles(files, {
+        mode,
+        capture: true,
+        toolCallId,
+        onSuspend,
+        resumeData: opReply(payload, { ok: true, screenshot: { ok: true, url: "http://platform/second.jpg" } })
+      });
+      expect(payload.type).toBe(SuspendType.CaptureCanvas);
+      await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('"zIndex": "a9"');
+      let extraCaptures = 0;
+      const result = (await executeEditFiles(files, {
+        mode,
+        capture: true,
+        toolCallId,
+        onSuspend: () => {
+          extraCaptures += 1;
+        },
+        resumeData: {
+          ok: true,
+          url: "http://platform/batch.jpg",
+          batchId: payload.batchId,
+          operationId: payload.operationId
+        }
+      })) as { success: boolean; imagesForModel: Array<{ url: string }> };
+      expect(result.success).toBe(true);
+      expect(extraCaptures).toBe(0);
+      expect(result.imagesForModel.map((image) => image.url)).toEqual(["http://platform/batch.jpg"]);
+    }
+  );
+
+  it.each([true, false])("组件和普通文件一起审批，组件在前=%s", async (componentFirst) => {
+    const componentPath = await componentTree();
+    const plainPath = path.join(path.dirname(componentPath), "notes.txt");
+    await fsp.writeFile(plainPath, "before", "utf8");
+    const files = [
+      { path: componentPath, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' }] },
+      { path: plainPath, edits: [{ old_string: "before", new_string: "after" }] }
+    ];
+    if (!componentFirst) {
+      files.reverse();
+    }
+    const payloads: Array<Record<string, unknown>> = [];
+    const options = {
+      mode: AgentMode.ASK_BEFORE_EDIT,
+      toolCallId: `mixed-approval-${componentFirst}`,
+      onSuspend: (payload: Record<string, unknown>) => payloads.push(payload)
     };
-    await executeEditFiles(files, { toolCallId, onSuspend });
-    await executeEditFiles(files, {
-      toolCallId,
-      onSuspend,
-      resumeData: opReply(payload, { ok: true, screenshot: { ok: true, url: "http://platform/first.jpg" } })
+    await executeEditFiles(files, options);
+    const first = payloads[0];
+    const purpose =
+      first.type === SuspendType.AskApproval ? first.purpose : (first.approval as { purpose: string }).purpose;
+    expect(purpose).toContain(componentPath);
+    expect(purpose).toContain(plainPath);
+    let result = await executeEditFiles(files, {
+      ...options,
+      resumeData:
+        first.type === SuspendType.AskApproval
+          ? { approved: true, batchId: first.batchId, operationId: first.operationId }
+          : opReply(first)
     });
-    const result = (await executeEditFiles(files, {
-      toolCallId,
-      resumeData: opReply(payload, { ok: true, screenshot: { ok: true, url: "http://platform/second.jpg" } })
-    })) as { success: boolean; imagesForModel: Array<{ url: string }> };
-    expect(result.success).toBe(true);
-    expect(result.imagesForModel.map((image) => image.url)).toEqual([
-      "http://platform/first.jpg",
-      "http://platform/second.jpg"
-    ]);
+    if (!componentFirst) {
+      expect(payloads[1].type).toBe(SuspendType.CanvasOps);
+      expect(payloads[1].approval).toBeUndefined();
+      result = await executeEditFiles(files, { ...options, resumeData: opReply(payloads[1]) });
+    }
+    expect(result).toMatchObject({ success: true, succeeded: 2 });
+    await expect(fsp.readFile(plainPath, "utf8")).resolves.toBe("after");
+    await expect(fsp.readFile(componentPath, "utf8")).resolves.toContain('"zIndex": "a9"');
   });
 
   it("回执条数不是 1 时报协议错误，不落盘", async () => {
@@ -696,7 +798,7 @@ describe("edit_files resume 结算", () => {
     );
 
     const pushedComponent = firstOp(payload).component as { option: { js: string } };
-    expect(firstOp(payload).capture).toBe(true);
+    expect(firstOp(payload).capture).toBe(false);
     expect(pushedComponent.option.js).toContain('name: "fun-card-updated"');
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('name: "fun-card"');
 

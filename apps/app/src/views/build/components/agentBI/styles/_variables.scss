@@ -58,7 +58,7 @@ $color-text-loading-dot: #8b9cc8; // 加载动画点
 $color-text-send-btn: #dfe0e3; // 发送按钮
 
 // === 背景色 ===
-$color-bg-drawer: #1a1a1a; // 抽屉面板背景
+$color-bg-drawer: var(--sw-editor-bg); // 与编辑器画布共用底色
 $color-bg-step-body: rgba(0, 0, 0, 0.25); // 工作流步骤内容区
 $color-bg-dropdown: #2a2f4a; // mention 下拉框
 $color-bg-editor: rgba(255, 255, 255, 0.05); // 输入编辑器（替换蓝色，融入整体）
@@ -80,8 +80,16 @@ $color-scrollbar-thumb-hover: #4a556d;
 
 // === 渐变 ===
 $gradient-input-border: linear-gradient(180deg, var(--sw-theme-color), var(--sw-theme-color));
-$gradient-drawer-bg: linear-gradient(0deg, color-mix(in srgb, var(--sw-theme-color) 25%, transparent) 0%, transparent 90%);
-$gradient-user-bubble: linear-gradient(135deg, color-mix(in srgb, var(--sw-theme-color) 35%, transparent) 0%, color-mix(in srgb, var(--sw-theme-color) 25%, transparent) 100%);
+$gradient-drawer-bg: linear-gradient(
+  0deg,
+  color-mix(in srgb, var(--sw-theme-color) 25%, transparent) 0%,
+  transparent 90%
+);
+$gradient-user-bubble: linear-gradient(
+  135deg,
+  color-mix(in srgb, var(--sw-theme-color) 35%, transparent) 0%,
+  color-mix(in srgb, var(--sw-theme-color) 25%, transparent) 100%
+);
 
 // === 字体 ===
 $font-monospace: monospace;

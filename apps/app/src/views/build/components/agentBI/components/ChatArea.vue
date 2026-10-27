@@ -186,9 +186,8 @@ const handleScroll = async () => {
   overflow: hidden;
   position: relative;
   min-width: 0;
-  background-color: $color-primary-5;
+  background-color: $color-bg-drawer;
   border-top-left-radius: 10px;
-  box-shadow: inset -8px 0 12px -6px rgba(0, 0, 0, 0.5);
 }
 
 .load-more-indicator {

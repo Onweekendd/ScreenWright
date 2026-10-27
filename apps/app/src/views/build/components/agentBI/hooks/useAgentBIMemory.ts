@@ -24,7 +24,7 @@ export function useAgentBIMemory(shared: AgentBISharedState) {
   const isLoadingMoreMessages = ref(false);
   const hasMoreMessages = ref(false);
   const currentPage = ref(0);
-  const currentMode = ref<AgentMode>(AgentMode.ASK_BEFORE_EDIT);
+  const currentMode = ref<AgentMode>(AgentMode.AUTO_EDIT);
 
   const ensureActiveThread = async () => {
     if (activeThreadId.value) {
@@ -119,7 +119,7 @@ export function useAgentBIMemory(shared: AgentBISharedState) {
     messages.value = [];
     activeThreadId.value = undefined;
     lastUsage.value = { inputTokens: 0, outputTokens: 0, totalTokens: 0, reasoningTokens: 0 };
-    currentMode.value = AgentMode.ASK_BEFORE_EDIT;
+    currentMode.value = AgentMode.AUTO_EDIT;
     hasMoreMessages.value = false;
     currentPage.value = 0;
   };

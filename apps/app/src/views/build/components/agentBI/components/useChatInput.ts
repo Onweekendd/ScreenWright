@@ -422,7 +422,11 @@ export function useChatInput(emit: Emit) {
   onBeforeUnmount(() => {
     document.removeEventListener("mousedown", handleOutsideClick);
     if (syncTimer) {
-      clearTimeout(syncTimer);
+      if (editorRef.value) {
+        syncTextImmediately(editorRef.value);
+      } else {
+        clearTimeout(syncTimer);
+      }
     }
   });
 

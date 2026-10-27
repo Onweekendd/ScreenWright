@@ -94,4 +94,13 @@ describe("ChatInput 图片粘贴", () => {
     input.handleSend();
     expect(emit.mock.calls).toEqual([["update:modelValue", "刚粘贴的文字"], ["send"], ["update:modelValue", ""]]);
   });
+
+  it("切换到侧边栏前立即保存尚未完成防抖的草稿", () => {
+    wrapper.element.textContent = "还没有发送的想法";
+    input.handleInput();
+    expect(emit).not.toHaveBeenCalled();
+    wrapper.unmount();
+    expect(emit).toHaveBeenCalledWith("update:modelValue", "还没有发送的想法");
+    expect(emit).not.toHaveBeenCalledWith("send");
+  });
 });

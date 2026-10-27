@@ -94,10 +94,12 @@ const activeHasMessages = computed(() => {
   display: flex;
   align-items: flex-end;
   height: 34px;
+  box-sizing: border-box;
   gap: 6px;
   padding: 0 4px;
   /* 与下方内容区之间的分隔线：选中 tab 通过弧形把自身底色铺到这条线上，形成无缝衔接 */
   border-bottom: 1px solid $color-primary-20;
+  background: var(--sw-panel-bg);
 }
 
 /* ---- tab 条（可横向滚动） ---- */
@@ -132,6 +134,7 @@ $tab-active-bg: $color-primary-10;
   gap: 4px;
   max-width: 180px;
   height: 28px;
+  box-sizing: border-box;
   padding: 0 10px;
   border-radius: $tab-curve $tab-curve 0 0;
   color: $color-text-secondary;

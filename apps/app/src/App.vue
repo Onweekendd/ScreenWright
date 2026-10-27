@@ -46,7 +46,7 @@ const contentStyle = computed(() => {
 watchEffect(() => {
   const appEl = document.getElementById("app");
   if (appEl) {
-    appEl.style.backgroundColor = isBuildRoute.value ? "#181a24" : "";
+    appEl.style.backgroundColor = isBuildRoute.value ? "var(--sw-editor-bg)" : "";
   }
 });
 

@@ -1,6 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login-card">
+      <img class="login-logo" src="/logo.png" alt="Screenwright Logo" width="64" height="64" />
       <h1 class="login-title">Screenwright</h1>
       <p class="login-subtitle">AI 原生的数据大屏编辑器</p>
 
@@ -97,6 +98,13 @@ const handleSubmit = async () => {
   border-radius: 12px;
   background: $sw-surface-1;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.login-logo {
+  display: block;
+  margin: 0 auto 16px;
+  border-radius: 12px;
+  object-fit: contain;
 }
 
 .login-title {

@@ -2,6 +2,9 @@
   <el-aside class="layout-aside aside-container" :class="{ 'is-narrow': hideSecondary }">
     <!-- 一级菜单列 -->
     <div class="aside-primary">
+      <div class="aside-brand">
+        <img src="/logo.png" alt="Screenwright Logo" width="40" height="40" />
+      </div>
       <nav class="aside-nav">
         <div
           v-for="ele in asyncRoute"

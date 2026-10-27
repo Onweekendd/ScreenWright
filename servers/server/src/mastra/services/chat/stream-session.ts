@@ -25,6 +25,7 @@ interface RunTurnArgs extends Partial<BIChatRequest> {
 /** 轮循环只读这几个字段；真实 chunk 是 ChunkType，字段远多于此 */
 interface TurnChunk {
   type?: string;
+  errorText?: string;
   toolCallId?: string;
   data?: { taskId?: string; toolCallId?: string };
 }
@@ -216,6 +217,9 @@ class BIChatStreamSession {
       for await (const chunk of turnStream as unknown as AsyncIterable<TurnChunk>) {
         if (this.closed) {
           break;
+        }
+        if (chunk.type === "error") {
+          throw new Error(chunk.errorText || "请求失败，请稍后重试。");
         }
         if (!this.prepareChunkForForwarding(chunk)) {
           continue;
@@ -525,17 +529,29 @@ class BIChatStreamSession {
     }
   }
 
-  /** 出错收尾：让前端 readUIMessageStream 抛错 → 走 handleSendError */
+  /** 出错收尾：记录完整异常，通过 SSE error 帧通知前端后关流。 */
   private fail(err: unknown) {
     if (this.closed) {
       return;
     }
     this.closed = true;
+    console.error("[bi-chat] session failed", { threadId: this.threadId, resourceId: this.resourceId, error: err });
     this.clearIdle();
     void this.markPendingToolCallsInterrupted();
     this.abort.abort();
-    this.writer.abort(err).catch(() => {});
     this.onClosed(this);
+    void this.finishWithError(err);
+  }
+
+  private async finishWithError(err: unknown): Promise<void> {
+    const errorText = err instanceof Error ? err.message : typeof err === "string" ? err : "请求失败，请稍后重试。";
+    try {
+      await this.writer.write({ type: "error", errorText } as unknown as ChunkType);
+      await this.writer.close();
+    } catch (error) {
+      console.error("[bi-chat] failed to send error response", { threadId: this.threadId, error });
+      await this.writer.abort(error).catch(() => {});
+    }
   }
 
   /**

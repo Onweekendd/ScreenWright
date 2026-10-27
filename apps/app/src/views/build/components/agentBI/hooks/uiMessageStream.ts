@@ -106,9 +106,8 @@ function processUIMessageStream(options: {
   runUpdateMessageJob: (
     job: (ctx: { state: StreamingUIMessageState; write: () => void }) => Promise<void>
   ) => Promise<void>;
-  onError?: (error: unknown) => void;
 }): ReadableStream<UIMessageChunk> {
-  const { stream, runUpdateMessageJob, onError } = options;
+  const { stream, runUpdateMessageJob } = options;
   return stream.pipeThrough(
     new TransformStream<UIMessageChunk, UIMessageChunk>({
       async transform(chunk: any, controller) {
@@ -521,8 +520,7 @@ function processUIMessageStream(options: {
               break;
             }
             case "error": {
-              onError?.(new Error(chunk.errorText));
-              break;
+              throw new Error(chunk.errorText);
             }
             default: {
               if (isDataUIMessageChunk(chunk)) {
@@ -580,7 +578,6 @@ export async function* readUIMessageStream(options: {
 
   const processed = processUIMessageStream({
     stream,
-    onError,
     runUpdateMessageJob: (job) =>
       job({
         state,
@@ -600,6 +597,7 @@ export async function* readUIMessageStream(options: {
         }
       }
     } catch (error) {
+      outputController.error(error);
       onError?.(error);
     } finally {
       try {

@@ -54,6 +54,47 @@ const mockTurnStream = (chunks: unknown[]) => {
 };
 
 describe("BIChatStreamSession 的拒绝终止", () => {
+  it("起流失败应记录异常、发送 error 帧并清理会话", async () => {
+    const error = new Error("模型请求失败");
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      vi.mocked(createBIChatTurnStream).mockRejectedValue(error);
+      const session = registry.getOrCreate("thread-error", "resource-error");
+      const collected = drain(session.getStream());
+
+      await session.runTurn({});
+
+      expect(await collected).toEqual([{ type: "error", errorText: error.message }]);
+      expect(registry.find("thread-error")).toBeUndefined();
+      expect(log).toHaveBeenCalledWith("[bi-chat] session failed", {
+        threadId: "thread-error",
+        resourceId: "resource-error",
+        error
+      });
+    } finally {
+      log.mockRestore();
+    }
+  });
+
+  it("上游 error 帧应终止生成，并将错误传给前端", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      mockTurnStream([
+        { type: "error", errorText: "模型限流" },
+        { type: "text-delta", text: "不应继续" }
+      ]);
+      const session = registry.getOrCreate("thread-error-chunk", "resource-error");
+      const collected = drain(session.getStream());
+
+      await session.runTurn({});
+
+      expect(await collected).toEqual([{ type: "error", errorText: "模型限流" }]);
+      expect(capturedAbort?.signal.aborted).toBe(true);
+    } finally {
+      log.mockRestore();
+    }
+  });
+
   it("被拒工具的结果帧要先推给前端，之后的帧一律不再推", async () => {
     mockTurnStream([
       { type: "text-delta", text: "我来创建组件" },

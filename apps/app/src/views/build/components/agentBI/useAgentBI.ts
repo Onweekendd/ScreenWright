@@ -190,20 +190,22 @@ export function createAgentBISession() {
   /**
    * 处理错误状态
    */
-  const handleSendError = (assistantId: string) => {
+  const handleSendError = (assistantId: string, error: unknown) => {
     // 确保流状态被重置，防止界面卡住无法发送下一条消息
     if (isStreaming.value) {
       isStreaming.value = false;
     }
 
-    updateMessagesBy(() =>
-      messages.value.map((m) => {
-        if (m.id !== assistantId) {
-          return m;
-        }
-        return { ...m, parts: [{ text: "请求失败，请稍后重试。", type: "text" }] };
-      })
-    );
+    const detail = error instanceof Error ? error.message : "";
+    const text = detail ? `请求失败：${detail}` : "请求失败，请稍后重试。";
+    const errorPart = { text, type: "text" as const };
+    updateMessagesBy(() => {
+      const assistant = messages.value.find((m) => m.id === assistantId && m.role === "assistant");
+      if (!assistant) {
+        return [...messages.value, { id: uuid(), role: "assistant", parts: [errorPart] }];
+      }
+      return messages.value.map((m) => (m.id === assistantId ? { ...m, parts: [...m.parts, errorPart] } : m));
+    });
   };
 
   /**
@@ -247,7 +249,7 @@ export function createAgentBISession() {
         response,
         messages.value,
         [splitBackgroundTaskChunkFromMainStream({ activeThreadId }), createSideEffectTransform],
-        { messages, updateMessagesBy, mergeIntoId, signal }
+        { messages, updateMessagesBy, mergeIntoId, signal, state: streamState }
       );
 
       // suspend/resume 由 useChunkSideEffects 在流内直接触发（POST /bi-chat/resume），
@@ -270,7 +272,7 @@ export function createAgentBISession() {
         return;
       }
       console.error("[processAgentStream] error", { err, mergeIntoId });
-      handleSendError(streamState.currentMessageId);
+      handleSendError(streamState.currentMessageId, err);
     }
   };
 

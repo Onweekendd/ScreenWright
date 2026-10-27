@@ -292,13 +292,35 @@ describe("sendMessage 基础流程", () => {
     expect(agent.messages.value).toHaveLength(0);
   });
 
-  it("sendMessage，chat 抛出异常，isStreaming 重置且 messages 仅包含用户消息", async () => {
+  it("sendMessage，chat 抛出异常，isStreaming 重置并显示错误原因", async () => {
     mockBiChatPost.mockRejectedValue(new Error("network error"));
 
     await agent.sendMessage("你好");
 
-    expect(agent.messages.value).toHaveLength(1);
+    expect(agent.messages.value).toHaveLength(2);
     expect(agent.messages.value[0].role).toBe("user");
+    expect(agent.messages.value[1]).toMatchObject({
+      role: "assistant",
+      parts: [{ type: "text", text: "请求失败：network error" }]
+    });
+    expect(agent.isStreaming.value).toBe(false);
+  });
+
+  it("sendMessage，流中途失败，在已有回复后显示错误且不新增另一条回复", async () => {
+    mockConsumeSSEResponse.mockImplementation(async (_response, _initial, _transforms, options) => {
+      const message = { id: "partial-answer", role: "assistant", parts: [{ type: "text", text: "部分回复" }] };
+      options.messages.value = [...options.messages.value, message];
+      options.state.currentMessageId = message.id;
+      throw new Error("模型连接中断");
+    });
+
+    await agent.sendMessage("你好");
+
+    expect(agent.messages.value).toHaveLength(2);
+    expect(agent.messages.value[1].parts).toEqual([
+      { type: "text", text: "部分回复" },
+      { type: "text", text: "请求失败：模型连接中断" }
+    ]);
     expect(agent.isStreaming.value).toBe(false);
   });
 });

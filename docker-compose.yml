@@ -146,6 +146,10 @@ services:
       <<: *server-env
       ROLE: ai
       PORT: "4112"
+      NODE_USE_ENV_PROXY: ${AI_USE_ENV_PROXY:-0}
+      HTTP_PROXY: ${AI_OUTBOUND_PROXY:-}
+      HTTPS_PROXY: ${AI_OUTBOUND_PROXY:-}
+      NO_PROXY: ${AI_NO_PROXY:-localhost,127.0.0.1,::1,api,ai:4112,worker,minio}
     volumes:
       - ai_workspace:/data/agent-workspace
     depends_on:

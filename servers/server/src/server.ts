@@ -1,4 +1,5 @@
-import { parseRole, runsHttp, runsWorker } from "./entry/role";
+import { parseRole, runsAi, runsHttp, runsWorker } from "./entry/role";
+import { configureOutboundProxy } from "./lib/http/outbound-proxy";
 import { getQueueMode } from "./queue/config";
 
 /**
@@ -7,6 +8,10 @@ import { getQueueMode } from "./queue/config";
  */
 const role = parseRole();
 console.log(`[boot] ROLE=${role}`);
+
+if (runsAi(role)) {
+  await configureOutboundProxy();
+}
 
 const stoppables: Array<{ close(): Promise<void> }> = [];
 

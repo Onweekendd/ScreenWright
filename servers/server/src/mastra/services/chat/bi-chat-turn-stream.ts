@@ -22,7 +22,6 @@ import { resolveModeFromResumeData } from "./resume-mode";
 import { SubAgentSnapshotCollector } from "./sub-agent-collector";
 import { patchThreadMetadata } from "./thread-metadata";
 import type { BIChatRequest } from "./types";
-import { buildWorkflowProgressChunk, isDeliveryWorkflow } from "./workflow-progress";
 
 /**
  * stream 期间在多个闭包间共享的 usage，避免裸的可变变量跨作用域读写。
@@ -185,17 +184,7 @@ const prepareSubAgentChunk = (
   return rawChunk;
 };
 
-/** 将建屏类 workflow 的进度帧替换为精简的进度帧，其余帧原样透传。 */
-const prepareWorkflowChunk = (rawChunk: unknown, chunk: ChunkType): unknown => {
-  const workflowChunkName = ((chunk as Record<string, unknown>).data as { name?: string })?.name;
-  return chunk.type === "data-tool-workflow" && isDeliveryWorkflow(workflowChunkName)
-    ? buildWorkflowProgressChunk(rawChunk)
-    : rawChunk;
-};
-
-/**
- * 将 AI SDK 原始帧整理为可下发给客户端的帧；返回 null 表示应丢弃该帧。
- */
+/** 将 AI SDK 原始帧整理为可下发给客户端的帧；返回 null 表示应丢弃该帧。 */
 const prepareChunkForClient = (
   rawChunk: unknown,
   subAgentSnapshotCollector: SubAgentSnapshotCollector,
@@ -205,7 +194,7 @@ const prepareChunkForClient = (
   if (chunk.type === "data-tool-agent") {
     return prepareSubAgentChunk(rawChunk, chunk, subAgentSnapshotCollector, bgSubRunIds);
   }
-  return prepareWorkflowChunk(rawChunk, chunk);
+  return rawChunk;
 };
 
 interface ProcessedStreamOptions {

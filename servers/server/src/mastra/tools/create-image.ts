@@ -4,7 +4,7 @@ import { z } from "zod";
 import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-assets/ai-asset-library";
 import { trackGeneration } from "@/mastra/services/ai-generation/generation-progress";
 import { deriveSeed } from "@/mastra/services/ai-generation/image-generation.server";
-import { formatErrorChain } from "@/mastra/workflows/figma-to-bi/utils/async";
+import { formatErrorChain } from "@/mastra/utils/async";
 import { generateImage } from "@/queue/image-client";
 
 import { TOOL_IMAGES_FIELD } from "../provider/image-middleware";

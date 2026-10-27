@@ -3,7 +3,6 @@ import { PinoLogger } from "@mastra/loggers";
 
 import { swAgent } from "./runtime";
 import { storage } from "./storage/storage";
-import { figmaToBIV2Workflow } from "./workflows/figma-to-bi/figma-to-bi-v2-workflow";
 import { workspace } from "./workspace";
 
 export const mastra = new Mastra({
@@ -14,7 +13,6 @@ export const mastra = new Mastra({
     name: "Mastra",
     level: "info"
   }),
-  workflows: { figmaToBIV2Workflow },
   storage,
   // 后台任务：让耗时的子 agent 委派(swExecutorAgent)不阻塞 agentic loop。
   // 需要 storage(已配置)。具体哪些工具走后台在 swAgent.backgroundTasks.tools 里 opt-in。

@@ -8,7 +8,6 @@ import { ElMessage } from "element-plus";
 import type { UsageInfo } from "../type";
 import type { StreamState, SuspendedToolInfo } from "./useAgentBIStream";
 import { useComponentStreamUpdater } from "./useComponentStreamUpdater";
-import { type ConvertChunkDataType, useFigmaToBI } from "./useFigmaToBI";
 
 type ChunkSideEffectHandler = (chunk: { type: string; data: unknown }) => Promise<void> | void;
 
@@ -16,15 +15,6 @@ interface ResolvedSuspend {
   suspendType: SuspendType;
   resumeData: Record<string, unknown>;
 }
-
-/**
- * 靠 data-node-conversion 帧建屏的工作流名，与后端 `workflow-progress.ts` 的 DELIVERY_STEP 一致。
- *
- * 名字漏一个的后果不是「少个动画」：`finishConversion` 不跑，`convertedComponents` 就不清空，
- * 下一轮生成的 nodeId 会被 addProcessedComponent 的幂等守卫当成「已经建过」整片跳过，
- * 表现成「第二次调就没反应了」。
- */
-const SCREEN_BUILD_WORKFLOW_NAMES = new Set(["figmaToBIV2Workflow", "figmaToBIMockWorkflow"]);
 
 /**
  * 管理流 chunk 副作用处理，可独立注入到任何消费 SSE 流的场景（主 agent、子 agent 等）。
@@ -47,7 +37,6 @@ export function useChunkSideEffects({
   onVersionCommitted?: () => void;
 }) {
   const { suspendHandlers } = useComponentStreamUpdater(sessionId, { applyLocalMode });
-  const { addProcessedComponent, finishConversion } = useFigmaToBI();
 
   /**
    * fire-and-forget 触发 resume：把 resume 轮灌进已存在的会话流（POST /bi-chat/resume），
@@ -111,31 +100,6 @@ export function useChunkSideEffects({
   const createHandlers = (state: StreamState): Map<string, ChunkSideEffectHandler> => {
     const handlers = new Map<string, ChunkSideEffectHandler>();
 
-    // 单个组件建失败不能拖垮整条流。
-    //
-    // 这一帧是**同步背压**的：后端 workflow 的 writer.custom 要等前端消费完才返回，
-    // 所以这里一抛异常，TransformStream 就报错、流断掉，后端那一步永远停在「执行中」，
-    // 界面上一点提示都没有——实测就是这么卡住的，只剩几个空分组，看着像「组件没生成」。
-    // 兜住之后：坏的那个组件报错、跳过，后面的组件照常建，工作流也能正常收尾。
-    handlers.set("data-node-conversion", async (chunk) => {
-      const data = chunk.data as ConvertChunkDataType;
-      try {
-        const added = await addProcessedComponent(data);
-        if (!added) {
-          // addProcessedComponent 有若干条 return null 的路径（父级类型不认、幂等跳过、创建失败），
-          // 静默返回会让「组件凭空少了」查无对证，这里至少留下是哪个节点、挂在谁下面
-          console.warn("[data-node-conversion] 组件未加入画布", {
-            nodeId: data.nodeId,
-            parentNodeId: data.parentNodeId,
-            prop: data.component?.component?.prop
-          });
-        }
-      } catch (error) {
-        console.error("[data-node-conversion] 组件添加异常", { nodeId: data.nodeId, error });
-        ElMessage.error(`组件「${data.component?.name ?? data.nodeId}」添加失败，已跳过`);
-      }
-    });
-
     handlers.set("data-usage", (chunk) => {
       if (lastUsage) {
         lastUsage.value = chunk.data as UsageInfo;
@@ -179,18 +143,6 @@ export function useChunkSideEffects({
         if (handler) {
           await handler(chunk as unknown as { type: string; data: unknown });
           return;
-        }
-
-        // 建屏工作流收尾：statistics 字段是节点转换交付步完成的标志，此时全部
-        // data-node-conversion chunk 都已入队。不吞这一帧——WorkflowMessage.vue 还要用它渲染统计信息，
-        // 这里只是顺带把路由导航回大屏根级（finishConversion 内部走同一条画布互斥队列，排在最后）。
-        const workflowChunk = chunk as { type?: string; data?: { name?: string; statistics?: unknown } };
-        if (
-          workflowChunk.type === "data-tool-workflow" &&
-          workflowChunk.data?.statistics &&
-          SCREEN_BUILD_WORKFLOW_NAMES.has(workflowChunk.data.name ?? "")
-        ) {
-          void finishConversion();
         }
 
         controller.enqueue(chunk);

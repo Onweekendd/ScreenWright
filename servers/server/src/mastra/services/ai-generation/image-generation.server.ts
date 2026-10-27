@@ -13,7 +13,7 @@ import { createHash } from "node:crypto";
 import { assetStore } from "@/lib/storage";
 import { getModelConfigSync } from "@/mastra/provider/model-registry";
 import { prismaClient } from "@/mastra/storage/prisma";
-import { formatErrorChain, retryWithBackoff } from "@/mastra/workflows/figma-to-bi/utils/async";
+import { formatErrorChain, retryWithBackoff } from "@/mastra/utils/async";
 
 import { imageSize, shrinkToJpeg } from "../ai-assets/shrink-image";
 import { buildImageRequest, extractImage, imagesEndpoint, mediaTypeOf } from "./image-provider";

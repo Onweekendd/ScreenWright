@@ -45,7 +45,6 @@ import { claimTask, createTask, deleteTask, getTask, listTasks, resetTaskList, u
 import { todoWrite } from "../tools/todo";
 import { ungroupComponentTool } from "../tools/ungroup-component";
 import { AgentMode, type CommonRunTimeType } from "../types/bi-chat";
-import { figmaToBIV2Workflow } from "../workflows/figma-to-bi/figma-to-bi-v2-workflow";
 import { fullWorkspace } from "../workspace";
 import { dataFlowVerificationAgent } from "./data-flow-verification-agent";
 import { swExecutorAgent } from "./sw-executor-agent";
@@ -280,14 +279,8 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       templateExtractorAgent
     } as unknown as DynamicArgument<Record<string, SubAgent<string, CommonRunTimeType>>, CommonRunTimeType>,
 
-    workflows: {
-      figmaToBIV2Workflow
-    },
-
     // 后台任务 opt-in：最小可用版本只把大屏并发施工子 agent 放后台。
     // 子 agent 调用底层是工具调用，key 用子 agent 名。
-    // figmaToBIV2Workflow 暂不放后台——其进度依赖 data-tool-workflow chunk，进后台会改走
-    // background-task-* chunk 导致现有进度统计失效，后续再单独适配。
     backgroundTasks: {
       tools: {
         swExecutorAgent: { enabled: true, timeoutMs: 900_000 }

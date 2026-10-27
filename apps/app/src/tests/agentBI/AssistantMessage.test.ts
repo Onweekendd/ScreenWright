@@ -15,9 +15,6 @@ vi.mock("@/views/build/components/agentBI/components/ReasoningPart.vue", () => (
 vi.mock("@/views/build/components/agentBI/components/ToolCallPart.vue", () => ({
   default: { props: ["part"], template: '<div class="test-tool">{{ part.toolCallId }}</div>' }
 }));
-vi.mock("@/views/build/components/agentBI/components/figmaToBIMessage/WorkflowMessage.vue", () => ({
-  default: { template: "<div />" }
-}));
 vi.mock("@/views/build/components/agentBI/components/LayoutTemplateResult.vue", () => ({
   default: { template: "<div />" }
 }));

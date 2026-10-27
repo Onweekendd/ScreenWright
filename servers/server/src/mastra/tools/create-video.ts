@@ -6,7 +6,7 @@ import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-a
 import { trackGeneration } from "@/mastra/services/ai-generation/generation-progress";
 import { videoInputShape, videoModeError } from "@/mastra/services/ai-generation/video-input";
 import { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/mastra/services/ai-generation/video-provider";
-import { formatErrorChain } from "@/mastra/workflows/figma-to-bi/utils/async";
+import { formatErrorChain } from "@/mastra/utils/async";
 import { generateVideo } from "@/queue/video-client";
 
 export const createVideoInputSchema = z

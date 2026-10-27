@@ -3,7 +3,7 @@ import { hash } from "node:crypto";
 import fs from "fs";
 import path from "path";
 
-import { retryWithBackoff } from "@/mastra/workflows/figma-to-bi/utils/async";
+import { retryWithBackoff } from "@/mastra/utils/async";
 
 export type StyleId = `${string}_${string}` & { __brand: "StyleId" };
 

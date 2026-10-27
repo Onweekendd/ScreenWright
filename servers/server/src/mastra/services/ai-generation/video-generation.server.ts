@@ -10,7 +10,7 @@ import { createHash } from "node:crypto";
 
 import { assetStore } from "@/lib/storage";
 import { prismaClient } from "@/mastra/storage/prisma";
-import { formatErrorChain, retryWithBackoff } from "@/mastra/workflows/figma-to-bi/utils/async";
+import { formatErrorChain, retryWithBackoff } from "@/mastra/utils/async";
 
 import { imageSize } from "../ai-assets/shrink-image";
 import { prepareReference } from "./image-generation.server";

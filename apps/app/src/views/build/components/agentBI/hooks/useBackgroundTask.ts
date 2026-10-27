@@ -322,7 +322,7 @@ function useBackgroundTask(sessionId: string) {
           //（uiMessageStream.ts 的 data 分支），而 AssistantMessage 根本不渲染 data-background-task-* part；
           // 每 push 一个就触发主流逐帧 normalizeForRender 全量浅比较，part 数随 chunk 线性堆积成 O(N²)，
           // 是多个子 agent / 大量 edit_files 并发时主线程卡死的根因。
-          // 安全性已核实：主流 createSideEffectTransform 只处理 data-node-conversion / data-usage /
+          // 安全性已核实：主流 createSideEffectTransform 只处理 data-usage /
           // data-tool-call-suspended，不依赖任何 data-background-task-*（其 suspend 等副作用由 split
           // 内部的 onBackgroundTaskSuspended 自行处理），故丢弃不影响功能。
           return;

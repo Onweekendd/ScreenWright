@@ -127,9 +127,6 @@ vi.mock("@/api/mastra", () => ({
   mastraClient: {}
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useWorkflowStreamUpdater", () => ({
-  useWorkflowStreamUpdater: vi.fn()
-}));
 
 vi.mock("element-plus", () => ({
   ElMessage: { error: vi.fn() }

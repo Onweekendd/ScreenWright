@@ -20,7 +20,6 @@ import { useBackgroundTask } from "./hooks/useBackgroundTask";
 import { useChunkSideEffects } from "./hooks/useChunkSideEffects";
 import { useContextWindow } from "./hooks/useContextWindow";
 import { useGenerateTitle } from "./hooks/useGenerateTitle";
-import { useWorkflowStreamUpdater } from "./hooks/useWorkflowStreamUpdater";
 import { agentBITools } from "./tools";
 import {
   extractPendingClientTools,
@@ -71,7 +70,6 @@ export function createAgentBISession() {
   const { backgroundTasks, runningTaskCount, splitBackgroundTaskChunkFromMainStream } = useBackgroundTask(sessionId);
 
   const { buildSystemContext } = useAgentBISystemContext();
-  useWorkflowStreamUpdater();
   const mentionedComponents = shallowRef<ComponentType[]>([]);
 
   const resourceId = computed(() => `${navInfo.value.id}`);

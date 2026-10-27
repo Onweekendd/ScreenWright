@@ -25,11 +25,9 @@
           />
           <ReasoningPart v-else-if="row.part.type === 'reasoning'" :part="row.part" />
           <MarkdownContent v-else-if="row.part.type === 'text'" :content="(row.part as TextUIPart).text" />
-          <WorkflowMessage v-else-if="row.part.type === 'data-tool-workflow'" :part="row.part" />
           <SubAgentPart v-else-if="row.part.type === 'data-tool-agent'" :part="row.part" />
           <template v-else-if="isToolPart(row.part)">
-            <WorkflowMessage v-if="isWorkflowTool(getToolName(row.part))" :part="row.part" />
-            <LayoutTemplateResult v-else-if="isLayoutTool(getToolName(row.part))" :part="row.part" />
+            <LayoutTemplateResult v-if="isLayoutTool(getToolName(row.part))" :part="row.part" />
             <TodoWritePart v-else-if="getToolName(row.part) === 'todoWrite'" :part="row.part" />
             <SubAgentPart v-else-if="isAgentTool(getToolName(row.part))" :part="row.part" />
             <ToolCallPartUI v-else :part="row.part" />
@@ -57,7 +55,6 @@ import type { TextUIPart, UIMessage } from "ai";
 import { type AssistantDisplayPart, groupAssistantParts, isProcessPart } from "../hooks/groupAssistantParts";
 import { useEditingToolParts } from "../hooks/useEditingToolParts";
 import ExecutionProcessBlock from "./ExecutionProcessBlock.vue";
-import WorkflowMessage from "./figmaToBIMessage/WorkflowMessage.vue";
 import LayoutTemplateResult from "./LayoutTemplateResult.vue";
 import MarkdownContent from "./MarkdownContent.vue";
 import type { OmEndData, OmFailedData, OmStartData } from "./OMBufferingPart.vue";
@@ -82,7 +79,6 @@ const props = defineProps<{ message: UIMessage; isLoading?: boolean }>();
 const isToolPart = (part: { type: string }): part is V5ToolPart => part.type.startsWith("tool-");
 const isToolError = (part: V5ToolPart): boolean => part.state === "output-error";
 const getToolName = (part: V5ToolPart): string => part.toolName ?? part.type.replace(/^tool-/, "");
-const isWorkflowTool = (toolName: string) => toolName.includes("workflow-");
 const isLayoutTool = (toolName: string) => toolName.includes("LayoutTemplate");
 const isAgentTool = (toolName: string) => toolName.startsWith("agent-");
 
@@ -114,12 +110,6 @@ const normalizedParts = computed(() => {
 
     return true;
   });
-
-  const hasStreamingWorkflow = parts.some((p) => p.type === "data-tool-workflow");
-  if (hasStreamingWorkflow) {
-    // 流式时 data-tool-workflow 已经渲染，过滤掉重复的 tool-workflow-* part
-    parts = parts.filter((p) => !(p.type.startsWith("tool-") && isWorkflowTool(getToolName(p as V5ToolPart))));
-  }
 
   const hasStreamingAgent = parts.some((p) => p.type === "data-tool-agent");
   if (hasStreamingAgent) {

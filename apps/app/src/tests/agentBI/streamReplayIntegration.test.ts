@@ -17,19 +17,13 @@ import type { UIMessage } from "ai";
 const {
   mockAskApprovalCreateComponent,
   mockProcessComponentUpdates,
-  mockAddProcessedComponent,
   mockGenerateTitle,
   mockResume
 } = vi.hoisted(() => ({
   mockAskApprovalCreateComponent: vi.fn(),
   mockProcessComponentUpdates: vi.fn(),
-  mockAddProcessedComponent: vi.fn(),
   mockGenerateTitle: vi.fn(),
   mockResume: vi.fn().mockResolvedValue({ json: async () => ({ piped: true }) })
-}));
-
-vi.mock("@/views/build/components/agentBI/hooks/useFigmaToBI", () => ({
-  useFigmaToBI: () => ({ addProcessedComponent: mockAddProcessedComponent, finishConversion: vi.fn() })
 }));
 
 vi.mock("@/views/build/components/agentBI/hooks/useComponentStreamUpdater", () => ({
@@ -110,7 +104,6 @@ describe("流回放集成（822a0cd8 session）", () => {
     session = loadSession(THREAD_ID);
     mockAskApprovalCreateComponent.mockReset();
     mockProcessComponentUpdates.mockReset();
-    mockAddProcessedComponent.mockReset();
     mockResume.mockReset().mockResolvedValue({ json: async () => ({ piped: true }) });
   });
 

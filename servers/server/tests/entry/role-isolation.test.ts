@@ -32,9 +32,9 @@ async function dependencyGraph(entry: string) {
 
 /** AI 运行时：Mastra 实例、agent、工具、工作区、沙箱 */
 const AI_RUNTIME_LOCAL = /src\/(mastra\/(index|runtime|agents|tools|workspace|mcp)\b|artifact-app\/)/;
-/** api 连整个 AI 侧都不该碰：工作流、对话录制也算（figma-to-bi/utils 下的纯工具函数除外） */
+/** api 连整个 AI 侧都不该碰：工作流、对话录制也算。 */
 const AI_STACK_LOCAL =
-  /src\/(mastra\/(index|runtime|agents|workflows\/(?!figma-to-bi\/utils\/)|tools|workspace|mcp)|artifact-app|recording)\b/;
+  /src\/(mastra\/(index|runtime|agents|workflows|tools|workspace|mcp)|artifact-app|recording)\b/;
 
 describe("角色之间的依赖隔离", () => {
   it("api 角色不会引入 Mastra / agent / 沙箱 / 队列", async () => {

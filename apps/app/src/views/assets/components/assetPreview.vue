@@ -20,12 +20,7 @@
       <!-- <el-image style="width: 100%; height: 100%" :src="item.hdrPreviewImg || defaultContentItemImg" /> -->
     </template>
 
-    <el-image
-      v-else
-      style="width: 100%; height: 100%"
-      :src="`${preViewUrl}?t=${new Date().getTime()}`"
-      fit="scale-down"
-    />
+    <el-image v-else style="width: 100%; height: 100%" :src="preViewUrl" fit="scale-down" />
   </div>
 </template>
 <script setup lang="ts">

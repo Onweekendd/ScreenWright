@@ -8,7 +8,7 @@
         <video crossorigin="anonymous" :src="setMinioUrl(option.img)" autoplay muted loop />
       </div>
       <div class="inside-img" v-else>
-        <img :src="setMinioUrl(option.img)" />
+        <img :src="setMinioUrl(option.img)" loading="lazy" decoding="async" />
       </div>
     </div>
 
@@ -35,7 +35,7 @@
       <i class="top-close iconfont iconfont-closeToHomepage" v-if="materialDelShow" @click.stop="deleteItem" />
 
       <div :class="[cardView.fullBleed ? 'inside-img-assets' : 'inside-img']" v-if="cardView.preview === 'video'">
-        <video crossorigin="anonymous" :src="cover ? `${cover}?t=${Date.now()}` : ''" autoplay muted loop />
+        <video crossorigin="anonymous" :src="cover" autoplay muted loop />
       </div>
       <div class="inside-img-assets" v-else-if="cardView.preview === 'archive'">
         <div class="archive-preview">
@@ -44,7 +44,7 @@
         </div>
       </div>
       <div :class="[cardView.fullBleed ? 'inside-img-assets' : 'inside-img']" v-else>
-        <img :src="cover ? `${cover}?t=${Date.now()}` : ''" />
+        <img :src="cover" loading="lazy" decoding="async" />
       </div>
     </div>
   </div>
@@ -131,7 +131,13 @@ const handleUpdateAssets = () => {
 .el-button {
   width: 70px;
   height: 25px;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(var(--sw-theme-color)), to(var(--sw-theme-color)));
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(var(--sw-theme-color)),
+    to(var(--sw-theme-color))
+  );
   background-image: linear-gradient(180deg, var(--sw-theme-color) 0%, var(--sw-theme-color) 100%);
   border-color: transparent;
   border-radius: 4px;

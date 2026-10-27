@@ -43,6 +43,8 @@
                       style="width: 100%; height: 100%; object-fit: scale-down"
                       v-if="subItem.type === 'img' && subItem.url"
                       :src="setMinioUrl(subItem.url)"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </div>

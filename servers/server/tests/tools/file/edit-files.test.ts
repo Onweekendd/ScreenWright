@@ -94,7 +94,7 @@ describe("edit_files", () => {
     await expect(fsp.readFile(thirdPath, "utf8")).resolves.toBe("three");
   });
 
-  it("suspends and resumes once for every file in ask-before-edit mode", async () => {
+  it("approves all files once in ask-before-edit mode", async () => {
     const firstPath = await createTempFile("first.txt", "alpha");
     const secondPath = await createTempFile("second.txt", "beta");
     const files = [
@@ -116,27 +116,9 @@ describe("edit_files", () => {
       type: SuspendType.AskApproval,
       filePath: firstPath
     });
+    expect(suspendedPayloads[0].purpose).toContain(firstPath);
+    expect(suspendedPayloads[0].purpose).toContain(secondPath);
     await expect(fsp.readFile(firstPath, "utf8")).resolves.toBe("alpha");
-
-    await executeEditFiles(files, {
-      mode: AgentMode.ASK_BEFORE_EDIT,
-      toolCallId,
-      resumeData: {
-        approved: true,
-        batchId: suspendedPayloads[0].batchId,
-        operationId: suspendedPayloads[0].operationId
-      },
-      onSuspend
-    });
-
-    expect(suspendedPayloads).toHaveLength(2);
-    expect(suspendedPayloads[1]).toMatchObject({
-      type: SuspendType.AskApproval,
-      filePath: secondPath,
-      batchId: suspendedPayloads[0].batchId
-    });
-    expect(suspendedPayloads[1].operationId).not.toBe(suspendedPayloads[0].operationId);
-    await expect(fsp.readFile(firstPath, "utf8")).resolves.toBe("one");
     await expect(fsp.readFile(secondPath, "utf8")).resolves.toBe("beta");
 
     const result = (await executeEditFiles(files, {
@@ -144,8 +126,8 @@ describe("edit_files", () => {
       toolCallId,
       resumeData: {
         approved: true,
-        batchId: suspendedPayloads[1].batchId,
-        operationId: suspendedPayloads[1].operationId
+        batchId: suspendedPayloads[0].batchId,
+        operationId: suspendedPayloads[0].operationId
       },
       onSuspend
     })) as {
@@ -155,8 +137,42 @@ describe("edit_files", () => {
       failed: number;
     };
 
-    expect(suspendedPayloads).toHaveLength(2);
+    expect(suspendedPayloads).toHaveLength(1);
     expect(result).toMatchObject({ success: true, total: 2, succeeded: 2, failed: 0 });
+    await expect(fsp.readFile(firstPath, "utf8")).resolves.toBe("one");
     await expect(fsp.readFile(secondPath, "utf8")).resolves.toBe("two");
+  });
+
+  it("rejecting batch approval cancels every file without further approvals", async () => {
+    const firstPath = await createTempFile("first.txt", "alpha");
+    const secondPath = await createTempFile("second.txt", "beta");
+    const files = [
+      { path: firstPath, edits: [{ old_string: "alpha", new_string: "one" }] },
+      { path: secondPath, edits: [{ old_string: "beta", new_string: "two" }] }
+    ];
+    const payloads: Array<Record<string, unknown>> = [];
+    const options = {
+      mode: AgentMode.ASK_BEFORE_EDIT,
+      toolCallId: "reject-batch",
+      onSuspend: (payload: Record<string, unknown>) => payloads.push(payload)
+    };
+    await executeEditFiles(files, options);
+    const result = await executeEditFiles(files, {
+      ...options,
+      resumeData: { approved: false, batchId: payloads[0].batchId, operationId: payloads[0].operationId }
+    });
+
+    expect(payloads).toHaveLength(1);
+    expect(result).toMatchObject({
+      success: false,
+      total: 2,
+      failed: 2,
+      results: [
+        { path: firstPath, success: false },
+        { path: secondPath, success: false }
+      ]
+    });
+    await expect(fsp.readFile(firstPath, "utf8")).resolves.toBe("alpha");
+    await expect(fsp.readFile(secondPath, "utf8")).resolves.toBe("beta");
   });
 });

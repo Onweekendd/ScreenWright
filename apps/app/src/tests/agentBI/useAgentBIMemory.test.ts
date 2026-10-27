@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { computed, ref, shallowRef } from "vue";
 
-import type { CustomStorageThreadType } from "@screenwright/server/rpc";
+import { AgentMode, type CustomStorageThreadType } from "@screenwright/server/rpc";
 import type { UIMessage } from "ai";
 
 // --- Mock 函数声明（hoisted）---
@@ -76,7 +76,7 @@ describe("ensureActiveThread", () => {
     await ctx.memory.ensureActiveThread();
 
     expect(mockCreateThread).toHaveBeenCalledWith({
-      json: { title: "新对话", resourceId: "screen-23595", metadata: { mode: "ask_before_edit" } }
+      json: { title: "新对话", resourceId: "screen-23595", metadata: { mode: "auto_edit" } }
     });
     expect(ctx.memory.activeThreadId.value).toBe("t-new");
     // 推入的是注入的共享 memoryThreads
@@ -142,12 +142,14 @@ describe("startNewChat", () => {
   it("startNewChat，调用后 activeThreadId 清空且 messages 清空", () => {
     const ctx = makeMemory();
     ctx.memory.activeThreadId.value = "t-1";
+    ctx.memory.currentMode.value = AgentMode.PLAN;
     // @ts-expect-error - UIMessage doesn't have content field in new version
     ctx.messages.value = [{ id: "m-1", role: "user", content: "hi", parts: [] }];
 
     ctx.memory.startNewChat();
 
     expect(ctx.memory.activeThreadId.value).toBeUndefined();
+    expect(ctx.memory.currentMode.value).toBe("auto_edit");
     expect(ctx.messages.value).toEqual([]);
     expect(ctx.lastUsage.value).toEqual({
       inputTokens: 0,

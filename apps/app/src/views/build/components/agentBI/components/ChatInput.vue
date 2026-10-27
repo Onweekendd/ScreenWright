@@ -61,13 +61,7 @@
 
       <div class="footer-actions">
         <div class="context-wrapper">
-          <el-tooltip
-            v-if="contextPercentage > 50"
-            :content="contextTooltip"
-            placement="top"
-            :show-arrow="true"
-            popper-class="context-tooltip"
-          >
+          <el-tooltip :content="contextTooltip" placement="top" :show-arrow="true" popper-class="context-tooltip">
             <div class="context-btn-wrapper" @click="handleCompact">
               <el-progress
                 type="circle"
@@ -80,7 +74,7 @@
               />
             </div>
           </el-tooltip>
-          <div v-if="contextPercentage > 50" class="context-btn-split" />
+          <div class="context-btn-split" />
 
           <el-dropdown
             trigger="click"
@@ -133,7 +127,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import { AgentMode } from "@screenwright/server/rpc";
 import type { ComponentType } from "@screenwright/types";
@@ -248,7 +242,7 @@ const handleCompact = async () => {
   }
 };
 
-defineProps<{ modelValue: string }>();
+const props = defineProps<{ modelValue: string }>();
 const emit = defineEmits<{
   "update:modelValue": [value: string];
   send: [];
@@ -271,6 +265,13 @@ const {
   selectMention,
   selectTargetData
 } = useChatInput(emit);
+
+// Restore the shared draft when moving between the canvas and sidebar composers.
+onMounted(() => {
+  if (editorRef.value && props.modelValue) {
+    editorRef.value.textContent = props.modelValue;
+  }
+});
 </script>
 
 <style lang="scss" scoped>

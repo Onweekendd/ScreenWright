@@ -198,9 +198,9 @@ describe("model-registry", () => {
       Promise.resolve(row(where.role))
     );
     await warmModelConfigs();
-    expect(getModelConfigSync("vision").role).toBe("vision");
+    expect(getModelConfigSync("reasoning").role).toBe("reasoning");
 
     invalidateModelConfigs();
-    expect(() => getModelConfigSync("vision")).toThrow();
+    expect(() => getModelConfigSync("reasoning")).toThrow();
   });
 });

@@ -101,16 +101,16 @@ defineExpose({ drawerWidth, visible });
 
   .el-drawer {
     pointer-events: auto;
-    background-color: #181a24;
+    background-color: transparent;
   }
 }
 
 .agent-bi-drawer.el-drawer {
   --el-drawer-bg-color: #{$color-bg-drawer};
-  background: $color-bg-drawer;
-  background-image: $gradient-drawer-bg;
-  background-repeat: no-repeat;
-  background-position: bottom;
+  background: transparent;
+  box-shadow: none;
+  box-sizing: border-box;
+  padding: 8px 8px 8px 0;
   font-size: 13px;
   color: $color-text-primary;
   font-family: $font-family-panel;
@@ -126,6 +126,10 @@ defineExpose({ drawerWidth, visible });
 
   .el-drawer__body {
     padding: 0;
+    box-sizing: border-box;
+    border: 1px solid rgba(200, 205, 230, 0.08);
+    border-radius: 12px;
+    background: $color-bg-drawer;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -166,7 +170,7 @@ defineExpose({ drawerWidth, visible });
   height: 100%;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(45deg, $color-primary-10, rgba(0, 0, 0, 0.01));
+  background: $color-bg-drawer;
 }
 
 /* ---- 主对话区 ---- */

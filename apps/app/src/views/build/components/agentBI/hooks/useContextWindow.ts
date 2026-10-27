@@ -151,9 +151,9 @@ export function useContextWindow() {
   /** 悬浮提示文案：展示剩余上下文百分比，L3 开启时额外说明会自动压缩 */
   const contextTooltip = computed(() => {
     if (!lastUsage.value) {
-      return "上下文：剩余 100%";
+      return `上下文：0 / ${maxContextTokens.value.toLocaleString()} tokens（剩余 100%）`;
     }
-    const base = `剩余 ${100 - contextPercentage.value}%`;
+    const base = `上下文：${usedTokens.value.toLocaleString()} / ${maxContextTokens.value.toLocaleString()} tokens（剩余 ${100 - contextPercentage.value}%）`;
     return modelCapability.value.compaction.l3Enabled && ceilingRatio.value >= 70
       ? `${base}（接近自动压缩阈值）`
       : base;

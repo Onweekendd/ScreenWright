@@ -10,16 +10,18 @@ import { formatSuccessMessage } from "../utils";
 
 /**
  * edit_files 能向前端提出的全部请求：普通文件在 ASK 模式下那一轮纯审批，加上组件 / 过滤器 / 屏幕配置
- * 三类同步——后者统一走 `canvas_ops`（审批与否由载荷里的 `approval` 决定）。
+ * 三类同步——后者统一走 `canvas_ops`（审批与否由载荷里的 `approval` 决定），批次末尾用 capture_canvas 统一截图。
  */
 export const editFilesSuspendSchema = z.union([
   SuspendDefs[SuspendType.AskApproval].suspend,
-  SuspendDefs[SuspendType.CanvasOps].suspend
+  SuspendDefs[SuspendType.CanvasOps].suspend,
+  SuspendDefs[SuspendType.CaptureCanvas].suspend
 ]);
 
 export const editFilesResumeSchema = z.union([
   SuspendDefs[SuspendType.AskApproval].resume,
-  SuspendDefs[SuspendType.CanvasOps].resume
+  SuspendDefs[SuspendType.CanvasOps].resume,
+  SuspendDefs[SuspendType.CaptureCanvas].resume
 ]);
 
 export type EditFilesSuspendPayload = z.infer<typeof editFilesSuspendSchema>;

@@ -2,6 +2,7 @@ import { snapdom } from "@zumer/snapdom";
 
 import { withCullingSuspended } from "../../../buildRender/hooks/cullingSuspend";
 import { runLayerCompositeCapture } from "./layerCompositeCapture";
+import { inlineCaptureImages } from "./inlineCaptureImages";
 import { promptEditorScreenShotMode } from "./promptEditorScreenShotMode";
 import type { CaptureElementRef, ScreenShotOptions, ScreenShotResult } from "./types";
 
@@ -47,6 +48,7 @@ async function captureEditorScreenShotSimple(
       scale,
       embedFonts: true,
       fast: true,
+      plugins: [inlineCaptureImages()],
       backgroundColor,
       exclude,
       dpr,

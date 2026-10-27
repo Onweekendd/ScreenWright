@@ -85,6 +85,9 @@ const baseInstructions =
 
 const planModePrompt = loadPrompt("mastra/mode-plan.md");
 
+// 两种提示词模式共用，避免压缩模式遗漏素材完整性约束。
+const assetCompletenessInstructions = loadPrompt("mastra/asset-completeness.md");
+
 export interface CreateSwAgentOptions {
   /** 已由启动层注入 ArtifactAppService 的前端编码任务委派工具。 */
   readonly delegateAppCodeTool: ReturnType<typeof createDelegateAppCodeTool>;
@@ -105,7 +108,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
     instructions: ({ requestContext }: { requestContext: RequestContext<CommonRunTimeType> }) => {
       const mode = requestContext?.get("mode") ?? AgentMode.ASK_BEFORE_EDIT;
       const extra = mode === AgentMode.PLAN ? planModePrompt : "";
-      return [baseInstructions, extra].filter(Boolean).join("\n\n");
+      return [baseInstructions, assetCompletenessInstructions, extra].filter(Boolean).join("\n\n");
     },
 
     // 模型配置在 ai_model 表（前端「设置」页），每次 run 重新解析以支持热更新

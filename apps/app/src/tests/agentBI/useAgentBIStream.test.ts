@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { ComputedRef } from "vue";
 import { ref, shallowRef } from "vue";
 
 import type { UIMessage, UIMessageChunk } from "ai";
@@ -109,6 +108,31 @@ describe("processMessageStream", () => {
   beforeEach(() => {
     ctx = makeStream();
     mockAddProcessedComponent.mockReset();
+  });
+
+  it("服务端 error 帧应让消费失败，并保留已收到的回复", async () => {
+    const response = createMockSseResponse([...textChunks("部分回复"), { type: "error", errorText: "模型服务不可用" }]);
+
+    await expect(ctx.stream.processMessageStream(response, [])).rejects.toThrow("模型服务不可用");
+    expect(ctx.messages.value[0].parts).toContainEqual(expect.objectContaining({ text: "部分回复" }));
+  });
+
+  it("底层连接中断应向调用方抛出错误", async () => {
+    const response = {
+      body: new ReadableStream({
+        start(controller) {
+          controller.error(new Error("连接中断"));
+        }
+      })
+    } as Response;
+
+    await expect(ctx.stream.processMessageStream(response, [])).rejects.toThrow("连接中断");
+  });
+
+  it("HTTP 失败应读取服务端错误信息", async () => {
+    const response = new Response(JSON.stringify({ message: "服务暂不可用" }), { status: 503 });
+
+    await expect(ctx.stream.processMessageStream(response, [])).rejects.toThrow("服务暂不可用");
   });
 
   it("processMessageStream，单段文本流，messages 追加新 assistant 消息", async () => {

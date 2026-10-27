@@ -235,6 +235,7 @@ export const SuspendDefs = {
   [SuspendType.CaptureCanvas]: {
     suspend: z.object({
       type: z.literal(SuspendType.CaptureCanvas),
+      ...batchOperationFields,
       componentIds: z.array(z.number()).optional().describe("只截这些组件的并集外框；不传截整个画布"),
       region: z
         .object({ x: z.number(), y: z.number(), width: z.number().positive(), height: z.number().positive() })
@@ -246,7 +247,7 @@ export const SuspendDefs = {
       gridStep: z.number().positive().optional().describe("网格间距（设计稿像素），不传自动"),
       snap: z.boolean().optional().describe("只对 region 生效：四条边吸附到附近的边框线上")
     }),
-    resume: CanvasCaptureResultSchema
+    resume: CanvasCaptureResultSchema.extend(batchOperationFields)
   },
 
   [SuspendType.SaveAiTemplate]: {

@@ -2,10 +2,16 @@
   <div class="build-action flex flex-align-center">
     <actionItem :disabled="!canUndo" type="ArrowLeft" content="撤销" @click="undo" />
     <actionItem :disabled="!canRedo" type="ArrowRight" content="返回撤销" @click="redo" />
-    <actionItem type="iconfont-data_btn" :isActive="visible" content="agentBI" @click="visible = !visible" />
     <actionItem :isActive="sideShow" type="iconfont-zuoce" content="左侧栏" @click="handleSideShow" />
     <actionItem :isActive="configShow" type="iconfont-youce" content="右侧栏" @click="handleConfigShow" />
     <actionItem type="iconfont-picture" content="导出图片" @click="handleExportImage" />
+    <controlItem
+      :isActive="visible"
+      name="AI 创作"
+      enName="AI studio"
+      type="iconfont-data_btn"
+      @click="visible = !visible"
+    />
     <controlItem @click="handlePreview" name="预览" enName="preview" type="iconfont-preview" />
     <buildClose @close="close" />
   </div>

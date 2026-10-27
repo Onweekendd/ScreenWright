@@ -8,6 +8,7 @@
 
       <section v-for="meta in ROLE_META" :key="meta.role" class="sw-card">
         <div class="sw-card__head">
+          <img class="sw-card__icon" :src="meta.image" alt="" width="36" height="36" />
           <h2>{{ meta.title }}</h2>
           <span class="sw-card__role">{{ meta.role }}</span>
         </div>
@@ -106,13 +107,16 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
   color: $sw-text;
 
   &__body {
-    max-width: 760px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 28px 24px 60px;
+    padding: 28px 28px 60px;
   }
 
   &__head {
-    margin-bottom: 20px;
+    grid-column: 1 / -1;
 
     h1 {
       margin: 0 0 8px;
@@ -131,8 +135,10 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
 }
 
 .sw-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
   padding: 18px 20px 16px;
-  margin-bottom: 16px;
   background-color: $sw-surface-2;
   border: 1px solid $sw-border;
   border-radius: 10px;
@@ -150,6 +156,12 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
     }
   }
 
+  &__icon {
+    display: block;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+
   &__role {
     padding: 1px 7px;
     font-size: 11px;
@@ -159,6 +171,7 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
   }
 
   &__desc {
+    min-height: 58px;
     margin: 8px 0 16px;
     font-size: 12px;
     line-height: 1.6;
@@ -170,7 +183,8 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 18px;
+    flex-wrap: wrap;
+    margin-top: auto;
     padding-top: 14px;
     border-top: 1px solid $sw-border;
   }
@@ -180,6 +194,8 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
     align-items: center;
     gap: 5px;
     font-size: 12px;
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: $sw-text-dim;
 
     .is-err {
@@ -189,8 +205,14 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
 
   &__actions {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 8px;
     margin-left: auto;
+
+    :deep(.el-button + .el-button) {
+      margin-left: 0;
+    }
   }
 }
 
@@ -232,11 +254,22 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
   }
 
   :deep(.el-input-number) {
-    width: 220px;
+    width: 100%;
 
     .el-input__wrapper {
       border: none;
     }
+  }
+}
+
+@media (max-width: 600px) {
+  .sw-settings__body {
+    padding: 20px 16px 40px;
+    gap: 16px;
+  }
+
+  .sw-card__desc {
+    min-height: 0;
   }
 }
 

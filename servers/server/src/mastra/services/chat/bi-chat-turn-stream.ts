@@ -304,7 +304,13 @@ export async function createBIChatTurnStream(
 
     const aiSdkStream = toAISdkStream(withRenamedBackgroundChunks(mastraStream, bgSubRunIds), {
       from: "agent",
-      sendReasoning: true
+      sendReasoning: true,
+      onError: (error) => {
+        console.error("[bi-chat] agent stream error", { threadId, resourceId, runId, error });
+        return (
+          (error instanceof Error ? error.message : typeof error === "string" ? error : "") || "请求失败，请稍后重试。"
+        );
+      }
     });
 
     return createProcessedStream({

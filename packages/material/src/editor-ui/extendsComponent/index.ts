@@ -1,13 +1,11 @@
 import { ExtendsEnum } from "@screenwright/types";
 import type { Component } from "vue";
 
-import swMaskLayerFrostedGlass from "./extendsFrostedGlass/sw-mask-layerFrostedGlass.vue";
 import fullScreenSwitchGlobal from "./extendsGlobal/fullScreenSwitchGlobal.vue";
 import pageReloadGlobal from "./extendsGlobal/pageReloadGlobal.vue";
 import simpleParticleGlobal from "./extendsGlobal/simple-particleGlobal.vue";
 import simpleStarGlobal from "./extendsGlobal/simpleStarGlobal.vue";
 import swDataContainerGlobal from "./extendsGlobal/sw-dataContainerGlobal.vue";
-import swMaskLayerGlobal from "./extendsGlobal/sw-mask-layerGlobal.vue";
 import swWeatherGlobal from "./extendsGlobal/sw-weatherGlobal.vue";
 import simpleParticleParticleStyle from "./extendsParticleStyle/simple-particleParticleStyle.vue";
 import swWeatherSeries from "./extendsSeries/sw-weatherSeries.vue";
@@ -19,7 +17,6 @@ export enum optionType {
   series = "Series",
   newOption = "NewOption",
   particleStyle = "ParticleStyle",
-  frostedGlass = "FrostedGlass",
   pictureList = "PictureList",
 }
 
@@ -71,13 +68,5 @@ export const ExtendsConfigComponent: Partial<Record<ExtendsEnum, ConfigTab[]>> =
       { label: "全局", value: optionType.global, component: swWeatherGlobal },
       { label: "样式", value: optionType.style, component: swWeatherStyle },
       { label: "系列", value: optionType.series, component: swWeatherSeries },
-    ],
-    [ExtendsEnum.SwMaskLayer]: [
-      { label: "全局", value: optionType.global, component: swMaskLayerGlobal },
-      {
-        label: "毛玻璃",
-        value: optionType.frostedGlass,
-        component: swMaskLayerFrostedGlass,
-      },
     ],
   };

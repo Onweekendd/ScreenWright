@@ -25,7 +25,6 @@ export const extendsComponentType: ExtendsEnum[] = [
   ExtendsEnum.SimpleParticle,
   ExtendsEnum.SwDataContainer,
   ExtendsEnum.SwWeather,
-  ExtendsEnum.SwMaskLayer
 ];
 
 export const childComponentType: ExtendsChildComponentEnum[] = [ExtendsChildComponentEnum.UeVessel_UeMessageReceiver];

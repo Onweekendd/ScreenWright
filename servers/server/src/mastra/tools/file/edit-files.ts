@@ -71,7 +71,7 @@ const editFilesInputSchema = z.object({
     .boolean()
     .optional()
     .default(true)
-    .describe("编辑组件后返回截图供视觉检查，默认 true；false 时跳过截图和上传。对普通文件无影响。")
+    .describe("整批组件编辑完成后统一返回一张画布截图，默认 true；false 时跳过截图和上传。对普通文件无影响。")
 });
 
 const fileEditResultSchema = z.object({
@@ -81,7 +81,6 @@ const fileEditResultSchema = z.object({
   message: z.string(),
   frontendSynced: z.boolean().optional(),
   validationErrors: z.array(z.string()).optional(),
-  screenshot: CanvasCaptureResultSchema.optional().describe("编辑完成后的组件截图；截图失败不影响编辑结果"),
   change: z.array(ChangeSchema).optional().describe("这个文件改动后的样子，不必再读回来确认")
 });
 
@@ -93,6 +92,7 @@ const editFilesOutputSchema = z.object({
   replacements: z.number(),
   message: z.string(),
   results: z.array(fileEditResultSchema),
+  screenshot: CanvasCaptureResultSchema.optional().describe("整批修改完成后的统一画布截图；截图失败不影响编辑结果"),
   change: z.array(ChangeSchema).optional().describe("本批全部改动的汇总，与各 result.change 同源"),
   [TOOL_IMAGES_FIELD]: z.array(z.object({ url: z.string(), label: z.string() })).optional()
 });
@@ -137,8 +137,13 @@ interface EditFilesBatchState {
   batchId: string;
   inputSignature: string;
   cursor: number;
-  approvedIndexes: Set<number>;
+  /** 一次批准覆盖这次工具调用的全部文件，不延续到其他调用。 */
+  approved: boolean;
   pending?: PendingOperation;
+  capturePending?: BatchOperationContext;
+  captureRequested?: boolean;
+  hasComponentEdits?: boolean;
+  screenshot?: z.infer<typeof CanvasCaptureResultSchema>;
   results: Array<FileEditResult | undefined>;
 }
 
@@ -189,11 +194,10 @@ function buildBatchOutput(state: EditFilesBatchState) {
   const succeeded = results.filter((result) => result.success).length;
   const failed = results.length - succeeded;
   const replacements = results.reduce((sum, result) => sum + result.replacements, 0);
-  const images = results.flatMap((result) =>
-    result.success && result.screenshot?.ok && result.screenshot.url
-      ? [{ url: result.screenshot.url, label: `组件编辑后截图：${result.path}` }]
-      : []
-  );
+  const images =
+    state.screenshot?.ok && state.screenshot.url
+      ? [{ url: state.screenshot.url, label: "本批文件编辑完成后的画布截图" }]
+      : [];
   return {
     success: failed === 0 && results.length === state.results.length,
     total: state.results.length,
@@ -202,16 +206,13 @@ function buildBatchOutput(state: EditFilesBatchState) {
     replacements,
     message: `Edited ${succeeded}/${state.results.length} files; ${failed} failed; ${replacements} replacements.`,
     results,
+    ...(state.screenshot ? { screenshot: state.screenshot } : {}),
     change: capChanges(results.flatMap((result) => result.change ?? [])),
     ...(images.length ? { [TOOL_IMAGES_FIELD]: images } : {})
   };
 }
 
-async function settlePendingOperation(
-  state: EditFilesBatchState,
-  resumeData: EditFilesResumeData,
-  capture: boolean
-): Promise<void> {
+async function settlePendingOperation(state: EditFilesBatchState, resumeData: EditFilesResumeData): Promise<void> {
   const pending = state.pending;
   if (!pending) {
     throw new Error("edit_files received resumeData without a pending operation.");
@@ -239,6 +240,18 @@ async function settlePendingOperation(
     state.pending = undefined;
   };
 
+  const rejectRemaining = () => {
+    for (let index = state.cursor; index < state.results.length; index += 1) {
+      state.results[index] = {
+        path: state.results[index]?.path ?? "",
+        success: false,
+        replacements: 0,
+        message: "用户拒绝了本批编辑，工作区未改动"
+      };
+    }
+    state.cursor = state.results.length;
+  };
+
   /** 三条前端同步路径只差成败文案，结算流程完全相同。 */
   const settleSync = (synced: boolean, kind: SyncKind, error: string | undefined, notice = pending.notice) => {
     const [okMessage, failPrefix] = SYNC_MESSAGES[kind];
@@ -254,11 +267,12 @@ async function settlePendingOperation(
 
   if (pending.kind === "approval") {
     if ("approved" in resumeData && resumeData.approved) {
-      state.approvedIndexes.add(pending.index);
+      state.approved = true;
       state.pending = undefined;
       return;
     }
     finish(false, "用户取消了编辑操作");
+    rejectRemaining();
     return;
   }
 
@@ -267,6 +281,7 @@ async function settlePendingOperation(
     // 不带的（普通文件在函数开头已单独问过一轮）走到这里只是前端同步那一步被取消。
     const outcome = pending.commit ? "用户拒绝了本次编辑，工作区未改动" : "用户取消了前端同步";
     finish(false, formatSuccessMessage(pending.replacements, pending.absPath, outcome), false);
+    rejectRemaining();
     return;
   }
 
@@ -299,11 +314,13 @@ async function settlePendingOperation(
   // 三类同步都是一次一个 op：回执只有一项，成败都在这一项里
   const reply = readCanvasOpResults(resumeData, 1);
   if (reply.status === "done") {
+    // 前端返回执行回执，说明这次载荷的审批已通过；后续文件共享这次批准。
+    state.approved = true;
     const receipt = reply.results[0];
     await commitThenSettle(receipt.ok, pending.kind, receipt.ok ? undefined : receipt.error);
     const result = state.results[pending.index];
-    if (capture && pending.kind === "component" && result?.success && receipt.ok && receipt.screenshot) {
-      result.screenshot = receipt.screenshot;
+    if (pending.kind === "component" && result?.success) {
+      state.hasComponentEdits = true;
     }
     return;
   }
@@ -315,19 +332,18 @@ async function processFileEdit(
   file: FileEditInput,
   index: number,
   state: EditFilesBatchState,
-  mode: AgentMode | undefined,
-  capture: boolean
+  mode: AgentMode | undefined
 ): Promise<FileProcessOutcome> {
   const { path: filePath, edits } = file;
   const absPath = resolveFilePath(filePath);
   const normalizedPath = absPath.replace(/\\/g, "/");
   // 需要跟前端同步的文件由处理器认领；认领不了的就是普通文件
   const handler = findSyncHandler(normalizedPath);
-  const needsApproval = mode === AgentMode.ASK_BEFORE_EDIT;
+  const needsApproval = mode === AgentMode.ASK_BEFORE_EDIT && !state.approved;
 
   // 会推给前端的那几类自带审批形态（ASK 模式下推的是 AskApprovalXxx），不必在这里先问一轮；
   // agent 产物是它自己的中间文件，也不该拿去烦用户。剩下的普通文件才走这一轮纯审批。
-  if (needsApproval && !state.approvedIndexes.has(index) && !handler && !isAgentArtifactFilePath(normalizedPath)) {
+  if (needsApproval && !handler && !isAgentArtifactFilePath(normalizedPath)) {
     return {
       status: "suspend",
       kind: "approval",
@@ -377,7 +393,7 @@ async function processFileEdit(
   }
 
   if (handler) {
-    const prepared = await handler.prepare({ filePath, absPath, result, readRecord, needsApproval, capture });
+    const prepared = await handler.prepare({ filePath, absPath, result, readRecord, needsApproval, capture: false });
     if (!prepared.ok) {
       return completeFile(filePath, false, 0, prepared.message, {
         ...(prepared.frontendSynced === undefined ? {} : { frontendSynced: prepared.frontendSynced }),
@@ -413,8 +429,9 @@ Input is files: [{ path, edits }]. Each file owns its edits.
 Rules:
 - Edits within one file are atomic and applied in order. If one edit fails, that file is not written.
 - Files are independent. A failure in one file never stops or rolls back other files.
-- Each component, filter, or screen-info update is suspended and resumed separately so every frontend update is processed.
-- capture defaults to true: successful component edits return a screenshot through imagesForModel for visual inspection. Set capture: false to skip capture and upload for this batch. If capture fails, the edit still succeeds; use capture_canvas to retry when needed.
+- In ask-before-edit mode, one approval covers all files in this call. Rejecting cancels the remaining edits.
+- Each component, filter, or screen-info update is synchronized separately after batch approval.
+- capture defaults to true: after all files finish, capture and upload the canvas once if any component edit succeeded. The shared screenshot is returned through screenshot and imagesForModel. Set capture: false to skip it. Screenshot failure does not fail the edits.
 - Do not use this tool on binary or Jupyter (.ipynb) files.
 - Never use shell commands to modify workspace component files; use edit_files so validation and frontend synchronization run.`,
 
@@ -449,7 +466,7 @@ Rules:
           batchId: randomUUID(),
           inputSignature,
           cursor: files.length,
-          approvedIndexes: new Set(),
+          approved: false,
           results: files.map((file) => ({
             path: file.path,
             success: false,
@@ -463,8 +480,8 @@ Rules:
         batchId: randomUUID(),
         inputSignature,
         cursor: 0,
-        approvedIndexes: new Set(),
-        results: new Array<FileEditResult | undefined>(files.length)
+        approved: false,
+        results: files.map((file) => ({ path: file.path, success: false, replacements: 0, message: "Pending" }))
       };
       batchStates.set(executionKey, state);
     } else if (state.inputSignature !== inputSignature) {
@@ -472,7 +489,18 @@ Rules:
     }
 
     if (resumeData) {
-      await settlePendingOperation(state, resumeData, capture);
+      if (state.capturePending) {
+        if (
+          resumeData.batchId !== state.capturePending.batchId ||
+          resumeData.operationId !== state.capturePending.operationId
+        ) {
+          throw new Error("edit_files capture resume mismatch.");
+        }
+        state.screenshot = CanvasCaptureResultSchema.parse(resumeData);
+        state.capturePending = undefined;
+      } else {
+        await settlePendingOperation(state, resumeData);
+      }
     }
 
     while (state.cursor < files.length) {
@@ -486,7 +514,7 @@ Rules:
 
       let outcome: FileProcessOutcome;
       try {
-        outcome = await processFileEdit(files[index], index, state, mode, capture);
+        outcome = await processFileEdit(files[index], index, state, mode);
       } catch (error) {
         outcome = completeFile(files[index].path, false, 0, error instanceof Error ? error.message : String(error));
       }
@@ -525,7 +553,26 @@ Rules:
         continue;
       }
 
-      return suspend(outcome.payload) as never;
+      // 首次确认展示整个调用的文件范围；批准后每个文件继续同步，不再弹确认。
+      const payload = outcome.payload;
+      if (files.length > 1) {
+        const purpose = `批量编辑以下 ${files.length} 个文件（一次批准整批修改）：\n${files.map((file) => file.path).join("\n")}`;
+        if (payload.type === SuspendType.AskApproval) {
+          payload.purpose = purpose;
+        } else if (payload.type === SuspendType.CanvasOps && payload.approval) {
+          payload.approval.purpose = purpose;
+        }
+      }
+      return suspend(payload) as never;
+    }
+
+    if (capture && state.hasComponentEdits && !state.captureRequested) {
+      state.captureRequested = true;
+      if (suspend) {
+        state.capturePending = { batchId: state.batchId, operationId: `${state.batchId}:capture` };
+        return suspend({ type: SuspendType.CaptureCanvas, ...state.capturePending }) as never;
+      }
+      state.screenshot = { ok: false, error: "当前上下文不支持截图" };
     }
 
     const output = buildBatchOutput(state);

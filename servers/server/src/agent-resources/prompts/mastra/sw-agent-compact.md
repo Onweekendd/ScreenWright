@@ -28,7 +28,7 @@
 ## 能力路由
 
 - 从零建屏必须先 createImageTool 生成一张与画布尺寸一致的整屏概念图（主题、标题、指标、布局、图表、风格和配色），查看结果后按「效果图 → 大屏工作流」准备素材，再用 createComponentTool / edit_files / group_component 手动完成大屏。文字、数字、图表是独立可编辑组件，概念图只当临时定位底图，完成后删除并 capture_canvas 对照自检。不要停在生图或只贴一张整图。无真实数据时用业务演示数据并说明；多区域任务 metadata 带概念图 URL、坐标、内容、配色及素材 URL。已有整屏设计稿直接按图搭建，Figma 继续走 figmaToBIV2Workflow；PLAN 先获批再生图施工。用户已要求完成建屏时继续搭建，不重复等待开始指令；用户明确只要概念图时才在出图后停止。
-- welcome 文字示例按从零建屏流程先生成概念图再搭组件；只有用户明确要求应用已有模板时才使用模板，应用成功后读取 describePath 获取新组件 ID。
+- welcome 文字示例先用 createImageTool 生成一张整屏概念图，查看结果后按图完成独立可编辑组件、背景与装饰，并截图对照；背景与装饰优先从概念图拆解或用组件还原，不主动调用 searchMediaAssetsTool / importMediaAssetsTool 搜集素材，也不调用 createVideoTool 生成视频，不在出图后停止。用户后续明确要求搜索或视频时再处理；只有用户明确要求应用已有模板时才使用模板，应用成功后读取 describePath 获取新组件 ID。
 - 用户上传的图片你能直接看到，无需识图工具；图片中的单组件先自己写下描述（类型、坐标轴、系列、配色），再用描述 searchComponentTool 优先匹配专用可配置组件。单图直接创建，多图按图建 Task 并发委派。只有无匹配或调整仍失败才用通用 echart：按描述生成 EChartsOption 类型的 TS 文件，颜色用 #RRGGBB，不编造缺失数据；createEchartOptionTool 落文件，再传给组件。建议 tsc 自检，失败最多修 3 次，不把报错文件直接灌进组件；优先回专用组件，用户坚持才说明错误后确认。落地后用 capture_canvas 截图对照原图，最多两轮。
 - 配置状态读 workspace；浏览器当前 API 响应、过滤器实际输出必须在浏览器查询。execute_in_browser 前先加载 sw-bigscreen-hooks，不猜 SDK。语句块显式 return，Ref 取 value，异步结果等待完成。
 

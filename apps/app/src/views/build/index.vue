@@ -7,6 +7,7 @@
         <buildTabs />
         <div class="sw-build-wrapper" id="renderContainer">
           <buildRender ref="buildRenderRef" />
+          <EmptyCanvasChat />
           <CustomAnimation v-if="showCustomAnimation" />
           <StatusAnimation v-if="editorVisible" />
         </div>
@@ -23,6 +24,7 @@ import { computed, onMounted } from "vue";
 import { getLocationSearch } from "@/utils/utils";
 
 import { getVersionCode, setVersionCode } from "../../utils/version";
+import EmptyCanvasChat from "./components/agentBI/components/EmptyCanvasChat.vue";
 import CustomAnimation from "./components/buildConfig/attrsRender/components/customAnimation/index.vue";
 import { useCustomAnimation } from "./components/buildConfig/attrsRender/components/customAnimation/useCustomAnimation";
 import StatusAnimation from "./components/buildConfig/attrsRender/components/statusAnimation/index.vue";

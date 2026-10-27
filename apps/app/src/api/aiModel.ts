@@ -1,8 +1,8 @@
 import type { BaseEntity } from "@/model/BaseEntity";
 import { serverRequest } from "@/utils/serverService";
 
-/** 5 个模型角色 */
-export type ModelRole = "reasoning" | "vision" | "embedding" | "image" | "video";
+/** 4 个模型角色 */
+export type ModelRole = "reasoning" | "embedding" | "image" | "video";
 
 export interface AiModelVo {
   role: ModelRole;

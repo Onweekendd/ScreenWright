@@ -41,6 +41,8 @@ type MessagePart = UIMessage["parts"][number];
 type MessageTransformFactory = (state: StreamState) => TransformStream<UIMessageChunk, UIMessageChunk>;
 
 interface ConsumeMessageStreamOptions {
+  /** 与调用方共享状态，流失败时仍能定位已显示的消息。 */
+  state?: StreamState;
   /** 当前响应式消息列表。 */
   messages: AgentBISharedState["messages"];
   /** 以新数组替换响应式消息列表的统一入口。 */
@@ -356,7 +358,7 @@ export function useAgentBIStream() {
       batchRender = false,
       batchIntervalMs = DEFAULT_BATCH_INTERVAL_MS
     } = options;
-    const state: StreamState = { finalMessage: null, currentMessageId: mergeIntoId ?? "" };
+    const state: StreamState = options.state ?? { finalMessage: null, currentMessageId: mergeIntoId ?? "" };
     const writeMessage = createReactiveMessageWriter({
       messages,
       updateMessagesBy,
@@ -424,6 +426,13 @@ export function useAgentBIStream() {
     transforms: MessageTransformFactory[],
     options: ConsumeSSEResponseOptions
   ): Promise<StreamState> => {
+    if (response.ok === false) {
+      const body = await response.json().catch(() => null);
+      throw new Error(body?.message || body?.error || `请求失败（HTTP ${response.status}）`);
+    }
+    if (!response.body) {
+      throw new Error("请求失败：服务器未返回响应内容。");
+    }
     return consumeMessageStream(parseChatSseStream(response) as ReadableStream<UIMessageChunk>, transforms, {
       ...options,
       initialMessages

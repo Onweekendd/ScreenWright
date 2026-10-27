@@ -1070,23 +1070,7 @@
     "template": "[{\"id\":\"1\",\"姓名\":\"张三\",\"性别\":\"男\",\"岗位\":\"保安\",\"电话\":13265555444,\"考勤班组\":\"班组1\",\"状态\":\"正常\"},{\"id\":\"2\",\"姓名\":\"李四\",\"性别\":\"男\",\"岗位\":\"保安组长\",\"电话\":132611112222,\"考勤班组\":\"班组2\",\"状态\":\"正常\"},{\"id\":\"3\",\"姓名\":\"阿珍\",\"性别\":\"女\",\"岗位\":\"保洁\",\"电话\":132622223333,\"考勤班组\":\"班组3\",\"状态\":\"紧急\"},{\"id\":\"4\",\"姓名\":\"阿强\",\"性别\":\"男\",\"岗位\":\"主管\",\"电话\":132666667777,\"考勤班组\":\"班组3\",\"状态\":\"正常\"},{\"id\":\"5\",\"姓名\":\"王五\",\"性别\":\"男\",\"岗位\":\"保安\",\"电话\":13245678978,\"考勤班组\":\"班组4\",\"状态\":\"正常\"},{\"id\":\"6\",\"姓名\":\"赵六\",\"性别\":\"男\",\"岗位\":\"保安\",\"电话\":13267676767,\"考勤班组\":\"班组5\",\"状态\":\"正常\"}]",
     "status": 1
   },
-{
-    "id": 88,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"title\":\"放射性渐变遮罩层\",\"name\":\"放射性渐变遮罩层\",\"display\":true,\"icon\":\"icon-scatter\",\"img\":\"/img/maskLayer.93de78c5.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"path\":\"\",\"time\":30,\"url\":\"\",\"data\":[{\"text\":\"放射性渐变遮罩层\"}],\"dataRemark\":[{\"key\":\"text\",\"map\":\"text\",\"decription\":\"文本\"}],\"openFilter\":false,\"listenArgs\":[],\"cbArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":500,\"height\":500,\"name\":\"sw-mask-layer\",\"prop\":\"sw-mask-layer\"},\"unitPavenType\":\"\",\"unitPavenType\":\"\",\"option\":{\"linearGradient\":{\"markColor\":\"rgba(0,0,0,0.7)\",\"markPosition\":180,\"markRadius\":40,\"markOpacity\":90},\"radioactiveGradation\":{\"markColor\":\"rgba(0,0,0,1)\",\"markOpacityRadius\":40,\"markOpacity\":100,\"markUnOpacityRadius\":90,\"showLengthWidthRatio\":false,\"lengthWidthRatio\":0},\"markType\":\"radioactiveGradation\",\"pointerEvents\":false,\"refresh\":false,\"backdropFilter\":false,\"backdropFilterBlur\":4,\"backdropFilterSaturate\":100},\"left\":0,\"top\":0,\"showSubComponent\":false}",
-    "level": 1,
-    "second_level_menu": "",
-    "first_level_menu": "扩展",
-    "name": "放射性渐变遮罩层",
-    "thumbnail": "/img/maskLayer.93de78c5.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:27.000Z",
-    "updated_by": "admin",
-    "updated_time": "2024-06-17T10:58:44.000Z",
-    "template": "[{\"text\":\"放射性渐变遮罩层\"}]",
-    "status": 1
-  },
+
 {
     "id": 89,
     "user_id": null,
@@ -1325,23 +1309,7 @@
     "template": "[]",
     "status": 1
   },
-{
-    "id": 104,
-    "user_id": null,
-    "type": 0,
-    "java_script": "{\"title\":\"线性渐变遮罩层\",\"name\":\"线性渐变遮罩层\",\"display\":true,\"icon\":\"icon-scatter\",\"img\":\"/img/maskLayer.ef2b23ee.png\",\"callbackArgs\":[],\"events\":[],\"loadAnimation\":{\"type\":\"none\",\"opacityOpen\":false,\"timingFunction\":\"linear\",\"direction\":\"right\",\"duration\":1000,\"delay\":0},\"dataType\":0,\"dataSource\":{},\"requestHeader\":{},\"requestBody\":{},\"crossOrigin\":false,\"needCookie\":false,\"autoRefresh\":false,\"dataQuery\":\"\",\"isLock\":false,\"dataMethod\":\"get\",\"path\":\"\",\"time\":30,\"url\":\"\",\"data\":[{\"text\":\"线性渐变遮罩层\"}],\"dataRemark\":[{\"key\":\"text\",\"map\":\"text\",\"decription\":\"文本\"}],\"openFilter\":false,\"listenArgs\":[],\"cbArgs\":[],\"dataFormatter\":\"(data, callbackArgs) => {\\r\\n    return data\\r\\n}\",\"component\":{\"width\":500,\"height\":500,\"name\":\"sw-mask-layer\",\"prop\":\"sw-mask-layer\"},\"unitPavenType\":\"\",\"unitPavenType\":\"\",\"option\":{\"linearGradient\":{\"markColor\":\"rgba(0,0,0,0.7)\",\"markPosition\":180,\"markRadius\":40,\"markOpacity\":90},\"radioactiveGradation\":{\"markColor\":\"rgba(0,0,0,1)\",\"markOpacityRadius\":40,\"markOpacity\":100,\"markUnOpacityRadius\":90,\"showLengthWidthRatio\":false,\"lengthWidthRatio\":0},\"markType\":\"linearGradient\",\"pointerEvents\":false,\"refresh\":false,\"backdropFilter\":false,\"backdropFilterBlur\":4,\"backdropFilterSaturate\":100},\"left\":0,\"top\":0,\"showSubComponent\":false}",
-    "level": 1,
-    "second_level_menu": "",
-    "first_level_menu": "扩展",
-    "name": "线性渐变遮罩层",
-    "thumbnail": "/img/maskLayer.ef2b23ee.png",
-    "created_by": "admin",
-    "created_time": "2023-05-31T12:34:27.000Z",
-    "updated_by": "admin",
-    "updated_time": "2024-06-17T10:58:45.000Z",
-    "template": "[{\"text\":\"线性渐变遮罩层\"}]",
-    "status": 1
-  },
+
 {
     "id": 105,
     "user_id": null,

@@ -21,6 +21,10 @@ export interface CompactionStats {
   savedTokenCount: number;
   tokenCountEstimated: boolean;
   tokenizer: string | null;
+  /** 摘要模型调用耗时，即自动压缩让这一轮多等的时间 */
+  durationMs: number;
+  summarizerInputTokens?: number;
+  summarizerOutputTokens?: number;
 }
 
 interface CompactHistoryInput {
@@ -39,10 +43,10 @@ const assertUniqueIds = (messages: readonly MastraDBMessage[]): void => {
   }
 };
 
-const measureStats = async (
+const measureTextTokens = async (
   history: readonly MastraDBMessage[],
   summaryMessage: MastraDBMessage
-): Promise<CompactionStats> => {
+): Promise<Omit<CompactionStats, "durationMs" | "summarizerInputTokens" | "summarizerOutputTokens">> => {
   const modelId = getModelConfigSync("reasoning").modelId;
   const [before, after] = await Promise.all([
     countTextTokens(history.map(extractTextFromMessage).join("\n"), modelId),
@@ -74,6 +78,12 @@ const resetLastUsage = async (threadId: string): Promise<void> => {
   }
 };
 
+/** 统计随摘要消息落库（metadata 不会发给模型），离线分析压缩效果时与 compaction_records 关联读取 */
+const withStats = (summaryMessage: MastraDBMessage, stats: CompactionStats): MastraDBMessage => ({
+  ...summaryMessage,
+  content: { ...summaryMessage.content, metadata: { ...summaryMessage.content.metadata, stats } }
+});
+
 /**
  * 用一条摘要替代传入的全部历史：摘要 → 统计 → 保存摘要并软删除原消息。
  * 成功与失败都计入熔断；失败时不写隐藏记录，调用方继续使用原历史。
@@ -86,14 +96,22 @@ export const compactHistory = async ({
 }: CompactHistoryInput): Promise<MastraDBMessage> => {
   try {
     assertUniqueIds(history);
-    const summaryText = await summarizeHistory(history);
-    const summaryMessage = buildSummaryMessage({
+    const startedAt = Date.now();
+    const summary = await summarizeHistory(history);
+    const durationMs = Date.now() - startedAt;
+    const draft = buildSummaryMessage({
       threadId,
       resourceId,
-      summaryText,
+      summaryText: summary.text,
       createdAt: new Date(history[history.length - 1].createdAt)
     });
-    const stats = await measureStats(history, summaryMessage);
+    const stats: CompactionStats = {
+      ...(await measureTextTokens(history, draft)),
+      durationMs,
+      summarizerInputTokens: summary.inputTokens,
+      summarizerOutputTokens: summary.outputTokens
+    };
+    const summaryMessage = withStats(draft, stats);
 
     await memory.saveMessages({ messages: [summaryMessage] });
     await prismaClient.compactionRecord.create({

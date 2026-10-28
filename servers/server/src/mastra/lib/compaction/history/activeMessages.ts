@@ -1,6 +1,7 @@
 import type { MastraDBMessage } from "@mastra/core/agent";
 
 import { prismaClient } from "../../../storage/prisma";
+import { isSummaryMessage } from "./summaryMessage";
 
 export const getCompactedIds = async (threadId: string): Promise<Set<string>> => {
   const records = await prismaClient.compactionRecord.findMany({
@@ -38,7 +39,8 @@ export const splitCurrentTurn = (
   messages: MastraDBMessage[]
 ): { history: MastraDBMessage[]; currentTurn: MastraDBMessage[] } => {
   let start = messages.length - 1;
-  while (start >= 0 && messages[start].role !== "user") {
+  // 上一次的摘要也是 user 消息，但它属于历史，不是当前这轮的起点
+  while (start >= 0 && (messages[start].role !== "user" || isSummaryMessage(messages[start]))) {
     start--;
   }
   if (start < 0) {

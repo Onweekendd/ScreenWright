@@ -49,7 +49,7 @@ describe("全量历史摘要", () => {
       textMessage("last", lastRole, "last message")
     ];
     const original = structuredClone(messages);
-    expect(await summarizeHistory(messages)).toBe("summary body");
+    expect((await summarizeHistory(messages)).text).toBe("summary body");
     const request = mocks.generate.mock.calls[0][0][0].content;
     expect(request).toContain("[role:user] keep blue");
     expect(request).toContain('[tool:readFileTool args={"path":"a.json"} result={"color":"blue"}]');
@@ -83,7 +83,7 @@ describe("全量历史摘要", () => {
     expect(message.id).not.toBe("");
     expect(message.createdAt).toBe(createdAt);
     expect(message).toMatchObject({
-      role: "assistant",
+      role: "user",
       threadId: "thread",
       resourceId: "resource",
       content: {

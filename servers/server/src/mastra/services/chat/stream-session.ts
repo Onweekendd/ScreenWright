@@ -3,12 +3,14 @@ import type { ChunkType } from "@mastra/core/stream";
 
 import { withRecordingTurn } from "@/recording/recording-scope";
 
+import { onCompactionEvent } from "../../lib/compaction/history/compactionEvents";
 import { memory } from "../../storage/storage";
 import { commitScreenSnapshot } from "../version/version-history";
 import { renameBackgroundChunk } from "./background-chunk";
 import type { BgEventChunk } from "./bg-event-dedup";
 import { BgEventDedup } from "./bg-event-dedup";
 import { createBIChatTurnStream } from "./bi-chat-turn-stream";
+import { toCompactionChunk } from "./compaction-chunk";
 import { markToolCallsInterrupted } from "./interrupted-tool-call";
 import { extractUserMessageId, extractUserMessageText } from "./turn-message";
 import type { BIChatRequest } from "./types";
@@ -128,11 +130,20 @@ class BIChatStreamSession {
   private readonly resourceId: string;
   /** 收尾时通知外界（注册表据此摘除登记）；会话因此不必反向依赖注册表 */
   private readonly onClosed: (session: BIChatStreamSession) => void;
+  /**
+   * 自动压缩的进度旁路推给前端：压缩跑在输入处理器里，那时流还没建好，只能按 threadId 订阅事件，
+   * 见 lib/compaction/history/compactionEvents。close()/fail() 时退订。
+   */
+  private readonly offCompaction: () => void;
 
   private constructor(init: BIChatStreamSessionInit) {
     this.threadId = init.threadId;
     this.resourceId = init.resourceId;
     this.onClosed = init.onClosed;
+    this.offCompaction = onCompactionEvent(
+      this.threadId,
+      (event) => void this.push(toCompactionChunk(event) as unknown as ChunkType)
+    );
     // 消费者(Response)取消 readable → writable 被 error → writer.closed reject;运行时断连兜底
     this.writer.closed.catch(() => this.dispose());
     // 初始连接断开 → 拆会话(主路,Hono 下更可靠);只在新建时绑一次
@@ -499,6 +510,7 @@ class BIChatStreamSession {
     }
     this.closed = true;
     this.clearIdle();
+    this.offCompaction();
     this.onClosed(this); // 立即通知摘除，防止新 turn 命中已在收尾的会话
     void this.finalizeCommit();
   }
@@ -537,6 +549,7 @@ class BIChatStreamSession {
     this.closed = true;
     console.error("[bi-chat] session failed", { threadId: this.threadId, resourceId: this.resourceId, error: err });
     this.clearIdle();
+    this.offCompaction();
     void this.markPendingToolCallsInterrupted();
     this.abort.abort();
     this.onClosed(this);

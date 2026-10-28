@@ -10,6 +10,8 @@ export type ManualCompactResult =
       compacted: true;
       messageCountBefore: number;
       messageCountAfter: number;
+      /** 替代全部活跃历史的那条摘要，前端据此直接更新对话，不必重拉 */
+      summary: MastraDBMessage;
     }
   | {
       compacted: false;
@@ -53,10 +55,11 @@ export const manualCompact = async (threadId: string, resourceId: string): Promi
     return { compacted: false, reason: "消息数量过少，无需压缩" };
   }
 
-  await compactHistory({ threadId, resourceId, history: activeMessages });
+  const summary = await compactHistory({ threadId, resourceId, history: activeMessages });
   return {
     compacted: true,
     messageCountBefore: activeMessages.length,
-    messageCountAfter: 1
+    messageCountAfter: 1,
+    summary
   };
 };

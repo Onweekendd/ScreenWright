@@ -34,6 +34,7 @@ vi.mock("@/mastra/services/llm-exchange/llm-exchange-token-count", () => ({
 import { compactionConfig } from "@/mastra/lib/compaction/config";
 import { splitCurrentTurn } from "@/mastra/lib/compaction/history/activeMessages";
 import { compactHistory } from "@/mastra/lib/compaction/history/compactHistory";
+import { type CompactionEvent, onCompactionEvent } from "@/mastra/lib/compaction/history/compactionEvents";
 import { isCircuitBroken } from "@/mastra/lib/compaction/history/trigger";
 import { manualCompact } from "@/mastra/lib/compaction/manualCompact";
 import { CompactionProcessor } from "@/mastra/lib/compaction/processors/compaction";
@@ -88,6 +89,13 @@ describe("切出当前这轮", () => {
     expect(idsOf(currentTurn)).toEqual(["u3", "a3"]);
   });
 
+  it("上一次的摘要虽是 user 消息，也不算当前这轮的起点", () => {
+    const summary = message("s1", "user", 0);
+    summary.content.metadata = { kind: "compaction_summary" };
+    const messages = [summary, message("a1", "assistant", 1)];
+    expect(splitCurrentTurn(messages)).toEqual({ history: messages, currentTurn: [] });
+  });
+
   it("没有 user 消息时全部视为历史", () => {
     const messages = [message("a1", "assistant", 1)];
     expect(splitCurrentTurn(messages)).toEqual({ history: messages, currentTurn: [] });
@@ -100,7 +108,7 @@ describe("compactHistory", () => {
     const summary = await compactHistory({ threadId, resourceId: "resource", history, keptCount: 2 });
 
     expect(summary).toBe(savedSummary());
-    expect(summary).toMatchObject({ role: "assistant", threadId, createdAt: history[3].createdAt });
+    expect(summary).toMatchObject({ role: "user", threadId, createdAt: history[3].createdAt });
     expect(mocks.createRecord).toHaveBeenCalledWith({
       data: {
         threadId,
@@ -115,6 +123,24 @@ describe("compactHistory", () => {
       expect.stringContaining("<conversation-summary>\nnew summary\n</conversation-summary>"),
       "deepseek-v4-flash"
     );
+  });
+
+  it("压缩统计（含摘要模型用量与耗时）随摘要消息落库", async () => {
+    mocks.generate.mockResolvedValue({ text: "new summary", usage: { inputTokens: 120_000, outputTokens: 3_000 } });
+
+    await compactHistory({ threadId, history: conversation() });
+
+    expect(savedSummary().content.metadata).toEqual({
+      kind: "compaction_summary",
+      stats: expect.objectContaining({
+        hiddenTokenCount: 100,
+        summaryTokenCount: 10,
+        savedTokenCount: 90,
+        summarizerInputTokens: 120_000,
+        summarizerOutputTokens: 3_000,
+        durationMs: expect.any(Number)
+      })
+    });
   });
 
   it("消息 ID 重复时在调用摘要模型前失败，不写任何数据", async () => {
@@ -185,6 +211,59 @@ describe("自动压缩处理器", () => {
     await run(list);
     expect(idsOf(list.get.all.db())).toEqual(["u1", "a1", "u2", "a2", "current"]);
   });
+
+  describe("压缩进度事件（会话层据此给前端推 data-compaction）", () => {
+    const listen = () => {
+      const events: CompactionEvent[] = [];
+      const off = onCompactionEvent(threadId, (event) => events.push(event));
+      return { events, off };
+    };
+
+    it("开始和完成各发一次；完成时带上摘要和当前这轮的起点", async () => {
+      mocks.getThreadById.mockResolvedValue(overThreshold());
+      const { events, off } = listen();
+
+      await run(listWithCurrentTurn());
+      off();
+
+      expect(events).toEqual([
+        { status: "started" },
+        { status: "completed", summary: savedSummary(), keptFromMessageId: "current" }
+      ]);
+    });
+
+    it("摘要失败时发 failed，前端据此收起提示", async () => {
+      mocks.getThreadById.mockResolvedValue(overThreshold());
+      mocks.generate.mockRejectedValue(new Error("model failed"));
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      const { events, off } = listen();
+
+      await run(listWithCurrentTurn());
+      off();
+
+      expect(events).toEqual([{ status: "started" }, { status: "failed" }]);
+    });
+
+    it("不需要压缩时什么都不发", async () => {
+      const { events, off } = listen();
+
+      await run(listWithCurrentTurn());
+      off();
+
+      expect(events).toEqual([]);
+    });
+
+    it("只发给本 thread 的订阅者", async () => {
+      mocks.getThreadById.mockResolvedValue(overThreshold());
+      const other: CompactionEvent[] = [];
+      const off = onCompactionEvent("another-thread", (event) => other.push(event));
+
+      await run(listWithCurrentTurn());
+      off();
+
+      expect(other).toEqual([]);
+    });
+  });
 });
 
 describe("手动压缩", () => {
@@ -196,7 +275,8 @@ describe("手动压缩", () => {
     expect(await manualCompact(threadId, "resource")).toEqual({
       compacted: true,
       messageCountBefore: 5,
-      messageCountAfter: 1
+      messageCountAfter: 1,
+      summary: savedSummary()
     });
     expect(mocks.createRecord.mock.calls[0][0].data.compactedMessageIds).toEqual(["u1", "a1", "u2", "a2", "u3"]);
   });

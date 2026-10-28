@@ -5,19 +5,21 @@
 import { convertMessages } from "@mastra/core/agent";
 import type { UIMessage } from "ai";
 
-import { manualCompact, type ManualCompactResult } from "../../lib/compaction/manualCompact";
+import { manualCompact } from "../../lib/compaction/manualCompact";
 import { memory, storage } from "../../storage/storage";
 import type { CustomStorageThreadType } from "../../types/bi-chat";
 import type { ThreadModelSelection } from "../../types/thread-model";
 import { initThreadModels } from "../ai-model/thread-model.server";
 import { restoreFilePartsFromAttachedImages } from "./attached-images";
+import { toSummaryUIMessage } from "./compaction-chunk";
 import { injectSubAgentDataParts, normalizeSubAgentSnapshots } from "./sub-agent-snapshots";
 
 /**
  * 用户主动压缩当前 thread 的上下文(手动触发历史摘要)
  */
-export async function handleCompactThread(threadId: string, resourceId: string): Promise<ManualCompactResult> {
-  return manualCompact(threadId, resourceId);
+export async function handleCompactThread(threadId: string, resourceId: string) {
+  const result = await manualCompact(threadId, resourceId);
+  return result.compacted ? { ...result, summary: toSummaryUIMessage(result.summary) } : result;
 }
 
 /**

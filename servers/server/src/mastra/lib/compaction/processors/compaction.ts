@@ -4,6 +4,7 @@ import type { ProcessInputArgs, Processor } from "@mastra/core/processors";
 import { memory } from "../../../storage/storage";
 import { filterActiveMessages, getCompactedIds, splitCurrentTurn } from "../history/activeMessages";
 import { compactHistory } from "../history/compactHistory";
+import { emitCompactionEvent } from "../history/compactionEvents";
 import { shouldAutoCompact, tickRound } from "../history/trigger";
 
 const firstDefined = <K extends "threadId" | "resourceId">(messages: MastraDBMessage[], key: K) =>
@@ -52,6 +53,7 @@ export class CompactionProcessor implements Processor {
       return messageList;
     }
 
+    emitCompactionEvent(threadId, { status: "started" });
     try {
       const summaryMessage = await compactHistory({
         threadId,
@@ -62,8 +64,14 @@ export class CompactionProcessor implements Processor {
       messageList.removeByIds(history.map(({ id }) => id));
       // 以 memory 来源加入：摘要已自行落库，不能再被当作本轮新输入保存。
       messageList.add(summaryMessage, "memory");
+      emitCompactionEvent(threadId, {
+        status: "completed",
+        summary: summaryMessage,
+        keptFromMessageId: currentTurn[0]?.id
+      });
     } catch (err) {
       console.error("[compaction] 自动压缩失败，保留原历史:", err);
+      emitCompactionEvent(threadId, { status: "failed" });
     }
     return messageList;
   }

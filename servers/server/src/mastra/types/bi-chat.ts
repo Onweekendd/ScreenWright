@@ -78,8 +78,17 @@ export type CustomStorageThreadType = StorageThreadType & {
      * 或 Record<innerId, string>，读时用 normalizeSubAgentSnapshots 展平。
      */
     subAgentSnapshots?: SubAgentSnapshotMap | Record<string, unknown>;
+    /** 后台任务结果有没有告诉过主 agent 的台账，见 processors/background-task-notices */
+    bgTaskNotices?: BackgroundTaskNotices;
   };
 };
+
+export interface BackgroundTaskNotices {
+  /** 台账建立的时刻（ms）。在这之前派发的任务当作已经告知过：老会话不补报陈年任务 */
+  since: number;
+  /** 已经告诉过主 agent 的后台任务 toolCallId */
+  notified: string[];
+}
 
 // ============================================
 // 后台任务流 chunk（data-background-task-*）

@@ -4,10 +4,17 @@ import type { ProcessorMessageContext } from "@mastra/core/processors";
 import { describe, expect, it, vi } from "vitest";
 
 const storageMocks = vi.hoisted(() => ({ listTasks: vi.fn(), getStore: vi.fn() }));
-vi.mock("@/mastra/storage/storage", () => ({ storage: { getStore: storageMocks.getStore } }));
+// memory 只给默认台账用：查不到 thread 就当没有要补报的，不影响其它用例
+vi.mock("@/mastra/storage/storage", () => ({
+  storage: { getStore: storageMocks.getStore },
+  memory: { getThreadById: vi.fn(), updateThread: vi.fn() }
+}));
 
+import type { BackgroundTaskNoticeLedger, FinishedBackgroundTask } from "@/mastra/processors/background-task-notices";
 import {
   type BackgroundTaskLookup,
+  catchUpNote,
+  directiveToolCallIds,
   imageMimeOf,
   InlineBackgroundTaskResults,
   lookupBackgroundTaskInStorage,
@@ -447,3 +454,164 @@ describe("InlineBackgroundTaskResults：挂起调用的说明", () => {
     expect(noteMessages(list)).toHaveLength(0);
   });
 });
+
+describe("directiveToolCallIds", () => {
+  it("完成、失败、取消三类点到名的 id 都取出来", () => {
+    const cancelled =
+      " IMPORTANT: The following tool-call IDs were cancelled by the user before completion: call_c (createImageTool). " +
+      "These tasks do not have results. ";
+
+    expect(directiveToolCallIds(COMPLETED + FAILED + cancelled)).toEqual(["call_a", "call_b", "call_c"]);
+  });
+
+  it("不是续接指令就是空的", () => {
+    expect(directiveToolCallIds("把标题改大一点")).toEqual([]);
+  });
+});
+
+const finished = (toolCallId: string, extra: Partial<FinishedBackgroundTask> = {}): FinishedBackgroundTask => ({
+  toolCallId,
+  toolName: "createImageTool",
+  status: "completed",
+  result: imageResult,
+  ...extra
+});
+
+describe("catchUpNote", () => {
+  it("写明以这里为准，带上结果和要附的图", () => {
+    const note = catchUpNote([finished("call_r")]);
+
+    expect(note.text).toContain("〔后台任务补报〕");
+    expect(note.text).toContain("以这里为准");
+    expect(note.text).toContain(`createImageTool（call_r） 已完成，结果：`);
+    expect(note.text).toContain(imageResult.url);
+    expect(note.images).toEqual(imageResult.imagesForModel);
+  });
+
+  it("失败、超时、取消各自写明原因", () => {
+    const note = catchUpNote([
+      finished("call_f", { status: "failed", result: undefined, error: { message: "额度不足" } }),
+      finished("call_t", { status: "timed_out", result: undefined }),
+      finished("call_c", { status: "cancelled", result: undefined })
+    ]);
+
+    expect(note.text).toContain("createImageTool（call_f） 失败：额度不足");
+    expect(note.text).toContain("createImageTool（call_t） 失败：超时");
+    expect(note.text).toContain("createImageTool（call_c） 已被用户取消");
+    expect(note.images).toEqual([]);
+  });
+});
+
+/** 内存版台账：记过账的下次就不再列出来，和真实台账的行为一致 */
+const memoryLedger = (tasks: FinishedBackgroundTask[]) => {
+  const notified = new Set<string>();
+  const ledger = {
+    listUnnotified: vi.fn(async () => tasks.filter((task) => !notified.has(task.toolCallId))),
+    markNotified: vi.fn(async (_threadId: string, toolCallIds: string[]) => {
+      toolCallIds.forEach((toolCallId) => notified.add(toolCallId));
+    })
+  } satisfies BackgroundTaskNoticeLedger;
+  return { ledger, notified };
+};
+
+/** 一次普通的用户提问（不是续接轮），thread 为 t1 */
+const askedList = () => {
+  const list = new MessageList({ threadId: "t1", resourceId: "5" });
+  list.add([{ role: "user", content: "已经生成完了啊" }], "input");
+  return list;
+};
+
+const catchUpMessages = (list: MessageList) =>
+  list.get.all.db().filter((m) => m.role === "user" && JSON.stringify(m.content).includes("〔后台任务补报〕"));
+
+describe("InlineBackgroundTaskResults：拿任务表对账补报", () => {
+  it("结束了却没通知到的任务，补一条带结果的说明，图片作为 file part 附上，并记账", async () => {
+    const { ledger, notified } = memoryLedger([finished("call_r")]);
+    const list = askedList();
+
+    await run(new InlineBackgroundTaskResults(async () => null, ledger), list);
+
+    const notes = catchUpMessages(list);
+    expect(ledger.listUnnotified).toHaveBeenCalledWith("t1");
+    expect(notes).toHaveLength(1);
+    expect(JSON.stringify(notes[0].content)).toContain(imageResult.url);
+    expect(notes[0].content.parts.filter((part) => part.type === "file")).toHaveLength(1);
+    expect([...notified]).toEqual(["call_r"]);
+  });
+
+  it("补报是 context 来源：只给模型看，不落库", async () => {
+    const { ledger } = memoryLedger([finished("call_r")]);
+    const list = askedList();
+
+    await run(new InlineBackgroundTaskResults(async () => null, ledger), list);
+
+    expect(list.get.input.db().map((m) => directiveTextOf(m))).toEqual(["已经生成完了啊"]);
+  });
+
+  it("每一步都会跑：补报过一次就不再叠", async () => {
+    const { ledger } = memoryLedger([finished("call_r")]);
+    const processor = new InlineBackgroundTaskResults(async () => null, ledger);
+    const list = askedList();
+
+    await run(processor, list);
+    await run(processor, list);
+
+    expect(catchUpMessages(list)).toHaveLength(1);
+  });
+
+  it("本步续接指令里已经点名的任务照常改写，不重复补报，但要记账", async () => {
+    const { ledger, notified } = memoryLedger([finished("call_a")]);
+    const list = listWith([], COMPLETED);
+
+    await run(
+      new InlineBackgroundTaskResults(
+        lookupReturning({ call_a: { status: "completed", result: imageResult } }),
+        ledger
+      ),
+      list
+    );
+
+    expect(directiveText(list)).toContain(imageResult.url);
+    expect(catchUpMessages(list)).toHaveLength(0);
+    expect([...notified]).toEqual(["call_a"]);
+  });
+
+  it("没有要补报的就什么都不加", async () => {
+    const { ledger } = memoryLedger([]);
+    const list = askedList();
+
+    await run(new InlineBackgroundTaskResults(async () => null, ledger), list);
+
+    expect(catchUpMessages(list)).toHaveLength(0);
+    expect(list.get.all.db()).toHaveLength(1);
+  });
+
+  it("对账出错（库连不上）只记日志，不拖垮这一轮", async () => {
+    const ledger: BackgroundTaskNoticeLedger = {
+      listUnnotified: vi.fn().mockRejectedValue(new Error("db down")),
+      markNotified: vi.fn()
+    };
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    const list = askedList();
+
+    await expect(run(new InlineBackgroundTaskResults(async () => null, ledger), list)).resolves.toBe(list);
+
+    expect(catchUpMessages(list)).toHaveLength(0);
+    expect(error).toHaveBeenCalled();
+    error.mockRestore();
+  });
+
+  it("拿不到 threadId（没挂 memory 的调用）就不对账", async () => {
+    const { ledger } = memoryLedger([finished("call_r")]);
+    const list = new MessageList();
+    list.add([{ role: "user", content: "hi" }], "input");
+
+    await run(new InlineBackgroundTaskResults(async () => null, ledger), list);
+
+    expect(ledger.listUnnotified).not.toHaveBeenCalled();
+  });
+});
+
+function directiveTextOf(message: MastraDBMessage): string {
+  return message.content.parts.map((p) => (p.type === "text" ? p.text : "")).join("");
+}

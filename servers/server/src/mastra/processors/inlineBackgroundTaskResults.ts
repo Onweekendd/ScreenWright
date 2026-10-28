@@ -1,8 +1,15 @@
+import { randomUUID } from "node:crypto";
+
 import type { MastraDBMessage } from "@mastra/core/agent";
 import type { Processor, ProcessorMessageContext } from "@mastra/core/processors";
 
 import { MAX_TOOL_IMAGES, TOOL_IMAGES_FIELD, type ToolImage } from "../provider/image-middleware";
 import { storage } from "../storage/storage";
+import {
+  type BackgroundTaskNoticeLedger,
+  type FinishedBackgroundTask,
+  threadNoticeLedger
+} from "./background-task-notices";
 
 /**
  * 后台任务（`background: { enabled: true }` 的工具，如生图、生视频）跑完后，Mastra 会开一轮「续接」，
@@ -18,12 +25,19 @@ import { storage } from "../storage/storage";
  * 这里在续接轮每一步模型调用前，把结果直接写进这条提示里。结果取自后台任务表（权威来源，
  * 不依赖那次原地替换），取不到再退回历史里已替换的 tool-invocation。
  *
+ * 续接本身也可能根本没开：结束事件只发一次，没人接住就丢了。所以每一步还会拿任务表对账，
+ * 把结束了却从没告诉过模型的任务补报上去（见 catchUp、./background-task-notices）。
+ *
  * 必须挂在 processInputStep 上：续接指令走 `context` 来源、不在用户本轮输入里，processInput 看不到。
  * processInputStep 每一步都会跑，所以改写要幂等（见 NOTE_MARKER）。
  * 改写后仍以 `context` 来源放回——它只给模型看、不落库，不会污染之后的对话。
  */
 const COMPLETED_RE = /tool-call IDs completed successfully:\s*(.*?)\.\s+Their results are now/s;
 const FAILED_RE = /tool-call IDs failed:\s*(.*?)\.\s+Their failure information/s;
+const CANCELLED_RE = /tool-call IDs were cancelled by the user before completion:\s*(.*?)\.\s+These tasks/s;
+
+/** 续接指令的开头，用来认出哪条 user 消息是它 */
+const DIRECTIVE_PREFIX = "IMPORTANT: The following tool-call IDs";
 
 /** 已经补过结果的标记：每一步都会再跑一遍，见到它就说明这条改写过了 */
 const NOTE_MARKER = "〔后台任务结果〕";
@@ -140,21 +154,24 @@ interface Described {
   images: ToolImage[];
 }
 
+const describeResult = (label: string, result: unknown): Described =>
+  result === undefined || result === null
+    ? {
+        line: `- ${label} 已完成，但没能取回结果内容。不要重复调用，告诉用户结果没取到，让用户去素材库 / 画布上确认。`,
+        images: []
+      }
+    : { line: `- ${label} 已完成，结果：${summarizeResult(result)}`, images: imagesOfResult(result) };
+
 const describeCompleted = async (
   { toolCallId, toolName }: Entry,
   lookup: BackgroundTaskLookup,
   messages: MastraDBMessage[]
 ): Promise<Described> => {
-  const label = `${toolName ?? "未知工具"}（${toolCallId}）`;
   const task = await lookup(toolCallId).catch(() => null);
-  const result = task?.result ?? resultFromHistory(messages, toolCallId);
-  if (result === undefined || result === null) {
-    return {
-      line: `- ${label} 已完成，但没能取回结果内容。不要重复调用，告诉用户结果没取到，让用户去素材库 / 画布上确认。`,
-      images: []
-    };
-  }
-  return { line: `- ${label} 已完成，结果：${summarizeResult(result)}`, images: imagesOfResult(result) };
+  return describeResult(
+    `${toolName ?? "未知工具"}（${toolCallId}）`,
+    task?.result ?? resultFromHistory(messages, toolCallId)
+  );
 };
 
 const describeFailed = async ({ toolCallId, toolName }: Entry, lookup: BackgroundTaskLookup): Promise<Described> => {
@@ -166,6 +183,23 @@ export interface RewrittenDirective {
   text: string;
   /** 要附在这条消息后面给模型看的图（最近 MAX_TOOL_IMAGES 张，和工具图的上限一致） */
   images: ToolImage[];
+}
+
+const imagesToShow = (described: Described[]): ToolImage[] =>
+  described.flatMap((item) => item.images).slice(-MAX_TOOL_IMAGES);
+
+const imageNoteLines = (images: ToolImage[]): string[] =>
+  images.length > 0
+    ? [
+        `生成的图片已按顺序附在本条消息后面，你可以直接看：${images.map((image, i) => `[${i + 1}] ${image.label}`).join("；")}`
+      ]
+    : [];
+
+/** 续接指令里点到名的全部 toolCallId（完成、失败、取消） */
+export function directiveToolCallIds(text: string): string[] {
+  return [COMPLETED_RE, FAILED_RE, CANCELLED_RE].flatMap((re) =>
+    parseEntries(re.exec(text)?.[1] ?? "").map((entry) => entry.toolCallId)
+  );
 }
 
 /** 返回 null 表示不用改写：不是续接指令、已经改写过、或这批里没有完成 / 失败项 */
@@ -186,20 +220,47 @@ export async function rewriteDirectiveText(
     ...completed.map((entry) => describeCompleted(entry, lookup, messages)),
     ...failed.map((entry) => describeFailed(entry, lookup))
   ]);
-  const images = described.flatMap((item) => item.images).slice(-MAX_TOOL_IMAGES);
-  const imageNote =
-    images.length > 0
-      ? [
-          `生成的图片已按顺序附在本条消息后面，你可以直接看：${images.map((image, i) => `[${i + 1}] ${image.label}`).join("；")}`
-        ]
-      : [];
+  const images = imagesToShow(described);
   return {
     text: [
       text.trim(),
       NOTE_MARKER,
       ...described.map((item) => item.line),
       "以上就是这些后台任务的返回内容，要用其中的 url / id 直接取用，不要重复调用同一个工具，也不要再去别处找结果。",
-      ...imageNote
+      ...imageNoteLines(images)
+    ].join("\n"),
+    images
+  };
+}
+
+/**
+ * 补报：任务早已结束、续接却没送到模型那里（为什么会漏见 ./background-task-notices）。
+ * 之前的回复或压缩摘要里可能还写着「在后台生成中」，提示里要明说以这里为准。
+ */
+const CATCH_UP_MARKER = "〔后台任务补报〕";
+
+export function describeFinishedTask(task: FinishedBackgroundTask): Described {
+  const label = `${task.toolName}（${task.toolCallId}）`;
+  if (task.status === "completed") {
+    return describeResult(label, task.result);
+  }
+  if (task.status === "cancelled") {
+    return { line: `- ${label} 已被用户取消，没有结果。`, images: [] };
+  }
+  const reason = task.status === "timed_out" ? "超时" : errorMessage(task.error);
+  return { line: `- ${label} 失败：${reason}`, images: [] };
+}
+
+export function catchUpNote(tasks: FinishedBackgroundTask[]): RewrittenDirective {
+  const described = tasks.map(describeFinishedTask);
+  const images = imagesToShow(described);
+  return {
+    text: [
+      CATCH_UP_MARKER,
+      "下面这些后台任务早已结束，但结束时没能通知到你。之前的对话或摘要里如果还写着它们「在后台运行 / 生成中」，以这里为准：",
+      ...described.map((item) => item.line),
+      "要用其中的 url / id 直接取用，不要重复调用同一个工具；之前跟用户说过「还在等结果」的，现在接着把结果用上。",
+      ...imageNoteLines(images)
     ].join("\n"),
     images
   };
@@ -282,18 +343,28 @@ function syncPendingNote(messageList: ProcessorMessageContext["messageList"], me
   }
 }
 
+/** 图片作为 file part 附在提示后面：image-middleware 会把本系统的图读成二进制，模型才真的看得见 */
+const imageParts = (images: ToolImage[]) =>
+  images.map((image) => ({ type: "file" as const, data: image.url, mimeType: imageMimeOf(image.url) }));
+
 export class InlineBackgroundTaskResults implements Processor {
   id = "inline-background-task-results";
 
-  constructor(private readonly lookup: BackgroundTaskLookup = lookupBackgroundTaskInStorage) {}
+  constructor(
+    private readonly lookup: BackgroundTaskLookup = lookupBackgroundTaskInStorage,
+    private readonly ledger: BackgroundTaskNoticeLedger = threadNoticeLedger
+  ) {}
 
   async processInputStep({ messageList }: ProcessorMessageContext) {
     syncPendingNote(messageList, messageList.get.all.db());
     const all = messageList.get.all.db();
+    /** 本步续接指令里已经点到名的任务：照常改写，对账时只记账、不重复补报 */
+    const announced = new Set<string>();
     for (const message of all) {
-      if (message.role !== "user" || !textOf(message).includes("IMPORTANT: The following tool-call IDs")) {
+      if (message.role !== "user" || !textOf(message).includes(DIRECTIVE_PREFIX)) {
         continue;
       }
+      directiveToolCallIds(textOf(message)).forEach((toolCallId) => announced.add(toolCallId));
       const images: ToolImage[] = [];
       const parts = message.content.parts.map(async (part) => {
         if (part.type !== "text") {
@@ -310,15 +381,48 @@ export class InlineBackgroundTaskResults implements Processor {
       if (textParts.every((part, index) => part === message.content.parts[index])) {
         continue;
       }
-      // 图片作为 file part 附在后面：image-middleware 会把本系统的图读成二进制，模型才真的看得见
-      const newParts = [
-        ...textParts,
-        ...images.map((image) => ({ type: "file" as const, data: image.url, mimeType: imageMimeOf(image.url) }))
-      ];
+      const newParts = [...textParts, ...imageParts(images)];
       // 以 context 来源放回：只给模型看，不落库
       messageList.removeByIds([message.id]);
       messageList.add({ ...message, content: { ...message.content, parts: newParts } }, "context");
     }
+    await this.catchUp(messageList, all, announced);
     return messageList;
+  }
+
+  /**
+   * 拿任务表对账：已经结束、却从没告诉过模型的任务，补一条说明（context 来源，不落库）。
+   * 每一步都跑，补报过的随即记账，下一步就不会再报；对账失败只记日志，不能拖垮这一轮。
+   */
+  private async catchUp(
+    messageList: ProcessorMessageContext["messageList"],
+    messages: MastraDBMessage[],
+    announced: Set<string>
+  ): Promise<void> {
+    const threadId = messages.find((message) => message.threadId)?.threadId;
+    if (!threadId) {
+      return;
+    }
+    try {
+      const unnotified = await this.ledger.listUnnotified(threadId);
+      const missed = unnotified.filter((task) => !announced.has(task.toolCallId));
+      if (missed.length > 0) {
+        const note = catchUpNote(missed);
+        const message: MastraDBMessage = {
+          id: randomUUID(),
+          role: "user",
+          createdAt: new Date(),
+          threadId,
+          content: { format: 2, parts: [{ type: "text", text: note.text }, ...imageParts(note.images)] }
+        };
+        messageList.add(message, "context");
+      }
+      await this.ledger.markNotified(
+        threadId,
+        unnotified.map((task) => task.toolCallId)
+      );
+    } catch (err) {
+      console.error("[inline-background-task-results] 后台任务对账失败", { threadId, err });
+    }
   }
 }

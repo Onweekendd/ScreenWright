@@ -11,7 +11,8 @@ const mocks = vi.hoisted(() => ({
   resumeStream: vi.fn(),
   stream: vi.fn(),
   getThreadById: vi.fn(),
-  getThreadModels: vi.fn()
+  getThreadModels: vi.fn(),
+  patchThreadMetadata: vi.fn()
 }));
 
 vi.mock("@/mastra/runtime", () => ({
@@ -26,6 +27,9 @@ vi.mock("@/mastra/services/version/version-history", () => ({
 }));
 vi.mock("@/mastra/services/ai-model/thread-model.server", () => ({
   getThreadModels: mocks.getThreadModels
+}));
+vi.mock("@/mastra/services/chat/thread-metadata", () => ({
+  patchThreadMetadata: mocks.patchThreadMetadata
 }));
 
 import { createBIChatTurnStream } from "@/mastra/services/chat/bi-chat-turn-stream";
@@ -68,6 +72,26 @@ describe("resume 带 toolCallId", () => {
       { approved: true },
       expect.objectContaining({ runId: "run-1", toolCallId: "call-2" })
     );
+  });
+
+  it("resume 这一轮每步的用量照样落库，并推一帧 data-usage 给前端", async () => {
+    // 画布写操作都要挂起再 resume，首次写画布之后主 agent 的步骤全跑在 resume 的 run 里
+    mocks.resumeStream.mockImplementation(async (_resumeData, options) => {
+      await options.onStepFinish?.({ usage: { inputTokens: 1234 } });
+      return emptyStream();
+    });
+
+    const stream = await createBIChatTurnStream(
+      { messages: [], clientTools: {}, threadId: "thread-1", resourceId: "resource-1", runId: "run-1" },
+      { abortController: new AbortController() }
+    );
+    const chunks: unknown[] = [];
+    for await (const chunk of stream as unknown as AsyncIterable<unknown>) {
+      chunks.push(chunk);
+    }
+
+    expect(mocks.patchThreadMetadata).toHaveBeenCalledWith("thread-1", expect.any(Function));
+    expect(chunks).toContainEqual({ type: "data-usage", data: { inputTokens: 1234 } });
   });
 
   it("对话的模型选择按 threadId 查出，放进 requestContext 的 models", async () => {

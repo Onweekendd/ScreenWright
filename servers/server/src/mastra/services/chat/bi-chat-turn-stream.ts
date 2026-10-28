@@ -76,7 +76,7 @@ const buildRequestContext = async (
   ]);
 };
 
-/** 每步结束时把 usage 落 thread metadata，并写入 usageRef 供流末尾注入 data-usage */
+/** 每步结束时把 usage 落 thread metadata，并写入 usageRef，由 createUsageFlusher 补发 data-usage */
 const createUsagePersister = (
   threadId: string,
   usageRef: UsageRef
@@ -142,7 +142,9 @@ const startBIAgentStream = (options: SwAgentStreamOptions) => {
       requestContext,
       modelSettings: {
         temperature: 0.2
-      }
+      },
+      // 画布写操作都会挂起再 resume，首次写画布后的步骤全在这条分支上跑，漏了用量就再不更新
+      onStepFinish
     });
   }
 

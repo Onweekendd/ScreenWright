@@ -6,8 +6,6 @@
 输出哪些组件会响应、以及回调参数驱动出的真实过滤结果）。它曾是 `scripts/simulateEvent.ts`，
 现在**不要去 `scripts/` 下找它**——那条路已经不存在了。
 
-`scripts/` 里剩下的 `create-template.ts` / `extract-slots.ts` 是模板提取子 agent 用的，主 agent 不需要碰。
-
 ## Workspace 文件结构
 
 大屏数据以文件化方式存储在 Workspace，目录结构如下：
@@ -36,17 +34,14 @@ workspace/
     ├── statusAnimation.json     # 状态动画信息
     └── component/
         ├── 123_销售额.json              # 叶子组件（完整 schema），文件名为 "{id}_{name}"
-        ├── 456_KPI分组.json             # 分组组件自身（children 字段仅保留子组件的 "{id}_{name}" 字符串数组）
+        ├── 456_KPI分组.json             # 分组自身配置 + children 轻量文件引用（id/name/type/prop/file）
         ├── 456_KPI分组/                 # 分组组件的子组件目录（与 456_KPI分组.json 并列，目录名同为 "{id}_{name}"）
-        │   ├── _layout.json            # 该分组内子组件的布局（container 含容器宽高，24×12 网格 + ascii_map）【只读，每次同步自动生成，禁止手动修改】
         │   └── 789_趋势.json
-        ├── 111_主面板.json              # 动态面板自身（panelData[i].config 仅保留子组件的 "{id}_{name}" 字符串数组）
+        ├── 111_主面板.json              # 面板自身配置 + panelData[i].config 轻量文件引用
         └── 111_主面板/                  # 动态面板状态目录（与 111_主面板.json 并列）
             ├── {stateId}_{stateName}/  # 状态目录，状态 id（多为 uuid）+ 状态名称
-            │   ├── _layout.json        # 该状态内子组件的布局（container 含 stateId/stateName，24×12 网格 + ascii_map）【只读，每次同步自动生成，禁止手动修改】
             │   └── {子组件id}_{子组件name}.json
             └── {stateId}_{stateName}/
-                ├── _layout.json
                 └── {子组件id}_{子组件name}.json
 ```
 
@@ -55,14 +50,14 @@ workspace/
 - 组件文件名/目录名统一为 `{id}_{name}` 形式（id 是真实数字 id，name 是组件名称；name 为空时退回组件类型（如"柱状图""图片"），便于直接从文件名/引用列表识别组件；name 净化后为空的段自动省略，最差退化为纯 `{id}`）
 - 动态面板状态目录为 `{stateId}_{stateName}` 形式（stateId 多为 uuid 字符串，不是数字；还原时取目录名第一个 `_` 之前的部分作为 stateId，要求 stateId 本身不含 `_`）
 - **叶子组件**：只有 `{id}_{name}.json`，无同名子目录
-- **分组组件**：`{id}_{name}.json`（自身，children 替换为 `"{id}_{name}"` 字符串数组）+ `{id}_{name}/` 目录（存子组件），**二者并列**
-- **动态面板**：`{id}_{name}.json`（自身，panelData[i].config 替换为 `"{id}_{name}"` 字符串数组）+ `{id}_{name}/` 目录（存各状态子目录 `{stateId}_{stateName}/`），**二者并列**
+- **分组组件**：`{id}_{name}.json` 同时存自身配置和 `children: [{ id, name, type, prop, file }]`，同名目录存完整子组件，**二者并列**。
+- **动态面板**：`{id}_{name}.json` 的 `panelData[i]` 保留状态 id/name，`config` 存同样的轻量引用；子组件位于同名目录下的 `{stateId}_{stateName}/`。
 - 是否存在同名子目录即可判断父节点 vs 叶子节点；提取 id 时取文件名/目录名中第一个 `_` 之前的数字部分（旧数据可能仍是纯数字文件名，同样兼容）
-- **嵌套 `_layout.json`**：分组子目录和动态面板的每个状态子目录下各有一份 `_layout.json`，结构为 `{ container, grid, ascii_map, components }`：`container` 含容器的 id/name/prop/width/height（动态面板状态额外含 stateId/stateName）以及 **`dir`（本 `_layout.json` 所在目录相对于 `component/` 的正斜杠路径）**，网格为 24×12，`components` 为直接子组件列表（含坐标和 childrenSummary，不递归展开）
+- **引用粒度**：只列直属子组件，完整配置不递归内联。旧工作区可能仍是 `"{id}_{name}"` 字符串引用，读取兼容；同步后自动升级。引用由组件树生成，不直接增删引用来改变层级，结构操作仍使用移动、分组等专用工具。
 
-**⚠️ 操作规则：`_layout.json` 每次数据同步时自动重新生成，禁止手动写入或修改。需要理解分组或动态面板内部结构时，必须先读该容器子目录下的 `_layout.json`**，它提供：子组件的空间布局（ascii_map）、层叠顺序（zIndex）、子树规模摘要（childrenSummary）。读完后再按需精读具体子组件文件。跳过此步直接猜测内部结构会导致错误。
+**操作规则**：不再生成或读取 `_layout.json`。根级目标先使用 editor-context 的组件摘要和真实目录列表；理解分组内部时读取分组 JSON 的 children，理解面板状态时读取面板 JSON 的 panelData。按 prop/type 筛选目标后，按需读取子文件或检索字段，不加载整屏配置。视觉布局和效果使用 `capture_canvas`；精确位置、层级、样式从目标组件配置读取。组件不可见时按配置核实，不编造截图结果。
 
-**⚠️ 路径拼接规则（必读）**：读到 `_layout.json` 后，其 `container.dir` 字段即为该容器目录相对于 `component/` 的路径（如 `"3303567_card-右侧栏_动态面板/42tW3Gpd-zHho-41hN-bNPq-tbccR78oVwH5_设备检测右"`）。`components[]` 中每个子组件的文件路径为：`screen_{id}/component/{container.dir}/{idName}.json`，**不要**直接将子组件 id 拼到顶层 `component/` 下。
+**路径规则**：引用的 `file` 是实际子文件名。分组子文件位于分组 JSON 的同名目录：如 `component/712_天气卡.json` 的引用 `{ file: "637_标题-天气.json" }` 指向 `component/712_天气卡/637_标题-天气.json`。面板状态引用位于面板同名目录的 `{stateId}_{净化后stateName}/`，先确认实际状态目录名，不猜省略中间层级。file 原样使用，不根据展示名称重新拼文件名。
 
 ## 本地素材区 assets/
 

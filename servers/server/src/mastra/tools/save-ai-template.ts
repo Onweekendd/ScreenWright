@@ -6,19 +6,19 @@ import z from "zod";
 import { SuspendDefs, SuspendType } from "../types/suspend";
 import { resolveFilePath } from "./file/state";
 
-/** 模板 JSON 的关键字段键名（中文键，来源见 scripts/create-template.ts 骨架） */
+/** 模板 JSON 的关键字段键名（中文键） */
 const KEY_NAME = "模板名称";
 const KEY_TAGS = "AI匹配语义标签";
 const KEY_EMBEDDING = "嵌入摘要";
 
-/** create-template 骨架占位统一带 "TODO" 前缀（如 "TODO(agent填)：..."） */
+/** 模板中待填写字段的占位标记 */
 const TODO_MARK = "TODO";
 
 const hasTodo = (v: unknown): boolean => typeof v === "string" && v.includes(TODO_MARK);
 
 /**
  * 递归扫描对象里所有「仍含 TODO 占位」的字符串字段，返回点分路径列表。
- * 用于在弹窗前拦截「子 agent 没填完语义字段」的半成品模板。
+ * 用于在弹窗前拦截尚未填完语义字段的半成品模板。
  */
 const collectTodoPaths = (node: unknown, prefix: string, out: string[]): void => {
   if (typeof node === "string") {
@@ -56,7 +56,7 @@ const validateTemplate = (template: Record<string, unknown>): string[] => {
   // 2) 关键字段：AI匹配语义标签（检索命中率核心，必须非空数组）
   const tags = template[KEY_TAGS];
   if (!Array.isArray(tags) || tags.length === 0) {
-    issues.push(`「${KEY_TAGS}」为空，子 agent 未生成检索标签`);
+    issues.push(`「${KEY_TAGS}」为空，未填写检索标签`);
   } else if (tags.some((t) => typeof t !== "string" || !t.trim() || hasTodo(t))) {
     issues.push(`「${KEY_TAGS}」存在空标签或 TODO 占位`);
   }
@@ -83,13 +83,13 @@ const validateTemplate = (template: Record<string, unknown>): string[] => {
 
 export const saveAiTemplateTool = createTool({
   id: "save_ai_template",
-  description: `把模板提取子 agent 产出的 template-{screenId}.json 交给用户确认并保存为「AI 模板」资产。
+  description: `把 workspace 中的模板 JSON 文件交给用户确认并保存为「AI 模板」资产。
 
-调用时机：templateExtractorAgent 返回模板文件路径、且你已审阅无误后调用。
+调用时机：已有模板文件路径、且你已审阅无误后调用。
 
 行为：
 - 工具读取模板文件并**先做完整性校验**（无残留 TODO、且「${KEY_NAME}」「${KEY_TAGS}」「${KEY_EMBEDDING}」均已填写）。
-- 校验不通过：直接返回 { saved:false, issues }，**不会弹窗**。请根据 issues 回去补全（重跑提取或用 edit_files 修改模板），再重新调用本工具。
+- 校验不通过：直接返回 { saved:false, issues }，**不会弹窗**。请根据 issues 用 edit_files 补全模板，再重新调用本工具。
 - 校验通过：弹出预填弹窗，用户复核/修改后自行保存（前端会附带当前大屏数据与封面截图）。用户保存返回 { saved:true, templateId }，取消返回 { saved:false, canceled:true }。`,
 
   inputSchema: z.object({

@@ -5,6 +5,13 @@ const TOKENIZER_FETCH_TIMEOUT_MS = 10_000;
 
 const tokenizerPromises = new Map<string, Promise<Tokenizer>>();
 
+export interface TextTokenUsage {
+  total: number;
+  /** 仅在没有匹配的 tokenizer 或加载失败时为 true。 */
+  estimated: boolean;
+  tokenizer: string | null;
+}
+
 export interface ToolTokenUsage {
   total: number;
   byTool: number[];
@@ -96,6 +103,27 @@ function estimateJsonTokenUsage(serializedValues: string[]): JsonTokenUsage {
     estimated: true,
     tokenizer: null
   };
+}
+
+/** 统计纯文本，不额外加 JSON 引号、转义或数组包装；不包含聊天模板与图片开销。 */
+export async function countTextTokens(text: string, model: string | undefined): Promise<TextTokenUsage> {
+  if (!text) {
+    return { total: 0, estimated: false, tokenizer: null };
+  }
+  const tokenizerModelId = resolveTokenizerModelId(model);
+  if (tokenizerModelId) {
+    try {
+      const tokenizer = await loadTokenizer(tokenizerModelId);
+      return {
+        total: tokenizer.encode(text, { add_special_tokens: false }).ids.length,
+        estimated: false,
+        tokenizer: tokenizerModelId
+      };
+    } catch (error) {
+      console.error(`[llm-exchange] Failed to load tokenizer ${tokenizerModelId}:`, error);
+    }
+  }
+  return { total: estimateTokenCount(text), estimated: true, tokenizer: null };
 }
 
 export async function countJsonValuesTokens(values: unknown[], model: string | undefined): Promise<JsonTokenUsage> {

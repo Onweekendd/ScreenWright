@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, rmSync } from "fs";
+import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import path from "path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -61,6 +61,49 @@ describe("syncScreenData", () => {
   });
 
   // ── _meta.json ────────────────────────────────────────────────
+  it("父组件内的轻量引用均指向实际子文件，不再产生独立布局索引", () => {
+    const verify = (dir: string) => {
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const file = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          verify(file);
+        } else if (entry.name.endsWith(".json") && !entry.name.startsWith("_")) {
+          const component = JSON.parse(readFileSync(file, "utf8"));
+          const base = path.join(dir, path.basename(file, ".json"));
+          const check = (refs: Array<{ id: number; file: string; prop: string }>, childDir: string) => {
+            for (const ref of refs) {
+              const child = JSON.parse(readFileSync(path.join(childDir, ref.file), "utf8"));
+              expect(child.id).toBe(ref.id);
+              expect(child.component.prop).toBe(ref.prop);
+              expect(ref).not.toHaveProperty("option");
+              expect(ref).not.toHaveProperty("children");
+            }
+          };
+          if (component.component?.prop === "sw-folder" && component.children?.length) {
+            check(component.children, base);
+          }
+          if (component.component?.prop === "sw-panel") {
+            for (const state of component.panelData ?? []) {
+              check(state.config, path.join(base, buildStateDirName(state.id, state.name)));
+            }
+          }
+        }
+        expect(entry.name).not.toBe("_layout.json");
+      }
+    };
+    verify(screenDir);
+  });
+
+  it("同步时清理旧根目录和状态目录的布局索引", () => {
+    const rootIndex = path.join(screenDir, "_layout.json");
+    const nestedIndex = path.join(componentDir, dynamicPanelIdName, firstStateDirName, "_layout.json");
+    writeFileSync(rootIndex, "{}");
+    writeFileSync(nestedIndex, "{}");
+    syncScreenData({ id: testFixture.id, cacheTime: testFixture.cacheTime, parsedLargeScreenInfo: parsedInfo });
+    expect(existsSync(rootIndex)).toBe(false);
+    expect(existsSync(nestedIndex)).toBe(false);
+  });
+
   describe("_meta.json", () => {
     const readMeta = () => JSON.parse(readFileSync(path.join(screenDir, "_meta.json"), "utf-8"));
 
@@ -95,11 +138,12 @@ describe("syncScreenData", () => {
       expect(existsSync(path.join(componentDir, `${dynamicPanelIdName}.json`))).toBe(true);
     });
 
-    it("panelData.config 存储子组件 id_name 字符串数组而非全量对象", () => {
+    it("panelData.config 存储子组件轻量引用而非完整配置", () => {
       const json = JSON.parse(readFileSync(path.join(componentDir, `${dynamicPanelIdName}.json`), "utf-8"));
       const config = json.panelData[0].config;
       expect(Array.isArray(config)).toBe(true);
-      expect(typeof config[0]).toBe("string");
+      expect(config[0]).toMatchObject({ id: firstStateChild.id, prop: firstStateChild.component.prop });
+      expect(Object.keys(config[0]).sort()).toEqual(["file", "id", "name", "prop", "type"]);
     });
 
     it("panelData.config 的 ID 与原始子组件 ID 一致", () => {
@@ -107,7 +151,9 @@ describe("syncScreenData", () => {
       const expectedIdNames = firstState.config.map((c: { id: number; name?: string; title?: string }) =>
         buildIdNameBase(c.id, c.name ?? c.title ?? "")
       );
-      expect(json.panelData[0].config).toEqual(expectedIdNames);
+      expect(json.panelData[0].config.map((ref: { file: string }) => ref.file)).toEqual(
+        expectedIdNames.map((name: string) => `${name}.json`)
+      );
     });
 
     it("为每个状态创建子目录", () => {

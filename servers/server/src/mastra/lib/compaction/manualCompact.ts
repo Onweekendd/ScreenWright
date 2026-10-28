@@ -1,11 +1,9 @@
 import type { MastraDBMessage } from "@mastra/core/agent";
 
 import { memory, storage } from "../../storage/storage";
-import { runCompaction } from "./compact";
-import { compactionConfig } from "./config";
-import { filterActiveMessages, getCompactedIds } from "./filter";
-import { applyCompaction } from "./historyReplacer";
-import { isCircuitBroken, recordCompactionFailure, recordCompactionSuccess } from "./trigger";
+import { filterActiveMessages, getCompactedIds } from "./history/activeMessages";
+import { compactHistory } from "./history/compactHistory";
+import { isCircuitBroken } from "./history/trigger";
 
 export type ManualCompactResult =
   | {
@@ -15,20 +13,17 @@ export type ManualCompactResult =
     }
   | {
       compacted: false;
-      reason: "上下文压缩功能未开启" | "压缩失败过多已暂时熔断，请稍后再试" | "对话不存在" | "消息数量过少，无需压缩";
+      reason: "压缩失败过多已暂时熔断，请稍后再试" | "对话不存在" | "消息数量过少，无需压缩";
     };
 
 // 手动压缩时,少于这个 active 消息数视为没必要压(避免短对话被无意义地塞进摘要)
 const MIN_ACTIVE_MESSAGES = 5;
 
 /**
- * 用户主动触发的 L3 压缩。跳过 token 阈值和 cooldown 判定,
- * 但仍尊重 l3Enabled flag 和熔断状态。
+ * 用户主动触发的压缩：跳过 token 阈值和 cooldown，但仍尊重熔断。
+ * 此时没有进行中的请求，全部活跃历史都替换为一条摘要。
  */
 export const manualCompact = async (threadId: string, resourceId: string): Promise<ManualCompactResult> => {
-  if (!compactionConfig.l3Enabled) {
-    return { compacted: false, reason: "上下文压缩功能未开启" };
-  }
   if (isCircuitBroken(threadId)) {
     return { compacted: false, reason: "压缩失败过多已暂时熔断，请稍后再试" };
   }
@@ -52,34 +47,16 @@ export const manualCompact = async (threadId: string, resourceId: string): Promi
     orderBy: { field: "createdAt", direction: "ASC" }
   });
   const allMessages = listResult.messages as MastraDBMessage[];
-
-  const compactedIds = await getCompactedIds(threadId);
-  const activeMessages = filterActiveMessages(allMessages, compactedIds);
+  const activeMessages = filterActiveMessages(allMessages, await getCompactedIds(threadId));
 
   if (activeMessages.length < MIN_ACTIVE_MESSAGES) {
     return { compacted: false, reason: "消息数量过少，无需压缩" };
   }
 
-  try {
-    const result = await runCompaction(activeMessages);
-
-    await applyCompaction({
-      memory,
-      threadId,
-      resourceId,
-      originalMessages: activeMessages,
-      result
-    });
-
-    recordCompactionSuccess(threadId);
-
-    return {
-      compacted: true,
-      messageCountBefore: activeMessages.length,
-      messageCountAfter: activeMessages.length - result.hiddenIds.length + 1
-    };
-  } catch (err) {
-    recordCompactionFailure(threadId);
-    throw err;
-  }
+  await compactHistory({ threadId, resourceId, history: activeMessages });
+  return {
+    compacted: true,
+    messageCountBefore: activeMessages.length,
+    messageCountAfter: 1
+  };
 };

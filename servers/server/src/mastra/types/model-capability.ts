@@ -11,12 +11,8 @@ export const ModelCapabilitySchema = z.object({
   contextLimit: z.number().int().positive(),
   /** 上下文压缩配置：前端可据此把告警阈值对齐到真实压缩点 */
   compaction: z.object({
-    /** L1（清理旧工具结果）是否启用 */
-    l1Enabled: z.boolean(),
-    /** L3（摘要压缩历史）是否启用 */
-    l3Enabled: z.boolean(),
-    /** L3 触发阈值（prompt token）。l3Enabled 为 false 时该值不会生效 */
-    l3TriggerTokens: z.number().int().positive()
+    /** 历史摘要的触发阈值（prompt token） */
+    triggerTokens: z.number().int().positive()
   })
 });
 

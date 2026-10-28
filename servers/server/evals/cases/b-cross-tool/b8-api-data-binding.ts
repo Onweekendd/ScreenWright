@@ -31,7 +31,7 @@
  * 别拿这里的绿灯替「接口能取到数」背书。
  */
 
-import { DataType, type ComponentType } from "@screenwright/types";
+import { type ComponentType, DataType } from "@screenwright/types";
 
 import { AgentMode } from "@/mastra/types/bi-chat";
 
@@ -89,7 +89,7 @@ export const b8ApiDataBinding: EvalCase = {
   prompt:
     "工作区里已经注册好了工厂的接口数据源。请把生产线的实时状态数据接到这块大屏的「条形图」上，" +
     "让它显示各条产线的当日产量。\n" +
-    "整个任务你自己从头做到尾：不要调用 ask_swExecutorAgent、ask_templateExtractorAgent、" +
+    "整个任务你自己从头做到尾：不要调用 ask_swExecutorAgent、" +
     "ask_dataFlowVerificationAgent 委派，也不要用 createTask / claimTask 分发任务，自检也自己跑。",
 
   mode: AgentMode.AUTO_EDIT,

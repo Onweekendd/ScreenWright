@@ -86,7 +86,8 @@ Usage:
 - Provide a path relative to the workspace root (e.g. "screen_123/component/456.json").
 - Text files return their content as a string and track file state for subsequent edits.
 - PNG, JPEG, WebP, GIF, AVIF and TIFF images are attached for you to see through the image middleware; the result also includes URL, dimensions and size. Images are not decoded as text or tracked for text edits.
-- Images are read in full (up to 50 MB); offset and limit apply only to text files. SVG files remain readable as text.`,
+- Images are read in full (up to 50 MB); text ranges do not apply to images. SVG files remain readable as text.
+- For large single-line files, use charOffset (0-based UTF-16 offset) and charLimit instead of line offset/limit. When a result contains nextRead, use those exact arguments to continue.`,
 
   inputSchema: z.object({
     path: z.string().describe('Workspace-relative path to the file (e.g. "screen_123/component/456.json")'),
@@ -101,7 +102,19 @@ Usage:
       .int()
       .min(0)
       .optional()
-      .describe("Maximum number of lines to read; 0 or omitted reads the whole file")
+      .describe("Maximum number of lines to read; 0 or omitted reads the whole file"),
+    charOffset: z.coerce
+      .number()
+      .int()
+      .min(0)
+      .optional()
+      .describe("0-based UTF-16 character offset in the LF-normalized text; use with charLimit instead of line ranges"),
+    charLimit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .optional()
+      .describe("Maximum UTF-16 characters to read; permits progress through large single-line files")
   }),
 
   outputSchema: z.union([
@@ -111,6 +124,9 @@ Usage:
       encoding: z.enum(["utf8", "utf16le"]),
       lineEnding: z.enum(["LF", "CRLF"]),
       isPartialView: z.boolean(),
+      startCharOffset: z.number().int().min(0),
+      endCharOffset: z.number().int().min(0),
+      totalCharacters: z.number().int().min(0),
       schemaDoc: z.string().optional().describe("组件 schema 文档路径（相对 workspace），修改前必须先读取"),
       notice: z.string().optional().describe("读的是 skill 文件时的提示：下次该用哪个工具")
     }),
@@ -126,7 +142,7 @@ Usage:
     })
   ]),
 
-  execute: async ({ path: filePath, offset, limit }) => {
+  execute: async ({ path: filePath, offset, limit, charOffset, charLimit }) => {
     // LLM 偶尔用 offset:0 / limit:0 表达「从头读全部」；0 在分页语义里没有意义，
     // 统一归一化为「未指定」，避免切出空内容、也避免下游对非法 0 的处理踩坑。
     const offsetNum = typeof offset === "number" && offset > 0 ? offset : undefined;
@@ -156,12 +172,40 @@ Usage:
 
     let viewContent = content;
     let isPartialView = false;
+    let startCharOffset = 0;
+    let endCharOffset = content.length;
 
-    if (offsetNum !== undefined || limitNum !== undefined) {
+    if (charOffset !== undefined || charLimit !== undefined) {
+      if (offsetNum !== undefined || limitNum !== undefined) {
+        throw new Error("Use either character ranges or line ranges, not both.");
+      }
+      startCharOffset = Math.min(charOffset ?? 0, content.length);
+      // 外部游标若落在代理对中间，回退到完整字符起点。
+      if (
+        startCharOffset > 0 &&
+        /[\uDC00-\uDFFF]/.test(content[startCharOffset] ?? "") &&
+        /[\uD800-\uDBFF]/.test(content[startCharOffset - 1])
+      ) {
+        startCharOffset -= 1;
+      }
+      endCharOffset = Math.min(content.length, startCharOffset + (charLimit ?? content.length));
+      if (
+        endCharOffset < content.length &&
+        /[\uDC00-\uDFFF]/.test(content[endCharOffset]) &&
+        /[\uD800-\uDBFF]/.test(content[endCharOffset - 1] ?? "")
+      ) {
+        endCharOffset += 1;
+      }
+      viewContent = content.slice(startCharOffset, endCharOffset);
+      isPartialView = startCharOffset > 0 || endCharOffset < content.length;
+    } else if (offsetNum !== undefined || limitNum !== undefined) {
       const start = Math.max(0, (offsetNum ?? 1) - 1);
       const end = limitNum !== undefined ? start + limitNum : lines.length;
       viewContent = lines.slice(start, end).join("\n");
       isPartialView = start > 0 || end < lines.length;
+      startCharOffset = lines.slice(0, start).reduce((length, line) => length + line.length + 1, 0);
+      startCharOffset = Math.min(startCharOffset, content.length);
+      endCharOffset = startCharOffset + viewContent.length;
     }
 
     // 记录读取状态（供 EditFileTool 校验）
@@ -196,6 +240,9 @@ Usage:
       encoding,
       lineEnding: (lineEnding === "\r\n" ? "CRLF" : "LF") as "CRLF" | "LF",
       isPartialView,
+      startCharOffset,
+      endCharOffset,
+      totalCharacters: content.length,
       ...(schemaDoc ? { schemaDoc } : {}),
       ...(skillHint ? { notice: skillHint } : {})
     };

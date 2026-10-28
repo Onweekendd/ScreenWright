@@ -189,7 +189,7 @@ type ComponentFlatType = z.infer<typeof ComponentFlatSchema>;
  * 把分组/动态面板的子引用归一成数字 id 数组，好让 ComponentFlatSchema 校验得动。
  *
  * 同一个容器节点会以三种形态出现，这里一并收口：
- * - **磁盘形态**：children / panelData[i].config 是 "{id}_{name}" 字符串（便于人和 agent 直接识别）；
+ * - **磁盘形态**：children / panelData[i].config 是含 id 的轻量文件引用，兼容旧 "{id}_{name}" 字符串；
  * - **内存形态**：是内联好的完整子组件对象（前端建好回传的分组、复制出来的子树都是这样）；
  * - 已经是 id 的，原样放过。
  *
@@ -288,7 +288,7 @@ function validateComponentContentLayers(
   try {
     const parsed = JSON.parse(content) as Record<string, unknown>;
 
-    // 磁盘格式：children / panelData[i].config 是 "{id}_{name}" 字符串数组，推送前还原为数字 id
+    // 磁盘中的轻量引用或旧 basename 字符串，在扁平 schema 校验前归一成数字 id
     normalizeChildRefs(parsed);
 
     const candidate = { cbArgs: [], ...parsed };

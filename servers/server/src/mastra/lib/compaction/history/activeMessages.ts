@@ -1,6 +1,6 @@
 import type { MastraDBMessage } from "@mastra/core/agent";
 
-import { prismaClient } from "../../storage/prisma";
+import { prismaClient } from "../../../storage/prisma";
 
 export const getCompactedIds = async (threadId: string): Promise<Set<string>> => {
   const records = await prismaClient.compactionRecord.findMany({
@@ -22,9 +22,27 @@ export const getCompactedIds = async (threadId: string): Promise<Set<string>> =>
   return ids;
 };
 
+/** 去掉已被摘要替代的消息；原消息只是软删除，仍留在存储里。 */
 export const filterActiveMessages = (messages: MastraDBMessage[], compactedIds: Set<string>): MastraDBMessage[] => {
   if (compactedIds.size === 0) {
     return messages;
   }
   return messages.filter((msg) => !compactedIds.has(msg.id));
+};
+
+/**
+ * 当前这轮从最后一条 user 消息开始，包含其后执行中的工具调用，不参与压缩；
+ * 否则摘要会吞掉用户刚发的指令，模型看到的最后一条变成 assistant 摘要。
+ */
+export const splitCurrentTurn = (
+  messages: MastraDBMessage[]
+): { history: MastraDBMessage[]; currentTurn: MastraDBMessage[] } => {
+  let start = messages.length - 1;
+  while (start >= 0 && messages[start].role !== "user") {
+    start--;
+  }
+  if (start < 0) {
+    return { history: messages, currentTurn: [] };
+  }
+  return { history: messages.slice(0, start), currentTurn: messages.slice(start) };
 };

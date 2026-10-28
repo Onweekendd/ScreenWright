@@ -732,8 +732,8 @@ describe("edit_files resume 结算", () => {
     });
 
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain(expected);
-    const layout = JSON.parse(await fsp.readFile(path.join(screenRoot, "_layout.json"), "utf8"));
-    expect(layout.screen.width).toBe(approved ? 2560 : 1920);
+    const screenInfo = JSON.parse(await fsp.readFile(path.join(screenRoot, "info.json"), "utf8"));
+    expect(Number(screenInfo.detail.width)).toBe(approved ? 2560 : 1920);
   });
 
   it("ASK 模式下过滤器被拒绝时不落盘，且 payload 用的是内存里的新内容", async () => {

@@ -6,8 +6,8 @@
       <div class="sw-build-manager" id="go-chart-edit-layout" :style="managerStyle">
         <buildTabs />
         <div class="sw-build-wrapper" id="renderContainer">
-          <buildRender ref="buildRenderRef" />
           <EmptyCanvasChat />
+          <buildRender ref="buildRenderRef" />
           <CustomAnimation v-if="showCustomAnimation" />
           <StatusAnimation v-if="editorVisible" />
         </div>

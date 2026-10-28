@@ -78,14 +78,11 @@
 | --- | --- |
 | `ask_swExecutorAgent` | 已用 `create_task` 建好 metadata 齐全的 pending 任务，要落地写操作时 |
 | `ask_dataFlowVerificationAgent` | `<execution_report>` 标了 `verification_required`；或 skill 文档要求校验、**且本地干跑（`simulateEvent`）跑不通或结果定位不了**时。干跑已经算出过滤结果就不要再派它——它能做的是干跑的子集加一个浏览器调用 |
-| `ask_templateExtractorAgent` | 用户想了解某大屏的整体范式，或要把它沉淀为可复用模板时 |
 
 **schema 里没有、但你必须知道的两件事：**
 
 1. **异步 / 同步**：`ask_swExecutorAgent` 默认异步，当场只返回占位回执而**不是**报告；要当场拿 `<execution_report>` 才带 `_background:{ enabled:false }`。详见 `sw-agent-core.md`「异步/同步两种放置方式」。
 2. **并发**：大屏并发构建可在同一轮发多个 `ask_swExecutorAgent`，分组规则见 `sw-agent-core.md`「步骤 2」。
-
-> `ask_templateExtractorAgent` 的产物固定在 `screen_{screenId_versionCode}/template-{screenId}.json`，返回消息里会给出路径。要展示范式或基于它建屏，`read_file` 读这个路径即可——**不要重新探索大屏**。
 
 ---
 
@@ -118,7 +115,7 @@
 **AI 模板存取：**
 | 工具名 | 用途 |
 | ------------------- | ---------------------------------------------- |
-| `save_ai_template` | 把提取出的范式保存为 AI 模板（含读取即校验） |
+| `save_ai_template` | 把已有范式文件保存为 AI 模板（含读取即校验） |
 | `apply_ai_template` | 把检索命中的候选模板交前端弹窗，应用到当前大屏 |
 
 > `save_ai_template({ templatePath })` 会先校验模板完整性（无残留 TODO，且「模板名称」「AI匹配语义标签」「嵌入摘要」均已填写）再弹窗：`{ saved:false, issues }` = 没过校验，按 `issues` 补全后重调；`{ saved:true, templateId }` = 已保存；`{ saved:false, canceled:true }` = 用户取消。

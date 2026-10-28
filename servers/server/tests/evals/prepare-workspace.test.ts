@@ -25,7 +25,6 @@ beforeEach(() => {
   target = path.join(root, "target");
   write(source, {
     "skills/common/x/SKILL.md": "skill v1",
-    "scripts/create-template.ts": "// script",
     "types/global.d.ts": "// types",
     "tsconfig.json": "{}"
   });
@@ -47,7 +46,7 @@ describe("clearRunArtifacts", () => {
     const removed = clearRunArtifacts(target);
 
     expect(removed).toEqual(["plan", "screen_9001_1", "tasks"]);
-    for (const kept of ["skills", "scripts", "types", "tsconfig.json"]) {
+    for (const kept of ["skills", "types", "tsconfig.json"]) {
       expect(fs.existsSync(path.join(target, kept))).toBe(true);
     }
     // 内容也要在，不能只剩空目录
@@ -112,8 +111,8 @@ describe("prepareEvalWorkspace 的陈旧检测", () => {
   });
 
   it("源里缺东西时记进 missing，不抛错", () => {
-    fs.rmSync(path.join(source, "scripts"), { recursive: true });
+    fs.rmSync(path.join(source, "types"), { recursive: true });
 
-    expect(prepareEvalWorkspace(source, target).missing).toContain("scripts");
+    expect(prepareEvalWorkspace(source, target).missing).toContain("types");
   });
 });

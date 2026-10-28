@@ -21,7 +21,7 @@ export enum SuspendType {
   AskApprovalExecuteInBrowser = "ask_approval_execute_in_browser",
   /** 截取当前编辑器画布，上传后回传图片 URL（只读，任何模式都不审批） */
   CaptureCanvas = "capture_canvas",
-  /** 模板提取后：把解析出的模板字段交前端预填弹窗，由用户确认/修改后保存为 AI 模板 */
+  /** 保存模板时：把解析出的模板字段交前端预填弹窗，由用户确认/修改后保存为 AI 模板 */
   SaveAiTemplate = "save_ai_template",
   /** 模板检索后：把候选模板 id 列表交前端弹窗（封面+适用场景），由用户选择并应用到当前大屏 */
   ApplyAiTemplate = "apply_ai_template",

@@ -8,9 +8,7 @@
  * `create-component.ts:323` 要查的组件 schema 文档也不在了。那样测出来的东西
  * 跟线上没关系。
  *
- * 同理还有另外三样：
- *   scripts/       —— `create-template.ts` / `extract-slots.ts`，模板提取子 agent 依赖
- *                     （事件干跑已从脚本改成 `simulateEvent` 工具，不再在这里）
+ * 同理还有另外两样：
  *   types/         —— agent 写 vue part 时的类型来源
  *   tsconfig.json  —— `check-vue-part` 要它才能跑
  *
@@ -37,7 +35,7 @@ import path from "node:path";
  * 从真实工作区复制过来的东西。都是**只读的基础设施**，agent 不该写它们；
  * 真写了也只脏了副本，源目录不受影响。
  */
-const INFRASTRUCTURE = ["skills", "scripts", "types", "tsconfig.json"];
+const INFRASTRUCTURE = ["skills", "types", "tsconfig.json"];
 
 export interface PrepareResult {
   copied: string[];

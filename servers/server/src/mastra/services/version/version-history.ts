@@ -131,7 +131,7 @@ const BASE_IGNORE_PATTERNS = [
  * 它们不是用户内容：删掉之后下一次同步会原样重建，回退也从不看它们
  * （见 {@link isRollbackRelevant}——`_` 开头的元文件与白名单之外的目录都被排除）。
  * 留在 git 里只会让每次提交混进一堆与用户改动无关的 diff：改一个组件标题，
- * `_layout.json` 里那张 ascii 图例的图例行就跟着变，`_meta.json` 的 componentIds 也可能重排，
+ * `_meta.json` 的 componentIds 可能重排，历史遗留的 `_layout.json` 也可能变化，
  * 于是回退预览与提交历史都被这些噪声淹没。
  *
  * 不含 `_analysis.json` / `template-*.json`：那两个是 agent 自己的产物（探索笔记、语义模型），

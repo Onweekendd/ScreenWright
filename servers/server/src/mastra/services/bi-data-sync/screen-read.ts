@@ -58,8 +58,8 @@ const StatusAnimationSchema = screenObject.shape.statusAnimation;
 /**
  * 子组件字段的磁盘形态。writeComponents 只对分组与动态面板两条分支做抽取——把子组件写进同名
  * 子目录，字段本身降级成一串 basename：
- * - 分组：children: ["4155_条形图", ...]
- * - 动态面板：panelData[].config: ["4158_条形图", ...]
+ * - 分组：children: [{ id, name, type, prop, file }, ...]
+ * - 动态面板：panelData[].config 使用同样的轻量引用；旧 basename 字符串也能读回。
  *
  * 其余带 panelData 的面板（如 terminal-control 终端控制面板）走的是兜底分支，整个组件原样落盘，
  * config 里仍是完整的子组件对象、并不独立成文件。故这里必须同时接受两种形态，
@@ -68,7 +68,7 @@ const StatusAnimationSchema = screenObject.shape.statusAnimation;
 const DiskChildrenSchema = z
   .union([
     z.array(z.string()).describe("抽到子目录的子组件文件 basename"),
-    z.array(z.any()).describe("原样内联的子组件对象")
+    z.array(z.any()).describe("子组件轻量文件引用或原样内联的子组件对象")
   ])
   .describe("子组件列表：basename 字符串或内联组件对象");
 
@@ -86,7 +86,7 @@ const DiskComponentSchema = ComponentFlatSchema.extend({
     .optional()
 });
 
-/** 磁盘形态的组件：children / panelData[].config 可能还是 basename，vue-part 的 option 还是文件名指针 */
+/** 磁盘形态的组件：子组件是轻量引用（兼容旧 basename），vue-part 的 option 是文件名指针 */
 export type DiskComponent = z.infer<typeof DiskComponentSchema>;
 
 /**
@@ -305,7 +305,7 @@ export class ScreenReader implements EditorState<EditorCoreState> {
             : (component as ComponentType);
         })
         // 目录列出的是文件名字典序（"999" 排在 "4112" 之后），叠放次序只由 zIndex 承载，
-        // 故按 zIndex 升序还原——与 buildLayout 同口径：小的在前（底层），大的在后（前景）。
+        // 故按 zIndex 升序还原：小的在前（底层），大的在后（前景）。
         // zIndex 相同的保持字典序：Array.sort 是稳定排序，同层组件的相对次序至少是确定的。
         .sort((a, b) => compareZIndex(a.zIndex ?? 0, b.zIndex ?? 0))
     );

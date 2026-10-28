@@ -139,8 +139,9 @@ describe("screen-mutation", () => {
       expect(readJson(componentFile("9200_新分组", "4152_条形图.json")).parent).toBe(9200);
 
       const group = readJson(componentFile("9200_新分组.json"));
-      // 落盘时分组自身的 children 退化成 basename 列表
-      expect(group.children).toEqual(["4152_条形图", "4153_条形图"]);
+      // 分组自身承载轻量子引用，完整配置仍位于独立文件中
+      expect(group.children.map((ref: { file: string }) => ref.file)).toEqual(["4152_条形图.json", "4153_条形图.json"]);
+      expect(group.children.map((ref: { id: number }) => ref.id)).toEqual([4152, 4153]);
     });
 
     it("分组自身按 placement 落进动态面板状态", async () => {

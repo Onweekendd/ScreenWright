@@ -29,7 +29,7 @@
     "eval": "dotenvx run -- tsx evals/harness/run.ts",
     "mastra:test:watch": "vitest --watch",
     "mastra:test:coverage": "vitest --coverage",
-    "mastra:check-types": "tsc --noEmit && tsc -p tsconfig.agent-scripts.json",
+    "mastra:check-types": "tsc --noEmit",
     "check-types": "tsc --noEmit",
     "test": "vitest --run",
     "check-vue-part": "tsx scripts/check-vue-part.ts",

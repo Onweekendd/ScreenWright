@@ -1,11 +1,11 @@
-import { compactionConfig } from "./config";
+import { compactionConfig } from "../config";
 
 const failureCounts = new Map<string, number>();
 const lastCompactionRound = new Map<string, number>();
 const roundCounters = new Map<string, number>();
 
 export const isCircuitBroken = (threadId: string): boolean =>
-  (failureCounts.get(threadId) ?? 0) >= compactionConfig.l3.circuitBreakerFailures;
+  (failureCounts.get(threadId) ?? 0) >= compactionConfig.history.circuitBreakerFailures;
 
 export const recordCompactionSuccess = (threadId: string): void => {
   failureCounts.delete(threadId);
@@ -28,23 +28,20 @@ const isInCooldown = (threadId: string): boolean => {
     return false;
   }
   const current = roundCounters.get(threadId) ?? 0;
-  return current - lastRound < compactionConfig.l3.cooldownRounds;
+  return current - lastRound < compactionConfig.history.cooldownRounds;
 };
 
-export const shouldCompactL3 = (
+export const shouldAutoCompact = (
   promptTokens: number,
   threadId: string
 ): { compact: boolean; reason: string; tokens: number } => {
-  if (!compactionConfig.l3Enabled) {
-    return { compact: false, reason: "l3-disabled", tokens: promptTokens };
-  }
   if (isCircuitBroken(threadId)) {
     return { compact: false, reason: "circuit-broken", tokens: promptTokens };
   }
   if (isInCooldown(threadId)) {
     return { compact: false, reason: "cooldown", tokens: promptTokens };
   }
-  if (promptTokens < compactionConfig.l3.triggerTokens) {
+  if (promptTokens < compactionConfig.history.triggerTokens) {
     return { compact: false, reason: "below-threshold", tokens: promptTokens };
   }
   return { compact: true, reason: "triggered", tokens: promptTokens };

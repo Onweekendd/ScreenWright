@@ -236,7 +236,7 @@ export function useComponentStreamUpdater(
   };
 
   /**
-   * 模板提取后：用解析出的字段预填弹窗，用户复核/修改后保存为 AI 模板。
+   * 保存模板时：用解析出的字段预填弹窗，用户复核/修改后保存为 AI 模板。
    * 后端已校验过模板完整性，这里只负责展示与保存。
    * @field name/embeddingText/tags/payload - 由后端从模板 JSON 解析出的预填值
    */

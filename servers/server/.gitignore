@@ -11,6 +11,7 @@ agent-workspace/tasks/**
 agent-workspace/plan/**
 agent-workspace/echart-options/**
 agent-workspace/api-registry/**
+agent-workspace/.tool-results/
 agent-workspace/skills/overviews/**
 
 # LLM 录制数据（RECORD_LLM 生成）

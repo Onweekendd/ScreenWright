@@ -1,11 +1,12 @@
-import type { SystemComponentProps } from "@screenwright/types";
 import { migrateLegacyZIndex } from "@screenwright/core";
+import type { SystemComponentProps } from "@screenwright/types";
 import { type ComponentType, FolderEnum, PanelEnum, type ParsedLargeScreenInfo } from "@screenwright/types";
-import { existsSync, rmSync } from "fs";
+import { existsSync, readdirSync, rmSync } from "fs";
 import path from "path";
 
 import { buildIdNameBase, buildStateDirName, sanitizeFsName } from "../../tools/file/utils";
 import { getScreenIdFromVersionKey } from "../screen/screen-workspace";
+import { buildComponentReference } from "./component-references";
 import { collectIncomingIds } from "./component-tree";
 import { buildCallbackFlowGraph, buildEventFlowGraph } from "./flow-graphs";
 import {
@@ -17,7 +18,6 @@ import {
   writeIfChanged,
   writeJson
 } from "./fs-utils";
-import { buildLayout, buildNestedLayout } from "./layout";
 import { serializeVuePartSFC, VUE_PART_PROP } from "./vue-part-sfc";
 
 interface SyncScreenDataInput {
@@ -42,7 +42,6 @@ type ScreenMetaRest = Omit<ParsedLargeScreenInfo, "layers" | "dataFilterArr" | "
  * ├── statusAnimation.json 状态动画
  * ├── _callback_flows/     回调参数数据流图（每个 argName 一个文件）
  * ├── _event_flows/        事件-行为链路（每个 sourceId 一个文件）
- * ├── _layout.json         全屏结构骨架
  * └── component/           组件树（文件+文件夹并列表示层级）
  */
 class ScreenSyncWriter {
@@ -95,7 +94,6 @@ class ScreenSyncWriter {
     this.pruneOrphans();
     this.writeCallbackFlows();
     this.writeEventFlows();
-    this.writeLayout();
     this.cleanupLegacyFiles();
   }
 
@@ -136,7 +134,7 @@ class ScreenSyncWriter {
    *
    * 文件结构规则（文件名/目录名均为 {id}_{name} 形式；name 为空时退回组件类型，便于人和 agent 直接识别组件含义）：
    * - 叶子组件：{id}_{name}.json
-   * - 分组组件：{id}_{name}.json（自身，去掉 children） + {id}_{name}/ 目录（存子组件）
+   * - 分组组件：{id}_{name}.json（自身，children 存轻量引用） + {id}_{name}/ 目录（存子组件）
    * - 动态面板：{id}_{name}.json（自身，panelData 保留状态元信息但去掉 config） + {id}_{name}/{stateId}_{stateName}/ 目录
    */
   private writeComponents(components: ComponentType[], basePath: string) {
@@ -164,33 +162,26 @@ class ScreenSyncWriter {
           ...rest,
           panelData: panelData.map(({ config, ...stateMeta }) => ({
             ...stateMeta,
-            config: config.map((c) => buildIdNameBase(c.id, c.name ?? c.title ?? ""))
+            config: config.map(buildComponentReference)
           }))
         });
 
-        // 各状态的子组件递归写入 {idNameBase}/{stateId}_{stateName}/，同时写 _layout.json
+        // 各状态的子组件递归写入 {idNameBase}/{stateId}_{stateName}/
         for (const state of panelData) {
           if (state.config?.length) {
             const stateDir = path.join(basePath, idNameBase, buildStateDirName(state.id, state.name));
             this.writeComponents(state.config, stateDir);
-            const stateRelDir = path.relative(this.componentDir, stateDir).replace(/\\/g, "/");
-            writeJson(
-              path.join(stateDir, "_layout.json"),
-              buildNestedLayout(component, state.config, { id: state.id, name: state.name }, stateRelDir)
-            );
           }
         }
       } else if (component.component.prop === FolderEnum.group && component.children?.length) {
-        // 分组组件：自身去掉 children，子组件写入同名子目录，同时写 _layout.json
+        // 分组的 children 保存轻量引用，子组件完整配置写入同名子目录
         const { children, ...rest } = component;
         writeJson(newFilePath, {
           ...rest,
-          children: children.map((child) => buildIdNameBase(child.id, child.name ?? child.title ?? ""))
+          children: children.map(buildComponentReference)
         });
         const groupDir = path.join(basePath, idNameBase);
         this.writeComponents(children, groupDir);
-        const groupRelDir = path.relative(this.componentDir, groupDir).replace(/\\/g, "/");
-        writeJson(path.join(groupDir, "_layout.json"), buildNestedLayout(component, children, undefined, groupRelDir));
       } else {
         // 叶子组件
         if (component.component.prop === VUE_PART_PROP) {
@@ -261,15 +252,28 @@ class ScreenSyncWriter {
     pruneStaleFiles(dir, current, [".json"]);
   }
 
-  /** _layout.json — 全屏结构骨架：嵌套层级 + 绝对坐标 + 网格占位 + 主题采样 */
-  private writeLayout() {
-    const layout = buildLayout(this.layers, this.screenMeta.detail);
-    layout.screen.id = this.screenMeta.id;
-    writeJson(path.join(this.screenDir, "_layout.json"), layout);
+  /** 旧布局索引不再生成；只清理同名派生文件，不改动组件内容。 */
+  private removeLegacyLayouts(dir: string) {
+    if (!existsSync(dir)) {
+      return;
+    }
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const file = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        this.removeLegacyLayouts(file);
+      } else if (entry.isFile() && entry.name === "_layout.json") {
+        rmSync(file);
+      }
+    }
   }
 
   /** 清理旧格式文件 */
   private cleanupLegacyFiles() {
+    const rootLayout = path.join(this.screenDir, "_layout.json");
+    if (existsSync(rootLayout)) {
+      rmSync(rootLayout);
+    }
+    this.removeLegacyLayouts(this.componentDir);
     const legacyDataFlow = path.join(this.screenDir, "_data_flow.json");
     if (existsSync(legacyDataFlow)) {
       rmSync(legacyDataFlow);
@@ -300,8 +304,7 @@ export const syncScreenData = (input: SyncScreenDataInput) => new ScreenSyncWrit
 /**
  * 同步大屏范式模板（描述）到 workspace
  *
- * 写入 screen_{id}/template-{screenId}.json，与 template-extractor 提取产物同名同位，
- * 直接成为当前大屏的语义认知索引（而非另起文件），主 agent / 提取器按既有约定读取。
+ * 写入 screen_{id}/template-{screenId}.json，作为当前大屏的语义认知索引，供主 agent 读取。
  *
  * 典型来源：前端「应用 AI 模板」后，把模板范式描述（其中旧组件 id 已重映射为目标大屏的新 id）
  * 回写到当前大屏，使描述与画布上的真实组件 id 对齐，并作为该屏最新认知。

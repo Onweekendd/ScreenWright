@@ -15,6 +15,7 @@ vi.mock("@/lib/storage", () => ({
   })
 }));
 
+import { limitReadFileResult } from "@/mastra/lib/compaction/tool-result/limitReadFileResult";
 import { inlineImages, TOOL_IMAGES_FIELD } from "@/mastra/provider/image-middleware";
 import { readStoredImage } from "@/mastra/services/ai-assets/chat-image.server";
 import { readFileTool } from "@/mastra/tools/file/read-file";
@@ -27,6 +28,9 @@ interface ReadResult {
   encoding?: string;
   lineEnding?: string;
   isPartialView?: boolean;
+  startCharOffset?: number;
+  endCharOffset?: number;
+  totalCharacters?: number;
   url?: string;
   mimeType?: string;
   width?: number;
@@ -38,6 +42,8 @@ const read = readFileTool.execute as unknown as (input: {
   path: string;
   offset?: number;
   limit?: number;
+  charOffset?: number;
+  charLimit?: number;
 }) => Promise<ReadResult>;
 const tempRoot = path.resolve(os.tmpdir());
 let workspace: string;
@@ -168,5 +174,66 @@ describe("read_file 图片读取", () => {
     expect(result[TOOL_IMAGES_FIELD]).toBeUndefined();
     expect(readFileState.get(local("notes.txt"))?.content).toBe("first\nsecond\nthird");
     expect(mocks.put).not.toHaveBeenCalled();
+  });
+
+  it("行范围与字符范围使用同一套 LF 原文位置", async () => {
+    await fsp.writeFile(local("ranges.txt"), "first\r\nsecond\r\nthird");
+    const lines = await read({ path: "ranges.txt", offset: 2, limit: 1 });
+    expect(lines).toMatchObject({ content: "second", startCharOffset: 6, endCharOffset: 12, totalCharacters: 18 });
+    const chars = await read({ path: "ranges.txt", charOffset: 6, charLimit: 6 });
+    expect(chars).toMatchObject({ content: "second", startCharOffset: 6, endCharOffset: 12, isPartialView: true });
+    await expect(read({ path: "ranges.txt", offset: 2, charLimit: 2 })).rejects.toThrow("not both");
+  });
+
+  it("字符范围不截断 emoji，且越界读取返回空内容", async () => {
+    await fsp.writeFile(local("unicode.txt"), "A😀B");
+    expect(await read({ path: "unicode.txt", charOffset: 1, charLimit: 1 })).toMatchObject({
+      content: "😀",
+      startCharOffset: 1,
+      endCharOffset: 3
+    });
+    expect(await read({ path: "unicode.txt", charOffset: 2, charLimit: 1 })).toMatchObject({
+      content: "😀",
+      startCharOffset: 1,
+      endCharOffset: 3
+    });
+    expect(await read({ path: "unicode.txt", charOffset: 99, charLimit: 1 })).toMatchObject({
+      content: "",
+      startCharOffset: 4,
+      endCharOffset: 4
+    });
+  });
+
+  it("巨大单行 JSON 可以按限长结果的游标完整读回，不反复读取同一段", async () => {
+    const content = JSON.stringify({ text: '中文😀\\"'.repeat(2000) });
+    await fsp.writeFile(local("single-line.json"), content);
+    const archiveOriginal = vi.fn().mockResolvedValue(".tool-results/archived.json");
+    const budget = 1500;
+    let next: { path: string; charOffset?: number; charLimit?: number } = { path: "single-line.json" };
+    let recovered = "";
+    for (let step = 0; step < content.length; step++) {
+      const raw = await read(next);
+      const limited = await limitReadFileResult({
+        toolName: "readFileTool",
+        toolCallId: `call-${step}`,
+        args: next,
+        result: raw,
+        maxBytes: budget,
+        archiveOriginal
+      });
+      const shown = (limited?.result ?? raw) as ReadResult & { nextRead?: typeof next };
+      expect(Buffer.byteLength(JSON.stringify(shown))).toBeLessThanOrEqual(budget);
+      expect(Buffer.from(shown.content, "utf8").toString("utf8")).toBe(shown.content);
+      recovered += shown.content;
+      if (!shown.nextRead && shown.endCharOffset === content.length) {
+        break;
+      }
+      const cursor = shown.nextRead?.charOffset ?? shown.endCharOffset!;
+      expect(cursor).toBeGreaterThan(next.charOffset ?? 0);
+      next = shown.nextRead ?? { path: next.path, charOffset: cursor, charLimit: 100 };
+    }
+    expect(recovered).toBe(content);
+    expect(archiveOriginal).toHaveBeenCalled();
+    expect(readFileState.get(local("single-line.json"))?.content).toBe(content);
   });
 });

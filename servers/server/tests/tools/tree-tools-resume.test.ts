@@ -7,8 +7,10 @@ const OUTPUT_DIR = path.resolve(__dirname, "output-tree-tools");
 process.env.MASTRA_WORKSPACE_PATH = OUTPUT_DIR;
 
 import { createPanelState } from "@screenwright/core";
+import type { ComponentType, SystemComponentProps } from "@screenwright/types";
 
-import { createScreenEditor } from "@/mastra/services/bi-data-sync/screen-read";
+import { syncScreenData } from "@/mastra/services/bi-data-sync";
+import { createScreenEditor, ScreenReader } from "@/mastra/services/bi-data-sync/screen-read";
 import { addPanelStateTool } from "@/mastra/tools/add-panel-state";
 import { copyComponentTool } from "@/mastra/tools/copy-component";
 import { groupComponentTool } from "@/mastra/tools/group-component";
@@ -332,6 +334,25 @@ describe("树操作工具的 resume", () => {
       to: `screen_${SCREEN_ID}/component/4156_分组/`
     };
     const builtCopy = () => ({ ...readJson(componentFile("4152_条形图.json")), id: 9400, name: "副本", title: "副本" });
+
+    it.each(["4156_分组", "4157_动态面板"])("轻量引用格式下复制 %s 仍还原完整子树", async (name) => {
+      const parsedLargeScreenInfo = new ScreenReader({ id: SCREEN_ID }).toParsedLargeScreenInfo();
+      syncScreenData({ id: SCREEN_ID, cacheTime: 0, parsedLargeScreenInfo });
+      const payload = await suspendedPayload(copyComponentTool, {
+        from: `screen_${SCREEN_ID}/component/${name}.json`,
+        to: `screen_${SCREEN_ID}/component/`
+      });
+      const component = (payload.ops as Array<{ component: ComponentType }>)[0].component;
+      if (name.startsWith("4156")) {
+        const children = component.children ?? [];
+        expect(children.map((child) => child.id)).toEqual([4154, 4155]);
+        expect(children[0].component.prop).toBeDefined();
+      } else {
+        const children = ((component as SystemComponentProps).panelData ?? []).flatMap((state) => state.config);
+        expect(children.length).toBeGreaterThan(0);
+        expect(children.every((child) => child.component)).toBe(true);
+      }
+    });
 
     it("首次执行只挂起，不产生副本文件", async () => {
       await run(copyComponentTool, input);

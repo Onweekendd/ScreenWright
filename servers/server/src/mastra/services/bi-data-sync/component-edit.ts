@@ -54,7 +54,7 @@ export interface ComponentEditOutcome {
  * 2. 把编辑后的那个组件内联成内存形态后 applyUpdate 到树上——core 顺带重算由树结构唯一决定的派生值
  *    （分组包围盒，见 ComponentManager.applyUpdate → reflowGroup）。这条规则前端改属性面板时跑的
  *    是同一份函数，后端不跑的话 AI 挪完成员分组框就是旧的，工作区与画布一起错；
- * 3. `write` 为真时 syncScreenData 整屏落盘——与前端整屏保存同一个写入器，`_layout.json` /
+ * 3. `write` 为真时 syncScreenData 整屏落盘——与前端整屏保存同一个写入器，父组件的轻量子引用和
  *    `_callback_flows` / `_event_flows` 这些同样由树结构派生、过去只有前端保存才刷新的索引，
  *    这时才跟得上。
  *

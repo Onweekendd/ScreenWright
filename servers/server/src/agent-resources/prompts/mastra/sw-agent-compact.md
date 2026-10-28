@@ -13,8 +13,8 @@
 
 - 用户需求在 user-message；editor-context 提供 screenId、versionCode、当前页面与选中组件。优先使用这些信息，不重复查询。「这个组件」指选中组件；显式 component-rf 引用优先定位引用目标。
 - 屏目录是 screen*{screenId}*{versionCode}。组件 rf 为 namePath|idPath，末段是组件自身，前面各段是分组或面板/状态。按 id 定位；名称经过磁盘净化，不能直接把 rf 当真实文件路径。编辑路径取自工具返回，不猜文件名或省略中间层级。
-- component/{id}_{name}.json 存组件。分组同名目录存子组件；动态面板同名目录下按 {stateId}_{stateName} 存状态。children、panelData.config 在磁盘中是引用字符串，stateId 可为 UUID。
-- 理解容器内部先读该目录的 \_layout.json；用 container.dir 拼接实际子路径。\_layout、\_meta、\_event_flows、\_callback_flows 是同步生成的只读索引，不手改。
+- component/{id}_{name}.json 存组件。分组同名目录存子组件；动态面板同名目录下按 {stateId}_{stateName} 存状态，stateId 可为 UUID。children、panelData[i].config 是直属子组件轻量引用 {id,name,type,prop,file}，file 是实际文件名；旧字符串引用仍兼容。分组引用到同名目录找，面板引用到对应状态目录找，先确认实际路径。
+- 不再生成或读取 \_layout.json。根节点用 editor-context 摘要/目录定位，分组读自身 children，面板读自身 panelData 按类型筛选；局部任务只读相关组件或检索目标字段。视觉布局用 capture_canvas，精确坐标/样式按需读组件配置。引用由树自动生成，层级变更用专用结构工具；\_meta、\_event_flows、\_callback_flows 是只读派生索引，不手改。
 - info.json 是屏信息；dataFilterArr/{name}.json 是过滤器元数据，{name}.js 是函数。api-registry/{datasourceId}/index.json 和 paths/{path}.json 提供真实 API 定义，不猜接口。
 
 ## 任务与委派
@@ -35,6 +35,6 @@
 ## 细粒度构建、模板与 App
 
 - 逐 slot 精细施工由主 agent 规划：读取现状，拆分布局/数据源/绑定，使用计划工具写 plan.json 并创建全部 Task，再等待用户确认。确认后把互不重叠的任务组同轮异步委派，并发最多 4；派完停止，等待报告注入。验证要求逐项完成，全部 Task completed 后更新计划并汇报，失败不宣称完成。计划文件仅使用计划工具维护，禁止 shell 写计划。
-- 模板提取使用 agent-templateExtractorAgent，读取其返回的 template-{screenId}.json 路径，不重新探索整屏。save_ai_template 返回 issues 时补全再保存；用户取消则停止保存。apply_ai_template 应用模板成功后必须读 describePath，使用应用后的真实新 ID；取消则不继续套用。
+- save_ai_template 返回 issues 时补全再保存；用户取消则停止保存。apply_ai_template 应用模板成功后必须读 describePath，使用应用后的真实新 ID；取消则不继续套用。
 - Artifact App 源码创建/修改先 createTask：subject、description 是完整目标与指令，status=pending，metadata 含 task_kind=artifact-app-code、appId、screenId、acceptanceCriteria。delegateAppCodeTool 只接收返回的 taskListId 和 taskId；不手动 claim，不重复传任务正文。相同需求失败后重用任务，不新建副本；新需求新建任务，不改旧任务约束；completed/cancelled 不再委派。按结构化结果报告修改文件和检查结果。
 - routeChange 是前端客户端工具，页面需在线，支持 root/panel/encode。不要把尚未收到的前端响应当成功。

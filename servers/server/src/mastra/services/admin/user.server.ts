@@ -92,7 +92,7 @@ export function getMenuTree() {
 
   // 开源单机版已取消角色/菜单级权限控制，菜单树不再下发按钮级权限子节点。
   const tree = [
-    node(1, "大屏管理", "/display", "display/index"),
+    node(1, "画布管理", "/display", "display/index"),
     node(2, "我的资源", "/assets", "assets/index"),
     node(3, "数据源", "/source", "source/index", sourceTabs)
   ];

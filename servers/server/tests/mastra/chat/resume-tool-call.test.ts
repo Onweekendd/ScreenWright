@@ -10,7 +10,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   resumeStream: vi.fn(),
   stream: vi.fn(),
-  getThreadById: vi.fn()
+  getThreadById: vi.fn(),
+  getThreadModels: vi.fn()
 }));
 
 vi.mock("@/mastra/runtime", () => ({
@@ -22,6 +23,9 @@ vi.mock("@/mastra/storage/storage", () => ({
 vi.mock("@/mastra/index", () => ({ mastra: {} }));
 vi.mock("@/mastra/services/version/version-history", () => ({
   commitScreenSnapshot: vi.fn().mockResolvedValue(undefined)
+}));
+vi.mock("@/mastra/services/ai-model/thread-model.server", () => ({
+  getThreadModels: mocks.getThreadModels
 }));
 
 import { createBIChatTurnStream } from "@/mastra/services/chat/bi-chat-turn-stream";
@@ -39,6 +43,8 @@ const emptyStream = () => ({
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.getThreadById.mockResolvedValue({ id: "thread-1", metadata: {} });
+  // 默认没选过模型：各角色走默认
+  mocks.getThreadModels.mockResolvedValue({});
   mocks.resumeStream.mockResolvedValue(emptyStream());
   mocks.stream.mockResolvedValue(emptyStream());
 });
@@ -62,6 +68,19 @@ describe("resume 带 toolCallId", () => {
       { approved: true },
       expect.objectContaining({ runId: "run-1", toolCallId: "call-2" })
     );
+  });
+
+  it("对话的模型选择按 threadId 查出，放进 requestContext 的 models", async () => {
+    mocks.getThreadModels.mockResolvedValue({ reasoning: "reasoning-2" });
+
+    await createBIChatTurnStream(
+      { messages: [], clientTools: {}, threadId: "thread-1", resourceId: "resource-1" },
+      { abortController: new AbortController() }
+    ).catch(() => undefined);
+
+    expect(mocks.getThreadModels).toHaveBeenCalledWith("thread-1");
+    const { requestContext } = mocks.stream.mock.calls[0][1];
+    expect(requestContext.get("models")).toEqual({ reasoning: "reasoning-2" });
   });
 
   it("resume 控制端点把前端带来的 toolCallId 传进这一轮", async () => {

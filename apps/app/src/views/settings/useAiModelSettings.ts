@@ -1,20 +1,23 @@
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 
+import {
+  aiModelLabel,
+  type AiModelVo,
+  createAiModel,
+  deleteAiModel,
+  getAiModels,
+  type ModelRole,
+  reindexEmbeddings,
+  setDefaultAiModel,
+  testAiModel,
+  updateAiModel
+} from "@/api/aiModel";
 import embeddingImage from "@/assets/image/models/embedding.png";
 import imageImage from "@/assets/image/models/image.png";
 import reasoningImage from "@/assets/image/models/reasoning.png";
 import videoImage from "@/assets/image/models/video.png";
-
-import {
-  type AiModelVo,
-  getAiModels,
-  type ModelRole,
-  reindexEmbeddings,
-  testAiModel,
-  updateAiModel
-} from "@/api/aiModel";
 
 export interface RoleMeta {
   role: ModelRole;
@@ -37,7 +40,7 @@ export const ROLE_META: RoleMeta[] = [
     role: "embedding",
     title: "嵌入模型",
     image: embeddingImage,
-    desc: "组件检索（RAG）向量化。改动后需「重建索引」才生效。",
+    desc: "组件检索（RAG）向量化。全局只用默认那条，切换默认后需「重建索引」才生效。",
     modelPlaceholder: "BAAI/bge-large-zh-v1.5"
   },
   {
@@ -57,10 +60,16 @@ export const ROLE_META: RoleMeta[] = [
   }
 ];
 
-/** 单个角色的可编辑表单 */
-export interface RoleForm {
+const ROLE_TITLE = Object.fromEntries(ROLE_META.map((m) => [m.role, m.title])) as Record<ModelRole, string>;
+
+/** 正在新增（还没落库）时的 editingId */
+export const NEW_ID = "__new__";
+
+/** 单条配置的可编辑表单 */
+export interface ModelForm {
+  name: string;
   baseUrl: string;
-  /** 空 = 不改动已存 key；占位符显示脱敏值 */
+  /** 空 = 不改动已存 key；占位符显示是否已配置 */
   apiKey: string;
   modelId: string;
   contextLength: number | undefined;
@@ -68,38 +77,122 @@ export interface RoleForm {
 }
 
 interface RoleState {
-  vo: AiModelVo;
-  form: RoleForm;
+  items: AiModelVo[];
+  /** 正在编辑的配置 id；NEW_ID 表示新增 */
+  editingId: string;
+  form: ModelForm;
+  /** 新增时没填 apiKey 就沿用这条已存配置的密钥（可跨角色） */
+  copyKeyFrom: string | undefined;
   saving: boolean;
   testing: boolean;
   testResult: { ok: boolean; text: string } | null;
 }
 
+const emptyForm = (): ModelForm => ({
+  name: "",
+  baseUrl: "",
+  apiKey: "",
+  modelId: "",
+  contextLength: undefined,
+  dimensions: undefined
+});
+
+const toForm = (vo: AiModelVo): ModelForm => ({
+  name: vo.name,
+  baseUrl: vo.baseUrl,
+  apiKey: "",
+  modelId: vo.modelId,
+  contextLength: vo.contextLength ?? undefined,
+  dimensions: vo.dimensions ?? undefined
+});
+
+const newRoleState = (): RoleState => ({
+  items: [],
+  editingId: NEW_ID,
+  form: emptyForm(),
+  copyKeyFrom: undefined,
+  saving: false,
+  testing: false,
+  testResult: null
+});
+
 export function useAiModelSettings() {
   const loading = ref(true);
   const reindexing = ref(false);
-  const states = reactive<Record<ModelRole, RoleState | null>>({
-    reasoning: null,
-    embedding: null,
-    image: null,
-    video: null
+  const states = reactive<Record<ModelRole, RoleState>>({
+    reasoning: newRoleState(),
+    embedding: newRoleState(),
+    image: newRoleState(),
+    video: newRoleState()
   });
 
-  const toForm = (vo: AiModelVo): RoleForm => ({
-    baseUrl: vo.baseUrl,
-    apiKey: "",
-    modelId: vo.modelId,
-    contextLength: vo.contextLength ?? undefined,
-    dimensions: vo.dimensions ?? undefined
-  });
+  /** 所有存了密钥的配置，供新增时「沿用已有密钥」选择 */
+  const keySources = computed(() =>
+    ROLE_META.flatMap(({ role }) =>
+      states[role].items
+        .filter((m) => m.hasApiKey)
+        .map((m) => ({ id: m.id, label: `${ROLE_TITLE[m.role]} · ${aiModelLabel(m)}` }))
+    )
+  );
 
-  const load = async () => {
+  const select = (role: ModelRole, id: string) => {
+    const st = states[role];
+    const vo = st.items.find((m) => m.id === id);
+    if (!vo) {
+      return;
+    }
+    st.editingId = id;
+    st.form = toForm(vo);
+    st.copyKeyFrom = undefined;
+    st.testResult = null;
+  };
+
+  const startCreate = (role: ModelRole) => {
+    const st = states[role];
+    st.editingId = NEW_ID;
+    st.form = emptyForm();
+    st.copyKeyFrom = undefined;
+    st.testResult = null;
+  };
+
+  /** 复制一条：表单预填，密钥沿用原条，改个模型 id 就能存 */
+  const duplicate = (role: ModelRole, vo: AiModelVo) => {
+    const st = states[role];
+    st.editingId = NEW_ID;
+    st.form = { ...toForm(vo), name: `${aiModelLabel(vo)} 副本` };
+    st.copyKeyFrom = vo.hasApiKey ? vo.id : undefined;
+    st.testResult = null;
+  };
+
+  let loadedOnce = false;
+
+  /**
+   * 重新拉列表，再决定每个角色选中哪条：
+   * `focusId`（刚保存的那条）→ 当前选中的那条 → 正在填的新增表单保持不动 → 默认那条。
+   */
+  const load = async (focusId?: string) => {
     loading.value = true;
     try {
       const list = await getAiModels();
-      for (const vo of list) {
-        states[vo.role] = { vo, form: toForm(vo), saving: false, testing: false, testResult: null };
+      for (const { role } of ROLE_META) {
+        const st = states[role];
+        st.items = list.filter((m) => m.role === role);
+        const keep = st.items.find((m) => m.id === focusId) ?? st.items.find((m) => m.id === st.editingId);
+        if (keep) {
+          select(role, keep.id);
+          continue;
+        }
+        if (loadedOnce && st.editingId === NEW_ID) {
+          continue;
+        }
+        const fallback = st.items.find((m) => m.isDefault) ?? st.items[0];
+        if (fallback) {
+          select(role, fallback.id);
+        } else {
+          startCreate(role);
+        }
       }
+      loadedOnce = true;
     } catch (e) {
       ElMessage.error(`加载模型配置失败：${(e as Error).message}`);
     } finally {
@@ -107,7 +200,8 @@ export function useAiModelSettings() {
     }
   };
 
-  const buildBody = (role: ModelRole, f: RoleForm) => ({
+  const buildBody = (role: ModelRole, f: ModelForm) => ({
+    name: f.name.trim(),
     baseUrl: f.baseUrl.trim(),
     apiKey: f.apiKey.trim() || undefined,
     modelId: f.modelId.trim(),
@@ -115,25 +209,26 @@ export function useAiModelSettings() {
     ...(role === "embedding" ? { dimensions: f.dimensions ?? null } : {})
   });
 
+  const warnReindex = () => ElMessage.warning("默认嵌入模型已变更，请点「重建索引」后再使用组件检索");
+
   const save = async (role: ModelRole) => {
     const st = states[role];
-    if (!st) {
-      return;
-    }
     if (!st.form.modelId.trim()) {
       ElMessage.warning("请填写模型 id");
       return;
     }
     st.saving = true;
     try {
-      const vo = await updateAiModel(role, buildBody(role, st.form));
-      st.vo = vo;
-      st.form = toForm(vo);
-      st.testResult = null;
+      const body = buildBody(role, st.form);
+      const vo =
+        st.editingId === NEW_ID
+          ? await createAiModel({ role, ...body, copyKeyFrom: st.copyKeyFrom })
+          : await updateAiModel(st.editingId, body);
       ElMessage.success("已保存");
-      if (role === "embedding") {
-        ElMessage.warning("嵌入模型已变更，请点「重建索引」后再使用组件检索");
+      if (role === "embedding" && vo.isDefault) {
+        warnReindex();
       }
+      await load(vo.id);
     } catch (e) {
       ElMessage.error(`保存失败：${(e as Error).message}`);
     } finally {
@@ -141,15 +236,45 @@ export function useAiModelSettings() {
     }
   };
 
-  const test = async (role: ModelRole) => {
-    const st = states[role];
-    if (!st) {
+  const setDefault = async (role: ModelRole, id: string) => {
+    try {
+      await setDefaultAiModel(id);
+      if (role === "embedding") {
+        warnReindex();
+      }
+      await load();
+    } catch (e) {
+      ElMessage.error(`设置默认失败：${(e as Error).message}`);
+    }
+  };
+
+  const remove = async (vo: AiModelVo) => {
+    try {
+      await ElMessageBox.confirm(`删除「${aiModelLabel(vo)}」？正在使用它的对话会回到默认模型。`, "删除模型配置", {
+        type: "warning",
+        confirmButtonText: "删除",
+        cancelButtonText: "取消"
+      });
+    } catch {
       return;
     }
+    try {
+      await deleteAiModel(vo.id);
+      ElMessage.success("已删除");
+      // 删的是正在编辑的那条时，load 找不到它会回落到默认
+      await load();
+    } catch (e) {
+      ElMessage.error(`删除失败：${(e as Error).message}`);
+    }
+  };
+
+  const test = async (role: ModelRole) => {
+    const st = states[role];
     st.testing = true;
     st.testResult = null;
     try {
       const r = await testAiModel(role, {
+        id: st.editingId === NEW_ID ? st.copyKeyFrom : st.editingId,
         baseUrl: st.form.baseUrl.trim(),
         apiKey: st.form.apiKey.trim() || undefined,
         modelId: st.form.modelId.trim(),
@@ -177,7 +302,31 @@ export function useAiModelSettings() {
     }
   };
 
-  onMounted(load);
+  /** API Key 输入框占位：告诉用户留空会发生什么 */
+  const apiKeyPlaceholder = (role: ModelRole) => {
+    const st = states[role];
+    if (st.editingId !== NEW_ID) {
+      return st.items.find((m) => m.id === st.editingId)?.hasApiKey ? "已配置，留空则不改动" : "未配置";
+    }
+    const source = keySources.value.find((s) => s.id === st.copyKeyFrom);
+    return source ? `留空则沿用「${source.label}」的密钥` : "请输入 API Key";
+  };
 
-  return { loading, reindexing, states, save, test, reindex };
+  onMounted(() => load());
+
+  return {
+    apiKeyPlaceholder,
+    duplicate,
+    keySources,
+    loading,
+    reindex,
+    reindexing,
+    remove,
+    save,
+    select,
+    setDefault,
+    startCreate,
+    states,
+    test
+  };
 }

@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/AiModel'
+export type * from './models/ThreadModel'
 export type * from './models/GeneratedImage'
 export type * from './models/GeneratedVideo'
 export type * from './models/FigmaKey'

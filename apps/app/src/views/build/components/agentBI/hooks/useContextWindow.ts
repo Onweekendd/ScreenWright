@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed, type MaybeRefOrGetter, ref, toValue } from "vue";
 
 import { apiClient, type ModelCapability } from "@screenwright/server/rpc";
 
@@ -16,7 +16,7 @@ import type { UsageInfo } from "../type";
 const FALLBACK_CAPABILITY: ModelCapability = {
   modelId: "unknown",
   contextLimit: 20_0000,
-  compaction: { l1Enabled: false, l3Enabled: false, l3TriggerTokens: 20_0000 }
+  compaction: { triggerTokens: 20_0000 }
 };
 
 /** 全局只拉一次：能力配置进程内不变，多会话/多 tab 共享同一份 */
@@ -53,7 +53,7 @@ const EMPTY_USAGE: UsageInfo = { inputTokens: 0, outputTokens: 0, reasoningToken
  * 内部持有最近一次的 token 用量 `lastUsage`，并基于后端下发的模型上下文窗口
  * 派生出占用百分比、进度条颜色与提示文案。多 tab 下每个会话独立持有自己的用量状态。
  */
-export function useContextWindow() {
+export function useContextWindow(contextLimitOverride?: MaybeRefOrGetter<number | null>) {
   /** 最近一次的 token 用量 */
   const lastUsage = ref<UsageInfo | null>(null);
 
@@ -62,7 +62,8 @@ export function useContextWindow() {
   void ensureCapability();
 
   const modelCapability = computed(() => capability.value ?? FALLBACK_CAPABILITY);
-  const maxContextTokens = computed(() => modelCapability.value.contextLimit);
+  /** 对话选了别的推理模型时，以该模型配置的上下文窗口为准；没配置则用后端默认模型的 */
+  const maxContextTokens = computed(() => toValue(contextLimitOverride) || modelCapability.value.contextLimit);
 
   /** 写入用量（如流式结束、加载线程时） */
   const setUsage = (usage: UsageInfo | null) => {
@@ -123,14 +124,11 @@ export function useContextWindow() {
   };
 
   /**
-   * 告警的参照点：
-   * - L3 开启时用真实压缩触发点。上限 100 万而压缩在 15 万就触发，
-   *   按上限的百分比来配色的话进度条永远不会变黄变红，预警形同虚设。
-   * - L3 关闭时才退回按模型上限算。
+   * 告警的参照点用真实压缩触发点（不超过模型上限）。上限 100 万而压缩在 15 万就触发，
+   * 按上限的百分比来配色的话进度条永远不会变黄变红，预警形同虚设。
    */
   const warningCeiling = computed(() => {
-    const { compaction, contextLimit } = modelCapability.value;
-    return compaction.l3Enabled ? compaction.l3TriggerTokens : contextLimit;
+    return Math.min(modelCapability.value.compaction.triggerTokens, maxContextTokens.value);
   });
 
   /** 距离告警参照点的占比（可超过 100） */
@@ -148,15 +146,13 @@ export function useContextWindow() {
     return "var(--sw-theme-color)";
   });
 
-  /** 悬浮提示文案：展示剩余上下文百分比，L3 开启时额外说明会自动压缩 */
+  /** 悬浮提示文案：展示剩余上下文百分比，接近压缩阈值时额外说明会自动压缩 */
   const contextTooltip = computed(() => {
     if (!lastUsage.value) {
       return `上下文：0 / ${maxContextTokens.value.toLocaleString()} tokens（剩余 100%）`;
     }
     const base = `上下文：${usedTokens.value.toLocaleString()} / ${maxContextTokens.value.toLocaleString()} tokens（剩余 ${100 - contextPercentage.value}%）`;
-    return modelCapability.value.compaction.l3Enabled && ceilingRatio.value >= 70
-      ? `${base}（接近自动压缩阈值）`
-      : base;
+    return ceilingRatio.value >= 70 ? `${base}（接近自动压缩阈值）` : base;
   });
 
   return {

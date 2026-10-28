@@ -11,43 +11,76 @@ import {
   resolveEmbeddingModel,
   warmModelConfigs
 } from "../../provider/model-registry";
-import { buildSubmitRequest, parseSubmitResponse, resolveVideoConfig } from "./video-provider";
+import { buildSubmitRequest, parseSubmitResponse, resolveVideoConfig } from "../ai-generation/video/video-provider";
 
 export interface AiModelVo {
+  id: string;
   role: ModelRole;
+  name: string;
   baseUrl: string;
   /** 只回布尔，绝不回传 key 明文或任何片段（开源项目，尾位也算泄露） */
   hasApiKey: boolean;
   modelId: string;
   contextLength: number | null;
   dimensions: number | null;
+  /** 该角色的默认配置（新对话、没在对话里单独选的角色都用它） */
+  isDefault: boolean;
 }
 
-const toVo = (row: {
+interface AiModelRow {
+  id: string;
   role: string;
+  name: string;
   baseUrl: string;
   apiKey: string;
   modelId: string;
   contextLength: number | null;
   dimensions: number | null;
-}): AiModelVo => ({
+  isDefault: boolean;
+}
+
+const toVo = (row: AiModelRow): AiModelVo => ({
+  id: row.id,
   role: row.role as ModelRole,
+  name: row.name,
   baseUrl: row.baseUrl,
   hasApiKey: !!row.apiKey,
   modelId: row.modelId,
   contextLength: row.contextLength,
-  dimensions: row.dimensions
+  dimensions: row.dimensions,
+  isDefault: row.isDefault
 });
 
+export class AiModelNotFoundError extends Error {
+  constructor(id: string) {
+    super(`模型配置不存在：${id}`);
+  }
+}
+
+export class LastAiModelError extends Error {
+  constructor() {
+    super("每个角色至少保留一条配置");
+  }
+}
+
+const findOrThrow = async (id: string) => {
+  const row = await prismaClient.aiModel.findUnique({ where: { id } });
+  if (!row) {
+    throw new AiModelNotFoundError(id);
+  }
+  return row;
+};
+
+/** 全部配置：按角色顺序，同角色按创建时间 */
 export async function listAiModels(): Promise<AiModelVo[]> {
-  // warm 一次，确保所有角色都存在（首次访问会 seed）
+  // warm 一次，确保每个角色至少一条且有默认行（首次访问会 seed）
   await warmModelConfigs();
-  const rows = await prismaClient.aiModel.findMany();
-  const byRole = new Map(rows.map((r) => [r.role, r]));
-  return MODEL_ROLES.map((role) => toVo(byRole.get(role)!));
+  const rows = await prismaClient.aiModel.findMany({ orderBy: { createdTime: "asc" } });
+  return MODEL_ROLES.flatMap((role) => rows.filter((r) => r.role === role).map(toVo));
 }
 
 export interface UpdateAiModelInput {
+  name?: string;
   baseUrl?: string;
   /** 空 / 未传 → 不覆盖旧值 */
   apiKey?: string;
@@ -56,8 +89,17 @@ export interface UpdateAiModelInput {
   dimensions?: number | null;
 }
 
-export async function updateAiModel(role: ModelRole, input: UpdateAiModelInput): Promise<AiModelVo> {
+export interface CreateAiModelInput extends UpdateAiModelInput {
+  /** 没填 apiKey 时沿用这条已存配置的密钥（可跨角色），同一服务商的 key 不用反复粘贴 */
+  copyKeyFrom?: string;
+}
+
+/** 只挑传了的字段；apiKey 空串视为「不改」 */
+const pickData = (input: UpdateAiModelInput): Record<string, unknown> => {
   const data: Record<string, unknown> = {};
+  if (input.name !== undefined) {
+    data.name = input.name.trim();
+  }
   if (input.baseUrl !== undefined) {
     data.baseUrl = input.baseUrl.trim();
   }
@@ -73,23 +115,55 @@ export async function updateAiModel(role: ModelRole, input: UpdateAiModelInput):
   if (input.dimensions !== undefined) {
     data.dimensions = input.dimensions;
   }
+  return data;
+};
 
-  const row = await prismaClient.aiModel.upsert({
-    where: { role },
-    create: {
-      role,
-      baseUrl: (data.baseUrl as string) ?? "",
-      apiKey: (data.apiKey as string) ?? "",
-      modelId: (data.modelId as string) ?? "",
-      contextLength: (data.contextLength as number | null) ?? null,
-      dimensions: (data.dimensions as number | null) ?? null
-    },
-    update: data
-  });
+/** 新增一条；该角色还没有任何配置时自动设为默认 */
+export async function createAiModel(role: ModelRole, input: CreateAiModelInput): Promise<AiModelVo> {
+  const data = pickData(input);
+  if (data.apiKey === undefined && input.copyKeyFrom) {
+    data.apiKey = (await findOrThrow(input.copyKeyFrom)).apiKey;
+  }
+  const siblings = await prismaClient.aiModel.count({ where: { role } });
+  const row = await prismaClient.aiModel.create({ data: { ...data, role, isDefault: siblings === 0 } });
+  await warmModelConfigs();
+  return toVo(row);
+}
 
+export async function updateAiModel(id: string, input: UpdateAiModelInput): Promise<AiModelVo> {
+  await findOrThrow(id);
+  const row = await prismaClient.aiModel.update({ where: { id }, data: pickData(input) });
   // 热更新：重建同步缓存，agent 下一次 run 就用新配置
   await warmModelConfigs();
   return toVo(row);
+}
+
+/**
+ * 把一条设为该角色的默认。同一事务里先清同角色的默认标记再设新的，保证每个角色恰好一条默认。
+ *
+ * TODO(你)：两个请求并发切同一角色的默认时，这个事务够不够？要不要数据库层兜底？见交接说明第 2 块。
+ */
+export async function setDefaultAiModel(id: string): Promise<AiModelVo> {
+  const target = await findOrThrow(id);
+  const [, row] = await prismaClient.$transaction([
+    prismaClient.aiModel.updateMany({ where: { role: target.role, isDefault: true }, data: { isDefault: false } }),
+    prismaClient.aiModel.update({ where: { id }, data: { isDefault: true } })
+  ]);
+  await warmModelConfigs();
+  return toVo(row);
+}
+
+/**
+ * 删除一条；角色的最后一条不让删。
+ * 删的是默认行时，warm 会把最早的一条补为默认；引用它的对话选择由外键级联删除，回到默认。
+ */
+export async function deleteAiModel(id: string): Promise<void> {
+  const target = await findOrThrow(id);
+  if ((await prismaClient.aiModel.count({ where: { role: target.role } })) <= 1) {
+    throw new LastAiModelError();
+  }
+  await prismaClient.aiModel.delete({ where: { id } });
+  await warmModelConfigs();
 }
 
 export interface TestAiModelResult {
@@ -103,14 +177,16 @@ const scrubKeys = (msg: string): string => msg.replace(/\b(sk|xai|key)-[A-Za-z0-
 
 /**
  * 用传入的临时配置发一次最小请求验证连通性（不落库）。
- * 表单里没重填的字段（尤其 apiKey——前端不显示明文）回退到库里已存的值。
+ * 表单里没重填的字段（尤其 apiKey——前端不显示明文）回退到 `storedId` 那条已存配置：
+ * 编辑时是正在编辑的那条，新增时是 copyKeyFrom 指定的那条，都没有就只用表单值。
  */
 export async function testAiModel(
   role: ModelRole,
-  partial: Partial<Pick<AiModelConfig, "baseUrl" | "apiKey" | "modelId" | "dimensions">>
+  partial: Partial<Pick<AiModelConfig, "baseUrl" | "apiKey" | "modelId" | "dimensions">>,
+  storedId?: string
 ): Promise<TestAiModelResult> {
   const started = Date.now();
-  const stored = await prismaClient.aiModel.findUnique({ where: { role } });
+  const stored = storedId ? await prismaClient.aiModel.findUnique({ where: { id: storedId } }) : null;
   const cfg = {
     baseUrl: partial.baseUrl?.trim() || stored?.baseUrl || "",
     apiKey: partial.apiKey?.trim() || stored?.apiKey || "",

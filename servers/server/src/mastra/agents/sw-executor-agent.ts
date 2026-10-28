@@ -1,5 +1,6 @@
 import { Agent } from "@mastra/core/agent";
 import { ToolSearchProcessor } from "@mastra/core/processors";
+import type { RequestContext } from "@mastra/core/request-context";
 
 import { loadPrompt } from "@/agent-resources/prompts";
 
@@ -18,6 +19,7 @@ import { listAvailableEvents } from "../tools/list-available-events";
 import { searchComponentTool } from "../tools/search-component-tool";
 import { simulateEvent } from "../tools/simulate-event";
 import { claimTask, getTask, listTasks, updateTask } from "../tools/task";
+import type { CommonRunTimeType } from "../types/bi-chat";
 import { fullWorkspace } from "../workspace";
 
 const instructions = [
@@ -44,7 +46,8 @@ export const swExecutorAgent = new Agent({
 
   instructions,
 
-  model: () => resolveReasoningModel(),
+  model: ({ requestContext }: { requestContext: RequestContext<CommonRunTimeType> }) =>
+    resolveReasoningModel(requestContext?.get("models")?.reasoning),
 
   memory,
 

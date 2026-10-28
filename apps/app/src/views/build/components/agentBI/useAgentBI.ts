@@ -20,6 +20,7 @@ import { useBackgroundTask } from "./hooks/useBackgroundTask";
 import { useChunkSideEffects } from "./hooks/useChunkSideEffects";
 import { useContextWindow } from "./hooks/useContextWindow";
 import { useGenerateTitle } from "./hooks/useGenerateTitle";
+import { useThreadModels } from "./hooks/useThreadModels";
 import { agentBITools } from "./tools";
 import {
   extractPendingClientTools,
@@ -48,7 +49,10 @@ export function createAgentBISession() {
   const inputText = ref("");
   const isStreaming = ref(false);
   const isGeneratingTitle = ref(false);
-  const { compacting, contextColor, contextPercentage, contextTooltip, lastUsage, requestCompact } = useContextWindow();
+  // getter 惰性求值：threadModels 在下方 useAgentBIMemory 之后才创建（它依赖 activeThreadId）
+  const { compacting, contextColor, contextPercentage, contextTooltip, lastUsage, requestCompact } = useContextWindow(
+    () => threadModels.reasoningContextLength.value
+  );
   const { navInfo } = useLargeScreenInfo();
 
   // 共享的历史线程列表（同一大屏所有 tab 共用一份）
@@ -108,6 +112,8 @@ export function createAgentBISession() {
 
     updateMessagesBy
   });
+
+  const threadModels = useThreadModels(activeThreadId);
 
   const { consumeSSEResponse } = useAgentBIStream();
   const { createSideEffectTransform } = useChunkSideEffects({
@@ -289,7 +295,7 @@ export function createAgentBISession() {
     }
 
     try {
-      await ensureActiveThread();
+      await ensureActiveThread(threadModels.selection.value);
     } catch (err) {
       console.error("Failed to ensure active thread:", err);
       ElMessage.error("创建对话失败，请稍后重试。");
@@ -386,6 +392,7 @@ export function createAgentBISession() {
     stopStreaming,
     switchToChatFromHistory,
     switchToNewChat,
+    threadModels,
     updateThreadMode,
     versionNodes,
     nodesByMessageId,

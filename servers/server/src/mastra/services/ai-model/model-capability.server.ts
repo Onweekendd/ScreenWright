@@ -15,9 +15,7 @@ export const getModelCapability = (): ModelCapability => {
     modelId: reasoning.modelId || "unset",
     contextLimit: reasoning.contextLength ?? FALLBACK_MODEL_CONTEXT_LIMIT,
     compaction: {
-      l1Enabled: compactionConfig.l1Enabled,
-      l3Enabled: compactionConfig.l3Enabled,
-      l3TriggerTokens: compactionConfig.l3.triggerTokens
+      triggerTokens: compactionConfig.history.triggerTokens
     }
   });
 };

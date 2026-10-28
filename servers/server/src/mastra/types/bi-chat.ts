@@ -3,6 +3,8 @@ import type { StorageThreadType } from "@mastra/core/memory";
 import type { LanguageModelUsage, UIMessageChunk } from "ai";
 import { z } from "zod";
 
+import type { ThreadModelSelection } from "./thread-model";
+
 // ============================================
 // BI Chat 消息相关 Schema
 // ============================================
@@ -38,8 +40,12 @@ export {
   SuspendType
 } from "./suspend";
 
+/** 一次 agent 运行的 RequestContext：由 buildRequestContext 按 threadId 查库组装，agent / 子 agent / processor 读取 */
 export interface CommonRunTimeType {
   mode: AgentMode;
+  threadId: string;
+  /** 对话的模型选择；缺的角色用默认 */
+  models: ThreadModelSelection;
 }
 
 /**

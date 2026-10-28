@@ -15,8 +15,9 @@ import { jsonSchema } from "ai";
 
 import { swAgent } from "../../runtime";
 import { memory } from "../../storage/storage";
-import type { CustomStorageThreadType } from "../../types/bi-chat";
+import type { CommonRunTimeType, CustomStorageThreadType } from "../../types/bi-chat";
 import { AgentMode } from "../../types/bi-chat";
+import { getThreadModels } from "../ai-model/thread-model.server";
 import { withRenamedBackgroundChunks } from "./background-chunk";
 import { resolveModeFromResumeData } from "./resume-mode";
 import { SubAgentSnapshotCollector } from "./sub-agent-collector";
@@ -67,13 +68,18 @@ const buildRequestContext = async (
   suspendType: BIChatRequest["suspendType"],
   resumeData: Record<string, unknown> | undefined
 ) => {
-  const currentThread = (await memory.getThreadById({ threadId })) as CustomStorageThreadType;
+  const [currentThread, models] = await Promise.all([
+    memory.getThreadById({ threadId }) as Promise<CustomStorageThreadType | null>,
+    getThreadModels(threadId)
+  ]);
+
   const metadataMode = currentThread?.metadata.mode ?? AgentMode.ASK_BEFORE_EDIT;
   const mode = resolveModeFromResumeData(metadataMode, suspendType, resumeData);
 
-  return new RequestContext<{ mode: AgentMode; threadId: string }>([
+  return new RequestContext<CommonRunTimeType>([
     ["mode", mode],
-    ["threadId", threadId]
+    ["threadId", threadId],
+    ["models", models]
   ]);
 };
 
@@ -107,7 +113,7 @@ interface SwAgentStreamOptions {
   messages: BIChatRequest["messages"];
   clientTools: ReturnType<typeof normalizeClientTools>;
   memoryOptions: MemoryOptions;
-  requestContext: RequestContext<{ mode: AgentMode; threadId: string }>;
+  requestContext: RequestContext<CommonRunTimeType>;
   abortSignal: AbortSignal;
   onStepFinish: AgentExecutionOptionsBase<unknown>["onStepFinish"];
 }

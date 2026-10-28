@@ -1,4 +1,5 @@
 import { Agent } from "@mastra/core/agent";
+import type { RequestContext } from "@mastra/core/request-context";
 
 import { loadPrompt } from "@/agent-resources/prompts";
 
@@ -7,6 +8,7 @@ import { memory } from "../storage/storage";
 import { executeInBrowserTool } from "../tools/execute-in-browser";
 import { readFileTool } from "../tools/file";
 import { simulateEvent } from "../tools/simulate-event";
+import type { CommonRunTimeType } from "../types/bi-chat";
 import { fullWorkspace } from "../workspace";
 
 const instructions = [
@@ -58,7 +60,8 @@ export const dataFlowVerificationAgent = new Agent({
     "专门验证 Screenwright 数据流链路配置（过滤器 / 回调参数 / 事件 / openFilter）。配置完成后调用，返回结构化验证报告，明确标注每项是否通过。",
   instructions,
 
-  model: () => resolveReasoningModel(),
+  model: ({ requestContext }: { requestContext: RequestContext<CommonRunTimeType> }) =>
+    resolveReasoningModel(requestContext?.get("models")?.reasoning),
 
   memory,
   // 校验类 agent：需要完整 skill 权限以 skill_read 读取 verify-flow.md 等校验规范

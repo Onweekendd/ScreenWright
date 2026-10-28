@@ -3,7 +3,10 @@
     <div class="sw-settings__body">
       <header class="sw-settings__head">
         <h1>模型设置</h1>
-        <p>配置保存在本地数据库，运行时热更新。API Key 留空则保留已存密钥；.env 仅用于首次初始化。</p>
+        <p>
+          每类模型可存多条配置，标「默认」的那条用于新对话，对话里可在输入框单独切换。配置保存在数据库，运行时热更新。API
+          Key 留空则保留已存密钥；.env 仅用于首次初始化。
+        </p>
       </header>
 
       <section v-for="meta in ROLE_META" :key="meta.role" class="sw-card">
@@ -14,86 +17,146 @@
         </div>
         <p class="sw-card__desc">{{ meta.desc }}</p>
 
-        <template v-if="states[meta.role]">
-          <div class="sw-field">
-            <label>Base URL</label>
-            <el-input
-              v-model="states[meta.role]!.form.baseUrl"
-              :placeholder="meta.baseUrlPlaceholder || 'https://api.example.com/v1'"
-            />
-          </div>
-
-          <div class="sw-field">
-            <label>API Key</label>
-            <el-input
-              v-model="states[meta.role]!.form.apiKey"
-              type="password"
-              show-password
-              :placeholder="states[meta.role]!.vo.hasApiKey ? '已配置，留空则不改动' : '未配置'"
-            />
-          </div>
-
-          <div class="sw-field">
-            <label>模型 ID</label>
-            <el-input v-model="states[meta.role]!.form.modelId" :placeholder="meta.modelPlaceholder" />
-          </div>
-
-          <div v-if="meta.role === 'reasoning'" class="sw-field">
-            <label>上下文窗口</label>
-            <el-input-number
-              v-model="states[meta.role]!.form.contextLength"
-              :min="0"
-              :step="10000"
-              :controls="false"
-              placeholder="如 1000000，留空用默认"
-            />
-            <span class="sw-field__note">用于对话页上下文进度条的分母</span>
-          </div>
-
-          <div v-if="meta.role === 'embedding'" class="sw-field">
-            <label>向量维度</label>
-            <el-input-number
-              v-model="states[meta.role]!.form.dimensions"
-              :min="1"
-              :controls="false"
-              placeholder="如 1024"
-            />
-            <span class="sw-field__note">须与模型实际输出维度一致，改动后必须重建索引</span>
-          </div>
-
-          <div class="sw-card__foot">
-            <div class="sw-card__test" v-if="states[meta.role]!.testResult">
-              <Icon
-                :type="states[meta.role]!.testResult!.ok ? 'CircleCheck' : 'CircleClose'"
-                :size="14"
-                :color="states[meta.role]!.testResult!.ok ? '#4ade80' : '#f87171'"
-              />
-              <span :class="{ 'is-err': !states[meta.role]!.testResult!.ok }">
-                {{ states[meta.role]!.testResult!.text }}
-              </span>
+        <ul class="sw-list">
+          <li
+            v-for="item in states[meta.role].items"
+            :key="item.id"
+            class="sw-list__item"
+            :class="{ 'is-editing': states[meta.role].editingId === item.id }"
+            @click="select(meta.role, item.id)"
+          >
+            <div class="sw-list__main">
+              <span class="sw-list__name">{{ aiModelLabel(item) }}</span>
+              <span v-if="item.isDefault" class="sw-list__default">默认</span>
+              <span class="sw-list__host">{{ hostOf(item.baseUrl) }}</span>
             </div>
-            <div class="sw-card__actions">
-              <el-button v-if="meta.role === 'embedding'" :loading="reindexing" @click="reindex"> 重建索引 </el-button>
-              <el-button :loading="states[meta.role]!.testing" @click="test(meta.role)">
-                {{ meta.role === "video" ? "测试提交" : "测试连接" }}
-              </el-button>
-              <el-button class="sw-btn-primary" :loading="states[meta.role]!.saving" @click="save(meta.role)">
-                保存
-              </el-button>
+            <div class="sw-list__ops" @click.stop>
+              <button v-if="!item.isDefault" type="button" @click="setDefault(meta.role, item.id)">设为默认</button>
+              <button type="button" @click="duplicate(meta.role, item)">复制</button>
+              <button v-if="states[meta.role].items.length > 1" type="button" class="is-danger" @click="remove(item)">
+                删除
+              </button>
             </div>
+          </li>
+          <li
+            class="sw-list__add"
+            :class="{ 'is-editing': states[meta.role].editingId === NEW_ID }"
+            @click="startCreate(meta.role)"
+          >
+            + 新增配置
+          </li>
+        </ul>
+
+        <div class="sw-field">
+          <label>名称</label>
+          <el-input v-model="states[meta.role].form.name" placeholder="选填，留空显示模型 ID" />
+        </div>
+
+        <div class="sw-field">
+          <label>Base URL</label>
+          <el-input
+            v-model="states[meta.role].form.baseUrl"
+            :placeholder="meta.baseUrlPlaceholder || 'https://api.example.com/v1'"
+          />
+        </div>
+
+        <div class="sw-field">
+          <label>API Key</label>
+          <el-input
+            v-model="states[meta.role].form.apiKey"
+            type="password"
+            show-password
+            :placeholder="apiKeyPlaceholder(meta.role)"
+          />
+          <el-select
+            v-if="states[meta.role].editingId === NEW_ID && keySources.length > 0"
+            v-model="states[meta.role].copyKeyFrom"
+            clearable
+            placeholder="或沿用已有配置的密钥"
+            popper-class="sw-select-dropdown"
+            class="sw-field__key-source"
+          >
+            <el-option v-for="source in keySources" :key="source.id" :label="source.label" :value="source.id" />
+          </el-select>
+        </div>
+
+        <div class="sw-field">
+          <label>模型 ID</label>
+          <el-input v-model="states[meta.role].form.modelId" :placeholder="meta.modelPlaceholder" />
+        </div>
+
+        <div v-if="meta.role === 'reasoning'" class="sw-field">
+          <label>上下文窗口</label>
+          <el-input-number
+            v-model="states[meta.role].form.contextLength"
+            :min="0"
+            :step="10000"
+            :controls="false"
+            placeholder="如 1000000，留空用默认"
+          />
+          <span class="sw-field__note">用于对话页上下文进度条的分母</span>
+        </div>
+
+        <div v-if="meta.role === 'embedding'" class="sw-field">
+          <label>向量维度</label>
+          <el-input-number
+            v-model="states[meta.role].form.dimensions"
+            :min="1"
+            :controls="false"
+            placeholder="如 1024"
+          />
+          <span class="sw-field__note">须与模型实际输出维度一致，改动默认配置后必须重建索引</span>
+        </div>
+
+        <div class="sw-card__foot">
+          <div class="sw-card__test" v-if="states[meta.role].testResult">
+            <Icon
+              :type="states[meta.role].testResult!.ok ? 'CircleCheck' : 'CircleClose'"
+              :size="14"
+              :color="states[meta.role].testResult!.ok ? '#4ade80' : '#f87171'"
+            />
+            <span :class="{ 'is-err': !states[meta.role].testResult!.ok }">
+              {{ states[meta.role].testResult!.text }}
+            </span>
           </div>
-        </template>
+          <div class="sw-card__actions">
+            <el-button v-if="meta.role === 'embedding'" :loading="reindexing" @click="reindex"> 重建索引 </el-button>
+            <el-button :loading="states[meta.role].testing" @click="test(meta.role)">
+              {{ meta.role === "video" ? "测试提交" : "测试连接" }}
+            </el-button>
+            <el-button class="sw-btn-primary" :loading="states[meta.role].saving" @click="save(meta.role)">
+              {{ states[meta.role].editingId === NEW_ID ? "新增" : "保存" }}
+            </el-button>
+          </div>
+        </div>
       </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { aiModelLabel } from "@/api/aiModel";
 import Icon from "@/components/Icon/index.vue";
 
-import { ROLE_META, useAiModelSettings } from "./useAiModelSettings";
+import { NEW_ID, ROLE_META, useAiModelSettings } from "./useAiModelSettings";
 
-const { loading, reindexing, states, save, test, reindex } = useAiModelSettings();
+const {
+  apiKeyPlaceholder,
+  duplicate,
+  keySources,
+  loading,
+  reindex,
+  reindexing,
+  remove,
+  save,
+  select,
+  setDefault,
+  startCreate,
+  states,
+  test
+} = useAiModelSettings();
+
+const hostOf = (baseUrl: string) => (URL.canParse(baseUrl) ? new URL(baseUrl).host : baseUrl || "未填地址");
 </script>
 
 <style lang="scss" scoped>
@@ -216,6 +279,102 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
   }
 }
 
+.sw-list {
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  border: 1px solid $sw-border;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &__item,
+  &__add {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+
+    &:hover {
+      background: $sw-hover-bg;
+    }
+
+    &.is-editing {
+      background: $sw-active-bg;
+      border-left-color: $sw-active-bar;
+    }
+
+    & + & {
+      border-top: 1px solid $sw-divider;
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__main {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 6px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 13px;
+    color: $sw-text-strong;
+    overflow-wrap: anywhere;
+  }
+
+  &__default {
+    padding: 0 6px;
+    font-size: 10px;
+    line-height: 16px;
+    color: $sw-purple-light;
+    background: $sw-active-bg;
+    border-radius: 3px;
+  }
+
+  &__host {
+    flex-basis: 100%;
+    font-size: 11px;
+    color: $sw-text-muted;
+    overflow-wrap: anywhere;
+  }
+
+  &__ops {
+    display: flex;
+    flex-shrink: 0;
+    gap: 2px;
+
+    button {
+      padding: 2px 6px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      color: $sw-text-dim;
+      font-size: 11px;
+      cursor: pointer;
+
+      &:hover {
+        color: $sw-text-strong;
+        background: $sw-hover-bg;
+      }
+
+      &.is-danger:hover {
+        color: #f87171;
+      }
+    }
+  }
+
+  &__add {
+    font-size: 12px;
+    color: $sw-text-dim;
+  }
+}
+
 .sw-field {
   display: flex;
   flex-direction: column;
@@ -232,7 +391,12 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
     color: $sw-text-muted;
   }
 
+  &__key-source {
+    width: 100%;
+  }
+
   :deep(.el-input__wrapper),
+  :deep(.el-select__wrapper),
   :deep(.el-input-number) {
     background-color: $sw-bg;
     box-shadow: none;
@@ -245,12 +409,17 @@ const { loading, reindexing, states, save, test, reindex } = useAiModelSettings(
     }
   }
 
-  :deep(.el-input__inner) {
+  :deep(.el-input__inner),
+  :deep(.el-select__selected-item) {
     color: $sw-text-strong;
 
     &::placeholder {
       color: $sw-text-muted;
     }
+  }
+
+  :deep(.el-select__placeholder.is-transparent) {
+    color: $sw-text-muted;
   }
 
   :deep(.el-input-number) {

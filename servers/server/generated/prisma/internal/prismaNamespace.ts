@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   AiModel: 'AiModel',
+  ThreadModel: 'ThreadModel',
   GeneratedImage: 'GeneratedImage',
   GeneratedVideo: 'GeneratedVideo',
   FigmaKey: 'FigmaKey',
@@ -420,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "aiModel" | "generatedImage" | "generatedVideo" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
+    modelProps: "aiModel" | "threadModel" | "generatedImage" | "generatedVideo" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -495,6 +496,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AiModelCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AiModelCountAggregateOutputType> | number
+        }
+      }
+    }
+    ThreadModel: {
+      payload: Prisma.$ThreadModelPayload<ExtArgs>
+      fields: Prisma.ThreadModelFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ThreadModelFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ThreadModelFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>
+        }
+        findFirst: {
+          args: Prisma.ThreadModelFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ThreadModelFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>
+        }
+        findMany: {
+          args: Prisma.ThreadModelFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>[]
+        }
+        create: {
+          args: Prisma.ThreadModelCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>
+        }
+        createMany: {
+          args: Prisma.ThreadModelCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ThreadModelCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>[]
+        }
+        delete: {
+          args: Prisma.ThreadModelDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>
+        }
+        update: {
+          args: Prisma.ThreadModelUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>
+        }
+        deleteMany: {
+          args: Prisma.ThreadModelDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ThreadModelUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ThreadModelUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>[]
+        }
+        upsert: {
+          args: Prisma.ThreadModelUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ThreadModelPayload>
+        }
+        aggregate: {
+          args: Prisma.ThreadModelAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateThreadModel>
+        }
+        groupBy: {
+          args: Prisma.ThreadModelGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ThreadModelGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ThreadModelCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ThreadModelCountAggregateOutputType> | number
         }
       }
     }
@@ -2018,16 +2093,30 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const AiModelScalarFieldEnum = {
+  id: 'id',
   role: 'role',
+  name: 'name',
   baseUrl: 'baseUrl',
   apiKey: 'apiKey',
   modelId: 'modelId',
   contextLength: 'contextLength',
   dimensions: 'dimensions',
+  isDefault: 'isDefault',
+  createdTime: 'createdTime',
   updatedTime: 'updatedTime'
 } as const
 
 export type AiModelScalarFieldEnum = (typeof AiModelScalarFieldEnum)[keyof typeof AiModelScalarFieldEnum]
+
+
+export const ThreadModelScalarFieldEnum = {
+  threadId: 'threadId',
+  role: 'role',
+  aiModelId: 'aiModelId',
+  updatedTime: 'updatedTime'
+} as const
+
+export type ThreadModelScalarFieldEnum = (typeof ThreadModelScalarFieldEnum)[keyof typeof ThreadModelScalarFieldEnum]
 
 
 export const GeneratedImageScalarFieldEnum = {
@@ -2533,6 +2622,13 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -2557,13 +2653,6 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -2676,6 +2765,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   aiModel?: Prisma.AiModelOmit
+  threadModel?: Prisma.ThreadModelOmit
   generatedImage?: Prisma.GeneratedImageOmit
   generatedVideo?: Prisma.GeneratedVideoOmit
   figmaKey?: Prisma.FigmaKeyOmit

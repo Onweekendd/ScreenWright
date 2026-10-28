@@ -8,11 +8,13 @@ import type { UIMessage } from "ai";
 import { manualCompact, type ManualCompactResult } from "../../lib/compaction/manualCompact";
 import { memory, storage } from "../../storage/storage";
 import type { CustomStorageThreadType } from "../../types/bi-chat";
+import type { ThreadModelSelection } from "../../types/thread-model";
+import { initThreadModels } from "../ai-model/thread-model.server";
 import { restoreFilePartsFromAttachedImages } from "./attached-images";
 import { injectSubAgentDataParts, normalizeSubAgentSnapshots } from "./sub-agent-snapshots";
 
 /**
- * 用户主动压缩当前 thread 的上下文(手动触发 L3)
+ * 用户主动压缩当前 thread 的上下文(手动触发历史摘要)
  */
 export async function handleCompactThread(threadId: string, resourceId: string): Promise<ManualCompactResult> {
   return manualCompact(threadId, resourceId);
@@ -21,8 +23,17 @@ export async function handleCompactThread(threadId: string, resourceId: string):
 /**
  * 创建对话线程
  */
-export async function handleCreateThread(resourceId: string, title?: string, metadata?: Record<string, unknown>) {
-  return memory.createThread({ resourceId, title: title ?? "新对话", metadata });
+export async function handleCreateThread(
+  resourceId: string,
+  title?: string,
+  metadata?: Record<string, unknown>,
+  models?: ThreadModelSelection
+) {
+  const thread = await memory.createThread({ resourceId, title: title ?? "新对话", metadata });
+  if (models) {
+    await initThreadModels(thread.id, models);
+  }
+  return thread;
 }
 
 /**

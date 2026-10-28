@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   AiModel: 'AiModel',
+  ThreadModel: 'ThreadModel',
   GeneratedImage: 'GeneratedImage',
   GeneratedVideo: 'GeneratedVideo',
   FigmaKey: 'FigmaKey',
@@ -91,16 +92,30 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const AiModelScalarFieldEnum = {
+  id: 'id',
   role: 'role',
+  name: 'name',
   baseUrl: 'baseUrl',
   apiKey: 'apiKey',
   modelId: 'modelId',
   contextLength: 'contextLength',
   dimensions: 'dimensions',
+  isDefault: 'isDefault',
+  createdTime: 'createdTime',
   updatedTime: 'updatedTime'
 } as const
 
 export type AiModelScalarFieldEnum = (typeof AiModelScalarFieldEnum)[keyof typeof AiModelScalarFieldEnum]
+
+
+export const ThreadModelScalarFieldEnum = {
+  threadId: 'threadId',
+  role: 'role',
+  aiModelId: 'aiModelId',
+  updatedTime: 'updatedTime'
+} as const
+
+export type ThreadModelScalarFieldEnum = (typeof ThreadModelScalarFieldEnum)[keyof typeof ThreadModelScalarFieldEnum]
 
 
 export const GeneratedImageScalarFieldEnum = {

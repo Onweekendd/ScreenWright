@@ -41,10 +41,19 @@ export { Prisma }
 
 /**
  * Model AiModel
- * AI 模型配置：5 个角色，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
- * 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
+ * AI 模型配置：4 个角色，每个角色可存多条，`isDefault` 标记该角色的默认那条（每角色恰好一条）。
+ * runtime 读取时若某角色一条都没有，用 env 兜底 seed；有行但没有默认行时取最早一条补为默认。
+ * 对话可在 `thread_model` 里按角色覆盖默认；没覆盖的角色用默认。provider 一律按 OpenAI 兼容端点处理。
  */
 export type AiModel = Prisma.AiModelModel
+/**
+ * Model ThreadModel
+ * 对话级模型选择：某对话的某角色不用默认、改用指定配置。没有行 = 该角色用默认。
+ * 只覆盖 reasoning / image / video；embedding 与向量索引维度绑定，保持全局唯一。
+ * threadId 不加外键：thread 在 Mastra 的独立 schema（MASTRA_DATABASE_URL）里。
+ * 配置被删时级联删掉这些行，对应对话自动回到默认。
+ */
+export type ThreadModel = Prisma.ThreadModelModel
 /**
  * Model GeneratedImage
  * 生图产物。`promptHash` 是幂等键：同一份结构化 prompt + seed + model 命中直接返回，

@@ -9,7 +9,9 @@ import { inlineImagesMiddleware } from "./image-middleware";
 import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from "./utils";
 
 /**
- * 模型配置化：4 个角色，配置存 `ai_model` 表（前端「设置」页维护）。
+ * 模型配置化：4 个角色，配置存 `ai_model` 表（前端「设置」页维护）。每个角色可存多条，
+ * `isDefault` 那条是默认；对话可在 `thread_model` 表里按角色改用别的配置（见 thread-model.server.ts）。
+ * 缓存里放全部配置，`resolveXxx(configId?)` 按 id 取，id 缺失/失效回退默认。
  *
  * - **reasoning**：主 agent + 所有子 agent + 标题 + 摘要压缩 + 编排 + 截图 + subtab + artifact-app Pi
  * - **embedding**：组件 RAG 向量
@@ -30,6 +32,7 @@ export const MODEL_ROLES: readonly ModelRole[] = ["reasoning", "embedding", "ima
 export const DEFAULT_VIDEO_MODEL = "MiniMax-H3";
 
 export interface AiModelConfig {
+  id: string;
   role: ModelRole;
   baseUrl: string;
   apiKey: string;
@@ -39,7 +42,7 @@ export interface AiModelConfig {
 }
 
 /** 首启 seed 兜底：某行不存在时用 env 建。env 也空就建空行，等用户去设置页填。惰性读 env。 */
-function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig, "role"> {
+function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig, "id" | "role"> {
   const e = process.env;
   switch (role) {
     case "reasoning":
@@ -84,9 +87,12 @@ function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig,
   }
 }
 
-const cache = new Map<ModelRole, AiModelConfig>();
+/** 全部配置按 id 索引；默认配置另按角色索引。两张表在 warm 时整体替换 */
+let configsById = new Map<string, AiModelConfig>();
+let defaultsByRole = new Map<ModelRole, AiModelConfig>();
 
 const toConfig = (row: {
+  id: string;
   role: string;
   baseUrl: string;
   apiKey: string;
@@ -94,6 +100,7 @@ const toConfig = (row: {
   contextLength: number | null;
   dimensions: number | null;
 }): AiModelConfig => ({
+  id: row.id,
   role: row.role as ModelRole,
   baseUrl: row.baseUrl,
   apiKey: row.apiKey,
@@ -103,7 +110,9 @@ const toConfig = (row: {
 });
 
 /**
- * 从库里读所有角色配置进同步缓存；缺行用 env 兜底 seed。
+ * 从库里读全部配置进同步缓存，并确定各角色的默认配置：
+ * - 一条都没有 → 用 env 兜底 seed 一条并设为默认；
+ * - 有行但没有默认行（比如默认行被直接删库）→ 取最早一条补为默认。
  * 在 `runtime.ts` 顶层 await、以及每次写 `ai_model` 后调用。
  *
  * 先在新表里读齐再整体替换，不能先 clear 再逐个填：生图 worker 每个任务开始前都会重读一次，
@@ -111,64 +120,85 @@ const toConfig = (row: {
  * 报「角色 image 未初始化」（实测一批 4 张里随机挂一张）。
  */
 export async function warmModelConfigs(): Promise<void> {
-  const next = new Map<ModelRole, AiModelConfig>();
+  const rows = await prismaClient.aiModel.findMany({ orderBy: { createdTime: "asc" } });
+  const nextById = new Map<string, AiModelConfig>();
+  const nextDefaults = new Map<ModelRole, AiModelConfig>();
   for (const role of MODEL_ROLES) {
-    let row = await prismaClient.aiModel.findUnique({ where: { role } });
-    if (!row) {
-      const d = envDefault(role, next.get("image"));
-      row = await prismaClient.aiModel.create({
+    const ofRole = rows.filter((r) => r.role === role);
+    let defaultRow = ofRole.find((r) => r.isDefault) ?? ofRole[0];
+    if (!defaultRow) {
+      const d = envDefault(role, nextDefaults.get("image"));
+      defaultRow = await prismaClient.aiModel.create({
         data: {
           role,
           baseUrl: d.baseUrl,
           apiKey: d.apiKey,
           modelId: d.modelId,
           contextLength: d.contextLength,
-          dimensions: d.dimensions
+          dimensions: d.dimensions,
+          isDefault: true
         }
       });
+    } else if (!defaultRow.isDefault) {
+      defaultRow = await prismaClient.aiModel.update({ where: { id: defaultRow.id }, data: { isDefault: true } });
     }
-    next.set(role, toConfig(row));
+    for (const row of [...ofRole, defaultRow]) {
+      nextById.set(row.id, toConfig(row));
+    }
+    nextDefaults.set(role, toConfig(defaultRow));
   }
-  cache.clear();
-  for (const [role, config] of next) {
-    cache.set(role, config);
-  }
+  configsById = nextById;
+  defaultsByRole = nextDefaults;
 }
 
-/** 读同步缓存；未 warm 抛错（不该发生——runtime 启动时已 warm）。 */
+/** 读某角色的默认配置；未 warm 抛错（不该发生——runtime 启动时已 warm）。 */
 export function getModelConfigSync(role: ModelRole): AiModelConfig {
-  const cfg = cache.get(role);
+  const cfg = defaultsByRole.get(role);
   if (!cfg) {
     throw new Error(`[model-registry] 角色 ${role} 未初始化，请确认 runtime 启动时调用了 warmModelConfigs()`);
   }
   return cfg;
 }
 
+/**
+ * 按配置 id 取；id 为空、已被删、或角色对不上都回退该角色默认。
+ * 回退而不是抛错：对话里存的选择可能指向刚删掉的配置，此时继续用默认比让整轮对话失败更合理。
+ */
+export function resolveModelConfig(role: ModelRole, configId?: string | null): AiModelConfig {
+  const picked = configId ? configsById.get(configId) : undefined;
+  return picked?.role === role ? picked : getModelConfigSync(role);
+}
+
 /** 清缓存（写库前后配合 warmModelConfigs 用；单独调一般用不到）。 */
 export function invalidateModelConfigs(): void {
-  cache.clear();
+  configsById = new Map();
+  defaultsByRole = new Map();
 }
 
 const openaiFor = (cfg: AiModelConfig, fetch?: typeof globalThis.fetch) =>
   createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing", fetch });
 
-/** 推理模型：主 / 子 / 编排 / 标题（录制版） / 摘要 等一切推理；主模型自带视觉，图片经 inlineImagesMiddleware 直接喂。 */
-export function resolveReasoningModel(): WrapLMModel {
-  const cfg = getModelConfigSync("reasoning");
+/**
+ * 推理模型：主 / 子 / 编排 / 标题（录制版） / 摘要 等一切推理；主模型自带视觉，图片经 inlineImagesMiddleware 直接喂。
+ * `configId` 为对话选择的配置，不传用默认。
+ */
+export function resolveReasoningModel(configId?: string | null): WrapLMModel {
+  const cfg = resolveModelConfig("reasoning", configId);
   const provider = openaiFor(cfg, createGenericFetch({ record: true, thinking: "enabled" }));
   return wrapLanguageModel({
     model: provider.chat(cfg.modelId) as unknown as WrapLMModel,
     middleware: [
       inlineImagesMiddleware,
       inlineReasoningMiddleware,
-      extractReasoningMiddleware({ tagName: "think", startWithReasoning: true })
+      // fetch 层已为 reasoning_content 补齐 <think> 标签；无标签的正文应直接保留为 text。
+      extractReasoningMiddleware({ tagName: "think" })
     ]
   });
 }
 
 /** 推理模型（不录制、关思考）：供 title-agent，避免污染主 turn 记录。 */
-export function resolveReasoningModelNoRecord(): WrapLMModel {
-  const cfg = getModelConfigSync("reasoning");
+export function resolveReasoningModelNoRecord(configId?: string | null): WrapLMModel {
+  const cfg = resolveModelConfig("reasoning", configId);
   const provider = openaiFor(cfg, createGenericFetch({ record: false, thinking: "disabled" }));
   // 标题取自首条用户消息，可能带图：内网图 URL 外网模型访问不到，同样要换成二进制
   return wrapLanguageModel({
@@ -188,8 +218,8 @@ export function resolveEmbeddingModel(): ReturnType<typeof createConfiguredEmbed
  * 不是 `WrapLMModel`——用 `ai` 包的 `generateImage({ model, prompt, ... })` 调用，
  * 不能塞进 `resolveReasoningModel` 那一套 wrapLanguageModel 管线。
  */
-export function resolveImageModel(): ImageModel {
-  const cfg = getModelConfigSync("image");
+export function resolveImageModel(configId?: string | null): ImageModel {
+  const cfg = resolveModelConfig("image", configId);
   const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
   return provider.imageModel(cfg.modelId);
 }

@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import z from "zod";
 
+import { handleGenerateTitle, type TitleGenerationRequest } from "../services/ai-generation/title-generation.server";
 import {
   type BIChatRequest,
   handleBiChat,
@@ -16,7 +17,6 @@ import {
   handleUpdateThread
 } from "../services/chat";
 import { buildScreenVersionKey } from "../services/screen/screen-workspace";
-import { handleGenerateTitle, type TitleGenerationRequest } from "../services/ai-generation/title-generation.server";
 import { buildRollbackPlan, getRollbackPreview, listNodes, rollback } from "../services/version/version-history";
 import { AgentMode, ListThreadMessagesRequestSchema } from "../types/bi-chat";
 import { SuspendTypeSchema } from "../types/suspend";
@@ -43,6 +43,10 @@ const CreateThreadRequestSchema = z.object({
       lastUsage: z.custom<LanguageModelUsage>().optional(),
       mode: z.nativeEnum(AgentMode).optional()
     })
+    .optional(),
+  /** 对话创建前在输入框里预选的模型（角色 → ai_model.id），随建对话一起落 thread_model */
+  models: z
+    .object({ reasoning: z.string().optional(), image: z.string().optional(), video: z.string().optional() })
     .optional()
 });
 
@@ -128,8 +132,8 @@ export const biChatRouter = new Hono()
   })
   .post("/create-thread", zValidator("json", CreateThreadRequestSchema), async (c) => {
     try {
-      const { resourceId, title, metadata } = c.req.valid("json");
-      const thread = await handleCreateThread(resourceId, title, metadata);
+      const { resourceId, title, metadata, models } = c.req.valid("json");
+      const thread = await handleCreateThread(resourceId, title, metadata, models);
       return c.json(thread);
     } catch (e) {
       console.error("[create-thread] error:", e);

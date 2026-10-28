@@ -99,6 +99,8 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+
+          <ModelPicker />
         </div>
 
         <div class="send-group">
@@ -142,6 +144,7 @@ import SelectAssets from "@/views/build/components/buildTabs/selectAssets/index.
 import { useActiveAgentBISession } from "../agentBISessionContext";
 import { getAttachmentMediaType } from "../hooks/attachmentMedia";
 import MediaAttachmentPreview from "./MediaAttachmentPreview.vue";
+import ModelPicker from "./ModelPicker.vue";
 import SelectedComponentsList from "./SelectedComponentsList.vue";
 import { useChatInput } from "./useChatInput";
 
@@ -484,6 +487,7 @@ onMounted(() => {
         align-items: center;
         height: 100%;
         flex: 1;
+        min-width: 0;
         gap: 6px;
 
         .context-btn-split {

@@ -14,18 +14,43 @@ datasource db {
   provider = "postgresql"
 }
 
-/// AI 模型配置：4 个角色，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
-/// 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
+/// AI 模型配置：4 个角色，每个角色可存多条，`isDefault` 标记该角色的默认那条（每角色恰好一条）。
+/// runtime 读取时若某角色一条都没有，用 env 兜底 seed；有行但没有默认行时取最早一条补为默认。
+/// 对话可在 `thread_model` 里按角色覆盖默认；没覆盖的角色用默认。provider 一律按 OpenAI 兼容端点处理。
 model AiModel {
-  role          String   @id // "reasoning" | "embedding" | "image" | "video"
+  id            String   @id @default(cuid())
+  role          String // "reasoning" | "embedding" | "image" | "video"
+  /// 展示名，空则前端显示 modelId
+  name          String   @default("")
   baseUrl       String   @default("") @map("base_url")
   apiKey        String   @default("") @map("api_key")
   modelId       String   @default("") @map("model_id")
   contextLength Int?     @map("context_length") // reasoning 专用：前端上下文进度条分母
   dimensions    Int? // embedding 专用：向量维度
+  isDefault     Boolean  @default(false) @map("is_default")
+  createdTime   DateTime @default(now()) @map("created_time")
   updatedTime   DateTime @updatedAt @map("updated_time")
 
+  threadModels ThreadModel[]
+
+  @@index([role])
   @@map("ai_model")
+}
+
+/// 对话级模型选择：某对话的某角色不用默认、改用指定配置。没有行 = 该角色用默认。
+/// 只覆盖 reasoning / image / video；embedding 与向量索引维度绑定，保持全局唯一。
+/// threadId 不加外键：thread 在 Mastra 的独立 schema（MASTRA_DATABASE_URL）里。
+/// 配置被删时级联删掉这些行，对应对话自动回到默认。
+model ThreadModel {
+  threadId    String   @map("thread_id")
+  role        String
+  aiModelId   String   @map("ai_model_id")
+  aiModel     AiModel  @relation(fields: [aiModelId], references: [id], onDelete: Cascade)
+  updatedTime DateTime @updatedAt @map("updated_time")
+
+  @@id([threadId, role])
+  @@index([aiModelId])
+  @@map("thread_model")
 }
 
 /// 生图产物。`promptHash` 是幂等键：同一份结构化 prompt + seed + model 命中直接返回，

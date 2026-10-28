@@ -14,8 +14,9 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model AiModel
- * AI 模型配置：5 个角色，主键即角色。runtime 首次读取时若某行缺失，用 env 兜底 seed。
- * 前端「设置」页维护；provider 一律按 OpenAI 兼容端点处理。
+ * AI 模型配置：4 个角色，每个角色可存多条，`isDefault` 标记该角色的默认那条（每角色恰好一条）。
+ * runtime 读取时若某角色一条都没有，用 env 兜底 seed；有行但没有默认行时取最早一条补为默认。
+ * 对话可在 `thread_model` 里按角色覆盖默认；没覆盖的角色用默认。provider 一律按 OpenAI 兼容端点处理。
  */
 export type AiModelModel = runtime.Types.Result.DefaultSelection<Prisma.$AiModelPayload>
 
@@ -38,32 +39,44 @@ export type AiModelSumAggregateOutputType = {
 }
 
 export type AiModelMinAggregateOutputType = {
+  id: string | null
   role: string | null
+  name: string | null
   baseUrl: string | null
   apiKey: string | null
   modelId: string | null
   contextLength: number | null
   dimensions: number | null
+  isDefault: boolean | null
+  createdTime: Date | null
   updatedTime: Date | null
 }
 
 export type AiModelMaxAggregateOutputType = {
+  id: string | null
   role: string | null
+  name: string | null
   baseUrl: string | null
   apiKey: string | null
   modelId: string | null
   contextLength: number | null
   dimensions: number | null
+  isDefault: boolean | null
+  createdTime: Date | null
   updatedTime: Date | null
 }
 
 export type AiModelCountAggregateOutputType = {
+  id: number
   role: number
+  name: number
   baseUrl: number
   apiKey: number
   modelId: number
   contextLength: number
   dimensions: number
+  isDefault: number
+  createdTime: number
   updatedTime: number
   _all: number
 }
@@ -80,32 +93,44 @@ export type AiModelSumAggregateInputType = {
 }
 
 export type AiModelMinAggregateInputType = {
+  id?: true
   role?: true
+  name?: true
   baseUrl?: true
   apiKey?: true
   modelId?: true
   contextLength?: true
   dimensions?: true
+  isDefault?: true
+  createdTime?: true
   updatedTime?: true
 }
 
 export type AiModelMaxAggregateInputType = {
+  id?: true
   role?: true
+  name?: true
   baseUrl?: true
   apiKey?: true
   modelId?: true
   contextLength?: true
   dimensions?: true
+  isDefault?: true
+  createdTime?: true
   updatedTime?: true
 }
 
 export type AiModelCountAggregateInputType = {
+  id?: true
   role?: true
+  name?: true
   baseUrl?: true
   apiKey?: true
   modelId?: true
   contextLength?: true
   dimensions?: true
+  isDefault?: true
+  createdTime?: true
   updatedTime?: true
   _all?: true
 }
@@ -197,12 +222,16 @@ export type AiModelGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type AiModelGroupByOutputType = {
+  id: string
   role: string
+  name: string
   baseUrl: string
   apiKey: string
   modelId: string
   contextLength: number | null
   dimensions: number | null
+  isDefault: boolean
+  createdTime: Date
   updatedTime: Date
   _count: AiModelCountAggregateOutputType | null
   _avg: AiModelAvgAggregateOutputType | null
@@ -230,45 +259,64 @@ export type AiModelWhereInput = {
   AND?: Prisma.AiModelWhereInput | Prisma.AiModelWhereInput[]
   OR?: Prisma.AiModelWhereInput[]
   NOT?: Prisma.AiModelWhereInput | Prisma.AiModelWhereInput[]
+  id?: Prisma.StringFilter<"AiModel"> | string
   role?: Prisma.StringFilter<"AiModel"> | string
+  name?: Prisma.StringFilter<"AiModel"> | string
   baseUrl?: Prisma.StringFilter<"AiModel"> | string
   apiKey?: Prisma.StringFilter<"AiModel"> | string
   modelId?: Prisma.StringFilter<"AiModel"> | string
   contextLength?: Prisma.IntNullableFilter<"AiModel"> | number | null
   dimensions?: Prisma.IntNullableFilter<"AiModel"> | number | null
+  isDefault?: Prisma.BoolFilter<"AiModel"> | boolean
+  createdTime?: Prisma.DateTimeFilter<"AiModel"> | Date | string
   updatedTime?: Prisma.DateTimeFilter<"AiModel"> | Date | string
+  threadModels?: Prisma.ThreadModelListRelationFilter
 }
 
 export type AiModelOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   baseUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   modelId?: Prisma.SortOrder
   contextLength?: Prisma.SortOrderInput | Prisma.SortOrder
   dimensions?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  createdTime?: Prisma.SortOrder
   updatedTime?: Prisma.SortOrder
+  threadModels?: Prisma.ThreadModelOrderByRelationAggregateInput
 }
 
 export type AiModelWhereUniqueInput = Prisma.AtLeast<{
-  role?: string
+  id?: string
   AND?: Prisma.AiModelWhereInput | Prisma.AiModelWhereInput[]
   OR?: Prisma.AiModelWhereInput[]
   NOT?: Prisma.AiModelWhereInput | Prisma.AiModelWhereInput[]
+  role?: Prisma.StringFilter<"AiModel"> | string
+  name?: Prisma.StringFilter<"AiModel"> | string
   baseUrl?: Prisma.StringFilter<"AiModel"> | string
   apiKey?: Prisma.StringFilter<"AiModel"> | string
   modelId?: Prisma.StringFilter<"AiModel"> | string
   contextLength?: Prisma.IntNullableFilter<"AiModel"> | number | null
   dimensions?: Prisma.IntNullableFilter<"AiModel"> | number | null
+  isDefault?: Prisma.BoolFilter<"AiModel"> | boolean
+  createdTime?: Prisma.DateTimeFilter<"AiModel"> | Date | string
   updatedTime?: Prisma.DateTimeFilter<"AiModel"> | Date | string
-}, "role">
+  threadModels?: Prisma.ThreadModelListRelationFilter
+}, "id">
 
 export type AiModelOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   baseUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   modelId?: Prisma.SortOrder
   contextLength?: Prisma.SortOrderInput | Prisma.SortOrder
   dimensions?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  createdTime?: Prisma.SortOrder
   updatedTime?: Prisma.SortOrder
   _count?: Prisma.AiModelCountOrderByAggregateInput
   _avg?: Prisma.AiModelAvgOrderByAggregateInput
@@ -281,92 +329,132 @@ export type AiModelScalarWhereWithAggregatesInput = {
   AND?: Prisma.AiModelScalarWhereWithAggregatesInput | Prisma.AiModelScalarWhereWithAggregatesInput[]
   OR?: Prisma.AiModelScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AiModelScalarWhereWithAggregatesInput | Prisma.AiModelScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"AiModel"> | string
   role?: Prisma.StringWithAggregatesFilter<"AiModel"> | string
+  name?: Prisma.StringWithAggregatesFilter<"AiModel"> | string
   baseUrl?: Prisma.StringWithAggregatesFilter<"AiModel"> | string
   apiKey?: Prisma.StringWithAggregatesFilter<"AiModel"> | string
   modelId?: Prisma.StringWithAggregatesFilter<"AiModel"> | string
   contextLength?: Prisma.IntNullableWithAggregatesFilter<"AiModel"> | number | null
   dimensions?: Prisma.IntNullableWithAggregatesFilter<"AiModel"> | number | null
+  isDefault?: Prisma.BoolWithAggregatesFilter<"AiModel"> | boolean
+  createdTime?: Prisma.DateTimeWithAggregatesFilter<"AiModel"> | Date | string
   updatedTime?: Prisma.DateTimeWithAggregatesFilter<"AiModel"> | Date | string
 }
 
 export type AiModelCreateInput = {
+  id?: string
   role: string
+  name?: string
   baseUrl?: string
   apiKey?: string
   modelId?: string
   contextLength?: number | null
   dimensions?: number | null
+  isDefault?: boolean
+  createdTime?: Date | string
   updatedTime?: Date | string
+  threadModels?: Prisma.ThreadModelCreateNestedManyWithoutAiModelInput
 }
 
 export type AiModelUncheckedCreateInput = {
+  id?: string
   role: string
+  name?: string
   baseUrl?: string
   apiKey?: string
   modelId?: string
   contextLength?: number | null
   dimensions?: number | null
+  isDefault?: boolean
+  createdTime?: Date | string
   updatedTime?: Date | string
+  threadModels?: Prisma.ThreadModelUncheckedCreateNestedManyWithoutAiModelInput
 }
 
 export type AiModelUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   baseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   modelId?: Prisma.StringFieldUpdateOperationsInput | string
   contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dimensions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  threadModels?: Prisma.ThreadModelUpdateManyWithoutAiModelNestedInput
 }
 
 export type AiModelUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   baseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   modelId?: Prisma.StringFieldUpdateOperationsInput | string
   contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dimensions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  threadModels?: Prisma.ThreadModelUncheckedUpdateManyWithoutAiModelNestedInput
 }
 
 export type AiModelCreateManyInput = {
+  id?: string
   role: string
+  name?: string
   baseUrl?: string
   apiKey?: string
   modelId?: string
   contextLength?: number | null
   dimensions?: number | null
+  isDefault?: boolean
+  createdTime?: Date | string
   updatedTime?: Date | string
 }
 
 export type AiModelUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   baseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   modelId?: Prisma.StringFieldUpdateOperationsInput | string
   contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dimensions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AiModelUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   baseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   apiKey?: Prisma.StringFieldUpdateOperationsInput | string
   modelId?: Prisma.StringFieldUpdateOperationsInput | string
   contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   dimensions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AiModelCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   baseUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   modelId?: Prisma.SortOrder
   contextLength?: Prisma.SortOrder
   dimensions?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  createdTime?: Prisma.SortOrder
   updatedTime?: Prisma.SortOrder
 }
 
@@ -376,28 +464,41 @@ export type AiModelAvgOrderByAggregateInput = {
 }
 
 export type AiModelMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   baseUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   modelId?: Prisma.SortOrder
   contextLength?: Prisma.SortOrder
   dimensions?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  createdTime?: Prisma.SortOrder
   updatedTime?: Prisma.SortOrder
 }
 
 export type AiModelMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   baseUrl?: Prisma.SortOrder
   apiKey?: Prisma.SortOrder
   modelId?: Prisma.SortOrder
   contextLength?: Prisma.SortOrder
   dimensions?: Prisma.SortOrder
+  isDefault?: Prisma.SortOrder
+  createdTime?: Prisma.SortOrder
   updatedTime?: Prisma.SortOrder
 }
 
 export type AiModelSumOrderByAggregateInput = {
   contextLength?: Prisma.SortOrder
   dimensions?: Prisma.SortOrder
+}
+
+export type AiModelScalarRelationFilter = {
+  is?: Prisma.AiModelWhereInput
+  isNot?: Prisma.AiModelWhereInput
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -412,64 +513,216 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type AiModelCreateNestedOneWithoutThreadModelsInput = {
+  create?: Prisma.XOR<Prisma.AiModelCreateWithoutThreadModelsInput, Prisma.AiModelUncheckedCreateWithoutThreadModelsInput>
+  connectOrCreate?: Prisma.AiModelCreateOrConnectWithoutThreadModelsInput
+  connect?: Prisma.AiModelWhereUniqueInput
+}
+
+export type AiModelUpdateOneRequiredWithoutThreadModelsNestedInput = {
+  create?: Prisma.XOR<Prisma.AiModelCreateWithoutThreadModelsInput, Prisma.AiModelUncheckedCreateWithoutThreadModelsInput>
+  connectOrCreate?: Prisma.AiModelCreateOrConnectWithoutThreadModelsInput
+  upsert?: Prisma.AiModelUpsertWithoutThreadModelsInput
+  connect?: Prisma.AiModelWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AiModelUpdateToOneWithWhereWithoutThreadModelsInput, Prisma.AiModelUpdateWithoutThreadModelsInput>, Prisma.AiModelUncheckedUpdateWithoutThreadModelsInput>
+}
+
+export type AiModelCreateWithoutThreadModelsInput = {
+  id?: string
+  role: string
+  name?: string
+  baseUrl?: string
+  apiKey?: string
+  modelId?: string
+  contextLength?: number | null
+  dimensions?: number | null
+  isDefault?: boolean
+  createdTime?: Date | string
+  updatedTime?: Date | string
+}
+
+export type AiModelUncheckedCreateWithoutThreadModelsInput = {
+  id?: string
+  role: string
+  name?: string
+  baseUrl?: string
+  apiKey?: string
+  modelId?: string
+  contextLength?: number | null
+  dimensions?: number | null
+  isDefault?: boolean
+  createdTime?: Date | string
+  updatedTime?: Date | string
+}
+
+export type AiModelCreateOrConnectWithoutThreadModelsInput = {
+  where: Prisma.AiModelWhereUniqueInput
+  create: Prisma.XOR<Prisma.AiModelCreateWithoutThreadModelsInput, Prisma.AiModelUncheckedCreateWithoutThreadModelsInput>
+}
+
+export type AiModelUpsertWithoutThreadModelsInput = {
+  update: Prisma.XOR<Prisma.AiModelUpdateWithoutThreadModelsInput, Prisma.AiModelUncheckedUpdateWithoutThreadModelsInput>
+  create: Prisma.XOR<Prisma.AiModelCreateWithoutThreadModelsInput, Prisma.AiModelUncheckedCreateWithoutThreadModelsInput>
+  where?: Prisma.AiModelWhereInput
+}
+
+export type AiModelUpdateToOneWithWhereWithoutThreadModelsInput = {
+  where?: Prisma.AiModelWhereInput
+  data: Prisma.XOR<Prisma.AiModelUpdateWithoutThreadModelsInput, Prisma.AiModelUncheckedUpdateWithoutThreadModelsInput>
+}
+
+export type AiModelUpdateWithoutThreadModelsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  baseUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  modelId?: Prisma.StringFieldUpdateOperationsInput | string
+  contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  dimensions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AiModelUncheckedUpdateWithoutThreadModelsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  baseUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  apiKey?: Prisma.StringFieldUpdateOperationsInput | string
+  modelId?: Prisma.StringFieldUpdateOperationsInput | string
+  contextLength?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  dimensions?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type AiModelCountOutputType
+ */
+
+export type AiModelCountOutputType = {
+  threadModels: number
+}
+
+export type AiModelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  threadModels?: boolean | AiModelCountOutputTypeCountThreadModelsArgs
+}
+
+/**
+ * AiModelCountOutputType without action
+ */
+export type AiModelCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiModelCountOutputType
+   */
+  select?: Prisma.AiModelCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AiModelCountOutputType without action
+ */
+export type AiModelCountOutputTypeCountThreadModelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ThreadModelWhereInput
+}
 
 
 export type AiModelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   role?: boolean
+  name?: boolean
   baseUrl?: boolean
   apiKey?: boolean
   modelId?: boolean
   contextLength?: boolean
   dimensions?: boolean
+  isDefault?: boolean
+  createdTime?: boolean
   updatedTime?: boolean
+  threadModels?: boolean | Prisma.AiModel$threadModelsArgs<ExtArgs>
+  _count?: boolean | Prisma.AiModelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aiModel"]>
 
 export type AiModelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   role?: boolean
+  name?: boolean
   baseUrl?: boolean
   apiKey?: boolean
   modelId?: boolean
   contextLength?: boolean
   dimensions?: boolean
+  isDefault?: boolean
+  createdTime?: boolean
   updatedTime?: boolean
 }, ExtArgs["result"]["aiModel"]>
 
 export type AiModelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   role?: boolean
+  name?: boolean
   baseUrl?: boolean
   apiKey?: boolean
   modelId?: boolean
   contextLength?: boolean
   dimensions?: boolean
+  isDefault?: boolean
+  createdTime?: boolean
   updatedTime?: boolean
 }, ExtArgs["result"]["aiModel"]>
 
 export type AiModelSelectScalar = {
+  id?: boolean
   role?: boolean
+  name?: boolean
   baseUrl?: boolean
   apiKey?: boolean
   modelId?: boolean
   contextLength?: boolean
   dimensions?: boolean
+  isDefault?: boolean
+  createdTime?: boolean
   updatedTime?: boolean
 }
 
-export type AiModelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"role" | "baseUrl" | "apiKey" | "modelId" | "contextLength" | "dimensions" | "updatedTime", ExtArgs["result"]["aiModel"]>
+export type AiModelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "role" | "name" | "baseUrl" | "apiKey" | "modelId" | "contextLength" | "dimensions" | "isDefault" | "createdTime" | "updatedTime", ExtArgs["result"]["aiModel"]>
+export type AiModelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  threadModels?: boolean | Prisma.AiModel$threadModelsArgs<ExtArgs>
+  _count?: boolean | Prisma.AiModelCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type AiModelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type AiModelIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $AiModelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AiModel"
-  objects: {}
+  objects: {
+    threadModels: Prisma.$ThreadModelPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
     role: string
+    /**
+     * 展示名，空则前端显示 modelId
+     */
+    name: string
     baseUrl: string
     apiKey: string
     modelId: string
     contextLength: number | null
     dimensions: number | null
+    isDefault: boolean
+    createdTime: Date
     updatedTime: Date
   }, ExtArgs["result"]["aiModel"]>
   composites: {}
@@ -554,8 +807,8 @@ export interface AiModelDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * // Get first 10 AiModels
    * const aiModels = await prisma.aiModel.findMany({ take: 10 })
    * 
-   * // Only select the `role`
-   * const aiModelWithRoleOnly = await prisma.aiModel.findMany({ select: { role: true } })
+   * // Only select the `id`
+   * const aiModelWithIdOnly = await prisma.aiModel.findMany({ select: { id: true } })
    * 
    */
   findMany<T extends AiModelFindManyArgs>(args?: Prisma.SelectSubset<T, AiModelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -599,9 +852,9 @@ export interface AiModelDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Create many AiModels and only return the `role`
-   * const aiModelWithRoleOnly = await prisma.aiModel.createManyAndReturn({
-   *   select: { role: true },
+   * // Create many AiModels and only return the `id`
+   * const aiModelWithIdOnly = await prisma.aiModel.createManyAndReturn({
+   *   select: { id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -690,9 +943,9 @@ export interface AiModelDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Update zero or more AiModels and only return the `role`
-   * const aiModelWithRoleOnly = await prisma.aiModel.updateManyAndReturn({
-   *   select: { role: true },
+   * // Update zero or more AiModels and only return the `id`
+   * const aiModelWithIdOnly = await prisma.aiModel.updateManyAndReturn({
+   *   select: { id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -865,6 +1118,7 @@ readonly fields: AiModelFieldRefs;
  */
 export interface Prisma__AiModelClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  threadModels<T extends Prisma.AiModel$threadModelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AiModel$threadModelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ThreadModelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -894,12 +1148,16 @@ export interface Prisma__AiModelClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the AiModel model
  */
 export interface AiModelFieldRefs {
+  readonly id: Prisma.FieldRef<"AiModel", 'String'>
   readonly role: Prisma.FieldRef<"AiModel", 'String'>
+  readonly name: Prisma.FieldRef<"AiModel", 'String'>
   readonly baseUrl: Prisma.FieldRef<"AiModel", 'String'>
   readonly apiKey: Prisma.FieldRef<"AiModel", 'String'>
   readonly modelId: Prisma.FieldRef<"AiModel", 'String'>
   readonly contextLength: Prisma.FieldRef<"AiModel", 'Int'>
   readonly dimensions: Prisma.FieldRef<"AiModel", 'Int'>
+  readonly isDefault: Prisma.FieldRef<"AiModel", 'Boolean'>
+  readonly createdTime: Prisma.FieldRef<"AiModel", 'DateTime'>
   readonly updatedTime: Prisma.FieldRef<"AiModel", 'DateTime'>
 }
     
@@ -917,6 +1175,10 @@ export type AiModelFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the AiModel
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
   /**
    * Filter, which AiModel to fetch.
    */
@@ -936,6 +1198,10 @@ export type AiModelFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
+  /**
    * Filter, which AiModel to fetch.
    */
   where: Prisma.AiModelWhereUniqueInput
@@ -953,6 +1219,10 @@ export type AiModelFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the AiModel
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
   /**
    * Filter, which AiModel to fetch.
    */
@@ -1002,6 +1272,10 @@ export type AiModelFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
+  /**
    * Filter, which AiModel to fetch.
    */
   where?: Prisma.AiModelWhereInput
@@ -1050,6 +1324,10 @@ export type AiModelFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
+  /**
    * Filter, which AiModels to fetch.
    */
   where?: Prisma.AiModelWhereInput
@@ -1092,6 +1370,10 @@ export type AiModelCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the AiModel
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
   /**
    * The data needed to create a AiModel.
    */
@@ -1140,6 +1422,10 @@ export type AiModelUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the AiModel
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
   /**
    * The data needed to update a AiModel.
    */
@@ -1207,6 +1493,10 @@ export type AiModelUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
+  /**
    * The filter to search for the AiModel to update in case it exists.
    */
   where: Prisma.AiModelWhereUniqueInput
@@ -1233,6 +1523,10 @@ export type AiModelDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
+  /**
    * Filter which AiModel to delete.
    */
   where: Prisma.AiModelWhereUniqueInput
@@ -1253,6 +1547,30 @@ export type AiModelDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * AiModel.threadModels
+ */
+export type AiModel$threadModelsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ThreadModel
+   */
+  select?: Prisma.ThreadModelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ThreadModel
+   */
+  omit?: Prisma.ThreadModelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ThreadModelInclude<ExtArgs> | null
+  where?: Prisma.ThreadModelWhereInput
+  orderBy?: Prisma.ThreadModelOrderByWithRelationInput | Prisma.ThreadModelOrderByWithRelationInput[]
+  cursor?: Prisma.ThreadModelWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ThreadModelScalarFieldEnum | Prisma.ThreadModelScalarFieldEnum[]
+}
+
+/**
  * AiModel without action
  */
 export type AiModelDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1264,4 +1582,8 @@ export type AiModelDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the AiModel
    */
   omit?: Prisma.AiModelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiModelInclude<ExtArgs> | null
 }

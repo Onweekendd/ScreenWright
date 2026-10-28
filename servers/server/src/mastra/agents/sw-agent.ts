@@ -1,5 +1,5 @@
 import { Agent, type SubAgent } from "@mastra/core/agent";
-import { TokenLimiter, ToolSearchProcessor } from "@mastra/core/processors";
+import { ToolSearchProcessor } from "@mastra/core/processors";
 import type { RequestContext } from "@mastra/core/request-context";
 import type { Tool } from "@mastra/core/tools";
 import type { DynamicArgument } from "@mastra/core/types";
@@ -7,7 +7,8 @@ import type { DynamicArgument } from "@mastra/core/types";
 import { loadPrompt } from "@/agent-resources/prompts";
 
 import { CompactionProcessor } from "../lib/compaction/processors/compaction";
-import { ToolResultCleanupProcessor } from "../lib/compaction/processors/toolResultCleanup";
+import { ContextWindowLimitProcessor } from "../lib/compaction/processors/contextWindowLimit";
+import { ToolResultLimitProcessor } from "../lib/compaction/processors/toolResultLimit";
 import { InlineBackgroundTaskResults } from "../processors/inlineBackgroundTaskResults";
 import { keepBgDelegationsVisible } from "../processors/keepBgDelegationsVisible";
 import { ModeGuardProcessor } from "../processors/mode-guard.processor";
@@ -48,7 +49,6 @@ import { AgentMode, type CommonRunTimeType } from "../types/bi-chat";
 import { fullWorkspace } from "../workspace";
 import { dataFlowVerificationAgent } from "./data-flow-verification-agent";
 import { swExecutorAgent } from "./sw-executor-agent";
-import { templateExtractorAgent } from "./template-extractor-agent";
 
 const baselineInstructions = [
   loadPrompt("mastra/sw-agent-core.md"),
@@ -111,8 +111,8 @@ export function createSwAgent(options: CreateSwAgentOptions) {
     },
 
     // 模型配置在 ai_model 表（前端「设置」页），每次 run 重新解析以支持热更新
-    model: () => resolveReasoningModel(),
-
+    model: ({ requestContext }: { requestContext: RequestContext<CommonRunTimeType> }) =>
+      resolveReasoningModel(requestContext?.get("models")?.reasoning),
     memory,
 
     // 主 agent 与子 agent 共用 fullWorkspace（含 references）。
@@ -209,7 +209,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
           addPanelStateTool,
           // 浏览器执行：只在需要跑前端侧脚本时用
           executeInBrowserTool,
-          // 模板存取：模板提取收尾 / 模板检索命中后应用，都是明确的收尾动作
+          // 模板存取：保存已审阅的模板 / 应用检索命中的模板
           saveAiTemplateTool,
           applyAiTemplateTool
           // 生图：低频（一次会话顶多用到几次装饰素材/效果图），且本身开了 background，
@@ -236,31 +236,20 @@ export function createSwAgent(options: CreateSwAgentOptions) {
       new InlineBackgroundTaskResults(),
       // 必须放在 ToolSearchProcessor 之后,以便剥离 Search 动态注入的写工具(如 createConditionTemplate)
       new ModeGuardProcessor(),
-      new ToolResultCleanupProcessor(),
       new CompactionProcessor(),
-      new TokenLimiter(300_000)
+      new ContextWindowLimitProcessor()
     ],
+
+    // 新工具结果首次发送前限长，不回头改写历史。
+    outputProcessors: [new ToolResultLimitProcessor()],
 
     defaultOptions: {
       maxSteps: 20,
       delegation: {
-        // 子 agent 不需要看主 agent 跟用户的对话历史。
-        //
-        // Mastra 把 `prompt` 自动构造成一条 user 消息发给子 agent(@mastra/core 内部:
-        // `messagesForSubAgent = [{ role: "user", content: effectivePrompt }]`),
-        // messageFilter 返回的 messages 是**额外的 context**,默认行为是把主 agent 的全部对话
-        // 都塞进子 agent 的 context —— 长会话时这部分会爆。
-        //
-        // 我们这边委派 prompt 已经包含 task_list_id + pending_task_ids,子 agent 通过这两个 ID
-        // 从 task 系统拿完整上下文,不需要任何父对话历史。返回 [] 把这部分整个砍掉。
         messageFilter: (context) => {
           const { messages, primitiveId } = context;
 
-          if (
-            primitiveId === "sw-executor-agent" ||
-            primitiveId === "data-flow-verification-agent" ||
-            primitiveId === "template-extractor-agent"
-          ) {
+          if (primitiveId === "sw-executor-agent" || primitiveId === "data-flow-verification-agent") {
             return [];
           }
           return messages;
@@ -275,8 +264,7 @@ export function createSwAgent(options: CreateSwAgentOptions) {
     // dataFlowVerificationAgent 只读校验，任何模式都可用。
     agents: {
       dataFlowVerificationAgent,
-      swExecutorAgent,
-      templateExtractorAgent
+      swExecutorAgent
     } as unknown as DynamicArgument<Record<string, SubAgent<string, CommonRunTimeType>>, CommonRunTimeType>,
 
     // 后台任务 opt-in：最小可用版本只把大屏并发施工子 agent 放后台。

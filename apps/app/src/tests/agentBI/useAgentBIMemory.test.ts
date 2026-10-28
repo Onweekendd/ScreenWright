@@ -82,6 +82,14 @@ describe("ensureActiveThread", () => {
     // 推入的是注入的共享 memoryThreads
     expect(ctx.memoryThreads.value).toContainEqual(newThread);
   });
+
+  it("ensureActiveThread，带预选模型，随建对话一起提交", async () => {
+    mockCreateThread.mockResolvedValue({ json: () => Promise.resolve({ id: "t-new", title: "新对话" }) });
+
+    await ctx.memory.ensureActiveThread({ reasoning: "reasoning-2" });
+
+    expect(mockCreateThread.mock.calls[0][0].json.models).toEqual({ reasoning: "reasoning-2" });
+  });
 });
 
 // ---------------------------------------------------------------------------

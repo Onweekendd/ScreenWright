@@ -5,6 +5,8 @@ import { apiClient } from "@screenwright/server/rpc";
 import type { UIMessage } from "ai";
 import { ElMessage } from "element-plus";
 
+import type { ThreadModelSelection } from "@/api/aiModel";
+
 import type { AgentBISharedState, UsageInfo } from "../type";
 
 /**
@@ -26,13 +28,14 @@ export function useAgentBIMemory(shared: AgentBISharedState) {
   const currentPage = ref(0);
   const currentMode = ref<AgentMode>(AgentMode.AUTO_EDIT);
 
-  const ensureActiveThread = async () => {
+  /** `models`：对话创建前在输入框里预选的模型，随建对话一起落库，保证首轮就用上 */
+  const ensureActiveThread = async (models?: ThreadModelSelection) => {
     if (activeThreadId.value) {
       return;
     }
 
     const res = await apiClient.customApi["bi-chat"]["create-thread"].$post({
-      json: { resourceId: resourceId.value, title: "新对话", metadata: { mode: currentMode.value } }
+      json: { resourceId: resourceId.value, title: "新对话", metadata: { mode: currentMode.value }, models }
     });
     const newThread = await res.json();
 

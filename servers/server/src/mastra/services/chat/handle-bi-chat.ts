@@ -5,6 +5,8 @@
  * - 会话(hub)生命周期在 ./stream-session，取会话一律走 ./session-registry
  */
 
+import { withRecordingTurn } from "@/recording/recording-scope";
+
 import { mastra } from "../../index";
 import { isRejectedResume } from "./resume-termination";
 import { sessionRegistry } from "./session-registry";
@@ -139,7 +141,9 @@ async function resumeBackgroundTask(body: {
   try {
     // subscribe-before-resume：stream() 只补发 running 快照，先订阅才不会丢 resumed/output。
     session.attachTaskStream(taskId, bgManager, isRejectedResume(body.suspendType, resumeData));
-    await bgManager.resume(taskId, resumeData ?? {});
+    // 恢复出来的子 agent 在 resume 调用的异步上下文里跑（pubsub 同步投递给 worker），
+    // 不包一层录制上下文，它的模型往返就记不进本 thread 的当前 turn，全落到根下的 step_-1.json。
+    await withRecordingTurn({ threadId, runId: taskId }, () => bgManager.resume(taskId, resumeData ?? {}));
   } catch (err) {
     session.detachTaskStream(taskId);
     console.error("[bi-chat] resume-task failed", { threadId, taskId, err });

@@ -1,6 +1,7 @@
 import { Mastra } from "@mastra/core";
 import { PinoLogger } from "@mastra/loggers";
 
+import { createObservability } from "./observability";
 import { swAgent } from "./runtime";
 import { storage } from "./storage/storage";
 import { workspace } from "./workspace";
@@ -44,6 +45,6 @@ export const mastra = new Mastra({
       // 如需 agent 向用户说明失败，等 Issue-1（bg task resume 失败）修复后再评估是否要续接 turn。
     }
   },
-  // 不配置 observability，使用 Mastra 默认的 NoOpObservability，关闭追踪及导出。
+  observability: createObservability(),
   workspace
 });

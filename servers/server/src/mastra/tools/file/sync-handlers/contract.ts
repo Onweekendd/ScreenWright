@@ -1,7 +1,7 @@
 import { z } from "zod";
 
+import type { ScreenTreeSet } from "../../../services/bi-data-sync/screen-tree-set";
 import { type CanvasOp, SuspendDefs, SuspendType } from "../../../types/suspend";
-import { canvasOpsPayload } from "../../canvas-ops";
 import type { ReplaceResult } from "../apply-edits";
 import { type ReadFileRecord, readFileState } from "../state";
 import { formatSuccessMessage } from "../utils";
@@ -31,13 +31,15 @@ export type EditFilesResumeData = z.infer<typeof editFilesResumeSchema>;
 export type SyncKind = "component" | "filter" | "screenInfo";
 
 /**
- * 前端执行成功之后才执行的落盘动作。返回 core 重算派生值的说明（没有则不返回）；抛错表示落盘失败。
+ * 前端执行成功之后才执行的落盘动作：把这次编辑放到 `trees` 那棵整屏树上，**不写盘**——
+ * 同一段里所有提交都上完树之后，由 edit_files 调一次 {@link ScreenTreeSet.flush} 统一写。
+ * 返回 core 重算派生值的说明（没有则不返回）；抛错表示这一项没能上树。
  *
  * 存在即意味着「这次挂起时工作区还没动」。工作区要反映画布的真实状态，所以顺序是
  * **先推给前端、前端执行成功、再落盘**——用户拒绝、前端离线、或者压根没人来 resume，
  * 工作区都保持原样，不会出现「文件说改了、画布上没有」的分叉。
  */
-export type DeferredCommit = (resumeData: EditFilesResumeData) => Promise<{ notice?: string } | void>;
+export type DeferredCommit = (trees: ScreenTreeSet) => Promise<{ notice?: string } | void>;
 
 // ── 处理器契约 ───────────────────────────────────────────────────────────────
 
@@ -50,26 +52,36 @@ export interface EditContext {
   result: ReplaceResult;
   /** 编辑开始时读到的原文；判断改名之类「改之前是什么」的问题只能问它 */
   readRecord: ReadFileRecord;
-  needsApproval: boolean;
+  /**
+   * 这一段编辑共用的预览树：处理器在上面算出要推给前端的那一份，但不写盘。
+   * 上树前必须先 claim，跟同段已上树的编辑有交集就返回 {@link CONFLICT}。
+   */
+  trees: ScreenTreeSet;
   /** 编辑完成后是否截图；不传时默认开启。 */
   capture?: boolean;
 }
 
+/** 跟同一段里已经上树的编辑有交集：先把前面的落盘，再回来重新处理这个文件。 */
+export const CONFLICT = { ok: "conflict" } as const;
+
 /**
- * prepare 的产物：要么这次编辑当场作废（工作区一个字节没动），要么挂起等前端。
+ * prepare 的产物：要么这次编辑当场作废（工作区一个字节没动），要么等前端，要么先让前面的落盘。
  *
  * 失败一律带上给 agent 看的完整消息，由调用方原样塞进 FileEditResult——处理器不认识批次状态。
  */
 export type PreparedEdit =
   | { ok: false; message: string; frontendSynced?: boolean; validationErrors?: string[] }
+  | typeof CONFLICT
   | {
       ok: true;
       kind: SyncKind;
       /** core 重算派生值留下的说明，结算时拼进结果消息 */
       notice?: string;
       commit: DeferredCommit;
-      /** 不含 batchId / operationId：批次上下文由调用方补，处理器不碰 */
-      payload: EditFilesSuspendPayload;
+      /** 要推给前端的那一个画布操作；同一段的 op 由调用方合进一次 canvas_ops 挂起 */
+      op: CanvasOp;
+      /** 只有这一个文件需要审批时，审批框里的说明 */
+      purpose: string;
     };
 
 /**
@@ -95,13 +107,6 @@ export const notWritten = (ctx: EditContext, reason: string): PreparedEdit => ({
   message: formatSuccessMessage(ctx.result.replacements, ctx.absPath, `未写入工作区: ${reason}`),
   frontendSynced: false
 });
-
-/**
- * 一次同步对应一个 `canvas_ops` 的 op；ASK 模式下载荷带 `approval`（前端先弹审批框），AUTO 模式直接推。
- * 审批与否只在这里判断一次——处理器只管产出 op。
- */
-export const syncPayload = (ctx: EditContext, purpose: string, op: CanvasOp): EditFilesSuspendPayload =>
-  canvasOpsPayload({ needsApproval: ctx.needsApproval, purpose, ops: [op] });
 
 /** 整屏回写换掉了磁盘内容，之前读到的快照全部失效，下次编辑必须重读。 */
 export const invalidateReadState = (...absPaths: string[]): void => {

@@ -30,12 +30,17 @@ export const runScreenMutation = async <T>(
   const value = await mutate(ScreenEditor.create(reader), reader);
 
   if (write) {
-    const screen = reader.toParsedLargeScreenInfo();
-    screen.config = reconcileConfig(screen.config, screen.layers);
-    syncScreenData({ id: screenKey, cacheTime: Date.now(), parsedLargeScreenInfo: screen });
+    writeScreen(screenKey, reader);
   }
 
   return value;
+};
+
+/** 把 reader 手里的整屏树一次写回工作区；屏级 config 先跟根层对齐（见 {@link reconcileConfig}）。 */
+export const writeScreen = (screenKey: string, reader: ScreenReader): void => {
+  const screen = reader.toParsedLargeScreenInfo();
+  screen.config = reconcileConfig(screen.config, screen.layers);
+  syncScreenData({ id: screenKey, cacheTime: Date.now(), parsedLargeScreenInfo: screen });
 };
 
 /**

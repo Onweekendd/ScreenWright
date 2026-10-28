@@ -1,17 +1,13 @@
-import {
-  applyScreenInfoEdit,
-  previewScreenInfoEdit,
-  validateScreenInfoContent
-} from "@/mastra/services/bi-data-sync/screen-file-edit";
+import { editScreenInfoInTree, validateScreenInfoContent } from "@/mastra/services/bi-data-sync/screen-file-edit";
 
 import { isScreenInfoFilePath } from "../file-kind";
 import {
+  CONFLICT,
   type EditContext,
   invalidateReadState,
   notWritten,
   type PreparedEdit,
-  type SyncHandler,
-  syncPayload
+  type SyncHandler
 } from "./contract";
 
 /** 大屏配置：某块大屏根目录下的 info.json。 */
@@ -31,28 +27,37 @@ export const screenInfoHandler: SyncHandler = {
       };
     }
 
-    const applied = await previewScreenInfoEdit(ctx.absPath, ctx.result.content);
-    if (!applied) {
+    // 编辑后的 info.json 已经过校验，拿它建树而不是去读磁盘上的旧版：旧版要是本身就不合 schema
+    // （历史脏数据），照常读会在动手之前就抛错，这次修复永远落不了地
+    const screenInfo = validation.data;
+    const tree = ctx.trees.open(ctx.absPath, screenInfo);
+    if (!tree) {
       return notWritten(ctx, "无法定位所属大屏");
     }
+    if (!ctx.trees.claim(tree, "screenInfo")) {
+      return CONFLICT;
+    }
+    const { detail, id: screenId } = editScreenInfoInTree(tree, screenInfo);
 
-    const { detail, id: screenId } = applied;
     return {
       ok: true,
       kind: "screenInfo",
-      commit: async () => {
-        const committed = await applyScreenInfoEdit(ctx.absPath, ctx.result.content);
-        if (!committed) {
+      commit: async (trees) => {
+        const commitTree = trees.open(ctx.absPath, screenInfo);
+        if (!commitTree) {
           throw new Error("已无法定位屏幕配置所属大屏");
         }
+        editScreenInfoInTree(commitTree, screenInfo);
+        trees.markDirty(commitTree);
         invalidateReadState(ctx.absPath);
       },
-      payload: syncPayload(ctx, "推送屏幕配置到前端", {
+      op: {
         op: "update_screen_info",
         screenId,
         detail,
         minioIds: detail.minioIds ?? []
-      })
+      },
+      purpose: "推送屏幕配置到前端"
     };
   }
 };

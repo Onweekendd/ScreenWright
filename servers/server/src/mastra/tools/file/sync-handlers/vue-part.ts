@@ -2,13 +2,11 @@ import fsp from "node:fs/promises";
 
 import type { ComponentType } from "@screenwright/types";
 
-import { applyComponentEdit, previewComponentEdit } from "@/mastra/services/bi-data-sync/component-edit";
-
 import { parseSFCToParts } from "../../../services/bi-data-sync/vue-part-sfc";
 import { isVuePartFilePath } from "../file-kind";
 import { validateComponentContent } from "../utils";
-import { pushComponentUpdate } from "./component";
-import { type EditContext, invalidateReadState, notWritten, type PreparedEdit, type SyncHandler } from "./contract";
+import { prepareComponentEdit } from "./component";
+import { type EditContext, notWritten, type PreparedEdit, type SyncHandler } from "./contract";
 
 /**
  * vue-part 组件的伴生 SFC：component/ 下的 .vue。
@@ -45,28 +43,12 @@ export const vuePartHandler: SyncHandler = {
       return { ok: false, message: validation.message, validationErrors: validation.validationErrors };
     }
 
-    const editedId = mergedComponent.id;
     // 喂对象而不是 JSON 文本：文本会让 core 按磁盘形态重新读一遍伴生 .vue，
     // 把刚编辑出来的 option 又用盘上那份旧源码盖回去。
-    const applied = await previewComponentEdit(jsonPath, mergedComponent);
-    if (!applied) {
-      return notWritten(ctx, `组件 ${editedId} 不在大屏树上`);
-    }
-
-    return {
-      ok: true,
-      kind: "component",
-      notice: applied.notice,
-      commit: async () => {
-        const committed = await applyComponentEdit(jsonPath, mergedComponent);
-        if (!committed) {
-          throw new Error(`组件 ${editedId} 已不在大屏树上`);
-        }
-        // .vue 与伴生 json 都被整屏回写换过，两份快照一起作废
-        invalidateReadState(ctx.absPath, jsonPath);
-        return { notice: committed.notice };
-      },
-      payload: pushComponentUpdate(ctx, "推送 vue-part 组件更新到前端", applied.component)
-    };
+    // .vue 与伴生 json 都被整屏回写换过，两份快照一起作废
+    return prepareComponentEdit(ctx, jsonPath, mergedComponent, mergedComponent.id, {
+      purpose: "推送 vue-part 组件更新到前端",
+      invalidates: [ctx.absPath, jsonPath]
+    });
   }
 };

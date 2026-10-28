@@ -2,20 +2,19 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 
 import {
-  applyDataFilterEdit,
   type DataFilterEditInput,
-  previewDataFilterEdit,
+  editDataFilterInTree,
   validateDataFilterContent
 } from "@/mastra/services/bi-data-sync/screen-file-edit";
 
 import { isDataFilterFilePath } from "../file-kind";
 import {
+  CONFLICT,
   type EditContext,
   invalidateReadState,
   notWritten,
   type PreparedEdit,
-  type SyncHandler,
-  syncPayload
+  type SyncHandler
 } from "./contract";
 
 /**
@@ -68,30 +67,38 @@ export const dataFilterHandler: SyncHandler = {
     const originalName = (originalJsonContent.name as string | undefined) ?? filterName;
     const editInput: DataFilterEditInput = { originalName, filter: validation.data };
 
-    const applied = await previewDataFilterEdit(ctx.absPath, editInput);
-    if (!applied) {
+    const tree = ctx.trees.open(ctx.absPath);
+    if (!tree) {
       return notWritten(ctx, "无法定位所属大屏");
     }
+    // 过滤器保存会顺手改各组件上的绑定，影响面说不清，只能独占这块屏的一段
+    if (!ctx.trees.claim(tree, "screen")) {
+      return CONFLICT;
+    }
+    const applied = await editDataFilterInTree(tree, editInput);
 
     return {
       ok: true,
       kind: "filter",
-      commit: async () => {
-        const committed = await applyDataFilterEdit(ctx.absPath, editInput);
-        if (!committed) {
+      commit: async (trees) => {
+        const commitTree = trees.open(ctx.absPath);
+        if (!commitTree) {
           throw new Error("已无法定位数据过滤器所属大屏");
         }
+        await editDataFilterInTree(commitTree, editInput);
+        trees.markDirty(commitTree);
         // 落盘的是整屏，成对的两个文件都被换过
         invalidateReadState(jsonPath, jsPath);
       },
-      payload: syncPayload(ctx, "保存数据过滤器", {
+      op: {
         op: "save_filter",
         // originalName 必须随协议下发：后端这条路是支持改名的（旧 key 删掉、旧文件被 pruneStaleFiles
         // 清理），而前端的 handleSaveFilter 只按 name 做 upsert。不告诉它旧名字，画布上就会新旧两个
         // 过滤器并存，下一次整屏同步过来又把旧的写回工作区——这次改名等于白改。
         originalName,
         filter: applied
-      })
+      },
+      purpose: "保存数据过滤器"
     };
   }
 };

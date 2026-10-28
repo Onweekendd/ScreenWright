@@ -13,6 +13,7 @@ import { screenInfoHandler } from "./screen-info";
 import { vuePartHandler } from "./vue-part";
 
 export {
+  CONFLICT,
   type DeferredCommit,
   type EditContext,
   type EditFilesResumeData,

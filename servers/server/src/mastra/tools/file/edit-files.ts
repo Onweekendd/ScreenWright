@@ -5,9 +5,10 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
 import { TOOL_IMAGES_FIELD } from "../../provider/image-middleware";
+import { ScreenTreeSet } from "../../services/bi-data-sync/screen-tree-set";
 import { AgentMode } from "../../types/bi-chat";
-import { CanvasCaptureResultSchema, SuspendType } from "../../types/suspend";
-import { readCanvasOpResults } from "../canvas-ops";
+import { CanvasCaptureResultSchema, type CanvasOp, type OpResult, SuspendType } from "../../types/suspend";
+import { canvasOpsPayload, readCanvasOpResults } from "../canvas-ops";
 import { capChanges, type Change, ChangeSchema, diffChange } from "../change-report";
 import { applyEdits, findNoopEditIndex, type ReplaceResult } from "./apply-edits";
 import { isAgentArtifactFilePath } from "./file-kind";
@@ -34,9 +35,7 @@ async function persistEdit(absPath: string, result: ReplaceResult, readRecord: R
   }
 
   const writeBuffer =
-    readRecord.encoding === "utf16le"
-      ? Buffer.from("\ufeff" + finalContent, "utf16le")
-      : Buffer.from(finalContent, "utf8");
+    readRecord.encoding === "utf16le" ? Buffer.from("﻿" + finalContent, "utf16le") : Buffer.from(finalContent, "utf8");
 
   await fsp.writeFile(absPath, writeBuffer);
 
@@ -99,8 +98,6 @@ const editFilesOutputSchema = z.object({
 
 type FileEditInput = z.input<typeof fileEditSchema>;
 export type FileEditResult = z.infer<typeof fileEditResultSchema>;
-/** "approval" 是普通文件在 ASK 模式下那一轮纯审批，不产生前端同步；其余三种见 SyncKind。 */
-type PendingKind = "approval" | SyncKind;
 
 /**
  * 三条前端同步路径的结算文案：[同步成功, 同步失败前缀]。新增同步类型时在此加一行。
@@ -120,26 +117,47 @@ interface BatchOperationContext {
   operationId: string;
 }
 
-interface PendingOperation extends BatchOperationContext {
+interface PendingBase {
   index: number;
-  kind: PendingKind;
   absPath: string;
   replacements: number;
-  /** core 重算派生值时留下的提示，结算时拼进结果消息 */
-  notice?: string;
-  /** 挂起前算好的改动回执，结算成功时填进结果 */
-  change?: Change[];
-  /** 见 {@link DeferredCommit}。要推给前端的编辑都带；纯审批挂起（kind="approval"）不带 */
-  commit?: DeferredCommit;
+}
+
+/**
+ * 一段里等前端回话的一项。
+ * - `plain`：ASK 模式下的普通文件，不用推给前端，只等这一段的审批，批准了才写；
+ * - 其余：推给前端的同步编辑，前端执行成功才落盘（见 {@link DeferredCommit}）。
+ */
+type PendingItem =
+  | (PendingBase & { kind: "plain"; write: () => Promise<FileEditResult> })
+  | (PendingBase & {
+      kind: SyncKind;
+      /** core 重算派生值时留下的提示，结算时拼进结果消息 */
+      notice?: string;
+      /** 挂起前算好的改动回执，结算成功时填进结果 */
+      change?: Change[];
+      commit: DeferredCommit;
+      op: CanvasOp;
+      purpose: string;
+    });
+
+type SyncItem = Exclude<PendingItem, { kind: "plain" }>;
+
+const isSyncItem = (item: PendingItem): item is SyncItem => item.kind !== "plain";
+
+/** 一次挂起带出去的一段编辑：互不覆盖、可以叠在同一棵整屏树上的那几个文件。 */
+interface PendingSegment extends BatchOperationContext {
+  items: PendingItem[];
 }
 
 interface EditFilesBatchState {
   batchId: string;
   inputSignature: string;
+  /** 下一个还没处理的文件；挂起中那一段的文件已经在 cursor 之前 */
   cursor: number;
   /** 一次批准覆盖这次工具调用的全部文件，不延续到其他调用。 */
   approved: boolean;
-  pending?: PendingOperation;
+  pending?: PendingSegment;
   capturePending?: BatchOperationContext;
   captureRequested?: boolean;
   hasComponentEdits?: boolean;
@@ -149,18 +167,9 @@ interface EditFilesBatchState {
 
 type FileProcessOutcome =
   | { status: "completed"; result: FileEditResult }
-  | {
-      status: "suspend";
-      kind: PendingKind;
-      absPath: string;
-      replacements: number;
-      notice?: string;
-      /** 见 {@link DeferredCommit}：带上它就表示编辑还没落盘，等前端执行成功再写 */
-      commit?: DeferredCommit;
-      /** 挂起前算好的改动回执；落盘成功后由 settlePendingOperation 填进结果 */
-      change?: Change[];
-      payload: EditFilesSuspendPayload;
-    };
+  | { status: "pending"; item: PendingItem }
+  /** 跟这一段已经上树的编辑有交集：先把这一段落盘，再回来处理这个文件 */
+  | { status: "conflict" };
 
 const batchStates = new Map<string, EditFilesBatchState>();
 
@@ -170,7 +179,7 @@ function completeFile(
   replacements: number,
   message: string,
   options: Pick<FileEditResult, "frontendSynced" | "validationErrors" | "change"> = {}
-): FileProcessOutcome {
+): { status: "completed"; result: FileEditResult } {
   return {
     status: "completed",
     result: { path, success, replacements, message, ...options }
@@ -179,14 +188,6 @@ function completeFile(
 
 function operationContext(state: EditFilesBatchState, index: number): BatchOperationContext {
   return { batchId: state.batchId, operationId: `${state.batchId}:${index}` };
-}
-
-function withOperationContext<T extends Record<string, unknown>>(
-  payload: T,
-  state: EditFilesBatchState,
-  index: number
-): T & BatchOperationContext {
-  return { ...payload, ...operationContext(state, index) };
 }
 
 function buildBatchOutput(state: EditFilesBatchState) {
@@ -212,155 +213,186 @@ function buildBatchOutput(state: EditFilesBatchState) {
   };
 }
 
-async function settlePendingOperation(state: EditFilesBatchState, resumeData: EditFilesResumeData): Promise<void> {
-  const pending = state.pending;
-  if (!pending) {
-    throw new Error("edit_files received resumeData without a pending operation.");
-  }
-  if (resumeData.batchId !== pending.batchId || resumeData.operationId !== pending.operationId) {
-    throw new Error(
-      `edit_files resume mismatch: expected ${pending.operationId}, received ${String(resumeData.operationId)}.`
-    );
-  }
-
-  const filePath = state.results[pending.index]?.path;
-  const pathForResult = filePath ?? "";
-  const finish = (success: boolean, message: string, frontendSynced?: boolean) => {
-    state.results[pending.index] = {
-      path: pathForResult,
-      success,
-      replacements: pending.replacements,
-      message,
-      ...(frontendSynced === undefined ? {} : { frontendSynced }),
-      // 只有真落盘了才报改动：失败/拒绝的那几条明确说过「工作区未改动」，
-      // 再附一份 change 就是自相矛盾
-      ...(success && pending.change ? { change: pending.change } : {})
+/** 用户拒绝之后，还没轮到的文件一律不做。 */
+function rejectRemaining(state: EditFilesBatchState): void {
+  for (let index = state.cursor; index < state.results.length; index += 1) {
+    state.results[index] = {
+      path: state.results[index]?.path ?? "",
+      success: false,
+      replacements: 0,
+      message: "用户拒绝了本批编辑，工作区未改动"
     };
-    state.cursor = pending.index + 1;
-    state.pending = undefined;
-  };
-
-  const rejectRemaining = () => {
-    for (let index = state.cursor; index < state.results.length; index += 1) {
-      state.results[index] = {
-        path: state.results[index]?.path ?? "",
-        success: false,
-        replacements: 0,
-        message: "用户拒绝了本批编辑，工作区未改动"
-      };
-    }
-    state.cursor = state.results.length;
-  };
-
-  /** 三条前端同步路径只差成败文案，结算流程完全相同。 */
-  const settleSync = (synced: boolean, kind: SyncKind, error: string | undefined, notice = pending.notice) => {
-    const [okMessage, failPrefix] = SYNC_MESSAGES[kind];
-    const outcome = synced ? okMessage : `${failPrefix}: ${error ?? "未知错误"}`;
-    // notice 是 core 重算派生值留下的说明（例如分组尺寸被按成员覆盖）——
-    // 不带出去 agent 会以为自己写的值生效了，然后反复改同一个字段
-    finish(
-      synced,
-      formatSuccessMessage(pending.replacements, pending.absPath, notice ? `${outcome}（${notice}）` : outcome),
-      synced
-    );
-  };
-
-  if (pending.kind === "approval") {
-    if ("approved" in resumeData && resumeData.approved) {
-      state.approved = true;
-      state.pending = undefined;
-      return;
-    }
-    finish(false, "用户取消了编辑操作");
-    rejectRemaining();
-    return;
   }
-
-  if ("approved" in resumeData && resumeData.approved === false) {
-    // 带 commit 说明落盘被推迟到了这里，拒绝就等于这次编辑从未发生——如实说「未改动工作区」。
-    // 不带的（普通文件在函数开头已单独问过一轮）走到这里只是前端同步那一步被取消。
-    const outcome = pending.commit ? "用户拒绝了本次编辑，工作区未改动" : "用户取消了前端同步";
-    finish(false, formatSuccessMessage(pending.replacements, pending.absPath, outcome), false);
-    rejectRemaining();
-    return;
-  }
-
-  /**
-   * 前端执行成功了，现在才真正落盘，然后按同步结果结算。
-   *
-   * **前端失败就不落盘**：工作区要跟画布对齐，前端没接住这次更新，工作区也不该单方面改掉
-   * ——否则下一次前端整屏同步过来，这笔改动又会被画布状态盖回去，等于悄悄丢了。
-   * commit 自身失败则如实报「前端已接受但没写进去」，不因为前端说成功就谎报。
-   */
-  const commitThenSettle = async (synced: boolean, kind: SyncKind, error: string | undefined) => {
-    if (!pending.commit || !synced) {
-      settleSync(synced, kind, error);
-      return;
-    }
-    try {
-      const committed = await pending.commit(resumeData);
-      // 落盘时重算出来的 notice 比挂起前那份新，以它为准
-      settleSync(synced, kind, error, committed?.notice ?? pending.notice);
-    } catch (commitError) {
-      const reason = commitError instanceof Error ? commitError.message : String(commitError);
-      finish(
-        false,
-        formatSuccessMessage(pending.replacements, pending.absPath, `前端已接受，但写入工作区失败: ${reason}`),
-        false
-      );
-    }
-  };
-
-  // 三类同步都是一次一个 op：回执只有一项，成败都在这一项里
-  const reply = readCanvasOpResults(resumeData, 1);
-  if (reply.status === "done") {
-    // 前端返回执行回执，说明这次载荷的审批已通过；后续文件共享这次批准。
-    state.approved = true;
-    const receipt = reply.results[0];
-    await commitThenSettle(receipt.ok, pending.kind, receipt.ok ? undefined : receipt.error);
-    const result = state.results[pending.index];
-    if (pending.kind === "component" && result?.success) {
-      state.hasComponentEdits = true;
-    }
-    return;
-  }
-
-  throw new Error(`edit_files received incompatible resumeData for ${pending.kind}.`);
+  state.cursor = state.results.length;
 }
 
+/** 前端回执（或审批结果）对不对得上挂起中的这一段；对不上就是协议被破坏，直接抛。 */
+function readSegmentReceipts(segment: PendingSegment, resumeData: EditFilesResumeData): OpResult[] {
+  const syncCount = segment.items.filter(isSyncItem).length;
+  if (syncCount === 0) {
+    // 只剩等审批的普通文件，挂起的是纯审批
+    if (!("approved" in resumeData && resumeData.approved)) {
+      throw new Error("edit_files received incompatible resumeData for approval.");
+    }
+    return [];
+  }
+  const reply = readCanvasOpResults(resumeData, syncCount);
+  if (reply.status !== "done") {
+    throw new Error(`edit_files received incompatible resumeData for canvas_ops (${reply.status}).`);
+  }
+  return reply.results;
+}
+
+/**
+ * 结算挂起中的那一段。
+ *
+ * 整段共用一棵提交树：前端接住的每一项依次上树，最后 {@link ScreenTreeSet.flush} 每块屏只写一次。
+ * 落盘时重新建树而不是复用预览那棵，是因为中间隔着一次前端往返，工作区可能已被别的操作改过。
+ */
+async function settleSegment(state: EditFilesBatchState, resumeData: EditFilesResumeData): Promise<void> {
+  const segment = state.pending;
+  if (!segment) {
+    throw new Error("edit_files received resumeData without a pending operation.");
+  }
+  if (resumeData.batchId !== segment.batchId || resumeData.operationId !== segment.operationId) {
+    throw new Error(
+      `edit_files resume mismatch: expected ${segment.operationId}, received ${String(resumeData.operationId)}.`
+    );
+  }
+
+  const settleSync = (item: SyncItem, synced: boolean, outcome: string) => {
+    state.results[item.index] = {
+      path: state.results[item.index]?.path ?? "",
+      success: synced,
+      replacements: item.replacements,
+      message: formatSuccessMessage(item.replacements, item.absPath, outcome),
+      frontendSynced: synced,
+      // 只有真落盘了才报改动：失败/拒绝的那几条明确说过「工作区未改动」，
+      // 再附一份 change 就是自相矛盾
+      ...(synced && item.change ? { change: item.change } : {})
+    };
+  };
+
+  if ("approved" in resumeData && resumeData.approved === false) {
+    for (const item of segment.items) {
+      if (isSyncItem(item)) {
+        // 落盘被推迟到了这里，拒绝就等于这次编辑从未发生——如实说「未改动工作区」
+        settleSync(item, false, "用户拒绝了本次编辑，工作区未改动");
+      } else {
+        state.results[item.index] = {
+          path: state.results[item.index]?.path ?? "",
+          success: false,
+          replacements: 0,
+          message: "用户取消了编辑操作"
+        };
+      }
+    }
+    state.pending = undefined;
+    rejectRemaining(state);
+    return;
+  }
+
+  const receipts = readSegmentReceipts(segment, resumeData);
+  // 前端返回执行回执或批准，说明这一段的审批已通过；后面的段共享这次批准。
+  state.approved = true;
+  state.pending = undefined;
+
+  const trees = new ScreenTreeSet();
+  /** 已上提交树、等整屏写完才算数的那几项，带着落盘时重算出来的 notice */
+  const staged: Array<{ item: SyncItem; notice?: string }> = [];
+  // 前端说成功不等于写进去了，没写进去就如实报，不谎报成功
+  const commitFailed = (item: SyncItem, error: unknown) => {
+    const reason = error instanceof Error ? error.message : String(error);
+    settleSync(item, false, `前端已接受，但写入工作区失败: ${reason}`);
+  };
+
+  let receiptIndex = 0;
+  for (const item of segment.items) {
+    if (!isSyncItem(item)) {
+      state.results[item.index] = await item.write();
+      continue;
+    }
+    const receipt = receipts[receiptIndex];
+    receiptIndex += 1;
+    if (!receipt.ok) {
+      // 前端失败就不落盘：工作区要跟画布对齐，前端没接住这次更新，工作区也不该单方面改掉
+      // ——否则下一次前端整屏同步过来，这笔改动又会被画布状态盖回去，等于悄悄丢了。
+      settleSync(item, false, `${SYNC_MESSAGES[item.kind][1]}: ${receipt.error ?? "未知错误"}`);
+      continue;
+    }
+    try {
+      const committed = await item.commit(trees);
+      // 落盘时重算出来的 notice 比挂起前那份新，以它为准
+      staged.push({ item, notice: committed?.notice ?? item.notice });
+    } catch (error) {
+      commitFailed(item, error);
+    }
+  }
+
+  try {
+    trees.flush();
+  } catch (error) {
+    staged.forEach(({ item }) => commitFailed(item, error));
+    return;
+  }
+
+  for (const { item, notice } of staged) {
+    // notice 是 core 重算派生值留下的说明（例如分组尺寸被按成员覆盖）——
+    // 不带出去 agent 会以为自己写的值生效了，然后反复改同一个字段
+    const okMessage = SYNC_MESSAGES[item.kind][0];
+    settleSync(item, true, notice ? `${okMessage}（${notice}）` : okMessage);
+    if (item.kind === "component") {
+      state.hasComponentEdits = true;
+    }
+  }
+}
+
+/** 普通文件：读、改、写一气呵成。ASK 模式下批准之后才调，所以重新读盘，不用挂起前读到的那份。 */
+async function editPlainFile(file: FileEditInput, absPath: string): Promise<FileEditResult> {
+  const readRecord = await readFileWithMeta(absPath).catch(() => null);
+  if (!readRecord) {
+    return completeFile(file.path, false, 0, `File not found: ${absPath}`).result;
+  }
+  readFileState.set(absPath, readRecord);
+
+  let result: ReplaceResult;
+  try {
+    // 一个文件内的 edit 是原子的：任一条失败就整体不落盘
+    result = applyEdits(readRecord.content, file.edits);
+  } catch (error) {
+    if (error instanceof StringNotFoundError || error instanceof StringNotUniqueError) {
+      return completeFile(file.path, false, 0, error.message).result;
+    }
+    throw error;
+  }
+
+  await persistEdit(absPath, result, readRecord);
+  return completeFile(file.path, true, result.replacements, formatSuccessMessage(result.replacements, absPath), {
+    change: diffChange(file.path, readRecord.content, result.content)
+  }).result;
+}
+
+/**
+ * 处理一个文件：要么当场有结果，要么进这一段等前端，要么跟这一段冲突、留到下一段。
+ *
+ * @param trees 这一段共用的预览树
+ * @param pendingPaths 这一段里已经在等前端的文件：同一个文件第二次编辑要看到第一次的结果，只能等它落盘
+ */
 async function processFileEdit(
   file: FileEditInput,
-  index: number,
   state: EditFilesBatchState,
-  mode: AgentMode | undefined
+  mode: AgentMode | undefined,
+  trees: ScreenTreeSet,
+  pendingPaths: ReadonlySet<string>
 ): Promise<FileProcessOutcome> {
   const { path: filePath, edits } = file;
   const absPath = resolveFilePath(filePath);
+  if (pendingPaths.has(absPath)) {
+    return { status: "conflict" };
+  }
   const normalizedPath = absPath.replace(/\\/g, "/");
   // 需要跟前端同步的文件由处理器认领；认领不了的就是普通文件
   const handler = findSyncHandler(normalizedPath);
-  const needsApproval = mode === AgentMode.ASK_BEFORE_EDIT && !state.approved;
-
-  // 会推给前端的那几类自带审批形态（ASK 模式下推的是 AskApprovalXxx），不必在这里先问一轮；
-  // agent 产物是它自己的中间文件，也不该拿去烦用户。剩下的普通文件才走这一轮纯审批。
-  if (needsApproval && !handler && !isAgentArtifactFilePath(normalizedPath)) {
-    return {
-      status: "suspend",
-      kind: "approval",
-      absPath,
-      replacements: 0,
-      payload: withOperationContext(
-        {
-          type: SuspendType.AskApproval,
-          purpose: "编辑文件",
-          filePath,
-          edits: edits.map((edit) => ({ oldString: edit.old_string, newString: edit.new_string }))
-        },
-        state,
-        index
-      )
-    };
-  }
 
   const noopIndex = findNoopEditIndex(edits);
   if (noopIndex !== -1) {
@@ -370,6 +402,21 @@ async function processFileEdit(
       0,
       `edits[${noopIndex}]: old_string and new_string are identical. No edit needed.`
     );
+  }
+
+  // 会推给前端的那几类自带审批形态（canvas_ops 载荷里的 approval），不必单独问；
+  // agent 产物是它自己的中间文件，也不该拿去烦用户。剩下的普通文件在 ASK 模式下进这一段等审批，
+  // 不需要的就没有「等前端执行完再落盘」这回事，直接写。
+  if (!handler) {
+    const needsApproval =
+      mode === AgentMode.ASK_BEFORE_EDIT && !state.approved && !isAgentArtifactFilePath(normalizedPath);
+    if (!needsApproval) {
+      return { status: "completed", result: await editPlainFile(file, absPath) };
+    }
+    return {
+      status: "pending",
+      item: { kind: "plain", index: state.cursor, absPath, replacements: 0, write: () => editPlainFile(file, absPath) }
+    };
   }
 
   /**
@@ -392,31 +439,104 @@ async function processFileEdit(
     throw error;
   }
 
-  if (handler) {
-    const prepared = await handler.prepare({ filePath, absPath, result, readRecord, needsApproval, capture: false });
-    if (!prepared.ok) {
-      return completeFile(filePath, false, 0, prepared.message, {
-        ...(prepared.frontendSynced === undefined ? {} : { frontendSynced: prepared.frontendSynced }),
-        ...(prepared.validationErrors ? { validationErrors: prepared.validationErrors } : {})
-      });
-    }
-    return {
-      status: "suspend",
+  const prepared = await handler.prepare({ filePath, absPath, result, readRecord, trees, capture: false });
+  if (prepared.ok === "conflict") {
+    return { status: "conflict" };
+  }
+  if (!prepared.ok) {
+    return completeFile(filePath, false, 0, prepared.message, {
+      ...(prepared.frontendSynced === undefined ? {} : { frontendSynced: prepared.frontendSynced }),
+      ...(prepared.validationErrors ? { validationErrors: prepared.validationErrors } : {})
+    });
+  }
+  return {
+    status: "pending",
+    item: {
       kind: prepared.kind,
+      index: state.cursor,
       absPath,
       replacements: result.replacements,
       notice: prepared.notice,
       commit: prepared.commit,
+      op: prepared.op,
+      purpose: prepared.purpose,
       // 落盘推迟到 resume，但改前改后的内容只有此刻手上有，先算好随 pending 带过去
-      change: diffChange(filePath, readRecord.content, result.content),
-      payload: withOperationContext(prepared.payload, state, index)
+      change: diffChange(filePath, readRecord.content, result.content)
+    }
+  };
+}
+
+/**
+ * 从 cursor 往后收一段：能叠在同一棵整屏树上的连续文件。不需要等前端的文件当场出结果，
+ * 遇到冲突就停，冲突的那个留给下一段（它要看到这一段落盘之后的工作区）。
+ *
+ * 原来是一个文件挂起一次，每次都是一整轮「前端执行 → resume → 整屏读写」；合成一段之后，
+ * 互不相干的编辑（最常见的就是一次改一批组件）只需要一次往返。
+ */
+async function collectSegment(
+  files: FileEditInput[],
+  state: EditFilesBatchState,
+  mode: AgentMode | undefined
+): Promise<PendingItem[]> {
+  const trees = new ScreenTreeSet();
+  const items: PendingItem[] = [];
+  const pendingPaths = new Set<string>();
+
+  while (state.cursor < files.length) {
+    const index = state.cursor;
+    let outcome: FileProcessOutcome;
+    try {
+      outcome = await processFileEdit(files[index], state, mode, trees, pendingPaths);
+    } catch (error) {
+      outcome = completeFile(files[index].path, false, 0, error instanceof Error ? error.message : String(error));
+    }
+
+    if (outcome.status === "conflict") {
+      break;
+    }
+    state.cursor += 1;
+    if (outcome.status === "completed") {
+      state.results[index] = outcome.result;
+      continue;
+    }
+    items.push(outcome.item);
+    pendingPaths.add(outcome.item.absPath);
+  }
+  return items;
+}
+
+/**
+ * 一段编辑的挂起载荷。有要推前端的就是一次 canvas_ops（ops 按段内顺序排，回执按下标对应）；
+ * 只剩 ASK 模式下等审批的普通文件时，退回纯审批。
+ */
+function segmentPayload(
+  files: FileEditInput[],
+  segment: PendingSegment,
+  needsApproval: boolean
+): EditFilesSuspendPayload {
+  // 首次确认展示整个调用的文件范围；批准后后面的段继续同步，不再弹确认。
+  const batchPurpose =
+    files.length > 1
+      ? `批量编辑以下 ${files.length} 个文件（一次批准整批修改）：\n${files.map((file) => file.path).join("\n")}`
+      : undefined;
+  const batch = { batchId: segment.batchId, operationId: segment.operationId };
+  const syncItems = segment.items.filter(isSyncItem);
+
+  if (syncItems.length === 0) {
+    const first = files[segment.items[0].index];
+    return {
+      type: SuspendType.AskApproval,
+      purpose: batchPurpose ?? "编辑文件",
+      filePath: first.path,
+      edits: first.edits.map((edit) => ({ oldString: edit.old_string, newString: edit.new_string })),
+      ...batch
     };
   }
-
-  // 走到这里的都是普通文件：不需要前端同步，也就没有「等前端执行完再落盘」这回事，直接写。
-  await persistEdit(absPath, result, readRecord);
-  return completeFile(filePath, true, result.replacements, formatSuccessMessage(result.replacements, absPath), {
-    change: diffChange(filePath, readRecord.content, result.content)
+  return canvasOpsPayload({
+    needsApproval,
+    purpose: batchPurpose ?? syncItems[0].purpose,
+    ops: syncItems.map((item) => item.op),
+    batch
   });
 }
 
@@ -430,7 +550,7 @@ Rules:
 - Edits within one file are atomic and applied in order. If one edit fails, that file is not written.
 - Files are independent. A failure in one file never stops or rolls back other files.
 - In ask-before-edit mode, one approval covers all files in this call. Rejecting cancels the remaining edits.
-- Each component, filter, or screen-info update is synchronized separately after batch approval.
+- Component, filter, and screen-info updates in one call are synchronized to the frontend together after batch approval.
 - capture defaults to true: after all files finish, capture and upload the canvas once if any component edit succeeded. The shared screenshot is returned through screenshot and imagesForModel. Set capture: false to skip it. Screenshot failure does not fail the edits.
 - Do not use this tool on binary or Jupyter (.ipynb) files.
 - Never use shell commands to modify workspace component files; use edit_files so validation and frontend synchronization run.`,
@@ -499,71 +619,37 @@ Rules:
         state.screenshot = CanvasCaptureResultSchema.parse(resumeData);
         state.capturePending = undefined;
       } else {
-        await settlePendingOperation(state, resumeData);
+        await settleSegment(state, resumeData);
       }
     }
 
     while (state.cursor < files.length) {
-      const index = state.cursor;
-      state.results[index] ??= {
-        path: files[index].path,
-        success: false,
-        replacements: 0,
-        message: "Pending"
-      };
-
-      let outcome: FileProcessOutcome;
-      try {
-        outcome = await processFileEdit(files[index], index, state, mode);
-      } catch (error) {
-        outcome = completeFile(files[index].path, false, 0, error instanceof Error ? error.message : String(error));
-      }
-
-      if (outcome.status === "completed") {
-        state.results[index] = outcome.result;
-        state.cursor += 1;
+      const items = await collectSegment(files as FileEditInput[], state, mode);
+      if (items.length === 0) {
+        // 冲突来自上了预览树却没走完的编辑（比如认领之后 core 接不上），这一段没有要等的：换一棵新树接着收
         continue;
       }
-
-      const ids = operationContext(state, index);
-      state.pending = {
-        ...ids,
-        index,
-        kind: outcome.kind,
-        absPath: outcome.absPath,
-        replacements: outcome.replacements,
-        notice: outcome.notice,
-        commit: outcome.commit,
-        change: outcome.change
-      };
 
       if (!suspend) {
-        state.results[index] = {
-          path: files[index].path,
-          success: false,
-          replacements: outcome.replacements,
-          // 带 commit 的编辑还悬在内存里，没人能批准也就没落盘——如实说清楚，别让调用方以为写进去了
-          message: outcome.commit
-            ? "Frontend synchronization is required, but suspend is unavailable. The edit was not written."
-            : "Frontend synchronization is required, but suspend is unavailable.",
-          frontendSynced: false
-        };
-        state.pending = undefined;
-        state.cursor += 1;
+        for (const item of items) {
+          const sync = isSyncItem(item);
+          state.results[item.index] = {
+            path: files[item.index].path,
+            success: false,
+            replacements: item.replacements,
+            // 等前端的编辑还悬在内存里，没人能批准也就没落盘——如实说清楚，别让调用方以为写进去了
+            message: sync
+              ? "Frontend synchronization is required, but suspend is unavailable. The edit was not written."
+              : "Frontend synchronization is required, but suspend is unavailable.",
+            ...(sync ? { frontendSynced: false } : {})
+          };
+        }
         continue;
       }
 
-      // 首次确认展示整个调用的文件范围；批准后每个文件继续同步，不再弹确认。
-      const payload = outcome.payload;
-      if (files.length > 1) {
-        const purpose = `批量编辑以下 ${files.length} 个文件（一次批准整批修改）：\n${files.map((file) => file.path).join("\n")}`;
-        if (payload.type === SuspendType.AskApproval) {
-          payload.purpose = purpose;
-        } else if (payload.type === SuspendType.CanvasOps && payload.approval) {
-          payload.approval.purpose = purpose;
-        }
-      }
-      return suspend(payload) as never;
+      const needsApproval = mode === AgentMode.ASK_BEFORE_EDIT && !state.approved;
+      state.pending = { ...operationContext(state, items[0].index), items };
+      return suspend(segmentPayload(files as FileEditInput[], state.pending, needsApproval)) as never;
     }
 
     if (capture && state.hasComponentEdits && !state.captureRequested) {

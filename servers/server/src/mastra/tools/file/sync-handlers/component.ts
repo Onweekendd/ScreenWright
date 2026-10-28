@@ -1,29 +1,84 @@
 import type { ComponentType } from "@screenwright/types";
 
-import { applyComponentEdit, previewComponentEdit } from "@/mastra/services/bi-data-sync/component-edit";
+import { type ComponentEditOutcome, editComponentInTree } from "@/mastra/services/bi-data-sync/component-edit";
 
+import type { CanvasOp } from "../../../types/suspend";
 import { isComponentFilePath } from "../file-kind";
 import { formatValidationWarnings, validateComponentContent } from "../utils";
 import {
+  CONFLICT,
   type EditContext,
-  type EditFilesSuspendPayload,
   invalidateReadState,
   notWritten,
   type PreparedEdit,
-  type SyncHandler,
-  syncPayload
+  type SyncHandler
 } from "./contract";
 
 /**
- * 组件更新的挂起载荷。component json 与 vue-part 两条路都推这一种，只有 purpose 不同——
+ * 组件更新的画布操作。component json 与 vue-part 两条路都推这一种——
  * 前端收到的是同一个组件对象，不该因为 agent 改的是 .json 还是 .vue 而走两套协议。
  */
-export const pushComponentUpdate = (
+export const componentUpdateOp = (ctx: EditContext, component: ComponentType): CanvasOp => ({
+  op: "update_component",
+  component,
+  capture: ctx.capture ?? true
+});
+
+/**
+ * 组件编辑在预览树上走一遍，并备好前端成功之后在提交树上再走一遍的 commit。
+ * component json 与 vue-part 共用：两者只差「喂给 core 的是什么」。
+ *
+ * 落盘时重新过一遍 core（而不是复用预览算好的那棵树）是刻意的：中间隔着一次前端往返，
+ * 工作区可能已被别的操作改过，拿陈旧快照去覆盖会吞掉那些改动。
+ *
+ * @param jsonPath 组件 json 的路径（vue-part 改的是 .vue，进树的是伴生 json）
+ * @param edited 喂给 core 的编辑后内容
+ * @param invalidates 落盘后要作废读快照的文件
+ */
+export const prepareComponentEdit = (
   ctx: EditContext,
-  purpose: string,
-  component: ComponentType
-): EditFilesSuspendPayload =>
-  syncPayload(ctx, purpose, { op: "update_component", component, capture: ctx.capture ?? true });
+  jsonPath: string,
+  edited: string | ComponentType,
+  editedId: number,
+  { purpose, extraNotice, invalidates }: { purpose: string; extraNotice?: string; invalidates: string[] }
+): PreparedEdit => {
+  let applied: ComponentEditOutcome | null;
+  try {
+    // 只算不写：编辑后的内容交给 core 合进这一段共用的整屏树，得到要推给前端的那一份
+    const tree = ctx.trees.open(jsonPath);
+    if (!tree) {
+      return notWritten(ctx, `组件 ${editedId} 不在任何大屏目录下`);
+    }
+    if (!ctx.trees.claim(tree, { componentId: editedId })) {
+      return CONFLICT;
+    }
+    applied = editComponentInTree(tree, jsonPath, edited);
+  } catch (error) {
+    // core 接不上（整屏读取失败等）：这次编辑一个字节都没落盘
+    return notWritten(ctx, (error as Error).message);
+  }
+  if (!applied) {
+    return notWritten(ctx, `组件 ${editedId} 不在大屏树上`);
+  }
+
+  return {
+    ok: true,
+    kind: "component",
+    notice: [applied.notice, extraNotice].filter(Boolean).join(" ") || undefined,
+    commit: async (trees) => {
+      const tree = trees.open(jsonPath);
+      const committed = tree ? editComponentInTree(tree, jsonPath, edited) : null;
+      if (!tree || !committed) {
+        throw new Error(`组件 ${editedId} 已不在大屏树上`);
+      }
+      trees.markDirty(tree);
+      invalidateReadState(...invalidates);
+      return { notice: committed.notice };
+    },
+    op: componentUpdateOp(ctx, applied.component),
+    purpose
+  };
+};
 
 /**
  * title 是组件类型标识（「条形图」「图片」），前端靠它在组件菜单里找类型，不能改；组件名是 name。
@@ -62,38 +117,12 @@ export const componentHandler: SyncHandler = {
       return { ok: false, message: titleError };
     }
 
-    const editedId = (validation.data as ComponentType).id;
-    let applied: Awaited<ReturnType<typeof previewComponentEdit>>;
-    let failureReason: string | undefined;
-    try {
-      // 只算不写：编辑后的文本交给 core 合进内存中的整屏树，得到要推给前端的那一份
-      applied = await previewComponentEdit(ctx.absPath, ctx.result.content);
-    } catch (error) {
-      applied = null;
-      failureReason = (error as Error).message;
-    }
-    if (!applied) {
-      // core 接不上（组件不在树上、或整屏读取失败）：这次编辑一个字节都没落盘
-      return notWritten(ctx, failureReason ?? `组件 ${editedId} 不在大屏树上`);
-    }
-
-    return {
-      ok: true,
-      kind: "component",
+    return prepareComponentEdit(ctx, ctx.absPath, ctx.result.content, (validation.data as ComponentType).id, {
+      purpose: "推送组件更新到前端",
       // 属性层的警告要说出来：放行不等于装作没事。不说的话 agent 永远不知道这个组件的
       // option/data 跟它的 prop schema 对不上，也就没机会顺手修好。
-      notice: [applied.notice, formatValidationWarnings(validation.warnings).trim()].filter(Boolean).join(" "),
-      // 落盘时重新过一遍 core（而不是复用刚才预览算好的那棵树）是刻意的：中间隔着一次前端往返，
-      // 工作区可能已被别的操作改过，拿陈旧快照去覆盖会吞掉那些改动。
-      commit: async () => {
-        const committed = await applyComponentEdit(ctx.absPath, ctx.result.content);
-        if (!committed) {
-          throw new Error(`组件 ${editedId} 已不在大屏树上`);
-        }
-        invalidateReadState(ctx.absPath);
-        return { notice: committed.notice };
-      },
-      payload: pushComponentUpdate(ctx, "推送组件更新到前端", applied.component)
-    };
+      extraNotice: formatValidationWarnings(validation.warnings).trim(),
+      invalidates: [ctx.absPath]
+    });
   }
 };

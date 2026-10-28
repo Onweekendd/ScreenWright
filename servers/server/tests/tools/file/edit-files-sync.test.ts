@@ -150,12 +150,17 @@ afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map((dir) => fsp.rm(dir, { recursive: true, force: true })));
 });
 
-/** canvas_ops 挂起载荷里 edit_files 发的唯一一个 op（一个文件一轮，一轮一个 op） */
-const firstOp = (payload: Record<string, unknown>) => (payload.ops as Array<Record<string, unknown>>)[0];
+const opsOf = (payload: Record<string, unknown>) => payload.ops as Array<Record<string, unknown>>;
 
-/** 前端对那一个 op 的回执：results 与 ops 按下标对应，批次字段原样带回 */
-const opReply = (payload: Record<string, unknown>, result: OpResult = { ok: true }) => ({
-  results: [result],
+/** canvas_ops 挂起载荷里的第一个 op（单文件时就是唯一那个） */
+const firstOp = (payload: Record<string, unknown>) => opsOf(payload)[0];
+
+/**
+ * 前端对整段 ops 的回执：results 与 ops 按下标对应，批次字段原样带回。
+ * 传一个 result 就每个 op 都回它；传数组就逐个对应。
+ */
+const opReply = (payload: Record<string, unknown>, result: OpResult | OpResult[] = { ok: true }) => ({
+  results: Array.isArray(result) ? result : opsOf(payload).map(() => result),
   batchId: payload.batchId,
   operationId: payload.operationId
 });
@@ -544,7 +549,7 @@ describe("edit_files resume 结算", () => {
     }
   );
 
-  it.each([true, false])("组件和普通文件一起审批，组件在前=%s", async (componentFirst) => {
+  it.each([true, false])("组件和普通文件只挂起一次、一起审批，组件在前=%s", async (componentFirst) => {
     const componentPath = await componentTree();
     const plainPath = path.join(path.dirname(componentPath), "notes.txt");
     await fsp.writeFile(plainPath, "before", "utf8");
@@ -562,23 +567,18 @@ describe("edit_files resume 结算", () => {
       onSuspend: (payload: Record<string, unknown>) => payloads.push(payload)
     };
     await executeEditFiles(files, options);
-    const first = payloads[0];
-    const purpose =
-      first.type === SuspendType.AskApproval ? first.purpose : (first.approval as { purpose: string }).purpose;
+    // 普通文件不再单独审批一轮：它跟组件进同一段，canvas_ops 那一次审批就把两个都批了
+    expect(payloads).toHaveLength(1);
+    expect(payloads[0].type).toBe(SuspendType.CanvasOps);
+    expect(opsOf(payloads[0])).toHaveLength(1);
+    const purpose = (payloads[0].approval as { purpose: string }).purpose;
     expect(purpose).toContain(componentPath);
     expect(purpose).toContain(plainPath);
-    let result = await executeEditFiles(files, {
-      ...options,
-      resumeData:
-        first.type === SuspendType.AskApproval
-          ? { approved: true, batchId: first.batchId, operationId: first.operationId }
-          : opReply(first)
-    });
-    if (!componentFirst) {
-      expect(payloads[1].type).toBe(SuspendType.CanvasOps);
-      expect(payloads[1].approval).toBeUndefined();
-      result = await executeEditFiles(files, { ...options, resumeData: opReply(payloads[1]) });
-    }
+    // 批准之前两个都没动
+    await expect(fsp.readFile(plainPath, "utf8")).resolves.toBe("before");
+
+    const result = await executeEditFiles(files, { ...options, resumeData: opReply(payloads[0]) });
+    expect(payloads).toHaveLength(1);
     expect(result).toMatchObject({ success: true, succeeded: 2 });
     await expect(fsp.readFile(plainPath, "utf8")).resolves.toBe("after");
     await expect(fsp.readFile(componentPath, "utf8")).resolves.toContain('"zIndex": "a9"');
@@ -806,5 +806,187 @@ describe("edit_files resume 结算", () => {
 
     await expect(fsp.readFile(filePath, "utf8")).resolves.toContain('name: "fun-card-updated"');
     await expect(fsp.readFile(jsonPath, "utf8")).resolves.toContain('"js": "4166_自定义组件.vue"');
+  });
+});
+
+/**
+ * 一次调用改很多文件时，互不相干的编辑合成一次挂起，而不是一个文件一轮「前端执行 → resume」。
+ *
+ * mock 大屏：4152 / 4153 是顶层兄弟，4156 分组下挂着 4154 / 4155。
+ */
+describe("edit_files 整批同步", () => {
+  const readJson = async (file: string) => JSON.parse(await fsp.readFile(file, "utf8")) as Record<string, any>;
+
+  /** 一路 resume 到底：每次挂起都按 reply 回执，返回全部挂起载荷和最终结果 */
+  async function runToEnd(
+    files: EditInput[],
+    toolCallId: string,
+    reply: (payload: Record<string, unknown>) => Record<string, unknown> = (payload) => opReply(payload),
+    mode: AgentMode = AgentMode.AUTO_EDIT
+  ) {
+    const payloads: Array<Record<string, unknown>> = [];
+    const onSuspend = (payload: Record<string, unknown>) => payloads.push(payload);
+    let result = await executeEditFiles(files, { mode, toolCallId, onSuspend });
+    for (let seen = 0; payloads.length > seen; ) {
+      seen = payloads.length;
+      result = await executeEditFiles(files, { mode, toolCallId, onSuspend, resumeData: reply(payloads[seen - 1]) });
+    }
+    return {
+      payloads,
+      result: result as {
+        success: boolean;
+        succeeded: number;
+        results: Array<{ success: boolean; frontendSynced?: boolean; message: string }>;
+      }
+    };
+  }
+
+  it("互不相干的组件与屏幕配置只挂起一次，ops 按文件顺序排，resume 后全部落盘", async () => {
+    const screenRoot = await screenFixture();
+    const componentDir = path.join(screenRoot, "component");
+    const first = path.join(componentDir, "4152_条形图.json");
+    const second = path.join(componentDir, "4153_条形图.json");
+    const member = path.join(componentDir, "4156_分组", "4155_条形图.json");
+    const info = path.join(screenRoot, "info.json");
+    const files = [
+      { path: first, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a7"' }] },
+      { path: second, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a8"' }] },
+      { path: member, edits: [{ old_string: '"left": 600', new_string: '"left": 650' }] },
+      { path: info, edits: [{ old_string: '"width": "1920"', new_string: '"width": "2560"' }] }
+    ];
+    const payloads: Array<Record<string, unknown>> = [];
+    const options = { toolCallId: "batch-one-suspend", onSuspend: (p: Record<string, unknown>) => payloads.push(p) };
+
+    await executeEditFiles(files, options);
+
+    expect(payloads).toHaveLength(1);
+    expect(opsOf(payloads[0])).toMatchObject([
+      { op: "update_component", component: { id: 4152, zIndex: "a7" } },
+      { op: "update_component", component: { id: 4153, zIndex: "a8" } },
+      { op: "update_component", component: { id: 4155, left: 650 } },
+      { op: "update_screen_info", detail: { width: "2560" } }
+    ]);
+    // 推给前端之前一个都没落盘
+    expect((await readJson(first)).zIndex).toBe("a0");
+    expect((await readJson(member)).left).toBe(600);
+
+    const result = (await executeEditFiles(files, { ...options, resumeData: opReply(payloads[0]) })) as {
+      success: boolean;
+      results: Array<{ frontendSynced?: boolean }>;
+    };
+
+    expect(payloads).toHaveLength(1);
+    expect(result.success).toBe(true);
+    expect(result.results.map((r) => r.frontendSynced)).toEqual([true, true, true, true]);
+    expect((await readJson(first)).zIndex).toBe("a7");
+    expect((await readJson(second)).zIndex).toBe("a8");
+    expect((await readJson(member)).left).toBe(650);
+    expect((await readJson(info)).detail.width).toBe("2560");
+  });
+
+  it("前端只有一项失败时，只有那一项不落盘", async () => {
+    const componentDir = path.join(await screenFixture(), "component");
+    const first = path.join(componentDir, "4152_条形图.json");
+    const second = path.join(componentDir, "4153_条形图.json");
+    const files = [
+      { path: first, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a7"' }] },
+      { path: second, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a8"' }] }
+    ];
+
+    const { payloads, result } = await runToEnd(files, "batch-partial-fail", (payload) =>
+      opReply(payload, [{ ok: false, error: "画布上找不到" }, { ok: true }])
+    );
+
+    expect(payloads).toHaveLength(1);
+    expect(result.results[0]).toMatchObject({ success: false, frontendSynced: false });
+    expect(result.results[0].message).toContain("画布上找不到");
+    expect(result.results[1]).toMatchObject({ success: true, frontendSynced: true });
+    expect((await readJson(first)).zIndex).toBe("a0");
+    expect((await readJson(second)).zIndex).toBe("a8");
+  });
+
+  it("成员与所在分组同批时分两段，先落盘的成员不会被分组那份冲回去", async () => {
+    const componentDir = path.join(await screenFixture(), "component");
+    const member = path.join(componentDir, "4156_分组", "4155_条形图.json");
+    const group = path.join(componentDir, "4156_分组.json");
+    const files = [
+      { path: member, edits: [{ old_string: '"left": 600', new_string: '"left": 650' }] },
+      { path: group, edits: [{ old_string: '"name": "分组"', new_string: '"name": "新分组"' }] }
+    ];
+
+    const { payloads, result } = await runToEnd(files, "batch-group-member");
+
+    // 分组那份 json 内联时子树读的是盘，得等成员落了盘它才能上树
+    expect(payloads.map((payload) => opsOf(payload).map((op) => (op.component as { id: number }).id))).toEqual([
+      [4155],
+      [4156]
+    ]);
+    expect(result.success).toBe(true);
+    // 分组改名，子目录跟着换成新名字
+    expect((await readJson(path.join(componentDir, "4156_新分组", "4155_条形图.json"))).left).toBe(650);
+    expect((await readJson(path.join(componentDir, "4156_新分组.json"))).name).toBe("新分组");
+  });
+
+  it("同批里的过滤器独占一段：它会改各组件的绑定", async () => {
+    const { filePath, componentPath } = await dataFilterFixture([{ label: "条形图", id: FIXTURE_COMPONENT_ID }]);
+    const files = [
+      { path: componentPath, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' }] },
+      { path: filePath, edits: [{ old_string: '"a"', new_string: '"b"' }] }
+    ];
+
+    const { payloads, result } = await runToEnd(files, "batch-filter");
+
+    expect(payloads.map((payload) => opsOf(payload).map((op) => op.op))).toEqual([
+      ["update_component"],
+      ["save_filter"]
+    ]);
+    expect(result.success).toBe(true);
+    const component = await readJson(componentPath);
+    // 两次改动都在：组件自己的 zIndex，加上过滤器保存时写上的绑定
+    expect(component.zIndex).toBe("a9");
+    expect(component.listenArgs).toContainEqual({ filterName: "我的过滤器", usageStatus: true, callbackFields: ["b"] });
+  });
+
+  it("ASK 模式下第一段批准之后，后面的段不再弹审批", async () => {
+    const componentDir = path.join(await screenFixture(), "component");
+    const member = path.join(componentDir, "4156_分组", "4155_条形图.json");
+    const group = path.join(componentDir, "4156_分组.json");
+    const sibling = path.join(componentDir, "4152_条形图.json");
+    const files = [
+      { path: member, edits: [{ old_string: '"left": 600', new_string: '"left": 650' }] },
+      { path: sibling, edits: [{ old_string: '"zIndex": "a0"', new_string: '"zIndex": "a9"' }] },
+      { path: group, edits: [{ old_string: '"name": "分组"', new_string: '"name": "新分组"' }] }
+    ];
+
+    const { payloads, result } = await runToEnd(files, "batch-ask", undefined, AgentMode.ASK_BEFORE_EDIT);
+
+    expect(payloads).toHaveLength(2);
+    expect(opsOf(payloads[0])).toHaveLength(2);
+    expect(payloads[0].approval).toBeDefined();
+    expect(payloads[1].approval).toBeUndefined();
+    expect(result.success).toBe(true);
+  });
+
+  it("ASK 模式下拒绝第一段，后面的文件一个都不动", async () => {
+    const componentDir = path.join(await screenFixture(), "component");
+    const member = path.join(componentDir, "4156_分组", "4155_条形图.json");
+    const group = path.join(componentDir, "4156_分组.json");
+    const files = [
+      { path: member, edits: [{ old_string: '"left": 600', new_string: '"left": 650' }] },
+      { path: group, edits: [{ old_string: '"name": "分组"', new_string: '"name": "新分组"' }] }
+    ];
+
+    const { payloads, result } = await runToEnd(
+      files,
+      "batch-ask-reject",
+      (payload) => ({ approved: false, batchId: payload.batchId, operationId: payload.operationId }),
+      AgentMode.ASK_BEFORE_EDIT
+    );
+
+    expect(payloads).toHaveLength(1);
+    expect(result).toMatchObject({ success: false, succeeded: 0 });
+    expect(result.results[1].message).toContain("用户拒绝了本批编辑");
+    expect((await readJson(member)).left).toBe(600);
+    expect((await readJson(group)).name).toBe("分组");
   });
 });

@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/mastra/provider/model-registry", () => ({
-  getModelConfigSync: vi.fn(),
+  resolveModelConfig: vi.fn(),
   DEFAULT_VIDEO_MODEL: "MiniMax-H3"
 }));
 
-import { getModelConfigSync } from "@/mastra/provider/model-registry";
+import { resolveModelConfig } from "@/mastra/provider/model-registry";
 import {
   buildSubmitRequest,
   DEFAULT_VIDEO_MODEL,
@@ -15,7 +15,7 @@ import {
   resolveVideoConfig,
   tasksEndpoint,
   taskUrl
-} from "@/mastra/services/ai-generation/video-provider";
+} from "@/mastra/services/ai-generation/video/video-provider";
 
 const config = { baseUrl: "https://llm-api.net/minimax/v2", apiKey: "k", modelId: "MiniMax-H3" };
 const params = { prompt: "云层流动", durationSec: 5, resolution: "768P", ratio: "16:9" } as const;
@@ -35,15 +35,28 @@ describe("resolveVideoConfig", () => {
   });
 
   it("运行时只读取 video 角色，使用独立地址、密钥和型号", () => {
-    vi.mocked(getModelConfigSync).mockReturnValue({
+    vi.mocked(resolveModelConfig).mockReturnValue({
+      id: "video-1",
       role: "video",
       ...config,
       contextLength: null,
       dimensions: null
     });
     expect(getVideoConfig()).toEqual(config);
-    expect(getModelConfigSync).toHaveBeenCalledWith("video");
-    expect(getModelConfigSync).not.toHaveBeenCalledWith("image");
+    expect(resolveModelConfig).toHaveBeenCalledWith("video", undefined);
+    expect(resolveModelConfig).not.toHaveBeenCalledWith("image", expect.anything());
+  });
+
+  it("传了对话选的配置 id 时按 id 取 video 配置", () => {
+    vi.mocked(resolveModelConfig).mockReturnValue({
+      id: "cfg_v",
+      role: "video",
+      ...config,
+      contextLength: null,
+      dimensions: null
+    });
+    getVideoConfig("cfg_v");
+    expect(resolveModelConfig).toHaveBeenCalledWith("video", "cfg_v");
   });
 
   it("视频没配地址 / 密钥时引导用户配置生视频模型", () => {

@@ -1,20 +1,16 @@
-import { z } from "zod";
-
-import { computePromptHash, type GeneratedImageRecord } from "@/mastra/services/ai-generation/image-generation.server";
+import {
+  computePromptHash,
+  type GeneratedImageRecord
+} from "@/mastra/services/ai-generation/image/image-generation.server";
+import { type GenerateImageInput, ImageGenerationInputSchema } from "@/mastra/services/ai-generation/image/image-input";
 
 /** 生图队列名。producer（ai 进程）与 consumer（worker 进程）必须一致。 */
 export const IMAGE_QUEUE = "image-generation";
 export const IMAGE_JOB_NAME = "generate";
 
-/** 队列里的任务数据，和 `GenerateImageInput` 同构；worker 入口用它做运行时校验。 */
-export const ImageJobDataSchema = z.object({
-  prompt: z.string().min(1),
-  seed: z.number().int(),
-  width: z.number().positive(),
-  height: z.number().positive(),
-  seedImageUrls: z.array(z.string()).optional()
-});
-export type ImageJobData = z.infer<typeof ImageJobDataSchema>;
+/** 队列里的任务数据就是生图入参本身；worker 入口用 schema 做运行时校验。 */
+export const ImageJobDataSchema = ImageGenerationInputSchema;
+export type ImageJobData = GenerateImageInput;
 
 /**
  * 任务 id = promptHash：同一份输入天然是同一个任务，BullMQ 会把重复入队合并成一条

@@ -7,9 +7,9 @@
 import IORedis from "ioredis";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as ImageGenerationModule from "@/mastra/services/ai-generation/image-generation.server";
-import type * as ImageClientModule from "@/queue/image-client";
-import type * as ImageJobsModule from "@/queue/image-jobs";
+import type * as ImageGenerationModule from "@/mastra/services/ai-generation/image/image-generation.server";
+import type * as ImageClientModule from "@/queue/image/image-client";
+import type * as ImageJobsModule from "@/queue/image/image-jobs";
 
 const mocks = vi.hoisted(() => ({ generateAndStoreImage: vi.fn() }));
 
@@ -17,9 +17,9 @@ vi.mock("@/mastra/storage/prisma", () => ({ prismaClient: {} }));
 vi.mock("@/lib/storage", () => ({ assetStore: () => ({}) }));
 vi.mock("@/mastra/provider/model-registry", () => ({
   warmModelConfigs: vi.fn(),
-  getModelConfigSync: () => ({ modelId: "test-model" })
+  resolveModelConfig: () => ({ modelId: "test-model" })
 }));
-vi.mock("@/mastra/services/ai-generation/image-generation.server", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-generation/image/image-generation.server", async (importOriginal) => ({
   ...(await importOriginal<typeof ImageGenerationModule>()),
   generateAndStoreImage: mocks.generateAndStoreImage
 }));
@@ -51,11 +51,11 @@ describe.skipIf(!REDIS_URL)("生图队列（真 Redis）", () => {
     process.env.REDIS_URL = REDIS_URL;
     process.env.QUEUE_MODE = "redis";
     process.env.QUEUE_PREFIX = prefix;
-    const client = await import("@/queue/image-client");
+    const client = await import("@/queue/image/image-client");
     ({ generateImage, getImageJobInfo } = client);
     closeClient = client.closeImageQueueClient;
-    ({ imageJobId } = await import("@/queue/image-jobs"));
-    const { createImageWorker } = await import("@/queue/image-worker");
+    ({ imageJobId } = await import("@/queue/image/image-jobs"));
+    const { createImageWorker } = await import("@/queue/image/image-worker");
     worker = createImageWorker();
   });
 

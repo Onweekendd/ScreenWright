@@ -1,10 +1,11 @@
+import { RequestContext } from "@mastra/core/request-context";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type * as AiAssetLibrary from "@/mastra/services/ai-assets/ai-asset-library";
 
 const mocks = vi.hoisted(() => ({ generateVideo: vi.fn(), addAiAsset: vi.fn() }));
 
-vi.mock("@/queue/video-client", () => ({ generateVideo: mocks.generateVideo }));
+vi.mock("@/queue/video/video-client", () => ({ generateVideo: mocks.generateVideo }));
 vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (importOriginal) => ({
   ...(await importOriginal<typeof AiAssetLibrary>()),
   addAiAsset: mocks.addAiAsset
@@ -13,7 +14,8 @@ vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (importOriginal) =
 import { createVideoInputSchema, createVideoTool } from "@/mastra/tools/create-video";
 
 const execute = createVideoTool.execute as unknown as (
-  input: Record<string, unknown>
+  input: Record<string, unknown>,
+  context?: { requestContext?: RequestContext }
 ) => Promise<Record<string, unknown>>;
 const run = (input: Record<string, unknown> = {}) =>
   execute({
@@ -118,6 +120,15 @@ describe("createVideoTool 的执行", () => {
       },
       { onProgress: expect.any(Function) }
     );
+  });
+
+  it("对话选了生视频配置时，把配置 id 交给视频生成", async () => {
+    await execute(
+      { screenId: "5_1", prompt: "p", durationSec: 5, resolution: "768P", ratio: "16:9" },
+      { requestContext: new RequestContext([["models", { video: "cfg_v", image: "cfg_i" }]]) }
+    );
+
+    expect(mocks.generateVideo.mock.calls[0][0].modelConfigId).toBe("cfg_v");
   });
 
   it("文生视频不带首帧", async () => {

@@ -2,12 +2,13 @@ import { createTool } from "@mastra/core/tools";
 import { ResourceTypeEnum } from "@screenwright/types";
 import { z } from "zod";
 
-import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-assets/ai-asset-library";
+import { defaultAssetName, saveGeneratedAsset } from "@/mastra/services/ai-assets/save-generated-asset";
 import { trackGeneration } from "@/mastra/services/ai-generation/generation-progress";
-import { videoInputShape, videoModeError } from "@/mastra/services/ai-generation/video-input";
-import { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/mastra/services/ai-generation/video-provider";
-import { formatErrorChain } from "@/mastra/utils/async";
-import { generateVideo } from "@/queue/video-client";
+import { videoInputShape, videoModeError } from "@/mastra/services/ai-generation/video/video-input";
+import { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "@/mastra/services/ai-generation/video/video-provider";
+import { generateVideo } from "@/queue/video/video-client";
+
+import { selectedModelConfigId } from "../types/thread-model";
 
 export const createVideoInputSchema = z
   .object({
@@ -107,7 +108,8 @@ export const createVideoTool = createTool({
           lastFrameUrl: lastFrameImage,
           referenceImageUrls: referenceImages,
           referenceVideoUrls: referenceVideos,
-          referenceAudioUrls: referenceAudios
+          referenceAudioUrls: referenceAudios,
+          modelConfigId: selectedModelConfigId(context?.requestContext, "video")
         },
         { onProgress }
       )
@@ -119,9 +121,9 @@ export const createVideoTool = createTool({
       ...(referenceVideos ?? []),
       ...(referenceAudios ?? [])
     ].filter((url): url is string => Boolean(url));
-    const library = await saveToLibrary({
+    const library = await saveGeneratedAsset({
       screenId,
-      name: name?.trim() || defaultName(prompt),
+      name: name?.trim() || defaultAssetName(prompt),
       url: result.url,
       resourceType: ResourceTypeEnum.video,
       referenceUrls: referenceUrls.length ? referenceUrls : undefined
@@ -129,23 +131,3 @@ export const createVideoTool = createTool({
     return { id: result.id, url: result.url, reused: result.reused, ...library };
   }
 });
-
-const defaultName = (prompt: string): string => prompt.replace(/\s+/g, " ").trim().slice(0, 20);
-
-/** 放进素材库只是附带的：失败了视频照样返回，原因写进 note 让模型知道 */
-async function saveToLibrary({
-  screenId,
-  ...asset
-}: Omit<AiAssetInput, "largeId"> & { screenId: string }): Promise<{ libraryFileId?: number; note?: string }> {
-  const largeId = largeIdOf(screenId);
-  if (largeId === null) {
-    return { note: `screenId 格式不对（${screenId}），视频没有放进素材库` };
-  }
-  try {
-    const { id } = await addAiAsset({ ...asset, largeId });
-    return { libraryFileId: id };
-  } catch (error) {
-    console.warn(`[createVideoTool] 放进素材库失败：${formatErrorChain(error)}`);
-    return { note: `视频没有放进素材库：${error instanceof Error ? error.message : String(error)}` };
-  }
-}

@@ -12,7 +12,11 @@ vi.mock("@/mastra/storage/prisma", () => ({
 }));
 
 vi.mock("@/mastra/provider/model-registry", () => ({
-  getModelConfigSync: () => ({ baseUrl: "https://gw.example/minimax/v2", apiKey: "k", modelId: "video-model" }),
+  // cfg_v 模拟对话选的另一条生视频配置，其余（含不传）都是默认配置
+  resolveModelConfig: (_role: string, configId?: string) =>
+    configId === "cfg_v"
+      ? { baseUrl: "https://picked.example/minimax/v2", apiKey: "k2", modelId: "picked-video-model" }
+      : { baseUrl: "https://gw.example/minimax/v2", apiKey: "k", modelId: "video-model" },
   DEFAULT_VIDEO_MODEL: "MiniMax-H3"
 }));
 
@@ -29,12 +33,12 @@ vi.mock("@/lib/storage", () => ({
 }));
 
 const imageMocks = vi.hoisted(() => ({ prepareReference: vi.fn(), imageSize: vi.fn() }));
-vi.mock("@/mastra/services/ai-generation/image-generation.server", () => ({
+vi.mock("@/mastra/services/ai-generation/image/image-generation.server", () => ({
   prepareReference: imageMocks.prepareReference
 }));
 vi.mock("@/mastra/services/ai-assets/shrink-image", () => ({ imageSize: imageMocks.imageSize }));
 
-import { computeVideoHash, generateAndStoreVideo } from "@/mastra/services/ai-generation/video-generation.server";
+import { computeVideoHash, generateAndStoreVideo } from "@/mastra/services/ai-generation/video/video-generation.server";
 
 const input = { prompt: "云层流动", durationSec: 5, resolution: "768P", ratio: "16:9" } as const;
 const TASKS = "https://gw.example/minimax/v2/video_generation";
@@ -353,5 +357,29 @@ describe("generateAndStoreVideo", () => {
     expect(seen[0]).toBe(5);
     expect(seen.at(-1)).toBe(90);
     expect(seen).toEqual([...seen].sort((a, b) => a - b));
+  });
+});
+
+describe("按对话选择的生视频配置", () => {
+  const PICKED_TASKS = "https://picked.example/minimax/v2/video_generation";
+
+  it("传了 modelConfigId 时按这份配置提交，记录与幂等键记它的模型；id 本身不进幂等键", async () => {
+    fetchMock.mockImplementation(async (url, init) => {
+      const target = String(url);
+      if (target === PICKED_TASKS && init?.method === "POST") {
+        return json({ task_id: "task_1" });
+      }
+      return target.includes("/query/video_generation/") ? succeeded() : mp4();
+    });
+
+    await generateAndStoreVideo({ ...input, modelConfigId: "cfg_v" });
+
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(String(url)).toBe(PICKED_TASKS);
+    expect((init!.headers as Record<string, string>).Authorization).toBe("Bearer k2");
+    expect(prismaMocks.create.mock.calls[0][0].data).toMatchObject({
+      model: "picked-video-model",
+      promptHash: computeVideoHash(input, "picked-video-model")
+    });
   });
 });

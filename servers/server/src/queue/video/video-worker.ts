@@ -1,10 +1,13 @@
 import { type Job, Worker } from "bullmq";
 
 import { warmModelConfigs } from "@/mastra/provider/model-registry";
-import { generateAndStoreVideo, type GeneratedVideoRecord } from "@/mastra/services/ai-generation/video-generation.server";
+import {
+  generateAndStoreVideo,
+  type GeneratedVideoRecord
+} from "@/mastra/services/ai-generation/video/video-generation.server";
 
-import { getQueuePrefix } from "./config";
-import { createRedisConnection } from "./connection";
+import { getQueuePrefix } from "../config";
+import { createRedisConnection } from "../connection";
 import { toVideoRecord, VIDEO_QUEUE, type VideoJobData, VideoJobDataSchema } from "./video-jobs";
 
 /** 单个任务的处理逻辑，单独导出方便不连 Redis 直接测。 */

@@ -9,7 +9,7 @@
  *
  * 按模型 id 自动判断；判断不准（比如网关把模型改了名）时用环境变量 IMAGE_API_STYLE 强制指定。
  */
-import type { GenerateImageInput } from "./image-generation.server";
+import type { GenerateImageInput } from "./image-input";
 
 export type ImageApiStyle = "ark" | "openai";
 

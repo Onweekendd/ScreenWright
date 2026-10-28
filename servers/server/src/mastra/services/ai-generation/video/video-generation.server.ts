@@ -12,9 +12,9 @@ import { assetStore } from "@/lib/storage";
 import { prismaClient } from "@/mastra/storage/prisma";
 import { formatErrorChain, retryWithBackoff } from "@/mastra/utils/async";
 
-import { imageSize } from "../ai-assets/shrink-image";
-import { prepareReference } from "./image-generation.server";
-import { mediaTypeOf } from "./image-provider";
+import { imageSize } from "../../ai-assets/shrink-image";
+import { prepareReference } from "../image/image-generation.server";
+import { mediaTypeOf } from "../image/image-provider";
 import { type GenerateVideoInput, VideoGenerationInputSchema } from "./video-input";
 import {
   buildSubmitRequest,
@@ -238,7 +238,8 @@ export async function generateAndStoreVideo(
   const report = async (percent: number) => {
     await options.onProgress?.(percent);
   };
-  const config = getVideoConfig();
+  // 入口解析一次往下传：hash 记的模型和实际提交的模型必须是同一份配置
+  const config = getVideoConfig(input.modelConfigId);
   const promptHash = computeVideoHash(input, config.modelId);
 
   const existing = await prismaClient.generatedVideo.findUnique({ where: { promptHash } });

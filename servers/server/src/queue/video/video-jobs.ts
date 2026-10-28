@@ -1,5 +1,8 @@
-import { computeVideoHash, type GeneratedVideoRecord } from "@/mastra/services/ai-generation/video-generation.server";
-import { type GenerateVideoInput, VideoGenerationInputSchema } from "@/mastra/services/ai-generation/video-input";
+import {
+  computeVideoHash,
+  type GeneratedVideoRecord
+} from "@/mastra/services/ai-generation/video/video-generation.server";
+import { type GenerateVideoInput, VideoGenerationInputSchema } from "@/mastra/services/ai-generation/video/video-input";
 
 /** 视频队列名。producer（ai 进程）与 consumer（worker 进程）必须一致。 */
 export const VIDEO_QUEUE = "video-generation";

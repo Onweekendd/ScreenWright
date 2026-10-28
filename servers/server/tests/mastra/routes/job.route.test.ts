@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ getImageJobInfo: vi.fn(), getQueueMode: vi.fn() }));
 
-vi.mock("@/queue/image-client", () => ({ getImageJobInfo: mocks.getImageJobInfo }));
+vi.mock("@/queue/image/image-client", () => ({ getImageJobInfo: mocks.getImageJobInfo }));
 vi.mock("@/queue/config", () => ({ getQueueMode: mocks.getQueueMode }));
 
 import { jobRouter } from "@/mastra/routes/job.route";

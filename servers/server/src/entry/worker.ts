@@ -1,7 +1,7 @@
-import { closeImageQueueClient } from "@/queue/image-client";
-import { createImageWorker } from "@/queue/image-worker";
-import { closeVideoQueueClient } from "@/queue/video-client";
-import { createVideoWorker } from "@/queue/video-worker";
+import { closeImageQueueClient } from "@/queue/image/image-client";
+import { createImageWorker } from "@/queue/image/image-worker";
+import { closeVideoQueueClient } from "@/queue/video/video-client";
+import { createVideoWorker } from "@/queue/video/video-worker";
 
 import type { Stoppable } from "./http";
 

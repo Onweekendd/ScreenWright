@@ -1,10 +1,13 @@
 import { type Job, UnrecoverableError, Worker } from "bullmq";
 
 import { warmModelConfigs } from "@/mastra/provider/model-registry";
-import { generateAndStoreImage, type GeneratedImageRecord } from "@/mastra/services/ai-generation/image-generation.server";
+import {
+  generateAndStoreImage,
+  type GeneratedImageRecord
+} from "@/mastra/services/ai-generation/image/image-generation.server";
 
-import { getQueuePrefix } from "./config";
-import { createRedisConnection } from "./connection";
+import { getQueuePrefix } from "../config";
+import { createRedisConnection } from "../connection";
 import { IMAGE_QUEUE, type ImageJobData, ImageJobDataSchema, toImageRecord } from "./image-jobs";
 
 /** 单个任务的处理逻辑，单独导出方便不连 Redis 直接测。 */

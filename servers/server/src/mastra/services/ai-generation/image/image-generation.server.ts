@@ -11,30 +11,16 @@
 import { createHash } from "node:crypto";
 
 import { assetStore } from "@/lib/storage";
-import { getModelConfigSync } from "@/mastra/provider/model-registry";
+import { type AiModelConfig, resolveModelConfig } from "@/mastra/provider/model-registry";
 import { prismaClient } from "@/mastra/storage/prisma";
 import { formatErrorChain, retryWithBackoff } from "@/mastra/utils/async";
 
-import { imageSize, shrinkToJpeg } from "../ai-assets/shrink-image";
+import { imageSize, shrinkToJpeg } from "../../ai-assets/shrink-image";
+import type { GenerateImageInput } from "./image-input";
 import { buildImageRequest, extractImage, imagesEndpoint, mediaTypeOf } from "./image-provider";
 
 export { imagesEndpoint };
-
-export interface GenerateImageInput {
-  /** 结构化 prompt 原文（画布/风格/布局/区域内容/文字白名单/禁止，见 docs/生图到大屏工作流.md §5） */
-  prompt: string;
-  /** 幂等键的一部分，调用方必须显式给出——同一个 seed+prompt+model 视为"同一张图" */
-  seed: number;
-  width: number;
-  height: number;
-  /**
-   * img2img 参考图，可以多张（如效果图 + 一张风格参考），按顺序发给服务商。
-   * **必须是我们自己 assetStore 里的资源 url**，不是任意外部图片——
-   * 用 `assetStore().keyFromUrl()` 反查 key 再读字节，查不到直接报错，不做"顺便下载
-   * 一个外部 url"这种静默兜底（外部图片来源不可控，也绕开了我们自己的存储审计）。
-   */
-  seedImageUrls?: string[];
-}
+export type { GenerateImageInput } from "./image-input";
 
 export interface GeneratedImageRecord {
   id: string;
@@ -136,8 +122,11 @@ export const prepareReference = async (bytes: Buffer): Promise<Buffer> => {
  */
 const promptLimit = (): number | undefined => Number(process.env.IMAGE_PROMPT_MAX_CHARS) || undefined;
 
-const requestGeneration = async (input: GenerateImageInput, references: Buffer[]): Promise<GeneratedBytes> => {
-  const { baseUrl, apiKey, modelId } = getModelConfigSync("image");
+const requestGeneration = async (
+  input: GenerateImageInput,
+  references: Buffer[],
+  { baseUrl, apiKey, modelId }: AiModelConfig
+): Promise<GeneratedBytes> => {
   const limit = promptLimit();
   if (limit && input.prompt.length > limit) {
     throw new Error(
@@ -242,7 +231,9 @@ export async function generateAndStoreImage(
   const report = async (percent: number) => {
     await options.onProgress?.(percent);
   };
-  const { modelId } = getModelConfigSync("image");
+  // 入口解析一次往下传：hash 记的模型和实际发请求的模型必须是同一份配置，中途设置页改配置也不会错开
+  const config = resolveModelConfig("image", input.modelConfigId);
+  const { modelId } = config;
   const promptHash = computePromptHash(input.prompt, input.seed, modelId, input.seedImageUrls);
 
   const existing = await prismaClient.generatedImage.findUnique({ where: { promptHash } });
@@ -263,7 +254,7 @@ export async function generateAndStoreImage(
   );
 
   await report(10);
-  const image = await requestGeneration(input, references);
+  const image = await requestGeneration(input, references, config);
   await report(75);
 
   // 服务商回的是直链，落库前转成我们自己 assetStore 里的 url——

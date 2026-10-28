@@ -4,11 +4,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("@/mastra/storage/prisma", () => ({ prismaClient: {} }));
 vi.mock("@/lib/storage", () => ({ assetStore: () => ({}) }));
 vi.mock("@/mastra/provider/model-registry", () => ({
-  getModelConfigSync: () => ({ modelId: "m" }),
+  resolveModelConfig: () => ({ modelId: "m" }),
   warmModelConfigs: vi.fn()
 }));
 
-import { ImageJobDataSchema, imageJobId, toImageRecord } from "@/queue/image-jobs";
+import { ImageJobDataSchema, imageJobId, toImageRecord } from "@/queue/image/image-jobs";
 
 const base = { prompt: "一张大屏效果图", seed: 42, width: 1920, height: 1080 };
 
@@ -30,7 +30,7 @@ describe("imageJobId", () => {
   });
 
   it("id 与生图服务落库用的 promptHash 一致，两边的幂等口径是同一个", async () => {
-    const { computePromptHash } = await import("@/mastra/services/ai-generation/image-generation.server");
+    const { computePromptHash } = await import("@/mastra/services/ai-generation/image/image-generation.server");
     expect(imageJobId(base, "m")).toBe(computePromptHash(base.prompt, base.seed, "m", undefined));
   });
 });

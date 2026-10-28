@@ -2,7 +2,7 @@ import { Hono } from "hono";
 
 import { getGenerationProgress } from "@/mastra/services/ai-generation/generation-progress";
 import { getQueueMode } from "@/queue/config";
-import { getImageJobInfo } from "@/queue/image-client";
+import { getImageJobInfo } from "@/queue/image/image-client";
 
 /** 队列任务状态查询（挂在 /customApi/jobs 下，随 /customApi/* 一起要求登录）。 */
 export const jobRouter = new Hono()

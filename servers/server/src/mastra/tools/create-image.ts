@@ -1,13 +1,13 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
-import { addAiAsset, type AiAssetInput, largeIdOf } from "@/mastra/services/ai-assets/ai-asset-library";
+import { defaultAssetName, saveGeneratedAsset } from "@/mastra/services/ai-assets/save-generated-asset";
 import { trackGeneration } from "@/mastra/services/ai-generation/generation-progress";
-import { deriveSeed } from "@/mastra/services/ai-generation/image-generation.server";
-import { formatErrorChain } from "@/mastra/utils/async";
-import { generateImage } from "@/queue/image-client";
+import { deriveSeed } from "@/mastra/services/ai-generation/image/image-generation.server";
+import { generateImage } from "@/queue/image/image-client";
 
 import { TOOL_IMAGES_FIELD } from "../provider/image-middleware";
+import { selectedModelConfigId } from "../types/thread-model";
 
 /**
  * 参考图张数上限。方舟、gpt-image 都收得下更多张，但参考图是整张进请求体的（方舟是 base64），
@@ -89,11 +89,13 @@ export const createImageTool = createTool({
   execute: async ({ screenId, images }, context) => {
     // 进度按 toolCallId 登记，前端按它轮询；前台 / 后台执行走的都是这个函数。
     // 整批的进度取各张的平均值：一张还在排队时整批不会显示成快完了
+    // 对话在输入框选的生图配置；没选时为空，下游回退默认配置
+    const batch: BatchContext = { screenId, modelConfigId: selectedModelConfigId(context?.requestContext, "image") };
     const percents = images.map(() => 0);
     return trackGeneration("image", context?.agent?.toolCallId, async (onProgress) => {
       const items = await Promise.all(
         images.map((item, index) =>
-          generateOne(screenId, item, index, (percent) => {
+          generateOne(batch, item, index, (percent) => {
             percents[index] = percent;
             onProgress(percents.reduce((sum, value) => sum + value, 0) / percents.length);
           })
@@ -119,20 +121,26 @@ type OneResult =
   | { ok: true; result: z.infer<typeof resultItemSchema>; image: { url: string; label: string } }
   | { ok: false; result: z.infer<typeof resultItemSchema>; error: Error; image?: undefined };
 
+/** 整批共用的参数；每张各自的 prompt / 尺寸在 ImageItem 里 */
+interface BatchContext {
+  screenId: string;
+  modelConfigId?: string;
+}
+
 /** 生一张并放进素材库；失败不抛，记在这一项里，不连累同批的其他张 */
 async function generateOne(
-  screenId: string,
+  { screenId, modelConfigId }: BatchContext,
   { name, prompt, width, height, seedImages }: ImageItem,
   index: number,
   onProgress: (percent: number) => void
 ): Promise<OneResult> {
-  const displayName = name?.trim() || defaultName(prompt);
+  const displayName = name?.trim() || defaultAssetName(prompt);
   try {
     const record = await generateImage(
-      { prompt, seed: deriveSeed(prompt), width, height, seedImageUrls: seedImages },
+      { prompt, seed: deriveSeed(prompt), width, height, seedImageUrls: seedImages, modelConfigId },
       { onProgress }
     );
-    const library = await saveToLibrary({
+    const library = await saveGeneratedAsset({
       screenId,
       name: displayName,
       url: record.url,
@@ -153,24 +161,3 @@ async function generateOne(
 
 const failureSummary = (items: OneResult[]): string =>
   `${items.length} 张全部生成失败：${items.map((item) => `[${item.result.index + 1}] ${item.result.name}：${item.result.error}`).join("；")}`;
-
-/** 素材名缺省取提示词开头：去掉风格前缀之类的标点，截到素材库卡片放得下的长度 */
-const defaultName = (prompt: string): string => prompt.replace(/\s+/g, " ").trim().slice(0, 20);
-
-/** 放进素材库只是附带的：失败了图照样返回，原因写进 note 让模型知道 */
-async function saveToLibrary({
-  screenId,
-  ...asset
-}: Omit<AiAssetInput, "largeId"> & { screenId: string }): Promise<{ libraryFileId?: number; note?: string }> {
-  const largeId = largeIdOf(screenId);
-  if (largeId === null) {
-    return { note: `screenId 格式不对（${screenId}），图没有放进素材库` };
-  }
-  try {
-    const { id } = await addAiAsset({ ...asset, largeId });
-    return { libraryFileId: id };
-  } catch (error) {
-    console.warn(`[createImageTool] 放进素材库失败：${formatErrorChain(error)}`);
-    return { note: `图没有放进素材库：${error instanceof Error ? error.message : String(error)}` };
-  }
-}

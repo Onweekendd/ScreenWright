@@ -4,8 +4,8 @@ import type * as AiAssetLibrary from "@/mastra/services/ai-assets/ai-asset-libra
 
 const mocks = vi.hoisted(() => ({ generateImage: vi.fn(), generateVideo: vi.fn(), addAiAsset: vi.fn() }));
 
-vi.mock("@/queue/image-client", () => ({ generateImage: mocks.generateImage }));
-vi.mock("@/queue/video-client", () => ({ generateVideo: mocks.generateVideo }));
+vi.mock("@/queue/image/image-client", () => ({ generateImage: mocks.generateImage }));
+vi.mock("@/queue/video/video-client", () => ({ generateVideo: mocks.generateVideo }));
 vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (importOriginal) => ({
   ...(await importOriginal<typeof AiAssetLibrary>()),
   addAiAsset: mocks.addAiAsset

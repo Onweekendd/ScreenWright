@@ -18,11 +18,11 @@ vi.mock("@/mastra/storage/prisma", () => ({
 }));
 
 const registryMocks = vi.hoisted(() => ({
-  getModelConfigSync: vi.fn()
+  resolveModelConfig: vi.fn()
 }));
 
 vi.mock("@/mastra/provider/model-registry", () => ({
-  getModelConfigSync: registryMocks.getModelConfigSync
+  resolveModelConfig: registryMocks.resolveModelConfig
 }));
 
 const storeMocks = vi.hoisted(() => ({ put: vi.fn(), keyFromUrl: vi.fn(), get: vi.fn() }));
@@ -37,7 +37,7 @@ import {
   generateEffectImages,
   imagesEndpoint,
   prepareReference
-} from "@/mastra/services/ai-generation/image-generation.server";
+} from "@/mastra/services/ai-generation/image/image-generation.server";
 
 let fetchMock: ReturnType<typeof spyFetch>;
 const spyFetch = () => vi.spyOn(globalThis, "fetch");
@@ -56,7 +56,7 @@ const createReturnsInput = () =>
 
 beforeEach(() => {
   vi.clearAllMocks();
-  registryMocks.getModelConfigSync.mockReturnValue({
+  registryMocks.resolveModelConfig.mockReturnValue({
     modelId: "test-image-model",
     baseUrl: "https://ark.example/api/v3/",
     apiKey: "k"
@@ -84,7 +84,7 @@ describe("gpt-image 网关", () => {
       .toBuffer();
 
   beforeEach(() => {
-    registryMocks.getModelConfigSync.mockReturnValue({
+    registryMocks.resolveModelConfig.mockReturnValue({
       modelId: "gpt-image-2",
       baseUrl: "https://llm-api.net/v1",
       apiKey: "k"
@@ -226,7 +226,7 @@ describe("imagesEndpoint", () => {
   });
 
   it("请求真的发到去重后的地址，而不是 /images/generations/images/generations", async () => {
-    registryMocks.getModelConfigSync.mockReturnValue({
+    registryMocks.resolveModelConfig.mockReturnValue({
       modelId: "test-image-model",
       baseUrl: "https://ark.example/api/v3/images/generations",
       apiKey: "k"
@@ -572,5 +572,48 @@ describe("generateEffectImages", () => {
 
     const results = await generateEffectImages({ prompt: "p", baseSeed: 0, width: 1920, height: 1080 });
     expect(results).toHaveLength(2);
+  });
+});
+
+/**
+ * 对话级生图配置：modelConfigId 一路传到这里，幂等键和真实请求必须用同一份配置。
+ */
+describe("按对话选择的生图配置", () => {
+  const configs: Record<string, { id: string; modelId: string; baseUrl: string; apiKey: string }> = {
+    seed_image: { id: "seed_image", modelId: "default-model", baseUrl: "https://default.example/v1", apiKey: "k1" },
+    cfg_b: { id: "cfg_b", modelId: "picked-model", baseUrl: "https://picked.example/v1", apiKey: "k2" }
+  };
+
+  beforeEach(() => {
+    registryMocks.resolveModelConfig.mockImplementation(
+      (_role: string, configId?: string) => configs[configId ?? ""] ?? configs.seed_image
+    );
+    prismaMocks.findUnique.mockResolvedValue(null);
+    createReturnsInput();
+  });
+
+  it("传了 modelConfigId 时，请求发到这份配置的地址和模型，记录与幂等键也记它的 modelId", async () => {
+    await generateAndStoreImage({ prompt: "p", seed: 1, width: 1024, height: 1024, modelConfigId: "cfg_b" });
+
+    expect(registryMocks.resolveModelConfig).toHaveBeenCalledWith("image", "cfg_b");
+    expect(String(generationCalls()[0][0])).toBe("https://picked.example/v1/images/generations");
+    expect(generationBody()).toMatchObject({ model: "picked-model" });
+    expect(prismaMocks.create.mock.calls[0][0].data).toMatchObject({
+      model: "picked-model",
+      promptHash: computePromptHash("p", 1, "picked-model", undefined)
+    });
+  });
+
+  it("只解析一次配置：hash 和请求不会因中途改配置而错开", async () => {
+    await generateAndStoreImage({ prompt: "p", seed: 1, width: 1024, height: 1024, modelConfigId: "cfg_b" });
+
+    expect(registryMocks.resolveModelConfig).toHaveBeenCalledTimes(1);
+  });
+
+  it("没传 modelConfigId 时按默认配置生成", async () => {
+    await generateAndStoreImage({ prompt: "p", seed: 1, width: 1024, height: 1024 });
+
+    expect(registryMocks.resolveModelConfig).toHaveBeenCalledWith("image", undefined);
+    expect(generationBody()).toMatchObject({ model: "default-model" });
   });
 });

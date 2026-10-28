@@ -1,22 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as VideoGeneration from "@/mastra/services/ai-generation/video-generation.server";
+import type * as VideoGeneration from "@/mastra/services/ai-generation/video/video-generation.server";
 
 const mocks = vi.hoisted(() => ({ warmModelConfigs: vi.fn(), generateAndStoreVideo: vi.fn() }));
 
 vi.mock("@/mastra/storage/prisma", () => ({ prismaClient: {} }));
 vi.mock("@/lib/storage", () => ({ assetStore: () => ({}) }));
 vi.mock("@/mastra/provider/model-registry", () => ({
-  getModelConfigSync: () => ({ baseUrl: "https://gw.example/v1", apiKey: "k", modelId: "m" }),
+  resolveModelConfig: () => ({ baseUrl: "https://gw.example/v1", apiKey: "k", modelId: "m" }),
   warmModelConfigs: mocks.warmModelConfigs
 }));
-vi.mock("@/mastra/services/ai-generation/video-generation.server", async (importOriginal) => ({
+vi.mock("@/mastra/services/ai-generation/video/video-generation.server", async (importOriginal) => ({
   ...(await importOriginal<typeof VideoGeneration>()),
   generateAndStoreVideo: mocks.generateAndStoreVideo
 }));
 
-import { toVideoRecord, VideoJobDataSchema, videoJobId } from "@/queue/video-jobs";
-import { processVideoJob } from "@/queue/video-worker";
+import { toVideoRecord, VideoJobDataSchema, videoJobId } from "@/queue/video/video-jobs";
+import { processVideoJob } from "@/queue/video/video-worker";
 
 const base = { prompt: "云层流动", durationSec: 5, resolution: "768P", ratio: "16:9" } as const;
 const record = {
@@ -58,7 +58,7 @@ describe("videoJobId", () => {
   });
 
   it("id 与服务落库用的 promptHash 是同一个口径", async () => {
-    const { computeVideoHash } = await import("@/mastra/services/ai-generation/video-generation.server");
+    const { computeVideoHash } = await import("@/mastra/services/ai-generation/video/video-generation.server");
     expect(videoJobId(base, "m")).toBe(computeVideoHash(base, "m"));
   });
 });

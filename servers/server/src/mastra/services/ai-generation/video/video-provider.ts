@@ -8,7 +8,7 @@
  * 官方文档：https://platform.minimax.cn/docs/api-reference/video-generation-v2-create
  * 网关前缀示例：https://llm-api.net/minimax/v2（也接受完整 video_generation 地址）。
  */
-import { DEFAULT_VIDEO_MODEL, getModelConfigSync } from "@/mastra/provider/model-registry";
+import { DEFAULT_VIDEO_MODEL, resolveModelConfig } from "@/mastra/provider/model-registry";
 
 import type { VIDEO_RATIOS, VIDEO_RESOLUTIONS } from "./video-input";
 import { videoModeError } from "./video-input";
@@ -47,7 +47,9 @@ export const resolveVideoConfig = (video: { baseUrl: string; apiKey: string; mod
   };
 };
 
-export const getVideoConfig = (): VideoConfig => resolveVideoConfig(getModelConfigSync("video"));
+/** 取生视频配置：`configId` 为对话选的配置，不传或已失效时用默认 */
+export const getVideoConfig = (configId?: string): VideoConfig =>
+  resolveVideoConfig(resolveModelConfig("video", configId));
 
 const normalizeVideoBaseUrl = (baseUrl: string): string => {
   const url = new URL(baseUrl.trim());

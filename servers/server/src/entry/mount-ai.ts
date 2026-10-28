@@ -28,8 +28,8 @@ export async function mountAi(app: Hono): Promise<RoleMount> {
     import("@/artifact-app/preview/local/artifact-app-preview-proxy"),
     import("@/mastra/record/branch-resolver"),
     import("@/recording/exchange-record"),
-    import("@/queue/image-client"),
-    import("@/queue/video-client")
+    import("@/queue/image/image-client"),
+    import("@/queue/video/video-client")
   ]);
 
   // AI 接口与 Mastra 内置路由（/api/*）必须登录，否则任何人都能直接消耗模型额度。

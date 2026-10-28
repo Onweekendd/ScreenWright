@@ -7,16 +7,16 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/mastra/provider/model-registry", () => ({
   warmModelConfigs: mocks.warmModelConfigs,
-  getModelConfigSync: () => ({ modelId: "m" })
+  resolveModelConfig: () => ({ modelId: "m" })
 }));
-vi.mock("@/mastra/services/ai-generation/image-generation.server", () => ({
+vi.mock("@/mastra/services/ai-generation/image/image-generation.server", () => ({
   generateAndStoreImage: mocks.generateAndStoreImage,
   computePromptHash: () => "hash"
 }));
 
 import { UnrecoverableError } from "bullmq";
 
-import { processImageJob } from "@/queue/image-worker";
+import { processImageJob } from "@/queue/image/image-worker";
 
 const data = { prompt: "p", seed: 1, width: 1920, height: 1080 };
 const record = {
@@ -97,5 +97,13 @@ describe("processImageJob", () => {
   it("生图失败的错误原样抛出，交给 BullMQ 按 attempts 重试", async () => {
     mocks.generateAndStoreImage.mockRejectedValue(new Error("请求失败 502"));
     await expect(processImageJob({ data, updateProgress: vi.fn() })).rejects.toThrow("请求失败 502");
+  });
+
+  it("任务里的 modelConfigId 经校验后原样交给生图服务（schema 漏声明会被 zod 悄悄剔掉）", async () => {
+    await processImageJob({ data: { ...data, modelConfigId: "cfg_b" }, updateProgress: vi.fn() });
+    expect(mocks.generateAndStoreImage).toHaveBeenCalledWith(
+      expect.objectContaining({ modelConfigId: "cfg_b" }),
+      expect.anything()
+    );
   });
 });

@@ -38,11 +38,18 @@ export const videoModeError = (input: VideoModeInput): string | undefined => {
   return undefined;
 };
 
-export const VideoGenerationInputSchema = z.object(videoInputShape).superRefine((input, context) => {
-  const message = videoModeError(input);
-  if (message) {
-    context.addIssue({ code: "custom", message });
-  }
-});
+// modelConfigId 不放进 videoInputShape：那份字段会被工具拿去拼给模型看的入参，模型不该自己选配置
+export const VideoGenerationInputSchema = z
+  .object({
+    ...videoInputShape,
+    /** 对话选的生视频配置 id；为空用默认配置。只传 id 不传密钥：任务数据会进 Redis */
+    modelConfigId: z.string().optional()
+  })
+  .superRefine((input, context) => {
+    const message = videoModeError(input);
+    if (message) {
+      context.addIssue({ code: "custom", message });
+    }
+  });
 
 export type GenerateVideoInput = z.infer<typeof VideoGenerationInputSchema>;

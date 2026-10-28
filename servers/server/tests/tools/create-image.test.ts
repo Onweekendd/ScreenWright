@@ -1,10 +1,11 @@
+import { RequestContext } from "@mastra/core/request-context";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type * as AiAssetLibrary from "@/mastra/services/ai-assets/ai-asset-library";
 
 const mocks = vi.hoisted(() => ({ generateImage: vi.fn(), addAiAsset: vi.fn() }));
 
-vi.mock("@/queue/image-client", () => ({ generateImage: mocks.generateImage }));
+vi.mock("@/queue/image/image-client", () => ({ generateImage: mocks.generateImage }));
 vi.mock("@/mastra/services/ai-assets/ai-asset-library", async (importOriginal) => ({
   ...(await importOriginal<typeof AiAssetLibrary>()),
   addAiAsset: mocks.addAiAsset
@@ -18,7 +19,10 @@ interface Result {
   [TOOL_IMAGES_FIELD]?: Array<{ url: string; label: string }>;
 }
 
-const execute = createImageTool.execute as unknown as (input: Record<string, unknown>) => Promise<Result>;
+const execute = createImageTool.execute as unknown as (
+  input: Record<string, unknown>,
+  context?: { requestContext?: RequestContext }
+) => Promise<Result>;
 
 const item = (overrides: Record<string, unknown> = {}) => ({
   prompt: "画一张大屏背景",
@@ -78,6 +82,20 @@ describe("createImageTool 的结果", () => {
 });
 
 describe("createImageTool 一次生成一批", () => {
+  it("对话选了生图配置时，同一批每张都带上这个配置 id；没选时不带", async () => {
+    mocks.generateImage.mockImplementation(async (input) => recordByPrompt(input));
+    const images = [item({ prompt: "a" }), item({ prompt: "b" })];
+
+    await execute(
+      { screenId: "5_1", images },
+      { requestContext: new RequestContext([["models", { image: "cfg_i", video: "cfg_v" }]]) }
+    );
+    await execute({ screenId: "5_1", images: [item({ prompt: "c" })] });
+
+    const ids = mocks.generateImage.mock.calls.map(([input]) => input.modelConfigId);
+    expect(ids).toEqual(["cfg_i", "cfg_i", undefined]);
+  });
+
   it("每张图各自的提示词、尺寸、参考图都带到生成服务", async () => {
     mocks.generateImage.mockImplementation(async (input) => recordByPrompt(input));
 

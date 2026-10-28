@@ -36,8 +36,8 @@
 import { computed, ref, watch } from "vue";
 
 import { useActiveAgentBISession } from "../agentBISessionContext";
-import { createAssistantMessageGrouper } from "../hooks/groupAssistantMessages";
-import type { BackgroundTaskView } from "../hooks/useBackgroundTask";
+import { createAssistantMessageGrouper } from "../hooks/message/groupAssistantMessages";
+import type { BackgroundTaskView } from "../hooks/stream/useBackgroundTask";
 import AssistantMessage from "./AssistantMessage.vue";
 
 const { backgroundTasks: tasks } = useActiveAgentBISession();

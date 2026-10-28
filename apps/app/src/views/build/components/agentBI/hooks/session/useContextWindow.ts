@@ -1,8 +1,9 @@
 import { computed, type MaybeRefOrGetter, ref, toValue } from "vue";
 
 import { apiClient, type ModelCapability } from "@screenwright/server/rpc";
+import type { UIMessage } from "ai";
 
-import type { UsageInfo } from "../type";
+import type { UsageInfo } from "../../type";
 
 /**
  * 模型上限与压缩配置由后端 /customApi/model-capability 提供，
@@ -116,7 +117,9 @@ export function useContextWindow(contextLimitOverride?: MaybeRefOrGetter<number 
 
       return {
         messageCountBefore: result.messageCountBefore,
-        messageCountAfter: result.messageCountAfter
+        messageCountAfter: result.messageCountAfter,
+        /** 替代全部历史的摘要，调用方据此直接更新对话，不必重拉 */
+        summary: result.summary as UIMessage
       };
     } finally {
       compacting.value = false;

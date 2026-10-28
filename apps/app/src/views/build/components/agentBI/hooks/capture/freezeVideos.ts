@@ -16,7 +16,7 @@ export type GrabVideoFrame = (video: HTMLVideoElement) => Promise<string | null>
 
 const defaultGrab: GrabVideoFrame = async (video) => {
   // 只有真有视频时才加载抓帧模块：它带一串编辑器依赖，没视频的截图不该为它付出代价
-  const { CorsMediaFallback } = await import("../../buildConfig/graphConfig/screenCapture/corsMediaFallback");
+  const { CorsMediaFallback } = await import("../../../buildConfig/graphConfig/screenCapture/corsMediaFallback");
   return CorsMediaFallback.captureFrameFromVideoElement(video);
 };
 

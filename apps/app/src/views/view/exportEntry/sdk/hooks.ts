@@ -9,7 +9,7 @@ import { useActionEvent } from "@/hooks/eventHandling/useActionEvent";
 import { useEventCallbacks } from "@/hooks/eventHandling/useEventCallbacks";
 import { useEventHandling } from "@/hooks/eventHandling/useEventHandling";
 import { useEvent } from "@/hooks/useEvent";
-import { useCreateComponent } from "@/views/build/components/agentBI/hooks/useCreateComponent";
+import { useCreateComponent } from "@/views/build/components/agentBI/hooks/canvas/useCreateComponent";
 import { EventTypeEnum } from "@/views/build/components/buildConfig/constants";
 import { useEditStore } from "@/views/build/components/buildRender/hooks/useEditStore";
 import { useGlobalAnimation } from "@/views/build/components/buildRender/hooks/useGlobalAnimation";

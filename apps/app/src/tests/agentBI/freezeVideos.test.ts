@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { freezeVideosForCapture } from "@/views/build/components/agentBI/hooks/freezeVideos";
+import { freezeVideosForCapture } from "@/views/build/components/agentBI/hooks/capture/freezeVideos";
 
 /**
  * jsdom 不做布局：getClientRects 恒为空、offsetLeft/Width 全是 0。

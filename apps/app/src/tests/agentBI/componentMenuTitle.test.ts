@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { componentMenuTitle } from "@/views/build/components/agentBI/hooks/componentMenuTitle";
+import { componentMenuTitle } from "@/views/build/components/agentBI/hooks/canvas/componentMenuTitle";
 
 describe("componentMenuTitle", () => {
   it("agent 给组件起了实例名时，仍按组件类型名去菜单里找", () => {

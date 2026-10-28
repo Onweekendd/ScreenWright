@@ -22,8 +22,8 @@ vi.mock("@screenwright/server/rpc", () => ({
 }));
 
 // --- 被测模块 ---
-import { type StreamState, useAgentBIStream } from "@/views/build/components/agentBI/hooks/useAgentBIStream";
-import { useGenerateTitle } from "@/views/build/components/agentBI/hooks/useGenerateTitle";
+import { useGenerateTitle } from "@/views/build/components/agentBI/hooks/session/useGenerateTitle";
+import { type StreamState, useAgentBIStream } from "@/views/build/components/agentBI/hooks/stream/useAgentBIStream";
 
 // --- Helpers ---
 

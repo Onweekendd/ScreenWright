@@ -7,7 +7,7 @@ import { ElMessage } from "element-plus";
 
 import type { ThreadModelSelection } from "@/api/aiModel";
 
-import type { AgentBISharedState, UsageInfo } from "../type";
+import type { AgentBISharedState, UsageInfo } from "../../type";
 
 /**
  * 单个会话 tab 私有的记忆状态：当前激活线程、分页、mode 及对应的加载/切换逻辑。

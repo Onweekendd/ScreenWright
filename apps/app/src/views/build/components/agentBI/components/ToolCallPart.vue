@@ -79,7 +79,7 @@ import {
   requestedImageCount,
   resultUrlsOf,
   useGenerationProgress
-} from "../hooks/useGenerationProgress";
+} from "../hooks/message/useGenerationProgress";
 import type { V5ToolPart } from "./AssistantMessage.vue";
 import MediaAttachmentPreview from "./MediaAttachmentPreview.vue";
 

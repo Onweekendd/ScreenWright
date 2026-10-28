@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("@/views/build/components/buildConfig/graphConfig/screenCapture", () => ({
   captureEditorScreenShot: vi.fn()
 }));
-vi.mock("@/views/build/components/agentBI/hooks/freezeVideos", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/capture/freezeVideos", () => ({
   freezeVideosForCapture: vi.fn(async () => () => undefined)
 }));
 
@@ -17,8 +17,8 @@ import {
   measureRegion,
   MIN_GRID_PX,
   REGION_PADDING
-} from "@/views/build/components/agentBI/hooks/captureCanvasForAgent";
-import { freezeVideosForCapture } from "@/views/build/components/agentBI/hooks/freezeVideos";
+} from "@/views/build/components/agentBI/hooks/capture/captureCanvasForAgent";
+import { freezeVideosForCapture } from "@/views/build/components/agentBI/hooks/capture/freezeVideos";
 import { captureEditorScreenShot } from "@/views/build/components/buildConfig/graphConfig/screenCapture";
 
 /**

@@ -34,7 +34,7 @@ vi.mock("@/views/build/components/agentBI/components/useChatInput", () => ({
 }));
 
 import ChatInput from "@/views/build/components/agentBI/components/ChatInput.vue";
-import type { AttachmentItem } from "@/views/build/components/agentBI/hooks/useAgentAttachment";
+import type { AttachmentItem } from "@/views/build/components/agentBI/hooks/attachment/useAgentAttachment";
 
 const session = {
   activeThreadId: ref("thread-1"),

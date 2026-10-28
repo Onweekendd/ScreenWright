@@ -45,13 +45,14 @@
       @change="handleFileChange"
     />
 
-    <div class="footer-input">
+    <!-- 压缩上下文期间冻结：不能输入、发送或改设置；自动压缩发生在流里，停止按钮仍可用 -->
+    <div class="footer-input" :class="{ 'is-frozen': compacting }">
       <!-- contenteditable 编辑区，替代 el-input textarea -->
       <div
         ref="editorRef"
         class="editor"
-        contenteditable="true"
-        data-placeholder="请输入您的问题，可粘贴图片，输入 @ 引用组件..."
+        :contenteditable="!compacting"
+        :data-placeholder="compacting ? '正在压缩上下文，请稍候…' : '请输入您的问题，可粘贴图片，输入 @ 引用组件...'"
         @input="handleInput"
         @keydown="handleKeydown"
         @keyup="handleKeyup"
@@ -117,7 +118,7 @@
           <Icon
             :type="isStreaming ? 'iconfont-tingzhi' : 'iconfont-xiangshangjiantou'"
             class="footer-send-btn"
-            :class="{ 'is-streaming': isStreaming }"
+            :class="{ 'is-streaming': isStreaming, 'is-disabled': compacting && !isStreaming }"
             @click="isStreaming ? stopStreaming() : handleSend()"
           />
         </div>
@@ -142,7 +143,7 @@ import type { MenuItemForRender } from "@/views/build/components/buildTabs/selec
 import SelectAssets from "@/views/build/components/buildTabs/selectAssets/index.vue";
 
 import { useActiveAgentBISession } from "../agentBISessionContext";
-import { getAttachmentMediaType } from "../hooks/attachmentMedia";
+import { getAttachmentMediaType } from "../hooks/attachment/attachmentMedia";
 import MediaAttachmentPreview from "./MediaAttachmentPreview.vue";
 import ModelPicker from "./ModelPicker.vue";
 import SelectedComponentsList from "./SelectedComponentsList.vue";
@@ -561,6 +562,24 @@ onMounted(() => {
         &:hover {
           color: #ff4d4f;
         }
+      }
+
+      &.is-disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+    }
+
+    &.is-frozen {
+      .editor {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .context-wrapper,
+      .mode-select {
+        opacity: 0.5;
+        pointer-events: none;
       }
     }
 

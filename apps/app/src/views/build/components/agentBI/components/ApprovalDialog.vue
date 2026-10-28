@@ -52,7 +52,7 @@ import { computed } from "vue";
 
 import AiTemplateSaveForm from "../../buildTabs/aiTemplateSaveForm.vue";
 import { useActiveAgentBISession } from "../agentBISessionContext";
-import { useConfirm } from "../hooks/useConfirm";
+import { useConfirm } from "../hooks/ui/useConfirm";
 import AiTemplateApplyCards from "./AiTemplateApplyCards.vue";
 import AskUserQuestionPart from "./AskUserQuestionPart.vue";
 import ConfirmPart from "./ConfirmPart.vue";

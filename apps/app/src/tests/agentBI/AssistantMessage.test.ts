@@ -28,8 +28,8 @@ vi.mock("@/views/build/components/agentBI/components/OMBufferingPart.vue", () =>
 
 import AssistantMessage from "@/views/build/components/agentBI/components/AssistantMessage.vue";
 import ExecutionProcessBlock from "@/views/build/components/agentBI/components/ExecutionProcessBlock.vue";
-import { createAssistantMessageGrouper } from "@/views/build/components/agentBI/hooks/groupAssistantMessages";
-import { groupAssistantParts } from "@/views/build/components/agentBI/hooks/groupAssistantParts";
+import { createAssistantMessageGrouper } from "@/views/build/components/agentBI/hooks/message/groupAssistantMessages";
+import { groupAssistantParts } from "@/views/build/components/agentBI/hooks/message/groupAssistantParts";
 
 type Part = UIMessage["parts"][number];
 const tool = (name: string, id: string, state = "output-available"): Part =>

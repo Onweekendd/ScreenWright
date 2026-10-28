@@ -4,8 +4,8 @@ import { createGlobalState } from "@vueuse/core";
 import type { CustomStorageThreadType } from "@screenwright/server/rpc";
 
 import { useLargeScreenInfo } from "../../useLargeScreenInfo";
-import { useAgentBIThreadList } from "./hooks/useAgentBIThreadList";
-import { useAgentBIVersionHistory } from "./hooks/useAgentBIVersionHistory";
+import { useAgentBIThreadList } from "./hooks/session/useAgentBIThreadList";
+import { useAgentBIVersionHistory } from "./hooks/session/useAgentBIVersionHistory";
 import { type AgentBISession, createAgentBISession } from "./useAgentBI";
 
 /**

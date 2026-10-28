@@ -21,7 +21,7 @@ import { useEditStore } from "@/views/build/components/buildRender/hooks/useEdit
 import { useLargeScreenInfo } from "@/views/build/useLargeScreenInfo";
 
 import { ActiveSessionKey } from "../agentBISessionContext";
-import { WELCOME_CAPABILITIES, WELCOME_EXAMPLES } from "../hooks/useWelcomeScreen";
+import { WELCOME_CAPABILITIES, WELCOME_EXAMPLES } from "../hooks/ui/useWelcomeScreen";
 import { useAgentBISessions } from "../useAgentBISessions";
 import ChatInput from "./ChatInput.vue";
 import WelcomeScreen from "./WelcomeScreen.vue";

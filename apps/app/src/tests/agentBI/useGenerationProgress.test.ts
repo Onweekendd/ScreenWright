@@ -10,7 +10,7 @@ import {
   requestedImageCount,
   resultUrlsOf,
   useGenerationProgress
-} from "@/views/build/components/agentBI/hooks/useGenerationProgress";
+} from "@/views/build/components/agentBI/hooks/message/useGenerationProgress";
 
 vi.mock("@screenwright/server/rpc", () => ({ apiClient: {} }));
 

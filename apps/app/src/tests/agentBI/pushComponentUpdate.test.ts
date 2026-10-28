@@ -4,7 +4,7 @@ import { legacyNumberToZIndex } from "@screenwright/core";
 import { SuspendType } from "@screenwright/server/rpc";
 
 import { updateLayersAgg } from "@/api/library";
-import { useComponentStreamUpdater } from "@/views/build/components/agentBI/hooks/useComponentStreamUpdater";
+import { useComponentStreamUpdater } from "@/views/build/components/agentBI/hooks/stream/useComponentStreamUpdater";
 import { useEditStore } from "@/views/build/components/buildRender/hooks/useEditStore";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 import { useLargeScreenInfo } from "@/views/build/useLargeScreenInfo";

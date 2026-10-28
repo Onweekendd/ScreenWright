@@ -7,7 +7,7 @@ import {
   type CanvasOpsDeps,
   createCanvasOpsHandler,
   createdComponentResult
-} from "@/views/build/components/agentBI/hooks/canvasOps";
+} from "@/views/build/components/agentBI/hooks/canvas/canvasOps";
 
 const comp = (id: number, extra: Record<string, unknown> = {}) => ({ id, ...extra }) as unknown as ComponentType;
 

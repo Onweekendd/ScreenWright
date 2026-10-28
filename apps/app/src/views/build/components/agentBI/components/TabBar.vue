@@ -56,7 +56,7 @@ import { Loading } from "@element-plus/icons-vue";
 
 import Icon from "@/components/Icon/index.vue";
 
-import { useConfirm } from "../hooks/useConfirm";
+import { useConfirm } from "../hooks/ui/useConfirm";
 import type { AgentBISession } from "../useAgentBI";
 
 const props = defineProps<{

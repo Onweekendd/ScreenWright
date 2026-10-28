@@ -10,7 +10,7 @@ import {
   useWelcomeScreen,
   WELCOME_CAPABILITIES,
   WELCOME_EXAMPLES
-} from "@/views/build/components/agentBI/hooks/useWelcomeScreen";
+} from "@/views/build/components/agentBI/hooks/ui/useWelcomeScreen";
 
 describe("欢迎页内容", () => {
   it("三项能力都有图标、标题和说明", () => {

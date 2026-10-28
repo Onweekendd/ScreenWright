@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { containerMenuItem } from "@/views/build/components/agentBI/hooks/containerMenuItem";
+import { containerMenuItem } from "@/views/build/components/agentBI/hooks/canvas/containerMenuItem";
 
 describe("containerMenuItem", () => {
   it("动态面板、分组不在组件菜单里，给出固定的菜单项", () => {

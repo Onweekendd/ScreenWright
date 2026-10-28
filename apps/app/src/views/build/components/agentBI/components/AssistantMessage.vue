@@ -52,8 +52,8 @@ import { computed, onUnmounted, ref } from "vue";
 
 import type { TextUIPart, UIMessage } from "ai";
 
-import { type AssistantDisplayPart, groupAssistantParts, isProcessPart } from "../hooks/groupAssistantParts";
-import { useEditingToolParts } from "../hooks/useEditingToolParts";
+import { type AssistantDisplayPart, groupAssistantParts, isProcessPart } from "../hooks/message/groupAssistantParts";
+import { useEditingToolParts } from "../hooks/message/useEditingToolParts";
 import ExecutionProcessBlock from "./ExecutionProcessBlock.vue";
 import LayoutTemplateResult from "./LayoutTemplateResult.vue";
 import MarkdownContent from "./MarkdownContent.vue";

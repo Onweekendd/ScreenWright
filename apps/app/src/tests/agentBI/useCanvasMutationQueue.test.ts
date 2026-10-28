@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { enqueueCanvasMutation } from "@/views/build/components/agentBI/hooks/useCanvasMutationQueue";
+import { enqueueCanvasMutation } from "@/views/build/components/agentBI/hooks/canvas/useCanvasMutationQueue";
 
 /** 受控 promise：手动 resolve/reject，用于断言执行时序 */
 const deferred = <T = void>() => {

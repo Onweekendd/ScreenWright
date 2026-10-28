@@ -8,16 +8,16 @@
  * 注入时机：每次 processAgentStream 发送前，保证 AI 无需额外工具调用
  * 即可感知选中组件、@提及组件、当前页面位置、当前页面组件列表。
  */
-import { useRoute } from "vue-router";
-
 import type { ComponentType } from "@screenwright/types";
 
+import router from "@/router";
 import { buildScreenWorkspaceDir } from "@/utils/screenWorkspace";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
-import { useLargeScreenInfo } from "../../useLargeScreenInfo";
-import { useEditStore } from "../buildRender/hooks/useEditStore";
-import { usePanelData } from "../panelEditor/usePanelData";
+import { useLargeScreenInfo } from "../../../../useLargeScreenInfo";
+import { useEditStore } from "../../../buildRender/hooks/useEditStore";
+import { usePanelData } from "../../../panelEditor/usePanelData";
+import { buildComponentPath } from "../../componentPath";
 
 // ── AttachObject 类型定义（对标 Claude Code ATTACHMENT_OBJECT）────────────
 
@@ -41,6 +41,8 @@ interface ComponentSummary {
   name: string;
   prop: string;
   title: string;
+  /** 全路径链路：namePath|idPath，与 @提及的 component-rf 同构，用于 agent 精确定位组件及 workspace 文件 */
+  rf?: string;
 }
 
 export interface EditorContextAttachObject {
@@ -56,11 +58,10 @@ export interface EditorContextAttachObject {
 // ── Composable ────────────────────────────────────────────────────────────
 
 export const useAgentBISystemContext = () => {
-  const route = useRoute();
   const { navInfo } = useLargeScreenInfo();
-  const { selectTargetData, componentList, isDynamicPanel } = useEditStore();
+  const { componentList, isDynamicPanel, selectTargetData } = useEditStore();
   const { allComponentMap } = useGlobalComponentData();
-  const { panelInfo, activeStatusId } = usePanelData();
+  const { activeStatusId, panelInfo } = usePanelData();
 
   /**
    * 收集编辑器当前状态，返回结构化 attachObject
@@ -73,7 +74,9 @@ export const useAgentBISystemContext = () => {
     const versionCode = navInfo.value.versionCode;
 
     if (inPanel) {
-      const panelId = route.params.cid as string;
+      // 不用 useRoute()：createAgentBISession 可能在事件回调(setup外)被调用，那时 useRoute() 返回 undefined 会抛错；
+      // 改读全局 router 实例的 currentRoute，任何时机都能拿到当前路由。
+      const panelId = router.currentRoute.value.params.cid as string;
       const panelComponent = allComponentMap.value.get(panelId);
       const panelName = panelComponent?.name ?? panelId;
       const activeState = panelInfo.value.config?.panelData?.find((s) => s.id === activeStatusId.value);
@@ -81,12 +84,12 @@ export const useAgentBISystemContext = () => {
       const hierarchy = buildHierarchy(Number(panelId), allComponentMap.value);
 
       currentPage = {
-        type: "panel",
-        panelName,
-        stateName,
+        hierarchy,
         panelId,
+        panelName,
         stateId: activeStatusId.value ?? undefined,
-        hierarchy
+        stateName,
+        type: "panel"
       };
     } else {
       currentPage = { type: "screen" };
@@ -99,12 +102,14 @@ export const useAgentBISystemContext = () => {
       title: c.title
     }));
 
+    const withRf = (comp: ComponentType): ComponentSummary => toComponentSummary(comp, allComponentMap.value);
+
     return {
       currentPage,
-      selectedComponents: selectTargetData.value.map(toComponentSummary),
-      mentionedComponents: mentionedComponents.map(toComponentSummary),
+      mentionedComponents: mentionedComponents.map(withRf),
       pageComponents,
       screenId: largeScreenId,
+      selectedComponents: selectTargetData.value.map(withRf),
       versionCode
     };
   };
@@ -133,17 +138,20 @@ export const useAgentBISystemContext = () => {
 
 // ── 模块内部工具函数 ───────────────────────────────────────────────────────
 
-function toComponentSummary(comp: ComponentType): ComponentSummary {
+function toComponentSummary(comp: ComponentType, allComponentMap: Map<string, ComponentType>): ComponentSummary {
+  const { namePath, idPath } = buildComponentPath(comp, allComponentMap);
   return {
     id: comp.id,
     name: comp.name,
     prop: comp.component?.prop ?? "",
+    rf: `${namePath}|${idPath}`,
     title: comp.title ?? ""
   };
 }
 
 function formatComponentXml(comp: ComponentSummary): string {
-  return `  <component id="${comp.id}" name="${comp.name}" prop="${comp.prop}" title="${comp.title}" />`;
+  const rfAttr = comp.rf ? ` rf="${comp.rf}"` : "";
+  return `  <component id="${comp.id}" name="${comp.name}" prop="${comp.prop}" title="${comp.title}"${rfAttr} />`;
 }
 
 function buildScreenInfoXml(screenId?: number, versionCode?: string): string {

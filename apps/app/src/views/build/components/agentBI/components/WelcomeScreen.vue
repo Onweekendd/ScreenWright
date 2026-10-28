@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, watch } from "vue";
 
-import type { WelcomeCapability, WelcomeExample } from "../hooks/useWelcomeScreen";
+import type { WelcomeCapability, WelcomeExample } from "../hooks/ui/useWelcomeScreen";
 
 const props = defineProps<{
   isVisible: boolean;

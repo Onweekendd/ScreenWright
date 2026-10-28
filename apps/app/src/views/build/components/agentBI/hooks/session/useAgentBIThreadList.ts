@@ -5,7 +5,7 @@ import type { CustomStorageThreadType } from "@screenwright/server/rpc";
 import { apiClient } from "@screenwright/server/rpc";
 import { ElMessage } from "element-plus";
 
-import { useLargeScreenInfo } from "../../../useLargeScreenInfo";
+import { useLargeScreenInfo } from "../../../../useLargeScreenInfo";
 
 /**
  * 历史线程列表 store（全局单例，按当前大屏 resourceId 共享）。

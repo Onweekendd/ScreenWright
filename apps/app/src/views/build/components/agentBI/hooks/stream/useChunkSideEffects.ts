@@ -5,7 +5,8 @@ import { apiClient, SuspendTypeSchema } from "@screenwright/server/rpc";
 import type { UIMessageChunk } from "ai";
 import { ElMessage } from "element-plus";
 
-import type { UsageInfo } from "../type";
+import type { UsageInfo } from "../../type";
+import type { CompactionChunkData } from "../message/compactionSummary";
 import type { StreamState, SuspendedToolInfo } from "./useAgentBIStream";
 import { useComponentStreamUpdater } from "./useComponentStreamUpdater";
 
@@ -25,7 +26,8 @@ export function useChunkSideEffects({
   lastUsage,
   activeThreadId,
   sessionId,
-  onVersionCommitted
+  onVersionCommitted,
+  onCompaction
 }: {
   applyLocalMode?: (mode: AgentMode) => void;
   lastUsage?: Ref<UsageInfo | null>;
@@ -35,6 +37,8 @@ export function useChunkSideEffects({
   sessionId: string;
   /** 后端 close() 提交版本快照落地后顺流推 data-version-committed，收到即刷新回退列表 */
   onVersionCommitted?: () => void;
+  /** 后端自动压缩上下文的进度（开始 / 完成带摘要 / 失败），压缩发生在 AI 开始回复之前 */
+  onCompaction?: (data: CompactionChunkData) => void;
 }) {
   const { suspendHandlers } = useComponentStreamUpdater(sessionId, { applyLocalMode });
 
@@ -110,6 +114,11 @@ export function useChunkSideEffects({
     // 该帧只作副作用、不进渲染，故命中 handler 即被吞掉。
     handlers.set("data-version-committed", () => {
       onVersionCommitted?.();
+    });
+
+    // 同样只作副作用：压缩进度驱动冻结提示，完成时由回调把摘要插进对话
+    handlers.set("data-compaction", (chunk) => {
+      onCompaction?.(chunk.data as CompactionChunkData);
     });
 
     handlers.set("data-tool-call-suspended", async (chunk) => {

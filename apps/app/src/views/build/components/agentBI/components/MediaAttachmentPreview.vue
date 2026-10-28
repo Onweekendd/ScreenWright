@@ -78,7 +78,7 @@ import { computed, onUnmounted, ref, watch } from "vue";
 
 import Icon from "@/components/Icon/index.vue";
 
-import type { MediaAttachment } from "../hooks/attachmentMedia";
+import type { MediaAttachment } from "../hooks/attachment/attachmentMedia";
 
 const props = defineProps<{ media: MediaAttachment; previewMedia?: MediaAttachment[] }>();
 const isVideo = computed(() => props.media.mediaType.startsWith("video/"));

@@ -11,7 +11,7 @@ vi.mock("@/views/build/components/agentBI/components/ComponentRefChip.vue", () =
 }));
 
 import UserMessage from "@/views/build/components/agentBI/components/UserMessage.vue";
-import { buildVideoAttachmentXml } from "@/views/build/components/agentBI/hooks/attachmentMessage";
+import { buildVideoAttachmentXml } from "@/views/build/components/agentBI/hooks/attachment/attachmentMessage";
 
 const ElDialog = defineComponent({
   name: "ElDialog",

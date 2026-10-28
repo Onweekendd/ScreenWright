@@ -44,8 +44,8 @@ import type { UIMessage } from "ai";
 
 import Icon from "@/components/Icon/index.vue";
 
-import type { MediaAttachment } from "../hooks/attachmentMedia";
-import { parseVideoAttachments } from "../hooks/attachmentMessage";
+import type { MediaAttachment } from "../hooks/attachment/attachmentMedia";
+import { parseVideoAttachments } from "../hooks/attachment/attachmentMessage";
 import ComponentRefChip from "./ComponentRefChip.vue";
 import MediaAttachmentPreview from "./MediaAttachmentPreview.vue";
 

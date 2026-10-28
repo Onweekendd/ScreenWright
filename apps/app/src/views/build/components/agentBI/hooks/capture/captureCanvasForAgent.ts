@@ -1,5 +1,5 @@
-import { captureEditorScreenShot } from "../../buildConfig/graphConfig/screenCapture";
-import { withCullingSuspended } from "../../buildRender/hooks/cullingSuspend";
+import { captureEditorScreenShot } from "../../../buildConfig/graphConfig/screenCapture";
+import { withCullingSuspended } from "../../../buildRender/hooks/cullingSuspend";
 import { type Edge, snapToBorders } from "./borderSnap";
 import { freezeVideosForCapture } from "./freezeVideos";
 

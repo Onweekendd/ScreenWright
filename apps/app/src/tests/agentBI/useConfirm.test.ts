@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useConfirm } from "@/views/build/components/agentBI/hooks/useConfirm";
+import { useConfirm } from "@/views/build/components/agentBI/hooks/ui/useConfirm";
 
 // createGlobalState 单例：取一次实例，用例间清理 dialogs
 const confirmStore = useConfirm();
@@ -41,7 +41,9 @@ describe("useConfirm 按 sessionId 隔离", () => {
   });
 
   it("askQuestion 与 confirm 在不同 session 下并存，resolveQuestion 不影响另一个", async () => {
-    const pa = confirmStore.askQuestion("session-a", [{ question: "q", header: "h", options: [], multiSelect: false } as any]);
+    const pa = confirmStore.askQuestion("session-a", [
+      { question: "q", header: "h", options: [], multiSelect: false } as any
+    ]);
     void confirmStore.confirm("session-b", "问题B");
 
     confirmStore.resolveQuestion("session-a", { h: "x" });

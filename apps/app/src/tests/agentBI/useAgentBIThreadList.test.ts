@@ -30,7 +30,7 @@ vi.mock("element-plus", () => ({
 }));
 
 // --- 被测模块 ---
-import { useAgentBIThreadList } from "@/views/build/components/agentBI/hooks/useAgentBIThreadList";
+import { useAgentBIThreadList } from "@/views/build/components/agentBI/hooks/session/useAgentBIThreadList";
 
 // createGlobalState 单例：取一次实例，各用例间用 reset / 重设 mock 隔离
 const list = useAgentBIThreadList();

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { type PixelBox, type PixelImage, snapToBorders } from "@/views/build/components/agentBI/hooks/borderSnap";
+import {
+  type PixelBox,
+  type PixelImage,
+  snapToBorders
+} from "@/views/build/components/agentBI/hooks/capture/borderSnap";
 
 /**
  * 合成一张「深色底 + 青色细边框卡片」的图，复现实测时让模型截不准的几种干扰：

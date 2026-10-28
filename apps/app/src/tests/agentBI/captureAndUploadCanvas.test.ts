@@ -4,10 +4,12 @@ const upload = vi.fn();
 vi.mock("@screenwright/server/rpc", () => ({
   apiClient: { customApi: { "chat-images": { upload: { $post: (...args: unknown[]) => upload(...args) } } } }
 }));
-vi.mock("@/views/build/components/agentBI/hooks/captureCanvasForAgent", () => ({ captureCanvasForAgent: vi.fn() }));
+vi.mock("@/views/build/components/agentBI/hooks/capture/captureCanvasForAgent", () => ({
+  captureCanvasForAgent: vi.fn()
+}));
 
-import { captureAndUploadCanvas } from "@/views/build/components/agentBI/hooks/captureAndUploadCanvas";
-import { captureCanvasForAgent } from "@/views/build/components/agentBI/hooks/captureCanvasForAgent";
+import { captureAndUploadCanvas } from "@/views/build/components/agentBI/hooks/capture/captureAndUploadCanvas";
+import { captureCanvasForAgent } from "@/views/build/components/agentBI/hooks/capture/captureCanvasForAgent";
 
 beforeEach(() => {
   vi.clearAllMocks();

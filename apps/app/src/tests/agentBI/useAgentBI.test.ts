@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { UIMessage } from "ai";
+
 // --- Mock 函数声明（vi.hoisted 与 vi.mock 一起提升到顶部）---
 const {
   mockConsumeSSEResponse,
@@ -8,7 +10,9 @@ const {
   mockEnsureActiveThread,
   mockStartNewChat,
   mockUploadAllAndGetParts,
-  mockToolExecute
+  mockToolExecute,
+  mockRequestCompact,
+  sideEffectOptions
 } = vi.hoisted(() => ({
   mockConsumeSSEResponse: vi.fn(),
   mockCallGenerateTitle: vi.fn().mockResolvedValue(undefined),
@@ -16,30 +20,34 @@ const {
   mockEnsureActiveThread: vi.fn().mockResolvedValue(undefined),
   mockStartNewChat: vi.fn(),
   mockUploadAllAndGetParts: vi.fn().mockResolvedValue([]),
-  mockToolExecute: vi.fn().mockResolvedValue({ success: true })
+  mockToolExecute: vi.fn().mockResolvedValue({ success: true }),
+  mockRequestCompact: vi.fn(),
+  /** 最近一次建会话时传给 useChunkSideEffects 的参数：拿 onCompaction 模拟后端推来的 data-compaction */
+  sideEffectOptions: { last: undefined as { onCompaction?: (data: unknown) => void } | undefined }
 }));
 
 // --- Mocks (hoisted) ---
 
-vi.mock("@/views/build/components/agentBI/hooks/useAgentBIStream", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/stream/useAgentBIStream", () => ({
   useAgentBIStream: () => ({
     consumeSSEResponse: mockConsumeSSEResponse
   })
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useGenerateTitle", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/session/useGenerateTitle", () => ({
   useGenerateTitle: () => ({
     callGenerateTitle: mockCallGenerateTitle
   })
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useChunkSideEffects", () => ({
-  useChunkSideEffects: () => ({
-    createSideEffectTransform: vi.fn(() => new TransformStream())
-  })
+vi.mock("@/views/build/components/agentBI/hooks/stream/useChunkSideEffects", () => ({
+  useChunkSideEffects: (options: { onCompaction?: (data: unknown) => void }) => {
+    sideEffectOptions.last = options;
+    return { createSideEffectTransform: vi.fn(() => new TransformStream()) };
+  }
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useBackgroundTask", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/stream/useBackgroundTask", () => ({
   useBackgroundTask: () => ({
     splitBackgroundTaskChunkFromMainStream: vi.fn(() => () => new TransformStream()),
     backgroundTasks: { value: [] },
@@ -47,18 +55,18 @@ vi.mock("@/views/build/components/agentBI/hooks/useBackgroundTask", () => ({
   })
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useContextWindow", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/session/useContextWindow", () => ({
   useContextWindow: () => ({
     compacting: { value: false },
     contextColor: { value: "#7c4dff" },
     contextPercentage: { value: 0 },
     contextTooltip: { value: "" },
     lastUsage: { value: null },
-    requestCompact: vi.fn()
+    requestCompact: mockRequestCompact
   })
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useAgentBIThreadList", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/session/useAgentBIThreadList", () => ({
   useAgentBIThreadList: () => ({
     memoryThreads: { value: [] },
     isLoadingMemory: { value: false },
@@ -68,7 +76,7 @@ vi.mock("@/views/build/components/agentBI/hooks/useAgentBIThreadList", () => ({
   })
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useAgentAttachment", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/attachment/useAgentAttachment", () => ({
   useAgentAttachment: () => ({
     addFiles: vi.fn(),
     addMedia: vi.fn(),
@@ -89,7 +97,7 @@ vi.mock("@screenwright/server/rpc", () => ({
   }
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useAgentBIMemory", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/session/useAgentBIMemory", () => ({
   useAgentBIMemory: () => ({
     activeThreadId: { value: "thread-1" },
     isLoadingThreadMessages: { value: false },
@@ -111,7 +119,7 @@ vi.mock("@/views/build/components/agentBI/tools", () => ({
   }
 }));
 
-vi.mock("@/views/build/components/agentBI/hooks/useAgentBISystemContext", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/session/useAgentBISystemContext", () => ({
   useAgentBISystemContext: () => ({
     buildSystemContext: vi.fn(() => "")
   })
@@ -127,9 +135,8 @@ vi.mock("@/api/mastra", () => ({
   mastraClient: {}
 }));
 
-
 vi.mock("element-plus", () => ({
-  ElMessage: { error: vi.fn() }
+  ElMessage: { error: vi.fn(), warning: vi.fn() }
 }));
 
 // --- 被测模块（所有 mock 必须在此行之前声明）---
@@ -386,5 +393,97 @@ describe("sendMessage 客户端工具循环", () => {
     await agent.sendMessage("跳转");
 
     expect(mockBiChatPost).toHaveBeenCalledTimes(2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 上下文压缩：冻结对话 + 完成后把摘要放进对话
+// ---------------------------------------------------------------------------
+
+describe("上下文压缩", () => {
+  const summary = {
+    id: "summary-1",
+    role: "assistant",
+    metadata: { kind: "compaction_summary" },
+    parts: [{ type: "text", text: "<!-- compaction-summary-v1 -->\n摘要" }]
+  } satisfies UIMessage;
+  const history = () =>
+    [
+      { id: "u1", role: "user", parts: [] },
+      { id: "a1", role: "assistant", parts: [] },
+      { id: "u-current", role: "user", parts: [] }
+    ] satisfies UIMessage[];
+
+  /** 新建一个会话，并拿到它注册给 useChunkSideEffects 的压缩回调 */
+  const newSession = () => {
+    const session = createAgentBISession();
+    const onCompaction = sideEffectOptions.last!.onCompaction!;
+    return { session, onCompaction };
+  };
+
+  beforeEach(() => {
+    mockConsumeSSEResponse.mockReset();
+    mockBiChatPost.mockReset().mockResolvedValue({});
+    mockEnsureActiveThread.mockReset().mockResolvedValue(undefined);
+    mockCallGenerateTitle.mockReset().mockResolvedValue(undefined);
+    mockRequestCompact.mockReset();
+  });
+
+  it("自动压缩开始时冻结；完成后解冻，摘要插到当前这轮之前", () => {
+    const { session, onCompaction } = newSession();
+    session.messages.value = history();
+
+    onCompaction({ status: "started" });
+    expect(session.compacting.value).toBe(true);
+
+    onCompaction({ status: "completed", summary, keptFromMessageId: "u-current" });
+    expect(session.compacting.value).toBe(false);
+    expect(session.messages.value.map((m) => m.id)).toEqual(["u1", "a1", "summary-1", "u-current"]);
+  });
+
+  it("自动压缩失败：解冻并提示，本轮照常继续", async () => {
+    const { ElMessage } = await import("element-plus");
+    const { session, onCompaction } = newSession();
+    session.messages.value = history();
+
+    onCompaction({ status: "started" });
+    onCompaction({ status: "failed" });
+
+    expect(session.compacting.value).toBe(false);
+    expect(session.messages.value).toHaveLength(3);
+    expect(ElMessage.warning).toHaveBeenCalled();
+  });
+
+  it("压缩中不能发起新一轮", async () => {
+    const { session } = newSession();
+    session.compacting.value = true;
+
+    await session.sendMessage("继续");
+
+    expect(mockConsumeSSEResponse).not.toHaveBeenCalled();
+    expect(session.messages.value).toHaveLength(0);
+  });
+
+  it("压缩中途断流收不到完成帧：流结束时解冻", async () => {
+    const { session, onCompaction } = newSession();
+    mockConsumeSSEResponse.mockImplementation(async () => {
+      onCompaction({ status: "started" });
+      throw new DOMException("aborted", "AbortError");
+    });
+
+    await session.sendMessage("你好");
+
+    expect(session.compacting.value).toBe(false);
+  });
+
+  it("手动压缩：摘要追加在对话最后", async () => {
+    const { session } = newSession();
+    session.messages.value = history();
+    mockRequestCompact.mockResolvedValue({ messageCountBefore: 3, messageCountAfter: 1, summary });
+
+    const result = await session.requestCompact({ threadId: "thread-1", resourceId: "23595" });
+
+    expect(result.messageCountAfter).toBe(1);
+    expect(session.messages.value.map((m) => m.id)).toEqual(["u1", "a1", "u-current", "summary-1"]);
   });
 });

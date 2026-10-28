@@ -5,7 +5,7 @@ import { apiClient } from "@screenwright/server/rpc";
 import type { UIMessage } from "ai";
 import { readUIMessageStream } from "ai";
 
-import { parseChatSseStream } from "../utils";
+import { parseChatSseStream } from "../../utils";
 
 export function useGenerateTitle(deps: {
   activeThreadId: Ref<string | undefined>;

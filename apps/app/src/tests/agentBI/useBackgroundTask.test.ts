@@ -5,12 +5,12 @@ import { shallowRef } from "vue";
 import type { UIMessage, UIMessageChunk } from "ai";
 
 vi.mock("@screenwright/server/rpc", () => ({ apiClient: {} }));
-vi.mock("@/views/build/components/agentBI/hooks/useChunkSideEffects", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/stream/useChunkSideEffects", () => ({
   useChunkSideEffects: () => ({ createSideEffectTransform: () => new TransformStream(), resolveSuspend: vi.fn() })
 }));
 
-import { useAgentBIStream } from "@/views/build/components/agentBI/hooks/useAgentBIStream";
-import { useBackgroundTask } from "@/views/build/components/agentBI/hooks/useBackgroundTask";
+import { useAgentBIStream } from "@/views/build/components/agentBI/hooks/stream/useAgentBIStream";
+import { useBackgroundTask } from "@/views/build/components/agentBI/hooks/stream/useBackgroundTask";
 
 const run = async (terminal: string, data: Record<string, unknown>, toolName = "searchMediaAssetsTool") => {
   const background = useBackgroundTask("session-1");

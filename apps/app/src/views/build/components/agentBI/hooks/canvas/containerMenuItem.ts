@@ -1,4 +1,4 @@
-import type { MenuItemForRender } from "../../buildTabs/selectAssets/assetsMenuType";
+import type { MenuItemForRender } from "../../../buildTabs/selectAssets/assetsMenuType";
 
 /**
  * 「动态面板」「分组」是容器，不在左侧组件菜单里（从工具栏建），按名字查菜单查不到，

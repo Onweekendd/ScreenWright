@@ -62,8 +62,8 @@ import BackgroundTasksView from "./components/BackgroundTasksView.vue";
 import ChatArea from "./components/ChatArea.vue";
 import HistorySidebar from "./components/HistorySidebar.vue";
 import TabBar from "./components/TabBar.vue";
-import { useAgentBIThreadList } from "./hooks/useAgentBIThreadList";
-import { useDrawerResize } from "./hooks/useDrawerResize";
+import { useAgentBIThreadList } from "./hooks/session/useAgentBIThreadList";
+import { useDrawerResize } from "./hooks/ui/useDrawerResize";
 import { useAgentBISessions } from "./useAgentBISessions";
 
 const { visible, sessions, activeSessionId, activeSession, addTab, closeTab, openThread } = useAgentBISessions();

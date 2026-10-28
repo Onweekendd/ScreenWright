@@ -5,8 +5,8 @@ import type { UIMessage } from "ai";
 import {
   createAssistantMessageGrouper,
   groupAssistantMessages
-} from "@/views/build/components/agentBI/hooks/groupAssistantMessages";
-import { groupAssistantParts } from "@/views/build/components/agentBI/hooks/groupAssistantParts";
+} from "@/views/build/components/agentBI/hooks/message/groupAssistantMessages";
+import { groupAssistantParts } from "@/views/build/components/agentBI/hooks/message/groupAssistantParts";
 
 type Part = UIMessage["parts"][number];
 const assistant = (id: string, parts: Part[]): UIMessage => ({ id, role: "assistant", parts });

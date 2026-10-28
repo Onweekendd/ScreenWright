@@ -18,7 +18,7 @@ vi.mock("@/api/aiModel", () => ({
 vi.mock("element-plus", () => ({ ElMessage: { error: mockError } }));
 
 import type { AiModelVo } from "@/api/aiModel";
-import { refreshAiModels, useThreadModels } from "@/views/build/components/agentBI/hooks/useThreadModels";
+import { refreshAiModels, useThreadModels } from "@/views/build/components/agentBI/hooks/session/useThreadModels";
 
 const model = (id: string, over: Partial<AiModelVo> = {}): AiModelVo => ({
   id,

@@ -10,17 +10,18 @@ import { mastraClient } from "@/api/mastra";
 import { uuid } from "@/utils/utils";
 
 import { useLargeScreenInfo } from "../../useLargeScreenInfo";
-import { type AttachmentPart, useAgentAttachment } from "./hooks/useAgentAttachment";
-import { useAgentBIMemory } from "./hooks/useAgentBIMemory";
-import { type StreamState, useAgentBIStream } from "./hooks/useAgentBIStream";
-import { useAgentBISystemContext } from "./hooks/useAgentBISystemContext";
-import { useAgentBIThreadList } from "./hooks/useAgentBIThreadList";
-import { useAgentBIVersionHistory } from "./hooks/useAgentBIVersionHistory";
-import { useBackgroundTask } from "./hooks/useBackgroundTask";
-import { useChunkSideEffects } from "./hooks/useChunkSideEffects";
-import { useContextWindow } from "./hooks/useContextWindow";
-import { useGenerateTitle } from "./hooks/useGenerateTitle";
-import { useThreadModels } from "./hooks/useThreadModels";
+import { type AttachmentPart, useAgentAttachment } from "./hooks/attachment/useAgentAttachment";
+import { type CompactionChunkData, insertCompactionSummary } from "./hooks/message/compactionSummary";
+import { useAgentBIMemory } from "./hooks/session/useAgentBIMemory";
+import { useAgentBISystemContext } from "./hooks/session/useAgentBISystemContext";
+import { useAgentBIThreadList } from "./hooks/session/useAgentBIThreadList";
+import { useAgentBIVersionHistory } from "./hooks/session/useAgentBIVersionHistory";
+import { useContextWindow } from "./hooks/session/useContextWindow";
+import { useGenerateTitle } from "./hooks/session/useGenerateTitle";
+import { useThreadModels } from "./hooks/session/useThreadModels";
+import { type StreamState, useAgentBIStream } from "./hooks/stream/useAgentBIStream";
+import { useBackgroundTask } from "./hooks/stream/useBackgroundTask";
+import { useChunkSideEffects } from "./hooks/stream/useChunkSideEffects";
 import { agentBITools } from "./tools";
 import {
   extractPendingClientTools,
@@ -115,6 +116,27 @@ export function createAgentBISession() {
 
   const threadModels = useThreadModels(activeThreadId);
 
+  /**
+   * 自动压缩（发生在 AI 开始回复之前，要跑十几秒到几十秒）：开始时冻结对话；
+   * 完成后把摘要插到当前这轮之前，之前的消息随之淡化，AI 接着回复。
+   */
+  const handleCompaction = ({ status, summary, keptFromMessageId }: CompactionChunkData) => {
+    compacting.value = status === "started";
+    if (status === "completed" && summary) {
+      updateMessagesBy(() => insertCompactionSummary(messages.value, summary, keptFromMessageId));
+    }
+    if (status === "failed") {
+      ElMessage.warning("上下文压缩失败，本轮继续使用完整对话。");
+    }
+  };
+
+  /** 手动压缩：全部历史都被替代，摘要排在对话最后 */
+  const compactThread = async (args: Parameters<typeof requestCompact>[0]) => {
+    const result = await requestCompact(args);
+    updateMessagesBy(() => insertCompactionSummary(messages.value, result.summary));
+    return result;
+  };
+
   const { consumeSSEResponse } = useAgentBIStream();
   const { createSideEffectTransform } = useChunkSideEffects({
     activeThreadId,
@@ -122,7 +144,8 @@ export function createAgentBISession() {
     lastUsage,
     sessionId,
     // 后端提交落地后顺流推 data-version-committed，收到即刷新回退列表（消除提交/刷新竞态）
-    onVersionCommitted: refreshVersionNodes
+    onVersionCommitted: refreshVersionNodes,
+    onCompaction: handleCompaction
   });
 
   const { callGenerateTitle } = useGenerateTitle({ activeThreadId, memoryThreads, queryMemory });
@@ -290,7 +313,8 @@ export function createAgentBISession() {
     const text = extractUserText(userMessageOrText, inputText.value);
 
     const hasPendingAttachments = attachments.value.some((item) => item.status === "pending");
-    if ((!text && !hasPendingAttachments) || !shouldContinueProcessing(isStreaming.value, false)) {
+    // 压缩期间冻结对话：手动压缩时没有在流式输出，也不能发起新一轮
+    if ((!text && !hasPendingAttachments) || compacting.value || !shouldContinueProcessing(isStreaming.value, false)) {
       return;
     }
 
@@ -333,6 +357,8 @@ export function createAgentBISession() {
       await processAgentStream();
     } finally {
       isStreaming.value = false;
+      // 压缩中途断流（用户停止、网络断开）就收不到完成帧，在这里解冻
+      compacting.value = false;
     }
 
     await titlePromise;
@@ -383,7 +409,7 @@ export function createAgentBISession() {
 
     messages,
     removeAttachment,
-    requestCompact,
+    requestCompact: compactThread,
     resourceId,
     runningTaskCount,
     sendMessage,

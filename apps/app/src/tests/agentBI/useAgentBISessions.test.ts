@@ -16,7 +16,7 @@ vi.mock("@/views/build/components/agentBI/useAgentBI", () => {
   };
 });
 
-vi.mock("@/views/build/components/agentBI/hooks/useAgentBIThreadList", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/session/useAgentBIThreadList", () => ({
   useAgentBIThreadList: () => ({ reset: vi.fn() })
 }));
 

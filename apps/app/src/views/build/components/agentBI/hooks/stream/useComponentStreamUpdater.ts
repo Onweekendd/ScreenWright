@@ -8,17 +8,17 @@ import { useCallbackArguments } from "@/hooks/callbackArguments/useCallbackArgum
 import { useDataFilter } from "@/views/build/useDataFilter";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
-import type { PanelState } from "../../buildRender/core/SystemComponent/type";
-import { UpdateHistoryTypeEnum, useAction } from "../../buildRender/hooks/useAction";
-import { createLocalPanelStatus } from "../../buildRender/hooks/useCommonPanelAction";
-import { useEditStore } from "../../buildRender/hooks/useEditStore";
-import { createCanvasOpsHandler, getBatchOperationFields } from "./canvasOps";
-import { captureAndUploadCanvas } from "./captureAndUploadCanvas";
+import type { PanelState } from "../../../buildRender/core/SystemComponent/type";
+import { UpdateHistoryTypeEnum, useAction } from "../../../buildRender/hooks/useAction";
+import { createLocalPanelStatus } from "../../../buildRender/hooks/useCommonPanelAction";
+import { useEditStore } from "../../../buildRender/hooks/useEditStore";
+import { createCanvasOpsHandler, getBatchOperationFields } from "../canvas/canvasOps";
+import { enqueueCanvasMutation } from "../canvas/useCanvasMutationQueue";
+import type { ComponentPlacement } from "../canvas/useCreateComponent";
+import { useCreateComponent } from "../canvas/useCreateComponent";
+import { captureAndUploadCanvas } from "../capture/captureAndUploadCanvas";
+import { useConfirm } from "../ui/useConfirm";
 import type { SuspendedToolInfo } from "./useAgentBIStream";
-import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
-import { useConfirm } from "./useConfirm";
-import type { ComponentPlacement } from "./useCreateComponent";
-import { useCreateComponent } from "./useCreateComponent";
 
 /**
  * Suspend handler 函数类型。

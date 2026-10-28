@@ -12,7 +12,7 @@ import { useDataFilter } from "@/views/build/useDataFilter";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 import { useLargeScreenInfo } from "@/views/build/useLargeScreenInfo";
 
-import { useEditStore } from "../../buildRender/hooks/useEditStore";
+import { useEditStore } from "../../../buildRender/hooks/useEditStore";
 import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import { useCreateComponent } from "./useCreateComponent";
 

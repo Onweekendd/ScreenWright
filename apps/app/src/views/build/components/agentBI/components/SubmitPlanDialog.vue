@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import type { SubmitPlanAction } from "../hooks/useConfirm";
+import type { SubmitPlanAction } from "../hooks/ui/useConfirm";
 import MarkdownContent from "./MarkdownContent.vue";
 
 defineProps<{ summary: string; plan: string }>();

@@ -14,19 +14,16 @@ import type { UIMessage } from "ai";
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
 
-const {
-  mockAskApprovalCreateComponent,
-  mockProcessComponentUpdates,
-  mockGenerateTitle,
-  mockResume
-} = vi.hoisted(() => ({
-  mockAskApprovalCreateComponent: vi.fn(),
-  mockProcessComponentUpdates: vi.fn(),
-  mockGenerateTitle: vi.fn(),
-  mockResume: vi.fn().mockResolvedValue({ json: async () => ({ piped: true }) })
-}));
+const { mockAskApprovalCreateComponent, mockProcessComponentUpdates, mockGenerateTitle, mockResume } = vi.hoisted(
+  () => ({
+    mockAskApprovalCreateComponent: vi.fn(),
+    mockProcessComponentUpdates: vi.fn(),
+    mockGenerateTitle: vi.fn(),
+    mockResume: vi.fn().mockResolvedValue({ json: async () => ({ piped: true }) })
+  })
+);
 
-vi.mock("@/views/build/components/agentBI/hooks/useComponentStreamUpdater", () => ({
+vi.mock("@/views/build/components/agentBI/hooks/stream/useComponentStreamUpdater", () => ({
   useComponentStreamUpdater: () => ({
     processComponentUpdates: mockProcessComponentUpdates,
     suspendHandlers: new Map([["ask_approval_create_component", mockAskApprovalCreateComponent]])
@@ -53,8 +50,8 @@ vi.mock("element-plus", () => ({
 
 // ── 被测模块（必须在 vi.mock 之后 import） ────────────────────────────────────
 
-import { useAgentBIStream } from "@/views/build/components/agentBI/hooks/useAgentBIStream";
-import { useChunkSideEffects } from "@/views/build/components/agentBI/hooks/useChunkSideEffects";
+import { useAgentBIStream } from "@/views/build/components/agentBI/hooks/stream/useAgentBIStream";
+import { useChunkSideEffects } from "@/views/build/components/agentBI/hooks/stream/useChunkSideEffects";
 
 import { loadSession, makeStepResponse } from "./streamReplay";
 

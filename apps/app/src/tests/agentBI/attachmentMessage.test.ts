@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildVideoAttachmentXml,
   parseVideoAttachments
-} from "@/views/build/components/agentBI/hooks/attachmentMessage";
+} from "@/views/build/components/agentBI/hooks/attachment/attachmentMessage";
 
 describe("视频附件 XML", () => {
   it("转义名称和签名 URL，解析时恢复原值并保留正文", () => {

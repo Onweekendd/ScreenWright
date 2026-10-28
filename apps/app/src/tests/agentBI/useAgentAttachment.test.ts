@@ -6,7 +6,7 @@ vi.mock("@screenwright/server/rpc", () => ({
 }));
 vi.mock("@/utils/utils", () => ({ uuid: () => crypto.randomUUID() }));
 
-import { useAgentAttachment } from "@/views/build/components/agentBI/hooks/useAgentAttachment";
+import { useAgentAttachment } from "@/views/build/components/agentBI/hooks/attachment/useAgentAttachment";
 
 const libraryImage = { filename: "背景.png", mediaType: "image/png", url: "https://assets.example.com/background.png" };
 const createObjectURL = vi.fn(() => "blob:local-image");

@@ -46,7 +46,7 @@ vi.mock("@/views/build/components/agentBI/componentPath", () => ({
 }));
 
 import router from "@/router";
-import { useAgentBISystemContext } from "@/views/build/components/agentBI/hooks/useAgentBISystemContext";
+import { useAgentBISystemContext } from "@/views/build/components/agentBI/hooks/session/useAgentBISystemContext";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 
 const { buildSystemContext } = useAgentBISystemContext();

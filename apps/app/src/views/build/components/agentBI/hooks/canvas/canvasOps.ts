@@ -2,8 +2,8 @@ import type { CanvasOp, OpResult, ResumeData, SuspendPayload, SuspendType } from
 import { ComponentSchema, type ComponentType } from "@screenwright/types";
 import { cloneDeep } from "lodash-es";
 
+import type { SuspendedToolInfo } from "../stream/useAgentBIStream";
 import { componentMenuTitle } from "./componentMenuTitle";
-import type { SuspendedToolInfo } from "./useAgentBIStream";
 import { enqueueCanvasMutation } from "./useCanvasMutationQueue";
 import type {
   ComponentPlacement,

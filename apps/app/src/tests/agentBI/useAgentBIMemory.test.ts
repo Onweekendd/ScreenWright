@@ -32,7 +32,7 @@ vi.mock("element-plus", () => ({
 }));
 
 // --- 被测模块 ---
-import { useAgentBIMemory } from "@/views/build/components/agentBI/hooks/useAgentBIMemory";
+import { useAgentBIMemory } from "@/views/build/components/agentBI/hooks/session/useAgentBIMemory";
 
 /** 构造 AgentBISharedState（memoryThreads 由 useAgentBIThreadList 注入，这里用桩 ref 替代） */
 const makeMemory = () => {

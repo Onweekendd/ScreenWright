@@ -6,14 +6,14 @@ import { uuid } from "@/utils/utils";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 import { useTabsMenuGroup } from "@/views/build/useTabsMenuGroup";
 
-import { useDataFilter } from "../../../useDataFilter";
-import { extendsEnumType } from "../../buildRender/core/ExtendsComponents/type";
-import { sceneEnumType } from "../../buildRender/core/SceneComponent/type";
-import { type PanelState, PanelType } from "../../buildRender/core/SystemComponent/type";
-import { UpdateHistoryTypeEnum, useAction } from "../../buildRender/hooks/useAction";
-import { useEditStore } from "../../buildRender/hooks/useEditStore";
-import type { MenuItemForRender, ModuleGroupForRender } from "../../buildTabs/selectAssets/assetsMenuType";
-import { useEncodeTabsMenuGroup } from "../../encodeEditor/components/Tabs/useEncodeTabsMenuGroup";
+import { useDataFilter } from "../../../../useDataFilter";
+import { extendsEnumType } from "../../../buildRender/core/ExtendsComponents/type";
+import { sceneEnumType } from "../../../buildRender/core/SceneComponent/type";
+import { type PanelState, PanelType } from "../../../buildRender/core/SystemComponent/type";
+import { UpdateHistoryTypeEnum, useAction } from "../../../buildRender/hooks/useAction";
+import { useEditStore } from "../../../buildRender/hooks/useEditStore";
+import type { MenuItemForRender, ModuleGroupForRender } from "../../../buildTabs/selectAssets/assetsMenuType";
+import { useEncodeTabsMenuGroup } from "../../../encodeEditor/components/Tabs/useEncodeTabsMenuGroup";
 import { containerMenuItem } from "./containerMenuItem";
 
 export type ComponentPlacement =

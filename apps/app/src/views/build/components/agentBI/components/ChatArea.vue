@@ -12,17 +12,33 @@
         <span>加载更多...</span>
       </div>
       <template v-for="(item, index) in displayMessages" :key="item.id">
+        <CompactionSummary
+          v-if="isCompactionSummary(item)"
+          :message="item"
+          :class="{ 'is-compacted': compactedIds.has(item.id) }"
+        />
         <UserMessage
-          v-if="item.role === 'user'"
+          v-else-if="item.role === 'user'"
           :parts="item.parts"
           :can-undo="canUndoMessage(item.id)"
+          :class="{ 'is-compacted': compactedIds.has(item.id) }"
           @undo="handleUndo(item.id)"
         />
-        <AssistantMessage v-else :message="item" :is-loading="isStreaming && index === displayMessages.length - 1" />
+        <AssistantMessage
+          v-else
+          :message="item"
+          :is-loading="isStreaming && index === displayMessages.length - 1"
+          :class="{ 'is-compacted': compactedIds.has(item.id) }"
+        />
       </template>
+      <!-- 压缩上下文期间对话冻结（输入框同步锁住），完成后摘要插到这里、上文淡化 -->
+      <div v-if="compacting" class="compacting-row" role="status">
+        <span class="compacting-spinner" />
+        <span>正在压缩上下文：较早的对话会整理成一份摘要，完成后继续</span>
+      </div>
       <!-- 已发送消息但首个 chunk 还未到达时，显示 loading 占位行 -->
       <AssistantMessage
-        v-if="isStreaming && messages[messages.length - 1]?.role === 'user'"
+        v-else-if="isStreaming && messages[messages.length - 1]?.role === 'user'"
         :message="placeholderMessage"
         :is-loading="true"
       />
@@ -49,14 +65,16 @@ import type { UIMessage } from "ai";
 import { ElMessage, ElMessageBox } from "element-plus";
 
 import { useActiveAgentBISession } from "../agentBISessionContext";
-import { createAssistantMessageGrouper } from "../hooks/groupAssistantMessages";
-import { useAgentBIVersionHistory } from "../hooks/useAgentBIVersionHistory";
-import { useConfirm } from "../hooks/useConfirm";
-import { useRollbackExecutor } from "../hooks/useRollbackExecutor";
-import { useWelcomeScreen } from "../hooks/useWelcomeScreen";
+import { useRollbackExecutor } from "../hooks/canvas/useRollbackExecutor";
+import { compactedMessageIds, isCompactionSummary } from "../hooks/message/compactionSummary";
+import { createAssistantMessageGrouper } from "../hooks/message/groupAssistantMessages";
+import { useAgentBIVersionHistory } from "../hooks/session/useAgentBIVersionHistory";
+import { useConfirm } from "../hooks/ui/useConfirm";
+import { useWelcomeScreen } from "../hooks/ui/useWelcomeScreen";
 import { useAgentBISessions } from "../useAgentBISessions";
 import AssistantMessage from "./AssistantMessage.vue";
 import ChatInput from "./ChatInput.vue";
+import CompactionSummary from "./CompactionSummary.vue";
 import UserMessage from "./UserMessage.vue";
 import WelcomeScreen from "./WelcomeScreen.vue";
 
@@ -67,11 +85,21 @@ const session = activeSession.value;
 if (!session) {
   throw new Error("ChatArea 必须在激活会话存在时渲染");
 }
-const { messages, inputText, isStreaming, hasMoreMessages, isLoadingMoreMessages, loadOlderMessages, sendMessage } =
-  session;
+const {
+  messages,
+  inputText,
+  isStreaming,
+  compacting,
+  hasMoreMessages,
+  isLoadingMoreMessages,
+  loadOlderMessages,
+  sendMessage
+} = session;
 
 const groupMessages = createAssistantMessageGrouper();
 const displayMessages = computed(() => groupMessages(messages.value));
+/** 已被压缩摘要替代的消息（AI 已看不到原文），淡化显示；合并后的展示行沿用首条消息的 id */
+const compactedIds = computed(() => compactedMessageIds(messages.value));
 
 // 回退是「当前大屏」级操作，不属于某个会话：版本历史是全局单例，执行器直接操作画布，
 // 故直接消费全局 hook，而非经 session 转发。
@@ -151,8 +179,9 @@ const placeholderMessage = {
 const { dialogs } = useConfirm();
 const { sessionId } = useActiveAgentBISession();
 const hasPendingDialog = computed(() => dialogs.value.has(sessionId));
-watch(hasPendingDialog, async (pending) => {
-  if (!pending) {
+// 压缩提示出现时同样滚到底，让「正在压缩」露出来
+watch([hasPendingDialog, compacting], async ([pending, isCompacting]) => {
+  if (!pending && !isCompacting) {
     return;
   }
   await nextTick();
@@ -188,6 +217,49 @@ const handleScroll = async () => {
   min-width: 0;
   background-color: $color-bg-drawer;
   border-top-left-radius: 10px;
+}
+
+// 被压缩掉的上文：仍可查看，但淡化，表明 AI 已经看不到它们；悬停时恢复一些便于阅读
+.is-compacted {
+  opacity: 0.45;
+  filter: saturate(0.6);
+  transition:
+    opacity $transition-base,
+    filter $transition-base;
+
+  &:hover {
+    opacity: 0.8;
+    filter: none;
+  }
+}
+
+.compacting-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  padding: 6px 10px;
+  border: 1px dashed $color-primary-25;
+  border-radius: 6px;
+  background: $color-primary-5;
+  font-size: 12px;
+  color: $color-text-muted;
+}
+
+.compacting-spinner {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid $color-primary-20;
+  border-top-color: $color-primary-60;
+  border-radius: 50%;
+  animation: compacting-spin 0.9s linear infinite;
+}
+
+@keyframes compacting-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .load-more-indicator {
@@ -235,6 +307,10 @@ const handleScroll = async () => {
 @media (prefers-reduced-motion: reduce) {
   .box-content {
     transition: none;
+  }
+
+  .compacting-spinner {
+    animation: none;
   }
 }
 </style>

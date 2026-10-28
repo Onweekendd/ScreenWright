@@ -4,7 +4,7 @@ import { createGlobalState } from "@vueuse/core";
 import type { FileChange, HistoryNode, RollbackPlan } from "@screenwright/server/rpc";
 import { apiClient } from "@screenwright/server/rpc";
 
-import { useLargeScreenInfo } from "../../../useLargeScreenInfo";
+import { useLargeScreenInfo } from "../../../../useLargeScreenInfo";
 
 /** git 空树 hash：某提问是首个 commit（无父）时，"修改前" = 空大屏，用它作对比基准 */
 const EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";

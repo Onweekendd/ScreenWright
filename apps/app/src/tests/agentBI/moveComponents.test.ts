@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { legacyNumberToZIndex } from "@screenwright/core";
 
-import { useCreateComponent } from "@/views/build/components/agentBI/hooks/useCreateComponent";
+import { useCreateComponent } from "@/views/build/components/agentBI/hooks/canvas/useCreateComponent";
 import { useEditStore } from "@/views/build/components/buildRender/hooks/useEditStore";
 import { useGlobalComponentData } from "@/views/build/useGlobalComponentData";
 import { useLargeScreenInfo } from "@/views/build/useLargeScreenInfo";

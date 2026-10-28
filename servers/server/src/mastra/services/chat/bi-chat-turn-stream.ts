@@ -23,14 +23,7 @@ import { resolveModeFromResumeData } from "./resume-mode";
 import { SubAgentSnapshotCollector } from "./sub-agent-collector";
 import { patchThreadMetadata } from "./thread-metadata";
 import type { BIChatRequest } from "./types";
-
-/**
- * stream 期间在多个闭包间共享的 usage，避免裸的可变变量跨作用域读写。
- * 类型保持 unknown：原样透传给前端的 data-usage，本模块不解读其字段。
- */
-interface UsageRef {
-  current: unknown;
-}
+import { createUsageFlusher, type UsageRef } from "./usage-flusher";
 
 interface MemoryOptions {
   thread: string;
@@ -213,24 +206,25 @@ interface ProcessedStreamOptions {
 }
 
 /**
- * 消费 aiSdkStream：逐帧路由下发，收尾注入 usage 并持久化子 agent 快照。
+ * 消费 aiSdkStream：逐帧路由下发，每步 usage 变化即时下发，收尾持久化子 agent 快照。
  */
 const createProcessedStream = (options: ProcessedStreamOptions): ReadableStream => {
   const { aiSdkStream, subAgentSnapshotCollector: snapshots, threadId, internalAbort, usageRef, bgSubRunIds } = options;
 
   return new ReadableStream({
     async start(responseStreamController) {
+      const flushUsage = createUsageFlusher(usageRef, (chunk) => responseStreamController.enqueue(chunk));
+
       // 正常收尾与异常收尾只差最后一步：都要先补 usage、再落快照
       const finish = async (settle: () => void) => {
-        if (usageRef.current) {
-          responseStreamController.enqueue({ type: "data-usage", data: usageRef.current });
-        }
+        flushUsage();
         await snapshots.persist(threadId);
         settle();
       };
 
       try {
         for await (const rawChunk of aiSdkStream as unknown as AsyncIterable<unknown>) {
+          flushUsage();
           const outgoing = prepareChunkForClient(rawChunk, snapshots, bgSubRunIds);
           if (outgoing !== null) {
             responseStreamController.enqueue(outgoing);

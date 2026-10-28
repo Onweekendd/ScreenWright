@@ -35,6 +35,9 @@ import {
 const COMPLETED_RE = /tool-call IDs completed successfully:\s*(.*?)\.\s+Their results are now/s;
 const FAILED_RE = /tool-call IDs failed:\s*(.*?)\.\s+Their failure information/s;
 const CANCELLED_RE = /tool-call IDs were cancelled by the user before completion:\s*(.*?)\.\s+These tasks/s;
+/** 整句匹配，改写时要整句换掉：原文叫模型去找用户恢复，在本项目里是错的（见 suspendedNote） */
+const SUSPENDED_RE =
+  /\s*IMPORTANT: The following tool-call IDs are suspended:\s*(.*?)\.\s+Do not attempt to resume them; let the user know they are waiting for explicit resume input\./s;
 
 /** 续接指令的开头，用来认出哪条 user 消息是它 */
 const DIRECTIVE_PREFIX = "IMPORTANT: The following tool-call IDs";
@@ -76,6 +79,32 @@ export function parseEntries(list: string): Entry[] {
     .map((item) => /^(\S+)(?:\s+\((.+)\))?$/.exec(item.trim()))
     .flatMap((match) => (match ? [{ toolCallId: match[1], toolName: match[2] }] : []));
 }
+
+const DELEGATED_TASK_ID_RE = /<id>\s*([^<\s]+)\s*<\/id>/g;
+
+/**
+ * 委派给子 agent 的调用当初派的是哪些任务：从委派入参的 <pending_task_ids> 里读。
+ * 续接提示只给 toolCallId，模型得自己对回是哪个任务，实测会对错（把 call_03 当成任务 3）。
+ */
+export function delegatedTaskIds(messages: MastraDBMessage[], toolCallId: string): string[] {
+  for (const message of messages) {
+    for (const part of message.content?.parts ?? []) {
+      if (part.type !== "tool-invocation" || part.toolInvocation.toolCallId !== toolCallId) {
+        continue;
+      }
+      const args = part.toolInvocation.args as { prompt?: unknown } | undefined;
+      const text = typeof args?.prompt === "string" ? args.prompt : JSON.stringify(args ?? {});
+      return [...text.matchAll(DELEGATED_TASK_ID_RE)].map((match) => match[1]);
+    }
+  }
+  return [];
+}
+
+/** "createImageTool（call_a）"；委派调用再带上任务号："agent-swExecutorAgent（call_a，任务 1）" */
+const labelOf = ({ toolCallId, toolName }: Entry, messages: MastraDBMessage[]): string => {
+  const tasks = delegatedTaskIds(messages, toolCallId);
+  return `${toolName ?? "未知工具"}（${toolCallId}${tasks.length > 0 ? `，任务 ${tasks.join("、")}` : ""}）`;
+};
 
 const truncate = (text: string) =>
   text.length > MAX_RESULT_CHARS ? `${text.slice(0, MAX_RESULT_CHARS)}…（已截断）` : text;
@@ -169,15 +198,35 @@ const describeCompleted = async (
 ): Promise<Described> => {
   const task = await lookup(toolCallId).catch(() => null);
   return describeResult(
-    `${toolName ?? "未知工具"}（${toolCallId}）`,
+    labelOf({ toolCallId, toolName }, messages),
     task?.result ?? resultFromHistory(messages, toolCallId)
   );
 };
 
-const describeFailed = async ({ toolCallId, toolName }: Entry, lookup: BackgroundTaskLookup): Promise<Described> => {
-  const task = await lookup(toolCallId).catch(() => null);
-  return { line: `- ${toolName ?? "未知工具"}（${toolCallId}）失败：${errorMessage(task?.error)}`, images: [] };
+const describeFailed = async (
+  entry: Entry,
+  lookup: BackgroundTaskLookup,
+  messages: MastraDBMessage[]
+): Promise<Described> => {
+  const task = await lookup(entry.toolCallId).catch(() => null);
+  return { line: `- ${labelOf(entry, messages)}失败：${errorMessage(task?.error)}`, images: [] };
 };
+
+/**
+ * 替换 Mastra 对挂起后台调用的原话「let the user know they are waiting for explicit resume input」。
+ * 本项目里后台调用（子 agent 施工）挂起，是停在画布写入上等前端执行，前端处理完自动恢复，用户什么都不用做。
+ * 照原话，主 agent 会去叫用户「恢复」，还会以为子 agent 卡住了、自己接手它的任务，画布上建出两套组件。
+ */
+const SUSPENDED_NOTE_MARKER = "〔后台调用等待前端〕";
+
+const suspendedNote = (entries: Entry[], messages: MastraDBMessage[]): string =>
+  [
+    SUSPENDED_NOTE_MARKER,
+    "下面这些后台调用停在画布写入上，正等前端执行（需要审批时，用户会直接在界面上看到审批框），执行完会自动接着跑：",
+    ...entries.map((entry) => `- ${labelOf(entry, messages)}`),
+    "它们没有卡住，也没有失败。不要叫用户去「恢复」，不要重新派发，也不要自己去做它们的任务——那样画布上会建出重复的组件。",
+    "先做和它们不冲突的事，或者直接结束这一轮；它们跑完后结果会自动送到你这里。"
+  ].join("\n");
 
 export interface RewrittenDirective {
   text: string;
@@ -202,32 +251,42 @@ export function directiveToolCallIds(text: string): string[] {
   );
 }
 
-/** 返回 null 表示不用改写：不是续接指令、已经改写过、或这批里没有完成 / 失败项 */
+/** 返回 null 表示不用改写：不是续接指令、已经改写过、或这批里没有完成 / 失败 / 挂起项 */
 export async function rewriteDirectiveText(
   text: string,
   lookup: BackgroundTaskLookup,
   messages: MastraDBMessage[]
 ): Promise<RewrittenDirective | null> {
-  if (text.includes(NOTE_MARKER)) {
+  if (text.includes(NOTE_MARKER) || text.includes(SUSPENDED_NOTE_MARKER)) {
     return null;
   }
+  const suspendedMatch = SUSPENDED_RE.exec(text);
+  const suspended = parseEntries(suspendedMatch?.[1] ?? "");
   const completed = parseEntries(COMPLETED_RE.exec(text)?.[1] ?? "");
   const failed = parseEntries(FAILED_RE.exec(text)?.[1] ?? "");
-  if (completed.length === 0 && failed.length === 0) {
+  if (completed.length === 0 && failed.length === 0 && suspended.length === 0) {
     return null;
   }
   const described = await Promise.all([
     ...completed.map((entry) => describeCompleted(entry, lookup, messages)),
-    ...failed.map((entry) => describeFailed(entry, lookup))
+    ...failed.map((entry) => describeFailed(entry, lookup, messages))
   ]);
   const images = imagesToShow(described);
+  const original = (suspendedMatch ? text.replace(suspendedMatch[0], "") : text).trim();
+  const resultLines =
+    described.length > 0
+      ? [
+          NOTE_MARKER,
+          ...described.map((item) => item.line),
+          "以上就是这些后台任务的返回内容，要用其中的 url / id 直接取用，不要重复调用同一个工具，也不要再去别处找结果。",
+          ...imageNoteLines(images)
+        ]
+      : [];
   return {
     text: [
-      text.trim(),
-      NOTE_MARKER,
-      ...described.map((item) => item.line),
-      "以上就是这些后台任务的返回内容，要用其中的 url / id 直接取用，不要重复调用同一个工具，也不要再去别处找结果。",
-      ...imageNoteLines(images)
+      ...(original ? [original] : []),
+      ...resultLines,
+      ...(suspended.length > 0 ? [suspendedNote(suspended, messages)] : [])
     ].join("\n"),
     images
   };
@@ -239,8 +298,8 @@ export async function rewriteDirectiveText(
  */
 const CATCH_UP_MARKER = "〔后台任务补报〕";
 
-export function describeFinishedTask(task: FinishedBackgroundTask): Described {
-  const label = `${task.toolName}（${task.toolCallId}）`;
+export function describeFinishedTask(task: FinishedBackgroundTask, messages: MastraDBMessage[] = []): Described {
+  const label = labelOf(task, messages);
   if (task.status === "completed") {
     return describeResult(label, task.result);
   }
@@ -251,8 +310,8 @@ export function describeFinishedTask(task: FinishedBackgroundTask): Described {
   return { line: `- ${label} 失败：${reason}`, images: [] };
 }
 
-export function catchUpNote(tasks: FinishedBackgroundTask[]): RewrittenDirective {
-  const described = tasks.map(describeFinishedTask);
+export function catchUpNote(tasks: FinishedBackgroundTask[], messages: MastraDBMessage[] = []): RewrittenDirective {
+  const described = tasks.map((task) => describeFinishedTask(task, messages));
   const images = imagesToShow(described);
   return {
     text: [
@@ -407,7 +466,7 @@ export class InlineBackgroundTaskResults implements Processor {
       const unnotified = await this.ledger.listUnnotified(threadId);
       const missed = unnotified.filter((task) => !announced.has(task.toolCallId));
       if (missed.length > 0) {
-        const note = catchUpNote(missed);
+        const note = catchUpNote(missed, messages);
         const message: MastraDBMessage = {
           id: randomUUID(),
           role: "user",

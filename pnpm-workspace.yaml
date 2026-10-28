@@ -13,5 +13,9 @@ onlyBuiltDependencies:
   - simple-git-hooks
   - vue-demi
 
+# 补丁是对着 1.66.0 的编译产物生成的，换版本必须先按 patches/README.md 重新核对，所以钉死版本
+overrides:
+  '@mastra/core': 1.66.0
+
 patchedDependencies:
-  '@mastra/core': patches/@mastra__core.patch
+  '@mastra/core@1.66.0': patches/@mastra__core.patch

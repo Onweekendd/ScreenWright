@@ -14,6 +14,7 @@ import type { BackgroundTaskNoticeLedger, FinishedBackgroundTask } from "@/mastr
 import {
   type BackgroundTaskLookup,
   catchUpNote,
+  delegatedTaskIds,
   directiveToolCallIds,
   imageMimeOf,
   InlineBackgroundTaskResults,
@@ -57,6 +58,36 @@ const invocation = (toolCallId: string, result: unknown) =>
         {
           type: "tool-invocation",
           toolInvocation: { toolCallId, toolName: "createImageTool", state: "result", args: {}, result }
+        }
+      ]
+    }
+  }) as unknown as MastraDBMessage;
+
+const SUSPENDED =
+  " IMPORTANT: The following tool-call IDs are suspended: call_00 (agent-swExecutorAgent). " +
+  "Do not attempt to resume them; let the user know they are waiting for explicit resume input.";
+
+/** 主 agent 委派施工的调用：任务号写在入参 prompt 的 <pending_task_ids> 里 */
+const delegation = (toolCallId: string, ...taskIds: string[]) =>
+  ({
+    id: `m-${toolCallId}`,
+    role: "assistant",
+    content: {
+      format: 2,
+      parts: [
+        {
+          type: "tool-invocation",
+          toolInvocation: {
+            toolCallId,
+            toolName: "agent-swExecutorAgent",
+            state: "result",
+            args: {
+              prompt: `<delegation>\n  <task_list_id>t1</task_list_id>\n  <pending_task_ids>\n${taskIds
+                .map((id) => `    <id>${id}</id>`)
+                .join("\n")}\n  </pending_task_ids>\n</delegation>`
+            },
+            result: "Background task started."
+          }
         }
       ]
     }
@@ -257,11 +288,75 @@ describe("rewriteDirectiveText", () => {
     expect(result!.images).toHaveLength(1);
   });
 
-  it("没有完成 / 失败项（只有挂起、取消）时不动", async () => {
-    const suspendedOnly =
-      " IMPORTANT: The following tool-call IDs are suspended: call_c (x). Do not attempt to resume them; let the user know.";
+  it("只有取消项时不动", async () => {
+    const cancelledOnly =
+      " IMPORTANT: The following tool-call IDs were cancelled by the user before completion: call_c (x). " +
+      "These tasks do not have results. Do not treat them as completed and do not call the same tool again unless the user explicitly requests it. ";
 
-    expect(await rewriteText(suspendedOnly, lookupReturning({}), [])).toBeNull();
+    expect(await rewriteText(cancelledOnly, lookupReturning({}), [])).toBeNull();
+  });
+
+  describe("挂起的后台调用", () => {
+    it("「叫用户去恢复」的原话换掉：说明是在等前端、会自动恢复，不要接手", async () => {
+      const text = await rewriteText(SUSPENDED, lookupReturning({}), []);
+
+      expect(text).not.toContain("explicit resume input");
+      expect(text).toContain("〔后台调用等待前端〕");
+      expect(text).toContain("- agent-swExecutorAgent（call_00）");
+      expect(text).toContain("会自动接着跑");
+      expect(text).toContain("不要重新派发");
+    });
+
+    it("和完成项同在一条提示里时，完成的照常补结果，挂起的换成说明", async () => {
+      const text = await rewriteText(
+        COMPLETED + SUSPENDED,
+        lookupReturning({ call_a: { status: "completed", result: imageResult } }),
+        []
+      );
+
+      expect(text).toContain("The following tool-call IDs completed successfully: call_a");
+      expect(text).toContain("createImageTool（call_a） 已完成");
+      expect(text).toContain("〔后台调用等待前端〕");
+      expect(text).not.toContain("explicit resume input");
+    });
+
+    it("已经改写过的不再改", async () => {
+      const once = await rewriteText(SUSPENDED, lookupReturning({}), []);
+
+      expect(await rewriteText(once!, lookupReturning({}), [])).toBeNull();
+    });
+  });
+
+  describe("委派调用标上任务号（续接提示只给 toolCallId，模型会对错）", () => {
+    const history = [delegation("call_00", "1"), delegation("call_03", "4")];
+
+    it("挂起的标上它委派的任务", async () => {
+      const text = await rewriteText(SUSPENDED, lookupReturning({}), history);
+
+      expect(text).toContain("agent-swExecutorAgent（call_00，任务 1）");
+    });
+
+    it("完成的也标上", async () => {
+      const completed =
+        " IMPORTANT: The following tool-call IDs completed successfully: call_03 (agent-swExecutorAgent). " +
+        "Their results are now in the conversation. Do not call the same tool again — the result is already available. ";
+
+      const text = await rewriteText(
+        completed,
+        lookupReturning({ call_03: { status: "completed", result: { text: "done" } } }),
+        history
+      );
+
+      expect(text).toContain("agent-swExecutorAgent（call_03，任务 4） 已完成");
+    });
+
+    it("一次委派多个任务时都列出来", () => {
+      expect(delegatedTaskIds([delegation("call_x", "2", "3")], "call_x")).toEqual(["2", "3"]);
+    });
+
+    it("不是委派调用（入参里没有任务号）就不标", () => {
+      expect(delegatedTaskIds([invocation("call_a", imageResult)], "call_a")).toEqual([]);
+    });
   });
 });
 

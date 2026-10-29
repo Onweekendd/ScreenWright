@@ -23,6 +23,7 @@ import { refreshAiModels, useThreadModels } from "@/views/build/components/agent
 const model = (id: string, over: Partial<AiModelVo> = {}): AiModelVo => ({
   id,
   role: id.split("-")[0] as AiModelVo["role"],
+  provider: "",
   name: "",
   baseUrl: "https://x/v1",
   hasApiKey: true,

@@ -43,7 +43,7 @@ export { Prisma }
  * Model AiModel
  * AI 模型配置：4 个角色，每个角色可存多条，`isDefault` 标记该角色的默认那条（每角色恰好一条）。
  * runtime 读取时若某角色一条都没有，用 env 兜底 seed；有行但没有默认行时取最早一条补为默认。
- * 对话可在 `thread_model` 里按角色覆盖默认；没覆盖的角色用默认。provider 一律按 OpenAI 兼容端点处理。
+ * 对话可在 `thread_model` 里按角色覆盖默认；没覆盖的角色用默认。
  */
 export type AiModel = Prisma.AiModelModel
 /**

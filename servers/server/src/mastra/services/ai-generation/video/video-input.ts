@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const VIDEO_RESOLUTIONS = ["480P", "768P", "2K"] as const;
+/** 各服务商支持的子集不同，由适配器在提交前校验 */
+export const VIDEO_RESOLUTIONS = ["480P", "768P", "1080P", "2K"] as const;
 export const VIDEO_RATIOS = ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"] as const;
 
 const mediaUrl = z

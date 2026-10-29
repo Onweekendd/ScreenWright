@@ -12,11 +12,13 @@ vi.mock("@/mastra/storage/prisma", () => ({
 }));
 
 vi.mock("@/mastra/provider/model-registry", () => ({
-  // cfg_v 模拟对话选的另一条生视频配置，其余（含不传）都是默认配置
+  // cfg_v / cfg_runlive 模拟对话选的另一条生视频配置，其余（含不传）都是默认配置
   resolveModelConfig: (_role: string, configId?: string) =>
     configId === "cfg_v"
       ? { baseUrl: "https://picked.example/minimax/v2", apiKey: "k2", modelId: "picked-video-model" }
-      : { baseUrl: "https://gw.example/minimax/v2", apiKey: "k", modelId: "video-model" },
+      : configId === "cfg_runlive"
+        ? { provider: "runlive", baseUrl: "https://www.runlive.top/mnmx", apiKey: "sk_card", modelId: "MiniMax-H3" }
+        : { baseUrl: "https://gw.example/minimax/v2", apiKey: "k", modelId: "video-model" },
   DEFAULT_VIDEO_MODEL: "MiniMax-H3"
 }));
 
@@ -381,5 +383,39 @@ describe("按对话选择的生视频配置", () => {
       model: "picked-video-model",
       promptHash: computeVideoHash(input, "picked-video-model")
     });
+  });
+
+  it("runlive：轮询到 completed 后另取下载地址，取链 404（云端未同步）时下一轮再取", async () => {
+    const RUNLIVE_TASKS = "https://www.runlive.top/mnmx/api/v1/tasks";
+    const fileUrls = [() => json({ success: false, message: "任务未完成" }, 404)];
+    fetchMock.mockImplementation(async (url, init) => {
+      const target = String(url);
+      if (target === RUNLIVE_TASKS && init?.method === "POST") {
+        return json({ success: true, data: { task_id: "rl_1", status: "queued" } }, 202);
+      }
+      if (target === `${RUNLIVE_TASKS}/rl_1`) {
+        return json({ success: true, data: { status: "completed" } });
+      }
+      if (target === `${RUNLIVE_TASKS}/rl_1/file-url`) {
+        return (
+          fileUrls.shift() ?? (() => json({ success: true, data: { url: "https://dl.example/rl_1?token=t" } }))
+        )();
+      }
+      return mp4();
+    });
+
+    const result = await generateAndStoreVideo({ ...input, modelConfigId: "cfg_runlive" });
+
+    const [, submitInit] = fetchMock.mock.calls[0];
+    expect((submitInit!.headers as Record<string, string>)["X-Card-Key"]).toBe("sk_card");
+    expect(submitInit!.body).toBeInstanceOf(FormData);
+    expect(fetchMock.mock.calls.filter(([url]) => String(url).endsWith("/file-url"))).toHaveLength(2);
+    expect(String(fetchMock.mock.calls.at(-1)![0])).toBe("https://dl.example/rl_1?token=t");
+    expect(prismaMocks.create.mock.calls[0][0].data).toMatchObject({
+      model: "runlive:MiniMax-H3",
+      taskId: "rl_1",
+      promptHash: computeVideoHash(input, "runlive:MiniMax-H3")
+    });
+    expect(result.url).toBe("https://blobs/h.mp4");
   });
 });

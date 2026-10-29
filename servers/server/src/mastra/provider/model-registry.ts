@@ -17,9 +17,9 @@ import { createGenericFetch, inlineReasoningMiddleware, type WrapLMModel } from 
  * - **embedding**：组件 RAG 向量
  * - **image**：生图（效果图、装饰素材重画）。走 `images.generations` 接口，不是 chat 补全，
  *   所以 `resolveImageModel` 返回 `ImageModel` 而不是 `WrapLMModel`，见下方单独的 warm/resolve。
- * - **video**：生视频。走 MiniMax V2 异步任务接口，由 video-provider 读取独立配置。
+ * - **video**：生视频。异步任务接口，按配置的 `provider` 选协议（见 video-provider）。
  *
- * 文本、嵌入、生图按 OpenAI 兼容端点处理，视频按 MiniMax V2 协议处理。
+ * 文本、嵌入、生图按 OpenAI 兼容端点处理；视频的 `provider` 为空时按 MiniMax V2 协议处理。
  * reasoning 往返走 `provider/utils.ts` 的通用逻辑。
  * 配置热更新：写库后调 `warmModelConfigs()` 重建缓存，agent 的 `model: () => resolveXxx()`
  * 每次 run 重新解析，无需重启。
@@ -34,6 +34,8 @@ export const DEFAULT_VIDEO_MODEL = "MiniMax-H3";
 export interface AiModelConfig {
   id: string;
   role: ModelRole;
+  /** 接口协议，空串 = 该角色的默认协议 */
+  provider: string;
   baseUrl: string;
   apiKey: string;
   modelId: string;
@@ -47,6 +49,7 @@ function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig,
   switch (role) {
     case "reasoning":
       return {
+        provider: "",
         baseUrl: e.REASONING_MODEL_BASE_URL ?? "",
         apiKey: e.REASONING_MODEL_API_KEY ?? "",
         modelId: e.REASONING_MODEL_ID ?? (e.REASONING_MODEL_API_KEY ? "deepseek-v4-flash" : ""),
@@ -55,6 +58,7 @@ function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig,
       };
     case "embedding":
       return {
+        provider: "",
         baseUrl: e.EMBEDDING_MODEL_BASE_URL ?? "",
         apiKey: e.EMBEDDING_MODEL_API_KEY ?? "",
         modelId: e.EMBEDDING_MODEL_ID ?? (e.EMBEDDING_MODEL_API_KEY ? "BAAI/bge-large-zh-v1.5" : ""),
@@ -66,6 +70,7 @@ function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig,
       // 注意 baseUrl 只到 /api/v3，不带 /images/generations——SDK 会自己拼这段路径，
       // 填全路径会导致拼出重复的 /images/generations/images/generations（真实踩过）。
       return {
+        provider: "",
         baseUrl: e.IMAGE_MODEL_BASE_URL ?? "",
         apiKey: e.IMAGE_MODEL_API_KEY ?? "",
         modelId: e.IMAGE_MODEL_ID ?? (e.IMAGE_MODEL_API_KEY ? "doubao-seedream-5-0-pro-260628" : ""),
@@ -76,6 +81,7 @@ function envDefault(role: ModelRole, image?: AiModelConfig): Omit<AiModelConfig,
       // 升级时只初始化一次：优先 VIDEO_MODEL_*，缺项沿用原有生图配置。
       // 后续与其他角色一样只读数据库，设置页保存后不会再被 env 或生图配置覆盖。
       return {
+        provider: e.VIDEO_MODEL_PROVIDER?.trim() ?? "",
         baseUrl:
           e.VIDEO_MODEL_BASE_URL?.trim() ||
           (image?.baseUrl && URL.canParse(image.baseUrl) ? `${new URL(image.baseUrl).origin}/minimax/v2` : ""),
@@ -94,6 +100,7 @@ let defaultsByRole = new Map<ModelRole, AiModelConfig>();
 const toConfig = (row: {
   id: string;
   role: string;
+  provider: string;
   baseUrl: string;
   apiKey: string;
   modelId: string;
@@ -102,6 +109,7 @@ const toConfig = (row: {
 }): AiModelConfig => ({
   id: row.id,
   role: row.role as ModelRole,
+  provider: row.provider,
   baseUrl: row.baseUrl,
   apiKey: row.apiKey,
   modelId: row.modelId,
@@ -131,6 +139,7 @@ export async function warmModelConfigs(): Promise<void> {
       defaultRow = await prismaClient.aiModel.create({
         data: {
           role,
+          provider: d.provider,
           baseUrl: d.baseUrl,
           apiKey: d.apiKey,
           modelId: d.modelId,

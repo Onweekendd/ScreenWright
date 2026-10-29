@@ -53,6 +53,7 @@ const str = (v: unknown): string | undefined => (typeof v === "string" ? v : und
 const readBody = async (c: Context) => (await c.req.json().catch(() => ({}))) as Record<string, unknown>;
 
 const toInput = (body: Record<string, unknown>): UpdateAiModelInput => ({
+  provider: str(body.provider),
   name: str(body.name),
   baseUrl: str(body.baseUrl),
   apiKey: str(body.apiKey),
@@ -100,6 +101,7 @@ export const aiModelRouter = new Hono()
     const result = await testAiModel(
       role,
       {
+        provider: str(body.provider),
         baseUrl: str(body.baseUrl) ?? "",
         apiKey: str(body.apiKey) ?? "",
         modelId: str(body.modelId) ?? "",

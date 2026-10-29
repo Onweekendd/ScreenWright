@@ -10,9 +10,14 @@ export type ThreadModelRole = Exclude<ModelRole, "embedding">;
 /** 对话的模型选择：角色 → 配置 id，缺的角色用默认 */
 export type ThreadModelSelection = Partial<Record<ThreadModelRole, string>>;
 
+/** 生视频接口协议；空串 = minimax-v2 */
+export type VideoProvider = "minimax-v2" | "runlive";
+
 export interface AiModelVo {
   id: string;
   role: ModelRole;
+  /** 接口协议，空串 = 该角色的默认协议（目前只有 video 可选） */
+  provider: string;
   /** 展示名，空则显示 modelId */
   name: string;
   baseUrl: string;
@@ -28,6 +33,7 @@ export interface AiModelVo {
 }
 
 export interface UpdateAiModelBody {
+  provider?: string;
   name?: string;
   baseUrl?: string;
   /** 空 / 不传 → 后端不覆盖旧值 */
@@ -79,7 +85,7 @@ export const setDefaultAiModel = (id: string) =>
  */
 export const testAiModel = (
   role: ModelRole,
-  body: Pick<UpdateAiModelBody, "baseUrl" | "apiKey" | "modelId" | "dimensions"> & { id?: string }
+  body: Pick<UpdateAiModelBody, "provider" | "baseUrl" | "apiKey" | "modelId" | "dimensions"> & { id?: string }
 ) =>
   serverRequest<BaseEntity<TestAiModelResult>>({
     url: `${base}/${role}/test`,

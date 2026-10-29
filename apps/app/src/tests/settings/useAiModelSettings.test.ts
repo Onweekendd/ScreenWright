@@ -35,6 +35,7 @@ import { NEW_ID, useAiModelSettings } from "@/views/settings/useAiModelSettings"
 const model = (id: string, over: Partial<AiModelVo> = {}): AiModelVo => ({
   id,
   role: id.split("-")[0] as AiModelVo["role"],
+  provider: "",
   name: "",
   baseUrl: "https://x/v1",
   hasApiKey: true,
@@ -184,5 +185,21 @@ describe("useAiModelSettings", () => {
 
     expect(api.deleteAiModel).toHaveBeenCalledWith("reasoning-2");
     expect(s.states.reasoning.editingId).toBe("reasoning-1");
+  });
+
+  it("生视频服务商：空值按 minimax-v2 展示，保存和测试都带上所选服务商；其他角色不传", async () => {
+    api.updateAiModel.mockResolvedValue(MODELS[4]);
+    api.testAiModel.mockResolvedValue({ ok: true, latencyMs: 5 });
+    const s = await setup();
+    expect(s.states.video.form.provider).toBe("minimax-v2");
+
+    s.states.video.form.provider = "runlive";
+    await s.test("video");
+    await s.save("video");
+    await s.save("reasoning");
+
+    expect(api.testAiModel).toHaveBeenCalledWith("video", expect.objectContaining({ provider: "runlive" }));
+    expect(api.updateAiModel).toHaveBeenCalledWith("video-1", expect.objectContaining({ provider: "runlive" }));
+    expect(api.updateAiModel.mock.calls.find(([id]) => id === "reasoning-1")![1]).not.toHaveProperty("provider");
   });
 });

@@ -38,11 +38,14 @@ export const createVideoInputSchema = z
     resolution: z
       .enum(VIDEO_RESOLUTIONS)
       .default("768P")
-      .describe("分辨率默认 768P；MiniMax-H3 支持 768P/2K，MiniMax-H3-Max 支持 480P/768P"),
+      .describe(
+        "分辨率默认 768P；支持范围取决于配置的服务：MiniMax-H3 支持 768P/2K，MiniMax-H3-Max 支持 480P/768P，" +
+          "runlive 支持 480P/768P/1080P（参考图模式仅 480P/768P）；不支持时工具会返回可用选项"
+      ),
     ratio: z
       .enum(VIDEO_RATIOS)
       .default("16:9")
-      .describe("文生/参考生视频画幅，大屏背景用 16:9；首尾帧模式自动适配图片比例")
+      .describe("画幅，大屏背景用 16:9；首尾帧模式下 MiniMax V2 自动适配图片比例，runlive 按这里的画幅出片")
   })
   .superRefine((input, context) => {
     const message = videoModeError({

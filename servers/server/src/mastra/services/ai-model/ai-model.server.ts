@@ -11,11 +11,14 @@ import {
   resolveEmbeddingModel,
   warmModelConfigs
 } from "../../provider/model-registry";
-import { buildSubmitRequest, parseSubmitResponse, resolveVideoConfig } from "../ai-generation/video/video-provider";
+import { probeVideoService } from "../ai-generation/video/video-generation.server";
+import { resolveVideoConfig } from "../ai-generation/video/video-provider";
 
 export interface AiModelVo {
   id: string;
   role: ModelRole;
+  /** 接口协议，空串 = 该角色的默认协议 */
+  provider: string;
   name: string;
   baseUrl: string;
   /** 只回布尔，绝不回传 key 明文或任何片段（开源项目，尾位也算泄露） */
@@ -30,6 +33,7 @@ export interface AiModelVo {
 interface AiModelRow {
   id: string;
   role: string;
+  provider: string;
   name: string;
   baseUrl: string;
   apiKey: string;
@@ -42,6 +46,7 @@ interface AiModelRow {
 const toVo = (row: AiModelRow): AiModelVo => ({
   id: row.id,
   role: row.role as ModelRole,
+  provider: row.provider,
   name: row.name,
   baseUrl: row.baseUrl,
   hasApiKey: !!row.apiKey,
@@ -80,6 +85,7 @@ export async function listAiModels(): Promise<AiModelVo[]> {
 }
 
 export interface UpdateAiModelInput {
+  provider?: string;
   name?: string;
   baseUrl?: string;
   /** 空 / 未传 → 不覆盖旧值 */
@@ -97,6 +103,9 @@ export interface CreateAiModelInput extends UpdateAiModelInput {
 /** 只挑传了的字段；apiKey 空串视为「不改」 */
 const pickData = (input: UpdateAiModelInput): Record<string, unknown> => {
   const data: Record<string, unknown> = {};
+  if (input.provider !== undefined) {
+    data.provider = input.provider.trim();
+  }
   if (input.name !== undefined) {
     data.name = input.name.trim();
   }
@@ -182,12 +191,13 @@ const scrubKeys = (msg: string): string => msg.replace(/\b(sk|xai|key)-[A-Za-z0-
  */
 export async function testAiModel(
   role: ModelRole,
-  partial: Partial<Pick<AiModelConfig, "baseUrl" | "apiKey" | "modelId" | "dimensions">>,
+  partial: Partial<Pick<AiModelConfig, "provider" | "baseUrl" | "apiKey" | "modelId" | "dimensions">>,
   storedId?: string
 ): Promise<TestAiModelResult> {
   const started = Date.now();
   const stored = storedId ? await prismaClient.aiModel.findUnique({ where: { id: storedId } }) : null;
   const cfg = {
+    provider: partial.provider !== undefined ? partial.provider : (stored?.provider ?? ""),
     baseUrl: partial.baseUrl?.trim() || stored?.baseUrl || "",
     apiKey: partial.apiKey?.trim() || stored?.apiKey || "",
     modelId: partial.modelId?.trim() || stored?.modelId || "",
@@ -213,24 +223,8 @@ export async function testAiModel(
       const model = provider.imageModel(cfg.modelId);
       await generateImage({ model, prompt: "a single red dot on white background", n: 1, size: "1024x1024" });
     } else if (role === "video") {
-      // 视频是异步任务：验证提交成功即可，不等待生成完成。
-      const request = buildSubmitRequest(resolveVideoConfig(cfg), {
-        prompt: "白色背景上的一朵云缓慢移动",
-        durationSec: 5,
-        resolution: "768P",
-        ratio: "16:9"
-      });
-      const response = await fetch(request.url, {
-        method: "POST",
-        headers: request.headers,
-        body: request.body,
-        signal: AbortSignal.timeout(45_000)
-      });
-      const body: unknown = await response.json();
-      if (!response.ok) {
-        throw new Error(`视频接口请求失败（HTTP ${response.status}）：${JSON.stringify(body)}`);
-      }
-      parseSubmitResponse(body);
+      // 视频是异步任务：按服务商验证地址和密钥，不等待生成完成。
+      await probeVideoService(resolveVideoConfig(cfg));
     } else {
       const provider = createOpenAI({ baseURL: cfg.baseUrl || undefined, apiKey: cfg.apiKey || "missing" });
       const model = provider.chat(cfg.modelId);

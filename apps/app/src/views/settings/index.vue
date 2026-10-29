@@ -52,12 +52,17 @@
           <el-input v-model="states[meta.role].form.name" placeholder="选填，留空显示模型 ID" />
         </div>
 
+        <div v-if="meta.role === 'video'" class="sw-field">
+          <label>服务商</label>
+          <el-select v-model="states.video.form.provider" popper-class="sw-select-dropdown">
+            <el-option v-for="p in VIDEO_PROVIDERS" :key="p.value" :label="p.label" :value="p.value" />
+          </el-select>
+          <span class="sw-field__note">{{ videoProviderMeta(states.video.form.provider).testNote }}</span>
+        </div>
+
         <div class="sw-field">
           <label>Base URL</label>
-          <el-input
-            v-model="states[meta.role].form.baseUrl"
-            :placeholder="meta.baseUrlPlaceholder || 'https://api.example.com/v1'"
-          />
+          <el-input v-model="states[meta.role].form.baseUrl" :placeholder="placeholdersOf(meta).baseUrl" />
         </div>
 
         <div class="sw-field">
@@ -82,7 +87,7 @@
 
         <div class="sw-field">
           <label>模型 ID</label>
-          <el-input v-model="states[meta.role].form.modelId" :placeholder="meta.modelPlaceholder" />
+          <el-input v-model="states[meta.role].form.modelId" :placeholder="placeholdersOf(meta).model" />
         </div>
 
         <div v-if="meta.role === 'reasoning'" class="sw-field">
@@ -122,7 +127,7 @@
           <div class="sw-card__actions">
             <el-button v-if="meta.role === 'embedding'" :loading="reindexing" @click="reindex"> 重建索引 </el-button>
             <el-button :loading="states[meta.role].testing" @click="test(meta.role)">
-              {{ meta.role === "video" ? "测试提交" : "测试连接" }}
+              {{ meta.role === "video" ? videoProviderMeta(states.video.form.provider).testLabel : "测试连接" }}
             </el-button>
             <el-button class="sw-btn-primary" :loading="states[meta.role].saving" @click="save(meta.role)">
               {{ states[meta.role].editingId === NEW_ID ? "新增" : "保存" }}
@@ -138,7 +143,14 @@
 import { aiModelLabel } from "@/api/aiModel";
 import Icon from "@/components/Icon/index.vue";
 
-import { NEW_ID, ROLE_META, useAiModelSettings } from "./useAiModelSettings";
+import {
+  NEW_ID,
+  ROLE_META,
+  type RoleMeta,
+  useAiModelSettings,
+  VIDEO_PROVIDERS,
+  videoProviderMeta
+} from "./useAiModelSettings";
 
 const {
   apiKeyPlaceholder,
@@ -155,6 +167,15 @@ const {
   states,
   test
 } = useAiModelSettings();
+
+/** 生视频的占位提示随所选服务商变化 */
+const placeholdersOf = (meta: RoleMeta) => {
+  if (meta.role === "video") {
+    const provider = videoProviderMeta(states.video.form.provider);
+    return { baseUrl: provider.baseUrlPlaceholder, model: provider.modelPlaceholder };
+  }
+  return { baseUrl: "https://api.example.com/v1", model: meta.modelPlaceholder };
+};
 
 const hostOf = (baseUrl: string) => (URL.canParse(baseUrl) ? new URL(baseUrl).host : baseUrl || "未填地址");
 </script>

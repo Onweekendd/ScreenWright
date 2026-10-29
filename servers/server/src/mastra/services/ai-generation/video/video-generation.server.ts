@@ -14,16 +14,15 @@ import { formatErrorChain, retryWithBackoff } from "@/mastra/utils/async";
 
 import { imageSize } from "../../ai-assets/shrink-image";
 import { prepareReference } from "../image/image-generation.server";
-import { mediaTypeOf } from "../image/image-provider";
 import { type GenerateVideoInput, VideoGenerationInputSchema } from "./video-input";
 import {
-  buildSubmitRequest,
   getVideoConfig,
-  parseSubmitResponse,
-  parseTaskResponse,
-  taskUrl,
+  type VideoAdapter,
+  videoAdapter,
   type VideoConfig,
-  type VideoParams
+  videoModelKey,
+  type VideoParams,
+  type VideoRequest
 } from "./video-provider";
 
 export type { GenerateVideoInput } from "./video-input";
@@ -78,7 +77,13 @@ class TaskFailedError extends Error {}
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const toDataUrl = (bytes: Buffer): string => `data:${mediaTypeOf(bytes)};base64,${bytes.toString("base64")}`;
+const send = (request: VideoRequest, timeoutMs: number): Promise<Response> =>
+  fetch(request.url, {
+    method: request.method,
+    headers: request.headers,
+    body: request.body,
+    signal: AbortSignal.timeout(timeoutMs)
+  });
 
 /**
  * 首帧宽高比（宽 / 高）的范围。超出范围的图（如 2.9:1 的横幅）网关不会说原因，只回一个误导人的
@@ -86,7 +91,7 @@ const toDataUrl = (bytes: Buffer): string => `data:${mediaTypeOf(bytes)};base64,
  */
 const FIRST_FRAME_RATIO_RANGE = { min: 0.4, max: 2.5 } as const;
 
-async function readImage(imageUrl: string, label: string, isFrame = true): Promise<string> {
+async function readImage(imageUrl: string, label: string, isFrame = true): Promise<Buffer> {
   const key = assetStore().keyFromUrl(imageUrl);
   if (!key) {
     throw new Error(`${label}图片不是内部 assetStore 的资源，无法解析：${imageUrl}`);
@@ -103,7 +108,7 @@ async function readImage(imageUrl: string, label: string, isFrame = true): Promi
     }
   }
   // 服务商拿不到我们的内网 / localhost 地址，只能把图直接放进请求；压成 JPEG 控制请求体大小
-  return toDataUrl(await prepareReference(original));
+  return prepareReference(original);
 }
 
 /** 视频/音频由服务商拉取；内部资源生成临时签名，不把大文件编码进提交请求。 */
@@ -141,15 +146,11 @@ async function referenceMediaUrl(sourceUrl: string): Promise<string> {
 }
 
 async function submitTask(config: VideoConfig, params: VideoParams): Promise<string> {
-  const request = buildSubmitRequest(config, params);
+  const adapter = videoAdapter(config);
+  const request = adapter.buildSubmitRequest(config, params);
   let response: Response;
   try {
-    response = await fetch(request.url, {
-      method: "POST",
-      headers: request.headers,
-      body: request.body,
-      signal: AbortSignal.timeout(SUBMIT_TIMEOUT_MS)
-    });
+    response = await send(request, SUBMIT_TIMEOUT_MS);
   } catch (error) {
     throw new Error(`提交视频生成任务失败：${formatErrorChain(error)}`);
   }
@@ -157,7 +158,16 @@ async function submitTask(config: VideoConfig, params: VideoParams): Promise<str
   if (!response.ok) {
     throw new Error(`提交视频生成任务失败 ${response.status}（${request.url}）：${text.slice(0, 300)}`);
   }
-  return parseSubmitResponse(JSON.parse(text));
+  return adapter.parseSubmitResponse(JSON.parse(text));
+}
+
+/** 查询结果不带视频地址的服务商：另取下载地址，返回 null 表示还没就绪 */
+async function fetchResultUrl(config: VideoConfig, adapter: VideoAdapter, taskId: string): Promise<string | null> {
+  if (!adapter.resultUrl) {
+    throw new TaskFailedError("任务成功了但响应里没有视频地址");
+  }
+  const response = await send(adapter.resultUrl.request(config, taskId), POLL_REQUEST_TIMEOUT_MS);
+  return adapter.resultUrl.parse(response.status, await response.text());
 }
 
 /** 轮询到任务结束，返回服务商的临时视频地址 */
@@ -166,22 +176,23 @@ async function waitForVideoUrl(
   taskId: string,
   onProgress?: (percent: number) => void | Promise<void>
 ): Promise<string> {
+  const adapter = videoAdapter(config);
   const startedAt = Date.now();
   let failures = 0;
   while (Date.now() - startedAt < MAX_WAIT_MS) {
     await sleep(POLL_INTERVAL_MS);
     try {
-      const response = await fetch(taskUrl(config, taskId), {
-        headers: { Authorization: `Bearer ${config.apiKey}` },
-        signal: AbortSignal.timeout(POLL_REQUEST_TIMEOUT_MS)
-      });
+      const response = await send(adapter.taskRequest(config, taskId), POLL_REQUEST_TIMEOUT_MS);
       if (!response.ok) {
         throw new Error(`查询任务失败 ${response.status}：${(await response.text()).slice(0, 200)}`);
       }
-      const state = parseTaskResponse(await response.json());
+      const state = adapter.parseTaskResponse(await response.json());
       failures = 0;
       if (state.status === "succeeded") {
-        return state.videoUrl;
+        const videoUrl = state.videoUrl ?? (await fetchResultUrl(config, adapter, taskId));
+        if (videoUrl) {
+          return videoUrl;
+        }
       }
       if (state.status === "failed") {
         throw new TaskFailedError(state.reason);
@@ -240,7 +251,8 @@ export async function generateAndStoreVideo(
   };
   // 入口解析一次往下传：hash 记的模型和实际提交的模型必须是同一份配置
   const config = getVideoConfig(input.modelConfigId);
-  const promptHash = computeVideoHash(input, config.modelId);
+  const model = videoModelKey(config);
+  const promptHash = computeVideoHash(input, model);
 
   const existing = await prismaClient.generatedVideo.findUnique({ where: { promptHash } });
   if (existing) {
@@ -280,7 +292,7 @@ export async function generateAndStoreVideo(
     data: {
       promptHash,
       prompt: input.prompt,
-      model: config.modelId,
+      model,
       durationSec: input.durationSec,
       resolution: input.resolution,
       ratio: input.ratio,
@@ -294,4 +306,11 @@ export async function generateAndStoreVideo(
     }
   });
   return { ...row, reused: false };
+}
+
+/** 设置页「测试」：按服务商用代价最小的请求验证地址和密钥（minimax-v2 只能真提交一次，会计费） */
+export async function probeVideoService(config: VideoConfig): Promise<void> {
+  const { probe } = videoAdapter(config);
+  const response = await send(probe.request(config), 45_000);
+  probe.check(response.status, await response.text());
 }

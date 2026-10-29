@@ -12,7 +12,8 @@ import {
   reindexEmbeddings,
   setDefaultAiModel,
   testAiModel,
-  updateAiModel
+  updateAiModel,
+  type VideoProvider
 } from "@/api/aiModel";
 import embeddingImage from "@/assets/image/models/embedding.png";
 import imageImage from "@/assets/image/models/image.png";
@@ -24,8 +25,8 @@ export interface RoleMeta {
   title: string;
   image: string;
   desc: string;
+  /** video 的占位提示按服务商取，见 VIDEO_PROVIDERS */
   modelPlaceholder: string;
-  baseUrlPlaceholder?: string;
 }
 
 export const ROLE_META: RoleMeta[] = [
@@ -54,11 +55,43 @@ export const ROLE_META: RoleMeta[] = [
     role: "video",
     title: "生视频模型",
     image: videoImage,
-    desc: "MiniMax V2 文生视频、图生视频。支持填写接口前缀或完整提交地址。测试提交会生成一次 5 秒视频，可能产生费用。",
-    modelPlaceholder: "MiniMax-H3 或 MiniMax-H3-Max",
-    baseUrlPlaceholder: "https://llm-api.net/minimax/v2"
+    desc: "文生视频、图生视频。先选服务商（接口协议），Base URL 可填接口前缀或完整提交地址。",
+    modelPlaceholder: "MiniMax-H3"
   }
 ];
+
+export interface VideoProviderMeta {
+  value: VideoProvider;
+  label: string;
+  baseUrlPlaceholder: string;
+  modelPlaceholder: string;
+  testLabel: string;
+  /** 测试按钮的代价说明 */
+  testNote: string;
+}
+
+export const VIDEO_PROVIDERS: VideoProviderMeta[] = [
+  {
+    value: "minimax-v2",
+    label: "MiniMax V2 网关",
+    baseUrlPlaceholder: "https://llm-api.net/minimax/v2",
+    modelPlaceholder: "MiniMax-H3 或 MiniMax-H3-Max",
+    testLabel: "测试提交",
+    testNote: "测试提交会生成一次 5 秒视频，可能产生费用"
+  },
+  {
+    value: "runlive",
+    label: "runlive 卡密接口",
+    baseUrlPlaceholder: "https://www.runlive.top/mnmx",
+    modelPlaceholder: "MiniMax-H3（仅作记录，模式按素材自动选）",
+    testLabel: "测试连接",
+    testNote: "API Key 填卡密钥；测试只查询一个不存在的任务，不扣积分"
+  }
+];
+
+/** 空串或未知值按默认协议 minimax-v2 展示 */
+export const videoProviderMeta = (provider: string): VideoProviderMeta =>
+  VIDEO_PROVIDERS.find((p) => p.value === provider) ?? VIDEO_PROVIDERS[0];
 
 const ROLE_TITLE = Object.fromEntries(ROLE_META.map((m) => [m.role, m.title])) as Record<ModelRole, string>;
 
@@ -67,6 +100,8 @@ export const NEW_ID = "__new__";
 
 /** 单条配置的可编辑表单 */
 export interface ModelForm {
+  /** 只有 video 可选，其余角色恒为空串 */
+  provider: string;
   name: string;
   baseUrl: string;
   /** 空 = 不改动已存 key；占位符显示是否已配置 */
@@ -88,7 +123,10 @@ interface RoleState {
   testResult: { ok: boolean; text: string } | null;
 }
 
-const emptyForm = (): ModelForm => ({
+const defaultProvider = (role: ModelRole) => (role === "video" ? VIDEO_PROVIDERS[0].value : "");
+
+const emptyForm = (role: ModelRole): ModelForm => ({
+  provider: defaultProvider(role),
   name: "",
   baseUrl: "",
   apiKey: "",
@@ -98,6 +136,7 @@ const emptyForm = (): ModelForm => ({
 });
 
 const toForm = (vo: AiModelVo): ModelForm => ({
+  provider: vo.provider || defaultProvider(vo.role),
   name: vo.name,
   baseUrl: vo.baseUrl,
   apiKey: "",
@@ -106,10 +145,10 @@ const toForm = (vo: AiModelVo): ModelForm => ({
   dimensions: vo.dimensions ?? undefined
 });
 
-const newRoleState = (): RoleState => ({
+const newRoleState = (role: ModelRole): RoleState => ({
   items: [],
   editingId: NEW_ID,
-  form: emptyForm(),
+  form: emptyForm(role),
   copyKeyFrom: undefined,
   saving: false,
   testing: false,
@@ -120,10 +159,10 @@ export function useAiModelSettings() {
   const loading = ref(true);
   const reindexing = ref(false);
   const states = reactive<Record<ModelRole, RoleState>>({
-    reasoning: newRoleState(),
-    embedding: newRoleState(),
-    image: newRoleState(),
-    video: newRoleState()
+    reasoning: newRoleState("reasoning"),
+    embedding: newRoleState("embedding"),
+    image: newRoleState("image"),
+    video: newRoleState("video")
   });
 
   /** 所有存了密钥的配置，供新增时「沿用已有密钥」选择 */
@@ -150,7 +189,7 @@ export function useAiModelSettings() {
   const startCreate = (role: ModelRole) => {
     const st = states[role];
     st.editingId = NEW_ID;
-    st.form = emptyForm();
+    st.form = emptyForm(role);
     st.copyKeyFrom = undefined;
     st.testResult = null;
   };
@@ -201,6 +240,7 @@ export function useAiModelSettings() {
   };
 
   const buildBody = (role: ModelRole, f: ModelForm) => ({
+    ...(role === "video" ? { provider: f.provider } : {}),
     name: f.name.trim(),
     baseUrl: f.baseUrl.trim(),
     apiKey: f.apiKey.trim() || undefined,
@@ -275,6 +315,7 @@ export function useAiModelSettings() {
     try {
       const r = await testAiModel(role, {
         id: st.editingId === NEW_ID ? st.copyKeyFrom : st.editingId,
+        ...(role === "video" ? { provider: st.form.provider } : {}),
         baseUrl: st.form.baseUrl.trim(),
         apiKey: st.form.apiKey.trim() || undefined,
         modelId: st.form.modelId.trim(),

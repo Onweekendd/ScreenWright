@@ -94,6 +94,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const AiModelScalarFieldEnum = {
   id: 'id',
   role: 'role',
+  provider: 'provider',
   name: 'name',
   baseUrl: 'baseUrl',
   apiKey: 'apiKey',

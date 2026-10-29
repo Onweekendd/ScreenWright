@@ -94,3 +94,13 @@ set_env WEB_IMAGE "$web_image"
 set_env TAG "$tag"
 docker compose ps
 echo "发布成功：$tag"
+
+# 发布已成功，清理失败不应触发回退。
+trap - ERR
+# 应用镜像保留当前与上一版（失败回退依赖上一版）；仍被容器引用的镜像删除失败时跳过。
+for image in "$server_image" "$web_image"; do
+  docker image ls "$image" --format '{{.Repository}}:{{.Tag}}' | tail -n +3 | xargs -r docker image rm >/dev/null 2>&1 || true
+done
+# 目录名以 UTC 时间开头，字典序即时间序；保留最近 10 份数据库备份。
+ls -1d backups/*/ 2>/dev/null | head -n -10 | xargs -r rm -rf -- || true
+ls -1dt releases/sha-*/ 2>/dev/null | tail -n +6 | xargs -r rm -rf -- || true

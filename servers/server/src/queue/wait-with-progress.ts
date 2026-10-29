@@ -5,6 +5,11 @@ export interface GenerateOptions {
   onProgress?: (percent: number) => void;
 }
 
+export interface WaitOptions extends GenerateOptions {
+  /** 最多等多久。超时只是调用方不再等，任务本身仍在 worker 里跑 */
+  timeoutMs: number;
+}
+
 interface WaitableJob<T> {
   id?: string;
   waitUntilFinished: (events: QueueEvents, ttl?: number) => Promise<T>;
@@ -17,18 +22,19 @@ interface WaitableJob<T> {
 export async function waitWithProgress<T>(
   job: WaitableJob<T>,
   events: QueueEvents,
-  timeoutMs: number,
-  onProgress?: (percent: number) => void
+  { timeoutMs, onProgress }: WaitOptions
 ): Promise<T> {
   if (!onProgress) {
     return job.waitUntilFinished(events, timeoutMs);
   }
+
   const listener = ({ jobId, data }: { jobId: string; data: unknown }) => {
     if (jobId === job.id && typeof data === "number") {
       onProgress(data);
     }
   };
   events.on("progress", listener);
+
   try {
     return await job.waitUntilFinished(events, timeoutMs);
   } finally {

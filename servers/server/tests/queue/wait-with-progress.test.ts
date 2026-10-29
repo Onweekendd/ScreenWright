@@ -25,7 +25,7 @@ describe("waitWithProgress", () => {
       events.emit("progress", { jobId: "job-1", data: 75 });
     });
 
-    await expect(waitWithProgress(job, events, 1000, onProgress)).resolves.toBe("结果");
+    await expect(waitWithProgress(job, events, { timeoutMs: 1000, onProgress })).resolves.toBe("结果");
 
     expect(onProgress.mock.calls).toEqual([[10], [75]]);
   });
@@ -35,7 +35,7 @@ describe("waitWithProgress", () => {
     const onProgress = vi.fn();
     const job = jobThatFinishesAfter(() => events.emit("progress", { jobId: "other", data: 50 }));
 
-    await waitWithProgress(job, events, 1000, onProgress);
+    await waitWithProgress(job, events, { timeoutMs: 1000, onProgress });
 
     expect(onProgress).not.toHaveBeenCalled();
   });
@@ -45,7 +45,7 @@ describe("waitWithProgress", () => {
     const onProgress = vi.fn();
     const job = jobThatFinishesAfter(() => events.emit("progress", { jobId: "job-1", data: { a: 1 } }));
 
-    await waitWithProgress(job, events, 1000, onProgress);
+    await waitWithProgress(job, events, { timeoutMs: 1000, onProgress });
 
     expect(onProgress).not.toHaveBeenCalled();
   });
@@ -59,7 +59,9 @@ describe("waitWithProgress", () => {
       }
     };
 
-    await expect(waitWithProgress(failing, events, 1000, vi.fn())).rejects.toThrow("任务失败");
+    await expect(waitWithProgress(failing, events, { timeoutMs: 1000, onProgress: vi.fn() })).rejects.toThrow(
+      "任务失败"
+    );
 
     expect(events.listenerCount("progress")).toBe(0);
   });
@@ -74,6 +76,6 @@ describe("waitWithProgress", () => {
       }
     };
 
-    await expect(waitWithProgress(job, events, 1000)).resolves.toBe("结果");
+    await expect(waitWithProgress(job, events, { timeoutMs: 1000 })).resolves.toBe("结果");
   });
 });

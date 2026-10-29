@@ -59,7 +59,7 @@ export function createJobClient<Data, Result extends { reused: boolean }>(
   const getQueue = () =>
     (queue ??= new Queue(config.queueName, { connection: createRedisConnection(), prefix: getQueuePrefix() }));
 
-  const getEvents = async () => {
+  const getQueueEvents = async () => {
     events ??= new QueueEvents(config.queueName, { connection: createRedisConnection(), prefix: getQueuePrefix() });
     await events.waitUntilReady();
     return events;
@@ -84,7 +84,10 @@ export function createJobClient<Data, Result extends { reused: boolean }>(
       removeOnFail: { age: RETENTION_SECONDS }
     });
 
-    const result = await waitWithProgress<Result>(job, await getEvents(), config.waitTimeoutMs, options.onProgress);
+    const result = await waitWithProgress<Result>(job, await getQueueEvents(), {
+      timeoutMs: config.waitTimeoutMs,
+      onProgress: options.onProgress
+    });
     return { ...result, reused: result.reused || alreadyDone };
   };
 

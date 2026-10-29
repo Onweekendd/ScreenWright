@@ -10,23 +10,6 @@ import {
   SyncScreenDataResponseSchema
 } from "../types/bi-data-sync";
 import { ReadWorkspaceFileRequestSchema, ReadWorkspaceFileResponseSchema } from "../types/bi-data-sync";
-import {
-  BatchByNodeIdsRequestSchema,
-  CreateOrUpdateRequestSchema,
-  FigmaNodeAssetApiResponseSchema,
-  FigmaNodeAssetPaginatedResponseSchema,
-  FigmaNodeAssetSchema,
-  SimplifyFigmaNodeDataRequestSchema,
-  UpdateByIdRequestSchema,
-  UploadImageRequestSchema
-} from "../types/figma-node-asset";
-
-// 简化 Figma 节点数据响应 schema
-const SimplifyFigmaNodeDataResponseSchema = z.object({
-  success: z.boolean(),
-  data: z.any().optional(),
-  error: z.string().optional()
-});
 
 // BI Chat 路由定义
 export const biChatRoutes = {
@@ -85,71 +68,5 @@ export const biDataSyncRoutes = {
       404: ErrorSchema,
       500: ErrorSchema
     }
-  }
-} as const;
-
-export const figmaNodeAssetRoutes = {
-  uploadImage: {
-    path: `${PREFIX}/figma-node-assets/upload` as const,
-    requestSchema: UploadImageRequestSchema,
-    responseSchema: {
-      201: FigmaNodeAssetApiResponseSchema(FigmaNodeAssetSchema)
-    }
-  },
-  downloadImage: {
-    path: `${PREFIX}/figma-node-assets/download` as const,
-    responseSchema: {
-      200: z.any(),
-      404: ErrorSchema,
-      502: ErrorSchema
-    }
-  },
-  batchByNodeIds: {
-    path: `${PREFIX}/figma-node-assets/batch-by-node-ids` as const,
-    requestSchema: BatchByNodeIdsRequestSchema,
-    responseSchema: {
-      200: FigmaNodeAssetApiResponseSchema(z.array(FigmaNodeAssetSchema))
-    }
-  },
-  getByNodeId: {
-    path: `${PREFIX}/figma-node-assets/by-node-id/:nodeId` as const,
-    responseSchema: {
-      200: FigmaNodeAssetApiResponseSchema(FigmaNodeAssetSchema),
-      404: ErrorSchema
-    }
-  },
-  listAll: {
-    path: `${PREFIX}/figma-node-assets` as const,
-    responseSchema: {
-      200: FigmaNodeAssetApiResponseSchema(FigmaNodeAssetPaginatedResponseSchema)
-    }
-  },
-  createOrUpdate: {
-    path: `${PREFIX}/figma-node-assets` as const,
-    requestSchema: CreateOrUpdateRequestSchema,
-    responseSchema: {
-      201: FigmaNodeAssetApiResponseSchema(FigmaNodeAssetSchema)
-    }
-  },
-  updateById: {
-    path: `${PREFIX}/figma-node-assets/:id` as const,
-    requestSchema: UpdateByIdRequestSchema,
-    responseSchema: {
-      200: FigmaNodeAssetApiResponseSchema(FigmaNodeAssetSchema),
-      404: ErrorSchema
-    }
-  },
-  deleteById: {
-    path: `${PREFIX}/figma-node-assets/:id` as const,
-    responseSchema: {
-      200: FigmaNodeAssetApiResponseSchema(z.null()),
-      404: ErrorSchema
-    }
-  },
-  // 新增：简化 Figma 节点数据接口
-  simplifyNodeData: {
-    path: `${PREFIX}/figma-node-assets/simplify-node-data` as const,
-    requestSchema: SimplifyFigmaNodeDataRequestSchema,
-    responseSchema: SimplifyFigmaNodeDataResponseSchema
   }
 } as const;

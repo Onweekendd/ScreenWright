@@ -8,15 +8,6 @@ import {
   SyncScreenDataRequestSchema,
   SyncScreenDataResponseSchema
 } from "./mastra/types/bi-data-sync";
-import {
-  BatchByNodeIdsRequestSchema,
-  CreateOrUpdateRequestSchema,
-  FigmaNodeAssetPaginatedResponseSchema,
-  FigmaNodeAssetSchema,
-  SimplifyFigmaNodeDataRequestSchema,
-  UpdateByIdRequestSchema,
-  UploadImageRequestSchema
-} from "./mastra/types/figma-node-asset";
 
 const s = (schema: z.ZodTypeAny) => z.toJSONSchema(schema, { unrepresentable: "any" });
 
@@ -34,8 +25,7 @@ export const swaggerSpec = {
   info: { title: "FunAI API", version: "1.0.0" },
   tags: [
     { name: "BI Chat", description: "AI 对话与线程管理" },
-    { name: "BI Data Sync", description: "大屏数据同步" },
-    { name: "Figma Node Assets", description: "Figma 节点资产管理" }
+    { name: "BI Data Sync", description: "大屏数据同步" }
   ],
   paths: {
     // ── BI Chat ──────────────────────────────────────────────────────────────
@@ -196,87 +186,6 @@ export const swaggerSpec = {
         summary: "读取工作区文件",
         requestBody: { required: true, content: { "application/json": { schema: s(ReadWorkspaceFileRequestSchema) } } },
         responses: { 200: json(ReadWorkspaceFileResponseSchema, "文件内容"), 404: err, 500: err }
-      }
-    },
-
-    // ── Figma Node Assets ────────────────────────────────────────────────────
-    "/customApi/figma-node-assets": {
-      get: {
-        tags: ["Figma Node Assets"],
-        summary: "分页查询所有节点资产",
-        parameters: [
-          { name: "page", in: "query", schema: { type: "integer", default: 1 } },
-          { name: "pageSize", in: "query", schema: { type: "integer", default: 20 } },
-          { name: "fileKey", in: "query", schema: { type: "string" } }
-        ],
-        responses: { 200: json(FigmaNodeAssetPaginatedResponseSchema, "分页结果") }
-      },
-      post: {
-        tags: ["Figma Node Assets"],
-        summary: "创建或更新节点资产",
-        requestBody: { required: true, content: { "application/json": { schema: s(CreateOrUpdateRequestSchema) } } },
-        responses: { 201: json(FigmaNodeAssetSchema, "创建成功") }
-      }
-    },
-    "/customApi/figma-node-assets/upload": {
-      post: {
-        tags: ["Figma Node Assets"],
-        summary: "上传图片",
-        requestBody: { required: true, content: { "application/json": { schema: s(UploadImageRequestSchema) } } },
-        responses: { 201: { description: "上传成功" } }
-      }
-    },
-    "/customApi/figma-node-assets/download": {
-      get: {
-        tags: ["Figma Node Assets"],
-        summary: "下载图片（二进制）",
-        parameters: [
-          { name: "nodeId", in: "query", schema: { type: "string" } },
-          { name: "bucket", in: "query", schema: { type: "string" } }
-        ],
-        responses: { 200: { description: "图片二进制数据" }, 404: err, 502: err }
-      }
-    },
-    "/customApi/figma-node-assets/batch-by-node-ids": {
-      post: {
-        tags: ["Figma Node Assets"],
-        summary: "批量查询节点资产",
-        requestBody: { required: true, content: { "application/json": { schema: s(BatchByNodeIdsRequestSchema) } } },
-        responses: { 200: { description: "批量结果" } }
-      }
-    },
-    "/customApi/figma-node-assets/simplify-node-data": {
-      post: {
-        tags: ["Figma Node Assets"],
-        summary: "简化 Figma 节点数据",
-        requestBody: {
-          required: true,
-          content: { "multipart/form-data": { schema: s(SimplifyFigmaNodeDataRequestSchema) } }
-        },
-        responses: { 200: { description: "简化结果" }, 400: err }
-      }
-    },
-    "/customApi/figma-node-assets/by-node-id/{nodeId}": {
-      get: {
-        tags: ["Figma Node Assets"],
-        summary: "按节点 ID 查询资产",
-        parameters: [{ name: "nodeId", in: "path", required: true, schema: { type: "string" } }],
-        responses: { 200: json(FigmaNodeAssetSchema, "节点资产"), 404: err }
-      }
-    },
-    "/customApi/figma-node-assets/{id}": {
-      put: {
-        tags: ["Figma Node Assets"],
-        summary: "按 ID 更新节点资产",
-        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
-        requestBody: { required: true, content: { "application/json": { schema: s(UpdateByIdRequestSchema) } } },
-        responses: { 200: json(FigmaNodeAssetSchema, "更新成功"), 404: err }
-      },
-      delete: {
-        tags: ["Figma Node Assets"],
-        summary: "按 ID 删除节点资产",
-        parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer" } }],
-        responses: { 200: { description: "删除成功" }, 404: err }
       }
     }
   }

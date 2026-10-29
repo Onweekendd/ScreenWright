@@ -5,7 +5,6 @@ import { biChatRouter } from "./bi-chat.route";
 import { biDataSyncRouter } from "./bi-data-sync.route";
 import { chatImageRouter } from "./chat-image.route";
 import { evalRouter } from "./eval.route";
-import { figmaNodeAssetRouter } from "./figma-node-asset.route";
 import { jobRouter } from "./job.route";
 import { llmExchangeRouter } from "./llm-exchange.route";
 import { modelCapabilityRouter } from "./model-capability.route";
@@ -15,7 +14,6 @@ export const customRoutes = new Hono()
   .route("/customApi/bi-chat", biChatRouter)
   .route("/customApi/chat-images", chatImageRouter)
   .route("/customApi", biDataSyncRouter)
-  .route("/customApi/figma-node-assets", figmaNodeAssetRouter)
   .route("/customApi/llm-exchanges", llmExchangeRouter)
   .route("/customApi/jobs", jobRouter)
   .route("/customApi/evals", evalRouter)

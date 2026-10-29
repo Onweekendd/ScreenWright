@@ -55,11 +55,8 @@ export const ModelName = {
   ThreadModel: 'ThreadModel',
   GeneratedImage: 'GeneratedImage',
   GeneratedVideo: 'GeneratedVideo',
-  FigmaKey: 'FigmaKey',
   Module: 'Module',
-  FigmaNodeAsset: 'FigmaNodeAsset',
   CompactionRecord: 'CompactionRecord',
-  FigmaNodeJson: 'FigmaNodeJson',
   LlmExchangeRecord: 'LlmExchangeRecord',
   EvalRun: 'EvalRun',
   EvalCase: 'EvalCase',
@@ -156,27 +153,6 @@ export const GeneratedVideoScalarFieldEnum = {
 export type GeneratedVideoScalarFieldEnum = (typeof GeneratedVideoScalarFieldEnum)[keyof typeof GeneratedVideoScalarFieldEnum]
 
 
-export const FigmaKeyScalarFieldEnum = {
-  id: 'id',
-  keyValue: 'keyValue',
-  name: 'name',
-  isActive: 'isActive',
-  isRateLimited: 'isRateLimited',
-  rateLimitStart: 'rateLimitStart',
-  rateLimitEnd: 'rateLimitEnd',
-  consecutive429Count: 'consecutive429Count',
-  totalRequests: 'totalRequests',
-  successRequests: 'successRequests',
-  failedRequests: 'failedRequests',
-  lastUsedAt: 'lastUsedAt',
-  lastSuccessAt: 'lastSuccessAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FigmaKeyScalarFieldEnum = (typeof FigmaKeyScalarFieldEnum)[keyof typeof FigmaKeyScalarFieldEnum]
-
-
 export const ModuleScalarFieldEnum = {
   id: 'id',
   moduleId: 'moduleId',
@@ -199,23 +175,6 @@ export const ModuleScalarFieldEnum = {
 export type ModuleScalarFieldEnum = (typeof ModuleScalarFieldEnum)[keyof typeof ModuleScalarFieldEnum]
 
 
-export const FigmaNodeAssetScalarFieldEnum = {
-  id: 'id',
-  fileKey: 'fileKey',
-  nodeId: 'nodeId',
-  nodeName: 'nodeName',
-  bucket: 'bucket',
-  objectKey: 'objectKey',
-  url: 'url',
-  mimeType: 'mimeType',
-  fileSize: 'fileSize',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FigmaNodeAssetScalarFieldEnum = (typeof FigmaNodeAssetScalarFieldEnum)[keyof typeof FigmaNodeAssetScalarFieldEnum]
-
-
 export const CompactionRecordScalarFieldEnum = {
   id: 'id',
   threadId: 'threadId',
@@ -227,23 +186,6 @@ export const CompactionRecordScalarFieldEnum = {
 } as const
 
 export type CompactionRecordScalarFieldEnum = (typeof CompactionRecordScalarFieldEnum)[keyof typeof CompactionRecordScalarFieldEnum]
-
-
-export const FigmaNodeJsonScalarFieldEnum = {
-  id: 'id',
-  fileKey: 'fileKey',
-  nodeId: 'nodeId',
-  nodeName: 'nodeName',
-  bucket: 'bucket',
-  objectKey: 'objectKey',
-  url: 'url',
-  mimeType: 'mimeType',
-  fileSize: 'fileSize',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FigmaNodeJsonScalarFieldEnum = (typeof FigmaNodeJsonScalarFieldEnum)[keyof typeof FigmaNodeJsonScalarFieldEnum]
 
 
 export const LlmExchangeRecordScalarFieldEnum = {

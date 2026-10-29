@@ -54,7 +54,6 @@ COPY servers/server ./servers/server
 # 后端运行时依赖的 workspace 包：各自出 dist（create-screenwright-app 会把 artifact-app 模板拷进去）
 RUN pnpm --filter @screenwright/types run build \
     && pnpm --filter @screenwright/core run build \
-    && pnpm --filter @screenwright/figma-helper run shared:build \
     && pnpm --filter create-screenwright-app run build
 
 WORKDIR /app/servers/server

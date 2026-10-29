@@ -48,30 +48,15 @@ export type GeneratedImage = Prisma.GeneratedImageModel
  */
 export type GeneratedVideo = Prisma.GeneratedVideoModel
 /**
- * Model FigmaKey
- * 
- */
-export type FigmaKey = Prisma.FigmaKeyModel
-/**
  * Model Module
  * 
  */
 export type Module = Prisma.ModuleModel
 /**
- * Model FigmaNodeAsset
- * 
- */
-export type FigmaNodeAsset = Prisma.FigmaNodeAssetModel
-/**
  * Model CompactionRecord
  * 
  */
 export type CompactionRecord = Prisma.CompactionRecordModel
-/**
- * Model FigmaNodeJson
- * 
- */
-export type FigmaNodeJson = Prisma.FigmaNodeJsonModel
 /**
  * Model LlmExchangeRecord
  * 

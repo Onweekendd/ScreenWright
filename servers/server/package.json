@@ -17,7 +17,6 @@
     "mastra:build": "mastra build",
     "mastra:start": "mastra start",
     "lint:eslint": "eslint --cache --max-warnings 0 \"{src,tests,types}/**/*.{vue,js,jsx,ts,tsx}\" --fix",
-    "init-figma-keys": "dotenvx run --  tsx scripts/seed-figma-keys.ts",
     "seed-embeddings": "dotenvx run --  tsx scripts/seed-component-embeddings.ts",
     "seed-modules": "dotenvx run --  tsx scripts/seed-modules.ts",
     "seed-bi-user": "dotenvx run --  tsx scripts/seed-bi-user.ts",
@@ -80,7 +79,6 @@
     "@prisma/adapter-pg": "7.2.0",
     "@prisma/client": "7.2.0",
     "@screenwright/core": "workspace:*",
-    "@screenwright/figma-helper": "workspace:*",
     "@screenwright/types": "workspace:*",
     "@types/proper-lockfile": "^4.1.4",
     "ai": "^6.0.282",
@@ -111,8 +109,6 @@
     "minio": "^8.0.7"
   },
   "devDependencies": {
-    "@figma/plugin-typings": "1.121.0",
-    "@figma/rest-api-spec": "^0.33.0",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",

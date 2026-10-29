@@ -103,36 +103,6 @@ model GeneratedVideo {
   @@map("generated_video")
 }
 
-// Figma API Key Pool Management
-model FigmaKey {
-  id       String  @id @default(cuid())
-  keyValue String  @unique
-  name     String?
-  isActive Boolean @default(true)
-
-  // 速率限制状态
-  isRateLimited       Boolean   @default(false)
-  rateLimitStart      DateTime?
-  rateLimitEnd        DateTime?
-  consecutive429Count Int       @default(0)
-
-  // 使用统计
-  totalRequests   Int       @default(0)
-  successRequests Int       @default(0)
-  failedRequests  Int       @default(0)
-  lastUsedAt      DateTime?
-  lastSuccessAt   DateTime?
-
-  // 元数据
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([isActive, isRateLimited])
-  @@index([rateLimitEnd])
-  @@index([totalRequests])
-  @@map("figma_keys")
-}
-
 // Module Management - BI 组件和大屏模块
 model Module {
   id              String    @id @default(cuid())
@@ -156,32 +126,6 @@ model Module {
   @@map("modules")
 }
 
-// Figma Node to Minio Storage Mapping
-model FigmaNodeAsset {
-  id String @id @default(cuid())
-
-  // Figma 节点标识
-  fileKey  String  @map("file_key") // Figma 文件 Key
-  nodeId   String  @map("node_id") // Figma 节点 ID
-  nodeName String? @map("node_name") // Figma 节点名称
-
-  // Minio 存储信息
-  bucket    String // Minio bucket 名称
-  objectKey String  @map("object_key") // Minio 对象路径
-  url       String? // 可访问的公开 URL（可选）
-  mimeType  String? @map("mime_type") // 文件 MIME 类型，如 image/png
-  fileSize  Int?    @map("file_size") // 文件大小（字节）
-
-  // 元数据
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@unique([fileKey, nodeId])
-  @@index([fileKey])
-  @@index([nodeId])
-  @@map("figma_node_assets")
-}
-
 // 对话压缩记录:软删除的消息 ID + 摘要消息 ID,用于在 inputProcessor 中过滤已压缩消息
 model CompactionRecord {
   id                  String   @id @default(cuid())
@@ -196,32 +140,6 @@ model CompactionRecord {
 
   @@index([threadId])
   @@map("compaction_records")
-}
-
-// Figma Node to Minio Storage Mapping
-model FigmaNodeJson {
-  id String @id @default(cuid())
-
-  // Figma 节点标识
-  fileKey  String  @map("file_key") // Figma 文件 Key
-  nodeId   String  @map("node_id") // Figma 节点 ID
-  nodeName String? @map("node_name") // Figma 节点名称
-
-  // Minio 存储信息
-  bucket    String // Minio bucket 名称
-  objectKey String  @map("object_key") // Minio 对象路径
-  url       String? // 可访问的公开 URL（可选）
-  mimeType  String? @map("mime_type") // 文件 MIME 类型，如 image/png
-  fileSize  Int?    @map("file_size") // 文件大小（字节）
-
-  // 元数据
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@unique([fileKey, nodeId])
-  @@index([fileKey])
-  @@index([nodeId])
-  @@map("figma_node_json")
 }
 
 // LLM 往返记录索引:每次发给 LLM 的往返(step)一行。

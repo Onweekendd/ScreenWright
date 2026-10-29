@@ -90,26 +90,20 @@
       "cache": true
     },
     "mastra:build": {
-      "dependsOn": ["@screenwright/figma-helper#shared:build", "create-screenwright-app#build"],
+      "dependsOn": ["create-screenwright-app#build"],
       "outputs": [".mastra/output/**"],
       "cache": true
     },
     "mastra:test": {
       "dependsOn": [
         "^build",
-        "@screenwright/figma-helper#shared:build",
         "check-types",
         "mastra:check-types"
       ],
       "cache": true
     },
-    "shared:build": {
-      "outputs": ["dist/shared/**"],
-      "cache": true
-    },
     "@screenwright/server#server:dev": {
       "dependsOn": [
-        "@screenwright/figma-helper#shared:build",
         "create-screenwright-app#build",
         "@screenwright/core#build"
       ],
@@ -129,7 +123,6 @@
       "dependsOn": [
         "@screenwright/types#build",
         "@screenwright/core#build",
-        "@screenwright/figma-helper#shared:build",
         "create-screenwright-app#build"
       ],
       "outputs": ["dist/server.mjs"],

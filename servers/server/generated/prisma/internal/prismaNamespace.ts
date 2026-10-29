@@ -388,11 +388,8 @@ export const ModelName = {
   ThreadModel: 'ThreadModel',
   GeneratedImage: 'GeneratedImage',
   GeneratedVideo: 'GeneratedVideo',
-  FigmaKey: 'FigmaKey',
   Module: 'Module',
-  FigmaNodeAsset: 'FigmaNodeAsset',
   CompactionRecord: 'CompactionRecord',
-  FigmaNodeJson: 'FigmaNodeJson',
   LlmExchangeRecord: 'LlmExchangeRecord',
   EvalRun: 'EvalRun',
   EvalCase: 'EvalCase',
@@ -421,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "aiModel" | "threadModel" | "generatedImage" | "generatedVideo" | "figmaKey" | "module" | "figmaNodeAsset" | "compactionRecord" | "figmaNodeJson" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
+    modelProps: "aiModel" | "threadModel" | "generatedImage" | "generatedVideo" | "module" | "compactionRecord" | "llmExchangeRecord" | "evalRun" | "evalCase" | "biUser" | "largeScreen" | "largeScreenVersion" | "largeGroup" | "layers" | "dataGroup" | "dataSource" | "dataLocal" | "minioFile" | "minioGroup"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -721,80 +718,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    FigmaKey: {
-      payload: Prisma.$FigmaKeyPayload<ExtArgs>
-      fields: Prisma.FigmaKeyFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.FigmaKeyFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.FigmaKeyFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>
-        }
-        findFirst: {
-          args: Prisma.FigmaKeyFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.FigmaKeyFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>
-        }
-        findMany: {
-          args: Prisma.FigmaKeyFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>[]
-        }
-        create: {
-          args: Prisma.FigmaKeyCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>
-        }
-        createMany: {
-          args: Prisma.FigmaKeyCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.FigmaKeyCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>[]
-        }
-        delete: {
-          args: Prisma.FigmaKeyDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>
-        }
-        update: {
-          args: Prisma.FigmaKeyUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>
-        }
-        deleteMany: {
-          args: Prisma.FigmaKeyDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.FigmaKeyUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.FigmaKeyUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>[]
-        }
-        upsert: {
-          args: Prisma.FigmaKeyUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaKeyPayload>
-        }
-        aggregate: {
-          args: Prisma.FigmaKeyAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFigmaKey>
-        }
-        groupBy: {
-          args: Prisma.FigmaKeyGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FigmaKeyGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.FigmaKeyCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FigmaKeyCountAggregateOutputType> | number
-        }
-      }
-    }
     Module: {
       payload: Prisma.$ModulePayload<ExtArgs>
       fields: Prisma.ModuleFieldRefs
@@ -869,80 +792,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    FigmaNodeAsset: {
-      payload: Prisma.$FigmaNodeAssetPayload<ExtArgs>
-      fields: Prisma.FigmaNodeAssetFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.FigmaNodeAssetFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.FigmaNodeAssetFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>
-        }
-        findFirst: {
-          args: Prisma.FigmaNodeAssetFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.FigmaNodeAssetFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>
-        }
-        findMany: {
-          args: Prisma.FigmaNodeAssetFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>[]
-        }
-        create: {
-          args: Prisma.FigmaNodeAssetCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>
-        }
-        createMany: {
-          args: Prisma.FigmaNodeAssetCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.FigmaNodeAssetCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>[]
-        }
-        delete: {
-          args: Prisma.FigmaNodeAssetDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>
-        }
-        update: {
-          args: Prisma.FigmaNodeAssetUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>
-        }
-        deleteMany: {
-          args: Prisma.FigmaNodeAssetDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.FigmaNodeAssetUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.FigmaNodeAssetUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>[]
-        }
-        upsert: {
-          args: Prisma.FigmaNodeAssetUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeAssetPayload>
-        }
-        aggregate: {
-          args: Prisma.FigmaNodeAssetAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFigmaNodeAsset>
-        }
-        groupBy: {
-          args: Prisma.FigmaNodeAssetGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FigmaNodeAssetGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.FigmaNodeAssetCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FigmaNodeAssetCountAggregateOutputType> | number
-        }
-      }
-    }
     CompactionRecord: {
       payload: Prisma.$CompactionRecordPayload<ExtArgs>
       fields: Prisma.CompactionRecordFieldRefs
@@ -1014,80 +863,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CompactionRecordCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CompactionRecordCountAggregateOutputType> | number
-        }
-      }
-    }
-    FigmaNodeJson: {
-      payload: Prisma.$FigmaNodeJsonPayload<ExtArgs>
-      fields: Prisma.FigmaNodeJsonFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.FigmaNodeJsonFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.FigmaNodeJsonFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>
-        }
-        findFirst: {
-          args: Prisma.FigmaNodeJsonFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.FigmaNodeJsonFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>
-        }
-        findMany: {
-          args: Prisma.FigmaNodeJsonFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>[]
-        }
-        create: {
-          args: Prisma.FigmaNodeJsonCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>
-        }
-        createMany: {
-          args: Prisma.FigmaNodeJsonCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.FigmaNodeJsonCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>[]
-        }
-        delete: {
-          args: Prisma.FigmaNodeJsonDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>
-        }
-        update: {
-          args: Prisma.FigmaNodeJsonUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>
-        }
-        deleteMany: {
-          args: Prisma.FigmaNodeJsonDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.FigmaNodeJsonUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.FigmaNodeJsonUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>[]
-        }
-        upsert: {
-          args: Prisma.FigmaNodeJsonUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FigmaNodeJsonPayload>
-        }
-        aggregate: {
-          args: Prisma.FigmaNodeJsonAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFigmaNodeJson>
-        }
-        groupBy: {
-          args: Prisma.FigmaNodeJsonGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FigmaNodeJsonGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.FigmaNodeJsonCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FigmaNodeJsonCountAggregateOutputType> | number
         }
       }
     }
@@ -2157,27 +1932,6 @@ export const GeneratedVideoScalarFieldEnum = {
 export type GeneratedVideoScalarFieldEnum = (typeof GeneratedVideoScalarFieldEnum)[keyof typeof GeneratedVideoScalarFieldEnum]
 
 
-export const FigmaKeyScalarFieldEnum = {
-  id: 'id',
-  keyValue: 'keyValue',
-  name: 'name',
-  isActive: 'isActive',
-  isRateLimited: 'isRateLimited',
-  rateLimitStart: 'rateLimitStart',
-  rateLimitEnd: 'rateLimitEnd',
-  consecutive429Count: 'consecutive429Count',
-  totalRequests: 'totalRequests',
-  successRequests: 'successRequests',
-  failedRequests: 'failedRequests',
-  lastUsedAt: 'lastUsedAt',
-  lastSuccessAt: 'lastSuccessAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FigmaKeyScalarFieldEnum = (typeof FigmaKeyScalarFieldEnum)[keyof typeof FigmaKeyScalarFieldEnum]
-
-
 export const ModuleScalarFieldEnum = {
   id: 'id',
   moduleId: 'moduleId',
@@ -2200,23 +1954,6 @@ export const ModuleScalarFieldEnum = {
 export type ModuleScalarFieldEnum = (typeof ModuleScalarFieldEnum)[keyof typeof ModuleScalarFieldEnum]
 
 
-export const FigmaNodeAssetScalarFieldEnum = {
-  id: 'id',
-  fileKey: 'fileKey',
-  nodeId: 'nodeId',
-  nodeName: 'nodeName',
-  bucket: 'bucket',
-  objectKey: 'objectKey',
-  url: 'url',
-  mimeType: 'mimeType',
-  fileSize: 'fileSize',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FigmaNodeAssetScalarFieldEnum = (typeof FigmaNodeAssetScalarFieldEnum)[keyof typeof FigmaNodeAssetScalarFieldEnum]
-
-
 export const CompactionRecordScalarFieldEnum = {
   id: 'id',
   threadId: 'threadId',
@@ -2228,23 +1965,6 @@ export const CompactionRecordScalarFieldEnum = {
 } as const
 
 export type CompactionRecordScalarFieldEnum = (typeof CompactionRecordScalarFieldEnum)[keyof typeof CompactionRecordScalarFieldEnum]
-
-
-export const FigmaNodeJsonScalarFieldEnum = {
-  id: 'id',
-  fileKey: 'fileKey',
-  nodeId: 'nodeId',
-  nodeName: 'nodeName',
-  bucket: 'bucket',
-  objectKey: 'objectKey',
-  url: 'url',
-  mimeType: 'mimeType',
-  fileSize: 'fileSize',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FigmaNodeJsonScalarFieldEnum = (typeof FigmaNodeJsonScalarFieldEnum)[keyof typeof FigmaNodeJsonScalarFieldEnum]
 
 
 export const LlmExchangeRecordScalarFieldEnum = {
@@ -2769,11 +2489,8 @@ export type GlobalOmitConfig = {
   threadModel?: Prisma.ThreadModelOmit
   generatedImage?: Prisma.GeneratedImageOmit
   generatedVideo?: Prisma.GeneratedVideoOmit
-  figmaKey?: Prisma.FigmaKeyOmit
   module?: Prisma.ModuleOmit
-  figmaNodeAsset?: Prisma.FigmaNodeAssetOmit
   compactionRecord?: Prisma.CompactionRecordOmit
-  figmaNodeJson?: Prisma.FigmaNodeJsonOmit
   llmExchangeRecord?: Prisma.LlmExchangeRecordOmit
   evalRun?: Prisma.EvalRunOmit
   evalCase?: Prisma.EvalCaseOmit

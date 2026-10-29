@@ -92,7 +92,7 @@ Handler 标准流程：
 4. 普通接口：`return c.json(result)`；流式接口：直接 `return streamFn(...)` 不包 c.json
 5. 错误处理（统一 try/catch）：Zod 校验错误（`"issues" in e`）→ 400，资源不存在 → 404，其他 → 500
 
-新处理器变量加入模块导出数组（如 `figmaNodeAssetApiRoutes`）。
+新处理器变量加入模块导出数组（如 `xxxApiRoutes`）。
 
 ### 步骤 5：路由挂载检查
 **文件**：`routes/index.ts`

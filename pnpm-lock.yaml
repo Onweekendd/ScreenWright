@@ -643,46 +643,6 @@ importers:
         specifier: ^9.4.3
         version: 9.4.3(eslint@9.35.0(jiti@2.7.0))
 
-  packages/figma-helper:
-    dependencies:
-      jszip:
-        specifier: ^3.10.1
-        version: 3.10.1
-    devDependencies:
-      '@figma/plugin-typings':
-        specifier: ^1.101.0
-        version: 1.121.0
-      '@screenwright/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@vitejs/plugin-vue':
-        specifier: ^5.2.1
-        version: 5.2.4(vite@5.4.21(@types/node@24.10.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1))(vue@3.5.21(typescript@5.9.2))
-      concurrently:
-        specifier: ^9.1.2
-        version: 9.2.1
-      cross-env:
-        specifier: ^7.0.3
-        version: 7.0.3
-      eslint:
-        specifier: ^9.32.0
-        version: 9.35.0(jiti@2.7.0)
-      prettier:
-        specifier: ^3.6.2
-        version: 3.6.2
-      typescript:
-        specifier: 5.9.2
-        version: 5.9.2
-      vite:
-        specifier: ^5.4.11
-        version: 5.4.21(@types/node@24.10.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1)
-      vite-plugin-singlefile:
-        specifier: ^2.0.0
-        version: 2.3.0(rollup@4.62.4)(vite@5.4.21(@types/node@24.10.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1))
-      vue:
-        specifier: ^3.5.13
-        version: 3.5.21(typescript@5.9.2)
-
   packages/material:
     dependencies:
       '@screenwright/composables':
@@ -1104,9 +1064,6 @@ importers:
       '@screenwright/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@screenwright/figma-helper':
-        specifier: workspace:*
-        version: link:../../packages/figma-helper
       '@screenwright/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -1180,12 +1137,6 @@ importers:
         specifier: ^4.1.13
         version: 4.4.3
     devDependencies:
-      '@figma/plugin-typings':
-        specifier: 1.121.0
-        version: 1.121.0
-      '@figma/rest-api-spec':
-        specifier: ^0.33.0
-        version: 0.33.0
       '@rollup/plugin-commonjs':
         specifier: ^29.0.0
         version: 29.0.2(rollup@4.62.4)
@@ -3178,12 +3129,6 @@ packages:
 
   '@expo/sudo-prompt@9.3.2':
     resolution: {integrity: sha512-HHQigo3rQWKMDzYDLkubN5WQOYXJJE2eNqIQC2axC2iO3mHdwnIR7FgZVvHWtBwAdzBgAP0ECp8KqS8TiMKvgw==}
-
-  '@figma/plugin-typings@1.121.0':
-    resolution: {integrity: sha512-590qfxc5QtGs/AqdAEegNZUWzwEuaA9whl6T8LxscBaGjmqU3Z5jJHgHfYXissy1S5IBsXEZFmudKibpLcxGdQ==}
-
-  '@figma/rest-api-spec@0.33.0':
-    resolution: {integrity: sha512-T/hxrxvnAejDHVzHr5av7eM09vCniyeyLy77QUMmnavUIZe+jA/Ex5mpFhMS6DHVAy/zuBUDJDZRMZ4t8OBwFg==}
 
   '@floating-ui/core@1.7.3':
     resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
@@ -6425,11 +6370,6 @@ packages:
   concurrently@8.2.2:
     resolution: {integrity: sha512-1dP4gpXFhei8IOtlXRE/T/4H88ElHgTiUzh71YUmtjTEHMSRS2Z/fgOxHSxxusGHogsRfxNq1vyAwxSC+EVyDg==}
     engines: {node: ^14.13.0 || >=16.0.0}
-    hasBin: true
-
-  concurrently@9.2.1:
-    resolution: {integrity: sha512-fsfrO0MxV64Znoy8/l1vVIjjHa29SZyyqPgQBwhiDcaW8wJc2W3XWVOGx4M3oJBnv/zdUZIIp1gDeS98GzP8Ng==}
-    engines: {node: '>=18'}
     hasBin: true
 
   confbox@0.1.8:
@@ -11729,13 +11669,6 @@ packages:
       '@vite-pwa/assets-generator':
         optional: true
 
-  vite-plugin-singlefile@2.3.0:
-    resolution: {integrity: sha512-DAcHzYypM0CasNLSz/WG0VdKOCxGHErfrjOoyIPiNxTPTGmO6rRD/te93n1YL/s+miXq66ipF1brMBikf99c6A==}
-    engines: {node: '>18.0.0'}
-    peerDependencies:
-      rollup: ^4.44.1
-      vite: ^5.4.11 || ^6.0.0 || ^7.0.0
-
   vite-plugin-svg-icons@2.0.1:
     resolution: {integrity: sha512-6ktD+DhV6Rz3VtedYvBKKVA2eXF+sAQVaKkKLDSqGUfnhqXl3bj5PPkVTl3VexfTuZy66PmINi8Q6eFnVfRUmA==}
     peerDependencies:
@@ -14280,10 +14213,6 @@ snapshots:
 
   '@expo/sudo-prompt@9.3.2': {}
 
-  '@figma/plugin-typings@1.121.0': {}
-
-  '@figma/rest-api-spec@0.33.0': {}
-
   '@floating-ui/core@1.7.3':
     dependencies:
       '@floating-ui/utils': 0.2.11
@@ -16587,11 +16516,6 @@ snapshots:
       vite: 5.4.21(@types/node@20.3.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1)
       vue: 3.5.21(typescript@5.9.2)
 
-  '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@24.10.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1))(vue@3.5.21(typescript@5.9.2))':
-    dependencies:
-      vite: 5.4.21(@types/node@24.10.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1)
-      vue: 3.5.21(typescript@5.9.2)
-
   '@vitejs/plugin-vue@6.0.1(vite@7.2.7(@types/node@24.10.2)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.21(typescript@5.9.2))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.29
@@ -17897,15 +17821,6 @@ snapshots:
       rxjs: 7.8.2
       shell-quote: 1.8.3
       spawn-command: 0.0.2
-      supports-color: 8.1.1
-      tree-kill: 1.2.2
-      yargs: 17.7.2
-
-  concurrently@9.2.1:
-    dependencies:
-      chalk: 4.1.2
-      rxjs: 7.8.2
-      shell-quote: 1.8.3
       supports-color: 8.1.1
       tree-kill: 1.2.2
       yargs: 17.7.2
@@ -24154,12 +24069,6 @@ snapshots:
       workbox-window: 7.4.0
     transitivePeerDependencies:
       - supports-color
-
-  vite-plugin-singlefile@2.3.0(rollup@4.62.4)(vite@5.4.21(@types/node@24.10.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1)):
-    dependencies:
-      micromatch: 4.0.8
-      rollup: 4.62.4
-      vite: 5.4.21(@types/node@24.10.2)(lightningcss@1.32.0)(sass@1.93.2)(terser@5.18.1)
 
   vite-plugin-svg-icons@2.0.1(vite@4.3.9(@types/node@20.3.2)(sass@1.63.6)(terser@5.18.1)):
     dependencies:

@@ -173,6 +173,9 @@ services:
     environment:
       <<: *server-env
       ROLE: worker
+    # 停止时先发 SIGTERM，worker 会停止领新任务、等在途任务结束；超过这个时间才 SIGKILL（Docker 默认只等 10 秒）。
+    # 生图通常能在这段时间里收尾；视频一跑就是几分钟，等不完的交给卡死回收重跑。
+    stop_grace_period: 60s
     depends_on:
       migrate:
         condition: service_completed_successfully

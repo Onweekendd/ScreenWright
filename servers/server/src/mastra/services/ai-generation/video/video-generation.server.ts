@@ -238,6 +238,40 @@ async function downloadVideo(videoUrl: string): Promise<Buffer> {
 export interface GenerateVideoOptions {
   /** 阶段进度（0~100），供队列任务上报 */
   onProgress?: (percent: number) => void | Promise<void>;
+  /** 检查点：之前已经提交给服务商的任务 id。有它就不再准备素材、不再提交，直接接着轮询这个任务 */
+  resumeTaskId?: string;
+  /**
+   * 新任务提交成功、拿到服务商任务 id 后立刻调用，调用方在这里存检查点。
+   * 等它完成才开始轮询：存档还没落地进程就崩了，等于没存。
+   */
+  onSubmitted?: (taskId: string) => void | Promise<void>;
+}
+
+/** 准备素材并提交一个新任务，返回服务商任务 id。会计费，只在没有检查点时调用 */
+async function prepareAndSubmit(
+  config: VideoConfig,
+  input: GenerateVideoInput,
+  report: (percent: number) => Promise<void>
+): Promise<string> {
+  const [firstFrame, lastFrame, referenceImages, referenceVideos, referenceAudios] = await Promise.all([
+    input.firstFrameUrl ? readImage(input.firstFrameUrl, "首帧") : undefined,
+    input.lastFrameUrl ? readImage(input.lastFrameUrl, "尾帧") : undefined,
+    Promise.all((input.referenceImageUrls ?? []).map((url) => readImage(url, "参考", false))),
+    Promise.all((input.referenceVideoUrls ?? []).map(referenceMediaUrl)),
+    Promise.all((input.referenceAudioUrls ?? []).map(referenceMediaUrl))
+  ]);
+  await report(5);
+  return submitTask(config, {
+    prompt: input.prompt,
+    durationSec: input.durationSec,
+    resolution: input.resolution,
+    ratio: input.ratio,
+    firstFrame,
+    lastFrame,
+    referenceImages,
+    referenceVideos,
+    referenceAudios
+  });
 }
 
 /** 生成一个视频，命中已有 promptHash 时直接返回旧记录、不重新调用模型。 */
@@ -259,25 +293,16 @@ export async function generateAndStoreVideo(
     return { ...existing, reused: true };
   }
 
-  const [firstFrame, lastFrame, referenceImages, referenceVideos, referenceAudios] = await Promise.all([
-    input.firstFrameUrl ? readImage(input.firstFrameUrl, "首帧") : undefined,
-    input.lastFrameUrl ? readImage(input.lastFrameUrl, "尾帧") : undefined,
-    Promise.all((input.referenceImageUrls ?? []).map((url) => readImage(url, "参考", false))),
-    Promise.all((input.referenceVideoUrls ?? []).map(referenceMediaUrl)),
-    Promise.all((input.referenceAudioUrls ?? []).map(referenceMediaUrl))
-  ]);
-  await report(5);
-  const taskId = await submitTask(config, {
-    prompt: input.prompt,
-    durationSec: input.durationSec,
-    resolution: input.resolution,
-    ratio: input.ratio,
-    firstFrame,
-    lastFrame,
-    referenceImages,
-    referenceVideos,
-    referenceAudios
-  });
+  // 检查点：之前已经提交过（任务被回收重跑）就接着轮询那个任务，不再提交、不再计费；
+  // 新提交的先等调用方把任务 id 存好，再开始轮询
+  let taskId: string;
+  if (options.resumeTaskId) {
+    taskId = options.resumeTaskId;
+  } else {
+    taskId = await prepareAndSubmit(config, input, report);
+    await options.onSubmitted?.(taskId);
+  }
+
   await report(20);
 
   const videoUrl = await waitForVideoUrl(config, taskId, options.onProgress);

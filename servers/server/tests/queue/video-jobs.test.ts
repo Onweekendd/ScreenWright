@@ -15,7 +15,7 @@ vi.mock("@/mastra/services/ai-generation/video/video-generation.server", async (
   generateAndStoreVideo: mocks.generateAndStoreVideo
 }));
 
-import { toVideoRecord, VideoJobDataSchema, videoJobId } from "@/queue/video/video-jobs";
+import { toVideoRecord, type VideoJobData, VideoJobDataSchema, videoJobId } from "@/queue/video/video-jobs";
 import { processVideoJob } from "@/queue/video/video-worker";
 
 const base = { prompt: "云层流动", durationSec: 5, resolution: "768P", ratio: "16:9" } as const;
@@ -37,6 +37,17 @@ const record = {
   createdTime: new Date(),
   taskId: "task_1"
 };
+
+/** BullMQ Job 的替身：只用到 id / data / updateProgress / updateData */
+const fakeJob = (data: unknown = base) => ({
+  id: "job-1",
+  data: data as VideoJobData,
+  updateProgress: vi.fn(),
+  updateData: vi.fn()
+});
+
+/** 取出 worker 交给生成服务的 options */
+const generateOptions = () => mocks.generateAndStoreVideo.mock.calls[0][1];
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -89,6 +100,13 @@ describe("VideoJobDataSchema", () => {
     ).toBe(false);
   });
 
+  it("保留检查点 providerTaskId；它不参与任务 id，写回前后还是同一个任务", () => {
+    const resumed = VideoJobDataSchema.parse({ ...base, providerTaskId: "task_7" });
+
+    expect(resumed.providerTaskId).toBe("task_7");
+    expect(videoJobId(resumed, "m")).toBe(videoJobId(base, "m"));
+  });
+
   it.each([
     ["空提示词", { prompt: "" }],
     ["小数时长", { durationSec: 4.5 }],
@@ -118,7 +136,7 @@ describe("processVideoJob", () => {
       return record;
     });
 
-    await processVideoJob({ data: base, updateProgress: vi.fn() });
+    await processVideoJob(fakeJob());
 
     expect(order).toEqual(["warm", "generate"]);
   });
@@ -131,14 +149,61 @@ describe("processVideoJob", () => {
       return record;
     });
 
-    const result = await processVideoJob({ data: base, updateProgress });
+    const result = await processVideoJob({ ...fakeJob(), updateProgress });
 
     expect(updateProgress.mock.calls.map(([percent]) => percent)).toEqual([1, 20, 90]);
     expect(result).toEqual(toVideoRecord(record));
   });
 
   it("任务数据不合法时在调服务商之前就拒绝", async () => {
-    await expect(processVideoJob({ data: { ...base, prompt: "" }, updateProgress: vi.fn() })).rejects.toThrow();
+    await expect(processVideoJob(fakeJob({ ...base, prompt: "" }))).rejects.toThrow();
     expect(mocks.generateAndStoreVideo).not.toHaveBeenCalled();
+  });
+});
+
+describe("processVideoJob 检查点", () => {
+  it("第一次执行：任务数据里没有 providerTaskId，不带 resumeTaskId", async () => {
+    await processVideoJob(fakeJob());
+
+    expect(generateOptions().resumeTaskId).toBeUndefined();
+  });
+
+  it("被卡死回收后重新执行：任务数据里的 providerTaskId 作为 resumeTaskId 交给生成服务", async () => {
+    await processVideoJob(fakeJob({ ...base, providerTaskId: "task_7" }));
+
+    expect(generateOptions().resumeTaskId).toBe("task_7");
+  });
+
+  it("提交成功后把服务商任务 id 写回任务数据，原有入参一个不少", async () => {
+    const job = fakeJob();
+    mocks.generateAndStoreVideo.mockImplementation(async (_input, options) => {
+      await options.onSubmitted("task_9");
+      return record;
+    });
+
+    await processVideoJob(job);
+
+    expect(job.updateData).toHaveBeenCalledWith({ ...base, providerTaskId: "task_9" });
+  });
+
+  it("写检查点失败不打断生成：视频已经提交计费，宁可没有检查点也要把结果拿回来", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const job = fakeJob();
+    job.updateData.mockRejectedValue(new Error("Redis 连接断了"));
+    mocks.generateAndStoreVideo.mockImplementation(async (_input, options) => {
+      await options.onSubmitted("task_9");
+      return record;
+    });
+
+    // 写检查点带退避重试（间隔 1s、2s），用假时钟跳过等待
+    vi.useFakeTimers();
+    const result = processVideoJob(job);
+    await vi.runAllTimersAsync();
+
+    await expect(result).resolves.toEqual(toVideoRecord(record));
+    expect(job.updateData).toHaveBeenCalledTimes(3);
+    expect(warn).toHaveBeenCalled();
+    vi.useRealTimers();
+    warn.mockRestore();
   });
 });

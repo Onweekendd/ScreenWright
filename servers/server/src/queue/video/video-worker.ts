@@ -5,6 +5,7 @@ import {
   generateAndStoreVideo,
   type GeneratedVideoRecord
 } from "@/mastra/services/ai-generation/video/video-generation.server";
+import { retryWithBackoff } from "@/mastra/utils/async";
 
 import { getQueuePrefix } from "../config";
 import { createRedisConnection } from "../connection";
@@ -12,13 +13,27 @@ import { toVideoRecord, VIDEO_QUEUE, type VideoJobData, VideoJobDataSchema } fro
 
 /** 单个任务的处理逻辑，单独导出方便不连 Redis 直接测。 */
 export async function processVideoJob(
-  job: Pick<Job<VideoJobData>, "data" | "updateProgress">
+  job: Pick<Job<VideoJobData>, "id" | "data" | "updateProgress" | "updateData">
 ): Promise<GeneratedVideoRecord> {
   const data = VideoJobDataSchema.parse(job.data);
   // 和生图 worker 一样，每个任务开始前重读配置，使设置页的 video 配置及时生效
   await warmModelConfigs();
   await job.updateProgress(1);
-  const record = await generateAndStoreVideo(data, { onProgress: (percent) => job.updateProgress(percent) });
+  // 检查点存在任务数据里：被卡死回收、重新执行时带着 providerTaskId，生成服务据此接着轮询、不再重复提交。
+  // updateData 是整份替换，所以带上原有入参；写失败只告警不抛——这时视频已经提交计费，宁可没有检查点，也要把结果拿回来
+  const record = await generateAndStoreVideo(data, {
+    onProgress: (percent) => job.updateProgress(percent),
+    resumeTaskId: data.providerTaskId,
+    onSubmitted: async (taskId) => {
+      try {
+        await retryWithBackoff(async () => {
+          await job.updateData({ ...data, providerTaskId: taskId });
+        });
+      } catch (error) {
+        console.warn(`[worker:video] 写回 providerTaskId 失败 ${job.id}：`, error);
+      }
+    }
+  });
   return toVideoRecord(record);
 }
 

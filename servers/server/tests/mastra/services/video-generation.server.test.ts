@@ -419,3 +419,64 @@ describe("按对话选择的生视频配置", () => {
     expect(result.url).toBe("https://blobs/h.mp4");
   });
 });
+
+describe("检查点：提交成功先存档，重跑时接着轮询", () => {
+  const pollCalls = () => fetchMock.mock.calls.filter(([url]) => String(url).startsWith(QUERY));
+
+  it("有 resumeTaskId：不读素材、不提交，直接轮询这个任务，落库的 taskId 就是它", async () => {
+    storeMocks.keyFromUrl.mockReturnValue("first.png");
+    respondTo({ poll: [succeeded] });
+
+    await generateAndStoreVideo(
+      { ...input, firstFrameUrl: "http://store/blobs/first.png" },
+      { resumeTaskId: "task_resumed" }
+    );
+
+    expect(submitCalls()).toHaveLength(0);
+    expect(storeMocks.get).not.toHaveBeenCalled();
+    expect(String(pollCalls()[0][0])).toContain("task_resumed");
+    expect(prismaMocks.create.mock.calls[0][0].data.taskId).toBe("task_resumed");
+  });
+
+  it("有 resumeTaskId：不调用 onSubmitted（没有新提交，检查点本来就在）", async () => {
+    const onSubmitted = vi.fn();
+    respondTo({ poll: [succeeded] });
+
+    await generateAndStoreVideo(input, { resumeTaskId: "task_resumed", onSubmitted });
+
+    expect(onSubmitted).not.toHaveBeenCalled();
+  });
+
+  it("没有 resumeTaskId：提交新任务，把服务商任务 id 交给 onSubmitted，等它存完才开始轮询", async () => {
+    const order: string[] = [];
+    respondTo({
+      submit: () => json({ task_id: "task_new" }),
+      poll: [
+        () => {
+          order.push("poll");
+          return succeeded();
+        }
+      ]
+    });
+    // 故意慢一点：如果没有 await，轮询（间隔 1ms）会抢在存档之前
+    const onSubmitted = vi.fn(async (taskId: string) => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      order.push(`checkpoint:${taskId}`);
+    });
+
+    await generateAndStoreVideo(input, { onSubmitted });
+
+    expect(submitCalls()).toHaveLength(1);
+    expect(order).toEqual(["checkpoint:task_new", "poll"]);
+  });
+
+  it("命中已有记录时直接返回：不轮询，也不调用 onSubmitted", async () => {
+    prismaMocks.findUnique.mockResolvedValue({ id: "old", url: "https://blobs/old.mp4" });
+    const onSubmitted = vi.fn();
+
+    await generateAndStoreVideo(input, { resumeTaskId: "task_resumed", onSubmitted });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(onSubmitted).not.toHaveBeenCalled();
+  });
+});

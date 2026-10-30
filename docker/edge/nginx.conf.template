@@ -1,0 +1,91 @@
+# 香港边缘节点：只做缓存反代，不放业务和数据。
+# 浏览器 → Caddy(HTTPS) → 这里(缓存) → 源站网关(国内，docker/nginx.conf 那个 web 容器)
+#
+# 官方 nginx 镜像会用 envsubst 渲染 *.template，只替换已定义的环境变量，$host 等 nginx 变量原样保留。
+
+# 静态资源缓存：只缓存下面明确列出的路径，接口响应一律不缓存（避免带登录态的内容被串给别人）
+proxy_cache_path /var/cache/nginx/edge levels=1:2 keys_zone=edge:50m max_size=8g inactive=30d use_temp_path=off;
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ""      "";
+}
+
+upstream origin {
+    server ${ORIGIN};
+    keepalive 16;
+}
+
+server {
+    listen 80;
+    server_name _;
+
+    client_max_body_size 500m;
+
+    # 回源时请求 gzip，缓存里存压缩后的版本，国内 5M 链路少传一半；客户端不支持 gzip 时由 gunzip 还原
+    gunzip on;
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript application/xml image/svg+xml;
+    gzip_min_length 1024;
+    # Caddy 转发会带 Via 头，默认(off)会被当成代理请求而不压缩、并把缓存里的 gzip 解开
+    gzip_proxied any;
+
+    proxy_http_version 1.1;
+
+    # 回源走 TLS，并固定（pin）源站那张自签证书：只信任 origin.crt，别的证书（包括公共 CA 签发的）一律拒绝。
+    # 源站没有域名，证书里写的是 IP，所以校验名用 ORIGIN_HOST（IP）。
+    proxy_ssl_verify on;
+    proxy_ssl_trusted_certificate /etc/nginx/origin.crt;
+    proxy_ssl_name ${ORIGIN_HOST};
+    proxy_ssl_protocols TLSv1.2 TLSv1.3;
+    proxy_ssl_session_reuse on;
+
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Upgrade $http_upgrade;
+    # 回源时 Host 必须是源站 IP:端口。国内云厂商的前置网关会拦截 Host 为「未备案域名」的 HTTP 请求
+    # （返回 Server: JDTP 的 403「网页禁止访问」），真实域名放在 X-Forwarded-Host 里。
+    # 转发协议由 Caddy 带来，源站网关会原样保留。
+    proxy_set_header Host ${ORIGIN};
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+    # 上传大文件直接流式转给源站，不在香港落盘
+    proxy_request_buffering off;
+
+    # ── 带 hash 的构建产物：不会变，首次回源后长期留在香港 ──
+    location /static/ {
+        proxy_pass https://origin;
+        proxy_set_header Accept-Encoding gzip;
+        proxy_cache edge;
+        proxy_cache_lock on;
+        proxy_cache_valid 200 30d;
+        proxy_cache_use_stale error timeout updating;
+        add_header X-Edge-Cache $upstream_cache_status;
+    }
+
+    # ── 系统素材：缓存时间跟随源站的 Cache-Control（缩略图一年，原图一天）──
+    location ~ ^/screenwright/(system|system-thumbnails)/ {
+        proxy_pass https://origin;
+        proxy_set_header Accept-Encoding gzip;
+        proxy_cache edge;
+        proxy_cache_lock on;
+        proxy_cache_use_stale error timeout updating;
+        add_header X-Edge-Cache $upstream_cache_status;
+    }
+
+    # ── 对话 SSE 等流式接口：不能缓冲 ──
+    location ~ ^/(customApi|api|artifact-apps)/ {
+        proxy_pass https://origin;
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+
+    # ── 其余一律透传，不缓存（接口、index.html、用户素材、WebSocket）──
+    location / {
+        proxy_pass https://origin;
+        proxy_read_timeout 300s;
+    }
+}

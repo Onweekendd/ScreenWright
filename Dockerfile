@@ -129,5 +129,10 @@ RUN pnpm run build:fontFace \
 # ───────────── web：nginx ─────────────
 FROM nginx:1.27-alpine AS web
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+# 站点配置由 80 和（可选的）443 两个 server 共用；放在 conf.d 之外，避免被当成顶层配置加载
+COPY docker/nginx-site.inc /etc/nginx/site.inc
+COPY docker/nginx-tls.conf /etc/nginx/nginx-tls.conf
+COPY docker/web-enable-tls.sh /docker-entrypoint.d/40-enable-tls.sh
+RUN chmod +x /docker-entrypoint.d/40-enable-tls.sh
 COPY --from=web-build /app/apps/app/dist /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 80 443

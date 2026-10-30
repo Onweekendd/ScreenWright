@@ -1,0 +1,50 @@
+# 香港边缘节点：Caddy(HTTPS) + nginx(缓存反代)。不跑业务、不存数据。
+#
+#   cp .env.example .env      # 填 DOMAIN / ORIGIN / ORIGIN_HOST
+#   把源站的 origin.crt 放到本目录
+#   docker compose up -d
+#
+# 部署说明见 README.md。
+
+name: screenwright-edge
+
+services:
+  edge:
+    image: nginx:1.27-alpine
+    environment:
+      ORIGIN: ${ORIGIN:?请在 .env 里设置 ORIGIN（源站回源 TLS 的 host:port）}
+      ORIGIN_HOST: ${ORIGIN_HOST:?请在 .env 里设置 ORIGIN_HOST（源站 IP，用于校验证书）}
+    volumes:
+      - ./nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+      # 源站自签证书（只有公钥部分），用来固定校验回源 TLS
+      - ./origin.crt:/etc/nginx/origin.crt:ro
+      - edge_cache:/var/cache/nginx/edge
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      DOMAIN: ${DOMAIN:?请在 .env 里设置 DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # 证书和账号信息：丢了会重新申请，频繁重建有被 Let's Encrypt 限流的风险
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      edge:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  edge_cache:
+  caddy_data:
+  caddy_config:

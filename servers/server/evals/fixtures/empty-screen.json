@@ -52,7 +52,6 @@
     },
     "backgroundUrl": null,
     "layers": [],
-    "password": "",
     "status": null,
     "userId": 71,
     "type": 1,
@@ -66,7 +65,6 @@
       "animationList": []
     },
     "statusAnimation": {},
-    "hasPassword": null,
     "hasExpirationTime": null,
     "encodedControl": []
   }

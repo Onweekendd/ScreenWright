@@ -1010,7 +1010,6 @@
         "zIndex": 1
       }
     ],
-    "password": "",
     "status": null,
     "userId": 71,
     "type": 1,
@@ -1022,7 +1021,6 @@
     "dataFilterArr": {},
     "aniFrameSet": {},
     "statusAnimation": {},
-    "hasPassword": null,
     "hasExpirationTime": null,
     "encodedControl": []
   }

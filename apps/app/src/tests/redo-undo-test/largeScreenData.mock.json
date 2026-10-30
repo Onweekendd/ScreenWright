@@ -48,7 +48,6 @@
   },
   "backgroundUrl": null,
   "layers": [],
-  "password": "",
   "status": null,
   "userId": 219,
   "type": 1,
@@ -60,7 +59,6 @@
   "dataFilterArr": "{}",
   "aniFrameSet": null,
   "statusAnimation": null,
-  "hasPassword": null,
   "hasExpirationTime": null,
   "encodedControl": null
 }

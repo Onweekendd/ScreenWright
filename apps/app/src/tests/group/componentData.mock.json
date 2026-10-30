@@ -1803,7 +1803,6 @@
       "type": "item"
     }
   ],
-  "password": "",
   "status": null,
   "userId": 219,
   "type": 1,
@@ -1815,7 +1814,6 @@
   "dataFilterArr": "{}",
   "aniFrameSet": "{\"animationList\":[]}",
   "statusAnimation": "{}",
-  "hasPassword": null,
   "hasExpirationTime": null,
   "encodedControl": null
 }

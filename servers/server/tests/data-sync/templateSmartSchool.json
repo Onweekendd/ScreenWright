@@ -18247,7 +18247,6 @@
       "config": "[2909861,2909867,2909908,2909915,2909957]",
       "name": "（橙色）智慧校园可视化平台(副本)",
       "backgroundUrl": "version-test/18926028-002e-42b3-a99c-3d85308a6289.png",
-      "password": null,
       "status": false,
       "userId": 219,
       "type": 1,
@@ -18256,7 +18255,6 @@
       "invitationCode": "cbf72a5e-566d-4325-88c7-f37dee614cc2",
       "versionCode": "1",
       "versionDesc": null,
-      "hasPassword": null,
       "hasExpirationTime": null,
       "encodedControl": null,
       "customCacheTime": 1774924431000

@@ -31,7 +31,6 @@ export const VERSION_SCOPED_FIELDS = [
   "encodedControl",
   "minioIds",
   "status",
-  "password",
   "expirationTime",
   "publishInfo",
   "versionDesc"
@@ -159,9 +158,7 @@ interface VersionVo {
   versionCode: string;
   versionDesc: string | null;
   status: boolean;
-  hasPassword: boolean;
   hasExpirationTime: boolean;
-  password: string;
   expirationTime: string | null;
   updatedBy: string | null;
   updatedTime: string;
@@ -174,9 +171,7 @@ function toVersionVo(row: LargeScreenVersionRow): VersionVo {
     versionCode: row.versionCode,
     versionDesc: row.versionDesc ?? null,
     status: row.status,
-    hasPassword: !!row.password,
     hasExpirationTime: !!row.expirationTime,
-    password: row.password || "",
     expirationTime: row.expirationTime ? row.expirationTime.toISOString() : null,
     updatedBy: row.updatedBy,
     updatedTime: row.updatedTime.toISOString(),

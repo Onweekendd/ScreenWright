@@ -47,7 +47,6 @@ import {
   getScreen,
   listGroups,
   listScreens,
-  openCheck,
   openScreen,
   quoteInfo,
   updateScreen
@@ -67,7 +66,6 @@ const screenRow = () => ({
   type: 1,
   stockType: 1,
   groupId: 0,
-  password: null,
   invitationCode: "abc-123",
   status: false,
   expirationTime: null,
@@ -104,7 +102,6 @@ const versionRow = (over: Record<string, unknown> = {}) => ({
   encodedControl: null,
   minioIds: null,
   status: false,
-  password: null,
   expirationTime: null,
   publishInfo: null,
   createdBy: "admin",
@@ -215,7 +212,7 @@ describe("getScreen", () => {
   });
 });
 
-describe("openScreen / openCheck", () => {
+describe("openScreen / quoteInfo", () => {
   it("openScreen 返回带 layers 的详情，无鉴权门槛", async () => {
     vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({ ...screenRow(), userId: 999 } as never);
     vi.mocked(prismaClient.layers.findMany).mockResolvedValue([{ config: { id: 5 } }] as never);
@@ -223,10 +220,6 @@ describe("openScreen / openCheck", () => {
     expect(res.success).toBe(true);
     expect(res.result.layers).toEqual([{ id: 5 }]);
     vi.mocked(prismaClient.layers.findMany).mockResolvedValue([]);
-  });
-  it("openCheck 恒为 true", async () => {
-    const res = await openCheck(10);
-    expect(res.result).toBe(true);
   });
   it("quoteInfo 返回被引用大屏的 config + layers", async () => {
     vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue({ ...screenRow(), id: 7 } as never);
@@ -298,6 +291,18 @@ describe("createScreen", () => {
     expect(data.invitationCode).toBeTruthy();
     expect(typeof data.invitationCode).toBe("string");
   });
+
+  it("旧前端带上 password 也不入库", async () => {
+    vi.mocked(prismaClient.largeScreen.create).mockResolvedValue(screenRow() as never);
+    await createScreen(1, "admin", { name: "新大屏", password: "123" } as never);
+    const screenData = vi.mocked(prismaClient.largeScreen.create).mock.calls[0][0]?.data as Record<string, unknown>;
+    const versionData = vi.mocked(prismaClient.largeScreenVersion.create).mock.calls[0][0]?.data as Record<
+      string,
+      unknown
+    >;
+    expect(screenData).not.toHaveProperty("password");
+    expect(versionData).not.toHaveProperty("password");
+  });
 });
 
 describe("updateScreen", () => {
@@ -331,6 +336,14 @@ describe("updateScreen", () => {
     const vData = vi.mocked(prismaClient.largeScreenVersion.update).mock.calls[0][0].data as Record<string, unknown>;
     expect(vData).not.toHaveProperty("filterType");
     expect(vData.aniFrameSet).toEqual({ animationList: [] });
+  });
+
+  it("旧前端带上 password 也不入库", async () => {
+    vi.mocked(prismaClient.largeScreen.findUnique).mockResolvedValue(screenRow() as never);
+    vi.mocked(prismaClient.largeScreen.update).mockResolvedValue(screenRow() as never);
+    await updateScreen(1, 1, "admin", { id: 10, password: "123" } as never);
+    const vData = vi.mocked(prismaClient.largeScreenVersion.update).mock.calls[0][0].data as Record<string, unknown>;
+    expect(vData).not.toHaveProperty("password");
   });
 });
 

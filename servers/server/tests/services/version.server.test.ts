@@ -43,7 +43,6 @@ const versionRow = (over: Record<string, unknown> = {}) => ({
   encodedControl: null,
   minioIds: null,
   status: false,
-  password: null,
   expirationTime: null,
   publishInfo: null,
   createdBy: "onweekend",
@@ -70,12 +69,11 @@ describe("version.server（多版本）", () => {
   it("listVersion 返回版本行数组", async () => {
     vi.mocked(prismaClient.largeScreenVersion.findMany).mockResolvedValue([
       versionRow({ versionCode: "1" }),
-      versionRow({ versionCode: "2", password: "x" })
+      versionRow({ versionCode: "2" })
     ] as never);
     const res = await listVersion(1);
     expect(res.result).toHaveLength(2);
     expect(res.result[1].versionCode).toBe("2");
-    expect(res.result[1].hasPassword).toBe(true);
   });
 
   it("listVersion 大屏不存在 → 抛", async () => {

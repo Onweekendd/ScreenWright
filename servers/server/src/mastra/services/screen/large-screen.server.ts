@@ -5,13 +5,13 @@ import { HTTPException } from "hono/http-exception";
 import type { Prisma } from "~/generated/prisma/client";
 
 import { ok } from "@/lib/http/envelope";
-import { prismaClient } from "@/mastra/storage/prisma";
 import {
   ensureVersionRow,
   mirrorVersionToScreen,
   pickVersionFields,
   resolveVersionCode
 } from "@/mastra/services/version/version.server";
+import { prismaClient } from "@/mastra/storage/prisma";
 import type {
   LargeGroupSaveReq,
   LargeGroupUpdateReq,
@@ -76,8 +76,6 @@ function toScreenItem(row: NonNullable<ScreenRow>) {
     type: row.type,
     stockType: row.stockType,
     groupId: row.groupId,
-    password: row.password ?? "",
-    hasPassword: !!row.password,
     invitationCode: row.invitationCode ?? "",
     status: row.status,
     expirationTime: row.expirationTime ? row.expirationTime.toISOString() : null,
@@ -157,8 +155,7 @@ async function loadScreenLayers(largeId: number, screenConfig: unknown, versionC
    * 分组成员的行 status=false（顶层），建组时会被写进版本 config，故必须在读取时剔除；
    * 面板成员 status=true 本就不在版本 config 里，这里一并兜底。
    */
-  const collectIds = (v: unknown): number[] =>
-    Array.isArray(v) ? v.map(Number).filter((n) => !Number.isNaN(n)) : [];
+  const collectIds = (v: unknown): number[] => (Array.isArray(v) ? v.map(Number).filter((n) => !Number.isNaN(n)) : []);
   const nestedIds = new Set<number>();
   for (const row of rows) {
     const cfg = (row.config as Record<string, unknown>) ?? {};
@@ -242,12 +239,15 @@ export async function listScreens(userId: number, role: number, req: ScreenListR
   if (role !== 0) {
     where.userId = userId;
   } // 超管可看全部
+
   if (name) {
     where.name = { contains: name, mode: "insensitive" };
   }
+
   if (typeof groupId === "number" && groupId > 0) {
     where.groupId = groupId;
   }
+
   if (typeof status === "boolean") {
     where.status = status;
   }
@@ -295,8 +295,6 @@ function toScreenMeta(row: NonNullable<ScreenRow>) {
     type: row.type,
     stockType: row.stockType,
     groupId: row.groupId,
-    password: row.password ?? "",
-    hasPassword: !!row.password,
     invitationCode: row.invitationCode ?? "",
     status: row.status,
     expirationTime: row.expirationTime ? row.expirationTime.toISOString() : null,
@@ -324,15 +322,15 @@ export async function getScreenMeta(userId: number, role: number, id: number, ve
     throw new HTTPException(401, { message: "无权访问该大屏" });
   }
   const vc = await resolveVersionCode(id, versionCode);
-  // status / versionDesc / publishInfo / expirationTime / password 是版本作用域字段，需 merge 后取
+  // status / versionDesc / publishInfo / expirationTime 是版本作用域字段，需 merge 后取
   return ok(toScreenMeta(mergeVersion(row, await ensureVersionRow(id, vc))));
 }
 
 /**
- * 预览打开（分享 / view 模式）。开源版无发布 / 权益 / 密码强校验，
+ * 预览打开（分享 / view 模式）。开源版无发布 / 权益校验，
  * 直接返回带 layers 的详情。
  */
-export async function openScreen(id: number, _password?: string, versionCode?: string | null) {
+export async function openScreen(id: number, versionCode?: string | null) {
   const row = await prismaClient.largeScreen.findUnique({ where: { id } });
   if (!row) {
     throw new HTTPException(404, { message: "大屏不存在" });
@@ -340,11 +338,6 @@ export async function openScreen(id: number, _password?: string, versionCode?: s
   const vc = await resolveVersionCode(id, versionCode);
   const merged = mergeVersion(row, await ensureVersionRow(id, vc));
   return ok(toLargeScreeInfo(merged, await loadScreenLayers(id, merged.config, vc)));
-}
-
-/** 预览前置校验：是否需要密码 / 能否直接进（开源版恒为 true） */
-export async function openCheck(_id: number, _password?: string) {
-  return ok(true);
 }
 
 /**
@@ -372,7 +365,6 @@ export async function createScreen(userId: number, userName: string, req: Screen
       groupId: req.groupId ?? 0,
       type: req.type ?? 1,
       stockType: req.stockType ?? 1,
-      password: req.password || null,
       config: toJson(req.config),
       detail: toJson(req.detail),
       invitationCode: randomUUID(),
@@ -387,7 +379,6 @@ export async function createScreen(userId: number, userName: string, req: Screen
       versionCode,
       config: toJson(req.config) ?? undefined,
       detail: toJson(req.detail) ?? undefined,
-      password: req.password || null,
       createdBy: userName,
       updatedBy: userName
     }
@@ -454,10 +445,6 @@ export async function updateScreen(
       vdata[k] = toJson(v);
     }
   }
-  if (req.password !== undefined) {
-    vdata.password = req.password || null;
-  }
-
   await prismaClient.largeScreen.update({
     where: { id },
     data: identity as unknown as Prisma.LargeScreenUpdateInput

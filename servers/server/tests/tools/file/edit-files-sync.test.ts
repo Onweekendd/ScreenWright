@@ -275,16 +275,16 @@ describe("edit_files 前端同步路径", () => {
     const screenRoot = await screenFixture();
     const filePath = path.join(screenRoot, "info.json");
     // 挑一个 schema 上可有可无的字段（走 catchall）——删必填字段会被前面那道校验直接挡掉
-    expect(JSON.parse(await fsp.readFile(filePath, "utf8"))).toHaveProperty("hasPassword");
+    expect(JSON.parse(await fsp.readFile(filePath, "utf8"))).toHaveProperty("moduleId");
     const payloads: Array<Record<string, unknown>> = [];
-    const files = [{ path: filePath, edits: [{ old_string: '  "hasPassword": null,\n', new_string: "" }] }];
+    const files = [{ path: filePath, edits: [{ old_string: '  "moduleId": null,\n', new_string: "" }] }];
 
     await executeEditFiles(files, { toolCallId: "screen-info-delete", onSuspend: (payload) => payloads.push(payload) });
     await executeEditFiles(files, { toolCallId: "screen-info-delete", resumeData: opReply(payloads[0]) });
 
     // info.json 是这些字段的唯一来源，整份替换才有删除语义——合并写法下旧值会被静默补回来
     const after = JSON.parse(await fsp.readFile(filePath, "utf8"));
-    expect(after).not.toHaveProperty("hasPassword");
+    expect(after).not.toHaveProperty("moduleId");
     expect(after.id).toBe(75);
     // 不在 info.json 里、各自独立落盘的三个字段不能被这次替换清空
     expect(after.dataFilterArr).toBeUndefined();

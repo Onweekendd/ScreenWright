@@ -3,11 +3,9 @@ import type { BaseEntity } from "@/model/BaseEntity";
 export interface ScreenVersion {
   id: number;
   versionCode: string;
-  hasPassword: boolean;
   hasExpirationTime: boolean;
   /** 状态：接口未设置时返回 null */
   status: boolean | null;
-  password: string;
   expirationTime: string | null;
   versionDesc?: string | null;
   updatedTime?: string | null;
@@ -46,7 +44,6 @@ export interface CreateVersion {
   config: string;
   detail: string;
   groupId: number | string;
-  password: string;
   name: string;
   type: number;
   id: number;

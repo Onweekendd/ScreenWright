@@ -18,7 +18,6 @@ export const ScreenSaveSchema = z
     groupId: z.coerce.number().optional(),
     type: z.number().optional(),
     stockType: z.number().optional(),
-    password: z.string().optional(),
     versionCode: z.union([z.string(), z.null()]).optional(),
     config: z.any().optional(),
     detail: z.any().optional()
@@ -34,7 +33,6 @@ export const ScreenUpdateSchema = z
     type: z.number().optional(),
     stockType: z.number().optional(),
     status: z.boolean().optional(),
-    password: z.union([z.string(), z.null()]).optional(),
     backgroundUrl: z.union([z.string(), z.null()]).optional(),
     sceneInfo: z.union([z.string(), z.null()]).optional(),
     minioIds: z.any().optional(),

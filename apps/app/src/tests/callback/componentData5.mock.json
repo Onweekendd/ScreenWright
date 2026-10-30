@@ -552,7 +552,6 @@
       "horizontalConst": "Left"
     }
   ],
-  "password": "",
   "status": null,
   "userId": 159,
   "type": 1,
@@ -564,7 +563,6 @@
   "dataFilterArr": "{\"API过滤器\":{\"name\":\"API过滤器\",\"callBack\":[\"selectedId\",\"keyword\"],\"callBackStatus\":false,\"bindComponent\":[{\"label\":\"柱状图\",\"id\":3224201}],\"checked\":true,\"notSaved\":false,\"tempPool\":{\"callBack\":[\"selectedId\",\"keyword\"],\"dataFormatter\":\"\"},\"show\":true,\"dataFormatter\":\"(data, callbackArgs) => {\\n    const user = data?.data ?? data ?? {};\\n    return [\\n        { seriesName: \\\"用户信息\\\", name: \\\"ID\\\", value: user.id || 0 },\\n        { seriesName: \\\"用户信息\\\", name: \\\"姓名长度\\\", value: (user.name || \\\"\\\").length },\\n        { seriesName: \\\"用户信息\\\", name: \\\"邮箱长度\\\", value: (user.email || \\\"\\\").length },\\n        { seriesName: \\\"用户信息\\\", name: \\\"角色码\\\", value: user.role === \\\"admin\\\" ? 100 : 50 }\\n    ];\\n}\"}}",
   "aniFrameSet": "{}",
   "statusAnimation": "{}",
-  "hasPassword": null,
   "hasExpirationTime": null,
   "encodedControl": null
 }

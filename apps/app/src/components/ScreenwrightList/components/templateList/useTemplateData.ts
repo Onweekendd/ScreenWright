@@ -120,7 +120,6 @@ export const useTemplateData = createGlobalState(() => {
     const params: DataModelReq = {
       applicationCode: "BI",
       config: "[]",
-      password: "",
       name: dataRes.name,
       groupId: dataRes.groupId ? (dataRes.groupId < 0 ? 0 : dataRes.groupId) : 0,
       detail: JSON.stringify(detail),

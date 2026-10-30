@@ -20,7 +20,6 @@ export type DataModelRes = BaseEntity<DataModel>;
 export interface DataModelReq {
   applicationCode: string;
   groupId: number | string;
-  password: string;
   name: string;
   type: number;
   config: string;

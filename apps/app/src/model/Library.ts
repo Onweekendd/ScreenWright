@@ -22,8 +22,6 @@ export interface ScreenItem {
   type: number;
   stockType: number;
   groupId: number;
-  password: string | null;
-  hasPassword: boolean | null;
   invitationCode: string;
   status: boolean;
   expirationTime: string | null;

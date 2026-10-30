@@ -23,7 +23,7 @@ const getFormData = (data = {}) => {
   }
   return formData;
 };
-export const queryBlueprint = (params: { largeId: number; password?: string; type?: number }) => {
+export const queryBlueprint = (params: { largeId: number; type?: number }) => {
   const formdata = getFormData(params);
   return request<BaseEntity<any>>({
     url: `${BaseName.System}/blue/print/query/data`,
@@ -32,7 +32,7 @@ export const queryBlueprint = (params: { largeId: number; password?: string; typ
   });
 };
 
-export const queryOpenBlueprint = (params: { largeId: number; password: string; type: number }) => {
+export const queryOpenBlueprint = (params: { largeId: number; type: number }) => {
   const formdata = getFormData(params);
   return request<BaseEntity<any>>({
     url: `${BaseName.Online}/largeScreenAgg/blue/print/open/data`,

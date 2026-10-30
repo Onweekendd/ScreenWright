@@ -1645,7 +1645,6 @@
       "terminalId": ""
     }
   ],
-  "password": "",
   "status": null,
   "userId": 219,
   "type": 1,
@@ -1657,7 +1656,6 @@
   "dataFilterArr": "{}",
   "aniFrameSet": "{\"animationList\":[{\"id\":\"psNnjLcn-tVz8-4wRt-b0O1-PyWgTGp7\",\"name\":\"动画1\",\"componentSetting\":[{\"id\":2036954,\"animationType\":\"slide-in\",\"direction\":\"left\",\"timingFunction\":\"linear\",\"delay\":400,\"duration\":1400,\"type\":\"load\"}],\"isEnable\":true}],\"activeAnimationList\":[{\"animationId\":\"psNnjLcn-tVz8-4wRt-b0O1-PyWgTGp7\",\"type\":\"load\"}]}",
   "statusAnimation": "{}",
-  "hasPassword": null,
   "hasExpirationTime": null,
   "encodedControl": null
 }

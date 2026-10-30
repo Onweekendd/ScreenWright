@@ -274,7 +274,6 @@
       "isLock": false
     }
   ],
-  "password": "",
   "status": null,
   "userId": 219,
   "type": 1,
@@ -286,7 +285,6 @@
   "dataFilterArr": "{}",
   "aniFrameSet": "{\"animationList\":[{\"id\":\"dafpV6U6-7Hul-498L-bt9X-07JuKjqQ\",\"name\":\"动画1\",\"componentSetting\":[{\"id\":2031993,\"animationType\":\"none\",\"direction\":\"none\",\"timingFunction\":\"none\",\"delay\":0,\"duration\":0,\"type\":\"none\"}],\"isEnable\":true}]}",
   "statusAnimation": "{\"animations\":{\"ea0lSfT4-ekhh-4qGu-8gRV-lM79X9vxd1zK\":{\"id\":\"ea0lSfT4-ekhh-4qGu-8gRV-lM79X9vxd1zK\",\"name\":\"动画1\",\"duration\":1000}},\"statusAnimations\":{\"ea0lSfT4-ekhh-4qGu-8gRV-lM79X9vxd1zK\":{\"qrUVULIz-sf0x-4y8G-8om8-U8NxqaHfw3GG\":{\"statusId\":\"qrUVULIz-sf0x-4y8G-8om8-U8NxqaHfw3GG\",\"statusName\":\"状态1\"}}},\"componentAnimations\":{\"ea0lSfT4-ekhh-4qGu-8gRV-lM79X9vxd1zK\":{\"qrUVULIz-sf0x-4y8G-8om8-U8NxqaHfw3GG\":{}}}}",
-  "hasPassword": null,
   "hasExpirationTime": null,
   "encodedControl": null
 }

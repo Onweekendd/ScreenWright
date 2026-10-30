@@ -233,7 +233,6 @@
       "openFilter": true
     }
   ],
-  "password": "",
   "status": null,
   "userId": 219,
   "type": 1,
@@ -284,7 +283,6 @@
   },
   "aniFrameSet": "{}",
   "statusAnimation": "{}",
-  "hasPassword": null,
   "hasExpirationTime": null,
   "encodedControl": null
 }

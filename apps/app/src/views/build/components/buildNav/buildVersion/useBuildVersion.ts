@@ -172,7 +172,6 @@ export const useBuildVersion = () => {
         groupId: "",
         id: Number(id.value),
         name: navInfo.value.name,
-        password: "",
         type: 1
       });
 

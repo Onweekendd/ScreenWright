@@ -19,7 +19,7 @@ const ANONYMOUS = { userId: 0, userName: "anonymous", role: -1 } as const;
  * 只放行「读」，且这些 service 都不依赖 userId。
  */
 const PUBLIC_PATHS = [
-  /^\/online\/largeScreenAgg\/(open|openCheck|openCheckEquities)$/,
+  /^\/online\/largeScreenAgg\/(open|openCheckEquities)$/,
   /^\/bi-system\/largeScreen\/openQuote$/
 ];
 

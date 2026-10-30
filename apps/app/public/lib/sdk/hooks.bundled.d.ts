@@ -14879,10 +14879,8 @@ interface MenuItemForRender {
 interface ScreenVersion {
     id: number;
     versionCode: string;
-    hasPassword: boolean;
     hasExpirationTime: boolean;
     status: boolean;
-    password: string;
     expirationTime: string | null;
     versionDesc?: string | null;
     updatedTime?: string | null;

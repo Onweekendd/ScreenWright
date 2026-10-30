@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 import { copyFile, updateFile, uploadFile, usedSize } from "@/mastra/services/ai-assets/assets.server";
-import { createScreen, openCheck, openScreen } from "@/mastra/services/screen/large-screen.server";
+import { createScreen, openScreen } from "@/mastra/services/screen/large-screen.server";
 import { saveLayer } from "@/mastra/services/screen/layers.server";
 import { ScreenSaveSchema } from "@/mastra/types/large-screen";
 import type { AuthVariables } from "@/middleware/auth";
@@ -81,14 +81,8 @@ onlineRouter.post("/largeScreenAgg/save", async (c) => {
 
 // /online/largeScreenAgg/open → 预览打开（含 layers）
 onlineRouter.post("/largeScreenAgg/open", async (c) => {
-  const b = (await c.req.json().catch(() => ({}))) as { id?: number; password?: string; versionCode?: string };
-  return c.json(await openScreen(Number(b.id), b.password, b.versionCode ?? c.req.header("Version-Code")));
-});
-
-// /online/largeScreenAgg/openCheck → 预览前置校验
-onlineRouter.post("/largeScreenAgg/openCheck", async (c) => {
-  const b = (await c.req.json().catch(() => ({}))) as { id?: number; password?: string };
-  return c.json(await openCheck(Number(b.id), b.password));
+  const b = (await c.req.json().catch(() => ({}))) as { id?: number; versionCode?: string };
+  return c.json(await openScreen(Number(b.id), b.versionCode ?? c.req.header("Version-Code")));
 });
 
 // /online/largeScreenAgg/openCheckEquities → 权益校验（开源版恒通过）

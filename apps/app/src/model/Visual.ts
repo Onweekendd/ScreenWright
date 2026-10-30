@@ -90,8 +90,6 @@ export interface ScreenItem {
   type: number;
   stockType: StockType;
   groupId: number;
-  password: string;
-  hasPassword: boolean;
   invitationCode: string;
   status: boolean;
   expirationTime: string | null;

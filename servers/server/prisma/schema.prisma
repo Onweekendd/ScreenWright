@@ -61,19 +61,19 @@ model ThreadModel {
 /// 只存 url（本地磁盘或对象存储路径），不存像素——像素交给现有的 `src/lib/storage/`
 /// 那套 fs/minio 抽象，这张表只管「有没有生成过、生成的是哪张」。
 model GeneratedImage {
-  id           String   @id @default(cuid())
+  id            String   @id @default(cuid())
   /// sha256(结构化 prompt + seed + model)，同一份输入不用重新生成
-  promptHash   String   @unique @map("prompt_hash")
+  promptHash    String   @unique @map("prompt_hash")
   /// 结构化 prompt 原文，便于事后排查「为什么生出这张」
-  prompt       String
-  model        String
-  seed         Int?
-  width        Int
-  height       Int
-  url          String
+  prompt        String
+  model         String
+  seed          Int?
+  width         Int
+  height        Int
+  url           String
   /// 发给生图服务的参考图 url（按顺序），没有参考图为空
-  referenceUrls Json?   @map("reference_urls")
-  createdTime  DateTime @default(now()) @map("created_time")
+  referenceUrls Json?    @map("reference_urls")
+  createdTime   DateTime @default(now()) @map("created_time")
 
   @@map("generated_image")
 }
@@ -81,24 +81,24 @@ model GeneratedImage {
 /// AI 生成的视频。和 GeneratedImage 同一个思路：只存 url（视频文件在 `src/lib/storage/`），
 /// 这张表管「这份输入生成过没有」——视频慢且贵，同一份输入不重新生成。
 model GeneratedVideo {
-  id            String   @id @default(cuid())
+  id                 String   @id @default(cuid())
   /// sha256(prompt + model + 输出参数 + 所有输入素材)，同一份输入不用重新生成
-  promptHash    String   @unique @map("prompt_hash")
-  prompt        String
-  model         String
-  durationSec   Int      @map("duration_sec")
-  resolution    String
-  ratio         String
-  url           String
+  promptHash         String   @unique @map("prompt_hash")
+  prompt             String
+  model              String
+  durationSec        Int      @map("duration_sec")
+  resolution         String
+  ratio              String
+  url                String
   /// 首帧图 url（图生视频），文生视频为空
-  firstFrameUrl String?  @map("first_frame_url")
-  lastFrameUrl  String?  @map("last_frame_url")
+  firstFrameUrl      String?  @map("first_frame_url")
+  lastFrameUrl       String?  @map("last_frame_url")
   referenceImageUrls String[] @default([]) @map("reference_image_urls")
   referenceVideoUrls String[] @default([]) @map("reference_video_urls")
   referenceAudioUrls String[] @default([]) @map("reference_audio_urls")
   /// 服务商侧的任务 id，事后查账、排查用
-  taskId        String?  @map("task_id")
-  createdTime   DateTime @default(now()) @map("created_time")
+  taskId             String?  @map("task_id")
+  createdTime        DateTime @default(now()) @map("created_time")
 
   @@map("generated_video")
 }
@@ -206,13 +206,13 @@ model EvalRun {
 
 // 一个 case 的一次尝试。同一 case 跑 N 遍就是 N 行(attempt 区分),通过率靠它算。
 model EvalCase {
-  id      String  @id @default(cuid())
-  runId   String  @map("run_id")
-  run     EvalRun @relation(fields: [runId], references: [id], onDelete: Cascade)
-  caseId  String  @map("case_id")
-  title   String
-  attempt Int
-  passed  Boolean
+  id           String  @id @default(cuid())
+  runId        String  @map("run_id")
+  run          EvalRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  caseId       String  @map("case_id")
+  title        String
+  attempt      Int
+  passed       Boolean
   /// 点进去看那次对话;driver 出错到拿不到 thread 时为 null
   threadId     String? @map("thread_id")
   timedOut     Boolean @default(false) @map("timed_out")
@@ -231,7 +231,7 @@ model EvalCase {
   /// L1 断言明细 Assertion[]
   assertions Json
   /// 挂起流水账摘要 { type, channel, toolName }[]
-  suspends Json
+  suspends   Json
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -282,36 +282,36 @@ model BiUser {
 // 大屏（对齐前端 src/model/Visual.ts 的 ScreenItem）
 // 简化为单版本：config/detail 直接存行上，不做 t_large_screen_config 多版本机制
 model LargeScreen {
-  id              Int         @id @default(autoincrement())
-  userId          Int         @map("user_id")
-  moduleId        Int?        @map("module_id")
+  id              Int       @id @default(autoincrement())
+  userId          Int       @map("user_id")
+  moduleId        Int?      @map("module_id")
   name            String
   config          Json? // 读出 JSON.stringify 成前端期望的 string
   detail          Json?
-  backgroundUrl   String?     @map("background_url")
-  sceneInfo       String?     @map("scene_info")
-  type            Int         @default(1) // 1私有 2协作 3系统模板
-  stockType       Int         @default(1) @map("stock_type")
-  groupId         Int         @default(0) @map("group_id") // 0=未分组
+  backgroundUrl   String?   @map("background_url")
+  sceneInfo       String?   @map("scene_info")
+  type            Int       @default(1) // 1私有 2协作 3系统模板
+  stockType       Int       @default(1) @map("stock_type")
+  groupId         Int       @default(0) @map("group_id") // 0=未分组
   password        String? // 大屏访问密码(bcrypt)，可为空
-  invitationCode  String?     @map("invitation_code")
-  status          Boolean     @default(false) // 是否已发布
-  expirationTime  DateTime?   @map("expiration_time")
-  sort            Int         @default(0)
-  versionCode     String?     @map("version_code")
-  versionDesc     String?     @map("version_desc")
-  minioIds        Json?       @map("minio_ids")
-  dataFilterArr   Json?       @map("data_filter_arr")
-  aniFrameSet     Json?       @map("ani_frame_set")
-  encodedControl  Json?       @map("encoded_control")
-  statusAnimation Json?       @map("status_animation")
-  publishInfo     String?     @map("publish_info")
+  invitationCode  String?   @map("invitation_code")
+  status          Boolean   @default(false) // 是否已发布
+  expirationTime  DateTime? @map("expiration_time")
+  sort            Int       @default(0)
+  versionCode     String?   @map("version_code")
+  versionDesc     String?   @map("version_desc")
+  minioIds        Json?     @map("minio_ids")
+  dataFilterArr   Json?     @map("data_filter_arr")
+  aniFrameSet     Json?     @map("ani_frame_set")
+  encodedControl  Json?     @map("encoded_control")
+  statusAnimation Json?     @map("status_animation")
+  publishInfo     String?   @map("publish_info")
   path            String?
-  newApplication  Boolean     @default(false) @map("new_application")
-  createdBy       String?     @map("created_by")
-  createdTime     DateTime    @default(now()) @map("created_time")
-  updatedBy       String?     @map("updated_by")
-  updatedTime     DateTime    @updatedAt @map("updated_time")
+  newApplication  Boolean   @default(false) @map("new_application")
+  createdBy       String?   @map("created_by")
+  createdTime     DateTime  @default(now()) @map("created_time")
+  updatedBy       String?   @map("updated_by")
+  updatedTime     DateTime  @updatedAt @map("updated_time")
 
   @@index([userId])
   @@index([groupId])
@@ -344,7 +344,6 @@ model LargeScreenVersion {
   updatedTime     DateTime  @updatedAt @map("updated_time")
 
   @@unique([largeId, versionCode])
-  @@index([largeId])
   @@map("large_screen_version")
 }
 
@@ -380,7 +379,7 @@ model Layers {
   updatedBy   String?  @map("updated_by")
   updatedTime DateTime @updatedAt @map("updated_time")
 
-  @@index([largeId])
+  @@index([largeId, versionCode])
   @@map("layers")
 }
 
@@ -431,7 +430,7 @@ model DataLocal {
   fileName    String?  @map("file_name")
   size        Int?
   charsetName String?  @map("charset_name")
-  content     Json?    // 解析后的行数据（{ headers, values }）
+  content     Json? // 解析后的行数据（{ headers, values }）
   layerIds    Json?    @map("layer_ids")
   createdBy   String?  @map("created_by")
   createdTime DateTime @default(now()) @map("created_time")
@@ -446,32 +445,31 @@ model DataLocal {
 // 素材文件（对齐 Java t_minio）：图片 / 视频 / 模型等用户上传资源
 // blobKey 指向本地 FS blob 存储；url 为可访问地址
 model MinioFile {
-  id           Int      @id @default(autoincrement())
-  userId       Int?     @map("user_id")
-  name         String
-  fileName     String?  @map("file_name") // 类型分类 / 扩展名
-  url          String?
-  blobKey      String?  @map("blob_key")
-  resourceType Int?     @map("resource_type")
-  fileType     Int?     @map("file_type")
-  auth         Int?
-  largeId      Int?     @map("large_id")
-  groupId      Int?     @map("group_id")
-  cover        String?
-  coverName    String?  @map("cover_name")
-  resourceSize Int?     @map("resource_size")
-  layerIds     Json?    @map("layer_ids")
-  largeUseIds  Json?    @map("large_use_ids")
+  id               Int      @id @default(autoincrement())
+  userId           Int?     @map("user_id")
+  name             String
+  fileName         String?  @map("file_name") // 类型分类 / 扩展名
+  url              String?
+  blobKey          String?  @map("blob_key")
+  resourceType     Int?     @map("resource_type")
+  fileType         Int?     @map("file_type")
+  auth             Int?
+  largeId          Int?     @map("large_id")
+  groupId          Int?     @map("group_id")
+  cover            String?
+  coverName        String?  @map("cover_name")
+  resourceSize     Int?     @map("resource_size")
+  layerIds         Json?    @map("layer_ids")
+  largeUseIds      Json?    @map("large_use_ids")
   /// AI 生成的素材：对应的生图记录（提示词 / seed / 模型在那边）；裁切、上传的素材为空
-  generatedImageId String? @map("generated_image_id")
+  generatedImageId String?  @map("generated_image_id")
   /// AI 生成的素材：生成时参考了哪些素材（素材 id 数组），画布上的血缘连线从这里来
-  referenceFileIds Json?   @map("reference_file_ids")
-  createdBy    String?  @map("created_by")
-  createdTime  DateTime @default(now()) @map("created_time")
-  updatedBy    String?  @map("updated_by")
-  updatedTime  DateTime @updatedAt @map("updated_time")
+  referenceFileIds Json?    @map("reference_file_ids")
+  createdBy        String?  @map("created_by")
+  createdTime      DateTime @default(now()) @map("created_time")
+  updatedBy        String?  @map("updated_by")
+  updatedTime      DateTime @updatedAt @map("updated_time")
 
-  @@index([userId])
   @@index([groupId])
   @@index([userId, url])
   @@map("minio_file")

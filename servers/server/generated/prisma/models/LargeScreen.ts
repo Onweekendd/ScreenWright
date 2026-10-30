@@ -56,7 +56,6 @@ export type LargeScreenMinAggregateOutputType = {
   type: number | null
   stockType: number | null
   groupId: number | null
-  password: string | null
   invitationCode: string | null
   status: boolean | null
   expirationTime: Date | null
@@ -82,7 +81,6 @@ export type LargeScreenMaxAggregateOutputType = {
   type: number | null
   stockType: number | null
   groupId: number | null
-  password: string | null
   invitationCode: string | null
   status: boolean | null
   expirationTime: Date | null
@@ -110,7 +108,6 @@ export type LargeScreenCountAggregateOutputType = {
   type: number
   stockType: number
   groupId: number
-  password: number
   invitationCode: number
   status: number
   expirationTime: number
@@ -163,7 +160,6 @@ export type LargeScreenMinAggregateInputType = {
   type?: true
   stockType?: true
   groupId?: true
-  password?: true
   invitationCode?: true
   status?: true
   expirationTime?: true
@@ -189,7 +185,6 @@ export type LargeScreenMaxAggregateInputType = {
   type?: true
   stockType?: true
   groupId?: true
-  password?: true
   invitationCode?: true
   status?: true
   expirationTime?: true
@@ -217,7 +212,6 @@ export type LargeScreenCountAggregateInputType = {
   type?: true
   stockType?: true
   groupId?: true
-  password?: true
   invitationCode?: true
   status?: true
   expirationTime?: true
@@ -337,7 +331,6 @@ export type LargeScreenGroupByOutputType = {
   type: number
   stockType: number
   groupId: number
-  password: string | null
   invitationCode: string | null
   status: boolean
   expirationTime: Date | null
@@ -393,7 +386,6 @@ export type LargeScreenWhereInput = {
   type?: Prisma.IntFilter<"LargeScreen"> | number
   stockType?: Prisma.IntFilter<"LargeScreen"> | number
   groupId?: Prisma.IntFilter<"LargeScreen"> | number
-  password?: Prisma.StringNullableFilter<"LargeScreen"> | string | null
   invitationCode?: Prisma.StringNullableFilter<"LargeScreen"> | string | null
   status?: Prisma.BoolFilter<"LargeScreen"> | boolean
   expirationTime?: Prisma.DateTimeNullableFilter<"LargeScreen"> | Date | string | null
@@ -426,7 +418,6 @@ export type LargeScreenOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   stockType?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
-  password?: Prisma.SortOrderInput | Prisma.SortOrder
   invitationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -462,7 +453,6 @@ export type LargeScreenWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.IntFilter<"LargeScreen"> | number
   stockType?: Prisma.IntFilter<"LargeScreen"> | number
   groupId?: Prisma.IntFilter<"LargeScreen"> | number
-  password?: Prisma.StringNullableFilter<"LargeScreen"> | string | null
   invitationCode?: Prisma.StringNullableFilter<"LargeScreen"> | string | null
   status?: Prisma.BoolFilter<"LargeScreen"> | boolean
   expirationTime?: Prisma.DateTimeNullableFilter<"LargeScreen"> | Date | string | null
@@ -495,7 +485,6 @@ export type LargeScreenOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   stockType?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
-  password?: Prisma.SortOrderInput | Prisma.SortOrder
   invitationCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -536,7 +525,6 @@ export type LargeScreenScalarWhereWithAggregatesInput = {
   type?: Prisma.IntWithAggregatesFilter<"LargeScreen"> | number
   stockType?: Prisma.IntWithAggregatesFilter<"LargeScreen"> | number
   groupId?: Prisma.IntWithAggregatesFilter<"LargeScreen"> | number
-  password?: Prisma.StringNullableWithAggregatesFilter<"LargeScreen"> | string | null
   invitationCode?: Prisma.StringNullableWithAggregatesFilter<"LargeScreen"> | string | null
   status?: Prisma.BoolWithAggregatesFilter<"LargeScreen"> | boolean
   expirationTime?: Prisma.DateTimeNullableWithAggregatesFilter<"LargeScreen"> | Date | string | null
@@ -568,7 +556,6 @@ export type LargeScreenCreateInput = {
   type?: number
   stockType?: number
   groupId?: number
-  password?: string | null
   invitationCode?: string | null
   status?: boolean
   expirationTime?: Date | string | null
@@ -601,7 +588,6 @@ export type LargeScreenUncheckedCreateInput = {
   type?: number
   stockType?: number
   groupId?: number
-  password?: string | null
   invitationCode?: string | null
   status?: boolean
   expirationTime?: Date | string | null
@@ -633,7 +619,6 @@ export type LargeScreenUpdateInput = {
   type?: Prisma.IntFieldUpdateOperationsInput | number
   stockType?: Prisma.IntFieldUpdateOperationsInput | number
   groupId?: Prisma.IntFieldUpdateOperationsInput | number
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -666,7 +651,6 @@ export type LargeScreenUncheckedUpdateInput = {
   type?: Prisma.IntFieldUpdateOperationsInput | number
   stockType?: Prisma.IntFieldUpdateOperationsInput | number
   groupId?: Prisma.IntFieldUpdateOperationsInput | number
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -699,7 +683,6 @@ export type LargeScreenCreateManyInput = {
   type?: number
   stockType?: number
   groupId?: number
-  password?: string | null
   invitationCode?: string | null
   status?: boolean
   expirationTime?: Date | string | null
@@ -731,7 +714,6 @@ export type LargeScreenUpdateManyMutationInput = {
   type?: Prisma.IntFieldUpdateOperationsInput | number
   stockType?: Prisma.IntFieldUpdateOperationsInput | number
   groupId?: Prisma.IntFieldUpdateOperationsInput | number
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -764,7 +746,6 @@ export type LargeScreenUncheckedUpdateManyInput = {
   type?: Prisma.IntFieldUpdateOperationsInput | number
   stockType?: Prisma.IntFieldUpdateOperationsInput | number
   groupId?: Prisma.IntFieldUpdateOperationsInput | number
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitationCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -797,7 +778,6 @@ export type LargeScreenCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   stockType?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
-  password?: Prisma.SortOrder
   invitationCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrder
@@ -838,7 +818,6 @@ export type LargeScreenMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   stockType?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
-  password?: Prisma.SortOrder
   invitationCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrder
@@ -864,7 +843,6 @@ export type LargeScreenMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   stockType?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
-  password?: Prisma.SortOrder
   invitationCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrder
@@ -904,7 +882,6 @@ export type LargeScreenSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   type?: boolean
   stockType?: boolean
   groupId?: boolean
-  password?: boolean
   invitationCode?: boolean
   status?: boolean
   expirationTime?: boolean
@@ -937,7 +914,6 @@ export type LargeScreenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   type?: boolean
   stockType?: boolean
   groupId?: boolean
-  password?: boolean
   invitationCode?: boolean
   status?: boolean
   expirationTime?: boolean
@@ -970,7 +946,6 @@ export type LargeScreenSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   type?: boolean
   stockType?: boolean
   groupId?: boolean
-  password?: boolean
   invitationCode?: boolean
   status?: boolean
   expirationTime?: boolean
@@ -1003,7 +978,6 @@ export type LargeScreenSelectScalar = {
   type?: boolean
   stockType?: boolean
   groupId?: boolean
-  password?: boolean
   invitationCode?: boolean
   status?: boolean
   expirationTime?: boolean
@@ -1024,7 +998,7 @@ export type LargeScreenSelectScalar = {
   updatedTime?: boolean
 }
 
-export type LargeScreenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "moduleId" | "name" | "config" | "detail" | "backgroundUrl" | "sceneInfo" | "type" | "stockType" | "groupId" | "password" | "invitationCode" | "status" | "expirationTime" | "sort" | "versionCode" | "versionDesc" | "minioIds" | "dataFilterArr" | "aniFrameSet" | "encodedControl" | "statusAnimation" | "publishInfo" | "path" | "newApplication" | "createdBy" | "createdTime" | "updatedBy" | "updatedTime", ExtArgs["result"]["largeScreen"]>
+export type LargeScreenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "moduleId" | "name" | "config" | "detail" | "backgroundUrl" | "sceneInfo" | "type" | "stockType" | "groupId" | "invitationCode" | "status" | "expirationTime" | "sort" | "versionCode" | "versionDesc" | "minioIds" | "dataFilterArr" | "aniFrameSet" | "encodedControl" | "statusAnimation" | "publishInfo" | "path" | "newApplication" | "createdBy" | "createdTime" | "updatedBy" | "updatedTime", ExtArgs["result"]["largeScreen"]>
 
 export type $LargeScreenPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LargeScreen"
@@ -1041,7 +1015,6 @@ export type $LargeScreenPayload<ExtArgs extends runtime.Types.Extensions.Interna
     type: number
     stockType: number
     groupId: number
-    password: string | null
     invitationCode: string | null
     status: boolean
     expirationTime: Date | null
@@ -1494,7 +1467,6 @@ export interface LargeScreenFieldRefs {
   readonly type: Prisma.FieldRef<"LargeScreen", 'Int'>
   readonly stockType: Prisma.FieldRef<"LargeScreen", 'Int'>
   readonly groupId: Prisma.FieldRef<"LargeScreen", 'Int'>
-  readonly password: Prisma.FieldRef<"LargeScreen", 'String'>
   readonly invitationCode: Prisma.FieldRef<"LargeScreen", 'String'>
   readonly status: Prisma.FieldRef<"LargeScreen", 'Boolean'>
   readonly expirationTime: Prisma.FieldRef<"LargeScreen", 'DateTime'>

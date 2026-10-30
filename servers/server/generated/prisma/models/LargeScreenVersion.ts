@@ -44,7 +44,6 @@ export type LargeScreenVersionMinAggregateOutputType = {
   backgroundUrl: string | null
   sceneInfo: string | null
   status: boolean | null
-  password: string | null
   expirationTime: Date | null
   publishInfo: string | null
   createdBy: string | null
@@ -61,7 +60,6 @@ export type LargeScreenVersionMaxAggregateOutputType = {
   backgroundUrl: string | null
   sceneInfo: string | null
   status: boolean | null
-  password: string | null
   expirationTime: Date | null
   publishInfo: string | null
   createdBy: string | null
@@ -85,7 +83,6 @@ export type LargeScreenVersionCountAggregateOutputType = {
   encodedControl: number
   minioIds: number
   status: number
-  password: number
   expirationTime: number
   publishInfo: number
   createdBy: number
@@ -114,7 +111,6 @@ export type LargeScreenVersionMinAggregateInputType = {
   backgroundUrl?: true
   sceneInfo?: true
   status?: true
-  password?: true
   expirationTime?: true
   publishInfo?: true
   createdBy?: true
@@ -131,7 +127,6 @@ export type LargeScreenVersionMaxAggregateInputType = {
   backgroundUrl?: true
   sceneInfo?: true
   status?: true
-  password?: true
   expirationTime?: true
   publishInfo?: true
   createdBy?: true
@@ -155,7 +150,6 @@ export type LargeScreenVersionCountAggregateInputType = {
   encodedControl?: true
   minioIds?: true
   status?: true
-  password?: true
   expirationTime?: true
   publishInfo?: true
   createdBy?: true
@@ -266,7 +260,6 @@ export type LargeScreenVersionGroupByOutputType = {
   encodedControl: runtime.JsonValue | null
   minioIds: runtime.JsonValue | null
   status: boolean
-  password: string | null
   expirationTime: Date | null
   publishInfo: string | null
   createdBy: string | null
@@ -313,7 +306,6 @@ export type LargeScreenVersionWhereInput = {
   encodedControl?: Prisma.JsonNullableFilter<"LargeScreenVersion">
   minioIds?: Prisma.JsonNullableFilter<"LargeScreenVersion">
   status?: Prisma.BoolFilter<"LargeScreenVersion"> | boolean
-  password?: Prisma.StringNullableFilter<"LargeScreenVersion"> | string | null
   expirationTime?: Prisma.DateTimeNullableFilter<"LargeScreenVersion"> | Date | string | null
   publishInfo?: Prisma.StringNullableFilter<"LargeScreenVersion"> | string | null
   createdBy?: Prisma.StringNullableFilter<"LargeScreenVersion"> | string | null
@@ -337,7 +329,6 @@ export type LargeScreenVersionOrderByWithRelationInput = {
   encodedControl?: Prisma.SortOrderInput | Prisma.SortOrder
   minioIds?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
-  password?: Prisma.SortOrderInput | Prisma.SortOrder
   expirationTime?: Prisma.SortOrderInput | Prisma.SortOrder
   publishInfo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -365,7 +356,6 @@ export type LargeScreenVersionWhereUniqueInput = Prisma.AtLeast<{
   encodedControl?: Prisma.JsonNullableFilter<"LargeScreenVersion">
   minioIds?: Prisma.JsonNullableFilter<"LargeScreenVersion">
   status?: Prisma.BoolFilter<"LargeScreenVersion"> | boolean
-  password?: Prisma.StringNullableFilter<"LargeScreenVersion"> | string | null
   expirationTime?: Prisma.DateTimeNullableFilter<"LargeScreenVersion"> | Date | string | null
   publishInfo?: Prisma.StringNullableFilter<"LargeScreenVersion"> | string | null
   createdBy?: Prisma.StringNullableFilter<"LargeScreenVersion"> | string | null
@@ -389,7 +379,6 @@ export type LargeScreenVersionOrderByWithAggregationInput = {
   encodedControl?: Prisma.SortOrderInput | Prisma.SortOrder
   minioIds?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
-  password?: Prisma.SortOrderInput | Prisma.SortOrder
   expirationTime?: Prisma.SortOrderInput | Prisma.SortOrder
   publishInfo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -421,7 +410,6 @@ export type LargeScreenVersionScalarWhereWithAggregatesInput = {
   encodedControl?: Prisma.JsonNullableWithAggregatesFilter<"LargeScreenVersion">
   minioIds?: Prisma.JsonNullableWithAggregatesFilter<"LargeScreenVersion">
   status?: Prisma.BoolWithAggregatesFilter<"LargeScreenVersion"> | boolean
-  password?: Prisma.StringNullableWithAggregatesFilter<"LargeScreenVersion"> | string | null
   expirationTime?: Prisma.DateTimeNullableWithAggregatesFilter<"LargeScreenVersion"> | Date | string | null
   publishInfo?: Prisma.StringNullableWithAggregatesFilter<"LargeScreenVersion"> | string | null
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"LargeScreenVersion"> | string | null
@@ -444,7 +432,6 @@ export type LargeScreenVersionCreateInput = {
   encodedControl?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   minioIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: boolean
-  password?: string | null
   expirationTime?: Date | string | null
   publishInfo?: string | null
   createdBy?: string | null
@@ -468,7 +455,6 @@ export type LargeScreenVersionUncheckedCreateInput = {
   encodedControl?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   minioIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: boolean
-  password?: string | null
   expirationTime?: Date | string | null
   publishInfo?: string | null
   createdBy?: string | null
@@ -491,7 +477,6 @@ export type LargeScreenVersionUpdateInput = {
   encodedControl?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   minioIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -515,7 +500,6 @@ export type LargeScreenVersionUncheckedUpdateInput = {
   encodedControl?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   minioIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -539,7 +523,6 @@ export type LargeScreenVersionCreateManyInput = {
   encodedControl?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   minioIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: boolean
-  password?: string | null
   expirationTime?: Date | string | null
   publishInfo?: string | null
   createdBy?: string | null
@@ -562,7 +545,6 @@ export type LargeScreenVersionUpdateManyMutationInput = {
   encodedControl?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   minioIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -586,7 +568,6 @@ export type LargeScreenVersionUncheckedUpdateManyInput = {
   encodedControl?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   minioIds?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expirationTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishInfo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -615,7 +596,6 @@ export type LargeScreenVersionCountOrderByAggregateInput = {
   encodedControl?: Prisma.SortOrder
   minioIds?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  password?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrder
   publishInfo?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -637,7 +617,6 @@ export type LargeScreenVersionMaxOrderByAggregateInput = {
   backgroundUrl?: Prisma.SortOrder
   sceneInfo?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  password?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrder
   publishInfo?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -654,7 +633,6 @@ export type LargeScreenVersionMinOrderByAggregateInput = {
   backgroundUrl?: Prisma.SortOrder
   sceneInfo?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  password?: Prisma.SortOrder
   expirationTime?: Prisma.SortOrder
   publishInfo?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -685,7 +663,6 @@ export type LargeScreenVersionSelect<ExtArgs extends runtime.Types.Extensions.In
   encodedControl?: boolean
   minioIds?: boolean
   status?: boolean
-  password?: boolean
   expirationTime?: boolean
   publishInfo?: boolean
   createdBy?: boolean
@@ -709,7 +686,6 @@ export type LargeScreenVersionSelectCreateManyAndReturn<ExtArgs extends runtime.
   encodedControl?: boolean
   minioIds?: boolean
   status?: boolean
-  password?: boolean
   expirationTime?: boolean
   publishInfo?: boolean
   createdBy?: boolean
@@ -733,7 +709,6 @@ export type LargeScreenVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.
   encodedControl?: boolean
   minioIds?: boolean
   status?: boolean
-  password?: boolean
   expirationTime?: boolean
   publishInfo?: boolean
   createdBy?: boolean
@@ -757,7 +732,6 @@ export type LargeScreenVersionSelectScalar = {
   encodedControl?: boolean
   minioIds?: boolean
   status?: boolean
-  password?: boolean
   expirationTime?: boolean
   publishInfo?: boolean
   createdBy?: boolean
@@ -766,7 +740,7 @@ export type LargeScreenVersionSelectScalar = {
   updatedTime?: boolean
 }
 
-export type LargeScreenVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "largeId" | "versionCode" | "versionDesc" | "config" | "detail" | "backgroundUrl" | "sceneInfo" | "statusAnimation" | "aniFrameSet" | "dataFilterArr" | "encodedControl" | "minioIds" | "status" | "password" | "expirationTime" | "publishInfo" | "createdBy" | "createdTime" | "updatedBy" | "updatedTime", ExtArgs["result"]["largeScreenVersion"]>
+export type LargeScreenVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "largeId" | "versionCode" | "versionDesc" | "config" | "detail" | "backgroundUrl" | "sceneInfo" | "statusAnimation" | "aniFrameSet" | "dataFilterArr" | "encodedControl" | "minioIds" | "status" | "expirationTime" | "publishInfo" | "createdBy" | "createdTime" | "updatedBy" | "updatedTime", ExtArgs["result"]["largeScreenVersion"]>
 
 export type $LargeScreenVersionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LargeScreenVersion"
@@ -786,7 +760,6 @@ export type $LargeScreenVersionPayload<ExtArgs extends runtime.Types.Extensions.
     encodedControl: runtime.JsonValue | null
     minioIds: runtime.JsonValue | null
     status: boolean
-    password: string | null
     expirationTime: Date | null
     publishInfo: string | null
     createdBy: string | null
@@ -1230,7 +1203,6 @@ export interface LargeScreenVersionFieldRefs {
   readonly encodedControl: Prisma.FieldRef<"LargeScreenVersion", 'Json'>
   readonly minioIds: Prisma.FieldRef<"LargeScreenVersion", 'Json'>
   readonly status: Prisma.FieldRef<"LargeScreenVersion", 'Boolean'>
-  readonly password: Prisma.FieldRef<"LargeScreenVersion", 'String'>
   readonly expirationTime: Prisma.FieldRef<"LargeScreenVersion", 'DateTime'>
   readonly publishInfo: Prisma.FieldRef<"LargeScreenVersion", 'String'>
   readonly createdBy: Prisma.FieldRef<"LargeScreenVersion", 'String'>

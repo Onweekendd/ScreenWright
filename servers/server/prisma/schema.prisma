@@ -293,7 +293,6 @@ model LargeScreen {
   type            Int       @default(1) // 1私有 2协作 3系统模板
   stockType       Int       @default(1) @map("stock_type")
   groupId         Int       @default(0) @map("group_id") // 0=未分组
-  password        String? // 大屏访问密码(bcrypt)，可为空
   invitationCode  String?   @map("invitation_code")
   status          Boolean   @default(false) // 是否已发布
   expirationTime  DateTime? @map("expiration_time")
@@ -335,7 +334,6 @@ model LargeScreenVersion {
   encodedControl  Json?     @map("encoded_control")
   minioIds        Json?     @map("minio_ids")
   status          Boolean   @default(false) // 该版本是否已发布
-  password        String?
   expirationTime  DateTime? @map("expiration_time")
   publishInfo     String?   @map("publish_info")
   createdBy       String?   @map("created_by")
